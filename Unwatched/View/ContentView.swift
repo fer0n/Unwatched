@@ -7,10 +7,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var showVideoPlayerSheet = false
+    @Environment(VideoManager.self) var videoManager
+
     @State private var sheetDetent = PresentationDetent.medium
     @State var selectedVideo: Video?
-    @Environment(VideoManager.self) var videoManager
+    @State var lastVideo: Video?
     @State var selection = "Queue"
     @State var previousSelection = "Queue"
 
@@ -31,7 +32,7 @@ struct ContentView: View {
 
             QueueView(onVideoTap: { video in
                 selectedVideo = video
-                showVideoPlayerSheet = true
+                lastVideo = video
             })
             .tabItem {
                 Image(systemName: "rectangle.stack")
@@ -51,22 +52,19 @@ struct ContentView: View {
         }
         .onChange(of: selection) {
             if selection == "VideoPlayer" {
-                showVideoPlayerSheet = true
                 selection = previousSelection
+                selectedVideo = lastVideo
             }
             previousSelection = selection
         }
-
-        .sheet(isPresented: $showVideoPlayerSheet) {
-            VideoPlayer(video: selectedVideo)
-                .presentationDetents(
-                    [.medium, .large],
-                    selection: $sheetDetent
-                )
-        }
-        .onAppear {
-            Task {
-                await videoManager.loadVideos()
+        .sheet(item: $selectedVideo) { video in
+            ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                VideoPlayer(video: video)
+                    .presentationDetents(
+                        [.medium, .large],
+                        selection: $sheetDetent
+                    )
             }
         }
     }

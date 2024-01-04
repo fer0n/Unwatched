@@ -28,6 +28,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
+    var currentPublishedDate: String = ""
 
     func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
@@ -47,6 +48,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         switch currentElement {
         case "title": currentTitle += string
         case "yt:videoId": currentYoutubeId += string
+        case "published": currentPublishedDate += string
         default: break
         }
     }
@@ -56,12 +58,16 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 namespaceURI: String?,
                 qualifiedName qName: String?) {
         if elementName == "entry" {
-            if let url = URL(string: currentLink), let thumbnailUrl = URL(string: thumbnailUrl) {
+            let dateFormatter = ISO8601DateFormatter()
+            if let publishedDate = dateFormatter.date(from: currentPublishedDate),
+               let url = URL(string: currentLink),
+               let thumbnailUrl = URL(string: thumbnailUrl) {
                 print("url", url)
                 print("thumbnailUrl", thumbnailUrl)
                 let video = Video(title: currentTitle,
                                   url: url, youtubeId: currentYoutubeId,
-                                  thumbnailUrl: thumbnailUrl)
+                                  thumbnailUrl: thumbnailUrl,
+                                  publishedDate: publishedDate)
                 videos.append(video)
             } else {
                 print("couldn't create the video")
@@ -70,6 +76,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentLink = ""
             thumbnailUrl = ""
             currentYoutubeId = ""
+            currentPublishedDate = ""
         }
     }
 }

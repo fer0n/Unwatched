@@ -10,18 +10,28 @@ struct VideoPlayer: View {
     @State private var playbackSpeed: Float = 1.0
 
     var body: some View {
-        if let video = video {
-            Text(video.title)
-            WebViewWrapper(videoID: video.youtubeId, playbackSpeed: $playbackSpeed)
-                .frame(width: 400, height: 300)
-            Slider(value: $playbackSpeed, in: 0.5...2.0, step: 0.1)
-                .padding()
-        } else {
-            Text("No video selected")
+        VStack {
+            if let video = video {
+                WebViewWrapper(videoID: video.youtubeId, playbackSpeed: $playbackSpeed)
+                    .aspectRatio(16/9, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                Text(video.title)
+                    .font(.system(size: 20, weight: .heavy))
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical)
+                Spacer()
+                Slider(value: $playbackSpeed, in: 0.5...2.0, step: 0.1)
+                    .padding(.vertical)
+            } else {
+                Text("No video selected")
+            }
         }
+        .padding(.top, 25)
+        .padding(.horizontal)
     }
 }
 
-// #Preview {
-//    VideoPlayer()
-// }
+ #Preview {
+     VideoPlayer(video: Video.dummy)
+ }
