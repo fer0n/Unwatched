@@ -20,10 +20,13 @@ struct UnwatchedApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    
+    @State var videoManager = VideoManager();
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(videoManager)
         }
         .modelContainer(sharedModelContainer)
     }

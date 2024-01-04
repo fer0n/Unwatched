@@ -6,50 +6,80 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
-    // This will hold the videos loaded from the RSS feeds
-    @State private var videos: [Video] = []
-    var videoManager = VideoManager();
 
-    @State private var showingSheet = false
+struct ContentView: View {
+    @State private var showVideoPlayerSheet = false
     @State private var sheetDetent = PresentationDetent.medium
-    @State private var selectedVideo: Video? = nil
+    @State var selectedVideo: Video? = nil
+    @Environment(VideoManager.self) var videoManager
+    @State var selection = "Queue"
+    @State var previousSelection = "Queue"
+  
+    init() {
+        UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
+        UITabBar.appearance().isTranslucent = false
+    }
 
     var body: some View {
-       List(videoManager.videos) { video in
-           VideoListItem(video: video)
-            .onTapGesture {
+        TabView(selection: $selection) {
+           VStack {
+               Text("VideoPlayer – Should never be visible")
+           }
+           .tabItem {
+               Image(systemName: "chevron.up.circle")
+           }
+           .tag("VideoPlayer")
+
+            QueueView(onVideoTap: { video in
                 selectedVideo = video
-                showingSheet = true
-            }
-       }
-        .onAppear {
-            Task {
-                await videoManager.loadVideos()
-            }
-        }
-        .sheet(isPresented: $showingSheet) {
+                showVideoPlayerSheet = true
+            })
+               .tabItem {
+                   Image(systemName: "rectangle.stack")
+               }
+               .tag("Queue")
+
+           Text("Inbox")
+               .tabItem {
+                   Image(systemName: "tray")
+               }
+               .tag("Inbox")
+            Text("Library")
+                .tabItem {
+                    Image(systemName: "books.vertical")
+                }
+                .tag("Library")
+           }
+           .onChange(of: selection) {
+               if (selection == "VideoPlayer") {
+                   showVideoPlayerSheet = true
+                   selection = previousSelection
+               }
+               previousSelection = selection
+           }
+        
+        .sheet(isPresented: $showVideoPlayerSheet) {
             VideoPlayer(video: selectedVideo)
             .presentationDetents(
                 [.medium, .large],
                 selection: $sheetDetent
              )
         }
+        .onAppear {
+            Task {
+                await videoManager.loadVideos()
+            }
+        }
     }
 }
 
 
 
-
-
-// This is a placeholder function, replace with your actual data loading code
-func loadVideosFromRSS(feedUrl: String) -> [Video] {
-    // Load videos from the RSS feed and return them
-    return []
-}
-
 struct ContentView_Previews: PreviewProvider {
+    
+    
     static var previews: some View {
         ContentView()
+            .environment(VideoManager())
     }
 }

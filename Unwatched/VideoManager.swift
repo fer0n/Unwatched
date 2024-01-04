@@ -5,6 +5,7 @@
 
 import SwiftData
 import SwiftUI
+import Observation
 
 @Observable class VideoManager {
     // This will hold the videos loaded from the RSS feeds
@@ -16,16 +17,16 @@ import SwiftUI
         // Add more RSS feed URLs here
     ]
 
-func loadVideos() async {
-    for feedUrl in feedUrls {
-        do {
-            // Use VideoCrawler to load the videos from the RSS feed
-            let loadedVideos = try await VideoCrawler.loadVideosFromRSS(feedUrl: feedUrl)
-            print("loadedVideos", loadedVideos)
-            videos.append(contentsOf: loadedVideos)
-        } catch {
-            print("Failed to load videos from \(feedUrl): \(error)")
+    func loadVideos() async {
+        for feedUrl in feedUrls {
+            do {
+                // Use VideoCrawler to load the videos from the RSS feed
+                let loadedVideos = try await VideoCrawler.loadVideosFromRSS(feedUrl: feedUrl)
+                print("loadedVideos", loadedVideos)
+                videos.append(contentsOf: loadedVideos)
+            } catch {
+                print("Failed to load videos from \(feedUrl): \(error)")
+            }
         }
     }
-}
 }

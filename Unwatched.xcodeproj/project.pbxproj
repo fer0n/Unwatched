@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
+		886E79BA2B46FFD300554E1F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B92B46FFD300554E1F /* Color.swift */; };
 		88D438A52B45ACD800482F29 /* WebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A42B45ACD800482F29 /* WebViewWrapper.swift */; };
 		88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */; };
 		88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A82B45B27600482F29 /* VideoPlayer.swift */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
+		886E79B92B46FFD300554E1F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		88D438A42B45ACD800482F29 /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
 		88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParserDelegate.swift; sourceTree = "<group>"; };
 		88D438A82B45B27600482F29 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
@@ -48,6 +52,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		886E79B82B46FFC700554E1F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				886E79B92B46FFD300554E1F /* Color.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		88DFC0A22B44843A001895C8 = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				88D438AA2B45C3D700482F29 /* Info.plist */,
+				886E79B82B46FFC700554E1F /* Extensions */,
 				88DFC0C42B448ABF001895C8 /* View */,
 				88DFC0C32B448AB0001895C8 /* Model */,
 				88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */,
@@ -104,6 +117,7 @@
 				88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */,
 				88D438A42B45ACD800482F29 /* WebViewWrapper.swift */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
+				886E79B62B46E0F900554E1F /* QueueView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -180,12 +194,14 @@
 			files = (
 				88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */,
 				88DFC0C02B4489C2001895C8 /* VideoListItem.swift in Sources */,
+				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoManager.swift in Sources */,
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				88D438A52B45ACD800482F29 /* WebViewWrapper.swift in Sources */,
+				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
