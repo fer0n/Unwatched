@@ -11,10 +11,28 @@ struct VideoListItem: View {
     var body: some View {
         // Define how each video should be displayed in the list
         // This is a placeholder, replace with your actual UI code
-        Text("\(video.title) (\(video.youtubeId))")
+        // thumbnail image async loaded
+        HStack {
+            AsyncImage(url: video.thumbnailUrl) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 160, height: 90)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 15.0))
+            } placeholder: {
+                Color.backgroundColor
+                    .frame(width: 160, height: 90)
+            }
+            VStack {
+                Text(video.title)
+                    .font(.system(size: 17, weight: .medium))
+            }
+        }
     }
 }
 
-// #Preview {
-//    VideoListItem()
-// }
+ #Preview {
+     VideoListItem(video: Video.dummy)
+         .background(Color.gray)
+ }

@@ -15,7 +15,7 @@ struct WebViewWrapper: UIViewRepresentable {
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
         webView.navigationDelegate = context.coordinator
-        webView.backgroundColor = UIColor.black
+        webView.backgroundColor = UIColor(Color.backgroundColor)
         webView.isOpaque = false
         return webView
     }

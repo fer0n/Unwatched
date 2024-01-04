@@ -16,9 +16,12 @@ struct QueueView: View {
                     onVideoTap(video)
                 }
         }
+        .clipped()
+        .listStyle(PlainListStyle())
     }
 }
 
-// #Preview {
-//    QueueView()
-// }
+ #Preview {
+     QueueView(onVideoTap: { _ in })
+         .environment(VideoManager.dummy)
+ }

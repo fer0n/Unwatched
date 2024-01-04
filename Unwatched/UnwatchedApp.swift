@@ -27,6 +27,11 @@ struct UnwatchedApp: App {
         WindowGroup {
             ContentView()
                 .environment(videoManager)
+                .onAppear {
+                    Task {
+                        await videoManager.loadVideos()
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }
