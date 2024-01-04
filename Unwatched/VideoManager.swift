@@ -13,7 +13,7 @@ import Observation
 
     // Define your RSS feeds here
     private let feedUrls = [
-        "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w",
+        "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w"
         // Add more RSS feed URLs here
     ]
 

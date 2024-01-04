@@ -12,7 +12,7 @@ final class Video: CustomStringConvertible {
     var url: URL
     var youtubeId: String
     var thumbnailUrl: URL
-    
+
     init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL) {
         self.title = title
         self.url = url

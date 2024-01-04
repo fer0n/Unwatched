@@ -10,7 +10,7 @@ import SwiftData
 struct UnwatchedApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Video.self,
+            Video.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -20,8 +20,8 @@ struct UnwatchedApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-    
-    @State var videoManager = VideoManager();
+
+    @State var videoManager = VideoManager()
 
     var body: some Scene {
         WindowGroup {
