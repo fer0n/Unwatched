@@ -5,7 +5,6 @@
 
 import Foundation
 
-
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [Video] = []
     var currentElement = ""
@@ -30,16 +29,19 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+    func parser(_ parser: XMLParser,
+                didStartElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?,
+                attributes attributeDict: [String: String] = [:]) {
         currentElement = elementName
-        
+
         if elementName == "link" && attributeDict["rel"] == "alternate" {
             currentLink = attributeDict["href"] ?? ""
         } else if elementName == "media:thumbnail" {
             thumbnailUrl = attributeDict["url"] ?? ""
         }
     }
-
 
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         switch currentElement {
@@ -49,12 +51,17 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser,
+                didEndElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?) {
         if elementName == "entry" {
             if let url = URL(string: currentLink), let thumbnailUrl = URL(string: thumbnailUrl) {
                 print("url", url)
                 print("thumbnailUrl", thumbnailUrl)
-                let video = Video(title: currentTitle, url: url, youtubeId: currentYoutubeId, thumbnailUrl: thumbnailUrl)
+                let video = Video(title: currentTitle,
+                                  url: url, youtubeId: currentYoutubeId,
+                                  thumbnailUrl: thumbnailUrl)
                 videos.append(video)
             } else {
                 print("couldn't create the video")
