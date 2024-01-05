@@ -10,7 +10,8 @@ import SwiftData
 struct UnwatchedApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Video.self
+            Video.self,
+            Subscription.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -22,16 +23,13 @@ struct UnwatchedApp: App {
     }()
 
     @State var videoManager = VideoManager()
+    @State var subscriptionManager = SubscriptionManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(videoManager)
-                .onAppear {
-                    Task {
-                        await videoManager.loadVideos()
-                    }
-                }
+                .environment(subscriptionManager)
         }
         .modelContainer(sharedModelContainer)
     }

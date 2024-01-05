@@ -8,11 +8,14 @@ import SwiftData
 
 @Model
 final class Video: CustomStringConvertible {
+    @Attribute(.unique) var youtubeId: String
     var title: String
     var url: URL
-    var youtubeId: String
     var thumbnailUrl: URL
     var publishedDate: Date?
+    var subscription: Subscription?
+
+    var watched: Bool = false
 
     init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL, publishedDate: Date?) {
         self.title = title

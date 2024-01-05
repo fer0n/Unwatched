@@ -32,6 +32,6 @@ struct VideoPlayer: View {
     }
 }
 
- #Preview {
-     VideoPlayer(video: Video.dummy)
- }
+#Preview {
+    VideoPlayer(video: Video.dummy)
+}

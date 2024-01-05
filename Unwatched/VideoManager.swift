@@ -8,35 +8,44 @@ import SwiftUI
 import Observation
 
 @Observable class VideoManager {
-    // This will hold the videos loaded from the RSS feeds
-    var videos: [Video] = []
 
-    init(videos: [Video]) {
-        self.videos = videos
-    }
+    func loadVideos(subscriptions: [Subscription]) async -> [(sub: Subscription, videos: [Video])] {
+        var subVideos: [(sub: Subscription, videos: [Video])] = []
 
-    init() {}
-
-    // Define your RSS feeds here
-    private let feedUrls = [
-        "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w"
-        // Add more RSS feed URLs here
-    ]
-
-    func loadVideos() async {
-        for feedUrl in feedUrls {
+        for sub in subscriptions {
+            var videos: [Video] = []
             do {
                 // Use VideoCrawler to load the videos from the RSS feed
-                let loadedVideos = try await VideoCrawler.loadVideosFromRSS(feedUrl: feedUrl)
+                let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
+                    url: sub.link,
+                    mostRecentPublishedDate: sub.mostRecentVideoDate)
                 videos.append(contentsOf: loadedVideos)
             } catch {
-                print("Failed to load videos from \(feedUrl): \(error)")
+                print("Failed to load videos from \(sub.link): \(error)")
+            }
+            // TODO: try doing this in parallel instead of one by one?
+            subVideos.append((sub: sub, videos: videos))
+        }
+        return subVideos
+    }
+
+    func insertSubscriptionVideos(_ subscriptionVideos: [(sub: Subscription, videos: [Video])],
+                                  insertVideo: @escaping (_ video: Video) -> Void) {
+        for subVideo in subscriptionVideos {
+            print("subVideo.videos", subVideo.videos)
+            for video in subVideo.videos {
+                insertVideo(video)
+            }
+            if let mostRecentDate = subVideo.videos.first?.publishedDate {
+                print("mostRecentDate", mostRecentDate)
+                // TODO: is this enough to update the model?
+                subVideo.sub.mostRecentVideoDate = mostRecentDate
             }
         }
     }
 
     // Preview data
-    static let dummy = VideoManager(videos: [
-        Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy
-    ])
+    //    static let dummy = VideoManager(videos: [
+    //        Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy
+    //    ])
 }
