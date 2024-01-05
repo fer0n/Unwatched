@@ -8,6 +8,8 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(VideoManager.self) var videoManager
+    @Environment(\.modelContext) var modelContext
+    @Query var subscriptions: [Subscription]
 
     @State private var sheetDetent = PresentationDetent.medium
     @State var selectedVideo: Video?
@@ -17,7 +19,20 @@ struct ContentView: View {
 
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
-        UITabBar.appearance().isTranslucent = false
+        UITabBar.appearance().backgroundImage = UIImage()
+    }
+
+    func loadNewVideos() {
+        print("loadNewVideos")
+        print("subscriptions", subscriptions)
+        Task {
+            let subVideos = await videoManager.loadVideos(
+                subscriptions: subscriptions
+            )
+            videoManager.insertSubscriptionVideos(subVideos, insertVideo: { video in
+                modelContext.insert(video)
+            })
+        }
     }
 
     var body: some View {
@@ -44,7 +59,8 @@ struct ContentView: View {
                     Image(systemName: "tray")
                 }
                 .tag("Inbox")
-            Text("Library")
+
+            LibraryView()
                 .tabItem {
                     Image(systemName: "books.vertical")
                 }
@@ -56,6 +72,9 @@ struct ContentView: View {
                 selectedVideo = lastVideo
             }
             previousSelection = selection
+        }
+        .onAppear {
+            loadNewVideos()
         }
         .sheet(item: $selectedVideo) { video in
             ZStack {

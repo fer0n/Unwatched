@@ -7,6 +7,10 @@ import Foundation
 
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [Video] = []
+    var subscriptionInfo: Subscription?
+    var limitVideos: Int?
+    var cutoffDate: Date?
+
     var currentElement = ""
     var currentTitle: String = "" {
         didSet {
@@ -28,7 +32,18 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
-    var currentPublishedDate: String = ""
+    var currentPublishedDate: String = "" {
+        didSet {
+            currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+
+    init(limitVideos: Int?, cutoffDate: Date?) {
+        self.limitVideos = limitVideos
+        self.cutoffDate = cutoffDate
+    }
+
+    override init() { }
 
     func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
@@ -41,6 +56,18 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentLink = attributeDict["href"] ?? ""
         } else if elementName == "media:thumbnail" {
             thumbnailUrl = attributeDict["url"] ?? ""
+        } else if elementName == "entry",
+                  subscriptionInfo == nil,
+                  let url = URL(string: currentLink) {
+            // TODO: find a better way to retrieve the info.
+            // it currently only works if the channel info comes before the first entry
+            subscriptionInfo = Subscription(link: url, title: currentTitle)
+            currentTitle = ""
+            currentLink = ""
+            thumbnailUrl = ""
+            currentYoutubeId = ""
+            currentPublishedDate = ""
+            // TODO: why the += ? better way to load all this?
         }
     }
 
@@ -62,12 +89,16 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             if let publishedDate = dateFormatter.date(from: currentPublishedDate),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
-                print("url", url)
-                print("thumbnailUrl", thumbnailUrl)
                 let video = Video(title: currentTitle,
                                   url: url, youtubeId: currentYoutubeId,
                                   thumbnailUrl: thumbnailUrl,
                                   publishedDate: publishedDate)
+
+                if (limitVideos != nil && videos.count >= limitVideos!) ||
+                    cutoffDate != nil && publishedDate <= cutoffDate! {
+                    parser.abortParsing()
+                    return
+                }
                 videos.append(video)
             } else {
                 print("couldn't create the video")

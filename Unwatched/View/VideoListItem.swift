@@ -24,15 +24,19 @@ struct VideoListItem: View {
                 Color.backgroundColor
                     .frame(width: 160, height: 90)
             }
-            VStack {
+            VStack(alignment: .leading, spacing: 10) {
                 Text(video.title)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.system(size: 16, weight: .medium))
+                    .lineLimit(3)
+                Text(video.publishedDate?.formatted ?? "")
+                    .font(.body)
+                    .foregroundStyle(Color.gray)
             }
         }
     }
 }
 
- #Preview {
-     VideoListItem(video: Video.dummy)
-         .background(Color.gray)
- }
+#Preview {
+    VideoListItem(video: Video.dummy)
+        .background(Color.gray)
+}
