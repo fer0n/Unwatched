@@ -7,8 +7,6 @@ import SwiftUI
 import SwiftData
 
 struct AddSubscriptionView: View {
-    @Environment(SubscriptionManager.self) var subscriptionManager
-    @Environment(VideoManager.self) var videoManager
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
 
@@ -28,9 +26,9 @@ struct AddSubscriptionView: View {
             errorMessage = nil
             isLoading = true
             do {
-                if let sub = try await subscriptionManager.getSubscription(url: text) {
+                if let sub = try await SubscriptionManager.getSubscription(url: text) {
                     self.saveSubscription(sub)
-                    // TODO: load all new videos here
+                    // TODO: load all new videos here?
                     dismiss()
                 }
             } catch {
@@ -89,6 +87,9 @@ struct AddSubscriptionView: View {
 
             Button {
                 text = UIPasteboard.general.string ?? ""
+                if !text.isEmpty {
+                    addSubscription()
+                }
             } label: {
                 Text("Paste URL")
                     .bold()

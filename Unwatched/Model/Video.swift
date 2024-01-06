@@ -13,7 +13,6 @@ final class Video: CustomStringConvertible {
     var url: URL
     var thumbnailUrl: URL
     var publishedDate: Date?
-    var subscription: Subscription?
 
     var watched: Bool = false
 

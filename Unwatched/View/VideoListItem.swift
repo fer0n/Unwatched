@@ -13,7 +13,7 @@ struct VideoListItem: View {
         // This is a placeholder, replace with your actual UI code
         // thumbnail image async loaded
         HStack {
-            AsyncImage(url: video.thumbnailUrl) { image in
+            CacheAsyncImage(url: video.thumbnailUrl) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)

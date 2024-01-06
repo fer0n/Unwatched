@@ -1,0 +1,71 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Add Subscription" : {
+
+    },
+    "Add to inbox" : {
+
+    },
+    "Add to Queue" : {
+
+    },
+    "Do nothing" : {
+
+    },
+    "Failed to parse the data" : {
+      "comment" : "Failed To Parse Error"
+    },
+    "Feed URL" : {
+
+    },
+    "History" : {
+
+    },
+    "Inbox" : {
+
+    },
+    "Invalid URL" : {
+      "comment" : "Invalid URL Error"
+    },
+    "Library" : {
+
+    },
+    "Mark Watched" : {
+
+    },
+    "newVideos" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Videos"
+          }
+        }
+      }
+    },
+    "Nothing marked as watched yet" : {
+
+    },
+    "Paste URL" : {
+
+    },
+    "Queue" : {
+
+    },
+    "Subscription information not found" : {
+      "comment" : "Subscription Info Not Found Error"
+    },
+    "The operation is not supported" : {
+      "comment" : "No Supported Error"
+    },
+    "Use Default" : {
+
+    },
+    "VideoPlayer – Should never be visible" : {
+
+    }
+  },
+  "version" : "1.0"
+}

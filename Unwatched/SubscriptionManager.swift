@@ -5,8 +5,8 @@
 
 import Foundation
 
-@Observable class SubscriptionManager {
-    func getSubscription(url: String) async throws -> Subscription? {
+class SubscriptionManager {
+    static func getSubscription(url: String) async throws -> Subscription? {
         guard let url = URL(string: url) else {
             throw VideoCrawlerError.invalidUrl
         }
@@ -16,12 +16,12 @@ import Foundation
         return try await self.validateSubscription(url: channelFeedUrl)
     }
 
-    func validateSubscription(url: URL) async throws -> Subscription? {
+    static func validateSubscription(url: URL) async throws -> Subscription? {
         let subscription = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
         return subscription
     }
 
-    func getChannelFeedFromUrl(url: URL) async throws -> URL {
+    static func getChannelFeedFromUrl(url: URL) async throws -> URL {
         if isYoutubeFeedUrl(url: url) {
             return url
         }
@@ -37,11 +37,11 @@ import Foundation
         throw SubscriptionError.noSupported
     }
 
-    func isYoutubeFeedUrl(url: URL) -> Bool {
+    static func isYoutubeFeedUrl(url: URL) -> Bool {
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
 
-    func getYoutubeChannelIdFromUsername(username: String) async throws -> String {
+    static func getYoutubeChannelIdFromUsername(username: String) async throws -> String {
         guard let apiKey = ProcessInfo.processInfo.environment["youtube-api-key"] else {
             fatalError("youtube-api-key environment varible not set")
         }

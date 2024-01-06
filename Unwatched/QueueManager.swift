@@ -4,34 +4,36 @@
 //
 
 import Foundation
+import SwiftData
 
 class QueueManager {
-    static func getTopOrderNumber(queue: [QueueEntry]) -> Int {
-        let currentMax = queue.max(by: { $0.order < $1.order })?.order
-        return currentMax != nil ? currentMax! + 1 : 0
+    static func deleteQueueEntry(_ queueEntry: QueueEntry, queue: [QueueEntry], modelContext: ModelContext) {
+        let deletedOrder = queueEntry.order
+        modelContext.delete(queueEntry)
+        QueueManager.updateQueueOrderDelete(deletedOrder: deletedOrder,
+                                            queue: queue)
     }
 
-    static func addVideosToQueue(_ queue: [QueueEntry],
-                                 videos: [Video],
-                                 insertQueueEntry: @escaping (_ queueEntry: QueueEntry) -> Void) {
-        print("addVideosToQueue")
-        var order = getTopOrderNumber(queue: queue)
-
-        for video in videos {
-            print("video", video)
-            print("order", order)
-            let queueEntry = QueueEntry(video: video, order: order)
-            insertQueueEntry(queueEntry)
-            order += 1
+    static func insertQueueEntries(at index: Int = 0,
+                                   videos: [Video],
+                                   queue: [QueueEntry],
+                                   modelContext: ModelContext) {
+        var orderedQueue = queue.sorted(by: { $0.order < $1.order })
+        for (index, video) in videos.enumerated() {
+            let queueEntry = QueueEntry(video: video, order: index + index)
+            modelContext.insert(queueEntry)
+            orderedQueue.insert(queueEntry, at: index)
+            print("queueEntry", queueEntry)
+        }
+        for (index, queueEntry) in orderedQueue.enumerated() {
+            queueEntry.order = index
         }
     }
 
     static func updateQueueOrderDelete(deletedOrder: Int,
                                        queue: [QueueEntry]) {
-        for queueEntry in queue {
-            if queueEntry.order > deletedOrder {
-                queueEntry.order -= 1
-            }
+        for queueEntry in queue where queueEntry.order > deletedOrder {
+            queueEntry.order -= 1
         }
     }
 
