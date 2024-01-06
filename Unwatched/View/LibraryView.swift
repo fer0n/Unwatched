@@ -12,6 +12,8 @@ struct LibraryView: View {
     @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
     @State var showAddSubscriptionSheet = false
 
+    var loadNewVideos: () async -> Void
+
     func deleteSubscription(_ indexSet: IndexSet) {
         for index in indexSet {
             let sub = subscriptions[index]
@@ -28,13 +30,6 @@ struct LibraryView: View {
         NavigationView {
             List {
                 Section {
-                    Button(action: {}, label: {
-                        HStack {
-                            Image(systemName: "bookmark.fill")
-                            Text("Bookmarks")
-                        }
-                    })
-
                     NavigationLink(destination: WatchHistoryView()) {
                         HStack {
                             Image(systemName: "clock.arrow.circlepath")
@@ -45,7 +40,11 @@ struct LibraryView: View {
 
                 Section {
                     ForEach(subscriptions) { subscripton in
-                        SubscriptionListItem(subscription: subscripton)
+                        NavigationLink(
+                            destination: SubscriptionDetailView(subscription: subscripton)
+                        ) {
+                            SubscriptionListItem(subscription: subscripton)
+                        }
                     }
                     .onDelete(perform: deleteSubscription)
                 }
@@ -57,6 +56,9 @@ struct LibraryView: View {
                 Image(systemName: "plus")
             }))
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+            .refreshable {
+                await loadNewVideos()
+            }
         }
         .sheet(isPresented: $showAddSubscriptionSheet) {
             ZStack {
@@ -68,5 +70,5 @@ struct LibraryView: View {
 }
 
 #Preview {
-    LibraryView()
+    LibraryView(loadNewVideos: {})
 }

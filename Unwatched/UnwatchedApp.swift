@@ -13,7 +13,8 @@ struct UnwatchedApp: App {
             Video.self,
             Subscription.self,
             QueueEntry.self,
-            WatchEntry.self
+            WatchEntry.self,
+            InboxEntry.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,13 +26,10 @@ struct UnwatchedApp: App {
     }()
 
     @State var videoManager = VideoManager()
-    @State var subscriptionManager = SubscriptionManager()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(videoManager)
-                .environment(subscriptionManager)
         }
         .modelContainer(sharedModelContainer)
     }

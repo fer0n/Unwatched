@@ -8,15 +8,14 @@ import SwiftData
 
 struct WatchHistoryView: View {
     @Environment(\.modelContext) var modelContext
-    @Query(sort: \WatchEntry.date) var watchEntries: [WatchEntry]
+    @Query(sort: \WatchEntry.date, order: .reverse) var watchEntries: [WatchEntry]
     @Query var queue: [QueueEntry]
 
     func addVideoToQueue(_ video: Video) {
-        QueueManager.addVideosToQueue(queue,
-                                      videos: [video],
-                                      insertQueueEntry: { entry in
-                                        modelContext.insert(entry)
-                                      })
+        QueueManager.insertQueueEntries(at: 0,
+                                        videos: [video],
+                                        queue: queue,
+                                        modelContext: modelContext)
     }
 
     var body: some View {

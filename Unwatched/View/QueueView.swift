@@ -7,7 +7,6 @@ import SwiftUI
 import SwiftData
 
 struct QueueView: View {
-    @Environment(VideoManager.self) var videoManager
     @Environment(\.modelContext) var modelContext
 
     var onVideoTap: (_ video: Video) -> Void
@@ -15,23 +14,10 @@ struct QueueView: View {
     @Query var subscriptions: [Subscription]
     @Query(sort: \QueueEntry.order) var queue: [QueueEntry]
 
-    func deleteQueueEntry(_ entry: QueueEntry) {
-        let deletedOrder = entry.order
-        modelContext.delete(entry)
-        QueueManager.updateQueueOrderDelete(deletedOrder: deletedOrder,
-                                            queue: queue)
-    }
-
-    func markVideoWatched(_ video: Video) {
-        video.watched = true
-        let watchEntry = WatchEntry(video: video)
-        modelContext.insert(watchEntry)
-    }
-
     func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
             let entry = queue[index]
-            deleteQueueEntry(entry)
+            QueueManager.deleteQueueEntry(entry, queue: queue, modelContext: modelContext)
         }
     }
 
@@ -42,33 +28,36 @@ struct QueueView: View {
     }
 
     var body: some View {
-        List {
-            ForEach(queue) { entry in
-                VStack {
-                    VideoListItem(video: entry.video)
-                        .onTapGesture {
-                            onVideoTap(entry.video)
-                        }
-                    //                    Text("\(entry.order)")
-                }
-                .swipeActions(edge: .leading) {
-                    Button {
-                        markVideoWatched(entry.video)
-                        deleteQueueEntry(entry)
-                    } label: {
-                        Image(systemName: "checkmark.circle.fill")
+        NavigationView {
+
+            List {
+                ForEach(queue) { entry in
+                    VStack {
+                        VideoListItem(video: entry.video)
+                            .onTapGesture {
+                                onVideoTap(entry.video)
+                            }
+                        //                    Text("\(entry.order)")
                     }
-                    .tint(.teal)
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            VideoManager.markVideoWatched(queueEntry: entry, queue: queue, modelContext: modelContext)
+                        } label: {
+                            Image(systemName: "checkmark.circle.fill")
+                        }
+                        .tint(.teal)
+                    }
                 }
+                .onDelete(perform: deleteQueueEntryIndexSet)
+                .onMove(perform: moveQueueEntry)
             }
-            .onDelete(perform: deleteQueueEntryIndexSet)
-            .onMove(perform: moveQueueEntry)
+            .navigationBarTitle("Queue")
+            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+            .refreshable {
+                await loadNewVideos()
+            }
         }
-        .refreshable {
-            await loadNewVideos()
-        }
-        .clipped()
-        .listStyle(PlainListStyle())
+        .listStyle(.plain)
     }
 }
 

@@ -97,6 +97,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
                     parser.abortParsing()
+                    print("aborting parsing early")
                     return
                 }
                 videos.append(video)
