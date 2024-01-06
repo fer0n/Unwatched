@@ -9,6 +9,11 @@ import Observation
 
 @Observable class VideoManager {
 
+    func queueVideo(_ video: Video, insertQueueEntry: @escaping (_ queueEntry: QueueEntry) -> Void) {
+        let queueEntry = QueueEntry(video: video, order: 0)
+        insertQueueEntry(queueEntry)
+    }
+
     func loadVideos(subscriptions: [Subscription]) async -> [(sub: Subscription, videos: [Video])] {
         var subVideos: [(sub: Subscription, videos: [Video])] = []
 
@@ -43,9 +48,4 @@ import Observation
             }
         }
     }
-
-    // Preview data
-    //    static let dummy = VideoManager(videos: [
-    //        Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy, Video.dummy
-    //    ])
 }

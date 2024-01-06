@@ -10,6 +10,7 @@ struct ContentView: View {
     @Environment(VideoManager.self) var videoManager
     @Environment(\.modelContext) var modelContext
     @Query var subscriptions: [Subscription]
+    @Query var queue: [QueueEntry]
 
     @State private var sheetDetent = PresentationDetent.medium
     @State var selectedVideo: Video?
@@ -22,15 +23,19 @@ struct ContentView: View {
         UITabBar.appearance().backgroundImage = UIImage()
     }
 
-    func loadNewVideos() {
+    func loadNewVideos() async {
         print("loadNewVideos")
-        print("subscriptions", subscriptions)
-        Task {
-            let subVideos = await videoManager.loadVideos(
-                subscriptions: subscriptions
-            )
-            videoManager.insertSubscriptionVideos(subVideos, insertVideo: { video in
-                modelContext.insert(video)
+        let subVideos = await videoManager.loadVideos(
+            subscriptions: subscriptions
+        )
+        print("subVideos", subVideos)
+        videoManager.insertSubscriptionVideos(subVideos, insertVideo: { video in
+            print("insert video", video)
+            modelContext.insert(video)
+        })
+        for subVideo in subVideos {
+            QueueManager.addVideosToQueue(queue, videos: subVideo.videos, insertQueueEntry: { queueEntry in
+                modelContext.insert(queueEntry)
             })
         }
     }
@@ -45,14 +50,16 @@ struct ContentView: View {
             }
             .tag("VideoPlayer")
 
-            QueueView(onVideoTap: { video in
-                selectedVideo = video
-                lastVideo = video
-            })
-            .tabItem {
-                Image(systemName: "rectangle.stack")
-            }
-            .tag("Queue")
+            QueueView(
+                onVideoTap: { video in
+                    selectedVideo = video
+                    lastVideo = video
+                },
+                loadNewVideos: loadNewVideos)
+                .tabItem {
+                    Image(systemName: "rectangle.stack")
+                }
+                .tag("Queue")
 
             Text("Inbox")
                 .tabItem {
@@ -74,7 +81,9 @@ struct ContentView: View {
             previousSelection = selection
         }
         .onAppear {
-            loadNewVideos()
+            Task {
+                await loadNewVideos()
+            }
         }
         .sheet(item: $selectedVideo) { video in
             ZStack {
