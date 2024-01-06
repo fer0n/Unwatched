@@ -16,7 +16,12 @@ struct LibraryView: View {
         for index in indexSet {
             let sub = subscriptions[index]
             modelContext.delete(sub)
+            deleteNonQueuedVideos()
         }
+    }
+
+    func deleteNonQueuedVideos() {
+        // TODO: add this after queue changes
     }
 
     var body: some View {
@@ -29,12 +34,13 @@ struct LibraryView: View {
                             Text("Bookmarks")
                         }
                     })
-                    Button(action: {}, label: {
+
+                    NavigationLink(destination: WatchHistoryView()) {
                         HStack {
                             Image(systemName: "clock.arrow.circlepath")
                             Text("History")
                         }
-                    })
+                    }
                 }
 
                 Section {

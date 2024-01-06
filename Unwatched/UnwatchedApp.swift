@@ -11,7 +11,9 @@ struct UnwatchedApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Video.self,
-            Subscription.self
+            Subscription.self,
+            QueueEntry.self,
+            WatchEntry.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
