@@ -7,6 +7,7 @@ import SwiftUI
 import SwiftData
 
 struct QueueView: View {
+    @State var value: Double = 1.5
     @Environment(\.modelContext) var modelContext
 
     var onVideoTap: (_ video: Video) -> Void

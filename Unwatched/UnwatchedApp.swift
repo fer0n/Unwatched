@@ -30,6 +30,7 @@ struct UnwatchedApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .accentColor(.accentColor)
         }
         .modelContainer(sharedModelContainer)
     }

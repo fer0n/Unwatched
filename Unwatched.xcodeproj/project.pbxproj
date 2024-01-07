@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
+		8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */; };
+		8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */; };
 		88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		8804F91E2B4805A100E19B7A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineToggleStyle.swift; sourceTree = "<group>"; };
+		8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlView.swift; sourceTree = "<group>"; };
 		88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImage.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 			children = (
 				88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */,
 				88ADE8222B4ADCC3002F86F7 /* BackgroundPlaceholder.swift */,
+				8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 				887AC8CB2B49584400512852 /* WatchHistoryView.swift */,
 				887AC8CD2B4988D000512852 /* InboxView.swift */,
 				887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */,
+				8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -298,12 +304,14 @@
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */,
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
+				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
 				887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */,
 				887AC8C82B493F5100512852 /* QueueManager.swift in Sources */,
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				8898B6842B4846D000348D01 /* SubscriptionError.swift in Sources */,
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
+				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
 				887AC8D02B498EAE00512852 /* InboxEntry.swift in Sources */,
 				88ADE8212B4ACCF6002F86F7 /* VideoStatus.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoManager.swift in Sources */,

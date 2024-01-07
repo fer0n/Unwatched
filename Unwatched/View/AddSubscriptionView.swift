@@ -14,7 +14,6 @@ struct AddSubscriptionView: View {
     @State var text: String = ""
     @State var isLoading: Bool = false
     @State var subscription: Subscription?
-    @FocusState private var textIsFocused: Bool
 
     func saveSubscription(_ subscription: Subscription) {
         modelContext.insert(subscription)
@@ -60,7 +59,6 @@ struct AddSubscriptionView: View {
                     .padding(.vertical, 15)
                     .background(Color.grayColor)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .focused($textIsFocused)
 
                 Button {
                     addSubscription()
@@ -69,7 +67,7 @@ struct AddSubscriptionView: View {
                         .bold()
                         .padding()
                 }
-                .background(Color.myAccentColor)
+                .background(Color.accentColor)
                 .foregroundColor(.backgroundColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
@@ -96,13 +94,10 @@ struct AddSubscriptionView: View {
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
             }
-            .background(Color.myAccentColor)
+            .background(Color.accentColor)
             .foregroundColor(.backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
             .padding()
-        }
-        .onAppear {
-            textIsFocused = true
         }
         .padding(.horizontal)
     }
