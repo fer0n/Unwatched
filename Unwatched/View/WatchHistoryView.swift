@@ -25,7 +25,7 @@ struct WatchHistoryView: View {
             } else {
                 List {
                     ForEach(watchEntries) { entry in
-                        VideoListItem(video: entry.video)
+                        VideoListItem(video: entry.video, showVideoStatus: true)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
                                     addVideoToQueue(entry.video)

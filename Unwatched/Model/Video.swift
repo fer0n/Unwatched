@@ -14,7 +14,9 @@ final class Video: CustomStringConvertible {
     var thumbnailUrl: URL
     var publishedDate: Date?
 
-    var watched: Bool = false
+    var status: VideoStatus?
+    var watched = false
+    var subscription: Subscription?
 
     init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL, publishedDate: Date?) {
         self.title = title
