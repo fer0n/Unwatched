@@ -37,6 +37,7 @@ class VideoManager {
 
     static func addVideosToQueue(_ videos: [Video], modelContext: ModelContext) {
         for video in videos {
+            video.status = .queued
             let queueEntry = QueueEntry(video: video, order: 0)
             modelContext.insert(queueEntry)
         }
@@ -44,6 +45,7 @@ class VideoManager {
 
     static func addVideosToInbox(_ videos: [Video], modelContext: ModelContext) {
         for video in videos {
+            video.status = .inbox
             let inboxEntry = InboxEntry(video: video)
             modelContext.insert(inboxEntry)
         }

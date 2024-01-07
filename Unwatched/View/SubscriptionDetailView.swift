@@ -35,7 +35,7 @@ struct SubscriptionDetailView: View {
                     ForEach(subscription.videos.sorted(by: { ($0.publishedDate ?? Date.distantPast)
                                                         > ($1.publishedDate ?? Date.distantPast)})
                     ) { video in
-                        VideoListItem(video: video)
+                        VideoListItem(video: video, showVideoStatus: true)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button {
                                     addVideoToQueue(video)

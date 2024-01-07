@@ -10,8 +10,14 @@ class QueueManager {
     static func deleteQueueEntry(_ queueEntry: QueueEntry, queue: [QueueEntry], modelContext: ModelContext) {
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
+        queueEntry.video.status = nil
         QueueManager.updateQueueOrderDelete(deletedOrder: deletedOrder,
                                             queue: queue)
+    }
+
+    static func deleteInboxEntry(modelContext: ModelContext, entry: InboxEntry) {
+        entry.video.status = nil
+        modelContext.delete(entry)
     }
 
     static func insertQueueEntries(at index: Int = 0,
@@ -20,6 +26,7 @@ class QueueManager {
                                    modelContext: ModelContext) {
         var orderedQueue = queue.sorted(by: { $0.order < $1.order })
         for (index, video) in videos.enumerated() {
+            video.status = .queued
             let queueEntry = QueueEntry(video: video, order: index + index)
             modelContext.insert(queueEntry)
             orderedQueue.insert(queueEntry, at: index)
