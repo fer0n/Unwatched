@@ -13,8 +13,10 @@ final class Subscription: CustomStringConvertible {
     var title: String
     var subscribedDate: Date
     var mostRecentVideoDate: Date?
-    var placeVideosIn: VideoPlacement
     var videos: [Video]
+
+    var placeVideosIn: VideoPlacement
+    var customSpeedSetting: Double?
 
     init(link: URL, title: String, placeVideosIn: VideoPlacement = .defaultPlacement, videos: [Video] = []) {
         self.link = link
