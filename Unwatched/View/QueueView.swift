@@ -41,11 +41,13 @@ struct QueueView: View {
                                 .onTapGesture {
                                     onVideoTap(entry.video)
                                 }
-                            //                    Text("\(entry.order)")
+                            // Text("\(entry.order)")
                         }
                         .swipeActions(edge: .leading) {
                             Button {
-                                VideoManager.markVideoWatched(queueEntry: entry, queue: queue, modelContext: modelContext)
+                                VideoManager.markVideoWatched(queueEntry: entry,
+                                                              queue: queue,
+                                                              modelContext: modelContext)
                             } label: {
                                 Image(systemName: "checkmark.circle.fill")
                             }

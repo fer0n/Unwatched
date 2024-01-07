@@ -53,8 +53,10 @@ struct VideoListItem: View {
                let statusInfo = getVideoStatusSystemName(video),
                let status = statusInfo.status {
                 Image(systemName: status)
+                    .resizable()
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.white, statusInfo.color)
+                    .frame(width: 23, height: 23)
             }
         }
     }

@@ -7,7 +7,7 @@ import WebKit
 
 struct WebViewWrapper: UIViewRepresentable {
     let videoID: String
-    @Binding var playbackSpeed: Float
+    @Binding var playbackSpeed: Double
 
     func makeUIView(context: Context) -> WKWebView {
         let webViewConfiguration = WKWebViewConfiguration()

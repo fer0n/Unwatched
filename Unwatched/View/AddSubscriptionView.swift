@@ -69,7 +69,7 @@ struct AddSubscriptionView: View {
                         .bold()
                         .padding()
                 }
-                .background(Color.accentColor)
+                .background(Color.myAccentColor)
                 .foregroundColor(.backgroundColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
@@ -96,7 +96,7 @@ struct AddSubscriptionView: View {
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
             }
-            .background(Color.accentColor)
+            .background(Color.myAccentColor)
             .foregroundColor(.backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
             .padding()
