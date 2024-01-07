@@ -40,13 +40,23 @@ struct VideoListItem: View {
                         .frame(width: 160, height: 90)
                 }
                 .padding(showVideoStatus ? 5 : 0)
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 3) {
                     Text(video.title)
-                        .font(.system(size: 16, weight: .medium))
-                        .lineLimit(3)
-                    Text(video.publishedDate?.formatted ?? "")
-                        .font(.body)
-                        .foregroundStyle(Color.gray)
+                        .font(.system(size: 15, weight: .medium))
+                        .lineLimit(2)
+                    if let published = video.publishedDate {
+                        Text(published.formatted)
+                            .font(.system(size: 14, weight: .light))
+                            .font(.body)
+                            .foregroundStyle(Color.gray)
+                    }
+                    if let sub = video.subscription {
+                        Text(sub.title)
+                            .font(.system(size: 14, weight: .regular))
+                            .lineLimit(1)
+                            .textCase(.uppercase)
+                            .foregroundStyle(Color.gray)
+                    }
                 }
             }
             if showVideoStatus,

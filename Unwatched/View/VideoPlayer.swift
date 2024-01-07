@@ -35,7 +35,7 @@ struct VideoPlayer: View {
                 .padding(.horizontal, 25)
                 .padding(.vertical, 15)
         }
-        .background(Color.myAccentColor)
+        .background(Color.accentColor)
         .foregroundColor(.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
     }
@@ -47,18 +47,23 @@ struct VideoPlayer: View {
             video.subscription?.customSpeedSetting = value ? playbackSpeed : nil
         })) {
             Text("Custom settings for this feed")
+                .fontWeight(.medium)
         }
+        .toggleStyle(OutlineToggleStyle())
         .disabled(video.subscription == nil)
-        .padding()
     }
 
     var body: some View {
         VStack(spacing: 10) {
-            Text(video.title)
-                .font(.system(size: 20, weight: .heavy))
-                .multilineTextAlignment(.center)
-                .padding(.vertical)
-            Text(video.subscription?.title ?? "no subscription found")
+            VStack(spacing: 10) {
+                Text(video.title)
+                    .font(.system(size: 20, weight: .heavy))
+                    .multilineTextAlignment(.center)
+                Text(video.subscription?.title ?? "no subscription found")
+                    .textCase(.uppercase)
+                    .foregroundColor(.teal)
+            }
+            .padding(.vertical)
 
             WebViewWrapper(videoID: video.youtubeId,
                            playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed)
@@ -67,14 +72,15 @@ struct VideoPlayer: View {
             .frame(maxWidth: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 20))
 
-            Spacer()
             VStack {
-                Slider(value: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
-                       in: 0.5...2.0, step: 0.1)
-
+                SpeedControlView(selectedSpeed: Binding(
+                                    get: getPlaybackSpeed,
+                                    set: setPlaybackSpeed)
+                )
                 customSettingsButton
             }
             .padding(.vertical)
+            Spacer()
 
             watchedButton
         }
