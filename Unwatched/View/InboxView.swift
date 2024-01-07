@@ -34,25 +34,31 @@ struct InboxView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(inboxEntries) { entry in
-                    VideoListItem(video: entry.video)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button {
-                                addVideoToQueue(entry)
-                            } label: {
-                                Image(systemName: "text.badge.plus")
-                            }
-                            .tint(.teal)
-                        }
+            ZStack {
+                if inboxEntries.isEmpty {
+                    BackgroundPlaceholder(systemName: "tray.fill")
                 }
-                .onDelete(perform: deleteInboxEntryIndexSet)
+
+                List {
+                    ForEach(inboxEntries) { entry in
+                        VideoListItem(video: entry.video)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button {
+                                    addVideoToQueue(entry)
+                                } label: {
+                                    Image(systemName: "text.badge.plus")
+                                }
+                                .tint(.teal)
+                            }
+                    }
+                    .onDelete(perform: deleteInboxEntryIndexSet)
+                }
+                .refreshable {
+                    await loadNewVideos()
+                }
+                .navigationBarTitle("Inbox")
+                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
-            .refreshable {
-                await loadNewVideos()
-            }
-            .navigationBarTitle("Inbox")
-            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
         }
         .listStyle(.plain)
     }
