@@ -29,32 +29,37 @@ struct QueueView: View {
 
     var body: some View {
         NavigationView {
-
-            List {
-                ForEach(queue) { entry in
-                    VStack {
-                        VideoListItem(video: entry.video)
-                            .onTapGesture {
-                                onVideoTap(entry.video)
-                            }
-                        //                    Text("\(entry.order)")
-                    }
-                    .swipeActions(edge: .leading) {
-                        Button {
-                            VideoManager.markVideoWatched(queueEntry: entry, queue: queue, modelContext: modelContext)
-                        } label: {
-                            Image(systemName: "checkmark.circle.fill")
-                        }
-                        .tint(.teal)
-                    }
+            ZStack {
+                if queue.isEmpty {
+                    BackgroundPlaceholder(systemName: "rectangle.stack.badge.play.fill")
                 }
-                .onDelete(perform: deleteQueueEntryIndexSet)
-                .onMove(perform: moveQueueEntry)
-            }
-            .navigationBarTitle("Queue")
-            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-            .refreshable {
-                await loadNewVideos()
+
+                List {
+                    ForEach(queue) { entry in
+                        VStack {
+                            VideoListItem(video: entry.video)
+                                .onTapGesture {
+                                    onVideoTap(entry.video)
+                                }
+                            //                    Text("\(entry.order)")
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                VideoManager.markVideoWatched(queueEntry: entry, queue: queue, modelContext: modelContext)
+                            } label: {
+                                Image(systemName: "checkmark.circle.fill")
+                            }
+                            .tint(.teal)
+                        }
+                    }
+                    .onDelete(perform: deleteQueueEntryIndexSet)
+                    .onMove(perform: moveQueueEntry)
+                }
+                .navigationBarTitle("Queue")
+                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+                .refreshable {
+                    await loadNewVideos()
+                }
             }
         }
         .listStyle(.plain)
