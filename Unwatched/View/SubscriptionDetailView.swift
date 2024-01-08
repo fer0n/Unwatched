@@ -9,12 +9,10 @@ import SwiftData
 struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
     @Environment(\.modelContext) var modelContext
-    @Query var queue: [QueueEntry]
 
     func addVideoToQueue(_ video: Video) {
         QueueManager.insertQueueEntries(
             videos: [video],
-            queue: queue,
             modelContext: modelContext)
         // TODO: potentially delete inbox entry here?
     }

@@ -9,7 +9,6 @@ import SwiftData
 struct InboxView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \InboxEntry.video.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
-    @Query var queue: [QueueEntry]
 
     var loadNewVideos: () async -> Void
 
@@ -27,7 +26,6 @@ struct InboxView: View {
     func addVideoToQueue(_ entry: InboxEntry) {
         QueueManager.insertQueueEntries(
             videos: [entry.video],
-            queue: queue,
             modelContext: modelContext)
         deleteInboxEntry(entry)
     }

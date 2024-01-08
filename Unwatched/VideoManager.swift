@@ -32,7 +32,7 @@ class VideoManager {
         if placement == .inbox {
             addVideosToInbox(videosToAdd, modelContext: modelContext)
         } else if placement == .queue {
-            QueueManager.insertQueueEntries(videos: videosToAdd, queue: queue, modelContext: modelContext)
+            QueueManager.insertQueueEntries(videos: videosToAdd, modelContext: modelContext)
         }
     }
 

@@ -21,18 +21,24 @@ class QueueManager {
 
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
-                                   queue: [QueueEntry],
                                    modelContext: ModelContext) {
-        var orderedQueue = queue.sorted(by: { $0.order < $1.order })
-        for (index, video) in videos.enumerated() {
-            video.status = .queued
-            let queueEntry = QueueEntry(video: video, order: index + index)
-            modelContext.insert(queueEntry)
-            orderedQueue.insert(queueEntry, at: index)
-            print("queueEntry", queueEntry)
-        }
-        for (index, queueEntry) in orderedQueue.enumerated() {
-            queueEntry.order = index
+        do {
+            let sort = SortDescriptor<QueueEntry>(\.order, order: .reverse)
+            let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+            var queue = try modelContext.fetch(fetch)
+
+            for (index, video) in videos.enumerated() {
+                video.status = .queued
+                let queueEntry = QueueEntry(video: video, order: index + index)
+                modelContext.insert(queueEntry)
+                queue.insert(queueEntry, at: index)
+                print("queueEntry", queueEntry)
+            }
+            for (index, queueEntry) in queue.enumerated() {
+                queueEntry.order = index
+            }
+        } catch {
+            print("\(error)")
         }
         // TODO: delete inbox entries here?
     }
