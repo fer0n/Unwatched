@@ -18,28 +18,21 @@ class VideoManager {
         QueueManager.deleteQueueEntry(queueEntry, queue: queue, modelContext: modelContext)
     }
 
-    static func triageSubscriptionVideos(subscription: Subscription,
-                                         videos: [Video],
+    static func triageSubscriptionVideos(_ subVideo: (sub: Subscription, videos: [Video]),
                                          defaultPlacement: VideoPlacement,
                                          queue: [QueueEntry],
+                                         limitVideos: Int?,
                                          modelContext: ModelContext) {
-        var placement = subscription.placeVideosIn
-        if subscription.placeVideosIn == .defaultPlacement {
+        let videosToAdd = limitVideos == nil ? subVideo.videos : Array(subVideo.videos.prefix(limitVideos!))
+
+        var placement = subVideo.sub.placeVideosIn
+        if subVideo.sub.placeVideosIn == .defaultPlacement {
             placement = defaultPlacement
         }
         if placement == .inbox {
-            addVideosToInbox(videos, modelContext: modelContext)
+            addVideosToInbox(videosToAdd, modelContext: modelContext)
         } else if placement == .queue {
-            QueueManager.insertQueueEntries(videos: videos, queue: queue, modelContext: modelContext)
-            addVideosToQueue(videos, modelContext: modelContext)
-        }
-    }
-
-    static func addVideosToQueue(_ videos: [Video], modelContext: ModelContext) {
-        for video in videos {
-            video.status = .queued
-            let queueEntry = QueueEntry(video: video, order: 0)
-            modelContext.insert(queueEntry)
+            QueueManager.insertQueueEntries(videos: videosToAdd, queue: queue, modelContext: modelContext)
         }
     }
 
@@ -88,7 +81,6 @@ class VideoManager {
                            modelContext: ModelContext) async -> [(sub: Subscription, videos: [Video])] {
         print(">START loadVideos")
         let subVideos =  await getSubVideos(subscriptions: subscriptions)
-
         // Perform the rest of the processing outside the detached task
         handleSubscriptionVideos(subVideos,
                                  defaultVideoPlacement: defaultVideoPlacement,
@@ -108,12 +100,13 @@ class VideoManager {
                 modelContext.insert(video)
             }
             subVideo.sub.videos.append(contentsOf: subVideo.videos)
-            updateRecentVideoDate(subscription: subVideo.sub, videos: subVideo.videos)
-            triageSubscriptionVideos(subscription: subVideo.sub,
-                                     videos: subVideo.videos,
+            let limitVideos = subVideo.sub.mostRecentVideoDate == nil ? 5 : nil
+            triageSubscriptionVideos(subVideo,
                                      defaultPlacement: defaultVideoPlacement,
                                      queue: queue,
+                                     limitVideos: limitVideos,
                                      modelContext: modelContext)
+            updateRecentVideoDate(subscription: subVideo.sub, videos: subVideo.videos)
         }
     }
 
@@ -121,7 +114,6 @@ class VideoManager {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
             subscription.mostRecentVideoDate = mostRecentDate
-            print("updateRecentVideoDate", mostRecentDate)
         }
     }
 }
