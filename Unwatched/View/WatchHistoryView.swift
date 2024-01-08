@@ -14,7 +14,6 @@ struct WatchHistoryView: View {
     func addVideoToQueue(_ video: Video) {
         QueueManager.insertQueueEntries(at: 0,
                                         videos: [video],
-                                        queue: queue,
                                         modelContext: modelContext)
     }
 
