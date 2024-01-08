@@ -15,7 +15,7 @@ class VideoManager {
         queueEntry.video.watched = true
         let watchEntry = WatchEntry(video: queueEntry.video)
         modelContext.insert(watchEntry)
-        QueueManager.deleteQueueEntry(queueEntry, queue: queue, modelContext: modelContext)
+        QueueManager.deleteQueueEntry(queueEntry, modelContext: modelContext)
     }
 
     static func triageSubscriptionVideos(_ subVideo: (sub: Subscription, videos: [Video]),
