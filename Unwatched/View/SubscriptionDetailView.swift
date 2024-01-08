@@ -9,12 +9,21 @@ import SwiftData
 struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
     @Environment(\.modelContext) var modelContext
+    @AppStorage("defaultVideoPlacement") var defaultVideoPlacement: VideoPlacement = .inbox
 
     func addVideoToQueue(_ video: Video) {
         QueueManager.insertQueueEntries(
             videos: [video],
             modelContext: modelContext)
         // TODO: potentially delete inbox entry here?
+    }
+
+    func loadNewVideos() async {
+        await VideoManager.loadVideos(
+            subscriptions: [subscription],
+            defaultVideoPlacement: .inbox,
+            modelContext: modelContext
+        )
     }
 
     var body: some View {
@@ -55,6 +64,9 @@ struct SubscriptionDetailView: View {
                 }
             }
             .listStyle(.plain)
+            .refreshable {
+                await loadNewVideos()
+            }
             Spacer()
 
         }
