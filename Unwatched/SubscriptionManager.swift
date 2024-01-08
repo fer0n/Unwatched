@@ -4,21 +4,40 @@
 //
 
 import Foundation
+import SwiftData
 
 class SubscriptionManager {
+    static func loadSubscriptions(urls: [String]) async throws -> [Subscription] {
+        var subscriptions: [Subscription] = []
+        await withTaskGroup(of: (Subscription?).self) { taskGroup in
+            for url in urls {
+                taskGroup.addTask {
+                    return try? await getSubscription(url: url)
+                }
+                for await sub in taskGroup {
+                    if let sub = sub {
+                        subscriptions.append(sub)
+                    }
+                }
+            }
+        }
+        return subscriptions
+    }
+
+    static func addSubscriptions(from urls: [String], modelContext: ModelContext) async throws {
+        if let subs = try? await loadSubscriptions(urls: urls) {
+            for sub in subs {
+                modelContext.insert(sub)
+            }
+        }
+    }
+
     static func getSubscription(url: String) async throws -> Subscription? {
         guard let url = URL(string: url) else {
             throw VideoCrawlerError.invalidUrl
         }
-
-        let channelFeedUrl = try await self.getChannelFeedFromUrl(url: url)
-        print("channelFeedUrl", channelFeedUrl)
-        return try await self.validateSubscription(url: channelFeedUrl)
-    }
-
-    static func validateSubscription(url: URL) async throws -> Subscription? {
-        let subscription = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
-        return subscription
+        let feedUrl = try await self.getChannelFeedFromUrl(url: url)
+        return try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
     }
 
     static func getChannelFeedFromUrl(url: URL) async throws -> URL {

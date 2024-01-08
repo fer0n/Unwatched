@@ -13,23 +13,16 @@ struct AddSubscriptionView: View {
     @State var errorMessage: String?
     @State var text: String = ""
     @State var isLoading: Bool = false
-    @State var subscription: Subscription?
-
-    func saveSubscription(_ subscription: Subscription) {
-        modelContext.insert(subscription)
-        // TODO: avoid adding an existing subscription
-    }
 
     func addSubscription() {
         Task {
             errorMessage = nil
             isLoading = true
+            let urls = text.components(separatedBy: "\n")
             do {
-                if let sub = try await SubscriptionManager.getSubscription(url: text) {
-                    self.saveSubscription(sub)
-                    // TODO: load all new videos here?
-                    dismiss()
-                }
+                try await SubscriptionManager.addSubscriptions(from: urls,
+                                                               modelContext: modelContext)
+                dismiss()
             } catch {
                 print("\(error)")
                 errorMessage = error.localizedDescription
