@@ -44,6 +44,15 @@ struct SubscriptionDetailView: View {
                                 }
                                 .tint(.teal)
                             }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    QueueManager.clearFromEverywhere(video,
+                                                                     modelContext: modelContext)
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                }
+                                .tint(.orange)
+                            }
                     }
                 }
             }
@@ -51,7 +60,7 @@ struct SubscriptionDetailView: View {
             Spacer()
 
         }
-        .navigationBarTitle(subscription.title)
+        .navigationBarTitle(subscription.title.uppercased())
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
     }
 }

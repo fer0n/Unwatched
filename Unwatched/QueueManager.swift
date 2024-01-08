@@ -7,12 +7,11 @@ import Foundation
 import SwiftData
 
 class QueueManager {
-    static func deleteQueueEntry(_ queueEntry: QueueEntry, queue: [QueueEntry], modelContext: ModelContext) {
+    static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
         queueEntry.video.status = nil
-        QueueManager.updateQueueOrderDelete(deletedOrder: deletedOrder,
-                                            queue: queue)
+        QueueManager.updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
     }
 
     static func deleteInboxEntry(modelContext: ModelContext, entry: InboxEntry) {
@@ -35,26 +34,66 @@ class QueueManager {
         for (index, queueEntry) in orderedQueue.enumerated() {
             queueEntry.order = index
         }
+        // TODO: delete inbox entries here?
     }
 
     static func updateQueueOrderDelete(deletedOrder: Int,
-                                       queue: [QueueEntry]) {
-        for queueEntry in queue where queueEntry.order > deletedOrder {
-            queueEntry.order -= 1
+                                       modelContext: ModelContext) {
+        do {
+            let fetchDescriptor = FetchDescriptor<QueueEntry>()
+            let queue = try modelContext.fetch(fetchDescriptor)
+            for queueEntry in queue where queueEntry.order > deletedOrder {
+                queueEntry.order -= 1
+            }
+        } catch {
+            print("No queue entry found to delete")
         }
+
     }
 
     static func moveQueueEntry(from source: IndexSet,
                                to destination: Int,
                                queue: [QueueEntry]) {
         var orderedQueue = queue.sorted(by: { $0.order < $1.order })
-        print("source", source)
-        print("destination", destination)
         orderedQueue.move(fromOffsets: source, toOffset: destination)
 
         for (index, queueEntry) in orderedQueue.enumerated() {
             queueEntry.order = index
-            print("\(queueEntry.video.title) \(queueEntry.order)")
         }
+    }
+
+    static func clearFromQueue(_ video: Video, modelContext: ModelContext) {
+        let videoId = video.youtubeId
+        let fetchDescriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate {
+            $0.video.youtubeId == videoId
+        })
+        do {
+            let queueEntry = try modelContext.fetch(fetchDescriptor)
+            for entry in queueEntry {
+                deleteQueueEntry(entry, modelContext: modelContext)
+            }
+        } catch {
+            print("No queue entry found to delete")
+        }
+    }
+
+    static func clearFromInbox(_ video: Video, modelContext: ModelContext) {
+        let videoId = video.youtubeId
+        let fetchDescriptor = FetchDescriptor<InboxEntry>(predicate: #Predicate {
+            $0.video.youtubeId == videoId
+        })
+        do {
+            let inboxEntry = try modelContext.fetch(fetchDescriptor)
+            for entry in inboxEntry {
+                deleteInboxEntry(modelContext: modelContext, entry: entry)
+            }
+        } catch {
+            print("No inbox entry found to delete")
+        }
+    }
+
+    static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) {
+        clearFromQueue(video, modelContext: modelContext)
+        clearFromInbox(video, modelContext: modelContext)
     }
 }

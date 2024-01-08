@@ -18,7 +18,7 @@ struct QueueView: View {
     func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
             let entry = queue[index]
-            QueueManager.deleteQueueEntry(entry, queue: queue, modelContext: modelContext)
+            QueueManager.deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
 
