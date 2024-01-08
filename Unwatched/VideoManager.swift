@@ -20,7 +20,6 @@ class VideoManager {
 
     static func triageSubscriptionVideos(_ subVideo: (sub: Subscription, videos: [Video]),
                                          defaultPlacement: VideoPlacement,
-                                         queue: [QueueEntry],
                                          limitVideos: Int?,
                                          modelContext: ModelContext) {
         let videosToAdd = limitVideos == nil ? subVideo.videos : Array(subVideo.videos.prefix(limitVideos!))
@@ -77,8 +76,7 @@ class VideoManager {
     // TODO: Background thread?
     static func loadVideos(subscriptions: [Subscription],
                            defaultVideoPlacement: VideoPlacement,
-                           queue: [QueueEntry],
-                           modelContext: ModelContext) async -> [(sub: Subscription, videos: [Video])] {
+                           modelContext: ModelContext) async {
         print(">START loadVideos")
         let subVideos =  await getSubVideos(subscriptions: subscriptions)
 
@@ -90,16 +88,12 @@ class VideoManager {
 
         handleSubscriptionVideos(subVideos,
                                  defaultVideoPlacement: defaultVideoPlacement,
-                                 queue: queue,
                                  modelContext: modelContext)
-
         print(">STOP loadVideos")
-        return subVideos
     }
 
     static func handleSubscriptionVideos(_ subscriptionVideos: [(sub: Subscription, videos: [Video])],
                                          defaultVideoPlacement: VideoPlacement,
-                                         queue: [QueueEntry],
                                          modelContext: ModelContext) {
         for subVideo in subscriptionVideos {
             let (sub, videos) = subVideo
@@ -107,7 +101,6 @@ class VideoManager {
             let limitVideos = sub.mostRecentVideoDate == nil ? 5 : nil
             triageSubscriptionVideos(subVideo,
                                      defaultPlacement: defaultVideoPlacement,
-                                     queue: queue,
                                      limitVideos: limitVideos,
                                      modelContext: modelContext)
             updateRecentVideoDate(subscription: sub, videos: videos)

@@ -37,12 +37,11 @@ struct ContentView: View {
         }
     }
 
-    func loadNewVideos() async {
+    func loadNewVideos() {
         Task {
             await VideoManager.loadVideos(
                 subscriptions: subscriptions,
                 defaultVideoPlacement: .inbox,
-                queue: queue,
                 modelContext: modelContext
             )
         }
@@ -87,11 +86,6 @@ struct ContentView: View {
                 selectedVideo = lastVideo
             }
             previousSelection = selection
-        }
-        .onAppear {
-            Task {
-                await loadNewVideos()
-            }
         }
         .sheet(item: $selectedVideo) { video in
             ZStack {
