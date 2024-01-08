@@ -44,7 +44,7 @@ class VideoManager {
         }
     }
 
-    static nonisolated func getSubVideos(
+    static func getSubVideos(
         subscriptions: [Subscription]
     ) async -> [(sub: Subscription, videos: [Video])] {
         var subVideos: [(sub: Subscription, videos: [Video])] = []
@@ -81,7 +81,13 @@ class VideoManager {
                            modelContext: ModelContext) async -> [(sub: Subscription, videos: [Video])] {
         print(">START loadVideos")
         let subVideos =  await getSubVideos(subscriptions: subscriptions)
-        // Perform the rest of the processing outside the detached task
+
+        for (_, videos) in subVideos {
+            for video in videos {
+                modelContext.insert(video)
+            }
+        }
+
         handleSubscriptionVideos(subVideos,
                                  defaultVideoPlacement: defaultVideoPlacement,
                                  queue: queue,
@@ -96,17 +102,15 @@ class VideoManager {
                                          queue: [QueueEntry],
                                          modelContext: ModelContext) {
         for subVideo in subscriptionVideos {
-            for video in subVideo.videos {
-                modelContext.insert(video)
-            }
-            subVideo.sub.videos.append(contentsOf: subVideo.videos)
-            let limitVideos = subVideo.sub.mostRecentVideoDate == nil ? 5 : nil
+            let (sub, videos) = subVideo
+            sub.videos.append(contentsOf: videos)
+            let limitVideos = sub.mostRecentVideoDate == nil ? 5 : nil
             triageSubscriptionVideos(subVideo,
                                      defaultPlacement: defaultVideoPlacement,
                                      queue: queue,
                                      limitVideos: limitVideos,
                                      modelContext: modelContext)
-            updateRecentVideoDate(subscription: subVideo.sub, videos: subVideo.videos)
+            updateRecentVideoDate(subscription: sub, videos: videos)
         }
     }
 
