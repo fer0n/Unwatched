@@ -20,6 +20,7 @@ struct ContentView: View {
     @Query var queue: [QueueEntry]
     @Query var inbox: [InboxEntry]
 
+    @MainActor
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
         UITabBar.appearance().backgroundImage = UIImage()
