@@ -11,7 +11,7 @@ struct VideoPlayer: View {
 
     @Bindable var video: Video
     var markVideoWatched: () -> Void
-    @State private var isCustomSetting: Bool = false
+    @State private var isPlaying: Bool = true
     @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
 
     func setPlaybackSpeed(_ value: Double) {
@@ -72,12 +72,12 @@ struct VideoPlayer: View {
             }
             .padding(.vertical)
 
-            WebViewWrapper(videoID: video.youtubeId,
-                           playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed)
+            YoutubeWebViewPlayer(videoID: video.youtubeId,
+                                 playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
+                                 isPlaying: $isPlaying
             )
             .aspectRatio(16/9, contentMode: .fit)
             .frame(maxWidth: .infinity)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
 
             VStack {
                 SpeedControlView(selectedSpeed: Binding(
@@ -85,6 +85,17 @@ struct VideoPlayer: View {
                                     set: setPlaybackSpeed)
                 )
                 customSettingsButton
+
+                Button {
+                    isPlaying.toggle()
+                } label: {
+                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .accentColor(.accentColor)
+                        .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+                }
+                .padding()
             }
             .padding(.vertical)
             Spacer()
@@ -92,7 +103,6 @@ struct VideoPlayer: View {
             watchedButton
         }
         .padding(.top, 25)
-        .padding(.horizontal)
     }
 }
 
