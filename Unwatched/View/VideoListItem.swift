@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct VideoListItem: View {
-    @Environment(SelectedVideo.self) private var selectedVideo
+    @Environment(NavigationManager.self) private var navManager
 
     let video: Video
     var showVideoStatus: Bool = false
@@ -72,7 +72,7 @@ struct VideoListItem: View {
             }
         }
         .onTapGesture {
-            selectedVideo.video = video
+            navManager.video = video
         }
     }
 }

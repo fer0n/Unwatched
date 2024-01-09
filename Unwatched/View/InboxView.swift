@@ -8,6 +8,7 @@ import SwiftData
 
 struct InboxView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) private var navManager
     @Query(sort: \InboxEntry.video.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
 
     var loadNewVideos: () async -> Void
@@ -31,7 +32,8 @@ struct InboxView: View {
     }
 
     var body: some View {
-        NavigationView {
+        @Bindable var navManager = navManager
+        NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
                 if inboxEntries.isEmpty {
                     BackgroundPlaceholder(systemName: "tray.fill")
@@ -56,6 +58,9 @@ struct InboxView: View {
                 }
                 .navigationBarTitle("Inbox")
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+            }
+            .navigationDestination(for: Subscription.self) { sub in
+                SubscriptionDetailView(subscription: sub)
             }
         }
         .listStyle(.plain)
