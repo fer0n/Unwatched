@@ -28,20 +28,14 @@ struct ContentView: View {
     }
 
     func markVideoWatched(video: Video) {
-        print("markVideoWatched", video)
-        VideoManager.markVideoWatched(
+        VideoService.markVideoWatched(
             video, modelContext: modelContext
         )
     }
 
     func loadNewVideos() {
-        Task {
-            await VideoManager.loadVideos(
-                subscriptions: subscriptions,
-                defaultVideoPlacement: .inbox,
-                modelContext: modelContext
-            )
-        }
+        VideoService.loadNewVideosInBg(subscriptions: subscriptions,
+                                       modelContext: modelContext)
     }
 
     var body: some View {

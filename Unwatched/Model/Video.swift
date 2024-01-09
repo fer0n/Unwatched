@@ -39,3 +39,14 @@ final class Video: CustomStringConvertible {
         thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
         publishedDate: Date())
 }
+
+struct SendableVideo: Sendable {
+    var youtubeId: String
+    var title: String
+    var url: URL
+    var thumbnailUrl: URL
+    var publishedDate: Date?
+
+    var status: VideoStatus?
+    var watched = false
+}

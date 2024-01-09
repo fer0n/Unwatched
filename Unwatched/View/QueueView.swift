@@ -18,14 +18,14 @@ struct QueueView: View {
     func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
             let entry = queue[index]
-            QueueManager.deleteQueueEntry(entry, modelContext: modelContext)
+            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
-        QueueManager.moveQueueEntry(from: source,
+        VideoService.moveQueueEntry(from: source,
                                     to: destination,
-                                    queue: queue)
+                                    modelContext: modelContext)
     }
 
     var body: some View {
@@ -41,7 +41,7 @@ struct QueueView: View {
                         VideoListItem(video: entry.video)
                             .swipeActions(edge: .leading) {
                                 Button {
-                                    VideoManager.markVideoWatched(entry.video,
+                                    VideoService.markVideoWatched(entry.video,
                                                                   modelContext: modelContext)
                                 } label: {
                                     Image(systemName: "checkmark.circle.fill")

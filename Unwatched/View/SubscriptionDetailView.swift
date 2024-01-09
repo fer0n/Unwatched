@@ -12,18 +12,10 @@ struct SubscriptionDetailView: View {
     @AppStorage("defaultVideoPlacement") var defaultVideoPlacement: VideoPlacement = .inbox
 
     func addVideoToQueue(_ video: Video) {
-        QueueManager.insertQueueEntries(
+        VideoService.insertQueueEntries(
             videos: [video],
             modelContext: modelContext)
         // TODO: potentially delete inbox entry here?
-    }
-
-    func loadNewVideos() async {
-        await VideoManager.loadVideos(
-            subscriptions: [subscription],
-            defaultVideoPlacement: .inbox,
-            modelContext: modelContext
-        )
     }
 
     var body: some View {
@@ -53,7 +45,7 @@ struct SubscriptionDetailView: View {
                             }
                             .swipeActions(edge: .trailing) {
                                 Button {
-                                    QueueManager.clearFromEverywhere(video,
+                                    VideoService.clearFromEverywhere(video,
                                                                      modelContext: modelContext)
                                 } label: {
                                     Image(systemName: "xmark.circle.fill")
@@ -65,7 +57,8 @@ struct SubscriptionDetailView: View {
             }
             .listStyle(.plain)
             .refreshable {
-                await loadNewVideos()
+                VideoService.loadNewVideosInBg(subscriptions: [subscription],
+                                               modelContext: modelContext)
             }
             Spacer()
 
