@@ -6,15 +6,19 @@
 import SwiftUI
 import SwiftData
 
+enum Tab {
+    case videoPlayer
+    case inbox
+    case queue
+    case library
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    @State var selectedVideo = SelectedVideo()
+    @State var navManager = NavigationManager()
     @Query var subscriptions: [Subscription]
     @Query var queue: [QueueEntry]
     @Query var inbox: [InboxEntry]
-
-    @State var selection = "Queue"
-    @State var previousSelection = "Queue"
 
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
@@ -40,42 +44,42 @@ struct ContentView: View {
     }
 
     var body: some View {
-        TabView(selection: $selection) {
+        @Bindable var navManager = navManager
+        TabView(selection: $navManager.tab) {
             VStack {
                 Text("VideoPlayer – Should never be visible")
             }
             .tabItem {
                 Image(systemName: "chevron.up.circle")
             }
-            .tag("VideoPlayer")
+            .tag(Tab.videoPlayer)
 
             QueueView(loadNewVideos: loadNewVideos)
                 .tabItem {
                     Image(systemName: "rectangle.stack")
                 }
-                .tag("Queue")
+                .tag(Tab.queue)
 
             InboxView(loadNewVideos: loadNewVideos)
                 .tabItem {
                     Image(systemName: inbox.isEmpty ? "tray" : "tray.full")
                 }
-                .tag("Inbox")
+                .tag(Tab.inbox)
 
             LibraryView(loadNewVideos: loadNewVideos)
                 .tabItem {
                     Image(systemName: "books.vertical")
                 }
-                .tag("Library")
+                .tag(Tab.library)
         }
-        .onChange(of: selection) {
-            if selection == "VideoPlayer" {
-                selection = previousSelection
-                selectedVideo.video = selectedVideo.lastVideo
+        .onChange(of: navManager.tab) {
+            if navManager.tab == .videoPlayer {
+                navManager.tab = navManager.previousTab
+                navManager.video = navManager.previousVideo
             }
-            previousSelection = selection
+            navManager.previousTab = navManager.tab
         }
-        .environment(selectedVideo)
-        .sheet(item: $selectedVideo.video) { video in
+        .sheet(item: $navManager.video) { video in
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
                 VideoPlayer(video: video, markVideoWatched: {
@@ -83,6 +87,7 @@ struct ContentView: View {
                 })
             }
         }
+        .environment(navManager)
     }
 }
 
@@ -91,13 +96,4 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-@Observable class SelectedVideo {
-    var video: Video? {
-        didSet {
-            lastVideo = oldValue
-        }
-    }
-    var lastVideo: Video?
 }

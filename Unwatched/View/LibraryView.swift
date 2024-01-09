@@ -8,6 +8,7 @@ import SwiftData
 
 struct LibraryView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) private var navManager
 
     @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
     @State var showAddSubscriptionSheet = false
@@ -27,7 +28,8 @@ struct LibraryView: View {
     }
 
     var body: some View {
-        NavigationView {
+        @Bindable var navManager = navManager
+        NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             List {
                 Section {
                     NavigationLink(destination: WatchHistoryView()) {
@@ -58,6 +60,9 @@ struct LibraryView: View {
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             .refreshable {
                 await loadNewVideos()
+            }
+            .navigationDestination(for: Subscription.self) { sub in
+                SubscriptionDetailView(subscription: sub)
             }
         }
         .sheet(isPresented: $showAddSubscriptionSheet) {

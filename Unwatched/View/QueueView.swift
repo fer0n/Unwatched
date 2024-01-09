@@ -9,6 +9,7 @@ import SwiftData
 struct QueueView: View {
     @State var value: Double = 1.5
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) private var navManager
 
     var loadNewVideos: () async -> Void
     @Query var subscriptions: [Subscription]
@@ -28,7 +29,8 @@ struct QueueView: View {
     }
 
     var body: some View {
-        NavigationView {
+        @Bindable var navManager = navManager
+        NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
                 if queue.isEmpty {
                     BackgroundPlaceholder(systemName: "rectangle.stack.badge.play.fill")
@@ -55,6 +57,9 @@ struct QueueView: View {
                 .refreshable {
                     await loadNewVideos()
                 }
+            }
+            .navigationDestination(for: Subscription.self) { sub in
+                SubscriptionDetailView(subscription: sub)
             }
         }
         .listStyle(.plain)

@@ -7,6 +7,7 @@ import SwiftUI
 
 struct VideoPlayer: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(NavigationManager.self) private var navManager
 
     @Bindable var video: Video
     var markVideoWatched: () -> Void
@@ -62,6 +63,12 @@ struct VideoPlayer: View {
                 Text(video.subscription?.title ?? "no subscription found")
                     .textCase(.uppercase)
                     .foregroundColor(.teal)
+                    .onTapGesture {
+                        if let sub = video.subscription {
+                            navManager.pushSubscription(sub)
+                            dismiss()
+                        }
+                    }
             }
             .padding(.vertical)
 
