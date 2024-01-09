@@ -6,7 +6,7 @@
 import Foundation
 
 class RSSParserDelegate: NSObject, XMLParserDelegate {
-    var videos: [Video] = []
+    var videos: [SendableVideo] = []
     var subscriptionInfo: Subscription?
     var limitVideos: Int?
     var cutoffDate: Date?
@@ -89,10 +89,11 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             if let publishedDate = dateFormatter.date(from: currentPublishedDate),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
-                let video = Video(title: currentTitle,
-                                  url: url, youtubeId: currentYoutubeId,
-                                  thumbnailUrl: thumbnailUrl,
-                                  publishedDate: publishedDate)
+                let video = SendableVideo(youtubeId: currentYoutubeId,
+                                          title: currentTitle,
+                                          url: url,
+                                          thumbnailUrl: thumbnailUrl,
+                                          publishedDate: publishedDate)
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {

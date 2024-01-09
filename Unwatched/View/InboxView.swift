@@ -21,11 +21,11 @@ struct InboxView: View {
     }
 
     func deleteInboxEntry(_ entry: InboxEntry) {
-        QueueManager.deleteInboxEntry(modelContext: modelContext, entry: entry)
+        VideoService.deleteInboxEntry(entry, modelContext: modelContext)
     }
 
     func addVideoToQueue(_ entry: InboxEntry) {
-        QueueManager.insertQueueEntries(
+        VideoService.insertQueueEntries(
             videos: [entry.video],
             modelContext: modelContext)
         deleteInboxEntry(entry)

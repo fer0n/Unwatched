@@ -6,6 +6,7 @@
 import Foundation
 import SwiftData
 
+// TODO: refactor everything here to use an actor
 class SubscriptionManager {
     static func loadSubscriptions(urls: [String]) async throws -> [Subscription] {
         var subscriptions: [Subscription] = []

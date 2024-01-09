@@ -12,7 +12,7 @@ struct WatchHistoryView: View {
     @Query var queue: [QueueEntry]
 
     func addVideoToQueue(_ video: Video) {
-        QueueManager.insertQueueEntries(at: 0,
+        VideoService.insertQueueEntries(at: 0,
                                         videos: [video],
                                         modelContext: modelContext)
     }

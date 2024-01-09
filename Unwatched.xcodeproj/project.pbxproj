@@ -16,7 +16,6 @@
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886E79BA2B46FFD300554E1F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B92B46FFD300554E1F /* Color.swift */; };
 		887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C52B49368F00512852 /* QueueEntry.swift */; };
-		887AC8C82B493F5100512852 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C72B493F5100512852 /* QueueManager.swift */; };
 		887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C92B4955B200512852 /* WatchEntry.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
 		887AC8CE2B4988D000512852 /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CD2B4988D000512852 /* InboxView.swift */; };
@@ -24,6 +23,7 @@
 		887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */; };
 		887AC8D42B49CECF00512852 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 887AC8D32B49CECF00512852 /* Localizable.xcstrings */; };
 		887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D52B49D0BE00512852 /* VideoPlacement.swift */; };
+		8891F0AD2B4E7E170098A3FB /* VideoActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
 		8898B6792B481F2100348D01 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionManager.swift */; };
 		8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67A2B481F5D00348D01 /* Subscription.swift */; };
@@ -41,7 +41,7 @@
 		88DFC0B92B44843C001895C8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88DFC0B82B44843C001895C8 /* Preview Assets.xcassets */; };
 		88DFC0C02B4489C2001895C8 /* VideoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */; };
 		88DFC0C22B4489F3001895C8 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C12B4489F3001895C8 /* Video.swift */; };
-		88DFC0C62B448C01001895C8 /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C52B448C01001895C8 /* VideoManager.swift */; };
+		88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C52B448C01001895C8 /* VideoService.swift */; };
 		88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +55,6 @@
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886E79B92B46FFD300554E1F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		887AC8C52B49368F00512852 /* QueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueEntry.swift; sourceTree = "<group>"; };
-		887AC8C72B493F5100512852 /* QueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 		887AC8C92B4955B200512852 /* WatchEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEntry.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
 		887AC8CD2B4988D000512852 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
@@ -63,6 +62,7 @@
 		887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailView.swift; sourceTree = "<group>"; };
 		887AC8D32B49CECF00512852 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		887AC8D52B49D0BE00512852 /* VideoPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlacement.swift; sourceTree = "<group>"; };
+		8891F0AC2B4E7E170098A3FB /* VideoActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoActor.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
 		8898B67A2B481F5D00348D01 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		88DFC0B82B44843C001895C8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItem.swift; sourceTree = "<group>"; };
 		88DFC0C12B4489F3001895C8 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
-		88DFC0C52B448C01001895C8 /* VideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoManager.swift; sourceTree = "<group>"; };
+		88DFC0C52B448C01001895C8 /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
 		88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,6 +116,18 @@
 				88250C602B49273100174C8D /* Date.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8891F0AE2B4E7F070098A3FB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				88DFC0C52B448C01001895C8 /* VideoService.swift */,
+				8891F0AC2B4E7E170098A3FB /* VideoActor.swift */,
+				8898B6782B481F2100348D01 /* SubscriptionManager.swift */,
+				88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */,
+				88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		8898B6802B48464000348D01 /* Errors */ = {
@@ -152,12 +164,8 @@
 				886E79B82B46FFC700554E1F /* Extensions */,
 				88DFC0C42B448ABF001895C8 /* View */,
 				88DFC0C32B448AB0001895C8 /* Model */,
+				8891F0AE2B4E7F070098A3FB /* Data */,
 				88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */,
-				88DFC0C52B448C01001895C8 /* VideoManager.swift */,
-				887AC8C72B493F5100512852 /* QueueManager.swift */,
-				8898B6782B481F2100348D01 /* SubscriptionManager.swift */,
-				88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */,
-				88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */,
 				88DFC0B42B44843C001895C8 /* Assets.xcassets */,
 				88DFC0B62B44843C001895C8 /* Unwatched.entitlements */,
 				88DFC0B72B44843C001895C8 /* Preview Content */,
@@ -309,7 +317,6 @@
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
 				887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */,
-				887AC8C82B493F5100512852 /* QueueManager.swift in Sources */,
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				8898B6842B4846D000348D01 /* SubscriptionError.swift in Sources */,
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
@@ -318,7 +325,7 @@
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
 				887AC8D02B498EAE00512852 /* InboxEntry.swift in Sources */,
 				88ADE8212B4ACCF6002F86F7 /* VideoStatus.swift in Sources */,
-				88DFC0C62B448C01001895C8 /* VideoManager.swift in Sources */,
+				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
 				887AC8CE2B4988D000512852 /* InboxView.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
@@ -328,6 +335,7 @@
 				88D438A52B45ACD800482F29 /* YoutubeWebViewPlayer.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
 				887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */,
+				8891F0AD2B4E7E170098A3FB /* VideoActor.swift in Sources */,
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */,
 				88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */,

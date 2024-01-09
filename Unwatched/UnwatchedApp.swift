@@ -25,8 +25,6 @@ struct UnwatchedApp: App {
         }
     }()
 
-    @State var videoManager = VideoManager()
-
     var body: some Scene {
         WindowGroup {
             ContentView()

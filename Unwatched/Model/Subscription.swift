@@ -9,7 +9,6 @@ import SwiftData
 @Model
 final class Subscription: CustomStringConvertible {
     @Attribute(.unique) var link: URL
-    var id = UUID()
     var title: String
     var subscribedDate: Date
     var mostRecentVideoDate: Date?
