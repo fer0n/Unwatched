@@ -10,7 +10,6 @@ struct QueueView: View {
     @State var value: Double = 1.5
     @Environment(\.modelContext) var modelContext
 
-    var onVideoTap: (_ video: Video) -> Void
     var loadNewVideos: () async -> Void
     @Query var subscriptions: [Subscription]
     @Query(sort: \QueueEntry.order) var queue: [QueueEntry]
@@ -37,23 +36,16 @@ struct QueueView: View {
 
                 List {
                     ForEach(queue) { entry in
-                        VStack {
-                            VideoListItem(video: entry.video)
-                                .onTapGesture {
-                                    onVideoTap(entry.video)
+                        VideoListItem(video: entry.video)
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    VideoManager.markVideoWatched(entry.video,
+                                                                  modelContext: modelContext)
+                                } label: {
+                                    Image(systemName: "checkmark.circle.fill")
                                 }
-                            // Text("\(entry.order)")
-                        }
-                        .swipeActions(edge: .leading) {
-                            Button {
-                                VideoManager.markVideoWatched(queueEntry: entry,
-                                                              queue: queue,
-                                                              modelContext: modelContext)
-                            } label: {
-                                Image(systemName: "checkmark.circle.fill")
+                                .tint(.teal)
                             }
-                            .tint(.teal)
-                        }
                     }
                     .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)

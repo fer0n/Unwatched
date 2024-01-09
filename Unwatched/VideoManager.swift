@@ -9,13 +9,12 @@ import Observation
 
 class VideoManager {
 
-    static func markVideoWatched(queueEntry: QueueEntry,
-                                 queue: [QueueEntry],
+    static func markVideoWatched(_ video: Video,
                                  modelContext: ModelContext ) {
-        queueEntry.video.watched = true
-        let watchEntry = WatchEntry(video: queueEntry.video)
+        QueueManager.clearFromEverywhere(video, modelContext: modelContext)
+        video.watched = true
+        let watchEntry = WatchEntry(video: video)
         modelContext.insert(watchEntry)
-        QueueManager.deleteQueueEntry(queueEntry, modelContext: modelContext)
     }
 
     static func triageSubscriptionVideos(_ subVideo: (sub: Subscription, videos: [Video]),
