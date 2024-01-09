@@ -29,7 +29,7 @@ struct LibraryView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
-        NavigationStack(path: $navManager.presentedSubscriptionQueue) {
+        NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
             List {
                 Section {
                     NavigationLink(destination: WatchHistoryView()) {

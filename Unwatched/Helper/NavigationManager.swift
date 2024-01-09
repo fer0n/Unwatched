@@ -9,7 +9,9 @@ import SwiftUI
 @Observable class NavigationManager {
     var video: Video? {
         didSet {
-            previousVideo = oldValue
+            if let value = oldValue {
+                previousVideo = value
+            }
         }
     }
     var previousVideo: Video?
