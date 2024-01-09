@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct VideoListItem: View {
+    @Environment(SelectedVideo.self) private var selectedVideo
+
     let video: Video
     var showVideoStatus: Bool = false
     // TODO: for any video, show the state: queued, watched, inbox
@@ -68,6 +70,9 @@ struct VideoListItem: View {
                     .foregroundStyle(.white, statusInfo.color)
                     .frame(width: 23, height: 23)
             }
+        }
+        .onTapGesture {
+            selectedVideo.video = video
         }
     }
 }
