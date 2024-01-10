@@ -20,9 +20,9 @@ class VideoCrawler {
         return rssParserDelegate.videos
     }
 
-    static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> Subscription {
+    static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
         let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0, cutoffDate: nil)
-        if let subscriptionInfo = rssParserDelegate.subscriptionInfo {
+        if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
             return subscriptionInfo
         }

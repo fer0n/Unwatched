@@ -5,12 +5,30 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
-    func loadVideos(_ subscriptionIds: [PersistentIdentifier],
+    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
                     defaultVideoPlacement: VideoPlacement) async throws {
-        for subId in subscriptionIds {
-            try await loadVideos(for: subId)
+        let subs = try fetchSubscriptions(subscriptionIds)
+        for sub in subs {
+            try await loadVideos(for: sub)
         }
         try modelContext.save()
+    }
+
+    func fetchSubscriptions(_ subscriptionIds: [PersistentIdentifier]?) throws -> [Subscription] {
+        var subs = [Subscription]()
+        if let ids = subscriptionIds {
+            for id in ids {
+                if let loadedSub = modelContext.model(for: id) as? Subscription {
+                    subs.append(loadedSub)
+                } else {
+                    print("Subscription not found for id: \(id)")
+                }
+            }
+        } else {
+            let fetchDescriptor = FetchDescriptor<Subscription>()
+            subs = try modelContext.fetch(fetchDescriptor)
+        }
+        return subs
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) throws {
@@ -25,11 +43,7 @@ actor VideoActor {
         try modelContext.save()
     }
 
-    private func loadVideos(for subId: PersistentIdentifier) async throws {
-        guard let sub = modelContext.model(for: subId) as? Subscription else {
-            print("subscription not found!")
-            return
-        }
+    private func loadVideos(for sub: Subscription) async throws {
         // load videos from web
         let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
             url: sub.link,

@@ -7,7 +7,7 @@ import Foundation
 
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
-    var subscriptionInfo: Subscription?
+    var subscriptionInfo: SendableSubscription?
     var limitVideos: Int?
     var cutoffDate: Date?
 
@@ -61,7 +61,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                   let url = URL(string: currentLink) {
             // TODO: find a better way to retrieve the info.
             // it currently only works if the channel info comes before the first entry
-            subscriptionInfo = Subscription(link: url, title: currentTitle)
+            subscriptionInfo = SendableSubscription(link: url, title: currentTitle)
             currentTitle = ""
             currentLink = ""
             thumbnailUrl = ""

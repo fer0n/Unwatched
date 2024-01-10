@@ -14,20 +14,55 @@ struct AddSubscriptionView: View {
     @State var text: String = ""
     @State var isLoading: Bool = false
 
-    func addSubscription() {
-        Task {
-            errorMessage = nil
+    func delayedIsLoading() -> DispatchWorkItem {
+        let workItem = DispatchWorkItem {
             isLoading = true
-            let urls = text.components(separatedBy: "\n")
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        return workItem
+    }
+
+    func getUrlsFromText() -> [URL] {
+        return text.components(separatedBy: "\n").compactMap { str in
+            if !str.isValidURL || str.isEmpty {
+                return nil
+            }
+            return URL(string: str)
+        }
+    }
+
+    func handleSuccess() {
+        VideoService.loadNewVideosInBg(modelContext: modelContext)
+        dismiss()
+    }
+
+    func addSubscription() {
+        let urls = getUrlsFromText()
+        if urls.isEmpty {
+            errorMessage = "No urls found"
+        }
+
+        let container = modelContext.container
+        errorMessage = nil
+        let workItem = delayedIsLoading()
+
+        Task {
+            print("load new")
             do {
-                try await SubscriptionManager.addSubscriptions(from: urls,
-                                                               modelContext: modelContext)
-                dismiss()
+                try await SubscriptionService.addSubscriptionsInBg(from: urls, modelContainer: container)
+                DispatchQueue.main.async {
+                    handleSuccess()
+                }
             } catch {
                 print("\(error)")
-                errorMessage = error.localizedDescription
+                DispatchQueue.main.async {
+                    errorMessage = error.localizedDescription
+                }
             }
-            isLoading = false
+            DispatchQueue.main.async {
+                workItem.cancel()
+                isLoading = false
+            }
         }
     }
 
@@ -42,6 +77,9 @@ struct AddSubscriptionView: View {
                     .submitLabel(.done)
                     .onSubmit {
                         addSubscription()
+                    }
+                    .onChange(of: text) {
+                        errorMessage = nil
                     }
             }
             .padding()

@@ -6,49 +6,31 @@
 import Foundation
 import SwiftData
 
-// TODO: refactor everything here to use an actor
-class SubscriptionManager {
-    static func loadSubscriptions(urls: [String]) async throws -> [Subscription] {
-        var subscriptions: [Subscription] = []
-        await withTaskGroup(of: (Subscription?).self) { taskGroup in
-            for url in urls {
-                taskGroup.addTask {
-                    return try? await getSubscription(url: url)
-                }
-                for await sub in taskGroup {
-                    if let sub = sub {
-                        subscriptions.append(sub)
-                    }
-                }
-            }
-        }
-        return subscriptions
-    }
-
-    static func addSubscriptions(from urls: [String], modelContext: ModelContext) async throws {
-        if let subs = try? await loadSubscriptions(urls: urls) {
-            for sub in subs {
+@ModelActor
+actor SubscriptionActor {
+    func addSubscriptions(from urls: [URL]) async throws {
+        for url in urls {
+            if let sendableSub = try await getSubscription(url: url) {
+                let sub = Subscription(link: sendableSub.link, title: sendableSub.title)
                 modelContext.insert(sub)
             }
         }
+        try modelContext.save()
     }
 
-    static func getSubscription(url: String) async throws -> Subscription? {
-        guard let url = URL(string: url) else {
-            throw VideoCrawlerError.invalidUrl
-        }
+    func getSubscription(url: URL) async throws -> SendableSubscription? {
         let feedUrl = try await self.getChannelFeedFromUrl(url: url)
         return try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
     }
 
-    static func getChannelFeedFromUrl(url: URL) async throws -> URL {
+    func getChannelFeedFromUrl(url: URL) async throws -> URL {
         if isYoutubeFeedUrl(url: url) {
             return url
         }
         if url.absoluteString.contains("youtube.com/@") {
             let username = url.absoluteString.components(separatedBy: "@").last ?? ""
             print("username", username)
-            let channelId = try await getYoutubeChannelIdFromUsername(username: username)
+            let channelId = try await SubscriptionActor.getYoutubeChannelIdFromUsername(username: username)
             print("channelId", channelId)
             if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
                 return channelFeedUrl
@@ -57,7 +39,7 @@ class SubscriptionManager {
         throw SubscriptionError.noSupported
     }
 
-    static func isYoutubeFeedUrl(url: URL) -> Bool {
+    func isYoutubeFeedUrl(url: URL) -> Bool {
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
 
