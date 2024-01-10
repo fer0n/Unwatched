@@ -33,3 +33,8 @@ final class Subscription: CustomStringConvertible {
         link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
         title: "Virtual Reality Oasis")
 }
+
+struct SendableSubscription: Sendable {
+    var link: URL
+    var title: String
+}

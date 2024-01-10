@@ -16,7 +16,6 @@ enum Tab {
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State var navManager = NavigationManager()
-    @Query var subscriptions: [Subscription]
     @Query var queue: [QueueEntry]
     @Query var inbox: [InboxEntry]
 
@@ -34,8 +33,7 @@ struct ContentView: View {
     }
 
     func loadNewVideos() {
-        VideoService.loadNewVideosInBg(subscriptions: subscriptions,
-                                       modelContext: modelContext)
+        VideoService.loadNewVideosInBg(modelContext: modelContext)
     }
 
     var body: some View {
