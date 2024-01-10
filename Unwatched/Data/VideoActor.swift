@@ -5,7 +5,7 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
-    func loadVideoData(of videoUrls: [URL]) async throws {
+    func loadVideoData(from videoUrls: [URL]) async throws {
         var videos = [Video]()
         for url in videoUrls {
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -13,15 +13,19 @@ actor VideoActor {
                 print("no youtubeId found")
                 return
             }
-            guard let (videoData, channelId) = try await VideoCrawler.loadVideoInfoFromYtId(youtubeId) else {
+            guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
                 return
             }
+            print("videoData", videoData)
             let video = Video(title: videoData.title.isEmpty ? youtubeId : videoData.title,
                               url: url,
                               youtubeId: youtubeId,
-                              thumbnailUrl: videoData.thumbnailUrl)
+                              thumbnailUrl: videoData.thumbnailUrl,
+                              publishedDate: videoData.publishedDate,
+                              youtubeChannelId: videoData.youtubeChannelId,
+                              feedTitle: videoData.feedTitle)
             modelContext.insert(video)
-            if let channelId = channelId {
+            if let channelId = videoData.youtubeChannelId {
                 addToCorrectSubscription(video, channelId: channelId)
             }
             videos.append(video)
@@ -88,7 +92,9 @@ actor VideoActor {
                                               url: $0.url,
                                               youtubeId: $0.youtubeId,
                                               thumbnailUrl: $0.thumbnailUrl,
-                                              publishedDate: $0.publishedDate) })
+                                              publishedDate: $0.publishedDate,
+                                              youtubeChannelId: sub.youtubeChannelId,
+                                              feedTitle: $0.feedTitle) })
         for video in videos {
             modelContext.insert(video)
         }

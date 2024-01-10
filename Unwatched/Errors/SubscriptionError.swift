@@ -8,6 +8,7 @@ import Foundation
 enum SubscriptionError: LocalizedError {
     case noSupported
     case failedGettingChannelIdFromUsername
+    case failedGettingVideoInfo
 
     var errorDescription: String? {
         switch self {
@@ -20,6 +21,9 @@ enum SubscriptionError: LocalizedError {
             Try adding the RSS feed directly (instead of the channel URL).
             """
             return NSLocalizedString(message, comment: "Failed Getting Channel ID Error")
+        case .failedGettingVideoInfo:
+            return NSLocalizedString("Failed to get video info",
+                                     comment: "Failed Getting Video Info Error")
         }
     }
 }

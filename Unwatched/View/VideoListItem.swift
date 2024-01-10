@@ -52,8 +52,8 @@ struct VideoListItem: View {
                             .font(.body)
                             .foregroundStyle(Color.gray)
                     }
-                    if let sub = video.subscription {
-                        Text(sub.title)
+                    if let title = video.feedTitle {
+                        Text(title)
                             .font(.system(size: 14, weight: .regular))
                             .lineLimit(1)
                             .textCase(.uppercase)

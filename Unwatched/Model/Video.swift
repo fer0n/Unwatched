@@ -13,17 +13,34 @@ final class Video: CustomStringConvertible {
     var url: URL
     var thumbnailUrl: URL?
     var publishedDate: Date?
+    var duration: String?
 
     var status: VideoStatus?
     var watched = false
     var subscription: Subscription?
+    var youtubeChannelId: String?
+    private var _feedTitle: String?
 
-    init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL? = nil, publishedDate: Date? = nil) {
+    var feedTitle: String? {
+        get {
+            return subscription?.title ?? _feedTitle
+        }
+    }
+
+    init(title: String,
+         url: URL,
+         youtubeId: String,
+         thumbnailUrl: URL? = nil,
+         publishedDate: Date? = nil,
+         youtubeChannelId: String? = nil,
+         feedTitle: String? = nil) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
+        self.youtubeChannelId = youtubeChannelId
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
+        self._feedTitle = feedTitle
     }
 
     // specify what is being printed when you print an instance of this class directly
@@ -45,6 +62,9 @@ struct SendableVideo: Sendable {
     var title: String
     var url: URL
     var thumbnailUrl: URL?
+    var youtubeChannelId: String?
+    var feedTitle: String?
+    var duration: String?
 
     var publishedDate: Date?
     var status: VideoStatus?
