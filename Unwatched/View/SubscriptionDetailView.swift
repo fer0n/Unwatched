@@ -60,8 +60,6 @@ struct SubscriptionDetailView: View {
                 VideoService.loadNewVideosInBg(subscriptions: [subscription],
                                                modelContext: modelContext)
             }
-            Spacer()
-
         }
         .navigationBarTitle(subscription.title.uppercased())
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
