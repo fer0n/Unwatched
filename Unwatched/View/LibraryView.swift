@@ -11,6 +11,7 @@ struct LibraryView: View {
     @Environment(NavigationManager.self) private var navManager
 
     @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
+    @Query(filter: #Predicate<Video> { $0.subscription == nil }) var sideloadedVideos: [Video]
     @State var showAddSubscriptionSheet = false
 
     var loadNewVideos: () async -> Void
@@ -36,6 +37,17 @@ struct LibraryView: View {
                         HStack {
                             Image(systemName: "clock.arrow.circlepath")
                             Text("History")
+                        }
+                    }
+                }
+
+                if !sideloadedVideos.isEmpty {
+                    Section {
+                        NavigationLink(destination: SideloadingView()) {
+                            HStack {
+                                Image(systemName: "arrow.right.circle")
+                                Text("Sideloads")
+                            }
                         }
                     }
                 }

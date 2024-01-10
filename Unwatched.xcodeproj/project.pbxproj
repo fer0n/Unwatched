@@ -26,6 +26,7 @@
 		8891F0AD2B4E7E170098A3FB /* VideoActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor.swift */; };
 		8891F0B02B4E9F330098A3FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AF2B4E9F330098A3FB /* String.swift */; };
 		8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */; };
+		8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B32B4EF3610098A3FB /* SideloadingView.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
 		8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionActor.swift */; };
 		8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67A2B481F5D00348D01 /* Subscription.swift */; };
@@ -67,6 +68,7 @@
 		8891F0AC2B4E7E170098A3FB /* VideoActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoActor.swift; sourceTree = "<group>"; };
 		8891F0AF2B4E9F330098A3FB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
+		8891F0B32B4EF3610098A3FB /* SideloadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideloadingView.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
 		8898B67A2B481F5D00348D01 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			children = (
 				88DFC0B02B44843A001895C8 /* ContentView.swift */,
 				88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */,
+				8891F0B32B4EF3610098A3FB /* SideloadingView.swift */,
 				88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				886E79B62B46E0F900554E1F /* QueueView.swift */,
@@ -347,6 +350,7 @@
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */,
 				88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */,
+				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				88ADE8232B4ADCC3002F86F7 /* BackgroundPlaceholder.swift in Sources */,
 			);

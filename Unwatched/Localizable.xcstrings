@@ -51,6 +51,9 @@
         }
       }
     },
+    "No sideloaded videos found" : {
+
+    },
     "Nothing marked as watched yet" : {
 
     },
@@ -58,6 +61,9 @@
 
     },
     "Queue" : {
+
+    },
+    "Sideloads" : {
 
     },
     "Subscription information not found" : {
