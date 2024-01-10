@@ -31,6 +31,11 @@ struct InboxView: View {
         deleteInboxEntry(entry)
     }
 
+    func handleUrlDrop(_ items: [URL]) {
+        print("handleUrlDrop inbox", items)
+        VideoService.addForeignUrls(items, videoPlacement: .inbox, modelContext: modelContext)
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
@@ -50,6 +55,9 @@ struct InboxView: View {
                                 }
                                 .tint(.teal)
                             }
+                    }
+                    .dropDestination(for: URL.self) { items, _ in
+                        handleUrlDrop(items)
                     }
                     .onDelete(perform: deleteInboxEntryIndexSet)
                 }
