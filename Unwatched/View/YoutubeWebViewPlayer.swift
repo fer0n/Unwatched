@@ -7,7 +7,7 @@ import SwiftUI
 import WebKit
 
 struct YoutubeWebViewPlayer: UIViewRepresentable {
-    let videoID: String
+    let video: Video
     @Binding var playbackSpeed: Double
     @Binding var isPlaying: Bool
 
@@ -26,6 +26,8 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         <script src="https://www.youtube.com/iframe_api"></script>
         <script>
             var player;
+            var timer;
+
             function onYouTubeIframeAPIReady() {
                 player = new YT.Player("player", {
                     events: {
@@ -37,15 +39,28 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
             function onPlayerReady(event) {
                 event.target.setPlaybackRate(\(playbackSpeed));
+                player.seekTo(\(video.elapsedSeconds), true);
                 player.play()
             }
 
             function onPlayerStateChange(event) {
                 if (event.data == YT.PlayerState.PAUSED) {
                     window.webkit.messageHandlers.iosListener.postMessage("paused");
+                    stopTimer();
                 } else if (event.data == YT.PlayerState.PLAYING) {
                     window.webkit.messageHandlers.iosListener.postMessage("playing");
+                    startTimer();
                 }
+            }
+
+            function startTimer() {
+                timer = setInterval(function() {
+                    window.webkit.messageHandlers.iosListener.postMessage("currentTime:" + player.getCurrentTime());
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timer);
             }
         </script>
         <iframe
@@ -53,7 +68,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             type="text/html"
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/\(videoID)?enablejsapi=1&autoplay=1&controls=1"
+            src="https://www.youtube.com/embed/\(video.youtubeId)?enablejsapi=1&autoplay=1&controls=1"
             frameborder="0"
         ></iframe>
     """
@@ -101,11 +116,28 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         func userContentController(_ userContentController: WKUserContentController,
                                    didReceive message: WKScriptMessage) {
             if message.name == "iosListener", let messageBody = message.body as? String {
-                if messageBody == "paused" {
+                // split into topic:content
+                let body = messageBody.split(separator: ":")
+                let topic = body[safe: 0]
+                let payload = body[safe: 1]
+
+                print("topic", topic)
+                print("payload", payload)
+                print("messageBody", messageBody)
+
+                switch topic {
+                case "paused":
                     parent.isPlaying = false
-                } else if messageBody == "playing" {
+                case "playing":
                     parent.isPlaying = true
+                case "currentTime":
+                    let newTime = Double(messageBody.split(separator: ":")[1]) ?? 0
+                    print("newTime", newTime)
+                    parent.video.elapsedSeconds = newTime
+                default:
+                    break
                 }
+
             }
         }
     }
