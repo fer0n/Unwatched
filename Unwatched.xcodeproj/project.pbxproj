@@ -27,7 +27,7 @@
 		8891F0B02B4E9F330098A3FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AF2B4E9F330098A3FB /* String.swift */; };
 		8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
-		8898B6792B481F2100348D01 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionManager.swift */; };
+		8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionActor.swift */; };
 		8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67A2B481F5D00348D01 /* Subscription.swift */; };
 		8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */; };
 		8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6812B48466700348D01 /* VideoCrawlerError.swift */; };
@@ -68,7 +68,7 @@
 		8891F0AF2B4E9F330098A3FB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
-		8898B6782B481F2100348D01 /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
 		8898B67A2B481F5D00348D01 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListItem.swift; sourceTree = "<group>"; };
 		8898B6812B48466700348D01 /* VideoCrawlerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawlerError.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				88DFC0C52B448C01001895C8 /* VideoService.swift */,
 				8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */,
 				8891F0AC2B4E7E170098A3FB /* VideoActor.swift */,
-				8898B6782B481F2100348D01 /* SubscriptionManager.swift */,
+				8898B6782B481F2100348D01 /* SubscriptionActor.swift */,
 				88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */,
 				88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */,
 			);
@@ -339,7 +339,7 @@
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
-				8898B6792B481F2100348D01 /* SubscriptionManager.swift in Sources */,
+				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				88D438A52B45ACD800482F29 /* YoutubeWebViewPlayer.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
 				887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */,

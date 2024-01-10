@@ -11,7 +11,9 @@ actor SubscriptionActor {
     func addSubscriptions(from urls: [URL]) async throws {
         for url in urls {
             if let sendableSub = try await getSubscription(url: url) {
-                let sub = Subscription(link: sendableSub.link, title: sendableSub.title)
+                let sub = Subscription(link: sendableSub.link,
+                                       title: sendableSub.title,
+                                       youtubeChannelId: sendableSub.youtubeChannelId)
                 modelContext.insert(sub)
             }
         }

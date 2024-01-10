@@ -28,6 +28,11 @@ struct QueueView: View {
                                     modelContext: modelContext)
     }
 
+    func handleUrlDrop(_ items: [URL]) {
+        print("handleUrlDrop", items)
+        VideoService.addForeignUrls(items, modelContext: modelContext)
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
@@ -35,7 +40,6 @@ struct QueueView: View {
                 if queue.isEmpty {
                     BackgroundPlaceholder(systemName: "rectangle.stack.badge.play.fill")
                 }
-
                 List {
                     ForEach(queue) { entry in
                         VideoListItem(video: entry.video)
@@ -51,6 +55,9 @@ struct QueueView: View {
                     }
                     .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)
+                    .dropDestination(for: URL.self) { items, _ in
+                        handleUrlDrop(items)
+                    }
                 }
                 .navigationBarTitle("Queue")
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)

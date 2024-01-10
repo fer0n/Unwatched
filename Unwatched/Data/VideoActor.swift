@@ -5,6 +5,31 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
+    func loadVideoData(of videoUrls: [URL]) async throws {
+        var videos = [Video]()
+        for url in videoUrls {
+            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            guard let youtubeId = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value else {
+                print("no youtubeId found")
+                return
+            }
+            guard let (videoData, channelId) = try await VideoCrawler.loadVideoInfoFromYtId(youtubeId) else {
+                return
+            }
+            let video = Video(title: videoData.title.isEmpty ? youtubeId : videoData.title,
+                              url: url,
+                              youtubeId: youtubeId,
+                              thumbnailUrl: videoData.thumbnailUrl)
+            modelContext.insert(video)
+            if let channelId = channelId {
+                addToCorrectSubscription(video, channelId: channelId)
+            }
+            videos.append(video)
+        }
+        VideoActor.insertQueueEntries(videos: videos, modelContext: modelContext)
+        try modelContext.save()
+    }
+
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
                     defaultVideoPlacement: VideoPlacement) async throws {
         let subs = try fetchSubscriptions(subscriptionIds)
@@ -41,6 +66,17 @@ actor VideoActor {
             queueEntry.order = index
         }
         try modelContext.save()
+    }
+
+    private func addToCorrectSubscription(_ video: Video, channelId: String) {
+        let channelIdWithout = String(channelId.dropFirst(2))
+        let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubeChannelId == channelId || $0.youtubeChannelId == channelIdWithout
+        })
+        let subscriptions = try? modelContext.fetch(fetchDescriptor)
+        if let sub = subscriptions?.first {
+            sub.videos.append(video)
+        }
     }
 
     private func loadVideos(for sub: Subscription) async throws {

@@ -32,6 +32,11 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
+    var currentYoutubeChannelId: String = "" {
+        didSet {
+            currentYoutubeChannelId = currentYoutubeChannelId.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
     var currentPublishedDate: String = "" {
         didSet {
             currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -61,7 +66,10 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                   let url = URL(string: currentLink) {
             // TODO: find a better way to retrieve the info.
             // it currently only works if the channel info comes before the first entry
-            subscriptionInfo = SendableSubscription(link: url, title: currentTitle)
+            subscriptionInfo = SendableSubscription(
+                link: url,
+                title: currentTitle,
+                youtubeChannelId: currentYoutubeChannelId)
             currentTitle = ""
             currentLink = ""
             thumbnailUrl = ""
@@ -76,6 +84,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         case "title": currentTitle += string
         case "yt:videoId": currentYoutubeId += string
         case "published": currentPublishedDate += string
+        case "yt:channelId": currentYoutubeChannelId += string
         default: break
         }
     }
@@ -110,6 +119,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
+            currentYoutubeChannelId = ""
         }
     }
 }
