@@ -13,20 +13,26 @@ final class Subscription: CustomStringConvertible {
     var subscribedDate: Date
     var mostRecentVideoDate: Date?
     var videos: [Video]
+    var youtubeChannelId: String?
 
     var placeVideosIn: VideoPlacement
     var customSpeedSetting: Double?
 
-    init(link: URL, title: String, placeVideosIn: VideoPlacement = .defaultPlacement, videos: [Video] = []) {
+    init(link: URL,
+         title: String,
+         placeVideosIn: VideoPlacement = .defaultPlacement,
+         videos: [Video] = [],
+         youtubeChannelId: String? = nil) {
         self.link = link
         self.title = title
         self.subscribedDate = .now
         self.placeVideosIn = placeVideosIn
         self.videos = videos
+        self.youtubeChannelId = youtubeChannelId
     }
 
     var description: String {
-        return "\(title) (\(link))"
+        return "\(title) (\(link)) \(youtubeChannelId)"
     }
 
     static var dummy = Subscription(
@@ -37,4 +43,5 @@ final class Subscription: CustomStringConvertible {
 struct SendableSubscription: Sendable {
     var link: URL
     var title: String
+    var youtubeChannelId: String?
 }

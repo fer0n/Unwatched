@@ -58,4 +58,32 @@ class VideoService {
                                    modelContext: ModelContext) {
         VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
     }
+
+    static func addForeignUrls(_ urls: [URL], modelContext: ModelContext) {
+        // TODO: before adding anything, check if the video already exists,
+        // if it does, add that one to queue
+        let container = modelContext.container
+
+        Task.detached {
+            do {
+                let repo = VideoActor(modelContainer: container)
+                try await repo.loadVideoData(of: urls)
+            } catch {
+                print("\(error)")
+            }
+        }
+    }
+}
+
+extension String {
+    func matching(regex: String) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: regex) else { return nil }
+        let range = NSRange(location: 0, length: self.utf16.count)
+        if let match = regex.firstMatch(in: self, options: [], range: range) {
+            if let matchRange = Range(match.range(at: 1), in: self) {
+                return String(self[matchRange])
+            }
+        }
+        return nil
+    }
 }

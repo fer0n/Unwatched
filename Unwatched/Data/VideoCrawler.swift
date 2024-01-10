@@ -28,4 +28,30 @@ class VideoCrawler {
         }
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
+
+    static func loadVideoInfoFromYtId(_ youtubeId: String) async throws -> (video: SendableVideo, channelId: String?)? {
+        print("loadVideoInfoFromUrl")
+        guard let url =  URL(string: "https://www.youtube.com/embed/\(youtubeId)") else {
+            return nil
+        }
+        let thumbnailRegex = #"url\\\":\\\"([^"]*)\\",\\\"width\\\"\:168"#
+        let videoTitleRegex = #"\"videoTitle\\\":\\"(.*?)\\""#
+        let channelIdRegex = #"channelId\\"\:\\\"(.*?)\\""#
+
+        let (data, _) = try await URLSession.shared.data(from: url)
+        guard let htmlString = String(data: data, encoding: .utf8) else { return nil }
+        let videoTitle = htmlString.matching(regex: videoTitleRegex)
+        var thumbnailURL: URL?
+        if let url = htmlString.matching(regex: thumbnailRegex) {
+            if let decodedChannelUrl = url.removingPercentEncoding {
+                thumbnailURL = URL(string: decodedChannelUrl)
+            }
+        }
+        let channelId = htmlString.matching(regex: channelIdRegex)
+        let sendableVideo = SendableVideo(youtubeId: youtubeId,
+                                          title: videoTitle ?? "",
+                                          url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)")!,
+                                          thumbnailUrl: thumbnailURL)
+        return (sendableVideo, channelId)
+    }
 }

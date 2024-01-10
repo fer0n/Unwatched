@@ -11,14 +11,14 @@ final class Video: CustomStringConvertible {
     @Attribute(.unique) var youtubeId: String
     var title: String
     var url: URL
-    var thumbnailUrl: URL
+    var thumbnailUrl: URL?
     var publishedDate: Date?
 
     var status: VideoStatus?
     var watched = false
     var subscription: Subscription?
 
-    init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL, publishedDate: Date?) {
+    init(title: String, url: URL, youtubeId: String, thumbnailUrl: URL? = nil, publishedDate: Date? = nil) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
@@ -44,9 +44,9 @@ struct SendableVideo: Sendable {
     var youtubeId: String
     var title: String
     var url: URL
-    var thumbnailUrl: URL
-    var publishedDate: Date?
+    var thumbnailUrl: URL?
 
+    var publishedDate: Date?
     var status: VideoStatus?
     var watched = false
 }
