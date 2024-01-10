@@ -5,7 +5,7 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
-    func loadVideoData(from videoUrls: [URL]) async throws {
+    func loadVideoData(from videoUrls: [URL], at videoplacement: VideoPlacement) async throws {
         var videos = [Video]()
         for url in videoUrls {
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -30,7 +30,7 @@ actor VideoActor {
             }
             videos.append(video)
         }
-        VideoActor.insertQueueEntries(videos: videos, modelContext: modelContext)
+        addVideosTo(videos: videos, placement: videoplacement)
         try modelContext.save()
     }
 
@@ -127,10 +127,14 @@ actor VideoActor {
         if sub.placeVideosIn == .defaultPlacement {
             placement = defaultPlacement
         }
+        addVideosTo(videos: videosToAdd, placement: placement)
+    }
+
+    private func addVideosTo(videos: [Video], placement: VideoPlacement) {
         if placement == .inbox {
-            addVideosToInbox(videosToAdd)
+            addVideosToInbox(videos)
         } else if placement == .queue {
-            VideoActor.insertQueueEntries(videos: videosToAdd, modelContext: modelContext)
+            VideoActor.insertQueueEntries(videos: videos, modelContext: modelContext)
         }
     }
 
