@@ -76,7 +76,7 @@ struct VideoPlayer: View {
             }
             .padding(.vertical)
 
-            YoutubeWebViewPlayer(videoID: video.youtubeId,
+            YoutubeWebViewPlayer(video: video,
                                  playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
                                  isPlaying: $isPlaying
             )

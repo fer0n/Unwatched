@@ -27,6 +27,8 @@ final class Video: CustomStringConvertible {
         }
     }
 
+    var elapsedSeconds: Double = 0
+
     init(title: String,
          url: URL,
          youtubeId: String,
