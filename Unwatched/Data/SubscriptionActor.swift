@@ -32,7 +32,7 @@ actor SubscriptionActor {
         if url.absoluteString.contains("youtube.com/@") {
             let username = url.absoluteString.components(separatedBy: "@").last ?? ""
             print("username", username)
-            let channelId = try await SubscriptionActor.getYoutubeChannelIdFromUsername(username: username)
+            let channelId = try await YoutubeDataAPI.getYtChannelIdFromUsername(username: username)
             print("channelId", channelId)
             if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
                 return channelFeedUrl
@@ -43,28 +43,5 @@ actor SubscriptionActor {
 
     func isYoutubeFeedUrl(url: URL) -> Bool {
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
-    }
-
-    static func getYoutubeChannelIdFromUsername(username: String) async throws -> String {
-        guard let apiKey = ProcessInfo.processInfo.environment["youtube-api-key"] else {
-            fatalError("youtube-api-key environment varible not set")
-        }
-
-        let apiUrl = "https://www.googleapis.com/youtube/v3/channels?key=\(apiKey)&forUsername=\(username)&part=id"
-        print("apiUrl", apiUrl)
-
-        if let url = URL(string: apiUrl) {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            print("data", data)
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print("json", json)
-                if let items = json["items"] as? [[String: Any]],
-                   let item = items.first,
-                   let id = item["id"] as? String {
-                    return id
-                }
-            }
-        }
-        throw SubscriptionError.failedGettingChannelIdFromUsername
     }
 }

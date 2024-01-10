@@ -60,7 +60,11 @@ struct VideoPlayer: View {
                 Text(video.title)
                     .font(.system(size: 20, weight: .heavy))
                     .multilineTextAlignment(.center)
-                Text(video.subscription?.title ?? "no subscription found")
+                    .onTapGesture {
+                        UIApplication.shared.open(video.url)
+                    }
+
+                Text(video.feedTitle ?? "no subscription found")
                     .textCase(.uppercase)
                     .foregroundColor(.teal)
                     .onTapGesture {

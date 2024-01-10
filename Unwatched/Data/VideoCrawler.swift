@@ -29,18 +29,22 @@ class VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
-    static func loadVideoInfoFromYtId(_ youtubeId: String) async throws -> (video: SendableVideo, channelId: String?)? {
+    static func loadVideoInfoFromYtId(_ youtubeId: String) async throws -> SendableVideo? {
         print("loadVideoInfoFromUrl")
         guard let url =  URL(string: "https://www.youtube.com/embed/\(youtubeId)") else {
             return nil
         }
         let thumbnailRegex = #"url\\\":\\\"([^"]*)\\",\\\"width\\\"\:168"#
-        let videoTitleRegex = #"\"videoTitle\\\":\\"(.*?)\\""#
+        let videoTitleRegex = #"\"videoTitle\\\":\\"(.*?)\\"}"#
+        let videoTitleFallbackRegex = #"thumbnailPreviewRenderer\\"\:{\\\"title\\\"\:{\\\"runs\\"\:\[{\\\"text\\\"\:\\\"(.*?)\\"}"#
         let channelIdRegex = #"channelId\\"\:\\\"(.*?)\\""#
 
         let (data, _) = try await URLSession.shared.data(from: url)
         guard let htmlString = String(data: data, encoding: .utf8) else { return nil }
-        let videoTitle = htmlString.matching(regex: videoTitleRegex)
+        var videoTitle = htmlString.matching(regex: videoTitleRegex)
+        if videoTitle == nil {
+            videoTitle = htmlString.matching(regex: videoTitleFallbackRegex)
+        }
         var thumbnailURL: URL?
         if let url = htmlString.matching(regex: thumbnailRegex) {
             if let decodedChannelUrl = url.removingPercentEncoding {
@@ -51,7 +55,8 @@ class VideoCrawler {
         let sendableVideo = SendableVideo(youtubeId: youtubeId,
                                           title: videoTitle ?? "",
                                           url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)")!,
-                                          thumbnailUrl: thumbnailURL)
-        return (sendableVideo, channelId)
+                                          thumbnailUrl: thumbnailURL,
+                                          youtubeChannelId: channelId)
+        return sendableVideo
     }
 }

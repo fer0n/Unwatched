@@ -28,6 +28,15 @@ struct SideloadingView: View {
                                 }
                                 .tint(.teal)
                             }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    VideoService.clearFromEverywhere(video,
+                                                                     modelContext: modelContext)
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                }
+                                .tint(.orange)
+                            }
                     }
                 }
                 .listStyle(.plain)

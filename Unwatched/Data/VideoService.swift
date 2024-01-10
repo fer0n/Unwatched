@@ -67,7 +67,7 @@ class VideoService {
         Task.detached {
             do {
                 let repo = VideoActor(modelContainer: container)
-                try await repo.loadVideoData(of: urls)
+                try await repo.loadVideoData(from: urls)
             } catch {
                 print("\(error)")
             }

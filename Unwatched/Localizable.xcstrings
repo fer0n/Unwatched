@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%lf" : {
 
     },
@@ -18,6 +21,9 @@
     },
     "Do nothing" : {
 
+    },
+    "Failed to get video info" : {
+      "comment" : "Failed Getting Video Info Error"
     },
     "Failed to parse the data" : {
       "comment" : "Failed To Parse Error"
