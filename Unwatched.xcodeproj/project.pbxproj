@@ -13,6 +13,7 @@
 		88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */; };
 		881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886E79BA2B46FFD300554E1F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B92B46FFD300554E1F /* Color.swift */; };
 		887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C52B49368F00512852 /* QueueEntry.swift */; };
@@ -58,6 +59,7 @@
 		88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImage.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		8845F0142B500E8A0086AA98 /* AllVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVideosView.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886E79B92B46FFD300554E1F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		887AC8C52B49368F00512852 /* QueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueEntry.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				8891F0B32B4EF3610098A3FB /* SideloadingView.swift */,
 				88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
+				8845F0142B500E8A0086AA98 /* AllVideosView.swift */,
 				886E79B62B46E0F900554E1F /* QueueView.swift */,
 				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
 				8898B6762B480C3700348D01 /* AddSubscriptionView.swift */,
@@ -354,6 +357,7 @@
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
+				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				88D438A52B45ACD800482F29 /* YoutubeWebViewPlayer.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,

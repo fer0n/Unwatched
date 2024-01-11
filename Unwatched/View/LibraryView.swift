@@ -33,9 +33,20 @@ struct LibraryView: View {
         NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
             List {
                 Section {
+                    NavigationLink(destination: AllVideosView()) {
+                        HStack {
+                            Image(systemName: "play.rectangle.on.rectangle")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text("All Videos")
+                        }
+
+                    }
                     NavigationLink(destination: WatchHistoryView()) {
                         HStack {
-                            Image(systemName: "checkmark.circle.fill")
+                            Image(systemName: "checkmark.circle")
+                                .resizable()
+                                .frame(width: 20, height: 20)
                             Text("Watched")
                         }
                     }
