@@ -42,6 +42,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
+    var currentDescription: String = ""
 
     init(limitVideos: Int?, cutoffDate: Date?) {
         self.limitVideos = limitVideos
@@ -85,6 +86,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         case "yt:videoId": currentYoutubeId += string
         case "published": currentPublishedDate += string
         case "yt:channelId": currentYoutubeChannelId += string
+        case "media:description": currentDescription += string
         default: break
         }
     }
@@ -98,11 +100,15 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             if let publishedDate = dateFormatter.date(from: currentPublishedDate),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
+                let chapters = VideoCrawler.extractChapters(from: currentDescription, videoDuration: nil)
+
                 let video = SendableVideo(youtubeId: currentYoutubeId,
                                           title: currentTitle,
                                           url: url,
                                           thumbnailUrl: thumbnailUrl,
-                                          publishedDate: publishedDate)
+                                          chapters: chapters,
+                                          publishedDate: publishedDate,
+                                          videoDescription: currentDescription)
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
@@ -120,6 +126,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = ""
             currentPublishedDate = ""
             currentYoutubeChannelId = ""
+            currentDescription = ""
         }
     }
 }

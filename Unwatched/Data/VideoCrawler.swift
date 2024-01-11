@@ -29,6 +29,79 @@ class VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
+    static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
+        let input = description
+        do {
+            let regex = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+(.+)"#)
+            let range = NSRange(input.startIndex..<input.endIndex, in: input)
+
+            var chapters: [SendableChapter] = []
+
+            regex.enumerateMatches(in: input, options: [], range: range) { match, _, _ in
+                if let match = match {
+                    let timeRange = Range(match.range(at: 1), in: input)!
+                    let titleRange = Range(match.range(at: 2), in: input)!
+
+                    let timeString = String(input[timeRange])
+                    let title = String(input[titleRange])
+                    if let time = timeToSeconds(timeString) {
+                        let chapter = SendableChapter(title: title, startTime: time)
+                        chapters.append(chapter)
+                    }
+                }
+            }
+            let chatpersWithDuration = setDuration(in: chapters, videoDuration: videoDuration)
+            return chatpersWithDuration
+        } catch {
+            print("Error creating regex: \(error)")
+        }
+        return []
+    }
+
+    static func setDuration(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
+        var chapters = chapters
+        for index in 0..<chapters.count {
+            if index == chapters.count - 1 {
+                if let videoDuration = videoDuration {
+                    chapters[index].duration = videoDuration - chapters[index].startTime
+                    chapters[index].endTime = videoDuration
+                } else {
+                    chapters[index].duration = nil
+                }
+            } else {
+                chapters[index].endTime = chapters[index + 1].startTime
+                chapters[index].duration = chapters[index + 1].startTime - chapters[index].startTime
+            }
+        }
+        return chapters
+    }
+
+    static func timeToSeconds(_ time: String) -> Double? {
+        let components = time.components(separatedBy: ":")
+
+        switch components.count {
+        case 2:
+            // Format: mm:ss
+            guard let minutes = Double(components[0]),
+                  let seconds = Double(components[1]) else {
+                return nil
+            }
+            return minutes * 60 + seconds
+
+        case 3:
+            // Format: hh:mm:ss
+            guard let hours = Double(components[0]),
+                  let minutes = Double(components[1]),
+                  let seconds = Double(components[2]) else {
+                return nil
+            }
+            return hours * 3600 + minutes * 60 + seconds
+
+        default:
+            return nil
+        }
+    }
+
     static func loadVideoInfoFromYtId(_ youtubeId: String) async throws -> SendableVideo? {
         print("loadVideoInfoFromUrl")
         guard let url =  URL(string: "https://www.youtube.com/embed/\(youtubeId)") else {

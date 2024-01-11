@@ -12,7 +12,16 @@ struct VideoPlayer: View {
     @Bindable var video: Video
     var markVideoWatched: () -> Void
     @State private var isPlaying: Bool = true
+    @State private var isDismissed = false
     @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
+
+    @State var elapsedSeconds: Double?
+
+    var chapterManager: ChapterManager
+
+    func updateElapsedTime(_ seconds: Double) {
+        elapsedSeconds = seconds
+    }
 
     func setPlaybackSpeed(_ value: Double) {
         if video.subscription?.customSpeedSetting != nil {
@@ -20,6 +29,10 @@ struct VideoPlayer: View {
         } else {
             playbackSpeed = value
         }
+    }
+
+    func seekTo(_ position: Double) {
+        print("position", position)
     }
 
     func getPlaybackSpeed() -> Double {
@@ -55,61 +68,76 @@ struct VideoPlayer: View {
     }
 
     var body: some View {
-        VStack(spacing: 10) {
+        ScrollView {
             VStack(spacing: 10) {
-                Text(video.title)
-                    .font(.system(size: 20, weight: .heavy))
-                    .multilineTextAlignment(.center)
-                    .onTapGesture {
-                        UIApplication.shared.open(video.url)
-                    }
-
-                Text(video.feedTitle ?? "no subscription found")
-                    .textCase(.uppercase)
-                    .foregroundColor(.teal)
-                    .onTapGesture {
-                        if let sub = video.subscription {
-                            navManager.pushSubscription(sub)
-                            dismiss()
+                VStack(spacing: 10) {
+                    Text(video.title)
+                        .font(.system(size: 20, weight: .heavy))
+                        .multilineTextAlignment(.center)
+                        .onTapGesture {
+                            UIApplication.shared.open(video.url)
                         }
-                    }
-            }
-            .padding(.vertical)
 
-            YoutubeWebViewPlayer(video: video,
-                                 playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
-                                 isPlaying: $isPlaying
-            )
-            .aspectRatio(16/9, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-
-            VStack {
-                SpeedControlView(selectedSpeed: Binding(
-                                    get: getPlaybackSpeed,
-                                    set: setPlaybackSpeed)
-                )
-                customSettingsButton
-
-                Button {
-                    isPlaying.toggle()
-                } label: {
-                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .accentColor(.accentColor)
-                        .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+                    Text(video.feedTitle ?? "no subscription found")
+                        .textCase(.uppercase)
+                        .foregroundColor(.teal)
+                        .onTapGesture {
+                            if let sub = video.subscription {
+                                navManager.pushSubscription(sub)
+                                dismiss()
+                            }
+                        }
                 }
-                .padding()
-            }
-            .padding(.vertical)
-            Spacer()
+                .padding(.vertical)
 
-            watchedButton
+                YoutubeWebViewPlayer(video: video,
+                                     playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
+                                     isPlaying: $isPlaying,
+                                     updateElapsedTime: updateElapsedTime,
+                                     chapterManager: chapterManager
+                )
+                .aspectRatio(16/9, contentMode: .fit)
+                .frame(maxWidth: .infinity)
+                .onDisappear {
+                    if let seconds = elapsedSeconds {
+                        video.elapsedSeconds = seconds
+                    }
+                }
+
+                VStack {
+                    SpeedControlView(selectedSpeed: Binding(
+                                        get: getPlaybackSpeed,
+                                        set: setPlaybackSpeed)
+                    )
+                    customSettingsButton
+
+                    Button {
+                        isPlaying.toggle()
+                    } label: {
+                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .accentColor(.accentColor)
+                            .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+                    }
+                    .padding()
+                }
+                .padding(.vertical)
+
+                watchedButton
+                    .padding(.bottom)
+
+                ChapterSelection(video: video, chapterManager: chapterManager)
+
+            }
+            .padding(.top, 15)
         }
-        .padding(.top, 25)
+        .onAppear {
+            chapterManager.video = video
+        }
     }
 }
 
-#Preview {
-    VideoPlayer(video: Video.dummy, markVideoWatched: {})
-}
+// #Preview {
+//    VideoPlayer(video: Video.dummy, markVideoWatched: {})
+// }

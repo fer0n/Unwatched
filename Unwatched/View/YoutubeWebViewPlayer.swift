@@ -10,6 +10,8 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     let video: Video
     @Binding var playbackSpeed: Double
     @Binding var isPlaying: Bool
+    var updateElapsedTime: (_ seconds: Double) -> Void
+    @Bindable var chapterManager: ChapterManager
 
     var htmlString: String {
         """
@@ -55,8 +57,9 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
 
             function startTimer() {
+                clearInterval(timer);
                 timer = setInterval(function() {
-                sendMessage("currentTime", player.getCurrentTime());
+                    sendMessage("currentTime", player.getCurrentTime());
                 }, 1000);
             }
 
@@ -96,13 +99,26 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        let script = "player.setPlaybackRate(\(playbackSpeed))"
-        uiView.evaluateJavaScript(script, completionHandler: nil)
+        print("updateUiView")
+        let prev = context.coordinator.previousState
+
+        if prev.playbackSpeed != playbackSpeed {
+            let script = "player.setPlaybackRate(\(playbackSpeed))"
+            uiView.evaluateJavaScript(script, completionHandler: nil)
+            context.coordinator.previousState.playbackSpeed = playbackSpeed
+        }
 
         if isPlaying {
             uiView.evaluateJavaScript("player.playVideo()", completionHandler: nil)
         } else {
             uiView.evaluateJavaScript("player.pauseVideo()", completionHandler: nil)
+        }
+
+        let seekPosition = chapterManager.seekPosition
+        if prev.seekPosition != seekPosition, let seekTo = seekPosition {
+            let script = "player.seekTo(\(seekTo), true)"
+            uiView.evaluateJavaScript(script, completionHandler: nil)
+            context.coordinator.previousState.seekPosition = seekPosition
         }
     }
 
@@ -113,6 +129,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         var parent: YoutubeWebViewPlayer
         var didLoadURL = false
+        var previousState = PreviousState()
 
         init(_ parent: YoutubeWebViewPlayer) {
             self.parent = parent
@@ -125,10 +142,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 let body = messageBody.split(separator: ":")
                 let topic = body[safe: 0]
                 let payload = body[safe: 1]
-
-                print("topic", topic)
-                print("payload", payload)
-                print("messageBody", messageBody)
+                //                debugPrint(messageBody)
 
                 switch topic {
                 case "paused":
@@ -139,19 +153,23 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     guard let payload = payload, let time = Double(payload) else {
                         return
                     }
-                    print("newTime", time)
-                    parent.video.elapsedSeconds = time
+                    // print("newTime", time)
+                    parent.updateElapsedTime(time)
+                    parent.chapterManager.monitorChapters(time: time)
                 case "duration":
                     guard let payload = payload, let duration = Double(payload) else {
                         return
                     }
-                    print("duration", duration)
-                    parent.video.duration = duration
+                    VideoService.updateDuration(parent.video, duration: duration)
                 default:
                     break
                 }
-
             }
         }
     }
+}
+
+struct PreviousState {
+    var playbackSpeed: Double?
+    var seekPosition: Double?
 }

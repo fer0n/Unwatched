@@ -82,17 +82,12 @@ class VideoService {
             }
         }
     }
-}
 
-extension String {
-    func matching(regex: String) -> String? {
-        guard let regex = try? NSRegularExpression(pattern: regex) else { return nil }
-        let range = NSRange(location: 0, length: self.utf16.count)
-        if let match = regex.firstMatch(in: self, options: [], range: range) {
-            if let matchRange = Range(match.range(at: 1), in: self) {
-                return String(self[matchRange])
-            }
+    static func updateDuration(_ video: Video, duration: Double) {
+        if let last = video.sortedChapters.last {
+            last.endTime = duration
+            last.duration = duration - last.startTime
         }
-        return nil
+        video.duration = duration
     }
 }

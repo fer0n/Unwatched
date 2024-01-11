@@ -16,7 +16,7 @@ actor VideoActor {
             guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
                 return
             }
-            print("videoData", videoData)
+
             let title = videoData.title.isEmpty ? youtubeId : videoData.title
             let video = videoData.getVideo(title: title, url: url, youtubeId: youtubeId)
             modelContext.insert(video)

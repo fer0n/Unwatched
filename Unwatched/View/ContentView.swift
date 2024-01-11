@@ -19,6 +19,8 @@ struct ContentView: View {
     @Query var queue: [QueueEntry]
     @Query var inbox: [InboxEntry]
 
+    @State var chapterManager = ChapterManager()
+
     @MainActor
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
@@ -75,9 +77,12 @@ struct ContentView: View {
         .sheet(item: $navManager.video) { video in
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
-                VideoPlayer(video: video, markVideoWatched: {
-                    markVideoWatched(video: video)
-                })
+                VideoPlayer(video: video,
+                            markVideoWatched: {
+                                markVideoWatched(video: video)
+                            },
+                            chapterManager: chapterManager
+                )
             }
         }
         .environment(navManager)

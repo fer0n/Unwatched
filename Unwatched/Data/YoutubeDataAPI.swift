@@ -73,7 +73,8 @@ class YoutubeDataAPI {
                         feedTitle: item.snippet.channelTitle,
                         duration: duration,
                         publishedDate: publishedDate,
-                        status: nil)
+                        status: nil,
+                        videoDescription: item.snippet.description)
                 }
             } catch {
                 print("Error parsing JSON:", error)
@@ -131,6 +132,7 @@ struct VideoInfo: Codable {
         let channelTitle: String
         let channelId: String
         let publishedAt: String
+        let description: String
     }
 
     struct ContentDetails: Codable {
