@@ -23,7 +23,8 @@ actor VideoActor {
                               thumbnailUrl: videoData.thumbnailUrl,
                               publishedDate: videoData.publishedDate,
                               youtubeChannelId: videoData.youtubeChannelId,
-                              feedTitle: videoData.feedTitle)
+                              feedTitle: videoData.feedTitle,
+                              duration: videoData.duration)
             modelContext.insert(video)
             if let channelId = videoData.youtubeChannelId {
                 addToCorrectSubscription(video, channelId: channelId)
@@ -94,7 +95,8 @@ actor VideoActor {
                                               thumbnailUrl: $0.thumbnailUrl,
                                               publishedDate: $0.publishedDate,
                                               youtubeChannelId: sub.youtubeChannelId,
-                                              feedTitle: $0.feedTitle) })
+                                              feedTitle: $0.feedTitle,
+                                              duration: $0.duration) })
         for video in videos {
             modelContext.insert(video)
         }
