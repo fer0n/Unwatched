@@ -60,7 +60,9 @@ struct VideoListItem: View {
                             .textCase(.uppercase)
                             .foregroundStyle(Color.gray)
                     }
-                    if let duration = video.duration, let remaining = video.remainingTime {
+                    if let duration = video.duration,
+                       let remaining = video.remainingTime,
+                       duration > 0 && remaining > 0 {
                         HStack(alignment: .center) {
                             ProgressView(value: video.elapsedSeconds, total: duration)
                                 .tint(.teal)
@@ -92,11 +94,16 @@ struct VideoListItem: View {
 
 func formatDurationFromSeconds(_ seconds: TimeInterval) -> String {
     let formatter = DateComponentsFormatter()
-    formatter.allowedUnits = [.minute, .second]
+    formatter.allowedUnits = [.hour, .minute, .second]
     formatter.unitsStyle = .positional
 
     if let formattedDuration = formatter.string(from: seconds) {
-        return formattedDuration
+        let components = formattedDuration.split(separator: ":")
+        if components.count == 1 {
+            return "\(formattedDuration)s"
+        } else {
+            return formattedDuration
+        }
     } else {
         return ""
     }

@@ -27,9 +27,9 @@ struct QueueView: View {
                                     modelContext: modelContext)
     }
 
-    func handleUrlDrop(_ items: [URL]) {
+    func handleUrlDrop(_ items: [URL], at index: Int) {
         print("handleUrlDrop", items)
-        VideoService.addForeignUrls(items, videoPlacement: .queue, modelContext: modelContext)
+        VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
     }
 
     var body: some View {
@@ -54,8 +54,9 @@ struct QueueView: View {
                     }
                     .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)
-                    .dropDestination(for: URL.self) { items, _ in
-                        handleUrlDrop(items)
+                    .dropDestination(for: URL.self) { items, index in
+                        print("index", index)
+                        handleUrlDrop(items, at: index)
                     }
                 }
                 .navigationBarTitle("Queue")

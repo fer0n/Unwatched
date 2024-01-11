@@ -22,7 +22,12 @@ final class Video: CustomStringConvertible {
     private var _feedTitle: String?
 
     var feedTitle: String? {
-        return subscription?.title ?? _feedTitle
+        get {
+            subscription?.title ?? _feedTitle
+        }
+        set {
+            _feedTitle = newValue
+        }
     }
 
     var remainingTime: Double? {
@@ -76,4 +81,26 @@ struct SendableVideo: Sendable {
     var publishedDate: Date?
     var status: VideoStatus?
     var watched = false
+
+    func getVideo(
+        title: String? = nil,
+        url: URL? = nil,
+        youtubeId: String? = nil,
+        thumbnailUrl: URL? = nil,
+        publishedDate: Date? = nil,
+        youtubeChannelId: String? = nil,
+        feedTitle: String? = nil,
+        duration: TimeInterval? = nil
+    ) -> Video {
+        Video(
+            title: title ?? self.title,
+            url: url ?? self.url,
+            youtubeId: youtubeId ?? self.youtubeId,
+            thumbnailUrl: thumbnailUrl ?? self.thumbnailUrl,
+            publishedDate: publishedDate ?? self.publishedDate,
+            youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
+            feedTitle: feedTitle ?? self.feedTitle,
+            duration: duration ?? self.duration
+        )
+    }
 }

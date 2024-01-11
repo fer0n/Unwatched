@@ -59,7 +59,10 @@ class VideoService {
         VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
     }
 
-    static func addForeignUrls(_ urls: [URL], videoPlacement: VideoPlacement, modelContext: ModelContext) {
+    static func addForeignUrls(_ urls: [URL],
+                               in videoPlacement: VideoPlacement,
+                               at index: Int = 0,
+                               modelContext: ModelContext) {
         // TODO: before adding anything, check if the video already exists,
         // if it does, add that one to queue
         let container = modelContext.container
@@ -67,7 +70,7 @@ class VideoService {
         Task.detached {
             do {
                 let repo = VideoActor(modelContainer: container)
-                try await repo.loadVideoData(from: urls, at: videoPlacement)
+                try await repo.loadVideoData(from: urls, in: videoPlacement, at: index)
             } catch {
                 print("\(error)")
             }
