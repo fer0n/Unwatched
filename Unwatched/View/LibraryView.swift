@@ -35,8 +35,8 @@ struct LibraryView: View {
                 Section {
                     NavigationLink(destination: WatchHistoryView()) {
                         HStack {
-                            Image(systemName: "clock.arrow.circlepath")
-                            Text("History")
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Watched")
                         }
                     }
                 }
