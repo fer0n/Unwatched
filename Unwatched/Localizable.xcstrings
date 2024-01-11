@@ -19,6 +19,18 @@
     "Add to Queue" : {
 
     },
+    "Are you sure you want to clear all items from the inbox?" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Clear All" : {
+
+    },
+    "Confirm Clear All" : {
+
+    },
     "Custom settings for this feed" : {
 
     },
@@ -79,9 +91,6 @@
 
     },
     "VideoPlayer – Should never be visible" : {
-
-    },
-    "Watch History" : {
 
     },
     "Watched" : {

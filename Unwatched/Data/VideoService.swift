@@ -40,6 +40,12 @@ class VideoService {
         }
     }
 
+    static func deleteInboxEntries(_ entries: [InboxEntry], modelContext: ModelContext) {
+        for entry in entries {
+            VideoService.deleteInboxEntry(entry, modelContext: modelContext)
+        }
+    }
+
     static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
         entry.video.status = nil
         modelContext.delete(entry)
