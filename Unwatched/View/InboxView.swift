@@ -53,6 +53,23 @@ struct InboxView: View {
                     .dropDestination(for: URL.self) { items, _ in
                         handleUrlDrop(items)
                     }
+
+                    if inboxEntries.count > 8 {
+                        Section {
+                            Button {
+                                showingClearAllAlert = true
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "xmark.circle")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.teal)
+                                    Spacer()
+                                }.padding()
+                            }
+                        }
+                    }
                 }
                 .refreshable {
                     await loadNewVideos()
@@ -63,17 +80,6 @@ struct InboxView: View {
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
-            }
-            .toolbar {
-                if !inboxEntries.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            showingClearAllAlert = true
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                        }
-                    }
-                }
             }
         }
         .listStyle(.plain)

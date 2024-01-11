@@ -14,7 +14,8 @@ struct UnwatchedApp: App {
             Subscription.self,
             QueueEntry.self,
             WatchEntry.self,
-            InboxEntry.self
+            InboxEntry.self,
+            Chapter.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
