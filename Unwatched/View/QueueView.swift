@@ -7,12 +7,13 @@ import SwiftUI
 import SwiftData
 
 struct QueueView: View {
-    @State var value: Double = 1.5
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
+
+    @State var value: Double = 1.5
 
     var loadNewVideos: () async -> Void
-    @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
     func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
@@ -41,16 +42,7 @@ struct QueueView: View {
                 }
                 List {
                     ForEach(queue) { entry in
-                        VideoListItem(video: entry.video)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    VideoService.markVideoWatched(entry.video,
-                                                                  modelContext: modelContext)
-                                } label: {
-                                    Image(systemName: "checkmark.circle.fill")
-                                }
-                                .tint(.teal)
-                            }
+                        VideoListItem(video: entry.video, videoSwipeActions: [.watched])
                     }
                     .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)

@@ -151,8 +151,6 @@ actor VideoActor {
 
     static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
         do {
-            print("insertQueueEntries")
-            print("startIndex", startIndex)
             let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
@@ -168,7 +166,7 @@ actor VideoActor {
         } catch {
             print("\(error)")
         }
-        // TODO: delete inbox entries here?
+        // TODO: also delete from inbox, but only in the background
     }
 
     private static func clearFromQueue(_ video: Video, modelContext: ModelContext) {

@@ -25,13 +25,6 @@ struct InboxView: View {
         VideoService.deleteInboxEntry(entry, modelContext: modelContext)
     }
 
-    func addVideoToQueue(_ entry: InboxEntry) {
-        VideoService.insertQueueEntries(
-            videos: [entry.video],
-            modelContext: modelContext)
-        deleteInboxEntry(entry)
-    }
-
     func handleUrlDrop(_ items: [URL]) {
         print("handleUrlDrop inbox", items)
         VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
@@ -52,15 +45,9 @@ struct InboxView: View {
 
                 List {
                     ForEach(inboxEntries) { entry in
-                        VideoListItem(video: entry.video)
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button {
-                                    addVideoToQueue(entry)
-                                } label: {
-                                    Image(systemName: "text.badge.plus")
-                                }
-                                .tint(.teal)
-                            }
+                        VideoListItem(video: entry.video, videoSwipeActions: [.queue], onAddToQueue: {
+                            deleteInboxEntry(entry)
+                        })
                     }
                     .onDelete(perform: deleteInboxEntryIndexSet)
                     .dropDestination(for: URL.self) { items, _ in

@@ -5,12 +5,21 @@
 
 import SwiftUI
 
+enum VideoActions {
+    case queue
+    case delete
+    case clear
+    case watched
+}
+
 struct VideoListItem: View {
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.modelContext) var modelContext
 
     let video: Video
     var showVideoStatus: Bool = false
-    // TODO: for any video, show the state: queued, watched, inbox
+    var videoSwipeActions: [VideoActions] = [.queue]
+    var onAddToQueue: (() -> Void)?
 
     func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
         let defaultColor = Color.green
@@ -24,10 +33,64 @@ struct VideoListItem: View {
         return nil
     }
 
-    var body: some View {
-        // Define how each video should be displayed in the list
-        // This is a placeholder, replace with your actual UI code
-        // thumbnail image async loaded
+    func addVideoToQueue() {
+        onAddToQueue?()
+        VideoService.insertQueueEntries(
+            at: 0,
+            videos: [video],
+            modelContext: modelContext
+        )
+    }
+
+    func markVideoWatched() {
+        VideoService.markVideoWatched(
+            video,
+            modelContext: modelContext
+        )
+    }
+
+    func clearVideoEverywhere() {
+        VideoService.clearFromEverywhere(
+            video,
+            modelContext: modelContext
+        )
+    }
+
+    func getLeadingSwipeActions() -> some View {
+        Group {
+            if videoSwipeActions.contains(.queue) {
+                Button {
+                    addVideoToQueue()
+                } label: {
+                    Image(systemName: "text.badge.plus")
+                }
+                .tint(.teal)
+            }
+            if videoSwipeActions.contains(.watched) {
+                Button {
+                    markVideoWatched()
+                } label: {
+                    Image(systemName: "checkmark.circle.fill")
+                }
+                .tint(.teal)
+            }
+        }
+    }
+
+    func getTrailingSwipeActions() -> some View {
+        return Group {
+            if videoSwipeActions.contains(.clear) {
+                Button {
+                    clearVideoEverywhere()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .tint(.orange)
+            }
+        }
+    }
+
+    var videoItem: some View {
         ZStack(alignment: .topLeading) {
             HStack {
                 CacheAsyncImage(url: video.thumbnailUrl) { image in
@@ -86,9 +149,20 @@ struct VideoListItem: View {
                     .frame(width: 23, height: 23)
             }
         }
-        .onTapGesture {
-            navManager.video = video
-        }
+    }
+
+    var body: some View {
+        videoItem
+            .onTapGesture {
+                navManager.video = video
+            }
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                getLeadingSwipeActions()
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                getTrailingSwipeActions()
+            }
+        // TODO: clean up all files with videoSwipeActions, there are probably funcs and contexts no longer necessary
     }
 }
 
