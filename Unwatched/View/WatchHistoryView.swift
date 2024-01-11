@@ -20,7 +20,7 @@ struct WatchHistoryView: View {
     var body: some View {
         ZStack {
             if watchEntries.isEmpty {
-                Text("Nothing marked as watched yet")
+                BackgroundPlaceholder(systemName: "checkmark.circle.fill")
             } else {
                 List {
                     ForEach(watchEntries) { entry in
@@ -37,10 +37,9 @@ struct WatchHistoryView: View {
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-                .navigationBarTitle("History", displayMode: .inline)
             }
         }
-
+        .navigationBarTitle("Watched", displayMode: .inline)
     }
 }
 

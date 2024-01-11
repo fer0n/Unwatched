@@ -34,9 +34,6 @@
     "Feed URL" : {
 
     },
-    "History" : {
-
-    },
     "Inbox" : {
 
     },
@@ -63,9 +60,6 @@
     "No sideloaded videos found" : {
 
     },
-    "Nothing marked as watched yet" : {
-
-    },
     "Paste URL" : {
 
     },
@@ -85,6 +79,12 @@
 
     },
     "VideoPlayer – Should never be visible" : {
+
+    },
+    "Watch History" : {
+
+    },
+    "Watched" : {
 
     }
   },
