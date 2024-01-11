@@ -5,7 +5,7 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
-    func loadVideoData(from videoUrls: [URL], at videoplacement: VideoPlacement) async throws {
+    func loadVideoData(from videoUrls: [URL], in videoplacement: VideoPlacement, at index: Int = 0) async throws {
         var videos = [Video]()
         for url in videoUrls {
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -17,21 +17,15 @@ actor VideoActor {
                 return
             }
             print("videoData", videoData)
-            let video = Video(title: videoData.title.isEmpty ? youtubeId : videoData.title,
-                              url: url,
-                              youtubeId: youtubeId,
-                              thumbnailUrl: videoData.thumbnailUrl,
-                              publishedDate: videoData.publishedDate,
-                              youtubeChannelId: videoData.youtubeChannelId,
-                              feedTitle: videoData.feedTitle,
-                              duration: videoData.duration)
+            let title = videoData.title.isEmpty ? youtubeId : videoData.title
+            let video = videoData.getVideo(title: title, url: url, youtubeId: youtubeId)
             modelContext.insert(video)
             if let channelId = videoData.youtubeChannelId {
                 addToCorrectSubscription(video, channelId: channelId)
             }
             videos.append(video)
         }
-        addVideosTo(videos: videos, placement: videoplacement)
+        addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
     }
 
@@ -81,6 +75,10 @@ actor VideoActor {
         let subscriptions = try? modelContext.fetch(fetchDescriptor)
         if let sub = subscriptions?.first {
             sub.videos.append(video)
+            for video in sub.videos {
+                video.feedTitle = sub.title
+                video.youtubeChannelId = sub.youtubeChannelId
+            }
         }
     }
 
@@ -89,24 +87,19 @@ actor VideoActor {
         let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
             url: sub.link,
             mostRecentPublishedDate: sub.mostRecentVideoDate)
-        let videos = loadedVideos.map({ Video(title: $0.title,
-                                              url: $0.url,
-                                              youtubeId: $0.youtubeId,
-                                              thumbnailUrl: $0.thumbnailUrl,
-                                              publishedDate: $0.publishedDate,
-                                              youtubeChannelId: sub.youtubeChannelId,
-                                              feedTitle: $0.feedTitle,
-                                              duration: $0.duration) })
-        for video in videos {
+        var newVideos = [Video]()
+        for vid in loadedVideos {
+            let video = vid.getVideo(youtubeChannelId: sub.youtubeChannelId)
             modelContext.insert(video)
+            newVideos.append(video)
         }
 
-        sub.videos.append(contentsOf: videos)
+        sub.videos.append(contentsOf: newVideos)
         let limitVideos = sub.mostRecentVideoDate == nil ? 5 : nil
-        updateRecentVideoDate(subscription: sub, videos: videos)
+        updateRecentVideoDate(subscription: sub, videos: newVideos)
 
         triageSubscriptionVideos(sub,
-                                 videos: videos,
+                                 videos: newVideos,
                                  defaultPlacement: .inbox,
                                  limitVideos: limitVideos)
     }
@@ -132,11 +125,11 @@ actor VideoActor {
         addVideosTo(videos: videosToAdd, placement: placement)
     }
 
-    private func addVideosTo(videos: [Video], placement: VideoPlacement) {
+    private func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 0) {
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {
-            VideoActor.insertQueueEntries(videos: videos, modelContext: modelContext)
+            VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
         }
     }
 
@@ -156,17 +149,18 @@ actor VideoActor {
         modelContext.insert(watchEntry)
     }
 
-    static func insertQueueEntries(at index: Int = 0, videos: [Video], modelContext: ModelContext) {
+    static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
         do {
-            let sort = SortDescriptor<QueueEntry>(\.order, order: .reverse)
+            print("insertQueueEntries")
+            print("startIndex", startIndex)
+            let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
-
             for (index, video) in videos.enumerated() {
                 video.status = .queued
-                let queueEntry = QueueEntry(video: video, order: index + index)
+                let queueEntry = QueueEntry(video: video, order: 0)
                 modelContext.insert(queueEntry)
-                queue.insert(queueEntry, at: index)
+                queue.insert(queueEntry, at: startIndex + index)
             }
             for (index, queueEntry) in queue.enumerated() {
                 queueEntry.order = index

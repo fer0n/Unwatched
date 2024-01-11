@@ -175,8 +175,8 @@
 		88DFC0AD2B44843A001895C8 /* Unwatched */ = {
 			isa = PBXGroup;
 			children = (
-				88143EB52B4A7FEF00829E13 /* Helper */,
 				88D438AA2B45C3D700482F29 /* Info.plist */,
+				88143EB52B4A7FEF00829E13 /* Helper */,
 				8898B6802B48464000348D01 /* Errors */,
 				886E79B82B46FFC700554E1F /* Extensions */,
 				88DFC0C42B448ABF001895C8 /* View */,

@@ -155,5 +155,3 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
     }
 }
-
-

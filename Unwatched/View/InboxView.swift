@@ -33,13 +33,14 @@ struct InboxView: View {
 
     func handleUrlDrop(_ items: [URL]) {
         print("handleUrlDrop inbox", items)
-        VideoService.addForeignUrls(items, videoPlacement: .inbox, modelContext: modelContext)
+        VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
     }
 
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
+
                 if inboxEntries.isEmpty {
                     BackgroundPlaceholder(systemName: "tray.fill")
                 }
@@ -56,17 +57,18 @@ struct InboxView: View {
                                 .tint(.teal)
                             }
                     }
+                    .onDelete(perform: deleteInboxEntryIndexSet)
                     .dropDestination(for: URL.self) { items, _ in
                         handleUrlDrop(items)
                     }
-                    .onDelete(perform: deleteInboxEntryIndexSet)
                 }
                 .refreshable {
                     await loadNewVideos()
                 }
-                .navigationBarTitle("Inbox")
-                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+
             }
+            .navigationBarTitle("Inbox")
+            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
