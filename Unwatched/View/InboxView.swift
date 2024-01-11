@@ -10,6 +10,7 @@ struct InboxView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Query(sort: \InboxEntry.video.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
+    @State private var showingClearAllAlert = false
 
     var loadNewVideos: () async -> Void
 
@@ -34,6 +35,10 @@ struct InboxView: View {
     func handleUrlDrop(_ items: [URL]) {
         print("handleUrlDrop inbox", items)
         VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
+    }
+
+    func clearAll() {
+        VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
     }
 
     var body: some View {
@@ -72,8 +77,27 @@ struct InboxView: View {
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
+            .toolbar {
+                if !inboxEntries.isEmpty {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showingClearAllAlert = true
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                        }
+                    }
+                }
+            }
         }
         .listStyle(.plain)
+        .alert("Confirm Clear All", isPresented: $showingClearAllAlert, actions: {
+            Button("Clear All", role: .destructive) {
+                clearAll()
+            }
+            Button("Cancel", role: .cancel) {}
+        }, message: {
+            Text("Are you sure you want to clear all items from the inbox?")
+        })
     }
 
 }
