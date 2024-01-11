@@ -11,9 +11,8 @@ class YoutubeDataAPI {
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
-    static func getYtChannelIdFromUsername(username: String) async throws -> String {
+    static func getYtChannelIdFromUsername(_ username: String) async throws -> String {
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forUsername=\(username)&part=id"
-        print("apiUrl", apiUrl)
 
         if let url = URL(string: apiUrl) {
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -25,6 +24,26 @@ class YoutubeDataAPI {
                    let id = item["id"] as? String {
                     return id
                 }
+            }
+        }
+        throw SubscriptionError.failedGettingChannelIdFromUsername
+    }
+
+    static func getYtChannelIdViaList(from userName: String) async throws -> String {
+        let apiUrl = "\(baseUrl)search?key=\(apiKey)&q=\(userName)&type=channel&part=id,snippet"
+        print("apiUrl", apiUrl)
+
+        if let url = URL(string: apiUrl) {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            print("data", data)
+            do {
+                let decoder = JSONDecoder()
+                let channelInfo = try decoder.decode(ChannelInfo.self, from: data)
+                if let item = channelInfo.items.first {
+                    return item.id.channelId
+                }
+            } catch {
+                print("Error parsing JSON:", error)
             }
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername
@@ -96,31 +115,46 @@ func parseDurationToSeconds(_ duration: String) -> Double? {
     return totalSeconds
 }
 
-struct Medium: Codable {
-    let url: String
-}
-
-struct Thumbnails: Codable {
-    let medium: Medium
-}
-
-struct Snippet: Codable {
-    let title: String
-    let thumbnails: Thumbnails
-    let channelTitle: String
-    let channelId: String
-    let publishedAt: String
-}
-
-struct ContentDetails: Codable {
-    let duration: String
-}
-
-struct Item: Codable {
-    let snippet: Snippet
-    let contentDetails: ContentDetails
-}
-
+// MARK: - VideoInfo
 struct VideoInfo: Codable {
+    struct Medium: Codable {
+        let url: String
+    }
+
+    struct Thumbnails: Codable {
+        let medium: Medium
+    }
+
+    struct Snippet: Codable {
+        let title: String
+        let thumbnails: Thumbnails
+        let channelTitle: String
+        let channelId: String
+        let publishedAt: String
+    }
+
+    struct ContentDetails: Codable {
+        let duration: String
+    }
+
+    struct Item: Codable {
+        let snippet: Snippet
+        let contentDetails: ContentDetails
+    }
+
     let items: [Item]
+}
+
+// MARK: - ChannelInfo
+struct ChannelInfo: Decodable {
+
+    struct Id: Decodable {
+        let channelId: String
+    }
+
+    struct Items: Decodable {
+        let id: Id
+    }
+
+    let items: [Items]
 }

@@ -29,19 +29,34 @@ actor SubscriptionActor {
         if isYoutubeFeedUrl(url: url) {
             return url
         }
-        if url.absoluteString.contains("youtube.com/@") {
-            let username = url.absoluteString.components(separatedBy: "@").last ?? ""
-            print("username", username)
-            let channelId = try await YoutubeDataAPI.getYtChannelIdFromUsername(username: username)
-            print("channelId", channelId)
-            if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
-                return channelFeedUrl
-            }
+        guard let userName = getChannelUserNameFromUrl(url: url) else {
+            throw SubscriptionError.failedGettingChannelIdFromUsername
         }
-        throw SubscriptionError.noSupported
+        let channelId = try await YoutubeDataAPI.getYtChannelIdViaList(from: userName)
+        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
+            return channelFeedUrl
+        }
+        throw SubscriptionError.notSupported
+    }
+
+    func getChannelUserNameFromUrl(url: URL) -> String? {
+        let urlString = url.absoluteString
+
+        // https://www.youtube.com/@GAMERTAGVR/videos
+        if let userName = urlString.matching(regex: #"\/@(.*?)\/"#) {
+            return userName
+        }
+
+        // https://www.youtube.com/c/GamertagVR/videos
+        if let userName = urlString.matching(regex: #"\/c\/(.*?)\/"#) {
+            return userName
+        }
+
+        return nil
     }
 
     func isYoutubeFeedUrl(url: URL) -> Bool {
+        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
 }

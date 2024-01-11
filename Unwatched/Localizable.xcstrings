@@ -46,9 +46,6 @@
     "Failed to parse the data" : {
       "comment" : "Failed To Parse Error"
     },
-    "Feed URL" : {
-
-    },
     "Inbox" : {
 
     },
@@ -75,7 +72,7 @@
     "No sideloaded videos found" : {
 
     },
-    "Paste URL" : {
+    "Paste & Submit" : {
 
     },
     "Queue" : {
@@ -97,6 +94,12 @@
 
     },
     "Watched" : {
+
+    },
+    "You can enter mutliple URLs, one per line" : {
+
+    },
+    "Youtube RSS/Channel URL" : {
 
     }
   },
