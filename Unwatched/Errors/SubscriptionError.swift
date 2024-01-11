@@ -6,13 +6,13 @@
 import Foundation
 
 enum SubscriptionError: LocalizedError {
-    case noSupported
+    case notSupported
     case failedGettingChannelIdFromUsername
     case failedGettingVideoInfo
 
     var errorDescription: String? {
         switch self {
-        case .noSupported:
+        case .notSupported:
             return NSLocalizedString("The operation is not supported",
                                      comment: "No Supported Error")
         case .failedGettingChannelIdFromUsername:

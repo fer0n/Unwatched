@@ -85,7 +85,7 @@ struct AddSubscriptionView: View {
             .padding()
 
             HStack {
-                TextField("Feed URL", text: $text)
+                TextField("Youtube RSS/Channel URL", text: $text)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 15)
                     .background(Color.grayColor)
@@ -102,6 +102,12 @@ struct AddSubscriptionView: View {
                 .foregroundColor(.backgroundColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
+
+            Text("You can enter mutliple URLs, one per line")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading)
 
             if let errorMessage = errorMessage {
                 Text(errorMessage)
@@ -120,7 +126,7 @@ struct AddSubscriptionView: View {
                     addSubscription()
                 }
             } label: {
-                Text("Paste URL")
+                Text("Paste & Submit")
                     .bold()
                     .padding(.horizontal, 25)
                     .padding(.vertical, 15)
