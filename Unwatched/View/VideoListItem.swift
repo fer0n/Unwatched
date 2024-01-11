@@ -42,6 +42,7 @@ struct VideoListItem: View {
                         .frame(width: 160, height: 90)
                 }
                 .padding(showVideoStatus ? 5 : 0)
+
                 VStack(alignment: .leading, spacing: 3) {
                     Text(video.title)
                         .font(.system(size: 15, weight: .medium))
@@ -59,6 +60,18 @@ struct VideoListItem: View {
                             .textCase(.uppercase)
                             .foregroundStyle(Color.gray)
                     }
+                    if let duration = video.duration, let remaining = video.remainingTime {
+                        HStack(alignment: .center) {
+                            ProgressView(value: video.elapsedSeconds, total: duration)
+                                .tint(.teal)
+                                .opacity(0.6)
+                                .padding(.top, 3)
+                                .padding(.trailing, 5)
+                            Text(formatDurationFromSeconds(remaining))
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundStyle(Color.gray)
+                        }
+                    }
                 }
             }
             if showVideoStatus,
@@ -74,6 +87,18 @@ struct VideoListItem: View {
         .onTapGesture {
             navManager.video = video
         }
+    }
+}
+
+func formatDurationFromSeconds(_ seconds: TimeInterval) -> String {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.minute, .second]
+    formatter.unitsStyle = .positional
+
+    if let formattedDuration = formatter.string(from: seconds) {
+        return formattedDuration
+    } else {
+        return ""
     }
 }
 

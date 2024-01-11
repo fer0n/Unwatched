@@ -40,27 +40,32 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             function onPlayerReady(event) {
                 event.target.setPlaybackRate(\(playbackSpeed));
                 player.seekTo(\(video.elapsedSeconds), true);
+                sendMessage("duration", player.getDuration());
                 player.play()
             }
 
             function onPlayerStateChange(event) {
                 if (event.data == YT.PlayerState.PAUSED) {
-                    window.webkit.messageHandlers.iosListener.postMessage("paused");
+                    sendMessage("paused");
                     stopTimer();
                 } else if (event.data == YT.PlayerState.PLAYING) {
-                    window.webkit.messageHandlers.iosListener.postMessage("playing");
+                    sendMessage("playing");
                     startTimer();
                 }
             }
 
             function startTimer() {
                 timer = setInterval(function() {
-                    window.webkit.messageHandlers.iosListener.postMessage("currentTime:" + player.getCurrentTime());
+                sendMessage("currentTime", player.getCurrentTime());
                 }, 1000);
             }
 
             function stopTimer() {
                 clearInterval(timer);
+            }
+
+            function sendMessage(topic, payload) {
+                window.webkit.messageHandlers.iosListener.postMessage("" + topic + ":" + payload);
             }
         </script>
         <iframe
@@ -131,9 +136,17 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 case "playing":
                     parent.isPlaying = true
                 case "currentTime":
-                    let newTime = Double(messageBody.split(separator: ":")[1]) ?? 0
-                    print("newTime", newTime)
-                    parent.video.elapsedSeconds = newTime
+                    guard let payload = payload, let time = Double(payload) else {
+                        return
+                    }
+                    print("newTime", time)
+                    parent.video.elapsedSeconds = time
+                case "duration":
+                    guard let payload = payload, let duration = Double(payload) else {
+                        return
+                    }
+                    print("duration", duration)
+                    parent.video.duration = duration
                 default:
                     break
                 }
@@ -142,3 +155,5 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
     }
 }
+
+

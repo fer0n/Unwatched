@@ -13,7 +13,7 @@ final class Video: CustomStringConvertible {
     var url: URL
     var thumbnailUrl: URL?
     var publishedDate: Date?
-    var duration: String?
+    var duration: Double?
 
     var status: VideoStatus?
     var watched = false
@@ -22,9 +22,12 @@ final class Video: CustomStringConvertible {
     private var _feedTitle: String?
 
     var feedTitle: String? {
-        get {
-            return subscription?.title ?? _feedTitle
-        }
+        return subscription?.title ?? _feedTitle
+    }
+
+    var remainingTime: Double? {
+        guard let duration = duration else { return nil }
+        return duration - elapsedSeconds
     }
 
     var elapsedSeconds: Double = 0
@@ -35,7 +38,8 @@ final class Video: CustomStringConvertible {
          thumbnailUrl: URL? = nil,
          publishedDate: Date? = nil,
          youtubeChannelId: String? = nil,
-         feedTitle: String? = nil) {
+         feedTitle: String? = nil,
+         duration: Double? = nil) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
@@ -43,6 +47,7 @@ final class Video: CustomStringConvertible {
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
         self._feedTitle = feedTitle
+        self.duration = duration
     }
 
     // specify what is being printed when you print an instance of this class directly
@@ -66,7 +71,7 @@ struct SendableVideo: Sendable {
     var thumbnailUrl: URL?
     var youtubeChannelId: String?
     var feedTitle: String?
-    var duration: String?
+    var duration: Double?
 
     var publishedDate: Date?
     var status: VideoStatus?

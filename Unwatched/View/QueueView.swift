@@ -12,8 +12,7 @@ struct QueueView: View {
     @Environment(NavigationManager.self) private var navManager
 
     var loadNewVideos: () async -> Void
-    @Query var subscriptions: [Subscription]
-    @Query(sort: \QueueEntry.order) var queue: [QueueEntry]
+    @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
     func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
