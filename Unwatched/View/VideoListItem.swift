@@ -20,6 +20,7 @@ struct VideoListItem: View {
     var showVideoStatus: Bool = false
     var videoSwipeActions: [VideoActions] = [.queue]
     var onAddToQueue: (() -> Void)?
+    var onTapQuesture: (() -> Void)?
 
     func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
         let defaultColor = Color.green
@@ -154,7 +155,11 @@ struct VideoListItem: View {
     var body: some View {
         videoItem
             .onTapGesture {
-                navManager.video = video
+                if let tap = onTapQuesture {
+                    tap()
+                } else {
+                    navManager.video = video
+                }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 getLeadingSwipeActions()

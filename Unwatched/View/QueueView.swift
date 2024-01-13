@@ -42,7 +42,13 @@ struct QueueView: View {
                 }
                 List {
                     ForEach(queue) { entry in
-                        VideoListItem(video: entry.video, videoSwipeActions: [.watched])
+                        VideoListItem(video: entry.video, videoSwipeActions: [.watched], onTapQuesture: {
+                            navManager.video = entry.video
+                            if entry.order == 0 { return }
+                            VideoService.moveQueueEntry(from: [entry.order],
+                                                        to: 0,
+                                                        modelContext: modelContext)
+                        })
                     }
                     .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)

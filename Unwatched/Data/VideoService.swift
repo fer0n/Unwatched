@@ -21,6 +21,7 @@ class VideoService {
     }
 
     static func markVideoWatched(_ video: Video, modelContext: ModelContext ) {
+        print("markVideoWatched", video.title)
         do {
             try VideoActor.markVideoWatched(video, modelContext: modelContext)
         } catch {
@@ -89,5 +90,19 @@ class VideoService {
             last.duration = duration - last.startTime
         }
         video.duration = duration
+    }
+
+    static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        let fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order > 0 }, sortBy: [sort])
+        let videos = try? modelContext.fetch(fetch)
+        print("videos", videos)
+        if let nextVideo = videos?.first {
+            print("nextVideo", nextVideo)
+            return nextVideo.video
+        }
+        return nil
+        // TODO: worth putting this on the background thread?
+        // TODO: worth getting the actual queueEntry for the current video first and then continue?
     }
 }

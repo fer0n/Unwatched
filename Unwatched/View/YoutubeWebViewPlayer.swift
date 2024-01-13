@@ -12,6 +12,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     @Binding var isPlaying: Bool
     var updateElapsedTime: (_ seconds: Double) -> Void
     @Bindable var chapterManager: ChapterManager
+    var onVideoEnded: () -> Void
 
     var htmlString: String {
         """
@@ -40,6 +41,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
 
             function onPlayerReady(event) {
+                sendMessage("playerReady");
                 event.target.setPlaybackRate(\(playbackSpeed));
                 player.seekTo(\(video.elapsedSeconds), true);
                 sendMessage("duration", player.getDuration());
@@ -53,6 +55,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 } else if (event.data == YT.PlayerState.PLAYING) {
                     sendMessage("playing");
                     startTimer();
+                } else if (event.data == YT.PlayerState.ENDED) {
+                    sendMessage("ended");
+                } else if (event.data == YT.PlayerState.UNSTARTED) {
+                    sendMessage("unstarted");
                 }
             }
 
@@ -83,6 +89,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> WKWebView {
+        print("MAKE UIView")
         let webViewConfiguration = WKWebViewConfiguration()
         webViewConfiguration.allowsPictureInPictureMediaPlayback = true
         webViewConfiguration.mediaTypesRequiringUserActionForPlayback = []
@@ -120,6 +127,12 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             uiView.evaluateJavaScript(script, completionHandler: nil)
             context.coordinator.previousState.seekPosition = seekPosition
         }
+
+        if prev.videoId != video.youtubeId {
+            let script = "player.loadVideoById('\(video.youtubeId)', 0)"
+            uiView.evaluateJavaScript(script, completionHandler: nil)
+            context.coordinator.previousState.videoId = video.youtubeId
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -142,12 +155,19 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 let body = messageBody.split(separator: ":")
                 let topic = body[safe: 0]
                 let payload = body[safe: 1]
-                //                debugPrint(messageBody)
+                if topic != "currentTime" {
+                    debugPrint(messageBody)
+                }
 
                 switch topic {
                 case "paused":
                     parent.isPlaying = false
                 case "playing":
+                    parent.isPlaying = true
+                case "ended":
+                    parent.isPlaying = false
+                    parent.onVideoEnded()
+                case "unstarted":
                     parent.isPlaying = true
                 case "currentTime":
                     guard let payload = payload, let time = Double(payload) else {
@@ -170,6 +190,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 }
 
 struct PreviousState {
+    var videoId: String?
     var playbackSpeed: Double?
     var seekPosition: Double?
 }
