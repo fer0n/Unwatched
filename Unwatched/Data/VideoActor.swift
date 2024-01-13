@@ -13,20 +13,39 @@ actor VideoActor {
                 print("no youtubeId found")
                 return
             }
-            guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
-                return
-            }
 
-            let title = videoData.title.isEmpty ? youtubeId : videoData.title
-            let video = videoData.getVideo(title: title, url: url, youtubeId: youtubeId)
-            modelContext.insert(video)
-            if let channelId = videoData.youtubeChannelId {
-                addToCorrectSubscription(video, channelId: channelId)
+            print("urlAlreadyExists?")
+            if let video = videoAlreadyExists(youtubeId) {
+                videos.append(video)
+            } else {
+                if let video = try await createVideo(from: youtubeId, url: url) {
+                    videos.append(video)
+                }
             }
-            videos.append(video)
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
+    }
+
+    func createVideo(from youtubeId: String, url: URL) async throws -> Video? {
+        guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
+            return nil
+        }
+        let title = videoData.title.isEmpty ? youtubeId : videoData.title
+        let video = videoData.getVideo(title: title, url: url, youtubeId: youtubeId)
+        modelContext.insert(video)
+        if let channelId = videoData.youtubeChannelId {
+            addToCorrectSubscription(video, channelId: channelId)
+        }
+        return video
+    }
+
+    func videoAlreadyExists(_ youtubeId: String) -> Video? {
+        let fetchDescriptor = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.youtubeId == youtubeId
+        })
+        let videos = try? modelContext.fetch(fetchDescriptor)
+        return videos?.first
     }
 
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
