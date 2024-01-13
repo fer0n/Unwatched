@@ -26,6 +26,7 @@
 		887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */; };
 		887AC8D42B49CECF00512852 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 887AC8D32B49CECF00512852 /* Localizable.xcstrings */; };
 		887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D52B49D0BE00512852 /* VideoPlacement.swift */; };
+		887CA9412B529B9E00E344EC /* WebViewWarmUper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887CA9402B529B9E00E344EC /* WebViewWarmUper.swift */; };
 		8891F0AD2B4E7E170098A3FB /* VideoActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor.swift */; };
 		8891F0B02B4E9F330098A3FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AF2B4E9F330098A3FB /* String.swift */; };
 		8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */; };
@@ -76,6 +77,7 @@
 		887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailView.swift; sourceTree = "<group>"; };
 		887AC8D32B49CECF00512852 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		887AC8D52B49D0BE00512852 /* VideoPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlacement.swift; sourceTree = "<group>"; };
+		887CA9402B529B9E00E344EC /* WebViewWarmUper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWarmUper.swift; sourceTree = "<group>"; };
 		8891F0AC2B4E7E170098A3FB /* VideoActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoActor.swift; sourceTree = "<group>"; };
 		8891F0AF2B4E9F330098A3FB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */,
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				88C205292B517732008EC51D /* ChapterManager.swift */,
+				887CA9402B529B9E00E344EC /* WebViewWarmUper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				88C2052A2B517732008EC51D /* ChapterManager.swift in Sources */,
 				887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */,
+				887CA9412B529B9E00E344EC /* WebViewWarmUper.swift in Sources */,
 				88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,

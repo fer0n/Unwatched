@@ -89,12 +89,6 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> WKWebView {
-        print("MAKE UIView")
-        let webViewConfiguration = WKWebViewConfiguration()
-        webViewConfiguration.allowsPictureInPictureMediaPlayback = true
-        webViewConfiguration.mediaTypesRequiringUserActionForPlayback = []
-        webViewConfiguration.allowsInlineMediaPlayback = true
-
         var startPosition = video.elapsedSeconds
         if let finished = video.hasFinished {
             if finished {
@@ -106,7 +100,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             playbackSpeed: playbackSpeed,
             startAt: startPosition
         )
-        let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
+        let webView = WKWebViewWarmUper.shared.dequeue()
         webView.navigationDelegate = context.coordinator
         webView.configuration.userContentController.add(context.coordinator, name: "iosListener")
         webView.backgroundColor = UIColor(Color.backgroundGray)
