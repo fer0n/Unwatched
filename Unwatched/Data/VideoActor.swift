@@ -5,13 +5,13 @@ import Observation
 @ModelActor
 actor VideoActor {
     // MARK: public functions that save context
-    func loadVideoData(from videoUrls: [URL], in videoplacement: VideoPlacement, at index: Int = 0) async throws {
+    func loadVideoData(from videoUrls: [URL], in videoplacement: VideoPlacement, at index: Int = 0) async throws -> [String]? {
         var videos = [Video]()
         for url in videoUrls {
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
             guard let youtubeId = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value else {
                 print("no youtubeId found")
-                return
+                return nil
             }
 
             print("urlAlreadyExists?")
@@ -25,6 +25,8 @@ actor VideoActor {
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
+        let videoTitles = videos.map { $0.title }
+        return videoTitles
     }
 
     func createVideo(from youtubeId: String, url: URL) async throws -> Video? {
