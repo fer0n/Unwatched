@@ -11,6 +11,11 @@ actor SubscriptionActor {
     func addSubscriptions(from urls: [URL]) async throws {
         for url in urls {
             if let sendableSub = try await getSubscription(url: url) {
+                if let channelId = sendableSub.youtubeChannelId,
+                   subscriptionAlreadyExists(channelId) != nil {
+                    return
+                }
+
                 let sub = Subscription(link: sendableSub.link,
                                        title: sendableSub.title,
                                        youtubeChannelId: sendableSub.youtubeChannelId)
@@ -18,6 +23,14 @@ actor SubscriptionActor {
             }
         }
         try modelContext.save()
+    }
+
+    func subscriptionAlreadyExists(_ youtubeChannelId: String) -> Subscription? {
+        let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubeChannelId == youtubeChannelId
+        })
+        let subs = try? modelContext.fetch(fetchDescriptor)
+        return subs?.first
     }
 
     func getSubscription(url: URL) async throws -> SendableSubscription? {
