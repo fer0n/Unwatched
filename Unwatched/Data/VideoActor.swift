@@ -52,11 +52,27 @@ actor VideoActor {
 
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
                     defaultVideoPlacement: VideoPlacement) async throws {
-        let subs = try fetchSubscriptions(subscriptionIds)
+        print("loadVideos")
+        print("subscriptionIds", subscriptionIds)
+        var subs = [Subscription]()
+        if subscriptionIds == nil {
+            print("nothing yet, getting all")
+            subs = try getAllSubscriptions()
+            print("all subs", subs)
+        } else {
+            print("found some, fetching")
+            subs = try fetchSubscriptions(subscriptionIds)
+        }
+
         for sub in subs {
             try await loadVideos(for: sub)
         }
         try modelContext.save()
+    }
+
+    func getAllSubscriptions() throws -> [Subscription] {
+        let fetch = FetchDescriptor<Subscription>()
+        return try modelContext.fetch(fetch)
     }
 
     func fetchSubscriptions(_ subscriptionIds: [PersistentIdentifier]?) throws -> [Subscription] {

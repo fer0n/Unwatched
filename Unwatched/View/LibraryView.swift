@@ -99,4 +99,6 @@ struct LibraryView: View {
 
 #Preview {
     LibraryView(loadNewVideos: {})
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
 }

@@ -55,6 +55,9 @@
     "Do nothing" : {
 
     },
+    "Drop URLs Here" : {
+
+    },
     "Failed to get video info" : {
       "comment" : "Failed Getting Video Info Error"
     },
@@ -109,6 +112,9 @@
 
     },
     "Watched" : {
+
+    },
+    "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once" : {
 
     },
     "You can enter mutliple URLs, one per line" : {
