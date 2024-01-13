@@ -22,6 +22,12 @@
     "Add to Queue" : {
 
     },
+    "Add Youtube URL" : {
+
+    },
+    "Add YouTube URL" : {
+
+    },
     "All Videos" : {
 
     },
@@ -109,6 +115,9 @@
 
     },
     "Youtube RSS/Channel URL" : {
+
+    },
+    "YouTube URL" : {
 
     }
   },
