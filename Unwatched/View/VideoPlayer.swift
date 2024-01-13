@@ -8,15 +8,16 @@ import SwiftUI
 struct VideoPlayer: View {
     @Environment(\.dismiss) var dismiss
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.modelContext) var modelContext
+    @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
+    @AppStorage("continuousPlay") var continuousPlay: Bool = false
+
+    @State private var isPlaying: Bool = true
+    @State var continuousPlayWorkaround: Bool = false
+    @State var elapsedSeconds: Double?
 
     @Bindable var video: Video
     var markVideoWatched: () -> Void
-    @State private var isPlaying: Bool = true
-    @State private var isDismissed = false
-    @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
-
-    @State var elapsedSeconds: Double?
-
     var chapterManager: ChapterManager
 
     func updateElapsedTime(_ seconds: Double) {
@@ -31,12 +32,27 @@ struct VideoPlayer: View {
         }
     }
 
-    func seekTo(_ position: Double) {
-        print("position", position)
-    }
-
     func getPlaybackSpeed() -> Double {
         video.subscription?.customSpeedSetting ?? playbackSpeed
+    }
+
+    func handleVideoEnded() {
+        if !continuousPlayWorkaround {
+            return
+        }
+        if navManager.tab == .queue,
+           let next = VideoService.getNextVideoInQueue(modelContext) {
+            playNextVideo(next)
+        }
+    }
+
+    func playNextVideo(_ next: Video) {
+        print("playNextVideo")
+        if let vid = navManager.video {
+            VideoService.markVideoWatched(vid, modelContext: modelContext)
+        }
+        navManager.video = next
+        chapterManager.video = next
     }
 
     var watchedButton: some View {
@@ -44,14 +60,9 @@ struct VideoPlayer: View {
             markVideoWatched()
             dismiss()
         } label: {
-            Text("Mark Watched")
-                .bold()
-                .padding(.horizontal, 25)
-                .padding(.vertical, 15)
+            Text("Mark\nWatched")
         }
-        .background(Color.accentColor)
-        .foregroundColor(.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 100, style: .continuous))
+        .modifier(OutlineToggleModifier(isOn: false))
     }
 
     var customSettingsButton: some View {
@@ -60,11 +71,19 @@ struct VideoPlayer: View {
         }, set: { value in
             video.subscription?.customSpeedSetting = value ? playbackSpeed : nil
         })) {
-            Text("Custom settings for this feed")
+            Text("Custom\nSettings")
                 .fontWeight(.medium)
         }
         .toggleStyle(OutlineToggleStyle())
         .disabled(video.subscription == nil)
+    }
+
+    var continuousPlayButton: some View {
+        Toggle(isOn: $continuousPlay) {
+            Text("Continuous\nPlay")
+                .fontWeight(.medium)
+        }
+        .toggleStyle(OutlineToggleStyle())
     }
 
     var body: some View {
@@ -94,7 +113,8 @@ struct VideoPlayer: View {
                                      playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
                                      isPlaying: $isPlaying,
                                      updateElapsedTime: updateElapsedTime,
-                                     chapterManager: chapterManager
+                                     chapterManager: chapterManager,
+                                     onVideoEnded: handleVideoEnded
                 )
                 .aspectRatio(16/9, contentMode: .fit)
                 .frame(maxWidth: .infinity)
@@ -109,24 +129,27 @@ struct VideoPlayer: View {
                                         get: getPlaybackSpeed,
                                         set: setPlaybackSpeed)
                     )
-                    customSettingsButton
 
-                    Button {
-                        isPlaying.toggle()
-                    } label: {
-                        Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .accentColor(.accentColor)
-                            .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+                    HStack {
+                        customSettingsButton
+                        Spacer()
+                        watchedButton
+                        Spacer()
+                        continuousPlayButton
                     }
-                    .padding()
+                    .padding(.horizontal, 5)
                 }
-                .padding(.vertical)
 
-                watchedButton
-                    .padding(.bottom)
-
+                Button {
+                    isPlaying.toggle()
+                } label: {
+                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .accentColor(.myAccentColor)
+                        .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+                }
+                .padding(40)
                 ChapterSelection(video: video, chapterManager: chapterManager)
 
             }
@@ -134,10 +157,16 @@ struct VideoPlayer: View {
         }
         .onAppear {
             chapterManager.video = video
+            continuousPlayWorkaround = continuousPlay
         }
+        .onChange(of: continuousPlay, { _, newValue in
+            continuousPlayWorkaround = newValue
+        })
     }
 }
 
-// #Preview {
-//    VideoPlayer(video: Video.dummy, markVideoWatched: {})
-// }
+#Preview {
+    VideoPlayer(video: Video.dummy, markVideoWatched: {}, chapterManager: ChapterManager())
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
+}

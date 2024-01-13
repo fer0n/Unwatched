@@ -32,8 +32,8 @@ struct ChapterSelection: View {
         if !video.chapters.isEmpty {
             ForEach(video.sortedChapters) { chapter in
                 let isCurrent = chapter == chapterManager.currentChapter
-                let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.accentColor
-                let backgroundColor: Color = isCurrent ? Color.accentColor : Color.myBackgroundGray
+                let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.myAccentColor
+                let backgroundColor: Color = isCurrent ? Color.myAccentColor : Color.myBackgroundGray
 
                 Button {
                     if !chapter.isActive {

@@ -11,23 +11,33 @@ struct OutlineToggleStyle: ToggleStyle {
             configuration.isOn.toggle()
         }, label: {
             configuration.label
-                .padding(.vertical, 10)
-                .padding(.horizontal, 20)
-                .frame(maxWidth: .infinity)
-                .background(configuration.isOn ? Color.accentColor : Color.myBackgroundGray)
-                .foregroundColor(configuration.isOn ? Color.backgroundColor : Color.myForegroundGray)
-                .clipShape(RoundedRectangle(cornerRadius: 50))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 50)
-                        .stroke(configuration.isOn ? Color.clear : Color.myForegroundGray, lineWidth: 2)
-                )
+                .modifier(OutlineToggleModifier(isOn: configuration.isOn))
         })
+    }
+}
+
+struct OutlineToggleModifier: ViewModifier {
+    let isOn: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 14))
+            .padding(.vertical, 15)
+            .padding(.horizontal, 15)
+            .frame(maxWidth: 110)
+            .background(isOn ? Color.myAccentColor : Color.myBackgroundGray)
+            .foregroundColor(isOn ? Color.backgroundColor : Color.myForegroundGray)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(isOn ? Color.clear : Color.myForegroundGray, lineWidth: 2)
+            )
     }
 }
 
 #Preview {
     Toggle(isOn: .constant(true)) {
-        Text("Custom settings for this feed")
+        Text("Custom\nsettings")
     }
     .toggleStyle(OutlineToggleStyle())
 }

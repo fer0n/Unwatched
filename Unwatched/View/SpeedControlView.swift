@@ -33,7 +33,7 @@ struct SpeedControlView: View {
                     let maxFrameSize: CGFloat = 34
                     let frameSize: CGFloat = isSelected ? maxFrameSize : isHightlighted ? 22 : 8
                     let cornerRadius: CGFloat = isSelected ? 12 : isHightlighted ? 7 : 2
-                    let backgroundColor: Color = isSelected ? .accentColor : .clear
+                    let backgroundColor: Color = isSelected ? .myAccentColor : .clear
                     let foregroundColor: Color = isSelected ? .backgroundColor : .foregroundGray
                     let showStroke = !isSelected
                     let fontSize: CGFloat = isSelected ? 17 : 12
@@ -70,4 +70,9 @@ struct SpeedControlView_Previews: PreviewProvider {
     static var previews: some View {
         SpeedControlView(selectedSpeed: $speed)
     }
+}
+
+#Preview {
+    SpeedControlView(selectedSpeed: .constant(1.5))
+        .modelContainer(DataController.previewContainer)
 }
