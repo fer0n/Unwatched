@@ -41,6 +41,13 @@ final class Video: CustomStringConvertible {
         return duration - elapsedSeconds
     }
 
+    var hasFinished: Bool? {
+        guard let duration = duration else {
+            return nil
+        }
+        return duration - 5 < elapsedSeconds
+    }
+
     var elapsedSeconds: Double = 0
 
     init(title: String,

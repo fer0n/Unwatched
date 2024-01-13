@@ -14,7 +14,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     @Bindable var chapterManager: ChapterManager
     var onVideoEnded: () -> Void
 
-    var htmlString: String {
+    func getYoutubeIframeHTML(youtubeId: String, playbackSpeed: Double, startAt: Double) -> String {
         """
         <meta name="viewport" content="width=device-width, shrink-to-fit=YES">
         <style>
@@ -43,7 +43,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             function onPlayerReady(event) {
                 sendMessage("playerReady");
                 event.target.setPlaybackRate(\(playbackSpeed));
-                player.seekTo(\(video.elapsedSeconds), true);
+                player.seekTo(\(startAt), true);
                 sendMessage("duration", player.getDuration());
                 player.play()
             }
@@ -82,7 +82,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             type="text/html"
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/\(video.youtubeId)?enablejsapi=1&autoplay=1&controls=1"
+            src="https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&autoplay=1&controls=1"
             frameborder="0"
         ></iframe>
     """
@@ -95,6 +95,17 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         webViewConfiguration.mediaTypesRequiringUserActionForPlayback = []
         webViewConfiguration.allowsInlineMediaPlayback = true
 
+        var startPosition = video.elapsedSeconds
+        if let finished = video.hasFinished {
+            if finished {
+                startPosition = 0
+            }
+        }
+        let htmlString = getYoutubeIframeHTML(
+            youtubeId: video.youtubeId,
+            playbackSpeed: playbackSpeed,
+            startAt: startPosition
+        )
         let webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
         webView.navigationDelegate = context.coordinator
         webView.configuration.userContentController.add(context.coordinator, name: "iosListener")

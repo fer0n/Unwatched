@@ -133,9 +133,11 @@ struct VideoListItem: View {
                                 .opacity(0.6)
                                 .padding(.top, 3)
                                 .padding(.trailing, 5)
-                            Text(formatDurationFromSeconds(remaining))
-                                .font(.system(size: 12, weight: .regular))
-                                .foregroundStyle(Color.gray)
+                            if video.hasFinished != true {
+                                Text(formatDurationFromSeconds(remaining))
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundStyle(Color.gray)
+                            }
                         }
                     }
                 }
