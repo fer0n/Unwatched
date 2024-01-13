@@ -4,7 +4,9 @@ import Observation
 
 class VideoService {
     static func loadNewVideosInBg(subscriptions: [Subscription]? = nil, modelContext: ModelContext) {
+        print("loadNewVideosInBg")
         let subscriptionIds = subscriptions?.map { $0.id }
+        print("subscriptionIds", subscriptionIds)
         let container = modelContext.container
         print("loadNewVideos")
         Task.detached {

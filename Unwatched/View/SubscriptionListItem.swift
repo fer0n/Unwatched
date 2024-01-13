@@ -12,6 +12,7 @@ struct SubscriptionListItem: View {
         HStack {
             Text(subscription.title)
                 .textCase(.uppercase)
+                .lineLimit(1)
             Spacer()
             if let date = subscription.mostRecentVideoDate {
                 Text(date.formatted)

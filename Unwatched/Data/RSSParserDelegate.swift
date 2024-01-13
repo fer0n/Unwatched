@@ -109,6 +109,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                                           chapters: chapters,
                                           publishedDate: publishedDate,
                                           videoDescription: currentDescription)
+                print("video", video.title)
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {

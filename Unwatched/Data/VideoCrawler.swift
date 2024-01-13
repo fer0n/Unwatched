@@ -16,6 +16,8 @@ class VideoCrawler {
     }
 
     static func loadVideosFromRSS(url: URL, mostRecentPublishedDate: Date?) async throws -> [SendableVideo] {
+        print("loadVideosFromRSS", url)
+        print("mostRecentPublishedDate", mostRecentPublishedDate)
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil, cutoffDate: mostRecentPublishedDate)
         return rssParserDelegate.videos
     }

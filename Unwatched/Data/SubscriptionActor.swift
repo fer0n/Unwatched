@@ -9,16 +9,19 @@ import SwiftData
 @ModelActor
 actor SubscriptionActor {
     func addSubscriptions(from urls: [URL]) async throws {
+        print("urls", urls)
         for url in urls {
             if let sendableSub = try await getSubscription(url: url) {
                 if let channelId = sendableSub.youtubeChannelId,
                    subscriptionAlreadyExists(channelId) != nil {
                     return
                 }
+                print("sendableSub", sendableSub)
 
                 let sub = Subscription(link: sendableSub.link,
                                        title: sendableSub.title,
                                        youtubeChannelId: sendableSub.youtubeChannelId)
+                print("sub", sub)
                 modelContext.insert(sub)
             }
         }
@@ -56,12 +59,12 @@ actor SubscriptionActor {
         let urlString = url.absoluteString
 
         // https://www.youtube.com/@GAMERTAGVR/videos
-        if let userName = urlString.matching(regex: #"\/@(.*?)\/"#) {
+        if let userName = urlString.matching(regex: #"\/@([^\/]*)"#) {
             return userName
         }
 
         // https://www.youtube.com/c/GamertagVR/videos
-        if let userName = urlString.matching(regex: #"\/c\/(.*?)\/"#) {
+        if let userName = urlString.matching(regex: #"\/c\/([^\/]*)"#) {
             return userName
         }
 
