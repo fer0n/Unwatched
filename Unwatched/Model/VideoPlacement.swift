@@ -11,12 +11,12 @@ enum VideoPlacement: Int, Codable, CaseIterable {
     case nothing
     case defaultPlacement
 
-    var description: String {
+    func description(defaultPlacement: String) -> String {
         switch self {
         case .inbox: return String(localized: "Add to inbox")
         case .queue: return String(localized: "Add to Queue")
         case .nothing: return String(localized: "Do nothing")
-        case .defaultPlacement: return String(localized: "Use Default")
+        case .defaultPlacement: return String(localized: "Use Default (\(defaultPlacement))")
         }
     }
 }

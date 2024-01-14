@@ -5,16 +5,20 @@ import Observation
 class VideoService {
     static func loadNewVideosInBg(subscriptions: [Subscription]? = nil, modelContext: ModelContext) {
         print("loadNewVideosInBg")
+        let defaultPlacementRaw = UserDefaults.standard.integer(forKey: "defaultEpisodePlacement")
+        let defaultPlacement = VideoPlacement(rawValue: defaultPlacementRaw)
+
         let subscriptionIds = subscriptions?.map { $0.id }
         print("subscriptionIds", subscriptionIds)
         let container = modelContext.container
         print("loadNewVideos")
+
         Task.detached {
             let repo = VideoActor(modelContainer: container)
             do {
                 try await repo.loadVideos(
                     subscriptionIds,
-                    defaultVideoPlacement: .inbox
+                    defaultVideoPlacement: defaultPlacement ?? .inbox
                 )
             } catch {
                 print("\(error)")
@@ -104,5 +108,15 @@ class VideoService {
         return nil
         // TODO: worth putting this on the background thread?
         // TODO: worth getting the actual queueEntry for the current video first and then continue?
+    }
+
+    static func deleteEverything(_ modelContext: ModelContext) {
+        do {
+            for entry in DataController.dbEntries {
+                try modelContext.delete(model: entry)
+            }
+        } catch {
+            print("Failed to clear all Country and City data.")
+        }
     }
 }

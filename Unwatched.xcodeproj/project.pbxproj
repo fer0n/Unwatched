@@ -45,6 +45,7 @@
 		88ADE8232B4ADCC3002F86F7 /* BackgroundPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ADE8222B4ADCC3002F86F7 /* BackgroundPlaceholder.swift */; };
 		88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205272B516D2A008EC51D /* ChapterListItem.swift */; };
 		88C2052A2B517732008EC51D /* ChapterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* ChapterManager.swift */; };
+		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
 		88D438A52B45ACD800482F29 /* YoutubeWebViewPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */; };
 		88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */; };
 		88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A82B45B27600482F29 /* VideoPlayer.swift */; };
@@ -97,6 +98,7 @@
 		88ADE8222B4ADCC3002F86F7 /* BackgroundPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPlaceholder.swift; sourceTree = "<group>"; };
 		88C205272B516D2A008EC51D /* ChapterListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListItem.swift; sourceTree = "<group>"; };
 		88C205292B517732008EC51D /* ChapterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterManager.swift; sourceTree = "<group>"; };
+		88C572322B53C8BD002FF07E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeWebViewPlayer.swift; sourceTree = "<group>"; };
 		88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParserDelegate.swift; sourceTree = "<group>"; };
 		88D438A82B45B27600482F29 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */,
 				8891F0B32B4EF3610098A3FB /* SideloadingView.swift */,
 				88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */,
+				88C572322B53C8BD002FF07E /* SettingsView.swift */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				8845F0182B50648D0086AA98 /* ChapterSelection.swift */,
 				88C205272B516D2A008EC51D /* ChapterListItem.swift */,
@@ -374,6 +377,7 @@
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
 				887AC8CE2B4988D000512852 /* InboxView.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
+				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,

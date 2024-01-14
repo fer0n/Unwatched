@@ -12,14 +12,7 @@ struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Video.self,
-            Subscription.self,
-            QueueEntry.self,
-            WatchEntry.self,
-            InboxEntry.self,
-            Chapter.self
-        ])
+        let schema = Schema(DataController.dbEntries)
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
@@ -40,16 +33,18 @@ struct UnwatchedApp: App {
 
 @MainActor
 class DataController {
+    static let dbEntries: [any PersistentModel.Type] = [
+        Video.self,
+        Subscription.self,
+        QueueEntry.self,
+        WatchEntry.self,
+        InboxEntry.self,
+        Chapter.self
+    ]
+
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
-            let schema = Schema([
-                Video.self,
-                Subscription.self,
-                QueueEntry.self,
-                WatchEntry.self,
-                InboxEntry.self,
-                Chapter.self
-            ])
+            let schema = Schema(DataController.dbEntries)
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
             do {

@@ -12,7 +12,7 @@ struct VideoPlayer: View {
     @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
     @AppStorage("continuousPlay") var continuousPlay: Bool = false
 
-    @State private var isPlaying: Bool = true
+    @State private var isPlaying: Bool = false
     @State var continuousPlayWorkaround: Bool = false
     @State var elapsedSeconds: Double?
 
