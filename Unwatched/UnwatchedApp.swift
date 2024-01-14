@@ -31,7 +31,6 @@ struct UnwatchedApp: App {
     }
 }
 
-
 class AppDelegate: NSObject, UIApplicationDelegate {
     func woraroundInitialWebViewDelay() {
         let webView = WKWebView()

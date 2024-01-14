@@ -22,7 +22,7 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        NavigationView {
+        VStack {
             List {
                 Section {
                     Picker("New Episodes", selection: $defaultEpisodePlacement) {
@@ -62,8 +62,9 @@ struct SettingsView: View {
                     showingDeleteEverythingAlert = true
                 }
             }
-            .navigationBarTitle("Settings")
         }
+        .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+        .navigationBarTitle("Settings", displayMode: .inline)
         .tint(.myAccentColor)
         .alert("Really Delete Everything?", isPresented: $showingDeleteEverythingAlert, actions: {
             Button("Clear All", role: .destructive) {
