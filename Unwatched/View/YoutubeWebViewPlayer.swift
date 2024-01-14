@@ -105,6 +105,9 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         )
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.allowsPictureInPictureMediaPlayback = true
+        if autoplayVideos {
+            webViewConfig.mediaTypesRequiringUserActionForPlayback = []
+        }
         if !playVideoFullscreen {
             webViewConfig.allowsInlineMediaPlayback = true
         }
@@ -184,6 +187,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     parent.isPlaying = false
                     parent.onVideoEnded()
                 case "unstarted":
+                    if parent.autoplayVideos {
+                        parent.isPlaying = true
+                    }
+                case "playerReady":
                     if parent.autoplayVideos {
                         parent.isPlaying = true
                     }
