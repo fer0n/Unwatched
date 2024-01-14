@@ -61,13 +61,16 @@ class DataController {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    func woraroundInitialWebViewDelay() {
+        let webView = WKWebView()
+        webView.loadHTMLString("", baseURL: nil)
+    }
+
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        Task {
-            await WebViewWarmUper.prepare()
-        }
+        woraroundInitialWebViewDelay()
         return true
     }
 }
