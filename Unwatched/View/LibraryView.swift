@@ -13,7 +13,23 @@ struct LibraryView: View {
     @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
     @Query(filter: #Predicate<Video> { $0.subscription == nil }) var sideloadedVideos: [Video]
     @State var showAddSubscriptionSheet = false
-    @State var showSettingsSheet = false
+    @Binding var subscriptionSorting: SubscriptionSorting
+
+    init(loadNewVideos: @escaping () async -> Void,
+         sort: Binding<SubscriptionSorting>) {
+        self.loadNewVideos = loadNewVideos
+        self._subscriptionSorting = sort
+        var sortDesc: SortDescriptor<Subscription>
+        switch sort.wrappedValue {
+        case .title:
+            sortDesc = SortDescriptor<Subscription>(\Subscription.title)
+        case .recentlyAdded:
+            sortDesc = SortDescriptor<Subscription>(\Subscription.subscribedDate)
+        case .mostRecentVideo:
+            sortDesc = SortDescriptor<Subscription>(\Subscription.mostRecentVideoDate)
+        }
+        _subscriptions = Query(sort: [sortDesc])
+    }
 
     var loadNewVideos: () async -> Void
 
@@ -21,18 +37,25 @@ struct LibraryView: View {
         for index in indexSet {
             let sub = subscriptions[index]
             modelContext.delete(sub)
-            deleteNonQueuedVideos()
         }
-    }
-
-    func deleteNonQueuedVideos() {
-        // TODO: add this after queue changes
     }
 
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
             List {
+                Section {
+                    NavigationLink(destination: SettingsView()) {
+                        HStack {
+                            Image(systemName: "gearshape.fill")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text("Settings")
+                        }
+
+                    }
+                }
+                Spacer()
                 Section {
                     NavigationLink(destination: AllVideosView()) {
                         HStack {
@@ -51,10 +74,7 @@ struct LibraryView: View {
                             Text("Watched")
                         }
                     }
-                }
-
-                if !sideloadedVideos.isEmpty {
-                    Section {
+                    if !sideloadedVideos.isEmpty {
                         NavigationLink(destination: SideloadingView()) {
                             HStack {
                                 Image(systemName: "arrow.right.circle")
@@ -64,25 +84,36 @@ struct LibraryView: View {
                     }
                 }
 
-                Section {
-                    ForEach(subscriptions) { subscripton in
-                        NavigationLink(
-                            destination: SubscriptionDetailView(subscription: subscripton)
-                        ) {
-                            SubscriptionListItem(subscription: subscripton)
+                if !subscriptions.isEmpty {
+                    Spacer()
+                    Section {
+                        ForEach(subscriptions) { subscripton in
+                            NavigationLink(
+                                destination: SubscriptionDetailView(subscription: subscripton)
+                            ) {
+                                SubscriptionListItem(subscription: subscripton)
+                            }
                         }
+                        .onDelete(perform: deleteSubscription)
                     }
-                    .onDelete(perform: deleteSubscription)
                 }
             }
+            .listStyle(.plain)
             .navigationBarTitle("Library")
             .toolbar {
                 ToolbarItemGroup {
-                    Button(action: {
-                        showSettingsSheet = true
-                    }, label: {
-                        Image(systemName: "gearshape.fill")
-                    })
+                    Menu {
+                        ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
+                            Button {
+                                subscriptionSorting = sort
+                            } label: {
+                                Text(sort.description)
+                            }
+                            .disabled(subscriptionSorting == sort)
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                    }
                     Button(action: {
                         showAddSubscriptionSheet = true
                     }, label: {
@@ -104,17 +135,28 @@ struct LibraryView: View {
                 AddSubscriptionView()
             }
         }
-        .sheet(isPresented: $showSettingsSheet) {
-            ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
-                SettingsView()
-            }
-        }
     }
 }
 
 #Preview {
-    LibraryView(loadNewVideos: {})
+    LibraryView(loadNewVideos: {}, sort: .constant(.title))
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
+}
+
+enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
+    case title
+    case recentlyAdded
+    case mostRecentVideo
+
+    var description: String {
+        switch self {
+        case .title:
+            return "Title"
+        case .recentlyAdded:
+            return "Recently Added"
+        case .mostRecentVideo:
+            return "Most recent video"
+        }
+    }
 }

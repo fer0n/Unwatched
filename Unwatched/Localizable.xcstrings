@@ -91,6 +91,9 @@
     "medium" : {
 
     },
+    "Most recent video" : {
+
+    },
     "New Episodes" : {
 
     },
@@ -137,6 +140,9 @@
     },
     "The operation is not supported" : {
       "comment" : "No Supported Error"
+    },
+    "Title" : {
+
     },
     "Use Default (%@)" : {
 

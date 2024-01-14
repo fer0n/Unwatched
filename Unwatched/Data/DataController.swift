@@ -30,6 +30,7 @@ class DataController {
         }()
 
         sharedModelContainer.mainContext.insert(Video.dummy)
+        sharedModelContainer.mainContext.insert(Subscription.dummy)
 
         return sharedModelContainer
     }()
