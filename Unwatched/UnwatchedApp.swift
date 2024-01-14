@@ -70,7 +70,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        WKWebViewWarmUper.shared.prepare()
+        Task {
+            await WebViewWarmUper.prepare()
+        }
         return true
     }
 }
