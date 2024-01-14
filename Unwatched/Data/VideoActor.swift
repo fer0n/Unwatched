@@ -65,7 +65,7 @@ actor VideoActor {
         }
 
         for sub in subs {
-            try await loadVideos(for: sub)
+            try await loadVideos(for: sub, defaultPlacement: defaultVideoPlacement)
         }
         try modelContext.save()
     }
@@ -119,7 +119,7 @@ actor VideoActor {
         }
     }
 
-    private func loadVideos(for sub: Subscription) async throws {
+    private func loadVideos(for sub: Subscription, defaultPlacement: VideoPlacement) async throws {
         // load videos from web
         let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
             url: sub.link,
@@ -137,7 +137,7 @@ actor VideoActor {
 
         triageSubscriptionVideos(sub,
                                  videos: newVideos,
-                                 defaultPlacement: .inbox,
+                                 defaultPlacement: defaultPlacement,
                                  limitVideos: limitVideos)
     }
 

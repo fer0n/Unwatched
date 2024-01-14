@@ -34,6 +34,12 @@
     "Are you sure you want to clear all items from the inbox?" : {
 
     },
+    "Are you sure you want to delete all data? This cannot be undone." : {
+
+    },
+    "Autoplay videos" : {
+
+    },
     "Cancel" : {
 
     },
@@ -50,6 +56,9 @@
 
     },
     "Custom\nSettings" : {
+
+    },
+    "Delete Everything" : {
 
     },
     "Do nothing" : {
@@ -73,7 +82,16 @@
     "Library" : {
 
     },
+    "long" : {
+
+    },
     "Mark\nWatched" : {
+
+    },
+    "medium" : {
+
+    },
+    "New Episodes" : {
 
     },
     "newVideos" : {
@@ -96,16 +114,31 @@
     "Queue" : {
 
     },
+    "Really Delete Everything?" : {
+
+    },
+    "Settings" : {
+
+    },
+    "short" : {
+
+    },
     "Sideloads" : {
+
+    },
+    "Start videos in fullscreen" : {
 
     },
     "Subscription information not found" : {
       "comment" : "Subscription Info Not Found Error"
     },
+    "tapAway" : {
+
+    },
     "The operation is not supported" : {
       "comment" : "No Supported Error"
     },
-    "Use Default" : {
+    "Use Default (%@)" : {
 
     },
     "VideoPlayer – Should never be visible" : {

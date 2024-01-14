@@ -12,7 +12,7 @@ final class Subscription: CustomStringConvertible {
     var title: String
     var subscribedDate: Date
     var mostRecentVideoDate: Date?
-    var videos: [Video]
+    @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
     var youtubeChannelId: String?
 
     var placeVideosIn: VideoPlacement

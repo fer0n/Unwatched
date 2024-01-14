@@ -13,6 +13,7 @@ struct LibraryView: View {
     @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
     @Query(filter: #Predicate<Video> { $0.subscription == nil }) var sideloadedVideos: [Video]
     @State var showAddSubscriptionSheet = false
+    @State var showSettingsSheet = false
 
     var loadNewVideos: () async -> Void
 
@@ -75,11 +76,20 @@ struct LibraryView: View {
                 }
             }
             .navigationBarTitle("Library")
-            .navigationBarItems(trailing: Button(action: {
-                showAddSubscriptionSheet = true
-            }, label: {
-                Image(systemName: "plus")
-            }))
+            .toolbar {
+                ToolbarItemGroup {
+                    Button(action: {
+                        showSettingsSheet = true
+                    }, label: {
+                        Image(systemName: "gearshape.fill")
+                    })
+                    Button(action: {
+                        showAddSubscriptionSheet = true
+                    }, label: {
+                        Image(systemName: "plus")
+                    })
+                }
+            }
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             .refreshable {
                 await loadNewVideos()
@@ -92,6 +102,12 @@ struct LibraryView: View {
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
                 AddSubscriptionView()
+            }
+        }
+        .sheet(isPresented: $showSettingsSheet) {
+            ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                SettingsView()
             }
         }
     }

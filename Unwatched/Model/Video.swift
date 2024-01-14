@@ -18,6 +18,7 @@ final class Video: CustomStringConvertible {
 
     var status: VideoStatus?
     var watched = false
+
     var subscription: Subscription?
     var youtubeChannelId: String?
     private var _feedTitle: String?

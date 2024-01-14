@@ -18,7 +18,7 @@ struct SubscriptionDetailView: View {
                     Picker("newVideos",
                            selection: $subscription.placeVideosIn) {
                         ForEach(VideoPlacement.allCases, id: \.self) {
-                            Text($0.description)
+                            Text($0.description(defaultPlacement: String(describing: defaultVideoPlacement) ))
                         }
                     }
                 }
