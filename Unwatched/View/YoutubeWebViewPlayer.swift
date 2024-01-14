@@ -100,7 +100,12 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             playbackSpeed: playbackSpeed,
             startAt: startPosition
         )
-        let webView = WKWebViewWarmUper.shared.dequeue()
+        let webViewConfig = WKWebViewConfiguration()
+        webViewConfig.allowsPictureInPictureMediaPlayback = true
+        webViewConfig.mediaTypesRequiringUserActionForPlayback = []
+        webViewConfig.allowsInlineMediaPlayback = true
+
+        let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.navigationDelegate = context.coordinator
         webView.configuration.userContentController.add(context.coordinator, name: "iosListener")
         webView.backgroundColor = UIColor(Color.backgroundGray)
