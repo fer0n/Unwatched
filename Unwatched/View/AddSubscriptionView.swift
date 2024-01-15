@@ -145,11 +145,6 @@ struct AddSubscriptionView: View {
         } isTargeted: { targeted in
             isDragOver = targeted
         }
-        .onDisappear {
-            if newSubs != nil {
-                VideoService.loadNewVideosInBg(modelContext: modelContext)
-            }
-        }
     }
 
     var body: some View {
@@ -172,6 +167,11 @@ struct AddSubscriptionView: View {
 
             }
             .padding(.horizontal)
+        }
+        .onDisappear {
+            if newSubs != nil {
+                VideoService.loadNewVideosInBg(modelContext: modelContext)
+            }
         }
     }
 }

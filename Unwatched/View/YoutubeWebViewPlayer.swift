@@ -45,10 +45,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
             function onPlayerReady(event) {
                 sendMessage("playerReady");
-                \(autoplayVideos ? "player.play()" : "")
+                sendMessage("duration", player.getDuration());
                 event.target.setPlaybackRate(\(playbackSpeed));
                 player.seekTo(\(startAt), true);
-                sendMessage("duration", player.getDuration());
+                \(autoplayVideos ? "player.play()" : "")
             }
 
             function onPlayerStateChange(event) {
