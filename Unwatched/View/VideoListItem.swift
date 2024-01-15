@@ -169,7 +169,6 @@ struct VideoListItem: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 getTrailingSwipeActions()
             }
-        // TODO: clean up all files with videoSwipeActions, there are probably funcs and contexts no longer necessary
     }
 }
 

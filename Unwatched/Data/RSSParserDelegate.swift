@@ -65,8 +65,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         } else if elementName == "entry",
                   subscriptionInfo == nil,
                   let url = URL(string: currentLink) {
-            // TODO: find a better way to retrieve the info.
-            // it currently only works if the channel info comes before the first entry
+            // this tactic requires the channel info to come before the first entity
             subscriptionInfo = SendableSubscription(
                 link: url,
                 title: currentTitle,

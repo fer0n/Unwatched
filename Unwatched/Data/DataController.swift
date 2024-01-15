@@ -29,9 +29,29 @@ class DataController {
             }
         }()
 
-        sharedModelContainer.mainContext.insert(Video.dummy)
-        sharedModelContainer.mainContext.insert(Subscription.dummy)
+        sharedModelContainer.mainContext.insert(Video.getDummy())
+        sharedModelContainer.mainContext.insert(Subscription.getDummy())
 
         return sharedModelContainer
     }()
+}
+
+extension Subscription {
+    static func getDummy() -> Subscription {
+        return Subscription(
+            link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
+            title: "Virtual Reality Oasis")
+    }
+}
+
+extension Video {
+    // Preview data
+    static func getDummy() -> Video {
+        return Video(
+            title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
+            url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
+            youtubeId: "_7vP9vsnYPc",
+            thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
+            publishedDate: Date())
+    }
 }

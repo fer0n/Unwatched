@@ -64,7 +64,7 @@ struct AddSubscriptionView: View {
             Image(systemName: "books.vertical.fill")
                 .resizable()
                 .frame(width: 50, height: 50)
-            Text("Add Subscription")
+            Text("addSubscription")
                 .font(.system(size: 20, weight: .heavy))
                 .submitLabel(.done)
                 .onSubmit {
@@ -78,7 +78,7 @@ struct AddSubscriptionView: View {
 
     var enterTextField: some View {
         VStack {
-            TextField("Youtube RSS/Channel URL", text: $text)
+            TextField("enterYoutubeRssUrl", text: $text)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 15)
                 .background(Color.grayColor)
@@ -88,7 +88,7 @@ struct AddSubscriptionView: View {
                     addSubscriptionFromText()
                 }
                 .disabled(isLoading)
-            Text("You can enter mutliple URLs, one per line")
+            Text("enterYoutubeRssUrlHelper")
                 .font(.caption)
                 .foregroundColor(.gray)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -103,7 +103,7 @@ struct AddSubscriptionView: View {
                 addSubscriptionFromText()
             }
         } label: {
-            Text("Paste")
+            Text("paste")
                 .bold()
                 .padding(.horizontal, 25)
                 .padding(.vertical, 15)
@@ -125,12 +125,12 @@ struct AddSubscriptionView: View {
                 )
 
             VStack(spacing: 10) {
-                Text("Drop URLs Here")
+                Text("dropUrlsHere")
                     .font(.title2)
                     .bold()
                     .foregroundStyle(.gray)
                     .padding(.top)
-                Text("You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once")
+                Text("dropSubscriptionHelper")
                     .foregroundStyle(.gray)
                     .multilineTextAlignment(.center)
                     .tint(.teal)
@@ -181,18 +181,19 @@ struct AddSubscriptionView: View {
         .modelContainer(DataController.previewContainer)
 }
 
-//            let newSubs = [
-//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
-//                SubscriptionState(
-//                    url: URL(string: "https://www.youtube.com/@TomScottGo")!,
-//                    title: "Gamertag VR",
-//                    userName: "GamertagVR",
-//                    success: true),
-//                SubscriptionState(
-//                    url: URL(string: "https://www.youtube.com/@TomScottGo")!,
-//                    userName: "veritasium",
-//                    error: "The request cannot be completed because you have exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
-//                ),
-//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
-//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!, userName: "TomScottGo")
-//            ]
+// let newSubs = [
+//    SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
+//    SubscriptionState(
+//        url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+//        title: "Gamertag VR",
+//        userName: "GamertagVR",
+//        success: true),
+//    SubscriptionState(
+//        url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+//        userName: "veritasium",
+//        error: "The request cannot be completed because you have" +
+//            " exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
+//    ),
+//    SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
+//    SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!, userName: "TomScottGo")
+// ]

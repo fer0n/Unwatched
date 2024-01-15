@@ -172,43 +172,53 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                                    didReceive message: WKScriptMessage) {
             if message.name == "iosListener", let messageBody = message.body as? String {
                 let body = messageBody.split(separator: ":")
-                let topic = body[safe: 0]
+                guard let topic = body[safe: 0] else {
+                    return
+                }
                 let payload = body[safe: 1]
+                let payloadString = payload.map { String($0) }
                 if topic != "currentTime" {
                     debugPrint(messageBody)
                 }
-
-                switch topic {
-                case "paused":
-                    parent.isPlaying = false
-                case "playing":
-                    parent.isPlaying = true
-                case "ended":
-                    parent.isPlaying = false
-                    parent.onVideoEnded()
-                case "unstarted":
-                    if parent.autoplayVideos {
-                        parent.isPlaying = true
-                    }
-                case "playerReady":
-                    if parent.autoplayVideos {
-                        parent.isPlaying = true
-                    }
-                case "currentTime":
-                    guard let payload = payload, let time = Double(payload) else {
-                        return
-                    }
-                    parent.updateElapsedTime(time)
-                    parent.chapterManager.monitorChapters(time: time)
-                case "duration":
-                    guard let payload = payload, let duration = Double(payload) else {
-                        return
-                    }
-                    VideoService.updateDuration(parent.video, duration: duration)
-                default:
-                    break
-                }
+                handleJsMessages(String(topic), payloadString)
             }
+        }
+
+        func handleJsMessages(_ topic: String, _ payload: String?) {
+            switch topic {
+            case "paused":
+                parent.isPlaying = false
+            case "playing":
+                parent.isPlaying = true
+            case "ended":
+                parent.isPlaying = false
+                parent.onVideoEnded()
+            case "unstarted", "playerReady":
+                handleAutoStart()
+            case "currentTime":
+                handleTimeUpdate(payload)
+            case "duration":
+                guard let payload = payload, let duration = Double(payload) else {
+                    return
+                }
+                VideoService.updateDuration(parent.video, duration: duration)
+            default:
+                break
+            }
+        }
+
+        func handleAutoStart() {
+            if parent.autoplayVideos {
+                parent.isPlaying = true
+            }
+        }
+
+        func handleTimeUpdate(_ payload: String?) {
+            guard let payload = payload, let time = Double(payload) else {
+                return
+            }
+            parent.updateElapsedTime(time)
+            parent.chapterManager.monitorChapters(time: time)
         }
     }
 }
