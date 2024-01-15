@@ -9,7 +9,6 @@ class VideoService {
         let defaultPlacement = VideoPlacement(rawValue: defaultPlacementRaw)
 
         let subscriptionIds = subscriptions?.map { $0.id }
-        print("subscriptionIds", subscriptionIds)
         let container = modelContext.container
         print("loadNewVideos")
 
@@ -70,13 +69,13 @@ class VideoService {
                                    videos: [Video],
                                    modelContext: ModelContext) {
         VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
-        // TODO: start background task to clean
+        // TODO: start background task to clean?
     }
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
                                at index: Int = 0,
-                               modelContext: ModelContext) -> Task<([String]?), Error> {
+                               modelContext: ModelContext) -> Task<(), Error> {
         // TODO: before adding anything, check if the video already exists,
         // if it does, add that one to queue
         let container = modelContext.container
@@ -100,9 +99,7 @@ class VideoService {
         let sort = SortDescriptor<QueueEntry>(\.order)
         let fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order > 0 }, sortBy: [sort])
         let videos = try? modelContext.fetch(fetch)
-        print("videos", videos)
         if let nextVideo = videos?.first {
-            print("nextVideo", nextVideo)
             return nextVideo.video
         }
         return nil

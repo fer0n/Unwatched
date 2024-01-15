@@ -166,7 +166,7 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(video: Video.dummy, markVideoWatched: {}, chapterManager: ChapterManager())
+    VideoPlayer(video: Video.getDummy(), markVideoWatched: {}, chapterManager: ChapterManager())
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
 }

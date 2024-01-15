@@ -30,7 +30,7 @@ struct QueueView: View {
 
     func handleUrlDrop(_ items: [URL], at index: Int) {
         print("handleUrlDrop", items)
-        VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
+        _ = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
     }
 
     var body: some View {

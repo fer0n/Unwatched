@@ -8,33 +8,32 @@ import SwiftData
 
 @Model
 final class Video: CustomStringConvertible {
+
+    @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
     @Attribute(.unique) var youtubeId: String
+
     var title: String
     var url: URL
+
     var thumbnailUrl: URL?
     var publishedDate: Date?
     var duration: Double?
+    var elapsedSeconds: Double = 0
     var videoDescription: String?
-
     var status: VideoStatus?
     var watched = false
-
     var subscription: Subscription?
     var youtubeChannelId: String?
-    private var _feedTitle: String?
 
-    @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
-    var sortedChapters: [Chapter] {
-        chapters.sorted(by: { $0.startTime < $1.startTime })
+    // MARK: Computed Properties
+    private var _feedTitle: String?
+    var feedTitle: String? {
+        get { subscription?.title ?? _feedTitle }
+        set { _feedTitle = newValue }
     }
 
-    var feedTitle: String? {
-        get {
-            subscription?.title ?? _feedTitle
-        }
-        set {
-            _feedTitle = newValue
-        }
+    var sortedChapters: [Chapter] {
+        chapters.sorted(by: { $0.startTime < $1.startTime })
     }
 
     var remainingTime: Double? {
@@ -49,7 +48,9 @@ final class Video: CustomStringConvertible {
         return duration - 5 < elapsedSeconds
     }
 
-    var elapsedSeconds: Double = 0
+    var description: String {
+        return "Video: \(title) (\(url))"
+    }
 
     init(title: String,
          url: URL,
@@ -73,63 +74,4 @@ final class Video: CustomStringConvertible {
         self.chapters = chapters
     }
 
-    // specify what is being printed when you print an instance of this class directly
-    var description: String {
-        return "Video: \(title) (\(url))"
-    }
-
-    // Preview data
-    static let dummy = Video(
-        title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
-        url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
-        youtubeId: "_7vP9vsnYPc",
-        thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
-        publishedDate: Date())
-}
-
-struct SendableVideo: Sendable {
-    var youtubeId: String
-    var title: String
-    var url: URL
-    var thumbnailUrl: URL?
-    var youtubeChannelId: String?
-    var feedTitle: String?
-    var duration: Double?
-    var chapters = [SendableChapter]()
-
-    var publishedDate: Date?
-    var status: VideoStatus?
-    var watched = false
-
-    var videoDescription: String?
-
-    func getVideo(
-        title: String? = nil,
-        url: URL? = nil,
-        youtubeId: String? = nil,
-        thumbnailUrl: URL? = nil,
-        publishedDate: Date? = nil,
-        youtubeChannelId: String? = nil,
-        feedTitle: String? = nil,
-        duration: TimeInterval? = nil,
-        videoDescription: String? = nil
-    ) -> Video {
-        var newChapters = chapters
-        if chapters.isEmpty, let desc = self.videoDescription {
-            newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
-        }
-
-        return Video(
-            title: title ?? self.title,
-            url: url ?? self.url,
-            youtubeId: youtubeId ?? self.youtubeId,
-            thumbnailUrl: thumbnailUrl ?? self.thumbnailUrl,
-            publishedDate: publishedDate ?? self.publishedDate,
-            youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
-            feedTitle: feedTitle ?? self.feedTitle,
-            duration: duration ?? self.duration,
-            videoDescription: videoDescription ?? self.videoDescription,
-            chapters: newChapters.map { $0.getChapter }
-        )
-    }
 }

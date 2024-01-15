@@ -13,9 +13,6 @@
     "%lld" : {
 
     },
-    "Add Subscription" : {
-
-    },
     "Add to inbox" : {
 
     },
@@ -27,6 +24,16 @@
     },
     "Add YouTube URL" : {
 
+    },
+    "addSubscription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Subscription"
+          }
+        }
+      }
     },
     "All Videos" : {
 
@@ -67,8 +74,45 @@
     "Do nothing" : {
 
     },
-    "Drop URLs Here" : {
-
+    "dropSubscriptionHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once"
+          }
+        }
+      }
+    },
+    "dropUrlsHere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop URLs Here"
+          }
+        }
+      }
+    },
+    "enterYoutubeRssUrl" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "enterYoutubeRssUrl"
+          }
+        }
+      }
+    },
+    "enterYoutubeRssUrlHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can enter mutliple URLs, one per line"
+          }
+        }
+      }
     },
     "Failed to get video info" : {
       "comment" : "Failed Getting Video Info Error"
@@ -117,8 +161,18 @@
     "No sideloaded videos found" : {
 
     },
-    "Paste" : {
-
+    "No video found" : {
+      "comment" : "No Supported Error"
+    },
+    "paste" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste"
+          }
+        }
+      }
     },
     "Queue" : {
 
@@ -157,15 +211,6 @@
 
     },
     "Watched" : {
-
-    },
-    "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once" : {
-
-    },
-    "You can enter mutliple URLs, one per line" : {
-
-    },
-    "Youtube RSS/Channel URL" : {
 
     },
     "YouTube URL" : {

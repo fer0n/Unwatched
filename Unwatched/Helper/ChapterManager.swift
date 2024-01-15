@@ -10,7 +10,7 @@ import SwiftUI
     var currentChapter: Chapter?
     var seekPosition: Double?
 
-    var currentEndTime: Double? // TODO: this should not be published
+    var currentEndTime: Double?
     var currentTime: Double?
 
     init() {

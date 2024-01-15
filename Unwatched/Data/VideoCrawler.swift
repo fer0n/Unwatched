@@ -17,7 +17,6 @@ class VideoCrawler {
 
     static func loadVideosFromRSS(url: URL, mostRecentPublishedDate: Date?) async throws -> [SendableVideo] {
         print("loadVideosFromRSS", url)
-        print("mostRecentPublishedDate", mostRecentPublishedDate)
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil, cutoffDate: mostRecentPublishedDate)
         return rssParserDelegate.videos
     }
@@ -143,7 +142,8 @@ class VideoCrawler {
         }
         let thumbnailRegex = #"url\\\":\\\"([^"]*)\\",\\\"width\\\"\:168"#
         let videoTitleRegex = #"\"videoTitle\\\":\\"(.*?)\\"}"#
-        let videoTitleFallbackRegex = #"thumbnailPreviewRenderer\\"\:{\\\"title\\\"\:{\\\"runs\\"\:\[{\\\"text\\\"\:\\\"(.*?)\\"}"#
+        let videoTitleFallbackRegex = #"thumbnailPreviewRenderer\\"\:{\\\"title\\\""# +
+            #"\:{\\\"runs\\"\:\[{\\\"text\\\"\:\\\"(.*?)\\"}"#
         let channelIdRegex = #"channelId\\"\:\\\"(.*?)\\""#
 
         let (data, _) = try await URLSession.shared.data(from: url)

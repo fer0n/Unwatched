@@ -44,6 +44,6 @@ struct SubscriptionDetailView: View {
 
 #Preview {
     NavigationView {
-        SubscriptionDetailView(subscription: Subscription.dummy)
+        SubscriptionDetailView(subscription: Subscription.getDummy())
     }
 }

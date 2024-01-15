@@ -8,17 +8,23 @@ import SwiftData
 
 @Model
 final class Subscription: CustomStringConvertible {
+
+    @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
     @Attribute(.unique) var link: URL
+
     var title: String
     var subscribedDate: Date
+    var placeVideosIn = VideoPlacement.defaultPlacement
+
+    var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
-    @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
     var youtubeChannelId: String?
     var youtubeUserName: String?
     // TODO: there's a difference between handles/usernames/cids, should be handled better
 
-    var placeVideosIn: VideoPlacement
-    var customSpeedSetting: Double?
+    var description: String {
+        return title
+    }
 
     init(link: URL,
          title: String,
@@ -34,14 +40,6 @@ final class Subscription: CustomStringConvertible {
         self.youtubeChannelId = youtubeChannelId
         self.youtubeUserName = youtubeUserName
     }
-
-    var description: String {
-        return "\(title) (\(link)) \(youtubeChannelId)"
-    }
-
-    static var dummy = Subscription(
-        link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
-        title: "Virtual Reality Oasis")
 }
 
 struct SendableSubscription: Sendable {

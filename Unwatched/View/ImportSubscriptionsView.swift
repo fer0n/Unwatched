@@ -112,7 +112,8 @@ struct SubscriptionStateView: View {
         SubscriptionState(
             url: URL(string: "https://www.youtube.com/@TomScottGo")!,
             userName: "veritasium",
-            error: "The request cannot be completed because you have exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
+            error: "The request cannot be completed because you have exceeded" +
+                " your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
         ),
         SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
         SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!, userName: "TomScottGo")
