@@ -13,6 +13,8 @@
 		8811A4A72B540D8100799CB2 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811A4A62B540D8100799CB2 /* DataController.swift */; };
 		88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */; };
 		881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
+		8823EB762B54FB510010A12F /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB752B54FB510010A12F /* apiKey.swift */; };
+		8823EB782B5519C60010A12F /* ImportSubscriptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* ImportSubscriptionsView.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
 		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
 		8845F0172B5054570086AA98 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0162B5054570086AA98 /* Chapter.swift */; };
@@ -66,6 +68,8 @@
 		8811A4A62B540D8100799CB2 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		88143EB62B4A7FFE00829E13 /* CacheAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImage.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
+		8823EB752B54FB510010A12F /* apiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiKey.swift; sourceTree = "<group>"; };
+		8823EB772B5519C60010A12F /* ImportSubscriptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSubscriptionsView.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		8845F0142B500E8A0086AA98 /* AllVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVideosView.swift; sourceTree = "<group>"; };
 		8845F0162B5054570086AA98 /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
@@ -201,6 +205,7 @@
 				88DFC0C32B448AB0001895C8 /* Model */,
 				8891F0AE2B4E7F070098A3FB /* Data */,
 				88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */,
+				8823EB752B54FB510010A12F /* apiKey.swift */,
 				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
 				88DFC0B42B44843C001895C8 /* Assets.xcassets */,
 				88DFC0B62B44843C001895C8 /* Unwatched.entitlements */,
@@ -247,6 +252,7 @@
 				8845F0142B500E8A0086AA98 /* AllVideosView.swift */,
 				886E79B62B46E0F900554E1F /* QueueView.swift */,
 				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
+				8823EB772B5519C60010A12F /* ImportSubscriptionsView.swift */,
 				8898B6762B480C3700348D01 /* AddSubscriptionView.swift */,
 				8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */,
 				887AC8CB2B49584400512852 /* WatchHistoryView.swift */,
@@ -376,6 +382,7 @@
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
 				887AC8CE2B4988D000512852 /* InboxView.swift in Sources */,
+				8823EB762B54FB510010A12F /* apiKey.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
@@ -391,6 +398,7 @@
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				88C2052A2B517732008EC51D /* ChapterManager.swift in Sources */,
 				887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */,
+				8823EB782B5519C60010A12F /* ImportSubscriptionsView.swift in Sources */,
 				887CA9452B52E72700E344EC /* AppShortcutsProvider.swift in Sources */,
 				88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,

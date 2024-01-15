@@ -20,7 +20,7 @@ struct ContentView: View {
     @Query var inbox: [InboxEntry]
 
     @State var chapterManager = ChapterManager()
-    @State private var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+    @AppStorage("subscriptionSortOrder") var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
 
     @MainActor
     init() {

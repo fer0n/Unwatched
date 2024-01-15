@@ -52,6 +52,9 @@
     "Continuous\nPlay" : {
 
     },
+    "Couldn't convert to URL: (noUrl)" : {
+      "comment" : "Couldn't convert to URL"
+    },
     "Custom\nsettings" : {
 
     },
@@ -72,6 +75,9 @@
     },
     "Failed to parse the data" : {
       "comment" : "Failed To Parse Error"
+    },
+    "HTTP request failed: (message)" : {
+      "comment" : "Failed Getting Video Info Error"
     },
     "Inbox" : {
 
@@ -111,7 +117,7 @@
     "No sideloaded videos found" : {
 
     },
-    "Paste & Submit" : {
+    "Paste" : {
 
     },
     "Queue" : {

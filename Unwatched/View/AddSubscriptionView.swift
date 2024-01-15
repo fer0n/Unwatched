@@ -14,19 +14,7 @@ struct AddSubscriptionView: View {
     @State var text: String = ""
     @State var isLoading: Bool = false
     @State var isDragOver: Bool = false
-
-    func delayedIsLoading() -> DispatchWorkItem {
-        let workItem = DispatchWorkItem {
-            isLoading = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
-        return workItem
-    }
-
-    func handleSuccess() {
-        VideoService.loadNewVideosInBg(modelContext: modelContext)
-        dismiss()
-    }
+    @State var newSubs: [SubscriptionState]?
 
     func addSubscriptionFromText() {
         let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
@@ -42,16 +30,17 @@ struct AddSubscriptionView: View {
     }
 
     func addSubscription(from urls: [URL]) {
+        //        newSubs = nil
         let container = modelContext.container
         errorMessage = nil
-        let workItem = delayedIsLoading()
+        isLoading = true
 
         Task {
             print("load new")
             do {
-                try await SubscriptionService.addSubscriptionsInBg(from: urls, modelContainer: container)
+                let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
                 DispatchQueue.main.async {
-                    handleSuccess()
+                    newSubs = subs
                 }
             } catch {
                 print("\(error)")
@@ -60,7 +49,6 @@ struct AddSubscriptionView: View {
                 }
             }
             DispatchQueue.main.async {
-                workItem.cancel()
                 isLoading = false
             }
         }
@@ -99,6 +87,7 @@ struct AddSubscriptionView: View {
                 .onSubmit {
                     addSubscriptionFromText()
                 }
+                .disabled(isLoading)
             Text("You can enter mutliple URLs, one per line")
                 .font(.caption)
                 .foregroundColor(.gray)
@@ -114,10 +103,11 @@ struct AddSubscriptionView: View {
                 addSubscriptionFromText()
             }
         } label: {
-            Text("Paste & Submit")
+            Text("Paste")
                 .bold()
                 .padding(.horizontal, 25)
                 .padding(.vertical, 15)
+                .disabled(isLoading)
         }
         .background(Color.myAccentColor)
         .foregroundColor(.backgroundColor)
@@ -133,22 +123,21 @@ struct AddSubscriptionView: View {
                         .fill(isDragOver ? Color.myBackgroundGray : .clear)
                         .stroke(isDragOver ? .clear : Color.grayColor, style: StrokeStyle(lineWidth: 2, dash: [5]))
                 )
-            VStack {
+
+            VStack(spacing: 10) {
                 Text("Drop URLs Here")
                     .font(.title2)
                     .bold()
                     .foregroundStyle(.gray)
-                    .padding(5)
+                    .padding(.top)
                 Text("You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once")
                     .foregroundStyle(.gray)
                     .multilineTextAlignment(.center)
                     .tint(.teal)
-
-                ProgressView()
-                    .opacity(isLoading ? 1 : 0)
-                    .padding(5)
-
+                    .padding(.bottom)
             }
+            .padding(.horizontal)
+
         }
         .dropDestination(for: URL.self) { items, _ in
             handleUrlDrop(items)
@@ -156,24 +145,54 @@ struct AddSubscriptionView: View {
         } isTargeted: { targeted in
             isDragOver = targeted
         }
+        .onDisappear {
+            if newSubs != nil {
+                VideoService.loadNewVideosInBg(modelContext: modelContext)
+            }
+        }
     }
 
     var body: some View {
-        VStack {
-            headerLogo
-                .padding()
-            enterTextField
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
+        ScrollView {
+            VStack {
+                headerLogo
+                    .padding()
+                enterTextField
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                }
+                dropArea
+                    .padding(.top)
+                pasteButton
+                ProgressView()
+                    .opacity(isLoading ? 1 : 0)
+                    .padding(.top, 5)
+                ImportSubscriptionsView(subStates: newSubs)
+                    .padding(.horizontal)
+
             }
-            dropArea
-                .padding(.top)
-            pasteButton
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 }
 
 #Preview {
     AddSubscriptionView()
+        .modelContainer(DataController.previewContainer)
 }
+
+//            let newSubs = [
+//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
+//                SubscriptionState(
+//                    url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+//                    title: "Gamertag VR",
+//                    userName: "GamertagVR",
+//                    success: true),
+//                SubscriptionState(
+//                    url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+//                    userName: "veritasium",
+//                    error: "The request cannot be completed because you have exceeded your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
+//                ),
+//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
+//                SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!, userName: "TomScottGo")
+//            ]

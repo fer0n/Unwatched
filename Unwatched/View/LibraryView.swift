@@ -24,9 +24,9 @@ struct LibraryView: View {
         case .title:
             sortDesc = SortDescriptor<Subscription>(\Subscription.title)
         case .recentlyAdded:
-            sortDesc = SortDescriptor<Subscription>(\Subscription.subscribedDate)
+            sortDesc = SortDescriptor<Subscription>(\Subscription.subscribedDate, order: .reverse)
         case .mostRecentVideo:
-            sortDesc = SortDescriptor<Subscription>(\Subscription.mostRecentVideoDate)
+            sortDesc = SortDescriptor<Subscription>(\Subscription.mostRecentVideoDate, order: .reverse)
         }
         _subscriptions = Query(sort: [sortDesc])
     }
@@ -78,6 +78,8 @@ struct LibraryView: View {
                         NavigationLink(destination: SideloadingView()) {
                             HStack {
                                 Image(systemName: "arrow.right.circle")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
                                 Text("Sideloads")
                             }
                         }
