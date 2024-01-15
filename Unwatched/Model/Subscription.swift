@@ -14,6 +14,8 @@ final class Subscription: CustomStringConvertible {
     var mostRecentVideoDate: Date?
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
     var youtubeChannelId: String?
+    var youtubeUserName: String?
+    // TODO: there's a difference between handles/usernames/cids, should be handled better
 
     var placeVideosIn: VideoPlacement
     var customSpeedSetting: Double?
@@ -22,13 +24,15 @@ final class Subscription: CustomStringConvertible {
          title: String,
          placeVideosIn: VideoPlacement = .defaultPlacement,
          videos: [Video] = [],
-         youtubeChannelId: String? = nil) {
+         youtubeChannelId: String? = nil,
+         youtubeUserName: String? = nil) {
         self.link = link
         self.title = title
         self.subscribedDate = .now
         self.placeVideosIn = placeVideosIn
         self.videos = videos
         self.youtubeChannelId = youtubeChannelId
+        self.youtubeUserName = youtubeUserName
     }
 
     var description: String {
@@ -44,4 +48,15 @@ struct SendableSubscription: Sendable {
     var link: URL
     var title: String
     var youtubeChannelId: String?
+    var youtubeUserName: String?
+}
+
+struct SubscriptionState: Identifiable {
+    var id = UUID()
+    var url: URL
+    var title: String?
+    var userName: String?
+    var error: String?
+    var success = false
+    var alreadyAdded = false
 }

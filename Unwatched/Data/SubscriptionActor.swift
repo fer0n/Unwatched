@@ -8,47 +8,69 @@ import SwiftData
 
 @ModelActor
 actor SubscriptionActor {
-    func addSubscriptions(from urls: [URL]) async throws {
-        print("urls", urls)
-        for url in urls {
-            if let sendableSub = try await getSubscription(url: url) {
-                if let channelId = sendableSub.youtubeChannelId,
-                   subscriptionAlreadyExists(channelId) != nil {
-                    return
-                }
-                print("sendableSub", sendableSub)
+    func addSubscriptions(from urls: [URL]) async throws -> [SubscriptionState] {
+        var subscriptionStates = [SubscriptionState]()
 
-                let sub = Subscription(link: sendableSub.link,
-                                       title: sendableSub.title,
-                                       youtubeChannelId: sendableSub.youtubeChannelId)
-                print("sub", sub)
-                modelContext.insert(sub)
+        for url in urls {
+            var subState = SubscriptionState(url: url)
+            do {
+                subState.userName = getChannelUserNameFromUrl(url: url)
+
+                if let sendableSub = try await getSubscription(url: url, userName: subState.userName) {
+                    if let channelId = sendableSub.youtubeChannelId,
+                       subscriptionAlreadyExists(channelId, subState.userName) != nil {
+                        subState.alreadyAdded = true
+                        subscriptionStates.append(subState)
+                        continue
+                    }
+
+                    let sub = Subscription(link: sendableSub.link,
+                                           title: sendableSub.title,
+                                           youtubeChannelId: sendableSub.youtubeChannelId,
+                                           youtubeUserName: subState.userName)
+                    modelContext.insert(sub)
+
+                    subState.title = sendableSub.title
+                    subState.success = true
+                    subscriptionStates.append(subState)
+                }
+            } catch {
+                subState.error = error.localizedDescription
+                subscriptionStates.append(subState)
             }
         }
         try modelContext.save()
+        return subscriptionStates
     }
 
-    func subscriptionAlreadyExists(_ youtubeChannelId: String) -> Subscription? {
+    func subscriptionAlreadyExists(_ youtubeChannelId: String?, _ userName: String?) -> Subscription? {
+        if youtubeChannelId == nil && userName == nil { return nil }
+
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.youtubeChannelId == youtubeChannelId
+            (youtubeChannelId != nil && youtubeChannelId == $0.youtubeChannelId) ||
+                (userName != nil && $0.youtubeUserName == userName)
         })
         let subs = try? modelContext.fetch(fetchDescriptor)
-        return subs?.first
+        if let sub = subs?.first {
+            print("existing one: \(sub.title)")
+            return sub
+        }
+        return nil
     }
 
-    func getSubscription(url: URL) async throws -> SendableSubscription? {
-        let feedUrl = try await self.getChannelFeedFromUrl(url: url)
+    func getSubscription(url: URL, userName: String?) async throws -> SendableSubscription? {
+        let feedUrl = try await self.getChannelFeedFromUrl(url: url, userName: userName)
         return try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
     }
 
-    func getChannelFeedFromUrl(url: URL) async throws -> URL {
+    func getChannelFeedFromUrl(url: URL, userName: String?) async throws -> URL {
         if isYoutubeFeedUrl(url: url) {
             return url
         }
-        guard let userName = getChannelUserNameFromUrl(url: url) else {
+        guard let userName = userName else {
             throw SubscriptionError.failedGettingChannelIdFromUsername
         }
-        let channelId = try await YoutubeDataAPI.getYtChannelIdViaList(from: userName)
+        let channelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
         if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
             return channelFeedUrl
         }

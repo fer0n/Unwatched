@@ -2,7 +2,7 @@ import Foundation
 
 class YoutubeDataAPI {
     static var apiKey: String {
-        let apiKey = ProcessInfo.processInfo.environment["youtube-api-key"]
+        let apiKey = Credentials.apiKey
         guard let apiKey = apiKey else {
             fatalError("youtube-api-key environment varible not set")
         }
@@ -11,42 +11,72 @@ class YoutubeDataAPI {
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
-    static func getYtChannelIdFromUsername(_ username: String) async throws -> String {
-        let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forUsername=\(username)&part=id"
+    static func getYtChannelId(from userName: String) async throws -> String {
+        do {
+            return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: userName)
+        } catch {
+            print("\(error)")
+        }
+        do {
+            return try await YoutubeDataAPI.getYtChannelIdViaList(userName)
+        } catch {
+            print("\(error)")
+        }
+        throw SubscriptionError.failedGettingChannelIdFromUsername
+        // return try await YoutubeDataAPI.getYtChannelIdViaSearch(from: userName)
+    }
 
-        if let url = URL(string: apiUrl) {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            print("data", data)
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print("json", json)
-                if let items = json["items"] as? [[String: Any]],
-                   let item = items.first,
-                   let id = item["id"] as? String {
-                    return id
-                }
-            }
+    static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
+        print("getLemnoslifeChannelId")
+        let url = "https://yt.lemnoslife.com/channels?handle=@\(handle)"
+        let channelInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: ChannelId.self)
+        if let item = channelInfo.items.first {
+            return item.id
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername
     }
 
-    static func getYtChannelIdViaList(from userName: String) async throws -> String {
-        let apiUrl = "\(baseUrl)search?key=\(apiKey)&q=\(userName)&type=channel&part=id,snippet"
+    private static func getYtChannelIdViaList(_ username: String) async throws -> String {
+        print("getYtChannelIdViaList")
+        let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forUsername=\(username)&part=id"
         print("apiUrl", apiUrl)
 
-        if let url = URL(string: apiUrl) {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            print("data", data)
-            do {
-                let decoder = JSONDecoder()
-                let channelInfo = try decoder.decode(ChannelInfo.self, from: data)
-                if let item = channelInfo.items.first {
-                    return item.id.channelId
-                }
-            } catch {
-                print("Error parsing JSON:", error)
+        let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: ChannelId.self)
+        if let item = response.items.first {
+            return item.id
+        }
+
+        throw SubscriptionError.failedGettingChannelIdFromUsername
+    }
+
+    static func getYtChannelIdViaSearch(from userName: String) async throws -> String {
+        print("getYtChannelIdViaSearch")
+        let apiUrl = "\(baseUrl)search?key=\(apiKey)&q=\(userName)&type=channel&part=id,snippet"
+        print("apiUrl", apiUrl)
+        let channelInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: ChannelInfo.self)
+        if let item = channelInfo.items.first {
+            return item.id.channelId
+        }
+
+        throw SubscriptionError.failedGettingChannelIdFromUsername
+    }
+
+    private static func handleYoutubeRequest<T>(url: String, model: T.Type) async throws -> T where T: Decodable {
+        guard let url = URL(string: url) else {
+            throw SubscriptionError.notAnUrl(url)
+        }
+        let (data, urlResponse) = try await URLSession.shared.data(from: url)
+        let decoder = JSONDecoder()
+        if let httpResponse = urlResponse as? HTTPURLResponse {
+            if let responseBody = String(data: data, encoding: .utf8) {
+                print("Response body: \(responseBody)")
+            }
+            if httpResponse.statusCode != 200 {
+                let response = try decoder.decode(ResponseBody.self, from: data)
+                throw SubscriptionError.httpRequestFailed(response.error.message)
             }
         }
-        throw SubscriptionError.failedGettingChannelIdFromUsername
+        return try decoder.decode(T.self, from: data)
     }
 
     static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
@@ -159,4 +189,38 @@ struct ChannelInfo: Decodable {
     }
 
     let items: [Items]
+}
+
+// MARK: - ChannelId
+struct ChannelId: Decodable {
+    struct Item: Decodable {
+        var id: String
+    }
+
+    var items: [Item]
+}
+
+// {
+//    "kind": "youtube#channelListResponse",
+//    "etag": "dzonrJ8Le3tnzwwHh4tGNofFfs4",
+//    "pageInfo": {
+//        "totalResults": 1,
+//        "resultsPerPage": 5
+//    },
+//    "items": [
+//        {
+//            "kind": "youtube#channel",
+//            "etag": "ZD6Vr3iThVcmOSqcf1lJfOeWHf8",
+//            "id": "UC-ImLFXGIe2FC4Wo5hOodnw"
+//        }
+//    ]
+// }
+
+// MARK: - error response body
+struct ResponseBody: Decodable {
+    struct Error: Decodable {
+        var code: Int
+        var message: String
+    }
+    var error: Error
 }

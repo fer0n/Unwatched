@@ -2,10 +2,10 @@ import Foundation
 import SwiftData
 
 class SubscriptionService {
-    static func addSubscriptionsInBg(from urls: [URL], modelContainer: ModelContainer) async throws {
+    static func addSubscriptions(from urls: [URL], modelContainer: ModelContainer) async throws -> [SubscriptionState] {
         print("addSubscriptionsInBg")
         // TODO: check if this is runnin in the bg
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        try await repo.addSubscriptions(from: urls)
+        return try await repo.addSubscriptions(from: urls)
     }
 }
