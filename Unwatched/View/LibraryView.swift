@@ -50,7 +50,7 @@ struct LibraryView: View {
                             Image(systemName: "gearshape.fill")
                                 .resizable()
                                 .frame(width: 20, height: 20)
-                            Text("Settings")
+                            Text("settings")
                         }
 
                     }
