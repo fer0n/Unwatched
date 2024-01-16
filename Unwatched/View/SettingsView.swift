@@ -10,16 +10,11 @@ struct SettingsView: View {
     @AppStorage("defaultEpisodePlacement") var defaultEpisodePlacement: VideoPlacement = .inbox
     @AppStorage("playVideoFullscreen") var playVideoFullscreen: Bool = false
     @AppStorage("autoplayVideos") var autoplayVideos: Bool = true
-    @State private var showingDeleteEverythingAlert = false
 
     let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
     let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
     // TODO: fix links
-
-    func deleteEverything() {
-        VideoService.deleteEverything(modelContext)
-    }
 
     var body: some View {
         VStack {
@@ -57,23 +52,11 @@ struct SettingsView: View {
                             .resizable()
                     }
                 }
-
-                Button("deleteEverything", role: .destructive) {
-                    showingDeleteEverythingAlert = true
-                }
             }
         }
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
         .navigationBarTitle("settings", displayMode: .inline)
         .tint(.myAccentColor)
-        .alert("reallyDelete", isPresented: $showingDeleteEverythingAlert, actions: {
-            Button("clearAll", role: .destructive) {
-                deleteEverything()
-            }
-            Button("cancel", role: .cancel) {}
-        }, message: {
-            Text("areYouSure")
-        })
     }
 }
 
