@@ -54,8 +54,10 @@ struct LibraryView: View {
                         }
 
                     }
+                    .listRowSeparator(.hidden)
                 }
                 Spacer()
+                    .listRowSeparator(.hidden)
                 Section {
                     NavigationLink(destination: AllVideosView()) {
                         HStack {
@@ -83,11 +85,14 @@ struct LibraryView: View {
                                 Text("Sideloads")
                             }
                         }
+
                     }
                 }
+                .listRowSeparator(.hidden)
 
                 if !subscriptions.isEmpty {
                     Spacer()
+                        .listRowSeparator(.hidden)
                     Section {
                         ForEach(subscriptions) { subscripton in
                             NavigationLink(

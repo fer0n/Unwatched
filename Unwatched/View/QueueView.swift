@@ -15,13 +15,6 @@ struct QueueView: View {
 
     var loadNewVideos: () async -> Void
 
-    func deleteQueueEntryIndexSet(_ indexSet: IndexSet) {
-        for index in indexSet {
-            let entry = queue[index]
-            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
-        }
-    }
-
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
         VideoService.moveQueueEntry(from: source,
                                     to: destination,
@@ -43,7 +36,7 @@ struct QueueView: View {
                 List {
                     ForEach(queue) { entry in
                         if let video = entry.video {
-                            VideoListItem(video: video, videoSwipeActions: [.watched], onTapQuesture: {
+                            VideoListItem(video: video, videoSwipeActions: [.watched, .clear], onTapQuesture: {
                                 navManager.video = entry.video
                                 if entry.order == 0 { return }
                                 VideoService.moveQueueEntry(from: [entry.order],
@@ -52,7 +45,6 @@ struct QueueView: View {
                             })
                         }
                     }
-                    .onDelete(perform: deleteQueueEntryIndexSet)
                     .onMove(perform: moveQueueEntry)
                     .dropDestination(for: URL.self) { items, index in
                         print("index", index)

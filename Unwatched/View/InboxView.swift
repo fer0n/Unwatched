@@ -46,10 +46,9 @@ struct InboxView: View {
                 List {
                     ForEach(inboxEntries) { entry in
                         if let video = entry.video {
-                            VideoListItem(video: video, videoSwipeActions: [.queue])
+                            VideoListItem(video: video, videoSwipeActions: [.queue, .clear])
                         }
                     }
-                    .onDelete(perform: deleteInboxEntryIndexSet)
                     .dropDestination(for: URL.self) { items, _ in
                         handleUrlDrop(items)
                     }

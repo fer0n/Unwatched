@@ -63,7 +63,7 @@ struct VideoListItem: View {
             return ("arrow.uturn.right.circle.fill", defaultColor)
         }
         if watched == true {
-            return ("checkmark.circle.fill", defaultColor)
+            return ("checkmark.circle.fill", .mint)
         }
         return nil
     }
@@ -114,13 +114,14 @@ struct VideoListItem: View {
 
     func getTrailingSwipeActions() -> some View {
         return Group {
-            if videoSwipeActions.contains(.clear) {
+            if videoSwipeActions.contains(.clear) &&
+                (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
                 Button {
                     clearVideoEverywhere()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                 }
-                .tint(.orange)
+                .tint(Color.backgroundColor)
             }
         }
     }
@@ -217,9 +218,10 @@ struct VideoListItem: View {
     return VideoListItem(
         video: video,
         showVideoStatus: true,
-        hasInboxEntry: video.inboxEntry != nil,
-        hasQueueEntry: video.queueEntry != nil,
-        watched: video.watched
+        hasInboxEntry: false,
+        hasQueueEntry: true,
+        watched: true
     )
-    .background(Color.gray)
+    .modelContainer(DataController.previewContainer)
+    .environment(NavigationManager())
 }
