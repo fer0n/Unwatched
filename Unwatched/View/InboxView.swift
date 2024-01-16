@@ -34,46 +34,54 @@ struct InboxView: View {
         VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
     }
 
+    var clearAllButton: some View {
+        Button {
+            showingClearAllAlert = true
+        } label: {
+            HStack {
+                Spacer()
+                Image(systemName: "xmark.circle")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(.teal)
+                Spacer()
+            }.padding()
+        }
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
-
                 if inboxEntries.isEmpty {
                     BackgroundPlaceholder(systemName: "tray.fill")
-                }
-
-                List {
-                    ForEach(inboxEntries) { entry in
-                        if let video = entry.video {
-                            VideoListItem(video: video, videoSwipeActions: [.queue, .clear])
+                    RefreshableEmptyDropView(
+                        onRefresh: {
+                            await loadNewVideos()
+                        },
+                        onDrop: { items, _  in
+                            handleUrlDrop(items)
+                        })
+                } else {
+                    List {
+                        ForEach(inboxEntries) { entry in
+                            if let video = entry.video {
+                                VideoListItem(video: video, videoSwipeActions: [.queue, .clear])
+                            }
                         }
-                    }
-                    .dropDestination(for: URL.self) { items, _ in
-                        handleUrlDrop(items)
-                    }
-
-                    if inboxEntries.count > 8 {
-                        Section {
-                            Button {
-                                showingClearAllAlert = true
-                            } label: {
-                                HStack {
-                                    Spacer()
-                                    Image(systemName: "xmark.circle")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(.teal)
-                                    Spacer()
-                                }.padding()
+                        .dropDestination(for: URL.self) { items, _ in
+                            handleUrlDrop(items)
+                        }
+                        if inboxEntries.count > 8 {
+                            Section {
+                                clearAllButton
                             }
                         }
                     }
+                    .refreshable {
+                        await loadNewVideos()
+                    }
                 }
-                .refreshable {
-                    await loadNewVideos()
-                }
-
             }
             .navigationBarTitle("Inbox")
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
