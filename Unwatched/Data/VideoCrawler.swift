@@ -103,38 +103,6 @@ class VideoCrawler {
         }
     }
 
-    static func loadChannelInfoFromYtId(from userName: String) async throws -> String? {
-        // TODO: can't get passed the cookie consent message
-        print("loadChannelInfoFromYtId", userName)
-        guard let url =  URL(string: "https://www.youtube.com/@\(userName)") else {
-            return nil
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-
-        // Create a cookie
-        var cookieProperties = [HTTPCookiePropertyKey: Any]()
-        cookieProperties[.name] = "CONSENT"
-        cookieProperties[.value] = "YES+1"
-        cookieProperties[.domain] = url.host!
-        cookieProperties[.path] = "/"
-        let cookie = HTTPCookie(properties: cookieProperties)
-
-        // Add the cookie to the session's cookie storage
-        session.configuration.httpCookieStorage?.setCookie(cookie!)
-
-        let (data, _) = try await session.data(for: request)
-
-        guard let htmlString = String(data: data, encoding: .utf8) else { return nil }
-        print("htmlString:", htmlString)
-        let channelIdRegex = #"<meta itemprop="identifier" content="(.*)\""#
-
-        return htmlString.matching(regex: channelIdRegex)
-    }
-
     static func loadVideoInfoFromYtId(_ youtubeId: String) async throws -> SendableVideo? {
         print("loadVideoInfoFromUrl")
         guard let url =  URL(string: "https://www.youtube.com/embed/\(youtubeId)") else {

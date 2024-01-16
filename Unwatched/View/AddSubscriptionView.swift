@@ -39,16 +39,16 @@ struct AddSubscriptionView: View {
             print("load new")
             do {
                 let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
-                DispatchQueue.main.async {
+                await MainActor.run {
                     newSubs = subs
                 }
             } catch {
                 print("\(error)")
-                DispatchQueue.main.async {
+                await MainActor.run {
                     errorMessage = error.localizedDescription
                 }
             }
-            DispatchQueue.main.async {
+            await MainActor.run {
                 isLoading = false
             }
         }

@@ -58,47 +58,22 @@ struct SettingsView: View {
                     }
                 }
 
-                Button("Delete Everything", role: .destructive) {
+                Button("deleteEverything", role: .destructive) {
                     showingDeleteEverythingAlert = true
                 }
             }
         }
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-        .navigationBarTitle("Settings", displayMode: .inline)
+        .navigationBarTitle("settings", displayMode: .inline)
         .tint(.myAccentColor)
-        .alert("Really Delete Everything?", isPresented: $showingDeleteEverythingAlert, actions: {
-            Button("Clear All", role: .destructive) {
+        .alert("reallyDelete", isPresented: $showingDeleteEverythingAlert, actions: {
+            Button("clearAll", role: .destructive) {
                 deleteEverything()
             }
-            Button("Cancel", role: .cancel) {}
+            Button("cancel", role: .cancel) {}
         }, message: {
-            Text("Are you sure you want to delete all data? This cannot be undone.")
+            Text("areYouSure")
         })
-    }
-}
-
-enum PreviewDuration: Int, CaseIterable {
-    case short
-    case medium
-    case long
-    case tapAway
-
-    var description: String {
-        switch self {
-        case .short: return String(localized: "short")
-        case .medium: return String(localized: "medium")
-        case .long: return String(localized: "long")
-        case .tapAway: return String(localized: "tapAway")
-        }
-    }
-
-    var timeInterval: TimeInterval? {
-        switch self {
-        case .short: return 0.5
-        case .medium: return 2.5
-        case .long: return 5
-        case .tapAway: return nil
-        }
     }
 }
 
@@ -114,6 +89,7 @@ struct LinkItemView<Content: View>: View {
                     .frame(width: 24, height: 24)
                     .foregroundColor(.myAccentColor)
                 Text(LocalizedStringKey(label))
+                    // TODO: this doesn't show up in the localized file
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer()

@@ -38,23 +38,58 @@
     "All Videos" : {
 
     },
-    "Are you sure you want to clear all items from the inbox?" : {
-
+    "areYouSure" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all data? This cannot be undone."
+          }
+        }
+      }
     },
-    "Are you sure you want to delete all data? This cannot be undone." : {
-
+    "areYouSureClearAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to clear all items from the inbox?"
+          }
+        }
+      }
     },
     "Autoplay videos" : {
 
     },
-    "Cancel" : {
-
+    "cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
     },
-    "Clear All" : {
-
+    "clearAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear All"
+          }
+        }
+      }
     },
-    "Confirm Clear All" : {
-
+    "confirmClearAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm Clear All"
+          }
+        }
+      }
     },
     "Continuous\nPlay" : {
 
@@ -68,8 +103,15 @@
     "Custom\nSettings" : {
 
     },
-    "Delete Everything" : {
-
+    "deleteEverything" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Everything"
+          }
+        }
+      }
     },
     "Do nothing" : {
 
@@ -99,7 +141,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "enterYoutubeRssUrl"
+            "value" : "Youtube RSS/Channel URL"
           }
         }
       }
@@ -132,13 +174,7 @@
     "Library" : {
 
     },
-    "long" : {
-
-    },
     "Mark\nWatched" : {
-
-    },
-    "medium" : {
 
     },
     "Most recent video" : {
@@ -177,14 +213,25 @@
     "Queue" : {
 
     },
-    "Really Delete Everything?" : {
-
+    "reallyDelete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete all data? This cannot be undone."
+          }
+        }
+      }
     },
-    "Settings" : {
-
-    },
-    "short" : {
-
+    "settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
     },
     "Sideloads" : {
 
@@ -194,9 +241,6 @@
     },
     "Subscription information not found" : {
       "comment" : "Subscription Info Not Found Error"
-    },
-    "tapAway" : {
-
     },
     "The operation is not supported" : {
       "comment" : "No Supported Error"

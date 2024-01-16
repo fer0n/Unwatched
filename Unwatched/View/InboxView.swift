@@ -83,13 +83,13 @@ struct InboxView: View {
             }
         }
         .listStyle(.plain)
-        .alert("Confirm Clear All", isPresented: $showingClearAllAlert, actions: {
-            Button("Clear All", role: .destructive) {
+        .alert("confirmClearAll", isPresented: $showingClearAllAlert, actions: {
+            Button("clearAll", role: .destructive) {
                 clearAll()
             }
-            Button("Cancel", role: .cancel) {}
+            Button("cancel", role: .cancel) {}
         }, message: {
-            Text("Are you sure you want to clear all items from the inbox?")
+            Text("areYouSureClearAll")
         })
     }
 
