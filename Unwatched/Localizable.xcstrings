@@ -39,6 +39,7 @@
 
     },
     "areYouSure" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -104,6 +105,7 @@
 
     },
     "deleteEverything" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -214,6 +216,7 @@
 
     },
     "reallyDelete" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
