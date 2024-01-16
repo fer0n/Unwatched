@@ -9,7 +9,7 @@ import SwiftData
 struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
     @Environment(\.modelContext) var modelContext
-    @AppStorage("defaultVideoPlacement") var defaultVideoPlacement: VideoPlacement = .inbox
+    @AppStorage("defaultEpisodePlacement") var defaultEpisodePlacement: VideoPlacement = .inbox
 
     var body: some View {
         VStack {
@@ -18,10 +18,11 @@ struct SubscriptionDetailView: View {
                     Picker("newVideos",
                            selection: $subscription.placeVideosIn) {
                         ForEach(VideoPlacement.allCases, id: \.self) {
-                            Text($0.description(defaultPlacement: String(describing: defaultVideoPlacement) ))
+                            Text($0.description(defaultPlacement: String(describing: defaultEpisodePlacement) ))
                         }
                     }
                 }
+                .listRowSeparator(.hidden, edges: .top)
 
                 Section {
                     ForEach(subscription.videos.sorted(by: { ($0.publishedDate ?? Date.distantPast)
@@ -44,7 +45,7 @@ struct SubscriptionDetailView: View {
                                                modelContext: modelContext)
             }
         }
-        .navigationBarTitle(subscription.title.uppercased())
+        .navigationBarTitle(subscription.title.uppercased(), displayMode: .inline)
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
     }
 }
