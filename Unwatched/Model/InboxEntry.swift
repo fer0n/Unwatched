@@ -8,13 +8,13 @@ import SwiftData
 
 @Model
 final class InboxEntry: CustomStringConvertible {
-    var video: Video
+    var video: Video?
 
     init(video: Video) {
         self.video = video
     }
 
     var description: String {
-        return "InboxEntry: \(video.title)"
+        return "InboxEntry: \(video?.title ?? "no title")"
     }
 }

@@ -8,7 +8,8 @@ import SwiftData
 
 @Model
 final class Video: CustomStringConvertible {
-
+    @Relationship(deleteRule: .cascade) var inboxEntry: InboxEntry?
+    @Relationship(deleteRule: .cascade) var queueEntry: QueueEntry?
     @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
     @Attribute(.unique) var youtubeId: String
 
@@ -20,7 +21,6 @@ final class Video: CustomStringConvertible {
     var duration: Double?
     var elapsedSeconds: Double = 0
     var videoDescription: String?
-    var status: VideoStatus?
     var watched = false
     var subscription: Subscription?
     var youtubeChannelId: String?

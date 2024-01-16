@@ -9,7 +9,7 @@ import SwiftData
 struct InboxView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Query(sort: \InboxEntry.video.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
+    @Query(sort: \InboxEntry.video?.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
     @State private var showingClearAllAlert = false
 
     var loadNewVideos: () async -> Void
@@ -45,9 +45,9 @@ struct InboxView: View {
 
                 List {
                     ForEach(inboxEntries) { entry in
-                        VideoListItem(video: entry.video, videoSwipeActions: [.queue], onAddToQueue: {
-                            deleteInboxEntry(entry)
-                        })
+                        if let video = entry.video {
+                            VideoListItem(video: video, videoSwipeActions: [.queue])
+                        }
                     }
                     .onDelete(perform: deleteInboxEntryIndexSet)
                     .dropDestination(for: URL.self) { items, _ in

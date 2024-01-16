@@ -165,36 +165,71 @@ actor VideoActor {
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {
-            VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
+            insertQueueEntries(at: index, videos: videos)
         }
     }
 
     private func addVideosToInbox(_ videos: [Video]) {
         for video in videos {
-            video.status = .inbox
             let inboxEntry = InboxEntry(video: video)
             modelContext.insert(inboxEntry)
+            video.inboxEntry = inboxEntry
+            clearEntries(from: video, except: InboxEntry.self)
         }
     }
 
-    // MARK: static functions
-    static func markVideoWatched(_ video: Video, modelContext: ModelContext) throws {
-        VideoActor.clearFromEverywhere(video, modelContext: modelContext)
+    func clearEntries(from videoId: PersistentIdentifier) throws {
+        if let video = modelContext.model(for: videoId) as? Video {
+            clearEntries(from: video)
+            try modelContext.save()
+        }
+    }
+
+    private func clearEntries(from video: Video, except model: (any PersistentModel.Type)? = nil) {
+        if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
+            modelContext.delete(inboxEntry)
+        }
+        if model != QueueEntry.self, let queueEntry = video.queueEntry {
+            modelContext.delete(queueEntry)
+        }
+    }
+
+    func markVideoWatched(_ videoId: PersistentIdentifier) throws {
+        if let video = modelContext.model(for: videoId) as? Video {
+            try markVideoWatched(video)
+            try modelContext.save()
+        }
+    }
+
+    private func markVideoWatched(_ video: Video) throws {
+        clearEntries(from: video)
         video.watched = true
         let watchEntry = WatchEntry(video: video)
         modelContext.insert(watchEntry)
     }
 
-    static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
+    func insertQueueEntries(at startIndex: Int = 0, videoIds: [PersistentIdentifier]) throws {
+        var videos = [Video]()
+        for videoId in videoIds {
+            if let video = modelContext.model(for: videoId) as? Video {
+                videos.append(video)
+            }
+        }
+        insertQueueEntries(at: startIndex, videos: videos)
+        try modelContext.save()
+    }
+
+    private func insertQueueEntries(at startIndex: Int = 0, videos: [Video]) {
         do {
             let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
             for (index, video) in videos.enumerated() {
-                video.status = .queued
+                clearEntries(from: video)
                 let queueEntry = QueueEntry(video: video, order: 0)
                 modelContext.insert(queueEntry)
                 queue.insert(queueEntry, at: startIndex + index)
+                video.queueEntry = queueEntry
             }
             for (index, queueEntry) in queue.enumerated() {
                 queueEntry.order = index
@@ -202,53 +237,15 @@ actor VideoActor {
         } catch {
             print("\(error)")
         }
-        // TODO: also delete from inbox, but only in the background
-    }
-
-    private static func clearFromQueue(_ video: Video, modelContext: ModelContext) {
-        let videoId = video.youtubeId
-        let fetchDescriptor = FetchDescriptor<QueueEntry>(predicate: #Predicate {
-            $0.video.youtubeId == videoId
-        })
-        do {
-            let queueEntry = try modelContext.fetch(fetchDescriptor)
-            for entry in queueEntry {
-                VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
-            }
-        } catch {
-            print("No queue entry found to delete")
-        }
-    }
-
-    private static func clearFromInbox(_ video: Video, modelContext: ModelContext) {
-        let videoId = video.youtubeId
-        let fetchDescriptor = FetchDescriptor<InboxEntry>(predicate: #Predicate {
-            $0.video.youtubeId == videoId
-        })
-        do {
-            let inboxEntry = try modelContext.fetch(fetchDescriptor)
-            for entry in inboxEntry {
-                VideoActor.deleteInboxEntry(entry: entry, modelContext: modelContext)
-            }
-        } catch {
-            print("No inbox entry found to delete")
-        }
-    }
-
-    static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) {
-        VideoActor.clearFromQueue(video, modelContext: modelContext)
-        VideoActor.clearFromInbox(video, modelContext: modelContext)
     }
 
     static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
-        queueEntry.video.status = nil
         VideoActor.updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
     }
 
     private static func deleteInboxEntry(entry: InboxEntry, modelContext: ModelContext) {
-        entry.video.status = nil
         modelContext.delete(entry)
     }
 
