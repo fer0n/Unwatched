@@ -27,7 +27,14 @@ struct SubscriptionDetailView: View {
                     ForEach(subscription.videos.sorted(by: { ($0.publishedDate ?? Date.distantPast)
                                                         > ($1.publishedDate ?? Date.distantPast)})
                     ) { video in
-                        VideoListItem(video: video, showVideoStatus: true, videoSwipeActions: [.queue, .clear])
+                        VideoListItem(
+                            video: video,
+                            showVideoStatus: true,
+                            hasInboxEntry: video.inboxEntry != nil,
+                            hasQueueEntry: video.queueEntry != nil,
+                            watched: video.watched,
+                            videoSwipeActions: [.queue, .clear]
+                        )
                     }
                 }
             }

@@ -11,7 +11,13 @@ struct AllVideosView: View {
             } else {
                 List {
                     ForEach(videos) { video in
-                        VideoListItem(video: video, showVideoStatus: true, videoSwipeActions: [.queue, .clear])
+                        VideoListItem(
+                            video: video,
+                            showVideoStatus: true,
+                            hasInboxEntry: video.inboxEntry != nil,
+                            hasQueueEntry: video.queueEntry != nil,
+                            watched: video.watched,
+                            videoSwipeActions: [.queue, .clear])
                     }
                 }
                 .listStyle(.plain)

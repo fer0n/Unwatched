@@ -26,11 +26,15 @@ class VideoService {
     }
 
     static func markVideoWatched(_ video: Video, modelContext: ModelContext ) {
-        print("markVideoWatched", video.title)
-        do {
-            try VideoActor.markVideoWatched(video, modelContext: modelContext)
-        } catch {
-            print("\(error)")
+        let container = modelContext.container
+        let videoId = video.id
+        Task {
+            do {
+                let repo = VideoActor(modelContainer: container)
+                try await repo.markVideoWatched(videoId)
+            } catch {
+                print("\(error)")
+            }
         }
     }
 
@@ -53,7 +57,6 @@ class VideoService {
     }
 
     static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
-        entry.video.status = nil
         modelContext.delete(entry)
     }
 
@@ -62,22 +65,29 @@ class VideoService {
     }
 
     static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) {
-        VideoActor.clearFromEverywhere(video, modelContext: modelContext)
+        let container = modelContext.container
+        let videoId = video.id
+        Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.clearEntries(from: videoId)
+        }
     }
 
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
                                    modelContext: ModelContext) {
-        VideoActor.insertQueueEntries(at: index, videos: videos, modelContext: modelContext)
-        // TODO: start background task to clean?
+        let container = modelContext.container
+        let videoIds = videos.map { $0.id }
+        Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.insertQueueEntries(at: index, videoIds: videoIds)
+        }
     }
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
                                at index: Int = 0,
                                modelContext: ModelContext) -> Task<(), Error> {
-        // TODO: before adding anything, check if the video already exists,
-        // if it does, add that one to queue
         let container = modelContext.container
 
         let task = Task.detached {

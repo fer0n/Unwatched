@@ -16,7 +16,12 @@ struct WatchHistoryView: View {
             } else {
                 List {
                     ForEach(watchEntries) { entry in
-                        VideoListItem(video: entry.video, showVideoStatus: true, videoSwipeActions: [.queue, .clear])
+                        VideoListItem(video: entry.video,
+                                      showVideoStatus: true,
+                                      hasInboxEntry: entry.video.inboxEntry != nil,
+                                      hasQueueEntry: entry.video.queueEntry != nil,
+                                      watched: entry.video.watched,
+                                      videoSwipeActions: [.queue, .clear])
                     }
                 }
                 .listStyle(.plain)

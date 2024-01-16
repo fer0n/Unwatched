@@ -8,7 +8,7 @@ import SwiftData
 
 @Model
 final class QueueEntry: CustomStringConvertible {
-    var video: Video
+    var video: Video?
     var order: Int
 
     init(video: Video, order: Int) {
@@ -17,6 +17,6 @@ final class QueueEntry: CustomStringConvertible {
     }
 
     var description: String {
-        return "\(video.title) at (\(order))"
+        return "\(video?.title ?? "not found") at (\(order))"
     }
 }

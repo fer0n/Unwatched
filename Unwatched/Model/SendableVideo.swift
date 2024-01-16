@@ -16,7 +16,6 @@ struct SendableVideo: Sendable {
     var chapters = [SendableChapter]()
 
     var publishedDate: Date?
-    var status: VideoStatus?
     var watched = false
 
     var videoDescription: String?

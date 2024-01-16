@@ -18,24 +18,58 @@ struct VideoListItem: View {
 
     let video: Video
     var showVideoStatus: Bool = false
-    var videoSwipeActions: [VideoActions] = [.queue]
-    var onAddToQueue: (() -> Void)?
+    var hasInboxEntry: Bool?
+    var hasQueueEntry: Bool?
+    var watched: Bool?
+    // TODO: see if there's a better way to fix the "label doesn't update from bg tasks" issue
+    // try to reproduce in mini project and ask on stackoverflow?
+
+    var videoSwipeActions: [VideoActions]
     var onTapQuesture: (() -> Void)?
+
+    init(video: Video,
+         videoSwipeActions: [VideoActions] = [.queue],
+         onTapQuesture: (() -> Void)? = nil) {
+        self.video = video
+        self.videoSwipeActions = videoSwipeActions
+        self.onTapQuesture = onTapQuesture
+    }
+
+    init(video: Video,
+         showVideoStatus: Bool,
+         hasInboxEntry: Bool,
+         hasQueueEntry: Bool,
+         watched: Bool,
+         videoSwipeActions: [VideoActions] = [.queue],
+         onTapQuesture: (() -> Void)? = nil) {
+        self.video = video
+        self.showVideoStatus = showVideoStatus
+        self.hasInboxEntry = hasInboxEntry
+        self.hasQueueEntry = hasQueueEntry
+        self.watched = watched
+        self.videoSwipeActions = videoSwipeActions
+        self.onTapQuesture = onTapQuesture
+    }
 
     func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
         let defaultColor = Color.green
-        switch video.status {
-        case .inbox: return ("circle.circle.fill", .teal)
-        case .playing: return ("play.circle.fill", defaultColor)
-        case .queued: return ("arrow.uturn.right.circle.fill", defaultColor)
-        case .none:
-            if video.watched { return ("checkmark.circle.fill", defaultColor) }
+        if video.youtubeId == navManager.video?.youtubeId {
+            return ("play.circle.fill", defaultColor)
+        }
+        if hasInboxEntry == true {
+            return ("circle.circle.fill", .teal)
+        }
+        if hasQueueEntry == true {
+            return ("arrow.uturn.right.circle.fill", defaultColor)
+        }
+        if watched == true {
+            return ("checkmark.circle.fill", defaultColor)
         }
         return nil
     }
 
     func addVideoToQueue() {
-        onAddToQueue?()
+        print("addVideoToQueue")
         VideoService.insertQueueEntries(
             at: 0,
             videos: [video],
@@ -172,23 +206,6 @@ struct VideoListItem: View {
     }
 }
 
-func formatDurationFromSeconds(_ seconds: TimeInterval) -> String {
-    let formatter = DateComponentsFormatter()
-    formatter.allowedUnits = [.hour, .minute, .second]
-    formatter.unitsStyle = .positional
-
-    if let formattedDuration = formatter.string(from: seconds) {
-        let components = formattedDuration.split(separator: ":")
-        if components.count == 1 {
-            return "\(formattedDuration)s"
-        } else {
-            return formattedDuration
-        }
-    } else {
-        return ""
-    }
-}
-
 #Preview {
     let video = Video(
         title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
@@ -196,9 +213,13 @@ func formatDurationFromSeconds(_ seconds: TimeInterval) -> String {
         youtubeId: "_7vP9vsnYPc",
         thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
         publishedDate: Date())
-    video.status = .playing
 
-    return VideoListItem(video: video,
-                         showVideoStatus: true)
-        .background(Color.gray)
+    return VideoListItem(
+        video: video,
+        showVideoStatus: true,
+        hasInboxEntry: video.inboxEntry != nil,
+        hasQueueEntry: video.queueEntry != nil,
+        watched: video.watched
+    )
+    .background(Color.gray)
 }

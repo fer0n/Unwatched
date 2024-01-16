@@ -98,7 +98,6 @@ class YoutubeDataAPI {
                 feedTitle: item.snippet.channelTitle,
                 duration: duration,
                 publishedDate: publishedDate,
-                status: nil,
                 videoDescription: item.snippet.description)
         }
 
