@@ -87,7 +87,7 @@ actor SubscriptionActor {
             return url
         }
         guard let userName = userName else {
-            throw SubscriptionError.failedGettingChannelIdFromUsername
+            throw SubscriptionError.failedGettingChannelIdFromUsername("Username was empty")
         }
         let channelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
         if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
