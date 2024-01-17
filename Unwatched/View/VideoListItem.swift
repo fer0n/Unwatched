@@ -107,7 +107,7 @@ struct VideoListItem: View {
                 } label: {
                     Image(systemName: "checkmark.circle.fill")
                 }
-                .tint(.teal)
+                .tint(.mint)
             }
         }
     }
