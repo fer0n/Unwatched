@@ -13,7 +13,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     let video: Video
     @Binding var playbackSpeed: Double
     @Binding var isPlaying: Bool
-    var updateElapsedTime: (_ seconds: Double) -> Void
+    var updateElapsedTime: (_ seconds: Double, _ persist: Bool) -> Void
     @Bindable var chapterManager: ChapterManager
     var onVideoEnded: () -> Void
 
@@ -53,7 +53,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
             function onPlayerStateChange(event) {
                 if (event.data == YT.PlayerState.PAUSED) {
-                    sendMessage("paused");
+                    sendMessage("paused", player.getCurrentTime());
                     stopTimer();
                 } else if (event.data == YT.PlayerState.PLAYING) {
                     sendMessage("playing");
@@ -188,6 +188,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             switch topic {
             case "paused":
                 parent.isPlaying = false
+                handleTimeUpdate(payload, persist: true)
             case "playing":
                 parent.isPlaying = true
             case "ended":
@@ -213,11 +214,11 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
         }
 
-        func handleTimeUpdate(_ payload: String?) {
+        func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
             guard let payload = payload, let time = Double(payload) else {
                 return
             }
-            parent.updateElapsedTime(time)
+            parent.updateElapsedTime(time, persist)
             parent.chapterManager.monitorChapters(time: time)
         }
     }

@@ -20,8 +20,17 @@ struct VideoPlayer: View {
     var markVideoWatched: () -> Void
     var chapterManager: ChapterManager
 
-    func updateElapsedTime(_ seconds: Double) {
+    func updateElapsedTime(_ seconds: Double, persist: Bool = false) {
         elapsedSeconds = seconds
+        if persist {
+            persistTimeChanges()
+        }
+    }
+
+    func persistTimeChanges() {
+        if let seconds = elapsedSeconds {
+            video.elapsedSeconds = seconds
+        }
     }
 
     func setPlaybackSpeed(_ value: Double) {
@@ -119,9 +128,7 @@ struct VideoPlayer: View {
                 .aspectRatio(16/9, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .onDisappear {
-                    if let seconds = elapsedSeconds {
-                        video.elapsedSeconds = seconds
-                    }
+                    persistTimeChanges()
                 }
 
                 VStack {
