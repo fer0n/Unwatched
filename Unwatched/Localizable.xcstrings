@@ -35,16 +35,12 @@
         }
       }
     },
-    "All Videos" : {
-
-    },
-    "areYouSure" : {
-      "extractionState" : "stale",
+    "allVideos" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete all data? This cannot be undone."
+            "value" : "All Videos"
           }
         }
       }
@@ -103,17 +99,6 @@
     },
     "Custom\nSettings" : {
 
-    },
-    "deleteEverything" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete Everything"
-          }
-        }
-      }
     },
     "Do nothing" : {
 
@@ -202,6 +187,86 @@
     "No video found" : {
       "comment" : "No Supported Error"
     },
+    "noHistoryItems" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing Watched"
+          }
+        }
+      }
+    },
+    "noHistoryItemsDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos marked as watched will appear here"
+          }
+        }
+      }
+    },
+    "noInboxItems" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Inbox"
+          }
+        }
+      }
+    },
+    "noInboxItemsDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New videos will show up here.\\nGrab what you like, discard the rest."
+          }
+        }
+      }
+    },
+    "noQueueItems" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Queue"
+          }
+        }
+      }
+    },
+    "noQueueItemsDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add videos manually or by marking subscriptions as \"Add to Queue\""
+          }
+        }
+      }
+    },
+    "noVideosYet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Videos Found"
+          }
+        }
+      }
+    },
+    "noVideosYetDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All available videos will be shown here, including manually added ones and videos from all subscriptions."
+          }
+        }
+      }
+    },
     "paste" : {
       "localizations" : {
         "en" : {
@@ -214,17 +279,6 @@
     },
     "Queue" : {
 
-    },
-    "reallyDelete" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Are you sure you want to delete all data? This cannot be undone."
-          }
-        }
-      }
     },
     "settings" : {
       "localizations" : {

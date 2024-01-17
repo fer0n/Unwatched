@@ -12,7 +12,9 @@ struct WatchHistoryView: View {
     var body: some View {
         ZStack {
             if watchEntries.isEmpty {
-                BackgroundPlaceholder(systemName: "checkmark.circle.fill")
+                ContentUnavailableView("noHistoryItems",
+                                       systemImage: "checkmark.circle.fill",
+                                       description: Text("noHistoryItemsDescription"))
             } else {
                 List {
                     ForEach(watchEntries) { entry in

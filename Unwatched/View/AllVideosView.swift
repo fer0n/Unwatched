@@ -7,7 +7,9 @@ struct AllVideosView: View {
     var body: some View {
         ZStack {
             if videos.isEmpty {
-                BackgroundPlaceholder(systemName: "checkmark.circle.fill")
+                ContentUnavailableView("noVideosYet",
+                                       systemImage: "checkmark.circle.fill",
+                                       description: Text("noVideosYetDescription"))
             } else {
                 List {
                     ForEach(videos) { video in
@@ -24,6 +26,6 @@ struct AllVideosView: View {
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
         }
-        .navigationBarTitle("All Videos", displayMode: .inline)
+        .navigationBarTitle("allVideos", displayMode: .inline)
     }
 }
