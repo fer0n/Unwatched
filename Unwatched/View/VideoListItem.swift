@@ -25,14 +25,18 @@ struct VideoListItem: View {
     // try to reproduce in mini project and ask on stackoverflow?
 
     var videoSwipeActions: [VideoActions]
-    var onTapQuesture: (() -> Void)?
+    var onTapGuesture: (() -> Void)?
+    var onClear: (() -> Void)?
+    // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
          videoSwipeActions: [VideoActions] = [.queue],
-         onTapQuesture: (() -> Void)? = nil) {
+         onTapGuesture: (() -> Void)? = nil,
+         onClear: (() -> Void)? = nil) {
         self.video = video
         self.videoSwipeActions = videoSwipeActions
-        self.onTapQuesture = onTapQuesture
+        self.onTapGuesture = onTapGuesture
+        self.onClear = onClear
     }
 
     init(video: Video,
@@ -41,14 +45,16 @@ struct VideoListItem: View {
          hasQueueEntry: Bool,
          watched: Bool,
          videoSwipeActions: [VideoActions] = [.queue],
-         onTapQuesture: (() -> Void)? = nil) {
+         onTapGuesture: (() -> Void)? = nil,
+         onClear: (() -> Void)? = nil) {
         self.video = video
         self.showVideoStatus = showVideoStatus
         self.hasInboxEntry = hasInboxEntry
         self.hasQueueEntry = hasQueueEntry
         self.watched = watched
         self.videoSwipeActions = videoSwipeActions
-        self.onTapQuesture = onTapQuesture
+        self.onTapGuesture = onTapGuesture
+        self.onClear = onClear
     }
 
     func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
@@ -85,6 +91,7 @@ struct VideoListItem: View {
     }
 
     func clearVideoEverywhere() {
+        onClear?()
         VideoService.clearFromEverywhere(
             video,
             modelContext: modelContext
@@ -192,7 +199,7 @@ struct VideoListItem: View {
     var body: some View {
         videoItem
             .onTapGesture {
-                if let tap = onTapQuesture {
+                if let tap = onTapGuesture {
                     tap()
                 } else {
                     navManager.video = video
