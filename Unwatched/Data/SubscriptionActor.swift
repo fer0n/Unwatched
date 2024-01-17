@@ -122,4 +122,10 @@ actor SubscriptionActor {
         // https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
+
+    func getAllFeedUrls() throws -> [(title: String, link: URL)] {
+        let fetchDescriptor = FetchDescriptor<Subscription>()
+        let subs = try modelContext.fetch(fetchDescriptor)
+        return subs.map { (title: $0.title, link: $0.link) }
+    }
 }

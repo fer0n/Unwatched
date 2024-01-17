@@ -88,6 +88,16 @@
         }
       }
     },
+    "contact" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact Us"
+          }
+        }
+      }
+    },
     "Continuous\nPlay" : {
 
     },
@@ -143,11 +153,31 @@
         }
       }
     },
+    "exportSubscriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Subscriptions"
+          }
+        }
+      }
+    },
     "Failed to get video info" : {
       "comment" : "Failed Getting Video Info Error"
     },
     "Failed to parse the data" : {
       "comment" : "Failed To Parse Error"
+    },
+    "github" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched on Github"
+          }
+        }
+      }
     },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
@@ -279,6 +309,16 @@
     },
     "Queue" : {
 
+    },
+    "rateApp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please Rate Unwatched"
+          }
+        }
+      }
     },
     "settings" : {
       "localizations" : {

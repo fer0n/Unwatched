@@ -16,6 +16,12 @@ struct SettingsView: View {
     let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
     // TODO: fix links
 
+    func exportAllSubscriptions() async -> [(title: String, link: URL)] {
+        let container = modelContext.container
+        let result = try? await SubscriptionService.getAllFeedUrls(container)
+        return result ?? []
+    }
+
     var body: some View {
         VStack {
             List {
@@ -52,6 +58,11 @@ struct SettingsView: View {
                             .resizable()
                     }
                 }
+
+                Section {
+                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions)
+                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions"))
+                }
             }
         }
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
@@ -60,9 +71,29 @@ struct SettingsView: View {
     }
 }
 
+struct AsyncSharableUrls: Transferable {
+    let getUrls: () async -> [(title: String, link: URL)]
+
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .plainText) { item in
+            let urls = await item.getUrls()
+            let textUrls = urls
+                .map { "\($0.title)\n\($0.link.absoluteString)\n" }
+                .joined(separator: "\n")
+            print("textUrls", textUrls)
+            let data = textUrls.data(using: .utf8)
+            if let data = data {
+                return data
+            } else {
+                fatalError()
+            }
+        }
+    }
+}
+
 struct LinkItemView<Content: View>: View {
     let destination: URL
-    let label: String
+    let label: LocalizedStringKey
     let content: () -> Content
 
     var body: some View {
@@ -71,8 +102,7 @@ struct LinkItemView<Content: View>: View {
                 content()
                     .frame(width: 24, height: 24)
                     .foregroundColor(.myAccentColor)
-                Text(LocalizedStringKey(label))
-                    // TODO: this doesn't show up in the localized file
+                Text(label)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer()

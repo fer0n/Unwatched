@@ -8,4 +8,9 @@ class SubscriptionService {
         let repo = SubscriptionActor(modelContainer: modelContainer)
         return try await repo.addSubscriptions(from: urls)
     }
+
+    static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL)] {
+        let repo = SubscriptionActor(modelContainer: container)
+        return try await repo.getAllFeedUrls()
+    }
 }
