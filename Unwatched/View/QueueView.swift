@@ -44,13 +44,16 @@ struct QueueView: View {
                     List {
                         ForEach(queue) { entry in
                             if let video = entry.video {
-                                VideoListItem(video: video, videoSwipeActions: [.watched, .clear], onTapQuesture: {
-                                    navManager.video = entry.video
-                                    if entry.order == 0 { return }
-                                    VideoService.moveQueueEntry(from: [entry.order],
-                                                                to: 0,
-                                                                modelContext: modelContext)
-                                })
+                                VideoListItem(
+                                    video: video,
+                                    videoSwipeActions: [.watched, .queue, .clear],
+                                    onTapQuesture: {
+                                        navManager.video = entry.video
+                                        if entry.order == 0 { return }
+                                        VideoService.moveQueueEntry(from: [entry.order],
+                                                                    to: 0,
+                                                                    modelContext: modelContext)
+                                    })
                             }
                         }
                         .onMove(perform: moveQueueEntry)

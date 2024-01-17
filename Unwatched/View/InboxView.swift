@@ -73,9 +73,8 @@ struct InboxView: View {
                             handleUrlDrop(items)
                         }
                         if inboxEntries.count > 8 {
-                            Section {
-                                clearAllButton
-                            }
+                            clearAllButton
+                                .listRowSeparator(.hidden, edges: .bottom)
                         }
                     }
                     .refreshable {

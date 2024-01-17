@@ -33,6 +33,10 @@ struct LibraryView: View {
 
     var loadNewVideos: () async -> Void
 
+    var hasSideloads: Bool {
+        !sideloadedVideos.isEmpty
+    }
+
     func deleteSubscription(_ indexSet: IndexSet) {
         for index in indexSet {
             let sub = subscriptions[index]
@@ -46,13 +50,7 @@ struct LibraryView: View {
             List {
                 Section {
                     NavigationLink(destination: SettingsView()) {
-                        HStack {
-                            Image(systemName: "gearshape.fill")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                            Text("settings")
-                        }
-
+                        LibraryNavListItem("settings", systemName: "gearshape.fill")
                     }
                     .listRowSeparator(.hidden)
                 }
@@ -60,35 +58,26 @@ struct LibraryView: View {
                     .listRowSeparator(.hidden)
                 Section {
                     NavigationLink(destination: AllVideosView()) {
-                        HStack {
-                            Image(systemName: "play.rectangle.on.rectangle")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                            Text("All Videos")
-                        }
-
+                        LibraryNavListItem("allVideos",
+                                           systemName: "play.rectangle.on.rectangle",
+                                           .blue)
                     }
+                    .listRowSeparator(.hidden, edges: .top)
                     NavigationLink(destination: WatchHistoryView()) {
-                        HStack {
-                            Image(systemName: "checkmark.circle")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                            Text("Watched")
-                        }
+                        LibraryNavListItem("watched",
+                                           systemName: "checkmark.circle",
+                                           .mint)
+                            .listRowSeparator(hasSideloads ? .visible : .hidden, edges: .top)
                     }
-                    if !sideloadedVideos.isEmpty {
+                    if hasSideloads {
                         NavigationLink(destination: SideloadingView()) {
-                            HStack {
-                                Image(systemName: "arrow.right.circle")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                Text("Sideloads")
-                            }
+                            LibraryNavListItem("sideloads",
+                                               systemName: "arrow.right.circle",
+                                               .purple)
                         }
-
+                        .listRowSeparator(.hidden, edges: .bottom)
                     }
                 }
-                .listRowSeparator(.hidden)
 
                 if !subscriptions.isEmpty {
                     Spacer()
@@ -135,12 +124,35 @@ struct LibraryView: View {
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
-        }
-        .sheet(isPresented: $showAddSubscriptionSheet) {
-            ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
-                AddSubscriptionView()
+            .sheet(isPresented: $showAddSubscriptionSheet) {
+                ZStack {
+                    Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                    AddSubscriptionView()
+                }
             }
+        }
+    }
+}
+
+struct LibraryNavListItem: View {
+    var text: String
+    var systemName: String
+    var color: Color? = .blue
+
+    init(_ text: String, systemName: String, _ color: Color? = nil) {
+        self.text = text
+        self.systemName = systemName
+        self.color = color
+    }
+
+    var body: some View {
+        HStack {
+            Image(systemName: systemName)
+                .resizable()
+                .frame(width: 23, height: 23)
+                .foregroundColor(color)
+                .padding([.vertical, .trailing], 6)
+            Text(text)
         }
     }
 }
