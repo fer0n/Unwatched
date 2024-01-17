@@ -135,11 +135,11 @@ struct LibraryView: View {
 }
 
 struct LibraryNavListItem: View {
-    var text: String
+    var text: LocalizedStringKey
     var systemName: String
     var color: Color? = .blue
 
-    init(_ text: String, systemName: String, _ color: Color? = nil) {
+    init(_ text: LocalizedStringKey, systemName: String, _ color: Color? = nil) {
         self.text = text
         self.systemName = systemName
         self.color = color

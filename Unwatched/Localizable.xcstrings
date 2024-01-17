@@ -222,7 +222,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New videos will show up here.\\nGrab what you like, discard the rest."
+            "value" : "New videos will show up here.\nGrab what you like, discard the rest."
           }
         }
       }
@@ -290,6 +290,16 @@
         }
       }
     },
+    "sideloads" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sideloads"
+          }
+        }
+      }
+    },
     "Sideloads" : {
 
     },
@@ -310,6 +320,16 @@
     },
     "VideoPlayer – Should never be visible" : {
 
+    },
+    "watched" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watched"
+          }
+        }
+      }
     },
     "Watched" : {
 
