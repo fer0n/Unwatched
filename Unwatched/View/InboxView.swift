@@ -55,31 +55,43 @@ struct InboxView: View {
             ZStack {
                 if inboxEntries.isEmpty {
                     BackgroundPlaceholder(systemName: "tray.fill")
-                    RefreshableEmptyDropView(
-                        onRefresh: {
-                            await loadNewVideos()
-                        },
-                        onDrop: { items, _  in
+                }
+                List {
+                    if inboxEntries.isEmpty {
+                        ForEach(0..<1) { _ in
+                            Color.clear
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                        }
+                        .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
-                        })
-                } else {
-                    List {
+                        }
+                    } else {
                         ForEach(inboxEntries) { entry in
                             if let video = entry.video {
-                                VideoListItem(video: video, videoSwipeActions: [.queue, .clear])
+                                VideoListItem(
+                                    video: video,
+                                    videoSwipeActions: [.queue, .clear],
+                                    onClear: {
+                                        VideoService.deleteInboxEntry(
+                                            entry,
+                                            modelContext: modelContext
+                                        )
+                                    }
+                                )
                             }
                         }
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
                         }
-                        if inboxEntries.count > 8 {
-                            clearAllButton
-                                .listRowSeparator(.hidden, edges: .bottom)
-                        }
                     }
-                    .refreshable {
-                        await loadNewVideos()
+                    if inboxEntries.count > 8 {
+                        clearAllButton
+                            .listRowSeparator(.hidden, edges: .bottom)
                     }
+                }
+                .refreshable {
+                    await loadNewVideos()
                 }
             }
             .navigationBarTitle("Inbox")

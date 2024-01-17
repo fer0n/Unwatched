@@ -57,7 +57,6 @@
 		88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D858562B55AC3F0047E0E6 /* YtChannelId.swift */; };
 		88D858592B55AC820047E0E6 /* YtErrorResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D858582B55AC820047E0E6 /* YtErrorResponseBody.swift */; };
 		88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D8585A2B55B0E70047E0E6 /* SendableVideo.swift */; };
-		88D8585D2B5717E00047E0E6 /* RefreshableEmptyDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D8585C2B5717E00047E0E6 /* RefreshableEmptyDropView.swift */; };
 		88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */; };
 		88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
 		88DFC0B52B44843C001895C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88DFC0B42B44843C001895C8 /* Assets.xcassets */; };
@@ -120,7 +119,6 @@
 		88D858562B55AC3F0047E0E6 /* YtChannelId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtChannelId.swift; sourceTree = "<group>"; };
 		88D858582B55AC820047E0E6 /* YtErrorResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtErrorResponseBody.swift; sourceTree = "<group>"; };
 		88D8585A2B55B0E70047E0E6 /* SendableVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendableVideo.swift; sourceTree = "<group>"; };
-		88D8585C2B5717E00047E0E6 /* RefreshableEmptyDropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableEmptyDropView.swift; sourceTree = "<group>"; };
 		88DFC0AB2B44843A001895C8 /* Unwatched.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Unwatched.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedApp.swift; sourceTree = "<group>"; };
 		88DFC0B02B44843A001895C8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -295,7 +293,6 @@
 				887AC8CD2B4988D000512852 /* InboxView.swift */,
 				887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */,
 				8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */,
-				88D8585C2B5717E00047E0E6 /* RefreshableEmptyDropView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -444,7 +441,6 @@
 				887CA9452B52E72700E344EC /* AppShortcutsProvider.swift in Sources */,
 				88143EB72B4A7FFE00829E13 /* CacheAsyncImage.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
-				88D8585D2B5717E00047E0E6 /* RefreshableEmptyDropView.swift in Sources */,
 				88D858592B55AC820047E0E6 /* YtErrorResponseBody.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				88ADE8232B4ADCC3002F86F7 /* BackgroundPlaceholder.swift in Sources */,

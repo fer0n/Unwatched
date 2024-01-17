@@ -32,28 +32,33 @@ struct QueueView: View {
             ZStack {
                 if queue.isEmpty {
                     BackgroundPlaceholder(systemName: "rectangle.stack.badge.play.fill")
-                    RefreshableEmptyDropView(
-                        onRefresh: {
-                            await loadNewVideos()
-                        },
-                        onDrop: { items, _ in
+                }
+                List {
+                    if queue.isEmpty {
+                        ForEach(0..<1) { _ in
+                            Color.clear
+                                .listRowBackground(Color.clear)
+                        }
+                        .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items, at: 0)
                         }
-                    )
-                } else {
-                    List {
+                    } else {
                         ForEach(queue) { entry in
                             if let video = entry.video {
                                 VideoListItem(
                                     video: video,
                                     videoSwipeActions: [.watched, .queue, .clear],
-                                    onTapQuesture: {
+                                    onTapGuesture: {
                                         navManager.video = entry.video
                                         if entry.order == 0 { return }
                                         VideoService.moveQueueEntry(from: [entry.order],
                                                                     to: 0,
                                                                     modelContext: modelContext)
-                                    })
+                                    },
+                                    onClear: {
+                                        VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+                                    }
+                                )
                             }
                         }
                         .onMove(perform: moveQueueEntry)
@@ -62,11 +67,11 @@ struct QueueView: View {
                             handleUrlDrop(items, at: index)
                         }
                     }
-                    .navigationBarTitle("Queue")
-                    .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-                    .refreshable {
-                        await loadNewVideos()
-                    }
+                }
+                .navigationBarTitle("Queue")
+                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+                .refreshable {
+                    await loadNewVideos()
                 }
             }
             .navigationDestination(for: Subscription.self) { sub in
