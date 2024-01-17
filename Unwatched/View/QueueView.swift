@@ -31,13 +31,14 @@ struct QueueView: View {
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
                 if queue.isEmpty {
-                    BackgroundPlaceholder(systemName: "rectangle.stack.badge.play.fill")
+                    ContentUnavailableView("noQueueItems",
+                                           systemImage: "rectangle.stack.badge.play.fill",
+                                           description: Text("noQueueItemsDescription"))
                 }
                 List {
                     if queue.isEmpty {
                         ForEach(0..<1) { _ in
-                            Color.clear
-                                .listRowBackground(Color.clear)
+                            EmptyListItem()
                         }
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items, at: 0)

@@ -54,14 +54,14 @@ struct InboxView: View {
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
                 if inboxEntries.isEmpty {
-                    BackgroundPlaceholder(systemName: "tray.fill")
+                    ContentUnavailableView("noInboxItems",
+                                           systemImage: "tray.fill",
+                                           description: Text("noInboxItemsDescription"))
                 }
                 List {
                     if inboxEntries.isEmpty {
                         ForEach(0..<1) { _ in
-                            Color.clear
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
+                            EmptyListItem()
                         }
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
