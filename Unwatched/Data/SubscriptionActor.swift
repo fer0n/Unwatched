@@ -11,36 +11,50 @@ actor SubscriptionActor {
     func addSubscriptions(from urls: [URL]) async throws -> [SubscriptionState] {
         var subscriptionStates = [SubscriptionState]()
 
-        for url in urls {
-            var subState = SubscriptionState(url: url)
-            do {
-                subState.userName = getChannelUserNameFromUrl(url: url)
-
-                if let sendableSub = try await getSubscription(url: url, userName: subState.userName) {
-                    if let channelId = sendableSub.youtubeChannelId,
-                       subscriptionAlreadyExists(channelId, subState.userName) != nil {
-                        subState.alreadyAdded = true
-                        subscriptionStates.append(subState)
-                        continue
-                    }
-
-                    let sub = Subscription(link: sendableSub.link,
-                                           title: sendableSub.title,
-                                           youtubeChannelId: sendableSub.youtubeChannelId,
-                                           youtubeUserName: subState.userName)
-                    modelContext.insert(sub)
-
-                    subState.title = sendableSub.title
-                    subState.success = true
-                    subscriptionStates.append(subState)
+        try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
+            for url in urls {
+                group.addTask {
+                    return await self.loadSubscriptionInfo(from: url)
                 }
-            } catch {
-                subState.error = error.localizedDescription
+            }
+
+            for try await (subState, sendableSub) in group {
                 subscriptionStates.append(subState)
+                if let sendableSub = sendableSub {
+                    let sub = Subscription(
+                        link: sendableSub.link,
+                        title: sendableSub.title,
+                        youtubeChannelId: sendableSub.youtubeChannelId,
+                        youtubeUserName: subState.userName
+                    )
+                    modelContext.insert(sub)
+                }
             }
         }
         try modelContext.save()
         return subscriptionStates
+    }
+
+    func loadSubscriptionInfo(from url: URL) async -> (SubscriptionState, SendableSubscription?) {
+        var subState = SubscriptionState(url: url)
+        do {
+            subState.userName = getChannelUserNameFromUrl(url: url)
+
+            if let sendableSub = try await getSubscription(url: url, userName: subState.userName) {
+                if let channelId = sendableSub.youtubeChannelId,
+                   subscriptionAlreadyExists(channelId, subState.userName) != nil {
+                    subState.alreadyAdded = true
+                    return (subState, sendableSub)
+                }
+
+                subState.title = sendableSub.title
+                subState.success = true
+                return (subState, sendableSub)
+            }
+        } catch {
+            subState.error = error.localizedDescription
+        }
+        return (subState, nil)
     }
 
     func subscriptionAlreadyExists(_ youtubeChannelId: String?, _ userName: String?) -> Subscription? {

@@ -68,9 +68,9 @@ class YoutubeDataAPI {
         let (data, urlResponse) = try await URLSession.shared.data(from: url)
         let decoder = JSONDecoder()
         if let httpResponse = urlResponse as? HTTPURLResponse {
-            if let responseBody = String(data: data, encoding: .utf8) {
-                print("Response body: \(responseBody)")
-            }
+            //            if let responseBody = String(data: data, encoding: .utf8) {
+            //                print("Response body: \(responseBody)")
+            //            }
             if httpResponse.statusCode != 200 {
                 let response = try decoder.decode(YtErrorResponseBody.self, from: data)
                 throw SubscriptionError.httpRequestFailed(response.error.message)

@@ -4,7 +4,6 @@ import Observation
 
 @ModelActor
 actor VideoActor {
-    // MARK: public functions that save context
     func loadVideoData(from videoUrls: [URL],
                        in videoplacement: VideoPlacement,
                        at index: Int = 0) async throws {
