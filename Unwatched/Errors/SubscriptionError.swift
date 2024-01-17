@@ -7,7 +7,7 @@ import Foundation
 
 enum SubscriptionError: LocalizedError {
     case notSupported
-    case failedGettingChannelIdFromUsername
+    case failedGettingChannelIdFromUsername(_ message: String?)
     case failedGettingVideoInfo
     case httpRequestFailed(_ message: String)
     case notAnUrl(_ noUrl: String)
@@ -17,10 +17,11 @@ enum SubscriptionError: LocalizedError {
         case .notSupported:
             return NSLocalizedString("The operation is not supported",
                                      comment: "No Supported Error")
-        case .failedGettingChannelIdFromUsername:
+        case .failedGettingChannelIdFromUsername(let message):
             let message = """
             Failed to get channel ID from username.
             Try adding the RSS feed directly (instead of the channel URL).
+            \(message != nil ? "Error: \(message!)" : "" )")
             """
             return NSLocalizedString(message, comment: "Failed Getting Channel ID Error")
         case .failedGettingVideoInfo:

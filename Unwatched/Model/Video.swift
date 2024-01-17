@@ -9,7 +9,7 @@ import SwiftData
 @Model
 final class Video: CustomStringConvertible {
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
-    @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var queueEntry: QueueEntry?
+    @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
     @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
     @Attribute(.unique) var youtubeId: String
 

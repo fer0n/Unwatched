@@ -8,7 +8,7 @@ struct AllVideosView: View {
         ZStack {
             if videos.isEmpty {
                 ContentUnavailableView("noVideosYet",
-                                       systemImage: "checkmark.circle.fill",
+                                       systemImage: "play.rectangle.on.rectangle",
                                        description: Text("noVideosYetDescription"))
             } else {
                 List {
