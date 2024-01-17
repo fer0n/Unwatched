@@ -39,10 +39,16 @@ actor SubscriptionActor {
         var subState = SubscriptionState(url: url)
         do {
             subState.userName = getChannelUserNameFromUrl(url: url)
+            if let title = getTitleIfSubscriptionExists(userName: subState.userName) {
+                subState.title = title
+                subState.alreadyAdded = true
+                return (subState, nil)
+            }
 
             if let sendableSub = try await getSubscription(url: url, userName: subState.userName) {
                 if let channelId = sendableSub.youtubeChannelId,
-                   subscriptionAlreadyExists(channelId, subState.userName) != nil {
+                   let title = getTitleIfSubscriptionExists(channelId: channelId) {
+                    subState.title = title
                     subState.alreadyAdded = true
                     return (subState, sendableSub)
                 }
@@ -57,17 +63,16 @@ actor SubscriptionActor {
         return (subState, nil)
     }
 
-    func subscriptionAlreadyExists(_ youtubeChannelId: String?, _ userName: String?) -> Subscription? {
-        if youtubeChannelId == nil && userName == nil { return nil }
-
+    func getTitleIfSubscriptionExists(channelId: String? = nil, userName: String? = nil) -> String? {
+        if channelId == nil && userName == nil { return nil }
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
-            (youtubeChannelId != nil && youtubeChannelId == $0.youtubeChannelId) ||
+            (channelId != nil && channelId == $0.youtubeChannelId) ||
                 (userName != nil && $0.youtubeUserName == userName)
         })
         let subs = try? modelContext.fetch(fetchDescriptor)
         if let sub = subs?.first {
-            print("existing one: \(sub.title)")
-            return sub
+            let title = sub.title
+            return title
         }
         return nil
     }
@@ -104,11 +109,17 @@ actor SubscriptionActor {
             return userName
         }
 
+        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+        if let userName = urlString.matching(regex: #"\/videos.xml\?user=(.*)"#) {
+            return userName
+        }
+
         return nil
     }
 
     func isYoutubeFeedUrl(url: URL) -> Bool {
         // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+        // https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg
         return url.absoluteString.contains("youtube.com/feeds/videos.xml")
     }
 }
