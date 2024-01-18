@@ -2,23 +2,35 @@ import SwiftUI
 import SwiftData
 
 struct SideloadingView: View {
-    @Query(filter: #Predicate<Video> { $0.subscription == nil }) var sideloadedVideos: [Video]
+    @Environment(\.modelContext) var modelContext
+    @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
+    var sidedloadedSubscriptions: [Subscription]
+
+    func deleteSubscription(_ indexSet: IndexSet) {
+        SubscriptionService.deleteSubscriptions(
+            sidedloadedSubscriptions,
+            indexSet: indexSet,
+            container: modelContext.container
+        )
+    }
 
     var body: some View {
+        let subs = sidedloadedSubscriptions.filter({ !$0.videos.isEmpty })
         ZStack {
-            if sideloadedVideos.isEmpty {
-                Text("No sideloaded videos found")
+            if subs.isEmpty {
+                ContentUnavailableView("noSideloadedSubscriptions",
+                                       systemImage: "arrow.right.circle",
+                                       description: Text("noSideloadedSubscriptionsDetail"))
             } else {
                 List {
-                    ForEach(sideloadedVideos) { video in
-                        VideoListItem(
-                            video: video,
-                            showVideoStatus: true,
-                            hasInboxEntry: video.inboxEntry != nil,
-                            hasQueueEntry: video.queueEntry != nil,
-                            watched: video.watched,
-                            videoSwipeActions: [.queue, .clear])
+                    ForEach(subs) { sub in
+                        NavigationLink(
+                            destination: SubscriptionDetailView(subscription: sub)
+                        ) {
+                            SubscriptionListItem(subscription: sub)
+                        }
                     }
+                    .onDelete(perform: deleteSubscription)
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
@@ -29,5 +41,5 @@ struct SideloadingView: View {
 }
 
 // #Preview {
-//    WatchHistoryView()
+//    SideloadingView()
 // }

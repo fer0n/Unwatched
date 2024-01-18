@@ -159,7 +159,7 @@ struct VideoListItem: View {
                             .font(.body)
                             .foregroundStyle(Color.gray)
                     }
-                    if let title = video.feedTitle {
+                    if let title = video.subscription?.title {
                         Text(title)
                             .font(.system(size: 14, weight: .regular))
                             .lineLimit(1)

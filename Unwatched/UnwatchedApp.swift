@@ -10,6 +10,7 @@ import WebKit
 @main
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @State var alerter: Alerter = Alerter()
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema(DataController.dbEntries)
@@ -26,6 +27,10 @@ struct UnwatchedApp: App {
         WindowGroup {
             ContentView()
                 .accentColor(.myAccentColor)
+                .environment(alerter)
+                .alert(isPresented: $alerter.isShowingAlert) {
+                    alerter.alert ?? Alert(title: Text(""))
+                }
         }
         .modelContainer(sharedModelContainer)
     }

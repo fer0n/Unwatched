@@ -88,11 +88,12 @@ class VideoService {
                                in videoPlacement: VideoPlacement,
                                at index: Int = 0,
                                modelContext: ModelContext) -> Task<(), Error> {
+        print("addForeignUrls")
         let container = modelContext.container
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
-            return try await repo.loadVideoData(from: urls, in: videoPlacement, at: index)
+            try await repo.addForeignVideo(from: urls, in: videoPlacement, at: index)
         }
         return task
     }

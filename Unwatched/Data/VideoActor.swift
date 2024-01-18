@@ -4,22 +4,24 @@ import Observation
 
 @ModelActor
 actor VideoActor {
-    func loadVideoData(from videoUrls: [URL],
-                       in videoplacement: VideoPlacement,
-                       at index: Int = 0) async throws {
+    func addForeignVideo(from videoUrls: [URL],
+                         in videoplacement: VideoPlacement,
+                         at index: Int = 0) async throws {
         var videos = [Video]()
         for url in videoUrls {
             let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
             guard let youtubeId = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value else {
                 print("no youtubeId found")
-                return
+                continue
             }
 
-            print("urlAlreadyExists?")
+            print("videoAlreadyExists?")
             if let video = videoAlreadyExists(youtubeId) {
                 videos.append(video)
             } else {
-                if let video = try await createVideo(from: youtubeId, url: url) {
+                let res = try await createVideo(from: youtubeId, url: url)
+                if let video = res?.video {
+                    try await addSubscriptionsForForeignVideos(video, feedTitle: res?.feedTitle)
                     videos.append(video)
                 }
             }
@@ -28,7 +30,52 @@ actor VideoActor {
         try modelContext.save()
     }
 
-    func createVideo(from youtubeId: String, url: URL) async throws -> Video? {
+    func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
+        print("addSubscriptionsForVideos")
+        guard let channelId = video.youtubeChannelId else {
+            print("no channel Id/title found in video")
+            return
+        }
+
+        // video already added, done here
+        guard video.subscription == nil else {
+            print("video already has a subscription")
+            return
+        }
+
+        // check if subs exists (in video or in db)
+        if let existingSub = try subscriptionExists(channelId) {
+            existingSub.videos.append(video)
+            return
+        }
+
+        // create subs where missing
+        let channelLink = try SubscriptionActor.getFeedUrlFromChannelId(channelId)
+        let sub = Subscription(
+            link: channelLink,
+            title: feedTitle ?? "",
+            youtubeChannelId: channelId,
+            isArchived: true
+        )
+        print("new sub: \(sub.isArchived)")
+
+        modelContext.insert(sub)
+        sub.videos.append(video)
+    }
+
+    func subscriptionExists(_ channelId: String) throws -> Subscription? {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubeChannelId == channelId
+        })
+        if let subs = try? modelContext.fetch(fetch) {
+            if let sub = subs.first {
+                return sub
+            }
+        }
+        return nil
+    }
+
+    func createVideo(from youtubeId: String, url: URL) async throws -> (video: Video, feedTitle: String?)? {
         guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
             return nil
         }
@@ -38,7 +85,7 @@ actor VideoActor {
         if let channelId = videoData.youtubeChannelId {
             addToCorrectSubscription(video, channelId: channelId)
         }
-        return video
+        return (video, videoData.feedTitle)
     }
 
     func videoAlreadyExists(_ youtubeId: String) -> Video? {
@@ -55,7 +102,7 @@ actor VideoActor {
         var subs = [Subscription]()
         if subscriptionIds == nil {
             print("nothing yet, getting all")
-            subs = try getAllSubscriptions()
+            subs = try getAllActiveSubscriptions()
             print("all subs", subs)
         } else {
             print("found some, fetching")
@@ -68,8 +115,8 @@ actor VideoActor {
         try modelContext.save()
     }
 
-    func getAllSubscriptions() throws -> [Subscription] {
-        let fetch = FetchDescriptor<Subscription>()
+    func getAllActiveSubscriptions() throws -> [Subscription] {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isArchived == false })
         return try modelContext.fetch(fetch)
     }
 
@@ -111,13 +158,20 @@ actor VideoActor {
         if let sub = subscriptions?.first {
             sub.videos.append(video)
             for video in sub.videos {
-                video.feedTitle = sub.title
                 video.youtubeChannelId = sub.youtubeChannelId
             }
         }
     }
 
+    private func getVideosNotAlreadyAdded(sub: Subscription, videos: [Video]) -> [Video] {
+        let videoIds = sub.videos.map { $0.youtubeId }
+        return videos.filter { !videoIds.contains($0.youtubeId) }
+    }
+
     private func loadVideos(for sub: Subscription, defaultPlacement: VideoPlacement) async throws {
+        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
+        print("isFirstTimeLoading", isFirstTimeLoading)
+
         // load videos from web
         let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
             url: sub.link,
@@ -125,13 +179,18 @@ actor VideoActor {
         var newVideos = [Video]()
         for vid in loadedVideos {
             let video = vid.getVideo(youtubeChannelId: sub.youtubeChannelId)
-            modelContext.insert(video)
             newVideos.append(video)
+        }
+        updateRecentVideoDate(subscription: sub, videos: newVideos)
+        if isFirstTimeLoading {
+            newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
+        }
+        for video in newVideos {
+            modelContext.insert(video)
         }
 
         sub.videos.append(contentsOf: newVideos)
-        let limitVideos = sub.mostRecentVideoDate == nil ? 5 : nil
-        updateRecentVideoDate(subscription: sub, videos: newVideos)
+        let limitVideos = isFirstTimeLoading ? 5 : nil
 
         triageSubscriptionVideos(sub,
                                  videos: newVideos,

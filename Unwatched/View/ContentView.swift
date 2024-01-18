@@ -87,6 +87,9 @@ struct ContentView: View {
             }
         }
         .environment(navManager)
+        .onAppear {
+            loadNewVideos()
+        }
     }
 }
 

@@ -10,8 +10,10 @@ struct LibraryView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
 
-    @Query(sort: \Subscription.subscribedDate, order: .reverse) var subscriptions: [Subscription]
-    @Query(filter: #Predicate<Video> { $0.subscription == nil }) var sideloadedVideos: [Video]
+    @Query var subscriptions: [Subscription]
+    @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
+    var sidedloadedSubscriptions: [Subscription]
+
     @State var showAddSubscriptionSheet = false
     @Binding var subscriptionSorting: SubscriptionSorting
 
@@ -28,20 +30,23 @@ struct LibraryView: View {
         case .mostRecentVideo:
             sortDesc = SortDescriptor<Subscription>(\Subscription.mostRecentVideoDate, order: .reverse)
         }
-        _subscriptions = Query(sort: [sortDesc])
+        _subscriptions = Query(filter: #Predicate<Subscription> { sub in
+            sub.isArchived == false
+        }, sort: [sortDesc])
     }
 
     var loadNewVideos: () async -> Void
 
     var hasSideloads: Bool {
-        !sideloadedVideos.isEmpty
+        !sidedloadedSubscriptions.isEmpty
     }
 
     func deleteSubscription(_ indexSet: IndexSet) {
-        for index in indexSet {
-            let sub = subscriptions[index]
-            modelContext.delete(sub)
-        }
+        SubscriptionService.deleteSubscriptions(
+            subscriptions,
+            indexSet: indexSet,
+            container: modelContext.container
+        )
     }
 
     var body: some View {
