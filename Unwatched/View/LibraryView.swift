@@ -41,14 +41,6 @@ struct LibraryView: View {
         !sidedloadedSubscriptions.isEmpty
     }
 
-    func deleteSubscription(_ indexSet: IndexSet) {
-        SubscriptionService.deleteSubscriptions(
-            subscriptions,
-            indexSet: indexSet,
-            container: modelContext.container
-        )
-    }
-
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
@@ -95,7 +87,6 @@ struct LibraryView: View {
                                 SubscriptionListItem(subscription: subscripton)
                             }
                         }
-                        .onDelete(perform: deleteSubscription)
                     }
                 }
             }
