@@ -55,10 +55,10 @@ struct SubscriptionStateView: View {
             HStack {
                 let color: Color = state.success || state.alreadyAdded ? .green : .red
                 let systemName = state.success
-                    ? "checkmark.circle.fill"
+                    ? Const.watchedSF
                     : state.alreadyAdded
-                    ? "books.vertical.circle.fill"
-                    : "xmark.circle.fill"
+                    ? Const.alreadyInLibrarySF
+                    : Const.clearSF
                 Image(systemName: systemName)
                     .resizable()
                     .frame(width: 25, height: 25)

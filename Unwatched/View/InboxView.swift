@@ -40,7 +40,7 @@ struct InboxView: View {
         } label: {
             HStack {
                 Spacer()
-                Image(systemName: "xmark.circle")
+                Image(systemName: Const.clearSF)
                     .resizable()
                     .frame(width: 30, height: 30)
                     .foregroundColor(.teal)

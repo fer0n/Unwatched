@@ -46,11 +46,11 @@ struct SettingsView: View {
 
                 Section {
                     LinkItemView(destination: writeReviewUrl, label: "rateApp") {
-                        Image(systemName: "star.fill")
+                        Image(systemName: Const.rateAppSF)
                     }
 
                     LinkItemView(destination: emailUrl, label: "contact") {
-                        Image(systemName: "envelope.fill")
+                        Image(systemName: Const.contactMailSF)
                     }
 
                     LinkItemView(destination: githubUrl, label: "github") {
@@ -106,7 +106,7 @@ struct LinkItemView<Content: View>: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer()
-                Image(systemName: "chevron.right")
+                Image(systemName: Const.listItemChevronSF)
                     .foregroundColor(.myAccentColor)
             }
         }

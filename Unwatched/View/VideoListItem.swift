@@ -69,7 +69,7 @@ struct VideoListItem: View {
             return ("arrow.uturn.right.circle.fill", defaultColor)
         }
         if watched == true {
-            return ("checkmark.circle.fill", .mint)
+            return (Const.watchedSF, .mint)
         }
         return nil
     }
@@ -104,7 +104,7 @@ struct VideoListItem: View {
                 Button {
                     addVideoToQueue()
                 } label: {
-                    Image(systemName: "text.badge.plus")
+                    Image(systemName: Const.addToQueuSF)
                 }
                 .tint(.teal)
             }
@@ -112,7 +112,7 @@ struct VideoListItem: View {
                 Button {
                     markVideoWatched()
                 } label: {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image(systemName: Const.watchedSF)
                 }
                 .tint(.mint)
             }
@@ -126,7 +126,7 @@ struct VideoListItem: View {
                 Button {
                     clearVideoEverywhere()
                 } label: {
-                    Image(systemName: "xmark.circle.fill")
+                    Image(systemName: Const.clearSF)
                 }
                 .tint(Color.backgroundColor)
             }
