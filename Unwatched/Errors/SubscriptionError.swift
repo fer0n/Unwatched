@@ -17,17 +17,17 @@ enum SubscriptionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notSupported:
-            return NSLocalizedString("The operation is not supported",
+            return NSLocalizedString("notSupported",
                                      comment: "No Supported Error")
         case .failedGettingChannelIdFromUsername(let message):
-            let message = """
+            let msg = """
             Failed to get channel ID from username.
             Try adding the RSS feed directly (instead of the channel URL).
             \(message != nil ? "Error: \(message!)" : "" )")
             """
-            return NSLocalizedString(message, comment: "Failed Getting Channel ID Error")
+            return NSLocalizedString(msg, comment: "Failed Getting Channel ID Error")
         case .failedGettingVideoInfo:
-            return NSLocalizedString("Failed to get video info",
+            return NSLocalizedString("failedGettingVideoInfo",
                                      comment: "Failed Getting Video Info Error")
         case .httpRequestFailed(let message):
             return NSLocalizedString("HTTP request failed: \(message)",

@@ -5,9 +5,9 @@ import SwiftData
 import AppIntents
 
 struct AddYoutubeURL: AppIntent {
-    static var title: LocalizedStringResource = "Add Youtube URL"
+    static var title: LocalizedStringResource = "addYoutubeUrl"
 
-    @Parameter(title: "YouTube URL")
+    @Parameter(title: "youtubeUrl")
     var youtubeUrl: URL
 
     @MainActor
@@ -21,16 +21,16 @@ struct AddYoutubeURL: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         Summary("Add video from \(\.$youtubeUrl)")
+        // TODO: translate this
     }
-
 }
 
 struct UnwatchedAppShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             intent: AddYoutubeURL(),
-            phrases: ["Add YouTube URL"],
-            shortTitle: "Add YouTube URL",
+            phrases: ["addYoutubeUrl"],
+            shortTitle: "addYoutubeUrl",
             systemImageName: "play.rectangle.fill"
         )
     }

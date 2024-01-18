@@ -36,7 +36,7 @@ import SwiftUI
         }
 
         guard let chapters = video?.sortedChapters else {
-            print("no video found")
+            print("noVideo found")
             return
         }
         guard let current = chapters.first(where: { chapter in

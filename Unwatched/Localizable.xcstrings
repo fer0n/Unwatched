@@ -13,24 +13,42 @@
     "%lld" : {
 
     },
-    "Add to inbox" : {
-
-    },
-    "Add to Queue" : {
-
-    },
-    "Add Youtube URL" : {
-
-    },
-    "Add YouTube URL" : {
-
-    },
     "addSubscription" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Subscription"
+          }
+        }
+      }
+    },
+    "addToInbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Inbox"
+          }
+        }
+      }
+    },
+    "addToQueue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Queue"
+          }
+        }
+      }
+    },
+    "addYoutubeUrl" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add YouTube URL"
           }
         }
       }
@@ -55,8 +73,15 @@
         }
       }
     },
-    "Autoplay videos" : {
-
+    "autoplayVideos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoplay videos"
+          }
+        }
+      }
     },
     "cancel" : {
       "localizations" : {
@@ -98,8 +123,25 @@
         }
       }
     },
-    "Continuous\nPlay" : {
-
+    "continuous\nplay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Play"
+          }
+        }
+      }
+    },
+    "continuousPlay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Play"
+          }
+        }
+      }
     },
     "Could not subscribe: (message)" : {
       "comment" : "Could not subscribe"
@@ -107,14 +149,25 @@
     "Couldn't convert to URL: (noUrl)" : {
       "comment" : "Couldn't convert to URL"
     },
-    "Custom\nsettings" : {
-
+    "custom\nsettings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Settings"
+          }
+        }
+      }
     },
-    "Custom\nSettings" : {
-
-    },
-    "Do nothing" : {
-
+    "doNothing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do Nothing"
+          }
+        }
+      }
     },
     "dropSubscriptionHelper" : {
       "localizations" : {
@@ -157,7 +210,14 @@
       }
     },
     "errorOccured" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error occurred"
+          }
+        }
+      }
     },
     "exportSubscriptions" : {
       "localizations" : {
@@ -169,11 +229,27 @@
         }
       }
     },
-    "Failed to get video info" : {
-      "comment" : "Failed Getting Video Info Error"
+    "failedGettingVideoInfo" : {
+      "comment" : "Failed Getting Video Info Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to get video info"
+          }
+        }
+      }
     },
-    "Failed to parse the data" : {
-      "comment" : "Failed To Parse Error"
+    "failedToParse" : {
+      "comment" : "Failed To Parse Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to parse the data"
+          }
+        }
+      }
     },
     "github" : {
       "localizations" : {
@@ -188,23 +264,56 @@
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
     },
-    "Inbox" : {
-
+    "inbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox"
+          }
+        }
+      }
     },
-    "Invalid URL" : {
-      "comment" : "Invalid URL Error"
+    "invalidUrl" : {
+      "comment" : "Invalid URL Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid URL"
+          }
+        }
+      }
     },
-    "Library" : {
-
+    "library" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
+          }
+        }
+      }
     },
-    "Mark\nWatched" : {
-
+    "mark\nwatched" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark Watched"
+          }
+        }
+      }
     },
-    "Most recent video" : {
-
-    },
-    "New Episodes" : {
-
+    "newEpisodes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Episodes"
+          }
+        }
+      }
     },
     "newVideos" : {
       "extractionState" : "manual",
@@ -216,9 +325,6 @@
           }
         }
       }
-    },
-    "No video found" : {
-      "comment" : "No Supported Error"
     },
     "noHistoryItems" : {
       "localizations" : {
@@ -261,7 +367,15 @@
       }
     },
     "noInfoFoundToSubscribeTo" : {
-      "comment" : "No info found to subscribe to"
+      "comment" : "No info found to subscribe to",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No info found to subscribe"
+          }
+        }
+      }
     },
     "noQueueItems" : {
       "localizations" : {
@@ -284,10 +398,46 @@
       }
     },
     "noSideloadedSubscriptions" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Sideloads"
+          }
+        }
+      }
     },
     "noSideloadedSubscriptionsDetail" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos of channels you haven't subscribed to will show up here"
+          }
+        }
+      }
+    },
+    "notSupported" : {
+      "comment" : "No Supported Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The URL is not supported"
+          }
+        }
+      }
+    },
+    "noVideoFound" : {
+      "comment" : "No Supported Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Video found"
+          }
+        }
+      }
     },
     "noVideosYet" : {
       "localizations" : {
@@ -319,8 +469,15 @@
         }
       }
     },
-    "Queue" : {
-
+    "queue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        }
+      }
     },
     "rateApp" : {
       "localizations" : {
@@ -352,11 +509,15 @@
         }
       }
     },
-    "Sideloads" : {
-
-    },
-    "Start videos in fullscreen" : {
-
+    "startVideosInFullscreen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start videos in fullscreen"
+          }
+        }
+      }
     },
     "subscribe" : {
       "localizations" : {
@@ -368,14 +529,16 @@
         }
       }
     },
-    "Subscription information not found" : {
-      "comment" : "Subscription Info Not Found Error"
-    },
-    "The operation is not supported" : {
-      "comment" : "No Supported Error"
-    },
-    "Title" : {
-
+    "subscriptionInfoNotFound" : {
+      "comment" : "Subscription Info Not Found Error",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscription information not found"
+          }
+        }
+      }
     },
     "unsubscribe" : {
       "localizations" : {
@@ -387,8 +550,15 @@
         }
       }
     },
-    "Use Default (%@)" : {
-
+    "useDefault" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Default"
+          }
+        }
+      }
     },
     "VideoPlayer – Should never be visible" : {
 
@@ -403,11 +573,15 @@
         }
       }
     },
-    "Watched" : {
-
-    },
-    "YouTube URL" : {
-
+    "youtubeUrl" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube URL"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

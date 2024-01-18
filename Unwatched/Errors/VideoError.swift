@@ -11,7 +11,7 @@ enum VideoError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noVideoFound:
-            return NSLocalizedString("No video found", comment: "No Supported Error")
+            return NSLocalizedString("noVideoFound", comment: "No Supported Error")
         }
     }
 }

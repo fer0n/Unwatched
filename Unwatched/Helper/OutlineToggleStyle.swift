@@ -37,7 +37,7 @@ struct OutlineToggleModifier: ViewModifier {
 
 #Preview {
     Toggle(isOn: .constant(true)) {
-        Text("Custom\nsettings")
+        Text("custom\nsettings")
     }
     .toggleStyle(OutlineToggleStyle())
 }

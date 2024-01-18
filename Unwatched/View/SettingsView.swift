@@ -26,7 +26,7 @@ struct SettingsView: View {
         VStack {
             List {
                 Section {
-                    Picker("New Episodes", selection: $defaultEpisodePlacement) {
+                    Picker("newEpisodes", selection: $defaultEpisodePlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
                             Text($0.description(defaultPlacement: ""))
                         }
@@ -36,10 +36,10 @@ struct SettingsView: View {
 
                 Section {
                     Toggle(isOn: $playVideoFullscreen) {
-                        Text("Start videos in fullscreen")
+                        Text("startVideosInFullscreen")
                     }
                     Toggle(isOn: $autoplayVideos) {
-                        Text("Autoplay videos")
+                        Text("autoplayVideos")
                     }
                 }
                 .tint(.teal)

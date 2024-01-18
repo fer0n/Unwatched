@@ -30,7 +30,7 @@ struct WatchHistoryView: View {
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
         }
-        .navigationBarTitle("Watched", displayMode: .inline)
+        .navigationBarTitle("watched", displayMode: .inline)
     }
 }
 
