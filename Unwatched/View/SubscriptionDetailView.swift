@@ -43,8 +43,10 @@ struct SubscriptionDetailView: View {
             }
             .listStyle(.plain)
             .refreshable {
-                VideoService.loadNewVideosInBg(subscriptions: [subscription],
-                                               modelContext: modelContext)
+                let task = VideoService.loadNewVideosInBg(
+                    subscriptions: [subscription],
+                    modelContext: modelContext)
+                try? await task.value
             }
         }
         .navigationBarTitle(subscription.title.uppercased(), displayMode: .inline)

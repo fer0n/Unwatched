@@ -35,7 +35,7 @@ struct AddSubscriptionView: View {
         errorMessage = nil
         isLoading = true
 
-        Task {
+        Task.detached {
             print("load new")
             do {
                 let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
