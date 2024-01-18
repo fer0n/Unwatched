@@ -489,6 +489,16 @@
         }
       }
     },
+    "refreshOnStartup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh on App start"
+          }
+        }
+      }
+    },
     "settings" : {
       "localizations" : {
         "en" : {

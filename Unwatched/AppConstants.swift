@@ -45,4 +45,5 @@ struct Const {
     static let defaultEpisodePlacement = "defaultEpisodePlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
+    static let refreshOnStartup = "refreshOnStartup"
 }

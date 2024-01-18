@@ -17,6 +17,7 @@
 		881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51382B59D555006384E4 /* LibraryNavListItem.swift */; };
 		881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513A2B59D577006384E4 /* SubscriptionSorting.swift */; };
 		881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513C2B59D5A3006384E4 /* SubscriptionStateView.swift */; };
+		881E513F2B59D9A8006384E4 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513E2B59D9A8006384E4 /* Task.swift */; };
 		8823EB762B54FB510010A12F /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB752B54FB510010A12F /* apiKey.swift */; };
 		8823EB782B5519C60010A12F /* ImportSubscriptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* ImportSubscriptionsView.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
@@ -83,6 +84,7 @@
 		881E51382B59D555006384E4 /* LibraryNavListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNavListItem.swift; sourceTree = "<group>"; };
 		881E513A2B59D577006384E4 /* SubscriptionSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSorting.swift; sourceTree = "<group>"; };
 		881E513C2B59D5A3006384E4 /* SubscriptionStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStateView.swift; sourceTree = "<group>"; };
+		881E513E2B59D9A8006384E4 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		8823EB752B54FB510010A12F /* apiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiKey.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* ImportSubscriptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSubscriptionsView.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				88D8584F2B55AB4D0047E0E6 /* DateTimeConversion.swift */,
 				88D34D742B58F86800533B74 /* Alerter.swift */,
 				881E513A2B59D577006384E4 /* SubscriptionSorting.swift */,
+				881E513E2B59D9A8006384E4 /* Task.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */,
+				881E513F2B59D9A8006384E4 /* Task.swift in Sources */,
 				88DFC0C02B4489C2001895C8 /* VideoListItem.swift in Sources */,
 				8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
