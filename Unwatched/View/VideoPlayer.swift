@@ -23,86 +23,49 @@ struct VideoPlayer: View {
     var markVideoWatched: () -> Void
     var chapterManager: ChapterManager
 
-    func updateElapsedTime(_ seconds: Double, persist: Bool = false) {
-        elapsedSeconds = seconds
-        if persist {
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                VStack(spacing: 10) {
+                    Text(video.title)
+                        .font(.system(size: 20, weight: .heavy))
+                        .multilineTextAlignment(.center)
+                        .onTapGesture {
+                            UIApplication.shared.open(video.url)
+                        }
+                    subscriptionTitle
+                }
+                .padding(.vertical)
+                webViewPlayer
+                VStack {
+                    SpeedControlView(selectedSpeed: Binding(
+                                        get: getPlaybackSpeed,
+                                        set: setPlaybackSpeed)
+                    )
+                    HStack {
+                        customSettingsButton
+                        Spacer()
+                        watchedButton
+                        Spacer()
+                        continuousPlayButton
+                    }
+                    .padding(.horizontal, 5)
+                }
+                playButton
+                ChapterSelection(video: video, chapterManager: chapterManager)
+            }
+            .padding(.top, 15)
+        }
+        .onAppear {
+            chapterManager.video = video
+            continuousPlayWorkaround = continuousPlay
+        }
+        .onDisappear {
             persistTimeChanges()
         }
-    }
-
-    func persistTimeChanges() {
-        if let seconds = elapsedSeconds {
-            video.elapsedSeconds = seconds
-        }
-    }
-
-    func setPlaybackSpeed(_ value: Double) {
-        if video.subscription?.customSpeedSetting != nil {
-            video.subscription?.customSpeedSetting = value
-        } else {
-            playbackSpeed = value
-        }
-    }
-
-    func getPlaybackSpeed() -> Double {
-        video.subscription?.customSpeedSetting ?? playbackSpeed
-    }
-
-    func handleVideoEnded() {
-        if !continuousPlayWorkaround {
-            return
-        }
-        if navManager.tab == .queue,
-           let next = VideoService.getNextVideoInQueue(modelContext) {
-            playNextVideo(next)
-        }
-    }
-
-    func playNextVideo(_ next: Video) {
-        print("playNextVideo")
-        if let vid = navManager.video {
-            VideoService.markVideoWatched(vid, modelContext: modelContext)
-        }
-        navManager.video = next
-        chapterManager.video = next
-    }
-
-    func handleSubscription(isSubscribed: Bool) {
-        isSubscribedSuccess = nil
-        isLoading = true
-        let container = modelContext.container
-
-        if isSubscribed {
-            guard let subId = video.subscription?.id else {
-                print("no subId to un/subscribe")
-                isLoading = false
-                return
-            }
-            SubscriptionService.deleteSubscriptions(
-                [subId],
-                container: container)
-            isLoading = false
-        } else {
-            let channelId = video.subscription?.youtubeChannelId ??
-                video.youtubeChannelId
-            let subId = video.subscription?.id
-            Task {
-                do {
-                    try await SubscriptionService.addSubscription(
-                        channelId: channelId,
-                        subsciptionId: subId,
-                        modelContainer: container)
-                    await MainActor.run {
-                        isSubscribedSuccess = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        alerter.showError(error)
-                    }
-                }
-                isLoading = false
-            }
-        }
+        .onChange(of: continuousPlay, { _, newValue in
+            continuousPlayWorkaround = newValue
+        })
     }
 
     var watchedButton: some View {
@@ -204,49 +167,86 @@ struct VideoPlayer: View {
         .frame(maxWidth: .infinity)
     }
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                VStack(spacing: 10) {
-                    Text(video.title)
-                        .font(.system(size: 20, weight: .heavy))
-                        .multilineTextAlignment(.center)
-                        .onTapGesture {
-                            UIApplication.shared.open(video.url)
-                        }
-                    subscriptionTitle
-                }
-                .padding(.vertical)
-                webViewPlayer
-                VStack {
-                    SpeedControlView(selectedSpeed: Binding(
-                                        get: getPlaybackSpeed,
-                                        set: setPlaybackSpeed)
-                    )
-                    HStack {
-                        customSettingsButton
-                        Spacer()
-                        watchedButton
-                        Spacer()
-                        continuousPlayButton
-                    }
-                    .padding(.horizontal, 5)
-                }
-                playButton
-                ChapterSelection(video: video, chapterManager: chapterManager)
-            }
-            .padding(.top, 15)
-        }
-        .onAppear {
-            chapterManager.video = video
-            continuousPlayWorkaround = continuousPlay
-        }
-        .onDisappear {
+    func updateElapsedTime(_ seconds: Double, persist: Bool = false) {
+        elapsedSeconds = seconds
+        if persist {
             persistTimeChanges()
         }
-        .onChange(of: continuousPlay, { _, newValue in
-            continuousPlayWorkaround = newValue
-        })
+    }
+
+    func persistTimeChanges() {
+        if let seconds = elapsedSeconds {
+            video.elapsedSeconds = seconds
+        }
+    }
+
+    func setPlaybackSpeed(_ value: Double) {
+        if video.subscription?.customSpeedSetting != nil {
+            video.subscription?.customSpeedSetting = value
+        } else {
+            playbackSpeed = value
+        }
+    }
+
+    func getPlaybackSpeed() -> Double {
+        video.subscription?.customSpeedSetting ?? playbackSpeed
+    }
+
+    func handleVideoEnded() {
+        if !continuousPlayWorkaround {
+            return
+        }
+        if navManager.tab == .queue,
+           let next = VideoService.getNextVideoInQueue(modelContext) {
+            playNextVideo(next)
+        }
+    }
+
+    func playNextVideo(_ next: Video) {
+        print("playNextVideo")
+        if let vid = navManager.video {
+            VideoService.markVideoWatched(vid, modelContext: modelContext)
+        }
+        navManager.video = next
+        chapterManager.video = next
+    }
+
+    func handleSubscription(isSubscribed: Bool) {
+        isSubscribedSuccess = nil
+        isLoading = true
+        let container = modelContext.container
+
+        if isSubscribed {
+            guard let subId = video.subscription?.id else {
+                print("no subId to un/subscribe")
+                isLoading = false
+                return
+            }
+            SubscriptionService.deleteSubscriptions(
+                [subId],
+                container: container)
+            isLoading = false
+        } else {
+            let channelId = video.subscription?.youtubeChannelId ??
+                video.youtubeChannelId
+            let subId = video.subscription?.id
+            Task {
+                do {
+                    try await SubscriptionService.addSubscription(
+                        channelId: channelId,
+                        subsciptionId: subId,
+                        modelContainer: container)
+                    await MainActor.run {
+                        isSubscribedSuccess = true
+                    }
+                } catch {
+                    await MainActor.run {
+                        alerter.showError(error)
+                    }
+                }
+                isLoading = false
+            }
+        }
     }
 }
 

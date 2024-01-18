@@ -14,41 +14,6 @@ struct InboxView: View {
 
     var loadNewVideos: () async -> Void
 
-    func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
-        for index in indexSet {
-            let entry = inboxEntries[index]
-            deleteInboxEntry(entry)
-        }
-    }
-
-    func deleteInboxEntry(_ entry: InboxEntry) {
-        VideoService.deleteInboxEntry(entry, modelContext: modelContext)
-    }
-
-    func handleUrlDrop(_ items: [URL]) {
-        print("handleUrlDrop inbox", items)
-        _ = VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
-    }
-
-    func clearAll() {
-        VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
-    }
-
-    var clearAllButton: some View {
-        Button {
-            showingClearAllAlert = true
-        } label: {
-            HStack {
-                Spacer()
-                Image(systemName: Const.clearSF)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.teal)
-                Spacer()
-            }.padding()
-        }
-    }
-
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
@@ -111,6 +76,41 @@ struct InboxView: View {
         }, message: {
             Text("areYouSureClearAll")
         })
+    }
+
+    func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
+        for index in indexSet {
+            let entry = inboxEntries[index]
+            deleteInboxEntry(entry)
+        }
+    }
+
+    func deleteInboxEntry(_ entry: InboxEntry) {
+        VideoService.deleteInboxEntry(entry, modelContext: modelContext)
+    }
+
+    func handleUrlDrop(_ items: [URL]) {
+        print("handleUrlDrop inbox", items)
+        _ = VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
+    }
+
+    func clearAll() {
+        VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
+    }
+
+    var clearAllButton: some View {
+        Button {
+            showingClearAllAlert = true
+        } label: {
+            HStack {
+                Spacer()
+                Image(systemName: Const.clearSF)
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(.teal)
+                Spacer()
+            }.padding()
+        }
     }
 
 }

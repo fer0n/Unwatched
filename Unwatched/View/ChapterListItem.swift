@@ -5,6 +5,21 @@ struct ChapterListItem: View {
     var toggleChapter: (_ chapter: Chapter) -> Void
     var timeText: String
 
+    var body: some View {
+        HStack {
+            toggleChapterButton
+
+            VStack(alignment: .leading) {
+                Text(chapter.title)
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(timeText)
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.gray)
+            }
+        }
+    }
+
     var toggleChapterButton: some View {
         Button {
             toggleChapter(chapter)
@@ -21,20 +36,4 @@ struct ChapterListItem: View {
             }
         }
     }
-
-    var body: some View {
-        HStack {
-            toggleChapterButton
-
-            VStack(alignment: .leading) {
-                Text(chapter.title)
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(timeText)
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color.gray)
-            }
-        }
-    }
-
 }

@@ -17,80 +17,6 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     @Bindable var chapterManager: ChapterManager
     var onVideoEnded: () -> Void
 
-    func getYoutubeIframeHTML(youtubeId: String, playbackSpeed: Double, startAt: Double) -> String {
-        """
-        <meta name="viewport" content="width=device-width, shrink-to-fit=YES">
-        <style>
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-        </style>
-        <script src="https://www.youtube.com/iframe_api"></script>
-        <script>
-            var player;
-            var timer;
-
-            function onYouTubeIframeAPIReady() {
-                player = new YT.Player("player", {
-                    events: {
-                        onReady: onPlayerReady,
-                        onStateChange: onPlayerStateChange
-                    },
-                });
-            }
-
-            function onPlayerReady(event) {
-                sendMessage("playerReady");
-                sendMessage("duration", player.getDuration());
-                event.target.setPlaybackRate(\(playbackSpeed));
-                player.seekTo(\(startAt), true);
-                \(autoplayVideos ? "player.play()" : "")
-            }
-
-            function onPlayerStateChange(event) {
-                if (event.data == YT.PlayerState.PAUSED) {
-                    sendMessage("paused", player.getCurrentTime());
-                    stopTimer();
-                } else if (event.data == YT.PlayerState.PLAYING) {
-                    sendMessage("playing");
-                    startTimer();
-                } else if (event.data == YT.PlayerState.ENDED) {
-                    sendMessage("ended");
-                } else if (event.data == YT.PlayerState.UNSTARTED) {
-                    sendMessage("unstarted");
-                }
-            }
-
-            function startTimer() {
-                clearInterval(timer);
-                timer = setInterval(function() {
-                    sendMessage("currentTime", player.getCurrentTime());
-                }, 1000);
-            }
-
-            function stopTimer() {
-                clearInterval(timer);
-            }
-
-            function sendMessage(topic, payload) {
-                window.webkit.messageHandlers.iosListener.postMessage("" + topic + ":" + payload);
-            }
-        </script>
-        <iframe
-            id="player"
-            type="text/html"
-            width="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&autoplay=1&controls=1"
-            frameborder="0"
-        ></iframe>
-    """
-    }
-
     func makeUIView(context: Context) -> WKWebView {
         var startPosition = video.elapsedSeconds
         if let finished = video.hasFinished {
@@ -221,6 +147,80 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             parent.updateElapsedTime(time, persist)
             parent.chapterManager.monitorChapters(time: time)
         }
+    }
+
+    func getYoutubeIframeHTML(youtubeId: String, playbackSpeed: Double, startAt: Double) -> String {
+        """
+        <meta name="viewport" content="width=device-width, shrink-to-fit=YES">
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+        </style>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script>
+            var player;
+            var timer;
+
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player("player", {
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange
+                    },
+                });
+            }
+
+            function onPlayerReady(event) {
+                sendMessage("playerReady");
+                sendMessage("duration", player.getDuration());
+                event.target.setPlaybackRate(\(playbackSpeed));
+                player.seekTo(\(startAt), true);
+                \(autoplayVideos ? "player.play()" : "")
+            }
+
+            function onPlayerStateChange(event) {
+                if (event.data == YT.PlayerState.PAUSED) {
+                    sendMessage("paused", player.getCurrentTime());
+                    stopTimer();
+                } else if (event.data == YT.PlayerState.PLAYING) {
+                    sendMessage("playing");
+                    startTimer();
+                } else if (event.data == YT.PlayerState.ENDED) {
+                    sendMessage("ended");
+                } else if (event.data == YT.PlayerState.UNSTARTED) {
+                    sendMessage("unstarted");
+                }
+            }
+
+            function startTimer() {
+                clearInterval(timer);
+                timer = setInterval(function() {
+                    sendMessage("currentTime", player.getCurrentTime());
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timer);
+            }
+
+            function sendMessage(topic, payload) {
+                window.webkit.messageHandlers.iosListener.postMessage("" + topic + ":" + payload);
+            }
+        </script>
+        <iframe
+            id="player"
+            type="text/html"
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&autoplay=1&controls=1"
+            frameborder="0"
+        ></iframe>
+    """
     }
 }
 

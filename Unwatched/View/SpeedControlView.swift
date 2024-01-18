@@ -10,14 +10,6 @@ struct SpeedControlView: View {
     let speeds: [Double] = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     let highlighted: [Double] = [1, 1.5, 2]
 
-    func formatSpeed(_ speed: Double) -> String {
-        if floor(speed) == speed {
-            return String(format: "%.0f", speed)
-        } else {
-            return String(format: "%.1f", speed)
-        }
-    }
-
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15.0)
@@ -60,6 +52,14 @@ struct SpeedControlView: View {
                 }
             }
             .padding(.horizontal, 2)
+        }
+    }
+
+    func formatSpeed(_ speed: Double) -> String {
+        if floor(speed) == speed {
+            return String(format: "%.0f", speed)
+        } else {
+            return String(format: "%.1f", speed)
         }
     }
 }

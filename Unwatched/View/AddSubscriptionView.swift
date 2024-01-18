@@ -16,47 +16,32 @@ struct AddSubscriptionView: View {
     @State var isDragOver: Bool = false
     @State var newSubs: [SubscriptionState]?
 
-    func addSubscriptionFromText() {
-        let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
-            if !str.isValidURL || str.isEmpty {
-                return nil
-            }
-            return URL(string: str)
-        }
-        if urls.isEmpty {
-            errorMessage = "No urls found"
-        }
-        addSubscription(from: urls)
-    }
-
-    func addSubscription(from urls: [URL]) {
-        //        newSubs = nil
-        let container = modelContext.container
-        errorMessage = nil
-        isLoading = true
-
-        Task.detached {
-            print("load new")
-            do {
-                let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
-                await MainActor.run {
-                    newSubs = subs
+    var body: some View {
+        ScrollView {
+            VStack {
+                headerLogo
+                    .padding()
+                enterTextField
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
                 }
-            } catch {
-                print("\(error)")
-                await MainActor.run {
-                    errorMessage = error.localizedDescription
-                }
+                dropArea
+                    .padding(.top)
+                pasteButton
+                ProgressView()
+                    .opacity(isLoading ? 1 : 0)
+                    .padding(.top, 5)
+                ImportSubscriptionsView(subStates: newSubs)
+                    .padding(.horizontal)
+
             }
-            await MainActor.run {
-                isLoading = false
+            .padding(.horizontal)
+        }
+        .onDisappear {
+            if newSubs != nil {
+                _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
             }
         }
-    }
-
-    func handleUrlDrop(_ urls: [URL]) {
-        print("handleUrlDrop inbox", urls)
-        addSubscription(from: urls)
     }
 
     var headerLogo: some View {
@@ -147,32 +132,47 @@ struct AddSubscriptionView: View {
         }
     }
 
-    var body: some View {
-        ScrollView {
-            VStack {
-                headerLogo
-                    .padding()
-                enterTextField
-                if let errorMessage = errorMessage {
-                    Text(errorMessage)
-                }
-                dropArea
-                    .padding(.top)
-                pasteButton
-                ProgressView()
-                    .opacity(isLoading ? 1 : 0)
-                    .padding(.top, 5)
-                ImportSubscriptionsView(subStates: newSubs)
-                    .padding(.horizontal)
+    func addSubscriptionFromText() {
+        let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
+            if !str.isValidURL || str.isEmpty {
+                return nil
+            }
+            return URL(string: str)
+        }
+        if urls.isEmpty {
+            errorMessage = "No urls found"
+        }
+        addSubscription(from: urls)
+    }
 
+    func addSubscription(from urls: [URL]) {
+        //        newSubs = nil
+        let container = modelContext.container
+        errorMessage = nil
+        isLoading = true
+
+        Task.detached {
+            print("load new")
+            do {
+                let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
+                await MainActor.run {
+                    newSubs = subs
+                }
+            } catch {
+                print("\(error)")
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                }
             }
-            .padding(.horizontal)
-        }
-        .onDisappear {
-            if newSubs != nil {
-                VideoService.loadNewVideosInBg(modelContext: modelContext)
+            await MainActor.run {
+                isLoading = false
             }
         }
+    }
+
+    func handleUrlDrop(_ urls: [URL]) {
+        print("handleUrlDrop inbox", urls)
+        addSubscription(from: urls)
     }
 }
 
