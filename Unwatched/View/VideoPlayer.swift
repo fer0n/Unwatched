@@ -8,6 +8,7 @@ import SwiftUI
 struct VideoPlayer: View {
     @Environment(\.dismiss) var dismiss
     @Environment(NavigationManager.self) private var navManager
+    @Environment(Alerter.self) private var alerter
     @Environment(\.modelContext) var modelContext
     @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
     @AppStorage("continuousPlay") var continuousPlay: Bool = false
@@ -15,6 +16,8 @@ struct VideoPlayer: View {
     @State private var isPlaying: Bool = false
     @State var continuousPlayWorkaround: Bool = false
     @State var elapsedSeconds: Double?
+    @State var isSubscribedSuccess: Bool?
+    @State var isLoading: Bool = false
 
     @Bindable var video: Video
     var markVideoWatched: () -> Void
@@ -64,6 +67,44 @@ struct VideoPlayer: View {
         chapterManager.video = next
     }
 
+    func handleSubscription(isSubscribed: Bool) {
+        isSubscribedSuccess = nil
+        isLoading = true
+        let container = modelContext.container
+
+        if isSubscribed {
+            guard let subId = video.subscription?.id else {
+                print("no subId to un/subscribe")
+                isLoading = false
+                return
+            }
+            SubscriptionService.deleteSubscriptions(
+                [subId],
+                container: container)
+            isLoading = false
+        } else {
+            let channelId = video.subscription?.youtubeChannelId ??
+                video.youtubeChannelId
+            let subId = video.subscription?.id
+            Task {
+                do {
+                    try await SubscriptionService.addSubscription(
+                        channelId: channelId,
+                        subsciptionId: subId,
+                        modelContainer: container)
+                    await MainActor.run {
+                        isSubscribedSuccess = true
+                    }
+                } catch {
+                    await MainActor.run {
+                        alerter.showError(error)
+                    }
+                }
+                isLoading = false
+            }
+        }
+    }
+
     var watchedButton: some View {
         Button {
             markVideoWatched()
@@ -95,6 +136,49 @@ struct VideoPlayer: View {
         .toggleStyle(OutlineToggleStyle())
     }
 
+    var subscriptionIcon: String? {
+        if isLoading {
+            return "circle.circle"
+        }
+        if isSubscribedSuccess == true {
+            return "checkmark"
+        }
+        if !SubscriptionService.isSubscribed(video) {
+            return "arrow.right.circle"
+        }
+        return nil
+    }
+
+    var subscriptionTitle: some View {
+        HStack {
+            Text(video.subscription?.title ?? "no subscription found")
+                .textCase(.uppercase)
+            if let icon = subscriptionIcon {
+                Image(systemName: icon)
+                    .contentTransition(.symbolEffect(.replace))
+                    .symbolEffect(.pulse, options: .repeating, isActive: isLoading)
+            }
+        }
+        .foregroundColor(.teal)
+        .onTapGesture {
+            if let sub = video.subscription {
+                navManager.pushSubscription(sub)
+                dismiss()
+            }
+        }
+        .contextMenu {
+            let isSubscribed = SubscriptionService.isSubscribed(video)
+            Button {
+                withAnimation {
+                    handleSubscription(isSubscribed: isSubscribed)
+                }
+            } label: {
+                Text(isSubscribed ? "unsubscribe" : "subscribe")
+            }
+            .disabled(isLoading)
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -105,16 +189,7 @@ struct VideoPlayer: View {
                         .onTapGesture {
                             UIApplication.shared.open(video.url)
                         }
-
-                    Text(video.feedTitle ?? "no subscription found")
-                        .textCase(.uppercase)
-                        .foregroundColor(.teal)
-                        .onTapGesture {
-                            if let sub = video.subscription {
-                                navManager.pushSubscription(sub)
-                                dismiss()
-                            }
-                        }
+                    subscriptionTitle
                 }
                 .padding(.vertical)
 

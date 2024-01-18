@@ -14,15 +14,17 @@ struct SubscriptionDetailView: View {
     var body: some View {
         VStack {
             List {
-                Section {
-                    Picker("newVideos",
-                           selection: $subscription.placeVideosIn) {
-                        ForEach(VideoPlacement.allCases, id: \.self) {
-                            Text($0.description(defaultPlacement: String(describing: defaultEpisodePlacement) ))
+                if !subscription.isArchived {
+                    Section {
+                        Picker("newVideos",
+                               selection: $subscription.placeVideosIn) {
+                            ForEach(VideoPlacement.allCases, id: \.self) {
+                                Text($0.description(defaultPlacement: String(describing: defaultEpisodePlacement) ))
+                            }
                         }
                     }
+                    .listRowSeparator(.hidden, edges: .top)
                 }
-                .listRowSeparator(.hidden, edges: .top)
 
                 Section {
                     ForEach(subscription.videos.sorted(by: { ($0.publishedDate ?? Date.distantPast)

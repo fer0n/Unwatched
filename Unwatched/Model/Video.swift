@@ -26,12 +26,6 @@ final class Video: CustomStringConvertible {
     var youtubeChannelId: String?
 
     // MARK: Computed Properties
-    private var _feedTitle: String?
-    var feedTitle: String? {
-        get { subscription?.title ?? _feedTitle }
-        set { _feedTitle = newValue }
-    }
-
     var sortedChapters: [Chapter] {
         chapters.sorted(by: { $0.startTime < $1.startTime })
     }
@@ -58,7 +52,6 @@ final class Video: CustomStringConvertible {
          thumbnailUrl: URL? = nil,
          publishedDate: Date? = nil,
          youtubeChannelId: String? = nil,
-         feedTitle: String? = nil,
          duration: Double? = nil,
          videoDescription: String? = nil,
          chapters: [Chapter] = []) {
@@ -68,7 +61,6 @@ final class Video: CustomStringConvertible {
         self.youtubeChannelId = youtubeChannelId
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
-        self._feedTitle = feedTitle
         self.duration = duration
         self.videoDescription = videoDescription
         self.chapters = chapters

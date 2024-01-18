@@ -35,7 +35,6 @@ struct SendableVideo: Sendable {
         if chapters.isEmpty, let desc = self.videoDescription {
             newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
         }
-
         return Video(
             title: title ?? self.title,
             url: url ?? self.url,
@@ -43,7 +42,6 @@ struct SendableVideo: Sendable {
             thumbnailUrl: thumbnailUrl ?? self.thumbnailUrl,
             publishedDate: publishedDate ?? self.publishedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
-            feedTitle: feedTitle ?? self.feedTitle,
             duration: duration ?? self.duration,
             videoDescription: videoDescription ?? self.videoDescription,
             chapters: newChapters.map { $0.getChapter }

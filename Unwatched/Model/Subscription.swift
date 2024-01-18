@@ -15,6 +15,7 @@ final class Subscription: CustomStringConvertible {
     var title: String
     var subscribedDate: Date
     var placeVideosIn = VideoPlacement.defaultPlacement
+    var isArchived: Bool
 
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
@@ -31,7 +32,8 @@ final class Subscription: CustomStringConvertible {
          placeVideosIn: VideoPlacement = .defaultPlacement,
          videos: [Video] = [],
          youtubeChannelId: String? = nil,
-         youtubeUserName: String? = nil) {
+         youtubeUserName: String? = nil,
+         isArchived: Bool = false) {
         self.link = link
         self.title = title
         self.subscribedDate = .now
@@ -39,6 +41,7 @@ final class Subscription: CustomStringConvertible {
         self.videos = videos
         self.youtubeChannelId = youtubeChannelId
         self.youtubeUserName = youtubeUserName
+        self.isArchived = isArchived
     }
 }
 
@@ -47,6 +50,15 @@ struct SendableSubscription: Sendable {
     var title: String
     var youtubeChannelId: String?
     var youtubeUserName: String?
+
+    func getSubscription() -> Subscription {
+        Subscription(
+            link: link,
+            title: title,
+            youtubeChannelId: youtubeChannelId,
+            youtubeUserName: youtubeUserName
+        )
+    }
 }
 
 struct SubscriptionState: Identifiable {

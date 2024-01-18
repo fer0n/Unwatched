@@ -11,6 +11,8 @@ enum SubscriptionError: LocalizedError {
     case failedGettingVideoInfo
     case httpRequestFailed(_ message: String)
     case notAnUrl(_ noUrl: String)
+    case noInfoFoundToSubscribeTo
+    case couldNotSubscribe(_ message: String)
 
     var errorDescription: String? {
         switch self {
@@ -32,6 +34,10 @@ enum SubscriptionError: LocalizedError {
                                      comment: "Failed Getting Video Info Error")
         case .notAnUrl(let noUrl):
             return NSLocalizedString("Couldn't convert to URL: \(noUrl)", comment: "Couldn't convert to URL")
+        case .noInfoFoundToSubscribeTo:
+            return NSLocalizedString("noInfoFoundToSubscribeTo", comment: "No info found to subscribe to")
+        case .couldNotSubscribe(let message):
+            return NSLocalizedString("Could not subscribe: \(message)", comment: "Could not subscribe")
         }
     }
 }

@@ -9,8 +9,40 @@ class SubscriptionService {
         return try await repo.addSubscriptions(from: urls)
     }
 
+    static func addSubscription(channelId: String?,
+                                subsciptionId: PersistentIdentifier?,
+                                modelContainer: ModelContainer) async throws {
+        guard channelId != nil || subsciptionId != nil else {
+            throw SubscriptionError.noInfoFoundToSubscribeTo
+        }
+        let repo = SubscriptionActor(modelContainer: modelContainer)
+        return try await repo.subscribeTo(channelId, subsciptionId)
+    }
+
     static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL)] {
         let repo = SubscriptionActor(modelContainer: container)
         return try await repo.getAllFeedUrls()
+    }
+
+    static func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier], container: ModelContainer) {
+        Task {
+            let repo = SubscriptionActor(modelContainer: container)
+            return try await repo.deleteSubscriptions(subscriptionIds)
+        }
+    }
+
+    static func deleteSubscriptions(_ subscriptions: [Subscription],
+                                    indexSet: IndexSet,
+                                    container: ModelContainer) {
+        var subscriptionIds = [PersistentIdentifier]()
+        for index in indexSet {
+            let sub = subscriptions[index]
+            subscriptionIds.append(sub.id)
+        }
+        self.deleteSubscriptions(subscriptionIds, container: container)
+    }
+
+    static func isSubscribed(_ video: Video) -> Bool {
+        return video.subscription?.isArchived == false
     }
 }

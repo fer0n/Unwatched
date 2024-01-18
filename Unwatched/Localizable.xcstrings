@@ -101,6 +101,9 @@
     "Continuous\nPlay" : {
 
     },
+    "Could not subscribe: (message)" : {
+      "comment" : "Could not subscribe"
+    },
     "Couldn't convert to URL: (noUrl)" : {
       "comment" : "Couldn't convert to URL"
     },
@@ -152,6 +155,9 @@
           }
         }
       }
+    },
+    "errorOccured" : {
+
     },
     "exportSubscriptions" : {
       "localizations" : {
@@ -211,9 +217,6 @@
         }
       }
     },
-    "No sideloaded videos found" : {
-
-    },
     "No video found" : {
       "comment" : "No Supported Error"
     },
@@ -257,6 +260,9 @@
         }
       }
     },
+    "noInfoFoundToSubscribeTo" : {
+      "comment" : "No info found to subscribe to"
+    },
     "noQueueItems" : {
       "localizations" : {
         "en" : {
@@ -276,6 +282,12 @@
           }
         }
       }
+    },
+    "noSideloadedSubscriptions" : {
+
+    },
+    "noSideloadedSubscriptionsDetail" : {
+
     },
     "noVideosYet" : {
       "localizations" : {
@@ -346,6 +358,16 @@
     "Start videos in fullscreen" : {
 
     },
+    "subscribe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe"
+          }
+        }
+      }
+    },
     "Subscription information not found" : {
       "comment" : "Subscription Info Not Found Error"
     },
@@ -354,6 +376,16 @@
     },
     "Title" : {
 
+    },
+    "unsubscribe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unsubscribe"
+          }
+        }
+      }
     },
     "Use Default (%@)" : {
 
