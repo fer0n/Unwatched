@@ -10,6 +10,7 @@ struct SettingsView: View {
     @AppStorage(Const.defaultEpisodePlacement) var defaultEpisodePlacement: VideoPlacement = .inbox
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
+    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
 
     let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
@@ -34,6 +35,13 @@ struct SettingsView: View {
                     }
                     Toggle(isOn: $autoplayVideos) {
                         Text("autoplayVideos")
+                    }
+                }
+                .tint(.teal)
+
+                Section {
+                    Toggle(isOn: $refreshOnStartup) {
+                        Text("refreshOnStartup")
                     }
                 }
                 .tint(.teal)

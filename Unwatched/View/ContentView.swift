@@ -21,6 +21,7 @@ struct ContentView: View {
 
     @State var chapterManager = ChapterManager()
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+    @AppStorage(Const.refreshOnStartup) var refreshOnStartup = false
 
     @MainActor
     init() {
@@ -78,9 +79,12 @@ struct ContentView: View {
             .animation(nil, value: UUID())
         }
         .environment(navManager)
-        // .onAppear {
-        // _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
-        // }
+        .onAppear {
+            if refreshOnStartup {
+                print("refreshOnStartup")
+                _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
+            }
+        }
     }
 
     func markVideoWatched(video: Video) {
