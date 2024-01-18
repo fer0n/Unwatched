@@ -75,6 +75,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
+            currentYoutubeChannelId = ""
             // TODO: why the += ? better way to load all this?
         }
     }
@@ -112,6 +113,8 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
+                    // the first correct channelId with the "UC" prefix comes inside the first entry
+                    subscriptionInfo?.youtubeChannelId = currentYoutubeChannelId
                     parser.abortParsing()
                     print("aborting parsing early")
                     return

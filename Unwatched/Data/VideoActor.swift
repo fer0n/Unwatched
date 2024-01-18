@@ -150,9 +150,8 @@ actor VideoActor {
     }
 
     private func addToCorrectSubscription(_ video: Video, channelId: String) {
-        let channelIdWithout = String(channelId.dropFirst(2))
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.youtubeChannelId == channelId || $0.youtubeChannelId == channelIdWithout
+            $0.youtubeChannelId == channelId
         })
         let subscriptions = try? modelContext.fetch(fetchDescriptor)
         if let sub = subscriptions?.first {
