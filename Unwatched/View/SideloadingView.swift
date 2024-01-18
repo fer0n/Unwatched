@@ -6,14 +6,6 @@ struct SideloadingView: View {
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
     var sidedloadedSubscriptions: [Subscription]
 
-    func deleteSubscription(_ indexSet: IndexSet) {
-        SubscriptionService.deleteSubscriptions(
-            sidedloadedSubscriptions,
-            indexSet: indexSet,
-            container: modelContext.container
-        )
-    }
-
     var body: some View {
         let subs = sidedloadedSubscriptions.filter({ !$0.videos.isEmpty })
         ZStack {
@@ -30,7 +22,6 @@ struct SideloadingView: View {
                             SubscriptionListItem(subscription: sub)
                         }
                     }
-                    .onDelete(perform: deleteSubscription)
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)

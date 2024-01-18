@@ -31,17 +31,6 @@ class SubscriptionService {
         }
     }
 
-    static func deleteSubscriptions(_ subscriptions: [Subscription],
-                                    indexSet: IndexSet,
-                                    container: ModelContainer) {
-        var subscriptionIds = [PersistentIdentifier]()
-        for index in indexSet {
-            let sub = subscriptions[index]
-            subscriptionIds.append(sub.id)
-        }
-        self.deleteSubscriptions(subscriptionIds, container: container)
-    }
-
     static func isSubscribed(_ video: Video) -> Bool {
         return video.subscription?.isArchived == false
     }

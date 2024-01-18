@@ -6,7 +6,12 @@
 import SwiftUI
 
 struct SubscriptionListItem: View {
+    @Environment(\.modelContext) var modelContext
     var subscription: Subscription
+
+    func deleteSubscription() {
+        SubscriptionService.deleteSubscriptions([subscription.id], container: modelContext.container)
+    }
 
     var body: some View {
         HStack {
@@ -18,6 +23,11 @@ struct SubscriptionListItem: View {
                 Text(date.formatted)
                     .font(.body)
                     .opacity(0.5)
+            }
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(action: deleteSubscription) {
+                Text("unsubscribe")
             }
         }
     }
