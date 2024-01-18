@@ -110,7 +110,7 @@ struct VideoPlayer: View {
             markVideoWatched()
             dismiss()
         } label: {
-            Text("Mark\nWatched")
+            Text("mark\nwatched")
         }
         .modifier(OutlineToggleModifier(isOn: false))
     }
@@ -121,7 +121,7 @@ struct VideoPlayer: View {
         }, set: { value in
             video.subscription?.customSpeedSetting = value ? playbackSpeed : nil
         })) {
-            Text("Custom\nSettings")
+            Text("custom\nsettings")
                 .fontWeight(.medium)
         }
         .toggleStyle(OutlineToggleStyle())
@@ -130,7 +130,7 @@ struct VideoPlayer: View {
 
     var continuousPlayButton: some View {
         Toggle(isOn: $continuousPlay) {
-            Text("Continuous\nPlay")
+            Text("continuous\nplay")
                 .fontWeight(.medium)
         }
         .toggleStyle(OutlineToggleStyle())
@@ -151,7 +151,7 @@ struct VideoPlayer: View {
 
     var subscriptionTitle: some View {
         HStack {
-            Text(video.subscription?.title ?? "no subscription found")
+            Text(video.subscription?.title ?? "–")
                 .textCase(.uppercase)
             if let icon = subscriptionIcon {
                 Image(systemName: icon)

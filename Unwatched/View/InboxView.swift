@@ -96,7 +96,7 @@ struct InboxView: View {
                     await loadNewVideos()
                 }
             }
-            .navigationBarTitle("Inbox")
+            .navigationBarTitle("inbox")
             .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)

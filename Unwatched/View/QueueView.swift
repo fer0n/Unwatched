@@ -71,7 +71,7 @@ struct QueueView: View {
                         }
                     }
                 }
-                .navigationBarTitle("Queue")
+                .navigationBarTitle("queue")
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
                 .refreshable {
                     await loadNewVideos()

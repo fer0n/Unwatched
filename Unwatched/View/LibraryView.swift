@@ -100,7 +100,7 @@ struct LibraryView: View {
                 }
             }
             .listStyle(.plain)
-            .navigationBarTitle("Library")
+            .navigationBarTitle("library")
             .toolbar {
                 ToolbarItemGroup {
                     Menu {
@@ -176,11 +176,11 @@ enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
     var description: String {
         switch self {
         case .title:
-            return "Title"
+            return "title"
         case .recentlyAdded:
-            return "Recently Added"
+            return "recentlyAdded"
         case .mostRecentVideo:
-            return "Most recent video"
+            return "mostRecentVideo"
         }
     }
 }

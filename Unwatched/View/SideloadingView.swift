@@ -34,7 +34,7 @@ struct SideloadingView: View {
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-                .navigationBarTitle("Sideloads", displayMode: .inline)
+                .navigationBarTitle("sideloads", displayMode: .inline)
             }
         }
     }
