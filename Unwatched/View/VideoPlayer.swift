@@ -179,6 +179,31 @@ struct VideoPlayer: View {
         }
     }
 
+    var playButton: some View {
+        Button {
+            isPlaying.toggle()
+        } label: {
+            Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                .resizable()
+                .frame(width: 60, height: 60)
+                .accentColor(.myAccentColor)
+                .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+        }
+        .padding(40)
+    }
+
+    var webViewPlayer: some View {
+        YoutubeWebViewPlayer(video: video,
+                             playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
+                             isPlaying: $isPlaying,
+                             updateElapsedTime: updateElapsedTime,
+                             chapterManager: chapterManager,
+                             onVideoEnded: handleVideoEnded
+        )
+        .aspectRatio(16/9, contentMode: .fit)
+        .frame(maxWidth: .infinity)
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -192,26 +217,12 @@ struct VideoPlayer: View {
                     subscriptionTitle
                 }
                 .padding(.vertical)
-
-                YoutubeWebViewPlayer(video: video,
-                                     playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
-                                     isPlaying: $isPlaying,
-                                     updateElapsedTime: updateElapsedTime,
-                                     chapterManager: chapterManager,
-                                     onVideoEnded: handleVideoEnded
-                )
-                .aspectRatio(16/9, contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .onDisappear {
-                    persistTimeChanges()
-                }
-
+                webViewPlayer
                 VStack {
                     SpeedControlView(selectedSpeed: Binding(
                                         get: getPlaybackSpeed,
                                         set: setPlaybackSpeed)
                     )
-
                     HStack {
                         customSettingsButton
                         Spacer()
@@ -221,25 +232,17 @@ struct VideoPlayer: View {
                     }
                     .padding(.horizontal, 5)
                 }
-
-                Button {
-                    isPlaying.toggle()
-                } label: {
-                    Image(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .accentColor(.myAccentColor)
-                        .contentTransition(.symbolEffect(.replace, options: .speed(7)))
-                }
-                .padding(40)
+                playButton
                 ChapterSelection(video: video, chapterManager: chapterManager)
-
             }
             .padding(.top, 15)
         }
         .onAppear {
             chapterManager.video = video
             continuousPlayWorkaround = continuousPlay
+        }
+        .onDisappear {
+            persistTimeChanges()
         }
         .onChange(of: continuousPlay, { _, newValue in
             continuousPlayWorkaround = newValue
