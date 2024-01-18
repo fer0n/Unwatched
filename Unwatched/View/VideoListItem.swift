@@ -57,6 +57,23 @@ struct VideoListItem: View {
         self.onClear = onClear
     }
 
+    var body: some View {
+        videoItem
+            .onTapGesture {
+                if let tap = onTapGuesture {
+                    tap()
+                } else {
+                    navManager.video = video
+                }
+            }
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                getLeadingSwipeActions()
+            }
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                getTrailingSwipeActions()
+            }
+    }
+
     func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
         let defaultColor = Color.green
         if video.youtubeId == navManager.video?.youtubeId {
@@ -101,17 +118,13 @@ struct VideoListItem: View {
     func getLeadingSwipeActions() -> some View {
         Group {
             if videoSwipeActions.contains(.queue) {
-                Button {
-                    addVideoToQueue()
-                } label: {
+                Button(action: addVideoToQueue) {
                     Image(systemName: Const.addToQueuSF)
                 }
                 .tint(.teal)
             }
             if videoSwipeActions.contains(.watched) {
-                Button {
-                    markVideoWatched()
-                } label: {
+                Button(action: markVideoWatched) {
                     Image(systemName: Const.watchedSF)
                 }
                 .tint(.mint)
@@ -123,9 +136,7 @@ struct VideoListItem: View {
         return Group {
             if videoSwipeActions.contains(.clear) &&
                 (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
-                Button {
-                    clearVideoEverywhere()
-                } label: {
+                Button(action: clearVideoEverywhere) {
                     Image(systemName: Const.clearSF)
                 }
                 .tint(Color.backgroundColor)
@@ -149,40 +160,7 @@ struct VideoListItem: View {
                 }
                 .padding(showVideoStatus ? 5 : 0)
 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(video.title)
-                        .font(.system(size: 15, weight: .medium))
-                        .lineLimit(2)
-                    if let published = video.publishedDate {
-                        Text(published.formatted)
-                            .font(.system(size: 14, weight: .light))
-                            .font(.body)
-                            .foregroundStyle(Color.gray)
-                    }
-                    if let title = video.subscription?.title {
-                        Text(title)
-                            .font(.system(size: 14, weight: .regular))
-                            .lineLimit(1)
-                            .textCase(.uppercase)
-                            .foregroundStyle(Color.gray)
-                    }
-                    if let duration = video.duration,
-                       let remaining = video.remainingTime,
-                       duration > 0 && remaining > 0 {
-                        HStack(alignment: .center) {
-                            ProgressView(value: video.elapsedSeconds, total: duration)
-                                .tint(.teal)
-                                .opacity(0.6)
-                                .padding(.top, 3)
-                                .padding(.trailing, 5)
-                            if video.hasFinished != true {
-                                Text(remaining.formattedSeconds ?? "")
-                                    .font(.system(size: 12, weight: .regular))
-                                    .foregroundStyle(Color.gray)
-                            }
-                        }
-                    }
-                }
+                videoItemDetails
             }
             if showVideoStatus,
                let statusInfo = getVideoStatusSystemName(video),
@@ -196,21 +174,41 @@ struct VideoListItem: View {
         }
     }
 
-    var body: some View {
-        videoItem
-            .onTapGesture {
-                if let tap = onTapGuesture {
-                    tap()
-                } else {
-                    navManager.video = video
+    var videoItemDetails: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(video.title)
+                .font(.system(size: 15, weight: .medium))
+                .lineLimit(2)
+            if let published = video.publishedDate {
+                Text(published.formatted)
+                    .font(.system(size: 14, weight: .light))
+                    .font(.body)
+                    .foregroundStyle(Color.gray)
+            }
+            if let title = video.subscription?.title {
+                Text(title)
+                    .font(.system(size: 14, weight: .regular))
+                    .lineLimit(1)
+                    .textCase(.uppercase)
+                    .foregroundStyle(Color.gray)
+            }
+            if let duration = video.duration,
+               let remaining = video.remainingTime,
+               duration > 0 && remaining > 0 {
+                HStack(alignment: .center) {
+                    ProgressView(value: video.elapsedSeconds, total: duration)
+                        .tint(.teal)
+                        .opacity(0.6)
+                        .padding(.top, 3)
+                        .padding(.trailing, 5)
+                    if video.hasFinished != true {
+                        Text(remaining.formattedSeconds ?? "")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(Color.gray)
+                    }
                 }
             }
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                getLeadingSwipeActions()
-            }
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                getTrailingSwipeActions()
-            }
+        }
     }
 }
 

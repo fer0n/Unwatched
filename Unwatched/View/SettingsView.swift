@@ -16,12 +16,6 @@ struct SettingsView: View {
     let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
     // TODO: fix links
 
-    func exportAllSubscriptions() async -> [(title: String, link: URL)] {
-        let container = modelContext.container
-        let result = try? await SubscriptionService.getAllFeedUrls(container)
-        return result ?? []
-    }
-
     var body: some View {
         VStack {
             List {
@@ -68,6 +62,12 @@ struct SettingsView: View {
         .toolbarBackground(Color.backgroundColor, for: .navigationBar)
         .navigationBarTitle("settings", displayMode: .inline)
         .tint(.myAccentColor)
+    }
+
+    func exportAllSubscriptions() async -> [(title: String, link: URL)] {
+        let container = modelContext.container
+        let result = try? await SubscriptionService.getAllFeedUrls(container)
+        return result ?? []
     }
 }
 

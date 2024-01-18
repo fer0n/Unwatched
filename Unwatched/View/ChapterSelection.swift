@@ -9,25 +9,6 @@ struct ChapterSelection: View {
     var video: Video
     var chapterManager: ChapterManager
 
-    func toggleChapter(_ chapter: Chapter) {
-        chapter.isActive.toggle()
-        chapterManager.handleChapterChange()
-    }
-
-    func setChapter(_ chapter: Chapter) {
-        chapterManager.setChapter(chapter)
-    }
-
-    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String {
-        guard isCurrent,
-              let endTime = chapter.endTime,
-              let currentTime = chapterManager.currentTime else {
-            return chapter.duration?.formattedSeconds ?? ""
-        }
-        let remaining = endTime - currentTime
-        return "\(remaining.formattedSeconds ?? "") remaining"
-    }
-
     var body: some View {
         if !video.chapters.isEmpty {
             ForEach(video.sortedChapters) { chapter in
@@ -55,6 +36,25 @@ struct ChapterSelection: View {
                 .tint(foregroundColor)
             }
         }
+    }
+
+    func toggleChapter(_ chapter: Chapter) {
+        chapter.isActive.toggle()
+        chapterManager.handleChapterChange()
+    }
+
+    func setChapter(_ chapter: Chapter) {
+        chapterManager.setChapter(chapter)
+    }
+
+    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String {
+        guard isCurrent,
+              let endTime = chapter.endTime,
+              let currentTime = chapterManager.currentTime else {
+            return chapter.duration?.formattedSeconds ?? ""
+        }
+        let remaining = endTime - currentTime
+        return "\(remaining.formattedSeconds ?? "") remaining"
     }
 }
 

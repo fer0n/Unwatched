@@ -15,17 +15,6 @@ struct QueueView: View {
 
     var loadNewVideos: () async -> Void
 
-    func moveQueueEntry(from source: IndexSet, to destination: Int) {
-        VideoService.moveQueueEntry(from: source,
-                                    to: destination,
-                                    modelContext: modelContext)
-    }
-
-    func handleUrlDrop(_ items: [URL], at index: Int) {
-        print("handleUrlDrop", items)
-        _ = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
-    }
-
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
@@ -83,6 +72,17 @@ struct QueueView: View {
         }
         .listStyle(.plain)
     }
+
+    func moveQueueEntry(from source: IndexSet, to destination: Int) {
+        VideoService.moveQueueEntry(from: source,
+                                    to: destination,
+                                    modelContext: modelContext)
+    }
+
+    func handleUrlDrop(_ items: [URL], at index: Int) {
+        print("handleUrlDrop", items)
+        _ = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
+    }
 }
 
 // #Preview {
@@ -96,9 +96,9 @@ struct QueueView: View {
 //        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 //        let container = try ModelContainer(for: QueueEntry.self, configurations: config)
 //
-//        let video = Video.dummy
+//        let video = Video.getDummy()
 //        let queueEntry = QueueEntry(video: video, order: 0)
-//        container.mainContext.insert(Video.dummy)
+//        container.mainContext.insert(Video.getDummy())
 //        container.mainContext.insert(queueEntry)
 //
 //        return QueueView(onVideoTap: { _ in }, loadNewVideos: { })
