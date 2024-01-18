@@ -68,17 +68,19 @@ struct InboxView: View {
                         }
                     } else {
                         ForEach(inboxEntries) { entry in
-                            if let video = entry.video {
-                                VideoListItem(
-                                    video: video,
-                                    videoSwipeActions: [.queue, .clear],
-                                    onClear: {
-                                        VideoService.deleteInboxEntry(
-                                            entry,
-                                            modelContext: modelContext
-                                        )
-                                    }
-                                )
+                            ZStack {
+                                if let video = entry.video {
+                                    VideoListItem(
+                                        video: video,
+                                        videoSwipeActions: [.queue, .clear],
+                                        onClear: {
+                                            VideoService.deleteInboxEntry(
+                                                entry,
+                                                modelContext: modelContext
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                         .dropDestination(for: URL.self) { items, _ in

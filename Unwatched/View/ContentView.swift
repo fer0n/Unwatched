@@ -17,7 +17,7 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State var navManager = NavigationManager()
     @Query var queue: [QueueEntry]
-    @Query var inbox: [InboxEntry]
+    @Query(animation: .default) var inbox: [InboxEntry]
 
     @State var chapterManager = ChapterManager()
     @AppStorage("subscriptionSortOrder") var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
@@ -86,11 +86,12 @@ struct ContentView: View {
                             chapterManager: chapterManager
                 )
             }
+            .animation(nil, value: UUID())
         }
         .environment(navManager)
-        .onAppear {
-            _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
-        }
+        //        .onAppear {
+        //            _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
+        //        }
     }
 }
 

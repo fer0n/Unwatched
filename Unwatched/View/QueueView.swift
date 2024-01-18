@@ -45,21 +45,23 @@ struct QueueView: View {
                         }
                     } else {
                         ForEach(queue) { entry in
-                            if let video = entry.video {
-                                VideoListItem(
-                                    video: video,
-                                    videoSwipeActions: [.watched, .queue, .clear],
-                                    onTapGuesture: {
-                                        navManager.video = entry.video
-                                        if entry.order == 0 { return }
-                                        VideoService.moveQueueEntry(from: [entry.order],
-                                                                    to: 0,
-                                                                    modelContext: modelContext)
-                                    },
-                                    onClear: {
-                                        VideoService.deleteQueueEntry(entry, modelContext: modelContext)
-                                    }
-                                )
+                            ZStack {
+                                if let video = entry.video {
+                                    VideoListItem(
+                                        video: video,
+                                        videoSwipeActions: [.watched, .queue, .clear],
+                                        onTapGuesture: {
+                                            navManager.video = entry.video
+                                            if entry.order == 0 { return }
+                                            VideoService.moveQueueEntry(from: [entry.order],
+                                                                        to: 0,
+                                                                        modelContext: modelContext)
+                                        },
+                                        onClear: {
+                                            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+                                        }
+                                    )
+                                }
                             }
                         }
                         .onMove(perform: moveQueueEntry)
