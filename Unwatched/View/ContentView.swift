@@ -20,24 +20,13 @@ struct ContentView: View {
     @Query(animation: .default) var inbox: [InboxEntry]
 
     @State var chapterManager = ChapterManager()
-    @AppStorage("subscriptionSortOrder") var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
 
     @MainActor
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
         UITabBar.appearance().backgroundImage = UIImage()
         UITabBar.appearance().backgroundColor = UIColor(Color.backgroundColor)
-    }
-
-    func markVideoWatched(video: Video) {
-        VideoService.markVideoWatched(
-            video, modelContext: modelContext
-        )
-    }
-
-    func loadNewVideos() async {
-        let task = VideoService.loadNewVideosInBg(modelContext: modelContext)
-        try? await task.value
     }
 
     var body: some View {
@@ -89,9 +78,20 @@ struct ContentView: View {
             .animation(nil, value: UUID())
         }
         .environment(navManager)
-        //        .onAppear {
-        //            _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
-        //        }
+        // .onAppear {
+        // _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
+        // }
+    }
+
+    func markVideoWatched(video: Video) {
+        VideoService.markVideoWatched(
+            video, modelContext: modelContext
+        )
+    }
+
+    func loadNewVideos() async {
+        let task = VideoService.loadNewVideosInBg(modelContext: modelContext)
+        try? await task.value
     }
 }
 
