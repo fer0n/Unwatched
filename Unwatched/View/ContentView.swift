@@ -47,25 +47,25 @@ struct ContentView: View {
                 Text("VideoPlayer – Should never be visible")
             }
             .tabItem {
-                Image(systemName: "chevron.up.circle")
+                Image(systemName: Const.videoPlayerTabSF)
             }
             .tag(Tab.videoPlayer)
 
             QueueView(loadNewVideos: loadNewVideos)
                 .tabItem {
-                    Image(systemName: "rectangle.stack")
+                    Image(systemName: Const.queueTagSF)
                 }
                 .tag(Tab.queue)
 
             InboxView(loadNewVideos: loadNewVideos)
                 .tabItem {
-                    Image(systemName: inbox.isEmpty ? "tray" : "tray.full")
+                    Image(systemName: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF)
                 }
                 .tag(Tab.inbox)
 
             LibraryView(loadNewVideos: loadNewVideos, sort: $subscriptionSortOrder)
                 .tabItem {
-                    Image(systemName: "books.vertical")
+                    Image(systemName: Const.libraryTabSF)
                 }
                 .tag(Tab.library)
         }

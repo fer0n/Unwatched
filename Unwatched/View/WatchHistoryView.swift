@@ -13,7 +13,7 @@ struct WatchHistoryView: View {
         ZStack {
             if watchEntries.isEmpty {
                 ContentUnavailableView("noHistoryItems",
-                                       systemImage: "checkmark.circle.fill",
+                                       systemImage: Const.watchedSF,
                                        description: Text("noHistoryItemsDescription"))
             } else {
                 List {

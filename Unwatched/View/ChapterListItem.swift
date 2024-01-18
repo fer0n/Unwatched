@@ -10,12 +10,12 @@ struct ChapterListItem: View {
             toggleChapter(chapter)
         } label: {
             ZStack {
-                Image(systemName: "circle.fill")
+                Image(systemName: Const.circleBackgroundSF)
                     .resizable()
                     .frame(width: 25, height: 25)
                     .foregroundStyle(Color.backgroundColor)
                 if chapter.isActive {
-                    Image(systemName: "checkmark")
+                    Image(systemName: Const.checkmarkSF)
                         .foregroundStyle(Color.myAccentColor)
                 }
             }

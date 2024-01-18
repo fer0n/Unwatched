@@ -47,7 +47,7 @@ struct LibraryView: View {
             List {
                 Section {
                     NavigationLink(destination: SettingsView()) {
-                        LibraryNavListItem("settings", systemName: "gearshape.fill")
+                        LibraryNavListItem("settings", systemName: Const.settingsViewSF)
                     }
                     .listRowSeparator(.hidden)
                 }
@@ -56,20 +56,20 @@ struct LibraryView: View {
                 Section {
                     NavigationLink(destination: AllVideosView()) {
                         LibraryNavListItem("allVideos",
-                                           systemName: "play.rectangle.on.rectangle",
+                                           systemName: Const.allVideosViewSF,
                                            .blue)
                     }
                     .listRowSeparator(.hidden, edges: .top)
                     NavigationLink(destination: WatchHistoryView()) {
                         LibraryNavListItem("watched",
-                                           systemName: "checkmark.circle",
+                                           systemName: Const.watchHistoryViewSF,
                                            .mint)
                             .listRowSeparator(hasSideloads ? .visible : .hidden, edges: .top)
                     }
                     if hasSideloads {
                         NavigationLink(destination: SideloadingView()) {
                             LibraryNavListItem("sideloads",
-                                               systemName: "arrow.right.circle",
+                                               systemName: Const.sideloadSF,
                                                .purple)
                         }
                         .listRowSeparator(.hidden, edges: .bottom)
@@ -104,12 +104,12 @@ struct LibraryView: View {
                             .disabled(subscriptionSorting == sort)
                         }
                     } label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                        Image(systemName: Const.filterSF)
                     }
                     Button(action: {
                         showAddSubscriptionSheet = true
                     }, label: {
-                        Image(systemName: "plus")
+                        Image(systemName: Const.addSF)
                     })
                 }
             }

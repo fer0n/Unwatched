@@ -61,7 +61,7 @@ struct AddSubscriptionView: View {
 
     var headerLogo: some View {
         VStack(spacing: 0) {
-            Image(systemName: "books.vertical.fill")
+            Image(systemName: Const.libraryTabSF)
                 .resizable()
                 .frame(width: 50, height: 50)
             Text("addSubscription")

@@ -189,7 +189,7 @@ actor VideoActor {
         }
 
         sub.videos.append(contentsOf: newVideos)
-        let limitVideos = isFirstTimeLoading ? 5 : nil
+        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
 
         triageSubscriptionVideos(sub,
                                  videos: newVideos,
