@@ -9,7 +9,7 @@ import SwiftData
 struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
     @Environment(\.modelContext) var modelContext
-    @AppStorage("defaultEpisodePlacement") var defaultEpisodePlacement: VideoPlacement = .inbox
+    @AppStorage(Const.defaultEpisodePlacement) var defaultEpisodePlacement: VideoPlacement = .inbox
 
     var body: some View {
         VStack {

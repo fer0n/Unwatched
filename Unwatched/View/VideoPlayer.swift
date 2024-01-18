@@ -10,8 +10,8 @@ struct VideoPlayer: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(Alerter.self) private var alerter
     @Environment(\.modelContext) var modelContext
-    @AppStorage("playbackSpeed") var playbackSpeed: Double = 1.0
-    @AppStorage("continuousPlay") var continuousPlay: Bool = false
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+    @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
 
     @State private var isPlaying: Bool = false
     @State var continuousPlayWorkaround: Bool = false

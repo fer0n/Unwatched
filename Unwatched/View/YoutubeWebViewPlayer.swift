@@ -7,8 +7,8 @@ import SwiftUI
 import WebKit
 
 struct YoutubeWebViewPlayer: UIViewRepresentable {
-    @AppStorage("playVideoFullscreen") var playVideoFullscreen: Bool = false
-    @AppStorage("autoplayVideos") var autoplayVideos: Bool = true
+    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
 
     let video: Video
     @Binding var playbackSpeed: Double

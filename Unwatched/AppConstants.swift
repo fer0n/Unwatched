@@ -37,5 +37,13 @@ struct Const {
 
     static let circleBackgroundSF = "circle.fill"
     static let checkmarkSF = "checkmark"
-
+    
+    
+    // MARK: - AppStorage
+    static let subscriptionSortOrder = "subscriptionSortOrder"
+    static let playVideoFullscreen = "playVideoFullscreen"
+    static let autoplayVideos = "autoplayVideos"
+    static let defaultEpisodePlacement = "defaultEpisodePlacement"
+    static let playbackSpeed = "playbackSpeed"
+    static let continuousPlay = "continuousPlay"
 }

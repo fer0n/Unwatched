@@ -7,9 +7,9 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage("defaultEpisodePlacement") var defaultEpisodePlacement: VideoPlacement = .inbox
-    @AppStorage("playVideoFullscreen") var playVideoFullscreen: Bool = false
-    @AppStorage("autoplayVideos") var autoplayVideos: Bool = true
+    @AppStorage(Const.defaultEpisodePlacement) var defaultEpisodePlacement: VideoPlacement = .inbox
+    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
 
     let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
