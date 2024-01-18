@@ -3,7 +3,7 @@ import SwiftUI
 import Observation
 
 class VideoService {
-    static func loadNewVideosInBg(subscriptions: [Subscription]? = nil, modelContext: ModelContext) {
+    static func loadNewVideosInBg(subscriptions: [Subscription]? = nil, modelContext: ModelContext) -> Task<(), Error> {
         print("loadNewVideosInBg")
         let defaultPlacementRaw = UserDefaults.standard.integer(forKey: "defaultEpisodePlacement")
         let defaultPlacement = VideoPlacement(rawValue: defaultPlacementRaw)
@@ -12,7 +12,7 @@ class VideoService {
         let container = modelContext.container
         print("loadNewVideos")
 
-        Task.detached {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
             do {
                 try await repo.loadVideos(
@@ -21,8 +21,10 @@ class VideoService {
                 )
             } catch {
                 print("\(error)")
+                throw error
             }
         }
+        return task
     }
 
     static func markVideoWatched(_ video: Video, modelContext: ModelContext ) {
