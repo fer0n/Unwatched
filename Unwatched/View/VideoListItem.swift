@@ -176,7 +176,7 @@ struct VideoListItem: View {
                                 .padding(.top, 3)
                                 .padding(.trailing, 5)
                             if video.hasFinished != true {
-                                Text(formatDurationFromSeconds(remaining))
+                                Text(remaining.formattedSeconds ?? "")
                                     .font(.system(size: 12, weight: .regular))
                                     .foregroundStyle(Color.gray)
                             }

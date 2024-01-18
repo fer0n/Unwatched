@@ -10,7 +10,7 @@ extension Date {
         let calendar = Calendar.current
         let formatter = DateFormatter()
 
-        if calendar.isDateInLastDay(self) {
+        if calendar.isDateInToday(self) {
             formatter.dateFormat = "HH:mm"
             return formatter.string(from: self)
         } else if calendar.isDateInLastWeek(self) {
