@@ -35,8 +35,9 @@ struct ContentView: View {
         )
     }
 
-    func loadNewVideos() {
-        VideoService.loadNewVideosInBg(modelContext: modelContext)
+    func loadNewVideos() async {
+        let task = VideoService.loadNewVideosInBg(modelContext: modelContext)
+        try? await task.value
     }
 
     var body: some View {
@@ -88,7 +89,7 @@ struct ContentView: View {
         }
         .environment(navManager)
         .onAppear {
-            loadNewVideos()
+            _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
         }
     }
 }
