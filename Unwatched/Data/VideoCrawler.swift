@@ -34,7 +34,7 @@ class VideoCrawler {
     static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
         let input = description
         do {
-            let regex = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+(.+)"#)
+            let regex = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+[-–•]?\s*(.+)"#)
             let range = NSRange(input.startIndex..<input.endIndex, in: input)
 
             var chapters: [SendableChapter] = []
