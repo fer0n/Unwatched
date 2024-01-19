@@ -3,6 +3,8 @@ import SwiftData
 
 struct SideloadingView: View {
     @Environment(\.modelContext) var modelContext
+    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
     var sidedloadedSubscriptions: [Subscription]
 
@@ -15,13 +17,12 @@ struct SideloadingView: View {
                                        description: Text("noSideloadedSubscriptionsDetail"))
             } else {
                 List {
-                    ForEach(subs) { sub in
-                        NavigationLink(
-                            destination: SubscriptionDetailView(subscription: sub)
-                        ) {
-                            SubscriptionListItem(subscription: sub)
-                        }
-                    }
+                    SubscriptionListView(
+                        sort: subscriptionSortOrder,
+                        filter: #Predicate<Subscription> { $0.isArchived == true },
+                        videoFilter: { !$0.videos.isEmpty }
+                    )
+                    // TODO: add filtering here
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)

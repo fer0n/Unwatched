@@ -24,6 +24,8 @@ final class Video: CustomStringConvertible {
     var watched = false
     var subscription: Subscription?
     var youtubeChannelId: String?
+    var isYtShort: Bool = false
+    var isLikelyYtShort: Bool = false
 
     // MARK: Computed Properties
     var sortedChapters: [Chapter] {
@@ -54,7 +56,9 @@ final class Video: CustomStringConvertible {
          youtubeChannelId: String? = nil,
          duration: Double? = nil,
          videoDescription: String? = nil,
-         chapters: [Chapter] = []) {
+         chapters: [Chapter] = [],
+         isYtShort: Bool = false,
+         isLikelyYtShort: Bool = false) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
@@ -64,6 +68,8 @@ final class Video: CustomStringConvertible {
         self.duration = duration
         self.videoDescription = videoDescription
         self.chapters = chapters
+        self.isYtShort = isYtShort
+        self.isLikelyYtShort = isLikelyYtShort
     }
 
 }

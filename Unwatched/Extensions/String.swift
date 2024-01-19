@@ -22,8 +22,10 @@ extension String {
         guard let regex = try? NSRegularExpression(pattern: regex) else { return nil }
         let range = NSRange(location: 0, length: self.utf16.count)
         if let match = regex.firstMatch(in: self, options: [], range: range) {
-            if let matchRange = Range(match.range(at: 1), in: self) {
+            if match.numberOfRanges > 1, let matchRange = Range(match.range(at: 1), in: self) {
                 return String(self[matchRange])
+            } else {
+                return "" // Return empty string if there's a match but no capture group
             }
         }
         return nil

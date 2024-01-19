@@ -4,6 +4,12 @@
     "" : {
 
     },
+    "–" : {
+
+    },
+    "#s%@" : {
+
+    },
     "%@" : {
 
     },
@@ -261,6 +267,26 @@
         }
       }
     },
+    "handleShortsDifferently" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Shorts Behaviour"
+          }
+        }
+      }
+    },
+    "hideShortsEverywhere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Shorts"
+          }
+        }
+      }
+    },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
     },
@@ -305,12 +331,12 @@
         }
       }
     },
-    "newEpisodes" : {
+    "newShorts" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Episodes"
+            "value" : "New Shorts"
           }
         }
       }
@@ -469,6 +495,16 @@
         }
       }
     },
+    "playback" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback"
+          }
+        }
+      }
+    },
     "queue" : {
       "localizations" : {
         "en" : {
@@ -505,6 +541,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        }
+      }
+    },
+    "shortsDetection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts Detection"
+          }
+        }
+      }
+    },
+    "shortsDetectionModerate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moderate"
+          }
+        }
+      }
+    },
+    "shortsDetectionSafe" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Safe"
+          }
+        }
+      }
+    },
+    "shortsSettings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Shorts"
           }
         }
       }
@@ -572,6 +648,16 @@
     },
     "VideoPlayer – Should never be visible" : {
 
+    },
+    "videoSettings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        }
+      }
     },
     "watched" : {
       "localizations" : {

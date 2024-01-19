@@ -96,8 +96,7 @@ actor VideoActor {
         return videos?.first
     }
 
-    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
-                    defaultVideoPlacement: VideoPlacement) async throws {
+    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws {
         print("loadVideos")
         var subs = [Subscription]()
         if subscriptionIds == nil {
@@ -109,10 +108,38 @@ actor VideoActor {
             subs = try fetchSubscriptions(subscriptionIds)
         }
 
+        let placementInfo = getDefaultVideoPlacement()
+
         for sub in subs {
-            try await loadVideos(for: sub, defaultPlacement: defaultVideoPlacement)
+            try await loadVideos(for: sub, defaultPlacementInfo: placementInfo)
         }
+        // TODO: load all videos in a task group?
         try modelContext.save()
+    }
+
+    func getDefaultVideoPlacement() -> DefaultVideoPlacement {
+        let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
+        let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
+
+        var shortsPlacement: VideoPlacement?
+        var shortsDetection: ShortsDetection = .safe
+
+        // TODO: is this thread safe? Put this into a static function somewhere else
+        if UserDefaults.standard.bool(forKey: Const.handleShortsDifferently) {
+            let shortsPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsPlacement)
+            shortsPlacement = VideoPlacement(rawValue: shortsPlacementRaw)
+            let shortsDetectionRaw = UserDefaults.standard.integer(forKey: Const.shortsDetection)
+            if let sPlace = ShortsDetection(rawValue: shortsDetectionRaw) {
+                shortsDetection = sPlace
+            }
+        }
+
+        let info = DefaultVideoPlacement(
+            videoPlacement: videoPlacement,
+            shortsPlacement: shortsPlacement,
+            shortsDetection: shortsDetection
+        )
+        return info
     }
 
     func getAllActiveSubscriptions() throws -> [Subscription] {
@@ -167,7 +194,7 @@ actor VideoActor {
         return videos.filter { !videoIds.contains($0.youtubeId) }
     }
 
-    private func loadVideos(for sub: Subscription, defaultPlacement: VideoPlacement) async throws {
+    private func loadVideos(for sub: Subscription, defaultPlacementInfo: DefaultVideoPlacement) async throws {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         print("isFirstTimeLoading", isFirstTimeLoading)
 
@@ -193,7 +220,7 @@ actor VideoActor {
 
         triageSubscriptionVideos(sub,
                                  videos: newVideos,
-                                 defaultPlacement: defaultPlacement,
+                                 defaultPlacementInfo: defaultPlacementInfo,
                                  limitVideos: limitVideos)
     }
 
@@ -207,15 +234,43 @@ actor VideoActor {
 
     private func triageSubscriptionVideos(_ sub: Subscription,
                                           videos: [Video],
-                                          defaultPlacement: VideoPlacement,
+                                          defaultPlacementInfo: DefaultVideoPlacement,
                                           limitVideos: Int?) {
         let videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
 
         var placement = sub.placeVideosIn
         if sub.placeVideosIn == .defaultPlacement {
-            placement = defaultPlacement
+            placement = defaultPlacementInfo.videoPlacement
         }
-        addVideosTo(videos: videosToAdd, placement: placement)
+
+        if defaultPlacementInfo.shortsPlacement != nil {
+            addSingleVideoTo(
+                videosToAdd,
+                videoPlacement: placement,
+                defaultPlacement: defaultPlacementInfo
+            )
+        } else {
+            addVideosTo(videos: videosToAdd, placement: placement)
+        }
+    }
+
+    // TODO: Move this function somewhere central and use it whereever possible
+    private func videoIsConsideredShorts(_ video: Video, shortsDetection: ShortsDetection) -> Bool {
+        switch shortsDetection {
+        case .safe:
+            return video.isYtShort
+        case .moderate:
+            return video.isYtShort || video.isLikelyYtShort
+        }
+    }
+
+    private func addSingleVideoTo(_ videos: [Video], videoPlacement: VideoPlacement, defaultPlacement: DefaultVideoPlacement) {
+        // check setting for ytShort, use individual setting in that case
+        for video in videos {
+            let isShorts = videoIsConsideredShorts(video, shortsDetection: defaultPlacement.shortsDetection)
+            let placement = isShorts ? defaultPlacement.shortsPlacement ?? videoPlacement : videoPlacement
+            addVideosTo(videos: [video], placement: placement)
+        }
     }
 
     private func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 0) {

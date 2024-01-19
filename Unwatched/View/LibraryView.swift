@@ -15,25 +15,7 @@ struct LibraryView: View {
     var sidedloadedSubscriptions: [Subscription]
 
     @State var showAddSubscriptionSheet = false
-    @Binding var subscriptionSorting: SubscriptionSorting
-
-    init(loadNewVideos: @escaping () async -> Void,
-         sort: Binding<SubscriptionSorting>) {
-        self.loadNewVideos = loadNewVideos
-        self._subscriptionSorting = sort
-        var sortDesc: SortDescriptor<Subscription>
-        switch sort.wrappedValue {
-        case .title:
-            sortDesc = SortDescriptor<Subscription>(\Subscription.title)
-        case .recentlyAdded:
-            sortDesc = SortDescriptor<Subscription>(\Subscription.subscribedDate, order: .reverse)
-        case .mostRecentVideo:
-            sortDesc = SortDescriptor<Subscription>(\Subscription.mostRecentVideoDate, order: .reverse)
-        }
-        _subscriptions = Query(filter: #Predicate<Subscription> { sub in
-            sub.isArchived == false
-        }, sort: [sortDesc])
-    }
+    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
 
     var loadNewVideos: () async -> Void
 
@@ -80,13 +62,7 @@ struct LibraryView: View {
                     Spacer()
                         .listRowSeparator(.hidden)
                     Section {
-                        ForEach(subscriptions) { subscripton in
-                            NavigationLink(
-                                destination: SubscriptionDetailView(subscription: subscripton)
-                            ) {
-                                SubscriptionListItem(subscription: subscripton)
-                            }
-                        }
+                        SubscriptionListView(sort: subscriptionSortOrder)
                     }
                 }
             }
@@ -97,11 +73,11 @@ struct LibraryView: View {
                     Menu {
                         ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
                             Button {
-                                subscriptionSorting = sort
+                                subscriptionSortOrder = sort
                             } label: {
                                 Text(sort.description)
                             }
-                            .disabled(subscriptionSorting == sort)
+                            .disabled(subscriptionSortOrder == sort)
                         }
                     } label: {
                         Image(systemName: Const.filterSF)
@@ -131,7 +107,7 @@ struct LibraryView: View {
 }
 
 #Preview {
-    LibraryView(loadNewVideos: {}, sort: .constant(.title))
+    LibraryView(loadNewVideos: {})
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
 }

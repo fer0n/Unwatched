@@ -7,10 +7,15 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage(Const.defaultEpisodePlacement) var defaultEpisodePlacement: VideoPlacement = .inbox
+    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
-    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
+    @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
+
+    @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
+    @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
+    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
+    @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
     let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
@@ -21,15 +26,13 @@ struct SettingsView: View {
         VStack {
             List {
                 Section {
-                    Picker("newEpisodes", selection: $defaultEpisodePlacement) {
-                        ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
-                            Text($0.description(defaultPlacement: ""))
-                        }
+                    Toggle(isOn: $refreshOnStartup) {
+                        Text("refreshOnStartup")
                     }
-                    .pickerStyle(.menu)
                 }
+                .tint(.teal)
 
-                Section {
+                Section("playback") {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
@@ -39,12 +42,38 @@ struct SettingsView: View {
                 }
                 .tint(.teal)
 
-                Section {
-                    Toggle(isOn: $refreshOnStartup) {
-                        Text("refreshOnStartup")
+                Section("videoSettings") {
+                    Picker("newVideos", selection: $defaultVideoPlacement) {
+                        ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
+                            Text($0.description(defaultPlacement: ""))
+                        }
                     }
+                    .pickerStyle(.menu)
                 }
-                .tint(.teal)
+
+                Section("shortsSettings") {
+                    Picker("shortsDetection", selection: $shortsDetection) {
+                        ForEach(ShortsDetection.allCases, id: \.self) {
+                            Text($0.description)
+                        }
+                    }
+                    Toggle(isOn: $handleShortsDifferently) {
+                        Text("handleShortsDifferently")
+                    }
+                    .tint(.teal)
+                    Toggle(isOn: $hideShortsEverywhere) {
+                        Text("hideShortsEverywhere")
+                    }
+                    .tint(.teal)
+                    .disabled(!handleShortsDifferently)
+                    Picker("newShorts", selection: $defaultShortsPlacement) {
+                        ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
+                            Text($0.description(defaultPlacement: ""))
+                        }
+                    }
+                    .disabled(!handleShortsDifferently)
+                    .pickerStyle(.menu)
+                }
 
                 Section {
                     LinkItemView(destination: writeReviewUrl, label: "rateApp") {
