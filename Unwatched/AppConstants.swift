@@ -7,6 +7,7 @@ import Foundation
 
 struct Const {
 
+    // videos of new subscriptions being triaged
     static let triageNewSubs = 5
 
     // MARK: - SF Symbols
@@ -42,8 +43,13 @@ struct Const {
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
     static let autoplayVideos = "autoplayVideos"
-    static let defaultEpisodePlacement = "defaultEpisodePlacement"
+    static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
     static let refreshOnStartup = "refreshOnStartup"
+
+    static let defaultShortsPlacement = "defaultShortsPlacement"
+    static let handleShortsDifferently = "handleShortsDifferently"
+    static let hideShortsEverywhere = "hideShortsEverywhere"
+    static let shortsDetection = "shortsDetection"
 }

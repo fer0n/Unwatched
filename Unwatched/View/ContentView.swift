@@ -20,7 +20,6 @@ struct ContentView: View {
     @Query(animation: .default) var inbox: [InboxEntry]
 
     @State var chapterManager = ChapterManager()
-    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup = false
 
     @MainActor
@@ -53,7 +52,7 @@ struct ContentView: View {
                 }
                 .tag(Tab.inbox)
 
-            LibraryView(loadNewVideos: loadNewVideos, sort: $subscriptionSortOrder)
+            LibraryView(loadNewVideos: loadNewVideos)
                 .tabItem {
                     Image(systemName: Const.libraryTabSF)
                 }

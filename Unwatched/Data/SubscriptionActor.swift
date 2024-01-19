@@ -177,6 +177,9 @@ actor SubscriptionActor {
 
             for video in sub.videos {
                 if video.queueEntry == nil && !video.watched {
+                    if let inboxEntry = video.inboxEntry {
+                        modelContext.delete(inboxEntry)
+                    }
                     modelContext.delete(video)
                 }
             }

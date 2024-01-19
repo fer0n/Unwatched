@@ -2,6 +2,10 @@ import SwiftUI
 import SwiftData
 
 struct AllVideosView: View {
+    @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
+    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
+    @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
+
     @Query(sort: \Video.publishedDate, order: .reverse) var videos: [Video]
 
     var body: some View {
@@ -12,20 +16,16 @@ struct AllVideosView: View {
                                        description: Text("noVideosYetDescription"))
             } else {
                 List {
-                    ForEach(videos) { video in
-                        VideoListItem(
-                            video: video,
-                            showVideoStatus: true,
-                            hasInboxEntry: video.inboxEntry != nil,
-                            hasQueueEntry: video.queueEntry != nil,
-                            watched: video.watched,
-                            videoSwipeActions: [.queue, .clear])
-                    }
+                    VideoListView(ytShortsFilter: shortsFilter)
                 }
                 .listStyle(.plain)
                 .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
         }
         .navigationBarTitle("allVideos", displayMode: .inline)
+    }
+
+    var shortsFilter: ShortsDetection? {
+        (handleShortsDifferently && hideShortsEverywhere) ? shortsDetection : nil
     }
 }

@@ -74,7 +74,110 @@ struct VideoListItem: View {
             }
     }
 
-    func getVideoStatusSystemName(_ video: Video) -> (status: String?, color: Color)? {
+    var videoItem: some View {
+        ZStack(alignment: .topLeading) {
+            HStack {
+                CacheAsyncImage(url: video.thumbnailUrl) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 160, height: 90)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 15.0))
+                } placeholder: {
+                    Color.backgroundColor
+                        .frame(width: 160, height: 90)
+                }
+                .padding(showVideoStatus ? 5 : 0)
+
+                videoItemDetails
+            }
+            if showVideoStatus,
+               let statusInfo = videoStatusSystemName,
+               let status = statusInfo.status {
+                Image(systemName: status)
+                    .resizable()
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.white, statusInfo.color)
+                    .frame(width: 23, height: 23)
+            }
+        }
+    }
+
+    func getLeadingSwipeActions() -> some View {
+        Group {
+            if videoSwipeActions.contains(.queue) {
+                Button(action: addVideoToQueue) {
+                    Image(systemName: Const.addToQueuSF)
+                }
+                .tint(.teal)
+            }
+            if videoSwipeActions.contains(.watched) {
+                Button(action: markVideoWatched) {
+                    Image(systemName: Const.watchedSF)
+                }
+                .tint(.mint)
+            }
+        }
+    }
+
+    func getTrailingSwipeActions() -> some View {
+        return Group {
+            if videoSwipeActions.contains(.clear) &&
+                (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
+                Button(action: clearVideoEverywhere) {
+                    Image(systemName: Const.clearSF)
+                }
+                .tint(Color.backgroundColor)
+            }
+        }
+    }
+
+    var videoItemDetails: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(video.title)
+                .font(.system(size: 15, weight: .medium))
+                .lineLimit(2)
+            HStack {
+                if let published = video.publishedDate {
+                    Text(published.formatted)
+                        .font(.system(size: 14, weight: .light))
+                        .font(.body)
+                        .foregroundStyle(Color.gray)
+                }
+                if video.isYtShort || video.isLikelyYtShort {
+                    Text("#s\(video.isYtShort == true ? "." : "")")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundStyle(Color.gray)
+                }
+            }
+            if let title = video.subscription?.title {
+                Text(title)
+                    .font(.system(size: 14, weight: .regular))
+                    .lineLimit(1)
+                    .textCase(.uppercase)
+                    .foregroundStyle(Color.gray)
+            }
+            if let duration = video.duration,
+               let remaining = video.remainingTime,
+               duration > 0 && remaining > 0 {
+                HStack(alignment: .center) {
+                    ProgressView(value: video.elapsedSeconds, total: duration)
+                        .tint(.teal)
+                        .opacity(0.6)
+                        .padding(.top, 3)
+                        .padding(.trailing, 5)
+                    if video.hasFinished != true {
+                        Text(remaining.formattedSeconds ?? "")
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(Color.gray)
+                    }
+                }
+            }
+        }
+    }
+
+    var videoStatusSystemName: (status: String?, color: Color)? {
         let defaultColor = Color.green
         if video.youtubeId == navManager.video?.youtubeId {
             return ("play.circle.fill", defaultColor)
@@ -114,102 +217,6 @@ struct VideoListItem: View {
             modelContext: modelContext
         )
     }
-
-    func getLeadingSwipeActions() -> some View {
-        Group {
-            if videoSwipeActions.contains(.queue) {
-                Button(action: addVideoToQueue) {
-                    Image(systemName: Const.addToQueuSF)
-                }
-                .tint(.teal)
-            }
-            if videoSwipeActions.contains(.watched) {
-                Button(action: markVideoWatched) {
-                    Image(systemName: Const.watchedSF)
-                }
-                .tint(.mint)
-            }
-        }
-    }
-
-    func getTrailingSwipeActions() -> some View {
-        return Group {
-            if videoSwipeActions.contains(.clear) &&
-                (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
-                Button(action: clearVideoEverywhere) {
-                    Image(systemName: Const.clearSF)
-                }
-                .tint(Color.backgroundColor)
-            }
-        }
-    }
-
-    var videoItem: some View {
-        ZStack(alignment: .topLeading) {
-            HStack {
-                CacheAsyncImage(url: video.thumbnailUrl) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 90)
-                        .clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: 15.0))
-                } placeholder: {
-                    Color.backgroundColor
-                        .frame(width: 160, height: 90)
-                }
-                .padding(showVideoStatus ? 5 : 0)
-
-                videoItemDetails
-            }
-            if showVideoStatus,
-               let statusInfo = getVideoStatusSystemName(video),
-               let status = statusInfo.status {
-                Image(systemName: status)
-                    .resizable()
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(.white, statusInfo.color)
-                    .frame(width: 23, height: 23)
-            }
-        }
-    }
-
-    var videoItemDetails: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(video.title)
-                .font(.system(size: 15, weight: .medium))
-                .lineLimit(2)
-            if let published = video.publishedDate {
-                Text(published.formatted)
-                    .font(.system(size: 14, weight: .light))
-                    .font(.body)
-                    .foregroundStyle(Color.gray)
-            }
-            if let title = video.subscription?.title {
-                Text(title)
-                    .font(.system(size: 14, weight: .regular))
-                    .lineLimit(1)
-                    .textCase(.uppercase)
-                    .foregroundStyle(Color.gray)
-            }
-            if let duration = video.duration,
-               let remaining = video.remainingTime,
-               duration > 0 && remaining > 0 {
-                HStack(alignment: .center) {
-                    ProgressView(value: video.elapsedSeconds, total: duration)
-                        .tint(.teal)
-                        .opacity(0.6)
-                        .padding(.top, 3)
-                        .padding(.trailing, 5)
-                    if video.hasFinished != true {
-                        Text(remaining.formattedSeconds ?? "")
-                            .font(.system(size: 12, weight: .regular))
-                            .foregroundStyle(Color.gray)
-                    }
-                }
-            }
-        }
-    }
 }
 
 #Preview {
@@ -218,7 +225,8 @@ struct VideoListItem: View {
         url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
         youtubeId: "_7vP9vsnYPc",
         thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
-        publishedDate: Date())
+        publishedDate: Date(),
+        isYtShort: true)
 
     return VideoListItem(
         video: video,

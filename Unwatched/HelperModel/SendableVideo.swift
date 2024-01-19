@@ -31,20 +31,28 @@ struct SendableVideo: Sendable {
         duration: TimeInterval? = nil,
         videoDescription: String? = nil
     ) -> Video {
+        let title = title ?? self.title
+        let description = videoDescription ?? self.videoDescription
+
         var newChapters = chapters
         if chapters.isEmpty, let desc = self.videoDescription {
             newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
         }
+        let ytShortsInfo = VideoCrawler.isYtShort(title, description: description)
+        print("ytShortsInfo: \(title)", ytShortsInfo)
+
         return Video(
-            title: title ?? self.title,
+            title: title,
             url: url ?? self.url,
             youtubeId: youtubeId ?? self.youtubeId,
             thumbnailUrl: thumbnailUrl ?? self.thumbnailUrl,
             publishedDate: publishedDate ?? self.publishedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
             duration: duration ?? self.duration,
-            videoDescription: videoDescription ?? self.videoDescription,
-            chapters: newChapters.map { $0.getChapter }
+            videoDescription: description,
+            chapters: newChapters.map { $0.getChapter },
+            isYtShort: ytShortsInfo.isShort,
+            isLikelyYtShort: ytShortsInfo.isLikelyShort
         )
     }
 }
