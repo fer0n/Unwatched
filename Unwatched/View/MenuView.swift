@@ -35,7 +35,7 @@ struct MenuView: View {
                 .tag(Tab.library)
         }
         .environment(navManager)
-        .tint(.white)
+        .tint(.myAccentColor)
     }
 
     func markVideoWatched(video: Video) {

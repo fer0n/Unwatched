@@ -334,6 +334,16 @@
         }
       }
     },
+    "mostRecentVideo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most Recent Video"
+          }
+        }
+      }
+    },
     "newShorts" : {
       "localizations" : {
         "en" : {
@@ -538,6 +548,16 @@
         }
       }
     },
+    "recentlyAdded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently Added"
+          }
+        }
+      }
+    },
     "refreshOnStartup" : {
       "localizations" : {
         "en" : {
@@ -655,6 +675,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subscriptions"
+          }
+        }
+      }
+    },
+    "title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
           }
         }
       }
