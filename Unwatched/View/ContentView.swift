@@ -30,16 +30,7 @@ struct ContentView: View {
                 .opacity(hideMiniPlayer ? 0 : 1)
                 .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
             if !videoExists {
-                ContentUnavailableView("noVideoSelected", systemImage: "play.rectangle.on.rectangle")
-                    .background(Color.backgroundColor)
-                    .onTapGesture {
-                        navManager.showMenu = true
-                    }
-                    .onAppear {
-                        if navManager.video == nil {
-                            navManager.showMenu = true
-                        }
-                    }
+                VideoNotAvailableView()
             }
         }
         .environment(player)
@@ -51,7 +42,6 @@ struct ContentView: View {
                     .enabled(upThrough: .height(sheetPos.maxSheetHeight))
                 )
                 .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                .interactiveDismissDisabled(!videoExists)
                 .onAppear {
                     sheetPos.setNormalSheetHeightDelayed()
                 }
