@@ -45,7 +45,9 @@ struct SubscriptionDetailView: View {
             }
             .listStyle(.plain)
             .toolbar {
-                RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
+                if !subscription.isArchived {
+                    RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
+                }
             }
         }
         .navigationBarTitle(subscription.title.uppercased(), displayMode: .inline)
