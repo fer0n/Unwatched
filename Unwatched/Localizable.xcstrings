@@ -679,6 +679,16 @@
         }
       }
     },
+    "swipeUpToSelecte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe up and choose one"
+          }
+        }
+      }
+    },
     "title" : {
       "localizations" : {
         "en" : {

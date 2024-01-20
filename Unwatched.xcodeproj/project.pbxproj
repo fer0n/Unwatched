@@ -83,6 +83,7 @@
 		88DFC0C22B4489F3001895C8 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C12B4489F3001895C8 /* Video.swift */; };
 		88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C52B448C01001895C8 /* VideoService.swift */; };
 		88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
+		88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -165,6 +166,7 @@
 		88DFC0C12B4489F3001895C8 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		88DFC0C52B448C01001895C8 /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
 		88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawler.swift; sourceTree = "<group>"; };
+		88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNotAvailableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +217,7 @@
 				8845F0182B50648D0086AA98 /* ChapterSelection.swift */,
 				88C205272B516D2A008EC51D /* ChapterListItem.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
+				88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */,
 				8898B6842B4846D000348D01 /* SubscriptionError.swift in Sources */,
+				88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */,
 				8845F0172B5054570086AA98 /* Chapter.swift in Sources */,
 				881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */,
 				883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */,
