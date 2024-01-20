@@ -30,6 +30,7 @@ struct SubscriptionListItem: View {
                 Text("unsubscribe")
             }
         }
+        .tint(Color.backgroundColor)
     }
 }
 

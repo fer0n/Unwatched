@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
     case title
@@ -13,11 +14,11 @@ enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
     var description: String {
         switch self {
         case .title:
-            return "title"
+            return String(localized: "title")
         case .recentlyAdded:
-            return "recentlyAdded"
+            return String(localized: "recentlyAdded")
         case .mostRecentVideo:
-            return "mostRecentVideo"
+            return String(localized: "mostRecentVideo")
         }
     }
 }
