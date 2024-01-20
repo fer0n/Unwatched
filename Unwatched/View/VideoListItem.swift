@@ -59,6 +59,7 @@ struct VideoListItem: View {
 
     var body: some View {
         videoItem
+            .contentShape(Rectangle())
             .onTapGesture {
                 if let tap = onTapGuesture {
                     tap()
