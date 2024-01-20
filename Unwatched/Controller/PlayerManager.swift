@@ -10,6 +10,9 @@ import SwiftUI
     var currentChapter: Chapter?
     var seekPosition: Double?
 
+    var previousChapter: Chapter?
+    var nextChapter: Chapter?
+
     var currentEndTime: Double?
     var currentTime: Double?
 
@@ -49,6 +52,12 @@ import SwiftUI
         let next = chapters.first(where: { chapter in
             chapter.startTime > current.startTime
         })
+        nextChapter = next
+
+        let previous = chapters.last(where: { chapter in
+            chapter.startTime < current.startTime
+        })
+        previousChapter = previous
         // print("next", next?.title)
         if !current.isActive {
             if let nextActive = chapters.first(where: { chapter in
@@ -69,28 +78,19 @@ import SwiftUI
         seekPosition = chapter.startTime
         currentTime = chapter.startTime
         currentChapter = chapter
+        handleChapterChange()
     }
 
-    func nextChapter() {
-        guard let chapters = video?.sortedChapters,
-              let current = currentChapter,
-              let next = chapters.first(where: { chapter in
-                chapter.startTime > current.startTime
-              }) else {
-            return
+    func goToNextChapter() {
+        if let next = nextChapter {
+            setChapter(next)
         }
-        setChapter(next)
     }
 
-    func previousChapter() {
-        guard let chapters = video?.sortedChapters,
-              let current = currentChapter,
-              let previous = chapters.last(where: { chapter in
-                chapter.startTime < current.startTime
-              }) else {
-            return
+    func goToPreviousChapter() {
+        if let previous = previousChapter {
+            setChapter(previous)
         }
-        setChapter(previous)
     }
 
     static func getDummy() -> PlayerManager {
@@ -100,4 +100,5 @@ import SwiftUI
         player.currentChapter = Chapter.getDummy()
         return player
     }
+
 }

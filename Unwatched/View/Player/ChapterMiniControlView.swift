@@ -12,23 +12,26 @@ struct ChapterMiniControlView: View {
     var body: some View {
         if let chapter = player.currentChapter {
             HStack {
-                Button(action: player.previousChapter) {
+                Button(action: player.goToPreviousChapter) {
                     Image(systemName: "backward.end.fill")
                 }
-                Spacer()
-                Text(chapter.title)
-                    .lineLimit(1)
-                    .padding()
-                Spacer()
-                Button(action: player.nextChapter) {
+                .disabled(player.previousChapter == nil)
+                Button {
+                    showChapterSelection = true
+                } label: {
+                    Text(chapter.title)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
+
+                Button(action: player.goToNextChapter) {
                     Image(systemName: "forward.end.fill")
                 }
-            }
-            .onTapGesture {
-                showChapterSelection = true
+                .disabled(player.nextChapter == nil)
             }
             .padding(.horizontal)
-            .frame(maxWidth: .infinity)
             .background(Color.backgroundGray)
             .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
             .sheet(isPresented: $showChapterSelection) {
