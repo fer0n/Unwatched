@@ -8,6 +8,7 @@ import SwiftUI
 
 struct VideoNotAvailableView: View {
     @Environment(NavigationManager.self) private var navManager
+    @Environment(PlayerManager.self) private var player
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
@@ -46,7 +47,7 @@ struct VideoNotAvailableView: View {
             navManager.showMenu = true
         }
         .onAppear {
-            if navManager.video == nil {
+            if player.video == nil {
                 navManager.showMenu = true
             }
         }

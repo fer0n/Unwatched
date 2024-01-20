@@ -24,7 +24,7 @@ struct VideoPlayer: View {
     var body: some View {
         VStack(spacing: 10) {
             VStack(spacing: 10) {
-                Text(navManager.video?.title ?? "")
+                Text(player.video?.title ?? "")
                     .font(.system(size: 20, weight: .heavy))
                     .multilineTextAlignment(.center)
                     .onTapGesture {
@@ -36,7 +36,7 @@ struct VideoPlayer: View {
             }
             .padding(.vertical)
             ZStack {
-                if let video = navManager.video {
+                if let video = player.video {
                     webViewPlayer(video)
                 } else {
                     Rectangle()
@@ -89,8 +89,8 @@ struct VideoPlayer: View {
         .onChange(of: continuousPlay, { _, newValue in
             continuousPlayWorkaround = newValue
         })
-        .onChange(of: navManager.video, { _, _ in
-            player.video = navManager.video
+        .onChange(of: player.video, { _, _ in
+            player.video = player.video
         })
     }
 
@@ -100,20 +100,20 @@ struct VideoPlayer: View {
         } label: {
             Text("mark\nwatched")
         }
-        .modifier(OutlineToggleModifier(isOn: isConsideredWatched(navManager.video)))
+        .modifier(OutlineToggleModifier(isOn: isConsideredWatched(player.video)))
     }
 
     var customSettingsButton: some View {
         Toggle(isOn: Binding(get: {
-            navManager.video?.subscription?.customSpeedSetting != nil
+            player.video?.subscription?.customSpeedSetting != nil
         }, set: { value in
-            navManager.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
+            player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
         })) {
             Text("custom\nsettings")
                 .fontWeight(.medium)
         }
         .toggleStyle(OutlineToggleStyle())
-        .disabled(navManager.video?.subscription == nil)
+        .disabled(player.video?.subscription == nil)
     }
 
     var continuousPlayButton: some View {
@@ -126,9 +126,9 @@ struct VideoPlayer: View {
 
     var subscriptionTitle: some View {
         HStack {
-            Text(navManager.video?.subscription?.title ?? "–")
+            Text(player.video?.subscription?.title ?? "–")
                 .textCase(.uppercase)
-            if let icon = subscribeManager.getSubscriptionSystemName(video: navManager.video) {
+            if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
                 Image(systemName: icon)
                     .contentTransition(.symbolEffect(.replace))
                     .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
@@ -136,17 +136,17 @@ struct VideoPlayer: View {
         }
         .foregroundColor(.teal)
         .onTapGesture {
-            if let sub = navManager.video?.subscription {
+            if let sub = player.video?.subscription {
                 navManager.pushSubscription(sub)
                 setShowMenu()
             }
         }
         .contextMenu {
-            let isSubscribed = subscribeManager.isSubscribed(video: navManager.video)
+            let isSubscribed = subscribeManager.isSubscribed(video: player.video)
             Button {
                 withAnimation {
                     subscribeManager.handleSubscription(
-                        video: navManager.video,
+                        video: player.video,
                         container: modelContext.container)
                 }
             } label: {
@@ -187,7 +187,7 @@ struct VideoPlayer: View {
     }
 
     func markVideoWatched() {
-        if let video = navManager.video {
+        if let video = player.video {
             VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
@@ -199,24 +199,24 @@ struct VideoPlayer: View {
 
     func updateElapsedTime(_ time: Double? = nil) {
         if let time = time {
-            navManager.video?.elapsedSeconds = time
+            player.video?.elapsedSeconds = time
             return
         }
         if let time = player.currentTime {
-            navManager.video?.elapsedSeconds = time
+            player.video?.elapsedSeconds = time
         }
     }
 
     func setPlaybackSpeed(_ value: Double) {
-        if navManager.video?.subscription?.customSpeedSetting != nil {
-            navManager.video?.subscription?.customSpeedSetting = value
+        if player.video?.subscription?.customSpeedSetting != nil {
+            player.video?.subscription?.customSpeedSetting = value
         } else {
             playbackSpeed = value
         }
     }
 
     func getPlaybackSpeed() -> Double {
-        navManager.video?.subscription?.customSpeedSetting ?? playbackSpeed
+        player.video?.subscription?.customSpeedSetting ?? playbackSpeed
     }
 
     func handleVideoEnded() {
@@ -236,10 +236,9 @@ struct VideoPlayer: View {
             return
         }
         print("playNextVideo")
-        if let vid = navManager.video {
+        if let vid = player.video {
             VideoService.markVideoWatched(vid, modelContext: modelContext)
         }
-        navManager.video = next
         player.video = next
     }
 }

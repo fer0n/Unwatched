@@ -12,7 +12,7 @@ struct MiniPlayerView: View {
     var body: some View {
         VStack {
             HStack(alignment: .center) {
-                if let video = navManager.video {
+                if let video = player.video {
                     CacheAsyncImage(url: video.thumbnailUrl) { image in
                         image
                             .resizable()

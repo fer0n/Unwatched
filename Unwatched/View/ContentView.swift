@@ -20,7 +20,7 @@ struct ContentView: View {
     var body: some View {
         @Bindable var navManager = navManager
 
-        let videoExists = navManager.video != nil
+        let videoExists = player.video != nil
         let hideMiniPlayer = (navManager.showMenu && sheetPos.swipedBelow) || navManager.showMenu == false
         let detents: Set<PresentationDetent> = videoExists ? [.height(sheetPos.maxSheetHeight)] : [.large]
 
@@ -45,6 +45,7 @@ struct ContentView: View {
                 .onAppear {
                     sheetPos.setNormalSheetHeightDelayed()
                 }
+                .environment(player)
         }
         .environment(navManager)
         .onAppear {
@@ -59,6 +60,13 @@ struct ContentView: View {
         })
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             saveNavigationManager()
+        }
+        .onChange(of: player.video) {
+            if player.video != nil {
+                withAnimation {
+                    navManager.showMenu = false
+                }
+            }
         }
     }
 

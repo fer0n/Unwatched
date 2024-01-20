@@ -15,6 +15,7 @@ enum VideoActions {
 struct VideoListItem: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) var modelContext
+    @Environment(PlayerManager.self) private var player
 
     let video: Video
     var showVideoStatus: Bool = false
@@ -64,7 +65,7 @@ struct VideoListItem: View {
                 if let tap = onTapGuesture {
                     tap()
                 } else {
-                    navManager.video = video
+                    player.video = video
                 }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -180,7 +181,7 @@ struct VideoListItem: View {
 
     var videoStatusSystemName: (status: String?, color: Color)? {
         let defaultColor = Color.green
-        if video.youtubeId == navManager.video?.youtubeId {
+        if video.youtubeId == player.video?.youtubeId {
             return ("play.circle.fill", defaultColor)
         }
         if hasInboxEntry == true {
@@ -205,7 +206,7 @@ struct VideoListItem: View {
     }
 
     func markVideoWatched() {
-        if let video = navManager.video {
+        if let video = player.video {
             VideoService.markVideoWatched(
                 video,
                 modelContext: modelContext
