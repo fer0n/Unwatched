@@ -39,7 +39,7 @@ struct AddSubscriptionView: View {
         }
         .onDisappear {
             if newSubs != nil {
-                _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
+                _ = VideoService.loadNewVideosInBg(container: modelContext.container)
             }
         }
     }
@@ -102,12 +102,9 @@ struct AddSubscriptionView: View {
 
     var dropArea: some View {
         ZStack {
-            Color.backgroundColor
-                .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(isDragOver ? Color.myBackgroundGray : .clear)
-                        .stroke(isDragOver ? .clear : Color.grayColor, style: StrokeStyle(lineWidth: 2, dash: [5]))
-                )
+            RoundedRectangle(cornerRadius: 15)
+                .fill(isDragOver ? Color.myBackgroundGray : .clear)
+                .stroke(isDragOver ? .clear : Color.grayColor, style: StrokeStyle(lineWidth: 2, dash: [5]))
 
             VStack(spacing: 10) {
                 Text("dropUrlsHere")

@@ -32,7 +32,6 @@ struct VideoListView: View {
     static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,
                                _ ytShortsFilter: ShortsDetection? = nil) -> Predicate<Video>? {
         var filter: Predicate<Video>?
-        print("ytShortsFilter", ytShortsFilter)
         let allSubscriptions = subscriptionId == nil
         if allSubscriptions {
             switch ytShortsFilter {

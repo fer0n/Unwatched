@@ -47,11 +47,16 @@ extension Subscription {
 extension Video {
     // Preview data
     static func getDummy() -> Video {
+        let chapters = [
+            Chapter(title: "First Chapter", time: 0, duration: 30, endTime: 30),
+            Chapter(title: "Second Chapter", time: 30, duration: 100, endTime: 130)
+        ]
         return Video(
             title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
-            publishedDate: Date())
+            publishedDate: Date(),
+            chapters: chapters)
     }
 }

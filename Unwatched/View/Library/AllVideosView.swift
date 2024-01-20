@@ -19,7 +19,6 @@ struct AllVideosView: View {
                     VideoListView(ytShortsFilter: shortsFilter)
                 }
                 .listStyle(.plain)
-                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
         }
         .navigationBarTitle("allVideos", displayMode: .inline)

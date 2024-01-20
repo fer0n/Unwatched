@@ -17,8 +17,6 @@ struct LibraryView: View {
     @State var showAddSubscriptionSheet = false
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
 
-    var loadNewVideos: () async -> Void
-
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
     }
@@ -31,22 +29,17 @@ struct LibraryView: View {
                     NavigationLink(destination: SettingsView()) {
                         LibraryNavListItem("settings", systemName: Const.settingsViewSF)
                     }
-                    .listRowSeparator(.hidden)
                 }
-                Spacer()
-                    .listRowSeparator(.hidden)
                 Section {
                     NavigationLink(destination: AllVideosView()) {
                         LibraryNavListItem("allVideos",
                                            systemName: Const.allVideosViewSF,
                                            .blue)
                     }
-                    .listRowSeparator(.hidden, edges: .top)
                     NavigationLink(destination: WatchHistoryView()) {
                         LibraryNavListItem("watched",
                                            systemName: Const.watchHistoryViewSF,
                                            .mint)
-                            .listRowSeparator(hasSideloads ? .visible : .hidden, edges: .top)
                     }
                     if hasSideloads {
                         NavigationLink(destination: SideloadingView()) {
@@ -54,22 +47,21 @@ struct LibraryView: View {
                                                systemName: Const.sideloadSF,
                                                .purple)
                         }
-                        .listRowSeparator(.hidden, edges: .bottom)
                     }
                 }
 
                 if !subscriptions.isEmpty {
-                    Spacer()
-                        .listRowSeparator(.hidden)
-                    Section {
+                    Section("subscriptions") {
                         SubscriptionListView(sort: subscriptionSortOrder)
                     }
                 }
             }
-            .listStyle(.plain)
-            .navigationBarTitle("library")
+            .navigationDestination(for: Subscription.self) { sub in
+                SubscriptionDetailView(subscription: sub)
+            }
+            .navigationBarTitle("library", displayMode: .inline)
             .toolbar {
-                ToolbarItemGroup {
+                ToolbarItem(placement: .topBarLeading) {
                     Menu {
                         ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
                             Button {
@@ -82,32 +74,26 @@ struct LibraryView: View {
                     } label: {
                         Image(systemName: Const.filterSF)
                     }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         showAddSubscriptionSheet = true
                     }, label: {
                         Image(systemName: Const.addSF)
                     })
                 }
+                RefreshToolbarButton()
             }
-            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-            .refreshable {
-                await loadNewVideos()
-            }
-            .navigationDestination(for: Subscription.self) { sub in
-                SubscriptionDetailView(subscription: sub)
-            }
-            .sheet(isPresented: $showAddSubscriptionSheet) {
-                ZStack {
-                    Color.backgroundColor.edgesIgnoringSafeArea(.all)
-                    AddSubscriptionView()
-                }
-            }
+        }
+
+        .sheet(isPresented: $showAddSubscriptionSheet) {
+            AddSubscriptionView()
         }
     }
 }
 
-#Preview {
-    LibraryView(loadNewVideos: {})
-        .modelContainer(DataController.previewContainer)
-        .environment(NavigationManager())
-}
+// #Preview {
+//    LibraryView()
+//        .modelContainer(DataController.previewContainer)
+//        .environment(NavigationManager())
+// }

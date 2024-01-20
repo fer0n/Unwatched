@@ -277,6 +277,9 @@
         }
       }
     },
+    "Hello" : {
+
+    },
     "hideShortsEverywhere" : {
       "localizations" : {
         "en" : {
@@ -465,6 +468,16 @@
         }
       }
     },
+    "noVideoSelected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Video Selected"
+          }
+        }
+      }
+    },
     "noVideosYet" : {
       "localizations" : {
         "en" : {
@@ -585,6 +598,16 @@
         }
       }
     },
+    "showMenu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        }
+      }
+    },
     "sideloads" : {
       "localizations" : {
         "en" : {
@@ -626,6 +649,16 @@
         }
       }
     },
+    "subscriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscriptions"
+          }
+        }
+      }
+    },
     "unsubscribe" : {
       "localizations" : {
         "en" : {
@@ -645,9 +678,6 @@
           }
         }
       }
-    },
-    "VideoPlayer – Should never be visible" : {
-
     },
     "videoSettings" : {
       "localizations" : {

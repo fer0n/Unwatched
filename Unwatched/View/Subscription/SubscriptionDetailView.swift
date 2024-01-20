@@ -16,6 +16,8 @@ struct SubscriptionDetailView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
+    @State var isLoading = false
+
     // TODO: test if now the videoListItem might no longer need the hasInboxEntry etc. workaround?
     // TODO: whats the difference between id and persistendModelID? Check what's used in tutorials
 
@@ -42,19 +44,31 @@ struct SubscriptionDetailView: View {
                 }
             }
             .listStyle(.plain)
-            .refreshable {
-                let task = VideoService.loadNewVideosInBg(
-                    subscriptions: [subscription],
-                    modelContext: modelContext)
-                try? await task.value
+            .toolbar {
+                RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
         .navigationBarTitle(subscription.title.uppercased(), displayMode: .inline)
-        .toolbarBackground(Color.backgroundColor, for: .navigationBar)
     }
 
     var shortsFilter: ShortsDetection? {
         (handleShortsDifferently && hideShortsEverywhere) ? shortsDetection : nil
+    }
+
+    func loadNewVideos() {
+        if isLoading { return }
+        isLoading = true
+        let container = modelContext.container
+        let subId = subscription.persistentModelID
+        Task {
+            let task = VideoService.loadNewVideosInBg(
+                subscriptionIds: [subId],
+                container: container)
+            try? await task.value
+            await MainActor.run {
+                isLoading = false
+            }
+        }
     }
 }
 
