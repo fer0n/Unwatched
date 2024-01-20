@@ -29,7 +29,7 @@ class SubscriptionService {
         }
     }
 
-    static func isSubscribed(_ video: Video) -> Bool {
-        return video.subscription?.isArchived == false
+    static func isSubscribed(_ video: Video?) -> Bool {
+        return video?.subscription?.isArchived == false
     }
 }

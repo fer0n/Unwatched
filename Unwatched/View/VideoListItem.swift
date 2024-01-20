@@ -83,11 +83,11 @@ struct VideoListItem: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 160, height: 90)
                         .clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: 15.0))
                 } placeholder: {
                     Color.backgroundColor
                         .frame(width: 160, height: 90)
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 15.0))
                 .padding(showVideoStatus ? 5 : 0)
 
                 videoItemDetails
@@ -204,10 +204,12 @@ struct VideoListItem: View {
     }
 
     func markVideoWatched() {
-        VideoService.markVideoWatched(
-            video,
-            modelContext: modelContext
-        )
+        if let video = navManager.video {
+            VideoService.markVideoWatched(
+                video,
+                modelContext: modelContext
+            )
+        }
     }
 
     func clearVideoEverywhere() {

@@ -7,10 +7,13 @@ import Foundation
 
 struct Const {
 
+    static let playerAboveSheetHeight: CGFloat = 60
+
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
 
     // MARK: - SF Symbols
+    static let refreshSF = "arrow.triangle.2.circlepath"
     static let videoPlayerTabSF = "chevron.up.circle"
     static let queueTagSF = "rectangle.stack"
     static let inboxTabEmptySF = "tray"
@@ -52,4 +55,5 @@ struct Const {
     static let handleShortsDifferently = "handleShortsDifferently"
     static let hideShortsEverywhere = "hideShortsEverywhere"
     static let shortsDetection = "shortsDetection"
+    static let navigationManager = "NavigationManager"
 }

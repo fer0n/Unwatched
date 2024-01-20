@@ -13,26 +13,22 @@ struct QueueView: View {
 
     @State var value: Double = 1.5
 
-    var loadNewVideos: () async -> Void
-
     var body: some View {
         @Bindable var navManager = navManager
+
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
                 if queue.isEmpty {
                     ContentUnavailableView("noQueueItems",
                                            systemImage: "rectangle.stack.badge.play.fill",
                                            description: Text("noQueueItemsDescription"))
-                }
-                List {
-                    if queue.isEmpty {
-                        ForEach(0..<1) { _ in
-                            EmptyListItem()
-                        }
+                        .contentShape(Rectangle())
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items, at: 0)
+                            return true
                         }
-                    } else {
+                } else {
+                    List {
                         ForEach(queue) { entry in
                             ZStack {
                                 if let video = entry.video {
@@ -60,14 +56,13 @@ struct QueueView: View {
                         }
                     }
                 }
-                .navigationBarTitle("queue")
-                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
-                .refreshable {
-                    await loadNewVideos()
-                }
             }
+            .navigationBarTitle("queue", displayMode: .inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
+            }
+            .toolbar {
+                RefreshToolbarButton()
             }
         }
         .listStyle(.plain)
@@ -85,25 +80,8 @@ struct QueueView: View {
     }
 }
 
-// #Preview {
-//    do {
-//        let schema = Schema([
-//            Video.self,
-//            Subscription.self,
-//            QueueEntry.self,
-//            WatchEntry.self
-//        ])
-//        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-//        let container = try ModelContainer(for: QueueEntry.self, configurations: config)
-//
-//        let video = Video.getDummy()
-//        let queueEntry = QueueEntry(video: video, order: 0)
-//        container.mainContext.insert(Video.getDummy())
-//        container.mainContext.insert(queueEntry)
-//
-//        return QueueView(onVideoTap: { _ in }, loadNewVideos: { })
-//            .modelContainer(container)
-//    } catch {
-//        fatalError("Failed to create model container.")
-//    }
-// }
+#Preview {
+    QueueView()
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
+}

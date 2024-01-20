@@ -1,10 +1,10 @@
 import SwiftUI
 
-@Observable class ChapterManager {
+@Observable class PlayerManager {
     var video: Video? {
         didSet {
             currentEndTime = 0
-            currentTime = 0
+            currentTime = video?.elapsedSeconds ?? 0
         }
     }
     var currentChapter: Chapter?
@@ -13,9 +13,9 @@ import SwiftUI
     var currentEndTime: Double?
     var currentTime: Double?
 
-    init() {
+    var isPlaying: Bool = false
 
-    }
+    init() {}
 
     func monitorChapters(time: Double) {
         currentTime = time
@@ -59,7 +59,9 @@ import SwiftUI
             }
         }
 
-        currentChapter = current
+        withAnimation {
+            currentChapter = current
+        }
         currentEndTime = next?.startTime
     }
 
@@ -67,5 +69,35 @@ import SwiftUI
         seekPosition = chapter.startTime
         currentTime = chapter.startTime
         currentChapter = chapter
+    }
+
+    func nextChapter() {
+        guard let chapters = video?.sortedChapters,
+              let current = currentChapter,
+              let next = chapters.first(where: { chapter in
+                chapter.startTime > current.startTime
+              }) else {
+            return
+        }
+        setChapter(next)
+    }
+
+    func previousChapter() {
+        guard let chapters = video?.sortedChapters,
+              let current = currentChapter,
+              let previous = chapters.last(where: { chapter in
+                chapter.startTime < current.startTime
+              }) else {
+            return
+        }
+        setChapter(previous)
+    }
+
+    static func getDummy() -> PlayerManager {
+        let player = PlayerManager()
+        player.video = Video.getDummy()
+        player.currentTime = 10
+        player.currentChapter = Chapter.getDummy()
+        return player
     }
 }

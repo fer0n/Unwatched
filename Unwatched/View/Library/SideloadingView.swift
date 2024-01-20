@@ -24,8 +24,6 @@ struct SideloadingView: View {
                     )
                     // TODO: add filtering here
                 }
-                .listStyle(.plain)
-                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
                 .navigationBarTitle("sideloads", displayMode: .inline)
             }
         }

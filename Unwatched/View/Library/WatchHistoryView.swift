@@ -27,7 +27,6 @@ struct WatchHistoryView: View {
                     }
                 }
                 .listStyle(.plain)
-                .toolbarBackground(Color.backgroundColor, for: .navigationBar)
             }
         }
         .navigationBarTitle("watched", displayMode: .inline)

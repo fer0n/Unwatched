@@ -12,26 +12,22 @@ struct InboxView: View {
     @Query(sort: \InboxEntry.video?.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
     @State private var showingClearAllAlert = false
 
-    var loadNewVideos: () async -> Void
-
     var body: some View {
         @Bindable var navManager = navManager
+
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
                 if inboxEntries.isEmpty {
                     ContentUnavailableView("noInboxItems",
                                            systemImage: "tray.fill",
                                            description: Text("noInboxItemsDescription"))
-                }
-                List {
-                    if inboxEntries.isEmpty {
-                        ForEach(0..<1) { _ in
-                            EmptyListItem()
-                        }
+                        .contentShape(Rectangle())
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
+                            return true
                         }
-                    } else {
+                } else {
+                    List {
                         ForEach(inboxEntries) { entry in
                             ZStack {
                                 if let video = entry.video {
@@ -51,23 +47,22 @@ struct InboxView: View {
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
                         }
+                        if inboxEntries.count > 8 {
+                            clearAllButton
+                                .listRowSeparator(.hidden, edges: .bottom)
+                        }
                     }
-                    if inboxEntries.count > 8 {
-                        clearAllButton
-                            .listRowSeparator(.hidden, edges: .bottom)
-                    }
-                }
-                .refreshable {
-                    await loadNewVideos()
+                    .listStyle(.plain)
                 }
             }
-            .navigationBarTitle("inbox")
-            .toolbarBackground(Color.backgroundColor, for: .navigationBar)
+            .toolbar {
+                RefreshToolbarButton()
+            }
+            .navigationBarTitle("inbox", displayMode: .inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
         }
-        .listStyle(.plain)
         .alert("confirmClearAll", isPresented: $showingClearAllAlert, actions: {
             Button("clearAll", role: .destructive) {
                 clearAll()
@@ -116,5 +111,7 @@ struct InboxView: View {
 }
 
 #Preview {
-    InboxView(loadNewVideos: { })
+    InboxView()
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
 }

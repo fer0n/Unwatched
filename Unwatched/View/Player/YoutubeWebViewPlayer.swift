@@ -9,12 +9,11 @@ import WebKit
 struct YoutubeWebViewPlayer: UIViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
+    @Environment(PlayerManager.self) var player
 
     let video: Video
     @Binding var playbackSpeed: Double
-    @Binding var isPlaying: Bool
-    var updateElapsedTime: (_ seconds: Double, _ persist: Bool) -> Void
-    @Bindable var chapterManager: ChapterManager
+    var updateElapsedTime: (_ seconds: Double) -> Void
     var onVideoEnded: () -> Void
 
     func makeUIView(context: Context) -> WKWebView {
@@ -58,16 +57,16 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             context.coordinator.previousState.playbackSpeed = playbackSpeed
         }
 
-        if prev.isPlaying != isPlaying {
-            if isPlaying {
+        if prev.isPlaying != player.isPlaying {
+            if player.isPlaying {
                 uiView.evaluateJavaScript("player.playVideo()", completionHandler: nil)
             } else {
                 uiView.evaluateJavaScript("player.pauseVideo()", completionHandler: nil)
             }
-            context.coordinator.previousState.isPlaying = isPlaying
+            context.coordinator.previousState.isPlaying = player.isPlaying
         }
 
-        let seekPosition = chapterManager.seekPosition
+        let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
             let script = "player.seekTo(\(seekTo), true)"
             uiView.evaluateJavaScript(script, completionHandler: nil)
@@ -113,12 +112,12 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "paused":
-                parent.isPlaying = false
+                parent.player.isPlaying = false
                 handleTimeUpdate(payload, persist: true)
             case "playing":
-                parent.isPlaying = true
+                parent.player.isPlaying = true
             case "ended":
-                parent.isPlaying = false
+                parent.player.isPlaying = false
                 parent.onVideoEnded()
             case "unstarted", "playerReady":
                 handleAutoStart()
@@ -136,7 +135,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
         func handleAutoStart() {
             if parent.autoplayVideos {
-                parent.isPlaying = true
+                parent.player.isPlaying = true
             }
         }
 
@@ -144,8 +143,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             guard let payload = payload, let time = Double(payload) else {
                 return
             }
-            parent.updateElapsedTime(time, persist)
-            parent.chapterManager.monitorChapters(time: time)
+            if persist {
+                parent.updateElapsedTime(time)
+            }
+            parent.player.monitorChapters(time: time)
         }
     }
 

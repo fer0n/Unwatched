@@ -3,13 +3,8 @@ import SwiftUI
 import Observation
 
 class VideoService {
-    static func loadNewVideosInBg(subscriptions: [Subscription]? = nil, modelContext: ModelContext) -> Task<(), Error> {
+    static func loadNewVideosInBg(subscriptionIds: [PersistentIdentifier]? = nil, container: ModelContainer) -> Task<(), Error> {
         print("loadNewVideosInBg")
-
-        let subscriptionIds = subscriptions?.map { $0.id }
-        let container = modelContext.container
-        print("loadNewVideos")
-
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
             do {

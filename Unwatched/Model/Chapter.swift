@@ -10,11 +10,15 @@ final class Chapter {
     var duration: Double?
     var isActive = true
 
-    init(title: String, time: Double, duration: Double?, endTime: Double? = nil) {
+    init(title: String, time: Double, duration: Double? = nil, endTime: Double? = nil) {
         self.title = title
         self.startTime = time
         self.duration = duration
         self.endTime = endTime
+    }
+
+    static func getDummy() -> Chapter {
+        return Chapter(title: "My Chapter", time: 0, duration: 20)
     }
 }
 

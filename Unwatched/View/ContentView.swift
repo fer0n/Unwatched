@@ -6,95 +6,95 @@
 import SwiftUI
 import SwiftData
 
-enum Tab {
-    case videoPlayer
-    case inbox
-    case queue
-    case library
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    @State var navManager = NavigationManager()
-    @Query var queue: [QueueEntry]
-    @Query(animation: .default) var inbox: [InboxEntry]
-
-    @State var chapterManager = ChapterManager()
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup = false
 
-    @MainActor
-    init() {
-        UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
-        UITabBar.appearance().backgroundImage = UIImage()
-        UITabBar.appearance().backgroundColor = UIColor(Color.backgroundColor)
-    }
+    @State var navManager: NavigationManager = {
+        return loadNavigationManager()
+    }()
+    @State var player = PlayerManager()
+    @State var refresher = RefreshManager()
+    @State var sheetPos = SheetPositionReader()
 
     var body: some View {
         @Bindable var navManager = navManager
-        TabView(selection: $navManager.tab) {
-            VStack {
-                Text("VideoPlayer – Should never be visible")
+
+        let videoExists = navManager.video != nil
+        let hideMiniPlayer = (navManager.showMenu && sheetPos.swipedBelow) || navManager.showMenu == false
+        let detents: Set<PresentationDetent> = videoExists ? [.height(sheetPos.maxSheetHeight)] : [.large]
+
+        ZStack {
+            VideoPlayer(showMenu: $navManager.showMenu)
+            MiniPlayerView()
+                .opacity(hideMiniPlayer ? 0 : 1)
+                .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
+            if !videoExists {
+                ContentUnavailableView("noVideoSelected", systemImage: "play.rectangle.on.rectangle")
+                    .background(Color.backgroundColor)
+                    .onTapGesture {
+                        navManager.showMenu = true
+                    }
+                    .onAppear {
+                        if navManager.video == nil {
+                            navManager.showMenu = true
+                        }
+                    }
             }
-            .tabItem {
-                Image(systemName: Const.videoPlayerTabSF)
-            }
-            .tag(Tab.videoPlayer)
-
-            QueueView(loadNewVideos: loadNewVideos)
-                .tabItem {
-                    Image(systemName: Const.queueTagSF)
-                }
-                .tag(Tab.queue)
-
-            InboxView(loadNewVideos: loadNewVideos)
-                .tabItem {
-                    Image(systemName: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF)
-                }
-                .tag(Tab.inbox)
-
-            LibraryView(loadNewVideos: loadNewVideos)
-                .tabItem {
-                    Image(systemName: Const.libraryTabSF)
-                }
-                .tag(Tab.library)
         }
-        .onChange(of: navManager.tab) {
-            if navManager.tab == .videoPlayer {
-                navManager.tab = navManager.previousTab
-                navManager.video = navManager.previousVideo
-            }
-            navManager.previousTab = navManager.tab
-        }
-        .sheet(item: $navManager.video) { video in
-            ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
-                VideoPlayer(video: video,
-                            markVideoWatched: {
-                                markVideoWatched(video: video)
-                            },
-                            chapterManager: chapterManager
+        .environment(player)
+        .sheet(isPresented: $navManager.showMenu) {
+            MenuView()
+                .environment(refresher)
+                .presentationDetents(detents)
+                .presentationBackgroundInteraction(
+                    .enabled(upThrough: .height(sheetPos.maxSheetHeight))
                 )
-            }
-            .animation(nil, value: UUID())
+                .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                .interactiveDismissDisabled(!videoExists)
+                .onAppear {
+                    sheetPos.setNormalSheetHeightDelayed()
+                }
         }
         .environment(navManager)
         .onAppear {
+            refresher.container = modelContext.container
             if refreshOnStartup {
                 print("refreshOnStartup")
-                _ = VideoService.loadNewVideosInBg(modelContext: modelContext)
+                refresher.refreshAll()
             }
+        }
+        .innerSizeTrackerModifier(onChange: { newSize in
+            sheetPos.sheetHeight = newSize.height
+        })
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            saveNavigationManager()
         }
     }
 
-    func markVideoWatched(video: Video) {
-        VideoService.markVideoWatched(
-            video, modelContext: modelContext
-        )
+    static func loadNavigationManager() -> NavigationManager {
+        print("loadNavigationManager")
+        if let savedNavManager = UserDefaults.standard.data(forKey: Const.navigationManager) {
+            print("loading savedNav")
+            if let loadedNavManager = try? JSONDecoder().decode(
+                NavigationManager.self,
+                from: savedNavManager
+            ) {
+                print("found state")
+                return loadedNavManager
+            } else {
+                print("not found")
+            }
+        }
+        return NavigationManager()
     }
 
-    func loadNewVideos() async {
-        let task = VideoService.loadNewVideosInBg(modelContext: modelContext)
-        try? await task.value
+    func saveNavigationManager() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(navManager) {
+            UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
+        }
+        print("saved state")
     }
 }
 
@@ -102,5 +102,8 @@ struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
         ContentView()
+            .modelContainer(DataController.previewContainer)
+            .environment(NavigationManager.getDummy())
+            .environment(Alerter())
     }
 }

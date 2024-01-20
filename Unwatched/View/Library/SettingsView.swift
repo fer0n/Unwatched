@@ -96,7 +96,6 @@ struct SettingsView: View {
                 }
             }
         }
-        .toolbarBackground(Color.backgroundColor, for: .navigationBar)
         .navigationBarTitle("settings", displayMode: .inline)
         .tint(.myAccentColor)
     }
