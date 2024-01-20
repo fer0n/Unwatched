@@ -9,6 +9,7 @@ import SwiftData
 struct QueueView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @Environment(PlayerManager.self) private var player
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
     @State var value: Double = 1.5
@@ -36,7 +37,7 @@ struct QueueView: View {
                                         video: video,
                                         videoSwipeActions: [.watched, .queue, .clear],
                                         onTapGuesture: {
-                                            navManager.video = entry.video
+                                            player.video = entry.video
                                             if entry.order == 0 { return }
                                             VideoService.moveQueueEntry(from: [entry.order],
                                                                         to: 0,

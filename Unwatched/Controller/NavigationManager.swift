@@ -8,14 +8,6 @@ import SwiftUI
 import SwiftData
 
 @Observable class NavigationManager: Codable {
-    var video: Video? {
-        didSet {
-            withAnimation {
-                showMenu = false
-            }
-        }
-    }
-
     var showMenu = true
     var tab = Tab.queue
 
@@ -52,7 +44,6 @@ import SwiftData
 
     static func getDummy() -> NavigationManager {
         let navManager = NavigationManager()
-        navManager.video = Video.getDummy()
         return navManager
     }
 }
@@ -60,7 +51,6 @@ import SwiftData
 enum NavManagerCodingKeys: CodingKey {
     case showMenu
     case tab
-    case video
 }
 
 enum Tab: Codable {
