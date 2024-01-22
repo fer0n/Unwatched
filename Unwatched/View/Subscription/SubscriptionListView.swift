@@ -9,12 +9,12 @@ import SwiftData
 struct SubscriptionListView: View {
 
     @Query var subscriptions: [Subscription]
-    var videoFilter: ((Subscription) -> Bool)?
+    var manualFilter: ((Subscription) -> Bool)?
 
     init(sort: SubscriptionSorting,
          filter: Predicate<Subscription>? = nil,
-         videoFilter: ((Subscription) -> Bool)? = nil) {
-        self.videoFilter = videoFilter
+         manualFilter: ((Subscription) -> Bool)? = nil) {
+        self.manualFilter = manualFilter
         var sortDesc: SortDescriptor<Subscription>
         switch sort {
         case .title:
@@ -29,7 +29,7 @@ struct SubscriptionListView: View {
     }
 
     var body: some View {
-        let subs = videoFilter != nil ? subscriptions.filter(videoFilter!) : subscriptions
+        let subs = manualFilter != nil ? subscriptions.filter(manualFilter!) : subscriptions
         ForEach(subs) { sub in
             NavigationLink(
                 destination: SubscriptionDetailView(subscription: sub)
