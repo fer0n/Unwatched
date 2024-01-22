@@ -36,14 +36,6 @@ struct QueueView: View {
                                     VideoListItem(
                                         video: video,
                                         videoSwipeActions: [.queueBottom, .queueTop, .clear],
-                                        onTapGuesture: {
-                                            player.playVideo(video)
-                                            navManager.showMenu = false
-                                            if entry.order == 0 { return }
-                                            VideoService.moveQueueEntry(from: [entry.order],
-                                                                        to: 0,
-                                                                        modelContext: modelContext)
-                                        },
                                         onClear: {
                                             VideoService.deleteQueueEntry(entry, modelContext: modelContext)
                                         }
