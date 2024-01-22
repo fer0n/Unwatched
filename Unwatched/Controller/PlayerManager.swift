@@ -1,5 +1,11 @@
 import SwiftUI
 
+enum VideoSource {
+    case continuousPlay
+    case nextUp
+    case userInteraction
+}
+
 @Observable class PlayerManager {
     var isPlaying: Bool = false
     var currentTime: Double?
@@ -7,6 +13,8 @@ import SwiftUI
     var previousChapter: Chapter?
     var nextChapter: Chapter?
     var seekPosition: Double?
+
+    var videoSource: VideoSource = .userInteraction
 
     var video: Video? {
         didSet {
@@ -31,6 +39,10 @@ import SwiftUI
         set {
             setPlaybackSpeed(newValue)
         }
+    }
+
+    var isContinuousPlay: Bool {
+        UserDefaults.standard.bool(forKey: Const.continuousPlay)
     }
 
     @ObservationIgnored private var currentEndTime: Double?
@@ -141,7 +153,30 @@ import SwiftUI
     }
 
     private func getPlaybackSpeed() -> Double {
-        video?.subscription?.customSpeedSetting ?? UserDefaults.standard.double(forKey: Const.playbackSpeed)
+        video?.subscription?.customSpeedSetting ??
+            UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
+    }
+
+    func setNextVideo(_ video: Video, _ source: VideoSource) {
+        self.videoSource = source
+        self.video = video
+    }
+
+    func playVideo(_ video: Video) {
+        self.videoSource = .userInteraction
+        self.video = video
+    }
+
+    func play() {
+        if !self.isPlaying {
+            self.isPlaying = true
+        }
+    }
+
+    func pause() {
+        if self.isPlaying {
+            self.isPlaying = false
+        }
     }
 
     static func getDummy() -> PlayerManager {
