@@ -11,8 +11,8 @@ struct VideoPlayer: View {
     @Environment(Alerter.self) private var alerter
     @Environment(PlayerManager.self) var player
 
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
 
     @GestureState private var dragState: CGFloat = 0
     @State var continuousPlayWorkaround: Bool = false
@@ -25,6 +25,7 @@ struct VideoPlayer: View {
         @Bindable var player = player
 
         VStack(spacing: 10) {
+
             VStack(spacing: 10) {
                 Text(player.video?.title ?? "")
                     .font(.system(size: 20, weight: .heavy))
@@ -40,7 +41,6 @@ struct VideoPlayer: View {
             ZStack {
                 if let video = player.video {
                     YoutubeWebViewPlayer(video: video,
-                                         playbackSpeed: $player.playbackSpeed,
                                          onVideoEnded: handleVideoEnded
                     )
                 } else {
@@ -172,10 +172,11 @@ struct VideoPlayer: View {
     }
 
     func markVideoWatched() {
+        print(">markVideoWatched")
         if let video = player.video {
-            player.isPlaying = false
+            player.pause()
             setShowMenu()
-            setNextVideo()
+            setNextVideo(.nextUp)
             VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
@@ -183,16 +184,16 @@ struct VideoPlayer: View {
     }
 
     func handleVideoEnded() {
-        guard continuousPlayWorkaround else {
+        guard continuousPlayWorkaround == true else {
             return
         }
+        print(">handleVideoEnded")
         if let video = player.video {
             VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
         }
-        setNextVideo()
-        player.isPlaying = true
+        setNextVideo(.continuousPlay)
     }
 
     func setShowMenu() {
@@ -200,13 +201,13 @@ struct VideoPlayer: View {
         showMenu = true
     }
 
-    func setNextVideo() {
+    func setNextVideo(_ source: VideoSource) {
         guard let next = VideoService.getNextVideoInQueue(modelContext) else {
             print("no next video found")
             return
         }
         print("next", next.title)
-        player.video = next
+        player.setNextVideo(next, source)
     }
 }
 

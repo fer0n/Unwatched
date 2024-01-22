@@ -12,19 +12,16 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     @Environment(PlayerManager.self) var player
 
     let video: Video
-    @Binding var playbackSpeed: Double
     var onVideoEnded: () -> Void
 
     func makeUIView(context: Context) -> WKWebView {
         var startPosition = video.elapsedSeconds
-        if let finished = video.hasFinished {
-            if finished {
-                startPosition = 0
-            }
+        if video.hasFinished == true {
+            startPosition = 0
         }
         let htmlString = getYoutubeIframeHTML(
             youtubeId: video.youtubeId,
-            playbackSpeed: playbackSpeed,
+            playbackSpeed: player.playbackSpeed,
             startAt: startPosition
         )
         let webViewConfig = WKWebViewConfiguration()
@@ -50,10 +47,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         print("updateUiView")
         let prev = context.coordinator.previousState
 
-        if prev.playbackSpeed != playbackSpeed {
-            let script = "player.setPlaybackRate(\(playbackSpeed))"
+        if prev.playbackSpeed != player.playbackSpeed {
+            let script = "player.setPlaybackRate(\(player.playbackSpeed))"
             uiView.evaluateJavaScript(script, completionHandler: nil)
-            context.coordinator.previousState.playbackSpeed = playbackSpeed
+            context.coordinator.previousState.playbackSpeed = player.playbackSpeed
         }
 
         if prev.isPlaying != player.isPlaying {
@@ -73,7 +70,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
 
         if prev.videoId != video.youtubeId {
-            let script = "player.loadVideoById('\(video.youtubeId)', 0)"
+            let script = "player.cueVideoById('\(video.youtubeId)');"
             uiView.evaluateJavaScript(script, completionHandler: nil)
             context.coordinator.previousState.videoId = video.youtubeId
         }
@@ -111,12 +108,12 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "paused":
-                parent.player.isPlaying = false
+                parent.player.pause()
                 handleTimeUpdate(payload, persist: true)
             case "playing":
-                parent.player.isPlaying = true
+                parent.player.play()
             case "ended":
-                parent.player.isPlaying = false
+                parent.player.pause()
                 parent.onVideoEnded()
             case "unstarted", "playerReady":
                 handleAutoStart()
@@ -133,8 +130,19 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
 
         func handleAutoStart() {
-            if parent.autoplayVideos {
-                parent.player.isPlaying = true
+            switch parent.player.videoSource {
+            case .continuousPlay:
+                let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
+                if continuousPlay {
+                    parent.player.play()
+                }
+            case .nextUp:
+                break
+            case .userInteraction:
+                let autoPlay = UserDefaults.standard.bool(forKey: Const.autoplayVideos)
+                if  autoPlay {
+                    parent.player.play()
+                }
             }
         }
 
@@ -145,7 +153,9 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             if persist {
                 parent.player.updateElapsedTime(time)
             }
-            parent.player.monitorChapters(time: time)
+            if parent.player.isPlaying {
+                parent.player.monitorChapters(time: time)
+            }
         }
     }
 
@@ -172,15 +182,19 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                         onReady: onPlayerReady,
                         onStateChange: onPlayerStateChange
                     },
+                    playerVars: {
+                        'enablejsapi': 1,
+                        'autoplay': 1,
+                        'controls': 1,
+                    },
                 });
             }
 
             function onPlayerReady(event) {
-                sendMessage("playerReady");
                 sendMessage("duration", player.getDuration());
                 event.target.setPlaybackRate(\(playbackSpeed));
                 player.seekTo(\(startAt), true);
-                \(autoplayVideos ? "player.play()" : "")
+                sendMessage("playerReady");
             }
 
             function onPlayerStateChange(event) {
@@ -192,6 +206,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     startTimer();
                 } else if (event.data == YT.PlayerState.ENDED) {
                     sendMessage("ended");
+                    stopTimer();
                 } else if (event.data == YT.PlayerState.UNSTARTED) {
                     sendMessage("unstarted");
                 }

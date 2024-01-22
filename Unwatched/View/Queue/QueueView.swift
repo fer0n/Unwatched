@@ -37,7 +37,7 @@ struct QueueView: View {
                                         video: video,
                                         videoSwipeActions: [.queueBottom, .queueTop, .clear],
                                         onTapGuesture: {
-                                            player.video = entry.video
+                                            player.playVideo(video)
                                             navManager.showMenu = false
                                             if entry.order == 0 { return }
                                             VideoService.moveQueueEntry(from: [entry.order],

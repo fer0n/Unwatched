@@ -65,7 +65,7 @@ struct VideoListItem: View {
                 if let tap = onTapGuesture {
                     tap()
                 } else {
-                    player.video = video
+                    player.playVideo(video)
                     withAnimation {
                         navManager.showMenu = false
                     }
