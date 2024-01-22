@@ -7,9 +7,11 @@ import SwiftUI
 import WebKit
 import TipKit
 
-struct BrowserView: View {
+struct BrowserView: View, KeyboardReadable {
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
+    @State private var isKeyboardVisible = false
+
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
 
@@ -28,7 +30,7 @@ struct BrowserView: View {
                         TipView(ytBrowserTip)
                             .padding(.horizontal)
                     }
-                    if let text = subscriptionText {
+                    if let text = subscriptionText, !isKeyboardVisible {
                         Button(action: handleAddSubButton) {
                             HStack {
                                 let systemName = subscribeManager.getSubscriptionSystemName()
@@ -53,6 +55,9 @@ struct BrowserView: View {
         }
         .onChange(of: browserManager.channelId) {
             subscribeManager.setIsSubscribed(browserManager.channelId)
+        }
+        .onReceive(keyboardPublisher) { newIsKeyboardVisible in
+            isKeyboardVisible = newIsKeyboardVisible
         }
         .onAppear {
             subscribeManager.container = modelContext.container
