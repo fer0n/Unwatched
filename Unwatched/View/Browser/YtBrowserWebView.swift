@@ -12,14 +12,16 @@ struct YtBrowserWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
+        webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.allowsInlineMediaPlayback = true
+
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = context.coordinator
         webView.backgroundColor = UIColor(Color.backgroundGray)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
-        if let url = URL(string: "https://m.youtube.com") {
+        if let url = URL(string: "https://m.youtube.com?autoplay=0") {
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -50,18 +52,10 @@ struct YtBrowserWebView: UIViewRepresentable {
                 print("no url found")
                 return
             }
-            // https://www.youtube.com/feed/channels
-            if url.absoluteString.contains("/feed/channels") == true {
-                print("found channel list")
-                extractChannelList(webView)
-            } else if let userName = SubscriptionActor.getChannelUserNameFromUrl(url: url) {
+            if let userName = SubscriptionActor.getChannelUserNameFromUrl(url: url) {
                 // is username page, reload the page
                 extractSubscriptionInfo(webView, userName: userName)
             }
-        }
-
-        @MainActor func extractChannelList(_ webView: WKWebView) {
-            // TODO: continue here
         }
 
         @MainActor func extractSubscriptionInfo(_ webView: WKWebView, userName: String) {
@@ -124,7 +118,6 @@ struct YtBrowserWebView: UIViewRepresentable {
             observation?.invalidate()
             observation = nil
         }
-
     }
 }
 
