@@ -20,7 +20,7 @@ struct SideloadingView: View {
                     SubscriptionListView(
                         sort: subscriptionSortOrder,
                         filter: #Predicate<Subscription> { $0.isArchived == true },
-                        videoFilter: { !$0.videos.isEmpty }
+                        manualFilter: { !$0.videos.isEmpty }
                     )
                     // TODO: add filtering here
                 }

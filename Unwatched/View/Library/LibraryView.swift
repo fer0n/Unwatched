@@ -62,11 +62,10 @@ struct LibraryView: View {
                             .listRowInsets(EdgeInsets())
                     } else {
                         searchBar
+
                         SubscriptionListView(
                             sort: subscriptionSortOrder,
-                            filter: #Predicate<Subscription> {
-                                $0.isArchived == false && ($0.title.localizedStandardContains(text) || text.isEmpty)
-                            }
+                            manualFilter: { text.isEmpty || $0.title.localizedStandardContains(text) }
                         )
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)

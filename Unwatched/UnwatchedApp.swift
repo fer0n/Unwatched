@@ -26,10 +26,6 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            //            Text("hi")
-            //                .sheet(isPresented: .constant(true)) {
-            //                    BrowserView()
-            //                }
             ContentView()
                 .accentColor(.myAccentColor)
                 .environment(alerter)
