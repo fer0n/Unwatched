@@ -29,7 +29,6 @@ struct Const {
     static let filterSF = "line.3.horizontal.decrease.circle.fill"
     static let addSF = "plus"
 
-    static let addToQueuSF = "text.badge.plus"
     static let watchedSF = "checkmark.circle.fill"
     static let clearSF = "xmark.circle.fill"
 

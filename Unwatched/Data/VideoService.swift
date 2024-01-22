@@ -78,6 +78,15 @@ class VideoService {
         }
     }
 
+    static func addToBottomQueue(video: Video, modelContext: ModelContext) {
+        let container = modelContext.container
+        let videoId = video.persistentModelID
+        Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.addToBottomQueue(videoId: videoId)
+        }
+    }
+
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
                                at index: Int = 0,

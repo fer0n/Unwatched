@@ -320,6 +320,22 @@ actor VideoActor {
         modelContext.insert(watchEntry)
     }
 
+    func addToBottomQueue(videoId: PersistentIdentifier) throws {
+        guard let video = modelContext.model(for: videoId) as? Video else {
+            print("addToBottomQueue couldn't find a video")
+            return
+        }
+
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order, order: .reverse)])
+        fetch.fetchLimit = 1
+        let entries = try? modelContext.fetch(fetch)
+        let maxOrder = entries?.first?.order
+        let newOrder = maxOrder.map { $0 + 1 } ?? 0
+        print("newOrder", newOrder)
+        insertQueueEntries(at: newOrder, videos: [video])
+        try modelContext.save()
+    }
+
     func insertQueueEntries(at startIndex: Int = 0, videoIds: [PersistentIdentifier]) throws {
         var videos = [Video]()
         for videoId in videoIds {

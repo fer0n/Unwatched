@@ -35,7 +35,7 @@ struct QueueView: View {
                                 if let video = entry.video {
                                     VideoListItem(
                                         video: video,
-                                        videoSwipeActions: [.watched, .queue, .clear],
+                                        videoSwipeActions: [.queueBottom, .queueTop, .clear],
                                         onTapGuesture: {
                                             player.video = entry.video
                                             navManager.showMenu = false
