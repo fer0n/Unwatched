@@ -6,10 +6,10 @@
 import SwiftUI
 
 enum VideoActions {
-    case queue
+    case queueTop
+    case queueBottom
     case delete
     case clear
-    case watched
 }
 
 struct VideoListItem: View {
@@ -31,7 +31,7 @@ struct VideoListItem: View {
     // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
-         videoSwipeActions: [VideoActions] = [.queue],
+         videoSwipeActions: [VideoActions] = [.queueTop],
          onTapGuesture: (() -> Void)? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
@@ -45,7 +45,7 @@ struct VideoListItem: View {
          hasInboxEntry: Bool,
          hasQueueEntry: Bool,
          watched: Bool,
-         videoSwipeActions: [VideoActions] = [.queue],
+         videoSwipeActions: [VideoActions] = [.queueTop],
          onTapGuesture: (() -> Void)? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
@@ -111,15 +111,15 @@ struct VideoListItem: View {
 
     func getLeadingSwipeActions() -> some View {
         Group {
-            if videoSwipeActions.contains(.queue) {
-                Button(action: addVideoToQueue) {
-                    Image(systemName: Const.addToQueuSF)
+            if videoSwipeActions.contains(.queueTop) {
+                Button(action: addVideoToTopQueue) {
+                    Image(systemName: "text.insert")
                 }
                 .tint(.teal)
             }
-            if videoSwipeActions.contains(.watched) {
-                Button(action: markVideoWatched) {
-                    Image(systemName: Const.watchedSF)
+            if videoSwipeActions.contains(.queueBottom) {
+                Button(action: addVideoToBottomQueue) {
+                    Image(systemName: "text.append")
                 }
                 .tint(.mint)
             }
@@ -199,8 +199,8 @@ struct VideoListItem: View {
         return nil
     }
 
-    func addVideoToQueue() {
-        print("addVideoToQueue")
+    func addVideoToTopQueue() {
+        print("addVideoTop")
         VideoService.insertQueueEntries(
             at: 0,
             videos: [video],
@@ -208,13 +208,9 @@ struct VideoListItem: View {
         )
     }
 
-    func markVideoWatched() {
-        if let video = player.video {
-            VideoService.markVideoWatched(
-                video,
-                modelContext: modelContext
-            )
-        }
+    func addVideoToBottomQueue() {
+        print("addVideoBottom")
+        VideoService.addToBottomQueue(video: video, modelContext: modelContext)
     }
 
     func clearVideoEverywhere() {

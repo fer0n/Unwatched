@@ -23,7 +23,7 @@ struct WatchHistoryView: View {
                                       hasInboxEntry: entry.video.inboxEntry != nil,
                                       hasQueueEntry: entry.video.queueEntry != nil,
                                       watched: entry.video.watched,
-                                      videoSwipeActions: [.queue, .clear])
+                                      videoSwipeActions: [.queueTop, .clear])
                     }
                 }
                 .listStyle(.plain)

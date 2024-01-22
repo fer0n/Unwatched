@@ -57,6 +57,7 @@ struct LibraryView: View {
 
                 Section("subscriptions") {
                     if subscriptions.isEmpty {
+                        searchBar
                         dropArea
                             .listRowInsets(EdgeInsets())
                     } else {

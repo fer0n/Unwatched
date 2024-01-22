@@ -34,11 +34,9 @@ class VideoCrawler {
         // search title and desc for #short -> definitly short
         let regexYtShort = #"#[sS]horts"#
         if title.matching(regex: regexYtShort) != nil {
-            print("title #short match: \(title)")
             return (true, false)
         }
         if description?.matching(regex: regexYtShort) != nil {
-            print("description #short match: \(title)")
             return (true, false)
         }
 
@@ -46,10 +44,8 @@ class VideoCrawler {
         let regexHashtag = #"#[[:alpha:]]{2,}"#
         let titleHasHashtags = title.matching(regex: regexHashtag) != nil
         if titleHasHashtags {
-            print("titleHasHashtags: \(title)")
             return (false, true)
         }
-        print("noting found: \(title)")
         return (false, false)
     }
 
