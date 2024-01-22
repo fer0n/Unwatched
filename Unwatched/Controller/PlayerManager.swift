@@ -20,6 +20,7 @@ enum VideoSource {
         didSet {
             currentEndTime = 0
             currentTime = video?.elapsedSeconds ?? 0
+            isPlaying = false
         }
     }
 

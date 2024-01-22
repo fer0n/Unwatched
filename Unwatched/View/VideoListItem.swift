@@ -26,17 +26,14 @@ struct VideoListItem: View {
     // try to reproduce in mini project and ask on stackoverflow?
 
     var videoSwipeActions: [VideoActions]
-    var onTapGuesture: (() -> Void)?
     var onClear: (() -> Void)?
     // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
          videoSwipeActions: [VideoActions] = [.queueTop],
-         onTapGuesture: (() -> Void)? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
         self.videoSwipeActions = videoSwipeActions
-        self.onTapGuesture = onTapGuesture
         self.onClear = onClear
     }
 
@@ -46,7 +43,6 @@ struct VideoListItem: View {
          hasQueueEntry: Bool,
          watched: Bool,
          videoSwipeActions: [VideoActions] = [.queueTop],
-         onTapGuesture: (() -> Void)? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
         self.showVideoStatus = showVideoStatus
@@ -54,7 +50,6 @@ struct VideoListItem: View {
         self.hasQueueEntry = hasQueueEntry
         self.watched = watched
         self.videoSwipeActions = videoSwipeActions
-        self.onTapGuesture = onTapGuesture
         self.onClear = onClear
     }
 
@@ -62,13 +57,10 @@ struct VideoListItem: View {
         videoItem
             .contentShape(Rectangle())
             .onTapGesture {
-                if let tap = onTapGuesture {
-                    tap()
-                } else {
-                    player.playVideo(video)
-                    withAnimation {
-                        navManager.showMenu = false
-                    }
+                player.playVideo(video)
+                VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+                withAnimation {
+                    navManager.showMenu = false
                 }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
