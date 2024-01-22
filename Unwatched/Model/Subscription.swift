@@ -17,6 +17,7 @@ final class Subscription: CustomStringConvertible {
     var placeVideosIn = VideoPlacement.defaultPlacement
     var isArchived: Bool
 
+    var hasCustomSpeed: Bool = false
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
     var youtubeChannelId: String?

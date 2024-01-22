@@ -16,4 +16,12 @@ extension Double {
         formatter.zeroFormattingBehavior = .dropAll
         return formatter.string(from: TimeInterval(self))
     }
+
+    func getFormattedSeconds(for allowedUnits: NSCalendar.Unit) -> String? {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = allowedUnits
+        formatter.unitsStyle = .abbreviated
+        formatter.zeroFormattingBehavior = .dropAll
+        return formatter.string(from: TimeInterval(self))
+    }
 }

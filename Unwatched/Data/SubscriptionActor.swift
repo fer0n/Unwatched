@@ -30,7 +30,7 @@ actor SubscriptionActor {
         let feedUrl = try SubscriptionActor.getFeedUrlFromChannelId(channelId)
         let subStates = try await addSubscriptions(from: [feedUrl])
         if let first = subStates.first {
-            if !first.success || !first.alreadyAdded {
+            if !(first.success || first.alreadyAdded) {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
             }
         }
@@ -65,7 +65,7 @@ actor SubscriptionActor {
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(url: url)
         do {
-            subState.userName = getChannelUserNameFromUrl(url: url)
+            subState.userName = SubscriptionActor.getChannelUserNameFromUrl(url: url)
             if let title = getTitleIfSubscriptionExists(
                 userName: subState.userName, unarchiveSubIfAvailable
             ) {
@@ -136,11 +136,11 @@ actor SubscriptionActor {
         throw SubscriptionError.notSupported
     }
 
-    func getChannelUserNameFromUrl(url: URL) -> String? {
+    static func getChannelUserNameFromUrl(url: URL) -> String? {
         let urlString = url.absoluteString
 
         // https://www.youtube.com/@GAMERTAGVR/videos
-        if let userName = urlString.matching(regex: #"\/@([^\/]*)"#) {
+        if let userName = urlString.matching(regex: #"\/@([^\/#\?]*)"#) {
             return userName
         }
 
@@ -167,6 +167,17 @@ actor SubscriptionActor {
         let fetchDescriptor = FetchDescriptor<Subscription>()
         let subs = try modelContext.fetch(fetchDescriptor)
         return subs.map { (title: $0.title, link: $0.link) }
+    }
+
+    func unsubscribe(_ channelId: String) throws {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubeChannelId == channelId
+        })
+        guard let first = try modelContext.fetch(fetch).first else {
+            print("nothing found to unsubscribe")
+            return
+        }
+        try deleteSubscriptions([first.persistentModelID])
     }
 
     func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier]) throws {

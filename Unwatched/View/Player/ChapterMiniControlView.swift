@@ -19,11 +19,19 @@ struct ChapterMiniControlView: View {
                 Button {
                     showChapterSelection = true
                 } label: {
-                    Text(chapter.title)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                        .padding()
-                        .frame(maxWidth: .infinity)
+                    VStack(spacing: 4) {
+                        Text(chapter.title)
+                            .fontWeight(.bold)
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity)
+                        if let remaining = player.currentRemaining {
+                            Text(remaining)
+                                .foregroundStyle(Color.foregroundGray)
+                                .font(.system(size: 14))
+                                .lineLimit(1)
+                        }
+                    }
+                    .padding(10)
                 }
 
                 Button(action: player.goToNextChapter) {

@@ -7,15 +7,20 @@ import SwiftUI
 import SwiftData
 
 struct LibraryView: View {
+    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @Environment(RefreshManager.self) var refresher
 
     @Query var subscriptions: [Subscription]
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
+
     var sidedloadedSubscriptions: [Subscription]
 
-    @State var showAddSubscriptionSheet = false
-    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+    @State var showBrowserSheet = false
+    @State var subManager = SubscribeManager()
+    @State var text: String = ""
+    @State var isDragOver: Bool = false
 
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
@@ -50,9 +55,22 @@ struct LibraryView: View {
                     }
                 }
 
-                if !subscriptions.isEmpty {
-                    Section("subscriptions") {
-                        SubscriptionListView(sort: subscriptionSortOrder)
+                Section("subscriptions") {
+                    if subscriptions.isEmpty {
+                        dropArea
+                            .listRowInsets(EdgeInsets())
+                    } else {
+                        searchBar
+                        SubscriptionListView(
+                            sort: subscriptionSortOrder,
+                            filter: #Predicate<Subscription> {
+                                $0.isArchived == false && ($0.title.localizedStandardContains(text) || text.isEmpty)
+                            }
+                        )
+                        .dropDestination(for: URL.self) { items, _ in
+                            handleUrlDrop(items)
+                            return true
+                        }
                     }
                 }
             }
@@ -77,23 +95,112 @@ struct LibraryView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        showAddSubscriptionSheet = true
+                        showBrowserSheet = true
                     }, label: {
-                        Image(systemName: Const.addSF)
+                        Image(systemName: "plus")
                     })
                 }
                 RefreshToolbarButton()
             }
         }
-
-        .sheet(isPresented: $showAddSubscriptionSheet) {
-            AddSubscriptionView()
+        .onAppear {
+            subManager.container = modelContext.container
         }
+        .sheet(isPresented: $showBrowserSheet) {
+            BrowserView()
+                .onDisappear {
+
+                }
+        }
+        .sheet(isPresented: $subManager.showDropResults) {
+            AddSubscriptionView(subManager: subManager)
+        }
+    }
+
+    var dropArea: some View {
+        ZStack {
+            Rectangle()
+                .fill(isDragOver ? Color.teal.opacity(0.1) : .clear)
+
+            VStack(spacing: 10) {
+                Text("dropUrlsHere")
+                    .font(.title2)
+                    .bold()
+                    .foregroundStyle(.gray)
+                Text("dropSubscriptionHelper")
+                    .foregroundStyle(.gray)
+                    .multilineTextAlignment(.center)
+                    .tint(.teal)
+            }
+            .padding(25)
+        }
+        .dropDestination(for: URL.self) { items, _ in
+            handleUrlDrop(items)
+            return true
+        } isTargeted: { targeted in
+            isDragOver = targeted
+        }
+    }
+
+    var searchBar: some View {
+        HStack(spacing: 0) {
+            Text("")
+            TextField("searchLibraryOrEnterUrl", text: $text)
+                .submitLabel(.done)
+                .onSubmit {
+                    handleTextFieldSubmit()
+                }
+                .disabled(subManager.isLoading)
+            if subManager.isLoading {
+                ProgressView()
+            } else if subManager.isSubscribedSuccess == true {
+                Image(systemName: "checkmark")
+            } else if text.isEmpty {
+                Button("paste") {
+                    let text = UIPasteboard.general.string ?? ""
+                    if !text.isEmpty {
+                        subManager.addSubscriptionFromText(text)
+                    }
+                }
+                .buttonStyle(CapsuleButtonStyle())
+                .tint(Color.myAccentColor)
+                .disabled(subManager.isLoading)
+            }
+        }
+        .onChange(of: subManager.isSubscribedSuccess) {
+            if subManager.isSubscribedSuccess != true {
+                return
+            }
+            text = ""
+            refresher.refreshAll()
+            Task {
+                await Task.sleep(s: 3)
+                await MainActor.run {
+                    subManager.isSubscribedSuccess = nil
+                }
+            }
+        }
+    }
+
+    func handleTextFieldSubmit() {
+        let regex = #"https:\/\/\w+\.\w+"#
+        let containsUrls = text.matching(regex: regex) != nil
+        if containsUrls {
+            let text = text
+            subManager.addSubscriptionFromText(text)
+        }
+    }
+
+    func handleUrlDrop(_ urls: [URL]) {
+        print("handleUrlDrop inbox", urls)
+        subManager.addSubscription(from: urls)
     }
 }
 
-// #Preview {
-//    LibraryView()
-//        .modelContainer(DataController.previewContainer)
-//        .environment(NavigationManager())
-// }
+#Preview {
+    LibraryView()
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
+}

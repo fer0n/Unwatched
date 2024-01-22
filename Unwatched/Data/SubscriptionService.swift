@@ -8,7 +8,7 @@ class SubscriptionService {
     }
 
     static func addSubscription(channelId: String?,
-                                subsciptionId: PersistentIdentifier?,
+                                subsciptionId: PersistentIdentifier? = nil,
                                 modelContainer: ModelContainer) async throws {
         guard channelId != nil || subsciptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
@@ -29,7 +29,21 @@ class SubscriptionService {
         }
     }
 
+    static func unsubscribe(_ channelId: String, container: ModelContainer) -> Task<(), Error> {
+        return Task {
+            let repo = SubscriptionActor(modelContainer: container)
+            return try await repo.unsubscribe(channelId)
+        }
+    }
+
     static func isSubscribed(_ video: Video?) -> Bool {
         return video?.subscription?.isArchived == false
+    }
+
+    static func isSubscribed(_ channelId: String? = nil, container: ModelContainer) -> Task<(Bool), Never> {
+        return Task {
+            let repo = SubscriptionActor(modelContainer: container)
+            return await repo.getTitleIfSubscriptionExists(channelId: channelId) != nil
+        }
     }
 }

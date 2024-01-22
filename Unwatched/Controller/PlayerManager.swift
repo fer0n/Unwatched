@@ -1,22 +1,61 @@
 import SwiftUI
 
 @Observable class PlayerManager {
+    var isPlaying: Bool = false
+    var currentTime: Double?
+    var currentChapter: Chapter?
+    var previousChapter: Chapter?
+    var nextChapter: Chapter?
+    var seekPosition: Double?
+
     var video: Video? {
         didSet {
             currentEndTime = 0
             currentTime = video?.elapsedSeconds ?? 0
         }
     }
-    var currentChapter: Chapter?
-    var seekPosition: Double?
 
-    var previousChapter: Chapter?
-    var nextChapter: Chapter?
+    var isConsideredWatched: Bool {
+        guard let video = video else {
+            return false
+        }
+        let noQueueEntry = video.queueEntry == nil
+        let noInboxEntry = video.inboxEntry == nil
+        return video.watched && noQueueEntry && noInboxEntry
+    }
 
-    var currentEndTime: Double?
-    var currentTime: Double?
+    var playbackSpeed: Double {
+        get {
+            getPlaybackSpeed()
+        }
+        set {
+            setPlaybackSpeed(newValue)
+        }
+    }
 
-    var isPlaying: Bool = false
+    @ObservationIgnored private var currentEndTime: Double?
+    //    @ObservationIgnored private var
+
+    func updateElapsedTime(_ time: Double? = nil) {
+        print("updateElapsedTime")
+        if let time = time {
+            video?.elapsedSeconds = time
+            return
+        }
+        if let time = currentTime {
+            video?.elapsedSeconds = time
+        }
+    }
+
+    var currentRemaining: String? {
+        if let end = currentEndTime, let current = currentTime {
+            let remaining = end - current
+            if let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
+                return "\(rem) remaining"
+            }
+        }
+        return nil
+    }
 
     init() {}
 
@@ -91,6 +130,18 @@ import SwiftUI
         if let previous = previousChapter {
             setChapter(previous)
         }
+    }
+
+    private func setPlaybackSpeed(_ value: Double) {
+        if video?.subscription?.customSpeedSetting != nil {
+            video?.subscription?.customSpeedSetting = value
+        } else {
+            UserDefaults.standard.setValue(value, forKey: Const.playbackSpeed)
+        }
+    }
+
+    private func getPlaybackSpeed() -> Double {
+        video?.subscription?.customSpeedSetting ?? UserDefaults.standard.double(forKey: Const.playbackSpeed)
     }
 
     static func getDummy() -> PlayerManager {

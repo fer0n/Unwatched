@@ -7,10 +7,10 @@ import Foundation
 
 @Observable class SheetPositionReader {
     // Sheet animation and height detection
-    var sheetHeight: CGFloat = .zero
     var swipedBelow: Bool = false
-    var normalSheetHeight: CGFloat = .zero
-    var sheetSwipeHeight: CGFloat = .zero
+    @ObservationIgnored var sheetHeight: CGFloat = .zero
+    @ObservationIgnored var normalSheetHeight: CGFloat = .zero
+    @ObservationIgnored var sheetSwipeHeight: CGFloat = .zero
 
     var maxSheetHeight: CGFloat {
         sheetHeight - Const.playerAboveSheetHeight
@@ -31,6 +31,9 @@ import Foundation
     func handleSheetMinYUpdate(_ minY: CGFloat) {
         sheetSwipeHeight = minY
         let value = minY - normalSheetHeight
-        swipedBelow = value > 50 || minY == 0 // after dismissing the sheet minY becomes 0
+        let newBelow = value > 50 || minY == 0 // after dismissing the sheet minY becomes 0
+        if newBelow != swipedBelow {
+            swipedBelow = newBelow
+        }
     }
 }
