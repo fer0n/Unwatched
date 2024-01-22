@@ -12,7 +12,7 @@ struct CapsuleButtonStyle: ButtonStyle {
             .padding(.horizontal, 10)
             .background(Material.thin)
             .clipShape(Capsule())
-            .foregroundColor(.accentColor)
+            .foregroundColor(.myAccentColor)
 
     }
 }

@@ -13,7 +13,6 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
     let video: Video
     @Binding var playbackSpeed: Double
-    var updateElapsedTime: (_ seconds: Double) -> Void
     var onVideoEnded: () -> Void
 
     func makeUIView(context: Context) -> WKWebView {
@@ -144,7 +143,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 return
             }
             if persist {
-                parent.updateElapsedTime(time)
+                parent.player.updateElapsedTime(time)
             }
             parent.player.monitorChapters(time: time)
         }

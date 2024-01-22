@@ -22,6 +22,8 @@ struct VideoPlayer: View {
     @Binding var showMenu: Bool
 
     var body: some View {
+        @Bindable var player = player
+
         VStack(spacing: 10) {
             VStack(spacing: 10) {
                 Text(player.video?.title ?? "")
@@ -37,7 +39,10 @@ struct VideoPlayer: View {
             .padding(.vertical)
             ZStack {
                 if let video = player.video {
-                    webViewPlayer(video)
+                    YoutubeWebViewPlayer(video: video,
+                                         playbackSpeed: $player.playbackSpeed,
+                                         onVideoEnded: handleVideoEnded
+                    )
                 } else {
                     Rectangle()
                         .fill(Color.backgroundColor)
@@ -47,10 +52,7 @@ struct VideoPlayer: View {
             .frame(maxWidth: .infinity)
 
             VStack {
-                SpeedControlView(selectedSpeed: Binding(
-                                    get: getPlaybackSpeed,
-                                    set: setPlaybackSpeed)
-                )
+                SpeedControlView(selectedSpeed: $player.playbackSpeed)
                 HStack {
                     customSettingsButton
                     Spacer()
@@ -89,9 +91,9 @@ struct VideoPlayer: View {
         .onChange(of: continuousPlay, { _, newValue in
             continuousPlayWorkaround = newValue
         })
-        .onChange(of: player.video, { _, _ in
-            player.video = player.video
-        })
+        .onChange(of: player.video?.subscription) {
+            // workaround to update ui, doesn't work without
+        }
     }
 
     var watchedButton: some View {
@@ -100,7 +102,7 @@ struct VideoPlayer: View {
         } label: {
             Text("mark\nwatched")
         }
-        .modifier(OutlineToggleModifier(isOn: isConsideredWatched(player.video)))
+        .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
     }
 
     var customSettingsButton: some View {
@@ -169,76 +171,41 @@ struct VideoPlayer: View {
         .padding(20)
     }
 
-    func isConsideredWatched(_ video: Video?) -> Bool {
-        guard let video = video else {
-            return false
-        }
-        let noQueueEntry = video.queueEntry == nil
-        let noInboxEntry = video.inboxEntry == nil
-        return video.watched && noQueueEntry && noInboxEntry
-    }
-
-    func webViewPlayer(_ video: Video) -> some View {
-        YoutubeWebViewPlayer(video: video,
-                             playbackSpeed: Binding(get: getPlaybackSpeed, set: setPlaybackSpeed),
-                             updateElapsedTime: updateElapsedTime,
-                             onVideoEnded: handleVideoEnded
-        )
-    }
-
     func markVideoWatched() {
+        if let video = player.video {
+            player.isPlaying = false
+            setShowMenu()
+            setNextVideo()
+            VideoService.markVideoWatched(
+                video, modelContext: modelContext
+            )
+        }
+    }
+
+    func handleVideoEnded() {
+        guard continuousPlayWorkaround else {
+            return
+        }
         if let video = player.video {
             VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
-            handleVideoEnded()
-            player.isPlaying = false
-            setShowMenu()
         }
-    }
-
-    func updateElapsedTime(_ time: Double? = nil) {
-        if let time = time {
-            player.video?.elapsedSeconds = time
-            return
-        }
-        if let time = player.currentTime {
-            player.video?.elapsedSeconds = time
-        }
-    }
-
-    func setPlaybackSpeed(_ value: Double) {
-        if player.video?.subscription?.customSpeedSetting != nil {
-            player.video?.subscription?.customSpeedSetting = value
-        } else {
-            playbackSpeed = value
-        }
-    }
-
-    func getPlaybackSpeed() -> Double {
-        player.video?.subscription?.customSpeedSetting ?? playbackSpeed
-    }
-
-    func handleVideoEnded() {
-        if !continuousPlayWorkaround {
-            return
-        }
-        playNextVideo()
+        setNextVideo()
+        player.isPlaying = true
     }
 
     func setShowMenu() {
+        player.updateElapsedTime()
         showMenu = true
-        updateElapsedTime()
     }
 
-    func playNextVideo() {
-        guard !showMenu, let next = VideoService.getNextVideoInQueue(modelContext) else {
+    func setNextVideo() {
+        guard let next = VideoService.getNextVideoInQueue(modelContext) else {
+            print("no next video found")
             return
         }
-        print("playNextVideo")
-        if let vid = player.video {
-            VideoService.markVideoWatched(vid, modelContext: modelContext)
-        }
+        print("next", next.title)
         player.video = next
     }
 }

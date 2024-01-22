@@ -6,6 +6,7 @@
 import SwiftUI
 import SwiftData
 import WebKit
+import TipKit
 
 @main
 struct UnwatchedApp: App {
@@ -25,11 +26,21 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
+            //            Text("hi")
+            //                .sheet(isPresented: .constant(true)) {
+            //                    BrowserView()
+            //                }
             ContentView()
                 .accentColor(.myAccentColor)
                 .environment(alerter)
                 .alert(isPresented: $alerter.isShowingAlert) {
                     alerter.alert ?? Alert(title: Text(""))
+                }
+                .task {
+                    try? Tips.configure([
+                        .displayFrequency(.immediate),
+                        .datastoreLocation(.applicationDefault)
+                    ])
                 }
         }
         .modelContainer(sharedModelContainer)

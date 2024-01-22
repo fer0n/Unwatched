@@ -61,13 +61,6 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             saveNavigationManager()
         }
-        .onChange(of: player.video) {
-            if player.video != nil {
-                withAnimation {
-                    navManager.showMenu = false
-                }
-            }
-        }
     }
 
     static func loadNavigationManager() -> NavigationManager {

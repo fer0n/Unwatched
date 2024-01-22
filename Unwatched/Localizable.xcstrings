@@ -29,6 +29,46 @@
         }
       }
     },
+    "addSubscriptionButtonTip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add this channel to Unwatched"
+          }
+        }
+      }
+    },
+    "addSubscriptionButtonTipMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The YouTube \"subscribe\" button only works for the YouTube website/App."
+          }
+        }
+      }
+    },
+    "addSubscriptionTip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Subscriptions to Unwatched"
+          }
+        }
+      }
+    },
+    "addSubscriptionTipMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you visit a channel page, an 'Add Subscription'-Button will appear here."
+          }
+        }
+      }
+    },
     "addToInbox" : {
       "localizations" : {
         "en" : {
@@ -180,7 +220,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once"
+            "value" : "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once.  Or use the \"+\" button in the tool bar to browse YouTube."
           }
         }
       }
@@ -191,26 +231,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drop URLs Here"
-          }
-        }
-      }
-    },
-    "enterYoutubeRssUrl" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Youtube RSS/Channel URL"
-          }
-        }
-      }
-    },
-    "enterYoutubeRssUrlHelper" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can enter mutliple URLs, one per line"
           }
         }
       }
@@ -564,6 +584,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refresh on App start"
+          }
+        }
+      }
+    },
+    "searchLibraryOrEnterUrl" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search library or enter URL(s)"
           }
         }
       }

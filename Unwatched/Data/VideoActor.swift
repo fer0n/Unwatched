@@ -302,7 +302,7 @@ actor VideoActor {
             modelContext.delete(inboxEntry)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
-            modelContext.delete(queueEntry)
+            VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
         }
     }
 

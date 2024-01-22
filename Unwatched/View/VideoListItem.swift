@@ -66,6 +66,9 @@ struct VideoListItem: View {
                     tap()
                 } else {
                     player.video = video
+                    withAnimation {
+                        navManager.showMenu = false
+                    }
                 }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
