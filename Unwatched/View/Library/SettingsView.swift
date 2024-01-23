@@ -17,11 +17,6 @@ struct SettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
-    let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
-    let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
-    let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
-    // TODO: fix links
-
     var body: some View {
         VStack {
             List {
@@ -76,15 +71,15 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    LinkItemView(destination: writeReviewUrl, label: "rateApp") {
+                    LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
                         Image(systemName: Const.rateAppSF)
                     }
 
-                    LinkItemView(destination: emailUrl, label: "contact") {
+                    LinkItemView(destination: UrlService.emailUrl, label: "contact") {
                         Image(systemName: Const.contactMailSF)
                     }
 
-                    LinkItemView(destination: githubUrl, label: "github") {
+                    LinkItemView(destination: UrlService.githubUrl, label: "github") {
                         Image("github-logo")
                             .resizable()
                     }
