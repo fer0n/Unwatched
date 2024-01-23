@@ -11,16 +11,15 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
     @Environment(PlayerManager.self) var player
 
-    let video: Video
     var onVideoEnded: () -> Void
 
     func makeUIView(context: Context) -> WKWebView {
-        var startPosition = video.elapsedSeconds
-        if video.hasFinished == true {
+        var startPosition = player.video?.elapsedSeconds ?? 0
+        if player.video?.hasFinished == true {
             startPosition = 0
         }
         let htmlString = getYoutubeIframeHTML(
-            youtubeId: video.youtubeId,
+            youtubeId: player.video?.youtubeId ?? "",
             playbackSpeed: player.playbackSpeed,
             startAt: startPosition
         )
@@ -69,10 +68,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             context.coordinator.previousState.seekPosition = seekPosition
         }
 
-        if prev.videoId != video.youtubeId {
-            let script = "player.cueVideoById('\(video.youtubeId)');"
+        if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
+            let script = "player.cueVideoById('\(videoId)');"
             uiView.evaluateJavaScript(script, completionHandler: nil)
-            context.coordinator.previousState.videoId = video.youtubeId
+            context.coordinator.previousState.videoId = player.video?.youtubeId
         }
     }
 
@@ -105,13 +104,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
         }
 
-        // TODO: remove parent.video, it's old values anyways
-
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "paused":
                 parent.player.pause()
-                print("parent.video.title", parent.video.title) // this is always just the initial video
                 print("parent.player.video.title", parent.player.video?.title)
                 handleTimeUpdate(payload, persist: true)
             case "playing":
