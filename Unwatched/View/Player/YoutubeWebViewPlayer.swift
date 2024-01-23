@@ -44,7 +44,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        print("updateUiView")
+        // print("updateUiView")
         let prev = context.coordinator.previousState
 
         if prev.playbackSpeed != player.playbackSpeed {
@@ -123,7 +123,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 guard let payload = payload, let duration = Double(payload) else {
                     return
                 }
-                VideoService.updateDuration(parent.video, duration: duration)
+                print("update duration for: \( parent.player.video?.title)")
+                if let video = parent.player.video {
+                    VideoService.updateDuration(video, duration: duration)
+                }
             default:
                 break
             }
@@ -191,10 +194,9 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
 
             function onPlayerReady(event) {
-                sendMessage("duration", player.getDuration());
                 event.target.setPlaybackRate(\(playbackSpeed));
-                player.seekTo(\(startAt), true);
                 sendMessage("playerReady");
+                sendMessage("duration", player.getDuration());
             }
 
             function onPlayerStateChange(event) {
@@ -209,6 +211,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     stopTimer();
                 } else if (event.data == YT.PlayerState.UNSTARTED) {
                     sendMessage("unstarted");
+                    sendMessage("duration", player.getDuration());
                 }
             }
 
