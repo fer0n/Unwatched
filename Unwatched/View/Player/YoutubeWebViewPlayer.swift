@@ -92,7 +92,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         func userContentController(_ userContentController: WKUserContentController,
                                    didReceive message: WKScriptMessage) {
             if message.name == "iosListener", let messageBody = message.body as? String {
-                let body = messageBody.split(separator: ":")
+                let body = messageBody.split(separator: ";")
                 guard let topic = body[safe: 0] else {
                     return
                 }
@@ -105,17 +105,22 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
         }
 
+        // TODO: remove parent.video, it's old values anyways
+
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "paused":
                 parent.player.pause()
+                print("parent.video.title", parent.video.title) // this is always just the initial video
+                print("parent.player.video.title", parent.player.video?.title)
                 handleTimeUpdate(payload, persist: true)
             case "playing":
                 parent.player.play()
             case "ended":
-                parent.player.pause()
                 parent.onVideoEnded()
             case "unstarted", "playerReady":
+                parent.player.seekPosition = parent.player.video?.elapsedSeconds ?? 0
+                previousState.seekPosition = nil
                 handleAutoStart()
             case "currentTime":
                 handleTimeUpdate(payload)
@@ -123,7 +128,6 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 guard let payload = payload, let duration = Double(payload) else {
                     return
                 }
-                print("update duration for: \( parent.player.video?.title)")
                 if let video = parent.player.video {
                     VideoService.updateDuration(video, duration: duration)
                 }
@@ -150,11 +154,25 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
 
         func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
-            guard let payload = payload, let time = Double(payload) else {
+            guard let payload = payload else {
                 return
             }
+
+            // "paused:2161.00033421,https://www.youtube.com/watch?t=2161&v=dKbT0iFia0I"
+            let payloadArray = payload.split(separator: ",")
+            let timeString = payloadArray[safe: 0]
+            let urlString = payloadArray[safe: 1]
+            guard let time = timeString.flatMap({ Double($0) }) else {
+                return
+            }
+            guard let urlString = urlString,
+                  let url = URL(string: String(urlString)),
+                  let videoId = VideoActor.getVideoIdFromUrl(url: url) else {
+                return
+            }
+
             if persist {
-                parent.player.updateElapsedTime(time)
+                parent.player.updateElapsedTime(time, videoId: videoId)
             }
             if parent.player.isPlaying {
                 parent.player.monitorChapters(time: time)
@@ -196,12 +214,15 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             function onPlayerReady(event) {
                 event.target.setPlaybackRate(\(playbackSpeed));
                 sendMessage("playerReady");
+                player.seekTo(\(startAt), true);
                 sendMessage("duration", player.getDuration());
             }
 
             function onPlayerStateChange(event) {
                 if (event.data == YT.PlayerState.PAUSED) {
-                    sendMessage("paused", player.getCurrentTime());
+                    const url = player.getVideoUrl();
+                    const payload = `${player.getCurrentTime()},${url}`;
+                    sendMessage("paused", payload);
                     stopTimer();
                 } else if (event.data == YT.PlayerState.PLAYING) {
                     sendMessage("playing");
@@ -227,7 +248,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
 
             function sendMessage(topic, payload) {
-                window.webkit.messageHandlers.iosListener.postMessage("" + topic + ":" + payload);
+                window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
             }
         </script>
         <iframe

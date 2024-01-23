@@ -49,13 +49,15 @@ enum VideoSource {
     @ObservationIgnored private var currentEndTime: Double?
     //    @ObservationIgnored private var
 
-    func updateElapsedTime(_ time: Double? = nil) {
+    func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
         print("updateElapsedTime")
-        if let time = time {
-            video?.elapsedSeconds = time
+        if videoId != nil && videoId != video?.youtubeId {
+            // avoid updating the wrong video
             return
         }
-        if let time = currentTime {
+
+        var newTime = time ?? currentTime
+        if let time = newTime {
             video?.elapsedSeconds = time
         }
     }
