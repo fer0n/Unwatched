@@ -30,6 +30,16 @@ struct VideoPlayer: View {
                 Text(player.video?.title ?? "")
                     .font(.system(size: 20, weight: .heavy))
                     .multilineTextAlignment(.center)
+                    .contextMenu(menuItems: {
+                        if let url = player.video?.url {
+                            ShareLink(item: url) {
+                                HStack {
+                                    Image(systemName: "square.and.arrow.up.fill")
+                                    Text("share")
+                                }
+                            }
+                        }
+                    })
                     .onTapGesture {
                         if let video = player.video {
                             UIApplication.shared.open(video.url)
@@ -152,7 +162,15 @@ struct VideoPlayer: View {
                         container: modelContext.container)
                 }
             } label: {
-                Text(isSubscribed ? "unsubscribe" : "subscribe")
+                HStack {
+                    if isSubscribed {
+                        Image(systemName: "xmark")
+                        Text("unsubscribe")
+                    } else {
+                        Image(systemName: "plus")
+                        Text("subscribe")
+                    }
+                }
             }
             .disabled(subscribeManager.isLoading)
         }

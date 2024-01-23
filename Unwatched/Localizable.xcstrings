@@ -608,6 +608,16 @@
         }
       }
     },
+    "share" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share"
+          }
+        }
+      }
+    },
     "shortsDetection" : {
       "localizations" : {
         "en" : {
