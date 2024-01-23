@@ -9,7 +9,7 @@ actor VideoActor {
                          at index: Int = 0) async throws {
         var videos = [Video]()
         for url in videoUrls {
-            guard let youtubeId = VideoActor.getVideoIdFromUrl(url: url) else {
+            guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
                 print("no youtubeId found")
                 continue
             }
@@ -27,11 +27,6 @@ actor VideoActor {
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
-    }
-
-    static func getVideoIdFromUrl(url: URL) -> String? {
-        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        return urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value
     }
 
     func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
@@ -54,7 +49,7 @@ actor VideoActor {
         }
 
         // create subs where missing
-        let channelLink = try SubscriptionActor.getFeedUrlFromChannelId(channelId)
+        let channelLink = try UrlService.getFeedUrlFromChannelId(channelId)
         let sub = Subscription(
             link: channelLink,
             title: feedTitle ?? "",
@@ -268,7 +263,11 @@ actor VideoActor {
         }
     }
 
-    private func addSingleVideoTo(_ videos: [Video], videoPlacement: VideoPlacement, defaultPlacement: DefaultVideoPlacement) {
+    private func addSingleVideoTo(
+        _ videos: [Video],
+        videoPlacement: VideoPlacement,
+        defaultPlacement: DefaultVideoPlacement
+    ) {
         // check setting for ytShort, use individual setting in that case
         for video in videos {
             let isShorts = videoIsConsideredShorts(video, shortsDetection: defaultPlacement.shortsDetection)

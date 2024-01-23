@@ -21,7 +21,7 @@ struct YtBrowserWebView: UIViewRepresentable {
         webView.backgroundColor = UIColor(Color.backgroundGray)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
-        if let url = URL(string: "https://m.youtube.com?autoplay=0") {
+        if let url = UrlService.youtubeStartPage {
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -52,7 +52,7 @@ struct YtBrowserWebView: UIViewRepresentable {
                 print("no url found")
                 return
             }
-            if let userName = SubscriptionActor.getChannelUserNameFromUrl(url: url) {
+            if let userName = UrlService.getChannelUserNameFromUrl(url: url) {
                 // is username page, reload the page
                 extractSubscriptionInfo(webView, userName: userName)
             }
@@ -84,7 +84,7 @@ struct YtBrowserWebView: UIViewRepresentable {
         func forceReloadUrl(_ webView: WKWebView) {
             if let url = webView.url {
                 print("URL changed: \(url)")
-                guard let userName = SubscriptionActor.getChannelUserNameFromUrl(url: url) else {
+                guard let userName = UrlService.getChannelUserNameFromUrl(url: url) else {
                     parent.fixSubManager.clearInfo()
                     print("no user name found")
                     return

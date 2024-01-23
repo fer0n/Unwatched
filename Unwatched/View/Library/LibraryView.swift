@@ -186,9 +186,7 @@ struct LibraryView: View {
     }
 
     func handleTextFieldSubmit() {
-        let regex = #"https:\/\/\w+\.\w+"#
-        let containsUrls = text.matching(regex: regex) != nil
-        if containsUrls {
+        if UrlService.stringContainsUrl(text) {
             let text = text
             subManager.addSubscriptionFromText(text)
         }

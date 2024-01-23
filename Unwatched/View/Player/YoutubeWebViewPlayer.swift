@@ -163,7 +163,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             }
             guard let urlString = urlString,
                   let url = URL(string: String(urlString)),
-                  let videoId = VideoActor.getVideoIdFromUrl(url: url) else {
+                  let videoId = UrlService.getYoutubeIdFromUrl(url: url) else {
                 return
             }
 
@@ -252,7 +252,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             type="text/html"
             width="100%"
             height="100%"
-            src="https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&autoplay=1&controls=1"
+            src="\(UrlService.getEmbeddedYoutubeUrl(youtubeId))"
             frameborder="0"
         ></iframe>
     """

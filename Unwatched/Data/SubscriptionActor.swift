@@ -27,7 +27,7 @@ actor SubscriptionActor {
         }
 
         // if it doesn't exist get url and run the regular subscription flow
-        let feedUrl = try SubscriptionActor.getFeedUrlFromChannelId(channelId)
+        let feedUrl = try UrlService.getFeedUrlFromChannelId(channelId)
         let subStates = try await addSubscriptions(from: [feedUrl])
         if let first = subStates.first {
             if !(first.success || first.alreadyAdded) {
@@ -65,7 +65,7 @@ actor SubscriptionActor {
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(url: url)
         do {
-            subState.userName = SubscriptionActor.getChannelUserNameFromUrl(url: url)
+            subState.userName = UrlService.getChannelUserNameFromUrl(url: url)
             if let title = getTitleIfSubscriptionExists(
                 userName: subState.userName, unarchiveSubIfAvailable
             ) {
@@ -119,48 +119,14 @@ actor SubscriptionActor {
     }
 
     static func getChannelFeedFromUrl(url: URL, userName: String?) async throws -> URL {
-        if isYoutubeFeedUrl(url: url) {
+        if UrlService.isYoutubeFeedUrl(url: url) {
             return url
         }
         guard let userName = userName else {
             throw SubscriptionError.failedGettingChannelIdFromUsername("Username was empty")
         }
         let channelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
-        return try SubscriptionActor.getFeedUrlFromChannelId(channelId)
-    }
-
-    static func getFeedUrlFromChannelId(_ channelId: String) throws -> URL {
-        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
-            return channelFeedUrl
-        }
-        throw SubscriptionError.notSupported
-    }
-
-    static func getChannelUserNameFromUrl(url: URL) -> String? {
-        let urlString = url.absoluteString
-
-        // https://www.youtube.com/@GAMERTAGVR/videos
-        if let userName = urlString.matching(regex: #"\/@([^\/#\?]*)"#) {
-            return userName
-        }
-
-        // https://www.youtube.com/c/GamertagVR/videos
-        if let userName = urlString.matching(regex: #"\/c\/([^\/]*)"#) {
-            return userName
-        }
-
-        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        if let userName = urlString.matching(regex: #"\/videos.xml\?user=(.*)"#) {
-            return userName
-        }
-
-        return nil
-    }
-
-    static func isYoutubeFeedUrl(url: URL) -> Bool {
-        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        // https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg
-        return url.absoluteString.contains("youtube.com/feeds/videos.xml")
+        return try UrlService.getFeedUrlFromChannelId(channelId)
     }
 
     func getAllFeedUrls() throws -> [(title: String, link: URL)] {
