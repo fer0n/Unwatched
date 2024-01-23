@@ -9,8 +9,7 @@ actor VideoActor {
                          at index: Int = 0) async throws {
         var videos = [Video]()
         for url in videoUrls {
-            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            guard let youtubeId = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value else {
+            guard let youtubeId = VideoActor.getVideoIdFromUrl(url: url) else {
                 print("no youtubeId found")
                 continue
             }
@@ -28,6 +27,11 @@ actor VideoActor {
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
+    }
+
+    static func getVideoIdFromUrl(url: URL) -> String? {
+        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        return urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value
     }
 
     func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {

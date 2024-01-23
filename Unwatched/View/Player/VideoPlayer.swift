@@ -192,7 +192,6 @@ struct VideoPlayer: View {
     func markVideoWatched() {
         print(">markVideoWatched")
         if let video = player.video {
-            player.pause()
             setShowMenu()
             setNextVideo(.nextUp)
             VideoService.markVideoWatched(
