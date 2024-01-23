@@ -50,9 +50,7 @@ struct VideoPlayer: View {
             .padding(.vertical)
             ZStack {
                 if let video = player.video {
-                    YoutubeWebViewPlayer(video: video,
-                                         onVideoEnded: handleVideoEnded
-                    )
+                    YoutubeWebViewPlayer(onVideoEnded: handleVideoEnded)
                 } else {
                     Rectangle()
                         .fill(Color.backgroundColor)
