@@ -85,7 +85,10 @@ struct LibraryView: View {
                             Button {
                                 subscriptionSortOrder = sort
                             } label: {
-                                Text(sort.description)
+                                HStack {
+                                    Image(systemName: sort.systemName)
+                                    Text(sort.description)
+                                }
                             }
                             .disabled(subscriptionSortOrder == sort)
                         }

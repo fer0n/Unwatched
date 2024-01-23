@@ -21,4 +21,15 @@ enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
             return String(localized: "mostRecentVideo")
         }
     }
+    
+    var systemName: String {
+        switch self {
+        case .title:
+            return "textformat.abc"
+        case .recentlyAdded:
+            return "calendar.badge.plus"
+        case .mostRecentVideo:
+            return "clock.arrow.circlepath"
+        }
+    }
 }
