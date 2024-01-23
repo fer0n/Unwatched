@@ -21,7 +21,7 @@ enum SubscriptionSorting: Int, CustomStringConvertible, CaseIterable {
             return String(localized: "mostRecentVideo")
         }
     }
-    
+
     var systemName: String {
         switch self {
         case .title:
