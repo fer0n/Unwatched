@@ -180,13 +180,13 @@ struct VideoListItem: View {
             return ("play.circle.fill", defaultColor)
         }
         if hasInboxEntry == true {
-            return ("circle.circle.fill", .teal)
+            return ("circle.circle.fill", .mint)
         }
         if hasQueueEntry == true {
             return ("arrow.uturn.right.circle.fill", defaultColor)
         }
         if watched == true {
-            return (Const.watchedSF, .mint)
+            return (Const.watchedSF, defaultColor)
         }
         return nil
     }
@@ -232,4 +232,5 @@ struct VideoListItem: View {
     )
     .modelContainer(DataController.previewContainer)
     .environment(NavigationManager())
+    .environment(PlayerManager())
 }

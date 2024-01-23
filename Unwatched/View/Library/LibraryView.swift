@@ -44,7 +44,7 @@ struct LibraryView: View {
                     NavigationLink(destination: WatchHistoryView()) {
                         LibraryNavListItem("watched",
                                            systemName: Const.watchHistoryViewSF,
-                                           .mint)
+                                           .green)
                     }
                     if hasSideloads {
                         NavigationLink(destination: SideloadingView()) {
