@@ -55,7 +55,6 @@ struct GlobalMinYTrackerModifier: ViewModifier {
             }
             .onPreferenceChange(GlobalMinYPreferenceKey.self) { minY in
                 onChange(minY)
-                //                self.minY = minY
             }
     }
 }
