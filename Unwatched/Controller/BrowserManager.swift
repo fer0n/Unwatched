@@ -15,6 +15,8 @@ import WebKit
     var title: String?
     var userName: String?
 
+    var firstPageLoaded = false
+
     var channelTextRepresentation: String? {
         return title ?? userName ?? channelId ?? rssFeed
     }

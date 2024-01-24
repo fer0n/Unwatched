@@ -7,7 +7,7 @@ import SwiftUI
 import WebKit
 
 struct YtBrowserWebView: UIViewRepresentable {
-    var fixSubManager: BrowserManager
+    var browserManager: BrowserManager
 
     func makeUIView(context: Context) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
@@ -18,7 +18,7 @@ struct YtBrowserWebView: UIViewRepresentable {
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = context.coordinator
-        webView.backgroundColor = UIColor(Color.backgroundGray)
+        webView.backgroundColor = UIColor.systemBackground
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
         if let url = UrlService.youtubeStartPage {
@@ -37,6 +37,7 @@ struct YtBrowserWebView: UIViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate {
         var parent: YtBrowserWebView
         var observation: NSKeyValueObservation?
+        var isFirstLoad = true
 
         init(_ parent: YtBrowserWebView) {
             self.parent = parent
@@ -48,6 +49,10 @@ struct YtBrowserWebView: UIViewRepresentable {
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             print("--- new page loaded")
+            if isFirstLoad {
+                isFirstLoad = false
+                parent.browserManager.firstPageLoaded = true
+            }
             guard let url = webView.url else {
                 print("no url found")
                 return
@@ -75,7 +80,7 @@ struct YtBrowserWebView: UIViewRepresentable {
                     print("Title: \(title)")
                     print("Image: \(image)")
 
-                    self.parent.fixSubManager.setFoundInfo(url, channelId, description, rssFeed, title, userName)
+                    self.parent.browserManager.setFoundInfo(url, channelId, description, rssFeed, title, userName)
                 }
             }
         }
@@ -85,11 +90,11 @@ struct YtBrowserWebView: UIViewRepresentable {
             if let url = webView.url {
                 print("URL changed: \(url)")
                 guard let userName = UrlService.getChannelUserNameFromUrl(url: url) else {
-                    parent.fixSubManager.clearInfo()
+                    parent.browserManager.clearInfo()
                     print("no user name found")
                     return
                 }
-                guard userName != parent.fixSubManager.userName else {
+                guard userName != parent.browserManager.userName else {
                     print("same username as before")
                     return
                 }
