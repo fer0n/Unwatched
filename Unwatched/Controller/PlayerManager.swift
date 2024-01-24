@@ -97,7 +97,7 @@ enum VideoSource {
             return
         }
 
-        guard let chapters = video?.sortedChapters else {
+        guard let chapters = video?.sortedChapters, let video = video, !chapters.isEmpty else {
             print("noVideo found")
             return
         }
@@ -124,6 +124,8 @@ enum VideoSource {
             }) {
                 print("skip to next chapter: \(nextActive.title)")
                 seekPosition = nextActive.startTime
+            } else if let duration = video.duration {
+                seekPosition = duration
             }
         }
 

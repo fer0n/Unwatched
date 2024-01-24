@@ -146,7 +146,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             case .nextUp:
                 break
             case .userInteraction:
-                let autoPlay = UserDefaults.standard.bool(forKey: Const.autoplayVideos)
+                let autoPlay = UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool ?? true
                 if  autoPlay {
                     parent.player.play()
                 }

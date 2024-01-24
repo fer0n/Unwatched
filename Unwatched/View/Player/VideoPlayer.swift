@@ -200,6 +200,7 @@ struct VideoPlayer: View {
 
     func handleVideoEnded() {
         guard continuousPlayWorkaround == true else {
+            player.pause()
             return
         }
         print(">handleVideoEnded")
