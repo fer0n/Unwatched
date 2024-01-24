@@ -14,7 +14,7 @@ struct UrlService {
     static let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
 
     static func getEmbeddedYoutubeUrl (_ youtubeId: String) -> String {
-        "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&autoplay=0&controls=1"
+        "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&controls=1"
     }
 
     static func stringContainsUrl (_ text: String) -> Bool {

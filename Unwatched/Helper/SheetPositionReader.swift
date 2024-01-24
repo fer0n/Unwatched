@@ -23,6 +23,7 @@ import Foundation
             await Task.sleep(s: 0.5)
             await MainActor.run {
                 normalSheetHeight = sheetSwipeHeight
+                handleSheetMinYUpdate(sheetSwipeHeight) // manually trigger update
             }
         }
     }

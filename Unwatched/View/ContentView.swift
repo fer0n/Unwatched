@@ -49,6 +49,7 @@ struct ContentView: View {
         }
         .environment(navManager)
         .onAppear {
+            restoreVideo()
             refresher.container = modelContext.container
             if refreshOnStartup {
                 print("refreshOnStartup")
@@ -59,7 +60,25 @@ struct ContentView: View {
             sheetPos.sheetHeight = newSize.height
         })
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            saveNavigationManager()
+            saveData()
+        }
+    }
+
+    func restoreVideo() {
+        print("restoreVideo")
+        if player.video != nil {
+            return
+        }
+        guard let data = UserDefaults.standard.data(forKey: Const.lastPlayedVideo) else {
+            print("no videoId to restore found")
+            return
+        }
+        guard let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) else {
+            print("no video to restore found")
+            return
+        }
+        if let video = modelContext.model(for: videoId) as? Video {
+            player.setNextVideo(video, .nextUp)
         }
     }
 
@@ -80,11 +99,15 @@ struct ContentView: View {
         return NavigationManager()
     }
 
-    func saveNavigationManager() {
+    func saveData() {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(navManager) {
             UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
         }
+
+        let videoId = player.video?.persistentModelID
+        let data = try? JSONEncoder().encode(videoId)
+        UserDefaults.standard.setValue(data, forKey: Const.lastPlayedVideo)
         print("saved state")
     }
 }

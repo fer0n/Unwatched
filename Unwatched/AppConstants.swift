@@ -56,4 +56,5 @@ struct Const {
     static let hideShortsEverywhere = "hideShortsEverywhere"
     static let shortsDetection = "shortsDetection"
     static let navigationManager = "NavigationManager"
+    static let lastPlayedVideo = "lastPlayedVideo"
 }
