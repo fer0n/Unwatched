@@ -8,6 +8,7 @@ import SwiftData
 
 struct SubscriptionDetailView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
@@ -27,6 +28,7 @@ struct SubscriptionDetailView: View {
     var body: some View {
         let firstNonShort = subscription.videos.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
         let thumbnailUrl = firstNonShort?.thumbnailUrl
+        let topListItemId = NavigationManager.getScrollId(subscription.title)
 
         VStack {
             List {
@@ -34,6 +36,7 @@ struct SubscriptionDetailView: View {
                     SubscriptionInfoDetails(subscription: subscription,
                                             requiresUnsubscribe: $requiresUnsubscribe)
                 }
+                .id(topListItemId)
                 .padding(.top, 200)
                 .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
@@ -71,6 +74,9 @@ struct SubscriptionDetailView: View {
             if !subscription.isArchived {
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
             }
+        }
+        .onAppear {
+            navManager.topListItemId = topListItemId
         }
         .onDisappear {
             print("onDisappear")

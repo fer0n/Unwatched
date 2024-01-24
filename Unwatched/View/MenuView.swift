@@ -15,27 +15,32 @@ struct MenuView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
-        TabView(selection: $navManager.tab) {
-            QueueView()
-                .tabItem {
-                    Image(systemName: Const.queueTagSF)
-                }
-                .tag(Tab.queue)
 
-            InboxView()
-                .tabItem {
-                    Image(systemName: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF)
-                }
-                .tag(Tab.inbox)
+        ScrollViewReader { proxy in
+            TabView(selection: $navManager.tab.onUpdate { newValue in
+                handleSameTabTapped(newValue, proxy)
+            }) {
+                QueueView()
+                    .tabItem {
+                        Image(systemName: Const.queueTagSF)
+                    }
+                    .tag(Tab.queue)
 
-            LibraryView()
-                .tabItem {
-                    Image(systemName: Const.libraryTabSF)
-                }
-                .tag(Tab.library)
+                InboxView()
+                    .tabItem {
+                        Image(systemName: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF)
+                    }
+                    .tag(Tab.inbox)
+
+                LibraryView()
+                    .tabItem {
+                        Image(systemName: Const.libraryTabSF)
+                    }
+                    .tag(Tab.library)
+            }
+            .environment(navManager)
+            .tint(.myAccentColor)
         }
-        .environment(navManager)
-        .tint(.myAccentColor)
     }
 
     func markVideoWatched(video: Video) {
@@ -44,11 +49,23 @@ struct MenuView: View {
         )
     }
 
+    func handleSameTabTapped(_ newTab: Tab, _ proxy: ScrollViewProxy) {
+        if newTab == navManager.tab {
+            withAnimation {
+                proxy.scrollTo(navManager.topListItemId, anchor: .bottom)
+            }
+        }
+    }
 }
 
 struct MenuView_Previews: PreviewProvider {
 
     static var previews: some View {
         MenuView()
+            .modelContainer(DataController.previewContainer)
+            .environment(NavigationManager.getDummy())
+            .environment(RefreshManager())
+            .environment(Alerter())
+            .environment(PlayerManager())
     }
 }

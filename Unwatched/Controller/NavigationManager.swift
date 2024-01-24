@@ -15,6 +15,8 @@ import SwiftData
     var presentedSubscriptionInbox = [Subscription]()
     var presentedSubscriptionLibrary = [Subscription]()
 
+    @ObservationIgnored var topListItemId: String?
+
     init() { }
 
     required init(from decoder: Decoder) throws {
@@ -40,6 +42,14 @@ import SwiftData
         case .library:
             presentedSubscriptionLibrary.append(subscription)
         }
+    }
+
+    func setScrollId(_ value: String?, _ differentiator: String = "") {
+        topListItemId = NavigationManager.getScrollId(value, differentiator)
+    }
+
+    static func getScrollId(_ value: String?, _ differentiator: String = "") -> String {
+        "scrollId-\(differentiator)-\(value ?? "")"
     }
 
     static func getDummy() -> NavigationManager {

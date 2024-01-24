@@ -27,6 +27,7 @@ struct LibraryView: View {
     }
 
     var body: some View {
+        let topListItemId = NavigationManager.getScrollId("library")
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
             List {
@@ -34,6 +35,7 @@ struct LibraryView: View {
                     NavigationLink(destination: SettingsView()) {
                         LibraryNavListItem("settings", systemName: Const.settingsViewSF)
                     }
+                    .id(topListItemId)
                 }
                 Section {
                     NavigationLink(destination: AllVideosView()) {
@@ -73,6 +75,9 @@ struct LibraryView: View {
                         }
                     }
                 }
+            }
+            .onAppear {
+                navManager.topListItemId = topListItemId
             }
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)

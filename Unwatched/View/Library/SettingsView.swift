@@ -7,6 +7,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
@@ -18,6 +19,8 @@ struct SettingsView: View {
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
     var body: some View {
+        let topListItemId = NavigationManager.getScrollId("settings")
+
         VStack {
             List {
                 Section {
@@ -25,6 +28,7 @@ struct SettingsView: View {
                         Text("refreshOnStartup")
                     }
                 }
+                .id(topListItemId)
                 .tint(.teal)
 
                 Section(header: Text("playback"), footer: Text("playbackHelper")) {
@@ -98,6 +102,9 @@ struct SettingsView: View {
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
         .tint(.myAccentColor)
+        .onAppear {
+            navManager.topListItemId = topListItemId
+        }
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL)] {
