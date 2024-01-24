@@ -44,7 +44,7 @@ struct ChapterMiniControlView: View {
             .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
             .sheet(isPresented: $showChapterSelection) {
                 ChapterSelection()
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.medium])
                     .ignoresSafeArea(.all)
             }
         }
