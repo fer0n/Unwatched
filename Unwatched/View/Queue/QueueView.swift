@@ -16,7 +16,6 @@ struct QueueView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
-
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
                 if queue.isEmpty {
@@ -30,7 +29,8 @@ struct QueueView: View {
                         }
                 } else {
                     List {
-                        ForEach(queue) { entry in
+                        ForEach(queue.indices, id: \.self) { index in
+                            let entry = queue[index]
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(
@@ -42,6 +42,7 @@ struct QueueView: View {
                                     )
                                 }
                             }
+                            .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
                         }
                         .onMove(perform: moveQueueEntry)
                         .dropDestination(for: URL.self) { items, index in
@@ -61,6 +62,9 @@ struct QueueView: View {
             }
         }
         .listStyle(.plain)
+        .onAppear {
+            navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
+        }
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {

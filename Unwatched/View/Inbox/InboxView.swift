@@ -28,7 +28,8 @@ struct InboxView: View {
                         }
                 } else {
                     List {
-                        ForEach(inboxEntries) { entry in
+                        ForEach(inboxEntries.indices, id: \.self) { index in
+                            let entry = inboxEntries[index]
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(
@@ -43,6 +44,7 @@ struct InboxView: View {
                                     )
                                 }
                             }
+                            .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
                         }
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
@@ -54,6 +56,9 @@ struct InboxView: View {
                     }
                     .listStyle(.plain)
                 }
+            }
+            .onAppear {
+                navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
             }
             .toolbar {
                 RefreshToolbarButton()

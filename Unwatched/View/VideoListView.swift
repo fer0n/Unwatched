@@ -8,16 +8,20 @@ import SwiftData
 
 struct VideoListView: View {
     @Query var videos: [Video]
+    var idPrefix: String
 
     init(subscriptionId: PersistentIdentifier? = nil,
-         ytShortsFilter: ShortsDetection? = nil) {
+         ytShortsFilter: ShortsDetection? = nil,
+         idPrefix: String = "") {
         // TODO: This is initiated on the library view already and apparently for every subscription. Should it be that way?
         let filter = VideoListView.getVideoFilter(subscriptionId, ytShortsFilter)
         _videos = Query(filter: filter, sort: \.publishedDate, order: .reverse)
+        self.idPrefix = idPrefix
     }
 
     var body: some View {
-        ForEach(videos) { video in
+        ForEach(videos.indices, id: \.self) { index in
+            let video = videos[index]
             VideoListItem(
                 video: video,
                 showVideoStatus: true,
@@ -26,6 +30,7 @@ struct VideoListView: View {
                 watched: video.watched,
                 videoSwipeActions: [.queueTop, .queueBottom, .clear]
             )
+            .id("\(idPrefix)-\(index)")
         }
     }
 

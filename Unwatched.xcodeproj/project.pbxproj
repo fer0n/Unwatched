@@ -52,6 +52,7 @@
 		888C49C52B5FA75700CDEC76 /* UrlService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C49C42B5FA75700CDEC76 /* UrlService.swift */; };
 		888C49C72B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C49C62B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift */; };
 		888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */; };
+		888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888C49C12B5F288F00CDEC76 /* Binding.swift */; };
 		8891F0AD2B4E7E170098A3FB /* VideoActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AC2B4E7E170098A3FB /* VideoActor.swift */; };
 		8891F0B02B4E9F330098A3FB /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0AF2B4E9F330098A3FB /* String.swift */; };
 		8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */; };
@@ -140,6 +141,7 @@
 		888C49C42B5FA75700CDEC76 /* UrlService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlService.swift; sourceTree = "<group>"; };
 		888C49C62B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfoDetails.swift; sourceTree = "<group>"; };
 		888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsulePicker.swift; sourceTree = "<group>"; };
+		888C49C12B5F288F00CDEC76 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		8891F0AC2B4E7E170098A3FB /* VideoActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoActor.swift; sourceTree = "<group>"; };
 		8891F0AF2B4E9F330098A3FB /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		8891F0B12B4E9F4E0098A3FB /* SubscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionService.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				8891F0AF2B4E9F330098A3FB /* String.swift */,
 				8891F0B72B4F3E080098A3FB /* Collection.swift */,
 				8891F0B92B4F54940098A3FB /* Double.swift */,
+				888C49C12B5F288F00CDEC76 /* Binding.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -562,6 +565,7 @@
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
+				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,
 				887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */,
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */,
