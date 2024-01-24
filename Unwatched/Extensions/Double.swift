@@ -19,7 +19,7 @@ extension Double {
 
     func getFormattedSeconds(for allowedUnits: NSCalendar.Unit) -> String? {
         let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = allowedUnits
+        formatter.allowedUnits = self < 60 ? [.second] : allowedUnits
         formatter.unitsStyle = .abbreviated
         formatter.zeroFormattingBehavior = .dropAll
         return formatter.string(from: TimeInterval(self))
