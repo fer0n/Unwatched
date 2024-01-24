@@ -27,7 +27,7 @@ struct SettingsView: View {
                 }
                 .tint(.teal)
 
-                Section("playback") {
+                Section(header: Text("playback"), footer: Text("playbackHelper")) {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
@@ -45,8 +45,7 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.menu)
                 }
-
-                Section("shortsSettings") {
+                Section(header: Text("shortsSettings"), footer: Text("shortsSettingsHelper")) {
                     Picker("shortsDetection", selection: $shortsDetection) {
                         ForEach(ShortsDetection.allCases, id: \.self) {
                             Text($0.description)
@@ -87,7 +86,12 @@ struct SettingsView: View {
 
                 Section {
                     let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions)
-                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions"))
+                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                            Text("exportSubscriptions")
+                        }
+                    }
                 }
             }
         }

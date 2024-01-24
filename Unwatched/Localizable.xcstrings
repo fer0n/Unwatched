@@ -560,6 +560,16 @@
         }
       }
     },
+    "playbackHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If \"Autoplay\" is enabled the video will start playing after selecting it from a list. \"Fullscreen\" set to true will only allow playing a video in fullscreen. You can still use Picture-in-Picture."
+          }
+        }
+      }
+    },
     "queue" : {
       "localizations" : {
         "en" : {
@@ -669,6 +679,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
+          }
+        }
+      }
+    },
+    "shortsSettingsHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos with \"#Shorts\" in the title/description are considered \"safe\" and marked with \"#s.\" (\".\" suffix). Videos with hashtags inside the title are considered \"moderate\" and marked with \"#s\"."
           }
         }
       }
