@@ -23,10 +23,10 @@ struct BrowserView: View, KeyboardReadable {
 
         GeometryReader { geometry in
             ZStack {
-                YtBrowserWebView(fixSubManager: browserManager)
+                YtBrowserWebView(browserManager: browserManager)
                 VStack {
                     Spacer()
-                    if subscriptionText == nil {
+                    if subscriptionText == nil && browserManager.firstPageLoaded {
                         TipView(ytBrowserTip)
                             .padding(.horizontal)
                     }
