@@ -47,9 +47,9 @@ struct InboxView: View {
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
                         }
-                        if inboxEntries.count > 8 {
+                        if inboxEntries.count > Const.minInboxEntriesToShowClear {
                             clearAllButton
-                                .listRowSeparator(.hidden, edges: .bottom)
+                                .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)

@@ -11,6 +11,7 @@ struct Const {
 
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
+    static let minInboxEntriesToShowClear = 4
 
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
