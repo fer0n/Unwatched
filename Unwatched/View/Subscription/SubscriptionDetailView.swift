@@ -45,7 +45,7 @@ struct SubscriptionDetailView: View {
                     } placeholder: {
                         Color.clear
                     }
-                    .overlay(Material.regular)
+                    .overlay(Material.thin)
                     .padding(.bottom, -100)
                     .mask(LinearGradient(gradient: Gradient(
                         stops: [
