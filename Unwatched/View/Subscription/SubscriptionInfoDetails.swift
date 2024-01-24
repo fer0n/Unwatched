@@ -18,7 +18,7 @@ struct SubscriptionInfoDetails: View {
         let userName = (subscription.youtubeUserName.map { "@\($0)" } ?? subscription.title)
         // - channelId (enough to open the url)
 
-        VStack(alignment: .leading, spacing: 15) {
+        VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
                     Text(userName)
@@ -46,54 +46,50 @@ struct SubscriptionInfoDetails: View {
                 }
                 .buttonStyle(CapsuleButtonStyle())
             }
-            .animation(nil, value: UUID())
-
             Spacer()
-                .frame(maxHeight: 10)
-
-            if !subscription.isArchived {
-                VStack(alignment: .leading, spacing: 5) {
-
-                    Text("Settings")
-                        .font(.subheadline)
-                        .foregroundStyle(Color.gray)
-                    HStack {
-                        Menu {
-                            ForEach(Array(SpeedControlView.speeds), id: \.self) { speed in
-                                Button {
-                                    subscription.customSpeedSetting = speed
-                                } label: {
-                                    Text(SpeedControlView.formatSpeed(speed))
-                                }
+                .frame(maxHeight: 15)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Settings")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.gray)
+                HStack {
+                    Menu {
+                        ForEach(Array(SpeedControlView.speeds), id: \.self) { speed in
+                            Button {
+                                subscription.customSpeedSetting = speed
+                            } label: {
+                                Text(SpeedControlView.formatSpeed(speed))
                             }
-                        } label: {
-                            HStack {
-                                Image(systemName: "timer")
-                                if let custom = subscription.customSpeedSetting {
-                                    Text("\(SpeedControlView.formatSpeed(custom))x")
-                                } else {
-                                    Text("Default (\(SpeedControlView.formatSpeed(playbackSpeed))x)")
-                                }
-                            }
-                            .padding(10)
                         }
-                        .buttonStyle(CapsuleButtonStyle())
-
-                        CapsulePicker(selection: $subscription.placeVideosIn, label: {
-                            let text = $0.description
-                            let img = $0.systemName
-                                ?? defaultVideoPlacement.systemName
-                                ?? "questionmark"
-                            return (text, img)
-                        })
-                        Spacer()
+                    } label: {
+                        HStack {
+                            Image(systemName: "timer")
+                            if let custom = subscription.customSpeedSetting {
+                                Text("\(SpeedControlView.formatSpeed(custom))x")
+                            } else {
+                                Text("Default (\(SpeedControlView.formatSpeed(playbackSpeed))x)")
+                            }
+                        }
+                        .padding(10)
                     }
+                    .buttonStyle(CapsuleButtonStyle())
+
+                    CapsulePicker(selection: $subscription.placeVideosIn, label: {
+                        let text = $0.description
+                        let img = $0.systemName
+                            ?? defaultVideoPlacement.systemName
+                            ?? "questionmark"
+                        return (text, img)
+                    })
+                    Spacer()
                 }
-                .transition(.scale)
-                .animation(.bouncy, value: subscription.isArchived)
             }
+            .padding(.bottom, 10)
+            .opacity(subscription.isArchived ? 0 : 1)
         }
-        .padding()
+
+        .padding([.horizontal, .top])
+
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
@@ -111,6 +107,7 @@ struct SubscriptionInfoDetails: View {
                 .environment(NavigationManager())
                 .environment(RefreshManager())
                 .environment(PlayerManager())
+            Color.blue
             Spacer()
         }
     } else {
