@@ -28,8 +28,7 @@ struct InboxView: View {
                         }
                 } else {
                     List {
-                        ForEach(inboxEntries.indices, id: \.self) { index in
-                            let entry = inboxEntries[index]
+                        ForEach(inboxEntries) { entry in
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(

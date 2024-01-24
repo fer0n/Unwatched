@@ -29,8 +29,7 @@ struct QueueView: View {
                         }
                 } else {
                     List {
-                        ForEach(queue.indices, id: \.self) { index in
-                            let entry = queue[index]
+                        ForEach(queue) { entry in
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(

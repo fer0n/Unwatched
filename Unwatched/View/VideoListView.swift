@@ -20,8 +20,7 @@ struct VideoListView: View {
     }
 
     var body: some View {
-        ForEach(videos.indices, id: \.self) { index in
-            let video = videos[index]
+        ForEach(Array(videos.enumerated()), id: \.element) { index, video in
             VideoListItem(
                 video: video,
                 showVideoStatus: true,
