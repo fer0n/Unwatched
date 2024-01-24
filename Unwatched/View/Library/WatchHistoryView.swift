@@ -29,7 +29,8 @@ struct WatchHistoryView: View {
                 .listStyle(.plain)
             }
         }
-        .navigationBarTitle("watched", displayMode: .inline)
+        .navigationTitle("watched")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

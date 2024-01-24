@@ -94,7 +94,7 @@ import SwiftUI
         }
     }
 
-    func addNewSubscription(_ channelId: String) {
+    func addSubscription(_ channelId: String? = nil, subscriptionId: PersistentIdentifier? = nil) {
         guard let container = container else {
             print("addNewSubscription has no container")
             return
@@ -104,7 +104,9 @@ import SwiftUI
         isLoading = true
         Task {
             do {
-                try await SubscriptionService.addSubscription(channelId: channelId, modelContainer: container)
+                try await SubscriptionService.addSubscription(channelId: channelId,
+                                                              subsciptionId: subscriptionId,
+                                                              modelContainer: container)
                 await MainActor.run {
                     isSubscribedSuccess = true
                     hasNewSubscriptions = true

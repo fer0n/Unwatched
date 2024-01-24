@@ -81,7 +81,7 @@ struct BrowserView: View, KeyboardReadable {
         if isSubscribed {
             subscribeManager.unsubscribe(channelId)
         } else {
-            subscribeManager.addNewSubscription(channelId)
+            subscribeManager.addSubscription(channelId)
         }
 
     }

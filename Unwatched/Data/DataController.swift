@@ -28,10 +28,12 @@ class DataController {
                 fatalError("Could not create ModelContainer: \(error)")
             }
         }()
-
-        sharedModelContainer.mainContext.insert(Video.getDummy())
-        sharedModelContainer.mainContext.insert(Subscription.getDummy())
-
+        let video = Video.getDummy()
+        sharedModelContainer.mainContext.insert(video)
+        let sub = Subscription.getDummy()
+        sub.videos.append(video)
+        sharedModelContainer.mainContext.insert(sub)
+        try? sharedModelContainer.mainContext.save()
         return sharedModelContainer
     }()
 }
@@ -40,7 +42,9 @@ extension Subscription {
     static func getDummy() -> Subscription {
         return Subscription(
             link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
-            title: "Virtual Reality Oasis")
+            title: "Virtual Reality Oasis",
+            youtubeUserName: "VirtualRealityOasis",
+            isArchived: false)
     }
 }
 

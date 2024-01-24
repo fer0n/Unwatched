@@ -21,7 +21,8 @@ struct AllVideosView: View {
                 .listStyle(.plain)
             }
         }
-        .navigationBarTitle("allVideos", displayMode: .inline)
+        .navigationTitle("allVideos")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     var shortsFilter: ShortsDetection? {

@@ -51,7 +51,8 @@ struct QueueView: View {
                     }
                 }
             }
-            .navigationBarTitle("queue", displayMode: .inline)
+            .navigationTitle("queue")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
@@ -78,4 +79,6 @@ struct QueueView: View {
     QueueView()
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
 }

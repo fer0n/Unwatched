@@ -21,6 +21,11 @@ enum VideoSource {
             currentEndTime = 0
             currentTime = video?.elapsedSeconds ?? 0
             isPlaying = false
+            currentChapter = nil
+            if video == oldValue && UserDefaults.standard.bool(forKey: Const.autoplayVideos) {
+                print("> tapped existing video")
+                self.play()
+            }
         }
     }
 

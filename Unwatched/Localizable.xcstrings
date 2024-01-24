@@ -7,16 +7,25 @@
     "–" : {
 
     },
+    "@%@" : {
+
+    },
     "#s%@" : {
 
     },
     "%@" : {
 
     },
+    "%@x" : {
+
+    },
     "%lf" : {
 
     },
     "%lld" : {
+
+    },
+    "%lld video(s) available" : {
 
     },
     "addSubscription" : {
@@ -204,6 +213,9 @@
           }
         }
       }
+    },
+    "Default (%@x)" : {
+
     },
     "doNothing" : {
       "localizations" : {
@@ -608,6 +620,9 @@
         }
       }
     },
+    "Settings" : {
+
+    },
     "share" : {
       "localizations" : {
         "en" : {
@@ -694,6 +709,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subscribe"
+          }
+        }
+      }
+    },
+    "subscribed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribed"
           }
         }
       }
