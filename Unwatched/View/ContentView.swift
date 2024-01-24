@@ -49,10 +49,11 @@ struct ContentView: View {
         }
         .environment(navManager)
         .onAppear {
-            restoreVideo()
-            refresher.container = modelContext.container
+            let container = modelContext.container
+            refresher.container = container
+            player.container = container
+            restoreNowPlayingVideo()
             if refreshOnStartup {
-                print("refreshOnStartup")
                 refresher.refreshAll()
             }
         }
@@ -62,23 +63,28 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             saveData()
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            restoreNowPlayingVideo()
+        }
     }
 
-    func restoreVideo() {
+    func restoreNowPlayingVideo() {
         print("restoreVideo")
-        if player.video != nil {
-            return
+        var video: Video?
+
+        if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
+           let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) {
+            if player.video?.persistentModelID == videoId {
+                // current video is the one stored, all good
+                return
+            }
+            video = modelContext.model(for: videoId) as? Video
         }
-        guard let data = UserDefaults.standard.data(forKey: Const.lastPlayedVideo) else {
-            print("no videoId to restore found")
-            return
-        }
-        guard let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) else {
-            print("no video to restore found")
-            return
-        }
-        if let video = modelContext.model(for: videoId) as? Video {
+
+        if let video = video {
             player.setNextVideo(video, .nextUp)
+        } else {
+            player.loadTopmostVideoFromQueue()
         }
     }
 
@@ -107,7 +113,7 @@ struct ContentView: View {
 
         let videoId = player.video?.persistentModelID
         let data = try? JSONEncoder().encode(videoId)
-        UserDefaults.standard.setValue(data, forKey: Const.lastPlayedVideo)
+        UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
         print("saved state")
     }
 }

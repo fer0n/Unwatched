@@ -15,7 +15,8 @@ struct AddYoutubeURL: AppIntent {
         let schema = Schema(DataController.dbEntries)
         let modelContainer = try ModelContainer(for: schema)
         let task = VideoService.addForeignUrls([youtubeUrl], in: .queue, modelContext: modelContainer.mainContext)
-        _ = try await task.value
+        try await task.value
+        UserDefaults.standard.setValue(nil, forKey: Const.nowPlayingVideo)
         return .result()
     }
 
