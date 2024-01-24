@@ -125,6 +125,11 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 if let video = parent.player.video {
                     VideoService.updateDuration(video, duration: duration)
                 }
+            case "playbackRate":
+                guard let payload = payload, let playbackRate = Double(payload) else {
+                    return
+                }
+                parent.player.playbackSpeed = playbackRate
             default:
                 break
             }
@@ -193,7 +198,10 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 player = new YT.Player("player", {
                     events: {
                         onReady: onPlayerReady,
-                        onStateChange: onPlayerStateChange
+                        onStateChange: onPlayerStateChange,
+                        onPlaybackRateChange: function(event) {
+                            sendMessage("playbackRate", event.data);
+                        }
                     },
                 });
             }
