@@ -7,7 +7,7 @@ class SubscriptionService {
         return try await repo.addSubscriptions(from: urls)
     }
 
-    static func addSubscription(channelId: String?,
+    static func addSubscription(channelId: String? = nil,
                                 subsciptionId: PersistentIdentifier? = nil,
                                 modelContainer: ModelContainer) async throws {
         guard channelId != nil || subsciptionId != nil else {

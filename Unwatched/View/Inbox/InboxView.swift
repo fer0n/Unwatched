@@ -58,7 +58,8 @@ struct InboxView: View {
             .toolbar {
                 RefreshToolbarButton()
             }
-            .navigationBarTitle("inbox", displayMode: .inline)
+            .navigationTitle("inbox")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
@@ -114,4 +115,6 @@ struct InboxView: View {
     InboxView()
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
 }

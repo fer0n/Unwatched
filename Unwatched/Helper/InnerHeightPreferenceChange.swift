@@ -65,3 +65,10 @@ extension View {
         self.modifier(GlobalMinYTrackerModifier(onChange: onChange))
     }
 }
+
+struct HeightAndOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = CGRect()
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
+    }
+}

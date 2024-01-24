@@ -77,7 +77,8 @@ struct LibraryView: View {
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
-            .navigationBarTitle("library", displayMode: .inline)
+            .navigationTitle("library")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {

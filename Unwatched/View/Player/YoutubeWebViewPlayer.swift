@@ -69,7 +69,8 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
-            let script = "player.cueVideoById('\(videoId)');"
+            print("cueVideoById")
+            let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
             uiView.evaluateJavaScript(script, completionHandler: nil)
             context.coordinator.previousState.videoId = player.video?.youtubeId
         }
@@ -108,15 +109,12 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             switch topic {
             case "paused":
                 parent.player.pause()
-                print("parent.player.video.title", parent.player.video?.title)
                 handleTimeUpdate(payload, persist: true)
             case "playing":
                 parent.player.play()
             case "ended":
                 parent.onVideoEnded()
             case "unstarted", "playerReady":
-                parent.player.seekPosition = parent.player.video?.elapsedSeconds ?? 0
-                previousState.seekPosition = nil
                 handleAutoStart()
             case "currentTime":
                 handleTimeUpdate(payload)
@@ -133,6 +131,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
         }
 
         func handleAutoStart() {
+            print("parent.player.videoSource", parent.player.videoSource)
             switch parent.player.videoSource {
             case .continuousPlay:
                 let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -161,17 +160,14 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             guard let time = timeString.flatMap({ Double($0) }) else {
                 return
             }
-            guard let urlString = urlString,
-                  let url = URL(string: String(urlString)),
-                  let videoId = UrlService.getYoutubeIdFromUrl(url: url) else {
-                return
-            }
-
-            if persist {
-                parent.player.updateElapsedTime(time, videoId: videoId)
-            }
             if parent.player.isPlaying {
                 parent.player.monitorChapters(time: time)
+            }
+            if let urlString = urlString,
+               let url = URL(string: String(urlString)),
+               let videoId = UrlService.getYoutubeIdFromUrl(url: url),
+               persist {
+                parent.player.updateElapsedTime(time, videoId: videoId)
             }
         }
     }
@@ -198,11 +194,6 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     events: {
                         onReady: onPlayerReady,
                         onStateChange: onPlayerStateChange
-                    },
-                    playerVars: {
-                        'enablejsapi': 1,
-                        'autoplay': 1,
-                        'controls': 1,
                     },
                 });
             }

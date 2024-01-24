@@ -24,7 +24,8 @@ struct SideloadingView: View {
                     )
                     // TODO: add filtering here
                 }
-                .navigationBarTitle("sideloads", displayMode: .inline)
+                .navigationTitle("sideloads")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }

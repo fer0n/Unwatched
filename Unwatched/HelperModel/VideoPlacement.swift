@@ -19,6 +19,24 @@ enum VideoPlacement: Int, Codable, CaseIterable {
         case .defaultPlacement: return String(localized: "useDefault") + " (\(defaultPlacement))"
         }
     }
+
+    var description: String {
+        switch self {
+        case .inbox: return String(localized: "addToInbox")
+        case .queue: return String(localized: "addToQueue")
+        case .nothing: return String(localized: "doNothing")
+        case .defaultPlacement: return String(localized: "useDefault")
+        }
+    }
+
+    var systemName: String? {
+        switch self {
+        case .inbox: return Const.inboxTabEmptySF
+        case .queue: return Const.queueTagSF
+        case .nothing: return Const.clearSF
+        case .defaultPlacement: return nil
+        }
+    }
 }
 
 struct DefaultVideoPlacement {

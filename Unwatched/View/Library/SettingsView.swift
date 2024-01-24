@@ -91,7 +91,8 @@ struct SettingsView: View {
                 }
             }
         }
-        .navigationBarTitle("settings", displayMode: .inline)
+        .navigationTitle("settings")
+        .navigationBarTitleDisplayMode(.inline)
         .tint(.myAccentColor)
     }
 
