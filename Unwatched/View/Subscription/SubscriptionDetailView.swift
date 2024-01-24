@@ -42,11 +42,20 @@ struct SubscriptionDetailView: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .clipped()
                     } placeholder: {
                         Color.clear
                     }
                     .overlay(Material.regular)
+                    .padding(.bottom, -100)
+                    .mask(LinearGradient(gradient: Gradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .black.opacity(0.8), location: 0.2),
+                            .init(color: .black, location: 0.3),
+                            .init(color: .black, location: 0.5),
+                            .init(color: .clear, location: 1)
+                        ]
+                    ), startPoint: .top, endPoint: .bottom))
                 )
 
                 VideoListView(
