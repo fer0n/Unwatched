@@ -19,8 +19,7 @@ struct WatchHistoryView: View {
                                        description: Text("noHistoryItemsDescription"))
             } else {
                 List {
-                    ForEach(watchEntries.indices, id: \.self) { index in
-                        let entry = watchEntries[index]
+                    ForEach(watchEntries) { entry in
                         VideoListItem(video: entry.video,
                                       showVideoStatus: true,
                                       hasInboxEntry: entry.video.inboxEntry != nil,
