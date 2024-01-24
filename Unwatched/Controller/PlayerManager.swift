@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 enum VideoSource {
     case continuousPlay
@@ -15,6 +16,8 @@ enum VideoSource {
     var seekPosition: Double?
 
     var videoSource: VideoSource = .userInteraction
+
+    var container: ModelContainer?
 
     var video: Video? {
         didSet {
@@ -186,6 +189,28 @@ enum VideoSource {
     func pause() {
         if self.isPlaying {
             self.isPlaying = false
+        }
+    }
+
+    func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
+        guard let container = container else {
+            print("no container handleUpdatedQueue")
+            return
+        }
+        let currentVideoId = video?.persistentModelID
+        Task {
+            try? await task?.value
+            let context = ModelContext(container)
+            let newVideo = VideoService.getTopVideoInQueue(context)
+            let videoId = newVideo?.persistentModelID
+            await MainActor.run {
+                if let videoId = videoId, currentVideoId != videoId {
+                    let context = ModelContext(container)
+                    if let newVideo = context.model(for: videoId) as? Video {
+                        self.setNextVideo(newVideo, .nextUp)
+                    }
+                }
+            }
         }
     }
 

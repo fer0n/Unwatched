@@ -32,16 +32,18 @@ class VideoService {
         }
     }
 
-    static func moveQueueEntry(from source: IndexSet, to destination: Int, modelContext: ModelContext) {
+    static func moveQueueEntry(from source: IndexSet, to destination: Int, modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
-        Task.detached {
+        let task = Task.detached {
             do {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.moveQueueEntry(from: source, to: destination)
             } catch {
                 print("\(error)")
+                throw error
             }
         }
+        return task
     }
 
     static func deleteInboxEntries(_ entries: [InboxEntry], modelContext: ModelContext) {
@@ -69,13 +71,14 @@ class VideoService {
 
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
-                                   modelContext: ModelContext) {
+                                   modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoIds = videos.map { $0.id }
-        Task {
+        let task = Task {
             let repo = VideoActor(modelContainer: container)
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)
         }
+        return task
     }
 
     static func addToBottomQueue(video: Video, modelContext: ModelContext) {
@@ -107,6 +110,17 @@ class VideoService {
             last.duration = duration - last.startTime
         }
         video.duration = duration
+    }
+
+    static func getTopVideoInQueue(_ modelContext: ModelContext) -> Video? {
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        fetch.fetchLimit = 1
+        let videos = try? modelContext.fetch(fetch)
+        if let nextVideo = videos?.first {
+            return nextVideo.video
+        }
+        return nil
     }
 
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {

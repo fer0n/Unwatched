@@ -67,14 +67,16 @@ struct QueueView: View {
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
-        VideoService.moveQueueEntry(from: source,
-                                    to: destination,
-                                    modelContext: modelContext)
+        let task = VideoService.moveQueueEntry(from: source,
+                                               to: destination,
+                                               modelContext: modelContext)
+        player.loadTopmostVideoFromQueue(after: task)
     }
 
     func handleUrlDrop(_ items: [URL], at index: Int) {
         print("handleUrlDrop", items)
-        _ = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
+        let task = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
+        player.loadTopmostVideoFromQueue(after: task)
     }
 }
 
