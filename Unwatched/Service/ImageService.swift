@@ -8,25 +8,34 @@ import SwiftData
 import SwiftUI
 
 class ImageService {
-    static func loadImage(_ videoId: PersistentIdentifier,
-                          url: URL,
-                          container: ModelContainer) -> Task<UIImage?, Error> {
-        let task = Task.detached {
-            let imageData = try await self.loadImageData(url: url)
-            let uiImg = UIImage(data: imageData)
+    //    static func loadImage(_ videoId: PersistentIdentifier,
+    //                          url: URL,
+    //                          container: ModelContainer) -> Task<Data?, Error> {
+    //        let task = Task.detached {
+    //            let imageData = try await self.loadImageData(url: url)
+    //            let uiImg = UIImage(data: imageData)
+    //            return uiImg
+    //        }
+    //        return task
+    //    }
+
+    static func persistImages(cache: [PersistentIdentifier: ImageCacheInfo], container: ModelContainer) -> Task<(), Error> {
+        let task = Task {
             let context = ModelContext(container)
-            guard let video = context.model(for: videoId) as? Video else {
-                return nil as UIImage?
+            cache.forEach { (videoId, info) in
+                guard let video = context.model(for: videoId) as? Video else {
+                    return
+                }
+                if video.cachedImage != nil {
+                    print("!has image")
+                    return
+                }
+                var imageCache = CachedImage(info.url, imageData: info.data)
+                context.insert(imageCache)
+                video.cachedImage = imageCache
+                print("saved")
             }
-            if video.cachedImage != nil {
-                print("!has image")
-                return nil as UIImage?
-            }
-            let imageCache = CachedImage(url, imageData: imageData)
-            context.insert(imageCache)
-            video.cachedImage = imageCache
-            print("saved")
-            return uiImg
+            try context.save()
         }
         return task
     }
