@@ -20,7 +20,8 @@ actor SubscriptionActor {
         guard let channelId = channelId else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.youtubeChannelId == channelId })
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.youtubeChannelId == channelId })
+        fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
             first.isArchived = false
@@ -98,11 +99,12 @@ actor SubscriptionActor {
                                       userName: String? = nil,
                                       _ unarchiveSubIfAvailable: Bool = false) -> String? {
         if channelId == nil && userName == nil { return nil }
-        let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             (channelId != nil && channelId == $0.youtubeChannelId) ||
                 (userName != nil && $0.youtubeUserName == userName)
         })
-        let subs = try? modelContext.fetch(fetchDescriptor)
+        fetch.fetchLimit = 1
+        let subs = try? modelContext.fetch(fetch)
         if let sub = subs?.first {
             if unarchiveSubIfAvailable {
                 sub.isArchived = false
@@ -136,9 +138,10 @@ actor SubscriptionActor {
     }
 
     func unsubscribe(_ channelId: String) throws {
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubeChannelId == channelId
         })
+        fetch.fetchLimit = 1
         guard let first = try modelContext.fetch(fetch).first else {
             print("nothing found to unsubscribe")
             return

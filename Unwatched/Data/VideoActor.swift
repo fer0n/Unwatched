@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 import Observation
 
+// swiftlint:disable type_body_length
 @ModelActor
 actor VideoActor {
     func addForeignVideo(from videoUrls: [URL],
@@ -63,9 +64,10 @@ actor VideoActor {
     }
 
     func subscriptionExists(_ channelId: String) throws -> Subscription? {
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubeChannelId == channelId
         })
+        fetch.fetchLimit = 1
         if let subs = try? modelContext.fetch(fetch) {
             if let sub = subs.first {
                 return sub
@@ -88,10 +90,11 @@ actor VideoActor {
     }
 
     func videoAlreadyExists(_ youtubeId: String) -> Video? {
-        let fetchDescriptor = FetchDescriptor<Video>(predicate: #Predicate {
+        var fetch = FetchDescriptor<Video>(predicate: #Predicate {
             $0.youtubeId == youtubeId
         })
-        let videos = try? modelContext.fetch(fetchDescriptor)
+        fetch.fetchLimit = 1
+        let videos = try? modelContext.fetch(fetch)
         return videos?.first
     }
 
@@ -176,10 +179,11 @@ actor VideoActor {
     }
 
     private func addToCorrectSubscription(_ video: Video, channelId: String) {
-        let fetchDescriptor = FetchDescriptor<Subscription>(predicate: #Predicate {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubeChannelId == channelId
         })
-        let subscriptions = try? modelContext.fetch(fetchDescriptor)
+        fetch.fetchLimit = 1
+        let subscriptions = try? modelContext.fetch(fetch)
         if let sub = subscriptions?.first {
             sub.videos.append(video)
             for video in sub.videos {
@@ -408,3 +412,4 @@ actor VideoActor {
         }
     }
 }
+// swiftlint:enable type_body_length
