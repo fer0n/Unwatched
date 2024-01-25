@@ -14,7 +14,8 @@ class DataController {
         QueueEntry.self,
         WatchEntry.self,
         InboxEntry.self,
-        Chapter.self
+        Chapter.self,
+        CachedImage.self
     ]
 
     static let previewContainer: ModelContainer = {

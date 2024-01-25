@@ -18,6 +18,8 @@ struct SettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
+    @State var isLoading = false
+
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("settings")
 
@@ -97,6 +99,20 @@ struct SettingsView: View {
                         }
                     }
                 }
+
+                Section {
+                    Button(role: .destructive, action: {
+                        deleteImageCache()
+                    }, label: {
+                        if isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Text("deleteImageCache")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                    })
+                }
             }
         }
         .navigationTitle("settings")
@@ -104,6 +120,19 @@ struct SettingsView: View {
         .tint(.myAccentColor)
         .onAppear {
             navManager.topListItemId = topListItemId
+        }
+    }
+
+    func deleteImageCache() {
+        if isLoading { return }
+        let container = modelContext.container
+        isLoading = true
+        Task {
+            let task = ImageService.deleteAllImages(container)
+            try? await task.value
+            await MainActor.run {
+                self.isLoading = false
+            }
         }
     }
 

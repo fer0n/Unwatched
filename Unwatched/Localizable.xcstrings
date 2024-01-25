@@ -217,6 +217,16 @@
     "Default (%@x)" : {
 
     },
+    "deleteImageCache" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Image Cache"
+          }
+        }
+      }
+    },
     "doNothing" : {
       "localizations" : {
         "en" : {

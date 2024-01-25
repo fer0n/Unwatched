@@ -13,7 +13,7 @@ struct MiniPlayerView: View {
         VStack {
             HStack(alignment: .center) {
                 if let video = player.video {
-                    CacheAsyncImage(url: video.thumbnailUrl) { image in
+                    CachedImageView(video: video) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -24,6 +24,7 @@ struct MiniPlayerView: View {
                     }
                     .aspectRatio(16/9, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+
                     Text(video.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Button {

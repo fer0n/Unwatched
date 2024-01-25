@@ -41,7 +41,7 @@ struct SubscriptionDetailView: View {
                 .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
                 .background(
-                    CacheAsyncImage(url: thumbnailUrl) { image in
+                    CachedImageView(video: firstNonShort) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
