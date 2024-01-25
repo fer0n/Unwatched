@@ -37,26 +37,32 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
     func loadImage () {
         guard let video = video,
               let url = video.thumbnailUrl,
-              cacheManager[url] == nil else {
+              cacheManager[video.persistentModelID] == nil else {
             return
         }
         let videoId = video.persistentModelID
-        let container = modelContext.container
-        Task {
-            let task = ImageService.loadImage(videoId, url: url, container: container)
-            let uiImage = try? await task.value
+        Task.detached {
+            print("-- load new")
+            let imageData = try await ImageService.loadImageData(url: url)
+            let cacheInfo = ImageCacheInfo(
+                url: url,
+                data: imageData,
+                videoId: videoId
+            )
             await MainActor.run {
-                cacheManager[url] = uiImage
+                cacheManager[videoId] = cacheInfo
             }
         }
     }
 
     var getUIImage: UIImage? {
         if let imageData = video?.cachedImage?.imageData {
+            print("> storage")
             return UIImage(data: imageData)
         }
-        if let uiImage = cacheManager[video?.thumbnailUrl] {
-            return uiImage
+        if let cacheInfo = cacheManager[video?.persistentModelID] {
+            print("> memory")
+            return UIImage(data: cacheInfo.data)
         }
         return nil
     }

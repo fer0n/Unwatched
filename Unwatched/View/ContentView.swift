@@ -113,6 +113,8 @@ struct ContentView: View {
         let videoId = player.video?.persistentModelID
         let data = try? JSONEncoder().encode(videoId)
         UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
+        let container = modelContext.container
+        imageCacheManager.persistCache(container)
         print("saved state")
     }
 }
