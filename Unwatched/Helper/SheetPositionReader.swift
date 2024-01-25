@@ -7,7 +7,7 @@ import Foundation
 
 @Observable class SheetPositionReader {
     // Sheet animation and height detection
-    var swipedBelow: Bool = false
+    var swipedBelow: Bool = true
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored var normalSheetHeight: CGFloat = .zero
     @ObservationIgnored var sheetSwipeHeight: CGFloat = .zero

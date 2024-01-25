@@ -92,7 +92,7 @@ class VideoService {
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
-                               at index: Int = 0,
+                               at index: Int = 1,
                                modelContext: ModelContext) -> Task<(), Error> {
         print("addForeignUrls")
         let container = modelContext.container
