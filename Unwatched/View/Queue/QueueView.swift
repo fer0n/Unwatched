@@ -36,7 +36,9 @@ struct QueueView: View {
                                         video: video,
                                         videoSwipeActions: [.queueBottom, .queueTop, .clear],
                                         onClear: {
-                                            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+                                            withAnimation {
+                                                VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+                                            }
                                         }
                                     )
                                 }

@@ -133,6 +133,7 @@ struct VideoListItem: View {
     var videoItemDetails: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(video.title)
+                .frame(maxWidth: .infinity)
                 .font(.system(size: 15, weight: .medium))
                 .lineLimit(2)
             HStack {
