@@ -6,7 +6,7 @@ import Observation
 actor VideoActor {
     func addForeignVideo(from videoUrls: [URL],
                          in videoplacement: VideoPlacement,
-                         at index: Int = 0) async throws {
+                         at index: Int) async throws {
         var videos = [Video]()
         for url in videoUrls {
             guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
@@ -332,10 +332,16 @@ actor VideoActor {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order, order: .reverse)])
         fetch.fetchLimit = 1
         let entries = try? modelContext.fetch(fetch)
-        let maxOrder = entries?.first?.order
-        let newOrder = maxOrder.map { $0 + 1 } ?? 0
-        print("newOrder", newOrder)
-        insertQueueEntries(at: newOrder, videos: [video])
+
+        var insertAt = 0
+        if let entries = entries {
+            if video.queueEntry != nil {
+                insertAt = entries.first?.order ?? 0
+            } else {
+                insertAt = (entries.first?.order ?? 0) + 1
+            }
+        }
+        insertQueueEntries(at: insertAt, videos: [video])
         try modelContext.save()
     }
 
@@ -356,11 +362,17 @@ actor VideoActor {
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
             for (index, video) in videos.enumerated() {
-                clearEntries(from: video)
-                let queueEntry = QueueEntry(video: video, order: 0)
-                modelContext.insert(queueEntry)
+                clearEntries(from: video, except: QueueEntry.self)
+                if let queueEntry = video.queueEntry {
+                    queue.removeAll { $0 == queueEntry }
+                }
+                let queueEntry = video.queueEntry ?? {
+                    let newQueueEntry = QueueEntry(video: video, order: 0)
+                    modelContext.insert(newQueueEntry)
+                    video.queueEntry = newQueueEntry
+                    return newQueueEntry
+                }()
                 queue.insert(queueEntry, at: startIndex + index)
-                video.queueEntry = queueEntry
             }
             for (index, queueEntry) in queue.enumerated() {
                 queueEntry.order = index
