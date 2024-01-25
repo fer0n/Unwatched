@@ -194,11 +194,10 @@ struct VideoListItem: View {
     func addVideoToTopQueue() {
         print("addVideoTop")
         let task = VideoService.insertQueueEntries(
-            at: 0,
+            at: 1,
             videos: [video],
             modelContext: modelContext
         )
-        player.loadTopmostVideoFromQueue(after: task)
     }
 
     func addVideoToBottomQueue() {
