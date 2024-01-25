@@ -22,13 +22,11 @@ import SwiftData
 
     func persistCache(_ container: ModelContainer) {
         let cache = cache
-        print("cache.count", cache.count)
         Task {
             let task = ImageService.persistImages(cache: cache, container: container)
             try await task.value
             await MainActor.run {
                 self.cache = [:]
-                print("empty cache now: \(self.cache)")
             }
         }
 

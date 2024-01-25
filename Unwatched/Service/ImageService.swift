@@ -8,18 +8,10 @@ import SwiftData
 import SwiftUI
 
 class ImageService {
-    //    static func loadImage(_ videoId: PersistentIdentifier,
-    //                          url: URL,
-    //                          container: ModelContainer) -> Task<Data?, Error> {
-    //        let task = Task.detached {
-    //            let imageData = try await self.loadImageData(url: url)
-    //            let uiImg = UIImage(data: imageData)
-    //            return uiImg
-    //        }
-    //        return task
-    //    }
 
-    static func persistImages(cache: [PersistentIdentifier: ImageCacheInfo], container: ModelContainer) -> Task<(), Error> {
+    static func persistImages(
+        cache: [PersistentIdentifier: ImageCacheInfo],
+        container: ModelContainer) -> Task<(), Error> {
         let task = Task {
             let context = ModelContext(container)
             cache.forEach { (videoId, info) in
@@ -30,7 +22,7 @@ class ImageService {
                     print("!has image")
                     return
                 }
-                var imageCache = CachedImage(info.url, imageData: info.data)
+                let imageCache = CachedImage(info.url, imageData: info.data)
                 context.insert(imageCache)
                 video.cachedImage = imageCache
                 print("saved")

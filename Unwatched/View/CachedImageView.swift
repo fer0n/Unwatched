@@ -42,7 +42,6 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
         }
         let videoId = video.persistentModelID
         Task.detached {
-            print("-- load new")
             let imageData = try await ImageService.loadImageData(url: url)
             let cacheInfo = ImageCacheInfo(
                 url: url,
@@ -57,11 +56,9 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
 
     var getUIImage: UIImage? {
         if let imageData = video?.cachedImage?.imageData {
-            print("> storage")
             return UIImage(data: imageData)
         }
         if let cacheInfo = cacheManager[video?.persistentModelID] {
-            print("> memory")
             return UIImage(data: cacheInfo.data)
         }
         return nil
