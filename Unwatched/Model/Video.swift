@@ -11,6 +11,7 @@ final class Video: CustomStringConvertible {
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
     @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
+    @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
     @Attribute(.unique) var youtubeId: String
 
     var title: String
@@ -71,5 +72,4 @@ final class Video: CustomStringConvertible {
         self.isYtShort = isYtShort
         self.isLikelyYtShort = isLikelyYtShort
     }
-
 }

@@ -74,7 +74,7 @@ struct VideoListItem: View {
     var videoItem: some View {
         ZStack(alignment: .topLeading) {
             HStack {
-                CacheAsyncImage(url: video.thumbnailUrl) { image in
+                CachedImageView(video: video) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

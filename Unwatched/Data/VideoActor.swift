@@ -372,7 +372,11 @@ actor VideoActor {
                     video.queueEntry = newQueueEntry
                     return newQueueEntry
                 }()
-                queue.insert(queueEntry, at: startIndex + index)
+                if queue.isEmpty {
+                    queue.append(queueEntry)
+                } else {
+                    queue.insert(queueEntry, at: startIndex + index)
+                }
             }
             for (index, queueEntry) in queue.enumerated() {
                 queueEntry.order = index

@@ -16,6 +16,7 @@ struct ContentView: View {
     @State var player = PlayerManager()
     @State var refresher = RefreshManager()
     @State var sheetPos = SheetPositionReader()
+    @State var imageCacheManager = ImageCacheManager()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -48,6 +49,7 @@ struct ContentView: View {
                 .environment(player)
         }
         .environment(navManager)
+        .environment(imageCacheManager)
         .onAppear {
             let container = modelContext.container
             refresher.container = container
