@@ -20,14 +20,10 @@ struct SubscriptionInfoDetails: View {
 
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading) {
-                VStack(alignment: .leading) {
-                    Text(userName)
-                        .fontWeight(.medium)
-                    Text(availableVideos)
-                        .font(.system(size: 14))
-                        .font(.body)
-                        .foregroundStyle(Color.gray)
-                }
+                Text(availableVideos)
+                    .font(.system(size: 14))
+                    .font(.body)
+                    .foregroundStyle(Color.gray)
 
                 Button {
                     requiresUnsubscribe = true
@@ -47,7 +43,7 @@ struct SubscriptionInfoDetails: View {
                 .buttonStyle(CapsuleButtonStyle())
             }
             Spacer()
-                .frame(maxHeight: 15)
+                .frame(maxHeight: 20)
             VStack(alignment: .leading, spacing: 5) {
                 Text("Settings")
                     .font(.subheadline)
@@ -84,12 +80,10 @@ struct SubscriptionInfoDetails: View {
                     Spacer()
                 }
             }
-            .padding(.bottom, 10)
-            .opacity(subscription.isArchived ? 0 : 1)
+            .padding(.bottom, 15)
+            .disabled(subscription.isArchived)
         }
-
-        .padding([.horizontal, .top])
-
+        .padding(.horizontal)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
