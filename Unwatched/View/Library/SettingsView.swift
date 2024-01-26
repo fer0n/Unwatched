@@ -18,7 +18,8 @@ struct SettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
-    @State var isLoading = false
+    @State var isDeleting = false
+    @State var isExporting = false
 
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("settings")
@@ -91,11 +92,16 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions)
+                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExporting)
                     ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                            Text("exportSubscriptions")
+                        if isExporting {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                Text("exportSubscriptions")
+                            }
                         }
                     }
                 }
@@ -104,12 +110,11 @@ struct SettingsView: View {
                     Button(role: .destructive, action: {
                         deleteImageCache()
                     }, label: {
-                        if isLoading {
+                        if isDeleting {
                             ProgressView()
                                 .frame(maxWidth: .infinity, alignment: .center)
                         } else {
                             Text("deleteImageCache")
-                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                     })
                 }
@@ -124,14 +129,14 @@ struct SettingsView: View {
     }
 
     func deleteImageCache() {
-        if isLoading { return }
+        if isDeleting { return }
         let container = modelContext.container
-        isLoading = true
+        isDeleting = true
         Task {
             let task = ImageService.deleteAllImages(container)
             try? await task.value
             await MainActor.run {
-                self.isLoading = false
+                self.isDeleting = false
             }
         }
     }
@@ -145,9 +150,11 @@ struct SettingsView: View {
 
 struct AsyncSharableUrls: Transferable {
     let getUrls: () async -> [(title: String, link: URL)]
+    @Binding var isLoading: Bool
 
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(exportedContentType: .plainText) { item in
+            item.isLoading = true
             let urls = await item.getUrls()
             let textUrls = urls
                 .map { "\($0.title)\n\($0.link.absoluteString)\n" }
@@ -155,10 +162,12 @@ struct AsyncSharableUrls: Transferable {
             print("textUrls", textUrls)
             let data = textUrls.data(using: .utf8)
             if let data = data {
+                item.isLoading = false
                 return data
             } else {
                 fatalError()
             }
+            item.isLoading = false
         }
     }
 }
