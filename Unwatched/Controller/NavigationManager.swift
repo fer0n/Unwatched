@@ -8,6 +8,8 @@ import SwiftUI
 import SwiftData
 
 @Observable class NavigationManager: Codable {
+    static let doubleTapTimoutS: Double = 0.5
+
     var showMenu = true
     var tab = Tab.queue
 
@@ -16,6 +18,7 @@ import SwiftData
     var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?
+    @ObservationIgnored private var lastTabTwiceDate: Date?
 
     init() { }
 
@@ -50,6 +53,29 @@ import SwiftData
 
     static func getScrollId(_ value: String?, _ differentiator: String = "") -> String {
         "scrollId-\(differentiator)-\(value ?? "")"
+    }
+
+    func handleTappedTwice() {
+        if let lastTapped = lastTabTwiceDate {
+            let isDoubleTap = lastTapped.timeIntervalSinceNow > -NavigationManager.doubleTapTimoutS
+            if isDoubleTap {
+                popCurrentNaviagtionStack()
+            }
+        }
+        lastTabTwiceDate = .now
+    }
+
+    func popCurrentNaviagtionStack() {
+        switch tab {
+        case .inbox:
+            _ = presentedSubscriptionInbox.popLast()
+        case .queue:
+            _ = presentedSubscriptionQueue.popLast()
+        case .library:
+            if !presentedLibrary.isEmpty {
+                presentedLibrary.removeLast()
+            }
+        }
     }
 
     static func getDummy() -> NavigationManager {
