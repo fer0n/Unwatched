@@ -15,19 +15,14 @@ struct SubscriptionDetailView: View {
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @State var isLoading = false
     @State var subscribeManager = SubscribeManager()
+    @State var requiresUnsubscribe = false
 
     @Bindable var subscription: Subscription
 
-    let coordinateSpaceName = "navstack"
-    @State var size: CGRect = .zero
-    @State var requiresUnsubscribe = false
-
     // TODO: test if now the videoListItem might no longer need the hasInboxEntry etc. workaround?
-    // TODO: whats the difference between id and persistendModelID? Check what's used in tutorials
 
     var body: some View {
         let firstNonShort = subscription.videos.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
-        let thumbnailUrl = firstNonShort?.thumbnailUrl
         let topListItemId = NavigationManager.getScrollId(subscription.title)
 
         VStack {
@@ -55,8 +50,7 @@ struct SubscriptionDetailView: View {
                             .init(color: .clear, location: 0),
                             .init(color: .black.opacity(0.8), location: 0.2),
                             .init(color: .black, location: 0.3),
-                            .init(color: .black, location: 0.5),
-                            .init(color: .clear, location: 1)
+                            .init(color: .black, location: 1)
                         ]
                     ), startPoint: .top, endPoint: .bottom))
                 )
@@ -68,8 +62,8 @@ struct SubscriptionDetailView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle(subscription.title.uppercased())
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(subscription.title)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if !subscription.isArchived {
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
@@ -122,6 +116,7 @@ struct SubscriptionDetailView: View {
                 .environment(NavigationManager())
                 .environment(RefreshManager())
                 .environment(PlayerManager())
+                .environment(ImageCacheManager())
         }
     } else {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
@@ -129,5 +124,6 @@ struct SubscriptionDetailView: View {
             .environment(NavigationManager())
             .environment(RefreshManager())
             .environment(PlayerManager())
+            .environment(ImageCacheManager())
     }
 }
