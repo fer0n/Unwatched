@@ -26,7 +26,7 @@ struct VideoPlayer: View {
 
         VStack(spacing: 10) {
 
-            VStack(spacing: 10) {
+            VStack(spacing: 0) {
                 Text(player.video?.title ?? "")
                     .font(.system(size: 20, weight: .heavy))
                     .multilineTextAlignment(.center)
@@ -47,7 +47,7 @@ struct VideoPlayer: View {
                     }
                 subscriptionTitle
             }
-            .padding(.vertical)
+            .padding(.top)
             ZStack {
                 if let video = player.video {
                     YoutubeWebViewPlayer(onVideoEnded: handleVideoEnded)
@@ -144,6 +144,7 @@ struct VideoPlayer: View {
                     .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
             }
         }
+        .padding(15)
         .foregroundColor(.teal)
         .onTapGesture {
             if let sub = player.video?.subscription {

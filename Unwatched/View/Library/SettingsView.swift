@@ -37,6 +37,7 @@ struct SettingsView: View {
                     Toggle(isOn: $refreshOnStartup) {
                         Text("refreshOnStartup")
                     }
+                    .tint(.teal)
                 }
 
                 Section(header: Text("playback"), footer: Text("playbackHelper")) {
@@ -81,12 +82,12 @@ struct SettingsView: View {
                 .id(topListItemId)
                 .tint(.teal)
 
-                Section {
+                Section("contact") {
                     LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
                         Image(systemName: Const.rateAppSF)
                     }
 
-                    LinkItemView(destination: UrlService.emailUrl, label: "contact") {
+                    LinkItemView(destination: UrlService.emailUrl, label: "contactUs") {
                         Image(systemName: Const.contactMailSF)
                     }
 

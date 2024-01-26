@@ -40,18 +40,18 @@ struct LibraryView: View {
                 Section {
                     NavigationLink(value: LibraryDestination.allVideos) {
                         LibraryNavListItem("allVideos",
-                                           systemName: Const.allVideosViewSF,
-                                           .blue)
+                                           systemName: "play.rectangle.on.rectangle.fill",
+                                           .cyan)
                     }
                     NavigationLink(value: LibraryDestination.watchHistory) {
                         LibraryNavListItem("watched",
-                                           systemName: Const.watchHistoryViewSF,
+                                           systemName: "checkmark.circle.fill",
                                            .green)
                     }
                     if hasSideloads {
                         NavigationLink(value: LibraryDestination.sideloading) {
                             LibraryNavListItem("sideloads",
-                                               systemName: Const.sideloadSF,
+                                               systemName: "arrow.forward.circle.fill",
                                                .purple)
                         }
                     }
