@@ -29,7 +29,7 @@ struct LibraryView: View {
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("library")
         @Bindable var navManager = navManager
-        NavigationStack(path: $navManager.presentedSubscriptionLibrary) {
+        NavigationStack(path: $navManager.presentedLibrary) {
             List {
                 Section {
                     NavigationLink(destination: SettingsView()) {
@@ -38,18 +38,18 @@ struct LibraryView: View {
                     .id(topListItemId)
                 }
                 Section {
-                    NavigationLink(destination: AllVideosView()) {
+                    NavigationLink(value: LibraryDestination.allVideos) {
                         LibraryNavListItem("allVideos",
                                            systemName: Const.allVideosViewSF,
                                            .blue)
                     }
-                    NavigationLink(destination: WatchHistoryView()) {
+                    NavigationLink(value: LibraryDestination.watchHistory) {
                         LibraryNavListItem("watched",
                                            systemName: Const.watchHistoryViewSF,
                                            .green)
                     }
                     if hasSideloads {
-                        NavigationLink(destination: SideloadingView()) {
+                        NavigationLink(value: LibraryDestination.sideloading) {
                             LibraryNavListItem("sideloads",
                                                systemName: Const.sideloadSF,
                                                .purple)
@@ -79,11 +79,21 @@ struct LibraryView: View {
             .onAppear {
                 navManager.topListItemId = topListItemId
             }
+            .navigationTitle("library")
+            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
-            .navigationTitle("library")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: LibraryDestination.self) { value in
+                switch value {
+                case .allVideos:
+                    AllVideosView()
+                case .watchHistory:
+                    WatchHistoryView()
+                case .sideloading:
+                    SideloadingView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
@@ -202,6 +212,12 @@ struct LibraryView: View {
         print("handleUrlDrop inbox", urls)
         subManager.addSubscription(from: urls)
     }
+}
+
+enum LibraryDestination {
+    case sideloading
+    case watchHistory
+    case allVideos
 }
 
 #Preview {
