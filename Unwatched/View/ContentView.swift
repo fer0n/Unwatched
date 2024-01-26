@@ -25,28 +25,30 @@ struct ContentView: View {
         let hideMiniPlayer = (navManager.showMenu && sheetPos.swipedBelow) || navManager.showMenu == false
         let detents: Set<PresentationDetent> = videoExists ? [.height(sheetPos.maxSheetHeight)] : [.large]
 
-        ZStack {
-            VideoPlayer(showMenu: $navManager.showMenu)
-            MiniPlayerView()
-                .opacity(hideMiniPlayer ? 0 : 1)
-                .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
-            if !videoExists {
-                VideoNotAvailableView()
-            }
-        }
-        .environment(player)
-        .sheet(isPresented: $navManager.showMenu) {
-            MenuView()
-                .environment(refresher)
-                .presentationDetents(detents)
-                .presentationBackgroundInteraction(
-                    .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                )
-                .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                .onAppear {
-                    sheetPos.setNormalSheetHeightDelayed()
+        GeometryReader { proxy in
+            ZStack {
+                VideoPlayer(showMenu: $navManager.showMenu)
+                MiniPlayerView()
+                    .opacity(hideMiniPlayer ? 0 : 1)
+                    .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
+                if !videoExists {
+                    VideoNotAvailableView()
                 }
-                .environment(player)
+            }
+            .onAppear {
+                sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
+            }
+            .environment(player)
+            .sheet(isPresented: $navManager.showMenu) {
+                MenuView()
+                    .environment(refresher)
+                    .presentationDetents(detents)
+                    .presentationBackgroundInteraction(
+                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                    )
+                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                    .environment(player)
+            }
         }
         .environment(navManager)
         .environment(imageCacheManager)
