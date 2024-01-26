@@ -183,6 +183,16 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "Contact"
+          }
+        }
+      }
+    },
+    "contactUs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Contact Us"
           }
         }
