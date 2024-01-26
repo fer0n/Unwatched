@@ -53,6 +53,7 @@ struct MenuView: View {
         if newTab == navManager.tab {
             withAnimation {
                 proxy.scrollTo(navManager.topListItemId, anchor: .bottom)
+                navManager.handleTappedTwice()
             }
         }
     }
