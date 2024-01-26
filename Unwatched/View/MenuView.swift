@@ -10,6 +10,7 @@ import SwiftData
 struct MenuView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
 
@@ -23,21 +24,32 @@ struct MenuView: View {
                 QueueView()
                     .tabItem {
                         Image(systemName: Const.queueTagSF)
+                        if showTabBarLabels {
+                            Text("queue")
+                        }
                     }
                     .tag(Tab.queue)
 
                 InboxView()
                     .tabItem {
                         Image(systemName: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF)
+                        if showTabBarLabels {
+                            Text("inbox")
+                        }
+
                     }
                     .tag(Tab.inbox)
 
                 LibraryView()
                     .tabItem {
                         Image(systemName: Const.libraryTabSF)
+                        if showTabBarLabels {
+                            Text("library")
+                        }
                     }
                     .tag(Tab.library)
             }
+
             .environment(navManager)
             .tint(.myAccentColor)
         }
