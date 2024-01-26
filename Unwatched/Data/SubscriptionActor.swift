@@ -132,7 +132,8 @@ actor SubscriptionActor {
     }
 
     func getAllFeedUrls() throws -> [(title: String, link: URL)] {
-        let fetchDescriptor = FetchDescriptor<Subscription>()
+        let predicate = #Predicate<Subscription> { $0.isArchived == false }
+        let fetchDescriptor = FetchDescriptor<Subscription>(predicate: predicate)
         let subs = try modelContext.fetch(fetchDescriptor)
         return subs.map { (title: $0.title, link: $0.link) }
     }
