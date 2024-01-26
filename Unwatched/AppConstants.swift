@@ -12,6 +12,7 @@ struct Const {
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
     static let minInboxEntriesToShowClear = 4
+    static let autoRefreshIntervalSeconds: Double = 10 * 60
 
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
@@ -57,4 +58,5 @@ struct Const {
     static let shortsDetection = "shortsDetection"
     static let navigationManager = "NavigationManager"
     static let nowPlayingVideo = "nowPlayingVideo"
+    static let lastAutoRefreshDate = "lastAutoRefreshDate"
 }

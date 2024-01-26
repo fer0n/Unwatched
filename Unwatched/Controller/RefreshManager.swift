@@ -12,6 +12,7 @@ import SwiftData
 
     func refreshAll() {
         refresh()
+        UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
 
     func refreshSubscription(subscriptionId: PersistentIdentifier) {
@@ -29,6 +30,22 @@ import SwiftData
                     isLoading = false
                 }
             }
+        }
+    }
+
+    func refreshOnStartup() {
+        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
+        if !refreshOnStartup {
+            return
+        }
+
+        let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
+        let shouldRefresh = lastAutoRefreshDate == nil ||
+            lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
+
+        if shouldRefresh {
+            print("refreshing now")
+            self.refreshAll()
         }
     }
 }

@@ -8,8 +8,6 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage(Const.refreshOnStartup) var refreshOnStartup = false
-
     @State var navManager: NavigationManager = {
         return loadNavigationManager()
     }()
@@ -57,9 +55,7 @@ struct ContentView: View {
             refresher.container = container
             player.container = container
             restoreNowPlayingVideo()
-            if refreshOnStartup {
-                refresher.refreshAll()
-            }
+            refresher.refreshOnStartup()
         }
         .innerSizeTrackerModifier(onChange: { newSize in
             sheetPos.sheetHeight = newSize.height
