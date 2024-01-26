@@ -13,7 +13,7 @@ import SwiftData
 
     var presentedSubscriptionQueue = [Subscription]()
     var presentedSubscriptionInbox = [Subscription]()
-    var presentedSubscriptionLibrary = [Subscription]()
+    var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?
 
@@ -40,7 +40,7 @@ import SwiftData
         case .queue:
             presentedSubscriptionQueue.append(subscription)
         case .library:
-            presentedSubscriptionLibrary.append(subscription)
+            presentedLibrary.append(subscription)
         }
     }
 
