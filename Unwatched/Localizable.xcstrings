@@ -118,6 +118,16 @@
         }
       }
     },
+    "appearance" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
+          }
+        }
+      }
+    },
     "areYouSureClearAll" : {
       "localizations" : {
         "en" : {
@@ -709,6 +719,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menu"
+          }
+        }
+      }
+    },
+    "showTabBarLabels" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Tab Bar Labels"
           }
         }
       }

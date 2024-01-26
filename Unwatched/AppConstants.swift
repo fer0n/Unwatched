@@ -59,4 +59,5 @@ struct Const {
     static let navigationManager = "NavigationManager"
     static let nowPlayingVideo = "nowPlayingVideo"
     static let lastAutoRefreshDate = "lastAutoRefreshDate"
+    static let showTabBarLabels = "showTabBarLabels"
 }

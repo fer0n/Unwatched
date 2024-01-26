@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
+    @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
 
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
@@ -26,24 +27,6 @@ struct SettingsView: View {
 
         VStack {
             List {
-                Section {
-                    Toggle(isOn: $refreshOnStartup) {
-                        Text("refreshOnStartup")
-                    }
-                }
-                .id(topListItemId)
-                .tint(.teal)
-
-                Section(header: Text("playback"), footer: Text("playbackHelper")) {
-                    Toggle(isOn: $playVideoFullscreen) {
-                        Text("startVideosInFullscreen")
-                    }
-                    Toggle(isOn: $autoplayVideos) {
-                        Text("autoplayVideos")
-                    }
-                }
-                .tint(.teal)
-
                 Section("videoSettings") {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
@@ -51,7 +34,21 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    Toggle(isOn: $refreshOnStartup) {
+                        Text("refreshOnStartup")
+                    }
                 }
+
+                Section(header: Text("playback"), footer: Text("playbackHelper")) {
+                    Toggle(isOn: $autoplayVideos) {
+                        Text("autoplayVideos")
+                    }
+                    Toggle(isOn: $playVideoFullscreen) {
+                        Text("startVideosInFullscreen")
+                    }
+                }
+                .tint(.teal)
+
                 Section(header: Text("shortsSettings"), footer: Text("shortsSettingsHelper")) {
                     Picker("shortsDetection", selection: $shortsDetection) {
                         ForEach(ShortsDetection.allCases, id: \.self) {
@@ -75,6 +72,14 @@ struct SettingsView: View {
                     .disabled(!handleShortsDifferently)
                     .pickerStyle(.menu)
                 }
+
+                Section("appearance") {
+                    Toggle(isOn: $showTabBarLabels) {
+                        Text("showTabBarLabels")
+                    }
+                }
+                .id(topListItemId)
+                .tint(.teal)
 
                 Section {
                     LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
