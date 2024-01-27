@@ -753,6 +753,9 @@
         }
       }
     },
+    "star" : {
+
+    },
     "startVideosInFullscreen" : {
       "localizations" : {
         "en" : {
