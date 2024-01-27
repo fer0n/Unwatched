@@ -60,13 +60,14 @@ class VideoService {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }
 
-    static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) {
+    static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoId = video.id
-        Task {
+        let task = Task {
             let repo = VideoActor(modelContainer: container)
             try await repo.clearEntries(from: videoId)
         }
+        return task
     }
 
     static func insertQueueEntries(at index: Int = 0,

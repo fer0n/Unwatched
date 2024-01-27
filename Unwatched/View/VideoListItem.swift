@@ -194,7 +194,7 @@ struct VideoListItem: View {
 
     func addVideoToTopQueue() {
         print("addVideoTop")
-        let task = VideoService.insertQueueEntries(
+        _ = VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
             modelContext: modelContext
@@ -208,10 +208,14 @@ struct VideoListItem: View {
 
     func clearVideoEverywhere() {
         onClear?()
-        VideoService.clearFromEverywhere(
+        let isFirstQueueEntry = video.queueEntry?.order == 0
+        let task = VideoService.clearFromEverywhere(
             video,
             modelContext: modelContext
         )
+        if isFirstQueueEntry {
+            player.loadTopmostVideoFromQueue(after: task)
+        }
     }
 }
 

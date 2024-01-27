@@ -55,7 +55,6 @@ enum VideoSource {
     }
 
     @ObservationIgnored private var currentEndTime: Double?
-    //    @ObservationIgnored private var
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
         print("updateElapsedTime")

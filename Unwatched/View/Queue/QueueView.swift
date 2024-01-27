@@ -34,12 +34,7 @@ struct QueueView: View {
                                 if let video = entry.video {
                                     VideoListItem(
                                         video: video,
-                                        videoSwipeActions: [.queueBottom, .queueTop, .clear],
-                                        onClear: {
-                                            withAnimation {
-                                                VideoService.deleteQueueEntry(entry, modelContext: modelContext)
-                                            }
-                                        }
+                                        videoSwipeActions: [.queueBottom, .queueTop, .clear]
                                     )
                                 }
                             }
@@ -72,7 +67,7 @@ struct QueueView: View {
         let task = VideoService.moveQueueEntry(from: source,
                                                to: destination,
                                                modelContext: modelContext)
-        if destination == 0 {
+        if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue(after: task)
         }
     }
