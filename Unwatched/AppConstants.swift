@@ -4,10 +4,12 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 struct Const {
 
     static let playerAboveSheetHeight: CGFloat = 60
+    static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5

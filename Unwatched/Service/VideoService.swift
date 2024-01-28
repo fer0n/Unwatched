@@ -86,8 +86,12 @@ class VideoService {
         let container = modelContext.container
         let videoId = video.persistentModelID
         Task {
-            let repo = VideoActor(modelContainer: container)
-            try await repo.addToBottomQueue(videoId: videoId)
+            do {
+                let repo = VideoActor(modelContainer: container)
+                try await repo.addToBottomQueue(videoId: videoId)
+            } catch {
+                print("addToBottomQueue: \(error)")
+            }
         }
     }
 
@@ -134,5 +138,20 @@ class VideoService {
         return nil
         // TODO: worth putting this on the background thread?
         // TODO: worth getting the actual queueEntry for the current video first and then continue?
+    }
+
+    static func deleteEverything(_ container: ModelContainer) async {
+        let context = ModelContext(container)
+        do {
+            try context.delete(model: QueueEntry.self)
+            try context.delete(model: InboxEntry.self)
+            try context.delete(model: WatchEntry.self)
+            try context.delete(model: CachedImage.self)
+            try context.delete(model: Subscription.self)
+            try context.delete(model: Video.self)
+            try context.save()
+        } catch {
+            print("Failed to clear everything")
+        }
     }
 }

@@ -7,7 +7,9 @@ import Foundation
 import SwiftData
 
 @Model
-final class Video: CustomStringConvertible {
+final class Video: CustomStringConvertible, Exportable {
+    typealias ExportType = SendableVideo
+
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
     @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
@@ -47,6 +49,21 @@ final class Video: CustomStringConvertible {
 
     var description: String {
         return "Video: \(title) (\(url))"
+    }
+
+    var toExport: SendableVideo? {
+        SendableVideo(
+            persistendId: self.persistentModelID.hashValue,
+            youtubeId: youtubeId,
+            title: title,
+            url: url,
+            thumbnailUrl: thumbnailUrl,
+            youtubeChannelId: youtubeChannelId,
+            duration: duration,
+            publishedDate: publishedDate,
+            watched: watched,
+            videoDescription: videoDescription
+        )
     }
 
     init(title: String,

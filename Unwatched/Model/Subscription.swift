@@ -7,7 +7,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class Subscription: CustomStringConvertible {
+final class Subscription: CustomStringConvertible, Exportable {
+    typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
     @Attribute(.unique) var link: URL
@@ -27,27 +28,58 @@ final class Subscription: CustomStringConvertible {
         return title
     }
 
-    init(link: URL,
+    init(videos: [Video] = [],
+         link: URL,
+
          title: String,
+         subscribedDate: Date = .now,
          placeVideosIn: VideoPlacement = .defaultPlacement,
-         videos: [Video] = [],
+         isArchived: Bool = false,
+
+         customSpeedSetting: Double? = nil,
+         mostRecentVideoDate: Date? = nil,
          youtubeChannelId: String? = nil,
-         youtubeUserName: String? = nil,
-         isArchived: Bool = false) {
+         youtubeUserName: String? = nil) {
+        self.videos = videos
         self.link = link
         self.title = title
-        self.subscribedDate = .now
+        self.subscribedDate = subscribedDate
         self.placeVideosIn = placeVideosIn
-        self.videos = videos
+        self.isArchived = isArchived
+
+        self.customSpeedSetting = customSpeedSetting
+        self.mostRecentVideoDate = mostRecentVideoDate
         self.youtubeChannelId = youtubeChannelId
         self.youtubeUserName = youtubeUserName
-        self.isArchived = isArchived
+    }
+
+    var toExport: SendableSubscription? {
+        SendableSubscription(
+            videosIds: videos.map { $0.persistentModelID.hashValue },
+            link: link,
+            title: title,
+            subscribedDate: subscribedDate,
+            placeVideosIn: placeVideosIn,
+            isArchived: isArchived,
+            customSpeedSetting: customSpeedSetting,
+            mostRecentVideoDate: mostRecentVideoDate,
+            youtubeChannelId: youtubeChannelId,
+            youtubeUserName: youtubeUserName
+        )
     }
 }
 
-struct SendableSubscription: Sendable {
+struct SendableSubscription: Sendable, Codable {
+    var videosIds = [Int]()
     var link: URL
+
     var title: String
+    var subscribedDate: Date = .now
+    var placeVideosIn = VideoPlacement.defaultPlacement
+    var isArchived: Bool = false
+
+    var customSpeedSetting: Double?
+    var mostRecentVideoDate: Date?
     var youtubeChannelId: String?
     var youtubeUserName: String?
 
@@ -55,6 +87,20 @@ struct SendableSubscription: Sendable {
         Subscription(
             link: link,
             title: title,
+            youtubeChannelId: youtubeChannelId,
+            youtubeUserName: youtubeUserName
+        )
+    }
+
+    var toModel: Subscription {
+        Subscription(
+            link: link,
+            title: title,
+            subscribedDate: subscribedDate,
+            placeVideosIn: placeVideosIn,
+            isArchived: isArchived,
+            customSpeedSetting: customSpeedSetting,
+            mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
             youtubeUserName: youtubeUserName
         )

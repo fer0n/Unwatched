@@ -8,6 +8,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
+
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
@@ -18,9 +19,6 @@ struct SettingsView: View {
     @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
-
-    @State var isDeleting = false
-    @State var isExporting = false
 
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("settings")
@@ -98,31 +96,9 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExporting)
-                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                        if isExporting {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            HStack {
-                                Image(systemName: "square.and.arrow.up")
-                                Text("exportSubscriptions")
-                            }
-                        }
+                    NavigationLink(value: LibraryDestination.userData) {
+                        Text("userData")
                     }
-                }
-
-                Section {
-                    Button(role: .destructive, action: {
-                        deleteImageCache()
-                    }, label: {
-                        if isDeleting {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            Text("deleteImageCache")
-                        }
-                    })
                 }
             }
         }
@@ -131,49 +107,6 @@ struct SettingsView: View {
         .tint(.myAccentColor)
         .onAppear {
             navManager.topListItemId = topListItemId
-        }
-    }
-
-    func deleteImageCache() {
-        if isDeleting { return }
-        let container = modelContext.container
-        isDeleting = true
-        Task {
-            let task = ImageService.deleteAllImages(container)
-            try? await task.value
-            await MainActor.run {
-                self.isDeleting = false
-            }
-        }
-    }
-
-    func exportAllSubscriptions() async -> [(title: String, link: URL)] {
-        let container = modelContext.container
-        let result = try? await SubscriptionService.getAllFeedUrls(container)
-        return result ?? []
-    }
-}
-
-struct AsyncSharableUrls: Transferable {
-    let getUrls: () async -> [(title: String, link: URL)]
-    @Binding var isLoading: Bool
-
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .plainText) { item in
-            item.isLoading = true
-            let urls = await item.getUrls()
-            let textUrls = urls
-                .map { "\($0.title)\n\($0.link.absoluteString)\n" }
-                .joined(separator: "\n")
-            print("textUrls", textUrls)
-            let data = textUrls.data(using: .utf8)
-            if let data = data {
-                item.isLoading = false
-                return data
-            } else {
-                fatalError()
-            }
-            item.isLoading = false
         }
     }
 }

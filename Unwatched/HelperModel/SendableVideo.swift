@@ -4,8 +4,10 @@
 //
 
 import Foundation
+import SwiftData
 
-struct SendableVideo: Sendable {
+struct SendableVideo: Sendable, Codable {
+    var persistendId: Int?
     var youtubeId: String
     var title: String
     var url: URL
@@ -55,4 +57,76 @@ struct SendableVideo: Sendable {
             isLikelyYtShort: ytShortsInfo.isLikelyShort
         )
     }
+
+    init(
+        persistendId: Int? = nil,
+        youtubeId: String,
+        title: String,
+        url: URL,
+        thumbnailUrl: URL? = nil,
+        youtubeChannelId: String? = nil,
+        feedTitle: String? = nil,
+        duration: Double? = nil,
+        chapters: [SendableChapter] = [SendableChapter](),
+        publishedDate: Date? = nil,
+        watched: Bool = false,
+        videoDescription: String? = nil
+    ) {
+        self.persistendId = persistendId
+        self.youtubeId = youtubeId
+        self.title = title
+        self.url = url
+        self.thumbnailUrl = thumbnailUrl
+        self.youtubeChannelId = youtubeChannelId
+        self.feedTitle = feedTitle
+        self.duration = duration
+        self.chapters = chapters
+        self.publishedDate = publishedDate
+        self.watched = watched
+        self.videoDescription = videoDescription
+    }
+
+    init(from decoder: Decoder) throws {
+        var container = try decoder.container(keyedBy: SendableVideoCodingKeys.self)
+
+        persistendId = try container.decodeIfPresent(Int.self, forKey: .persistendId)
+        youtubeId = try container.decode(String.self, forKey: .youtubeId)
+        title = try container.decode(String.self, forKey: .title)
+        url = try container.decode(URL.self, forKey: .url)
+        thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
+        youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
+        duration = try container.decodeIfPresent(Double.self, forKey: .duration)
+        publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
+        watched = try container.decodeIfPresent(Bool.self, forKey: .watched) ?? false
+        videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: SendableVideoCodingKeys.self)
+
+        try container.encodeIfPresent(persistendId, forKey: .persistendId)
+        try container.encode(youtubeId, forKey: .youtubeId)
+        try container.encode(title, forKey: .title)
+        try container.encode(url, forKey: .url)
+        try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
+        try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
+        try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
+        try container.encode(watched, forKey: .watched)
+        try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
+    }
+}
+
+// MARK: - SendableVideoCodingKeys
+enum SendableVideoCodingKeys: String, CodingKey {
+    case persistendId
+    case youtubeId
+    case title
+    case url
+    case thumbnailUrl
+    case youtubeChannelId
+    case duration
+    case publishedDate
+    case watched
+    case videoDescription
 }

@@ -20,13 +20,17 @@ struct WatchHistoryView: View {
             } else {
                 List {
                     ForEach(watchEntries) { entry in
-                        VideoListItem(video: entry.video,
-                                      showVideoStatus: true,
-                                      hasInboxEntry: entry.video.inboxEntry != nil,
-                                      hasQueueEntry: entry.video.queueEntry != nil,
-                                      watched: entry.video.watched,
-                                      videoSwipeActions: [.queueTop, .clear])
-                            .id(NavigationManager.getScrollId(entry.video.youtubeId, "history"))
+                        ZStack {
+                            if let video = entry.video {
+                                VideoListItem(video: video,
+                                              showVideoStatus: true,
+                                              hasInboxEntry: video.inboxEntry != nil,
+                                              hasQueueEntry: video.queueEntry != nil,
+                                              watched: video.watched,
+                                              videoSwipeActions: [.queueTop, .clear])
+                            }
+                        }
+                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "history"))
                     }
                 }
                 .listStyle(.plain)
@@ -35,7 +39,7 @@ struct WatchHistoryView: View {
         .navigationTitle("watched")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            navManager.setScrollId(watchEntries.first?.video.youtubeId, "history")
+            navManager.setScrollId(watchEntries.first?.video?.youtubeId, "history")
         }
     }
 }
