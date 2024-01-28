@@ -7,7 +7,6 @@ import SwiftUI
 import SwiftData
 
 struct WatchHistoryView: View {
-    @Environment(NavigationManager.self) var navManager
     @Query(sort: \WatchEntry.date, order: .reverse) var watchEntries: [WatchEntry]
 
     var body: some View {
@@ -30,7 +29,6 @@ struct WatchHistoryView: View {
                                               videoSwipeActions: [.queueTop, .clear])
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "history"))
                     }
                 }
                 .listStyle(.plain)
@@ -38,9 +36,6 @@ struct WatchHistoryView: View {
         }
         .navigationTitle("watched")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            navManager.setScrollId(watchEntries.first?.video?.youtubeId, "history")
-        }
     }
 }
 

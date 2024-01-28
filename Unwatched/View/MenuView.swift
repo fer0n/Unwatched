@@ -64,8 +64,10 @@ struct MenuView: View {
     func handleSameTabTapped(_ newTab: Tab, _ proxy: ScrollViewProxy) {
         if newTab == navManager.tab {
             withAnimation {
-                proxy.scrollTo(navManager.topListItemId, anchor: .bottom)
-                navManager.handleTappedTwice()
+                let isTopView = navManager.handleTappedTwice()
+                if isTopView {
+                    proxy.scrollTo(navManager.topListItemId, anchor: .bottom)
+                }
             }
         }
     }
