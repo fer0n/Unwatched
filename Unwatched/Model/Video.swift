@@ -60,6 +60,7 @@ final class Video: CustomStringConvertible, Exportable {
             thumbnailUrl: thumbnailUrl,
             youtubeChannelId: youtubeChannelId,
             duration: duration,
+            elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
             watched: watched,
             videoDescription: videoDescription
@@ -73,6 +74,7 @@ final class Video: CustomStringConvertible, Exportable {
          publishedDate: Date? = nil,
          youtubeChannelId: String? = nil,
          duration: Double? = nil,
+         elapsedSeconds: Double = 0,
          videoDescription: String? = nil,
          chapters: [Chapter] = [],
          isYtShort: Bool = false,
@@ -84,6 +86,7 @@ final class Video: CustomStringConvertible, Exportable {
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
         self.duration = duration
+        self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
         self.chapters = chapters
         self.isYtShort = isYtShort
