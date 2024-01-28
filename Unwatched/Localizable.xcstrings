@@ -148,6 +148,26 @@
         }
       }
     },
+    "backup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup"
+          }
+        }
+      }
+    },
+    "backupNow" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup Now"
+          }
+        }
+      }
+    },
     "cancel" : {
       "localizations" : {
         "en" : {
@@ -174,6 +194,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirm Clear All"
+          }
+        }
+      }
+    },
+    "confirmDeleteEverything" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Really Delete Everything?"
+          }
+        }
+      }
+    },
+    "confirmDeleteEverythingMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This cannot be undone. You can create a backup if you wish to restore the data in the future."
           }
         }
       }
@@ -236,6 +276,16 @@
     },
     "Default (%@x)" : {
 
+    },
+    "deleteEverything" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Everything"
+          }
+        }
+      }
     },
     "deleteImageCache" : {
       "localizations" : {
@@ -354,6 +404,16 @@
     },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
+    },
+    "importBackup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Backup"
+          }
+        }
+      }
     },
     "inbox" : {
       "localizations" : {
@@ -660,9 +720,6 @@
         }
       }
     },
-    "Settings" : {
-
-    },
     "share" : {
       "localizations" : {
         "en" : {
@@ -843,6 +900,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Use Default"
+          }
+        }
+      }
+    },
+    "userData" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User Data"
           }
         }
       }

@@ -45,7 +45,7 @@ struct SubscriptionInfoDetails: View {
             Spacer()
                 .frame(maxHeight: 20)
             VStack(alignment: .leading, spacing: 5) {
-                Text("Settings")
+                Text("settings")
                     .font(.subheadline)
                     .foregroundStyle(Color.gray)
                 HStack {

@@ -54,9 +54,8 @@ actor VideoActor {
         let sub = Subscription(
             link: channelLink,
             title: feedTitle ?? "",
-            youtubeChannelId: channelId,
-            isArchived: true
-        )
+            isArchived: true,
+            youtubeChannelId: channelId)
         print("new sub: \(sub.isArchived)")
 
         modelContext.insert(sub)
@@ -290,7 +289,7 @@ actor VideoActor {
 
     private func addVideosToInbox(_ videos: [Video]) {
         for video in videos {
-            let inboxEntry = InboxEntry(video: video)
+            let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
             video.inboxEntry = inboxEntry
             clearEntries(from: video, except: InboxEntry.self)

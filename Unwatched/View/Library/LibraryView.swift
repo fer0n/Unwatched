@@ -32,7 +32,7 @@ struct LibraryView: View {
         NavigationStack(path: $navManager.presentedLibrary) {
             List {
                 Section {
-                    NavigationLink(destination: SettingsView()) {
+                    NavigationLink(value: LibraryDestination.settings) {
                         LibraryNavListItem("settings", systemName: Const.settingsViewSF)
                     }
                     .id(topListItemId)
@@ -92,6 +92,10 @@ struct LibraryView: View {
                     WatchHistoryView()
                 case .sideloading:
                     SideloadingView()
+                case .settings:
+                    SettingsView()
+                case .userData:
+                    BackupView()
                 }
             }
             .toolbar {
@@ -218,6 +222,8 @@ enum LibraryDestination {
     case sideloading
     case watchHistory
     case allVideos
+    case userData
+    case settings
 }
 
 #Preview {

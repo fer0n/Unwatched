@@ -191,6 +191,11 @@ enum VideoSource {
         }
     }
 
+    func clearVideo() {
+        self.video = nil
+        UserDefaults.standard.set(nil, forKey: Const.nowPlayingVideo)
+    }
+
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
         guard let container = container else {
             print("no container handleUpdatedQueue")
