@@ -2,7 +2,6 @@ import SwiftUI
 import SwiftData
 
 struct AllVideosView: View {
-    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
@@ -10,8 +9,6 @@ struct AllVideosView: View {
     @Query(sort: \Video.publishedDate, order: .reverse) var videos: [Video]
 
     var body: some View {
-        let idPrefix = NavigationManager.getScrollId("all-videos")
-
         ZStack {
             if videos.isEmpty {
                 ContentUnavailableView("noVideosYet",
@@ -19,13 +16,10 @@ struct AllVideosView: View {
                                        description: Text("noVideosYetDescription"))
             } else {
                 List {
-                    VideoListView(ytShortsFilter: shortsFilter, idPrefix: idPrefix)
+                    VideoListView(ytShortsFilter: shortsFilter)
                 }
                 .listStyle(.plain)
             }
-        }
-        .onAppear {
-            navManager.topListItemId = "\(idPrefix)-0"
         }
         .navigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)

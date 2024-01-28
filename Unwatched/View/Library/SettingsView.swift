@@ -7,7 +7,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
@@ -21,8 +20,6 @@ struct SettingsView: View {
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
     var body: some View {
-        let topListItemId = NavigationManager.getScrollId("settings")
-
         VStack {
             List {
                 Section("videoSettings") {
@@ -77,7 +74,6 @@ struct SettingsView: View {
                         Text("showTabBarLabels")
                     }
                 }
-                .id(topListItemId)
                 .tint(.teal)
 
                 Section("contact") {
@@ -105,9 +101,6 @@ struct SettingsView: View {
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
         .tint(.myAccentColor)
-        .onAppear {
-            navManager.topListItemId = topListItemId
-        }
     }
 }
 
