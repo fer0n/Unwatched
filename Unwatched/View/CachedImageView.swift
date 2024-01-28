@@ -46,8 +46,10 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
             let cacheInfo = ImageCacheInfo(
                 url: url,
                 data: imageData,
-                videoId: videoId
+                videoId: videoId,
+                uiImage: UIImage(data: imageData)
             )
+            await Task.yield()
             await MainActor.run {
                 cacheManager[videoId] = cacheInfo
             }
@@ -59,6 +61,9 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
             return UIImage(data: imageData)
         }
         if let cacheInfo = cacheManager[video?.persistentModelID] {
+            if let uiImage = cacheInfo.uiImage {
+                return uiImage
+            }
             return UIImage(data: cacheInfo.data)
         }
         return nil
