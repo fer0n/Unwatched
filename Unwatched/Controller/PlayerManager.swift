@@ -25,7 +25,7 @@ enum VideoSource {
             currentTime = video?.elapsedSeconds ?? 0
             isPlaying = false
             currentChapter = nil
-            if video == oldValue && UserDefaults.standard.bool(forKey: Const.autoplayVideos) {
+            if video == oldValue && (UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false) {
                 print("> tapped existing video")
                 self.play()
             }
@@ -100,7 +100,8 @@ enum VideoSource {
         }
 
         guard let chapters = video?.sortedChapters, let video = video, !chapters.isEmpty else {
-            print("noVideo found")
+            currentEndTime = nil // stop monitoring this video for chapters
+            print("no info to check for chapters")
             return
         }
         guard let current = chapters.first(where: { chapter in
