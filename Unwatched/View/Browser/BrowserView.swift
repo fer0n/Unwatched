@@ -24,28 +24,21 @@ struct BrowserView: View, KeyboardReadable {
         GeometryReader { geometry in
             ZStack {
                 YtBrowserWebView(browserManager: browserManager)
-                VStack {
-                    Spacer()
-                    if subscriptionText == nil && browserManager.firstPageLoaded {
-                        TipView(ytBrowserTip)
-                            .padding(.horizontal)
-                    }
-                    if let text = subscriptionText, !isKeyboardVisible {
-                        Button(action: handleAddSubButton) {
-                            HStack {
-                                let systemName = subscribeManager.getSubscriptionSystemName()
-                                Image(systemName: systemName)
-                                    .contentTransition(.symbolEffect(.replace))
-                                Text(text)
-                            }
-                            .padding(10)
+                if !isKeyboardVisible {
+                    VStack {
+                        Spacer()
+                        if subscriptionText == nil && browserManager.firstPageLoaded {
+                            TipView(ytBrowserTip)
+                                .padding(.horizontal)
                         }
-                        .buttonStyle(CapsuleButtonStyle())
-                        .popoverTip(addButtonTip, arrowEdge: .bottom)
-                        .disabled(subscribeManager.isLoading)
+                        if let text = subscriptionText, !isKeyboardVisible {
+                            addSubButton(text)
+                                .popoverTip(addButtonTip, arrowEdge: .bottom)
+                                .disabled(subscribeManager.isLoading)
+                        }
+                        Spacer()
+                            .frame(height: 60 + geometry.safeAreaInsets.bottom)
                     }
-                    Spacer()
-                        .frame(height: 60 + geometry.safeAreaInsets.bottom)
                 }
             }
             .ignoresSafeArea(.all)
@@ -67,6 +60,19 @@ struct BrowserView: View, KeyboardReadable {
                 refresher.refreshAll()
             }
         }
+    }
+
+    func addSubButton(_ text: String) -> some View {
+        Button(action: handleAddSubButton) {
+            HStack {
+                let systemName = subscribeManager.getSubscriptionSystemName()
+                Image(systemName: systemName)
+                    .contentTransition(.symbolEffect(.replace))
+                Text(text)
+            }
+            .padding(10)
+        }
+        .buttonStyle(CapsuleButtonStyle())
     }
 
     func handleAddSubButton() {
