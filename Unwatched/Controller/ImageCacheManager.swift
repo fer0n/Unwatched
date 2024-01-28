@@ -37,4 +37,5 @@ struct ImageCacheInfo {
     var url: URL
     var data: Data
     var videoId: PersistentIdentifier
+    var uiImage: UIImage?
 }
