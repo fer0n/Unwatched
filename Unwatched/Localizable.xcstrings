@@ -487,6 +487,9 @@
         }
       }
     },
+    "no video found" : {
+
+    },
     "noHistoryItems" : {
       "localizations" : {
         "en" : {
