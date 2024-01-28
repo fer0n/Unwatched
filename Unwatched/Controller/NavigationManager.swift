@@ -17,6 +17,7 @@ import SwiftData
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
+    @ObservationIgnored private var lastLibrarySubscriptionId: Subscription?
 
     init() { }
 
@@ -37,11 +38,18 @@ import SwiftData
     func pushSubscription(_ subscription: Subscription) {
         switch tab {
         case .inbox:
-            presentedSubscriptionInbox.append(subscription)
+            if presentedSubscriptionInbox.last != subscription {
+                presentedSubscriptionInbox.append(subscription)
+            }
         case .queue:
-            presentedSubscriptionQueue.append(subscription)
+            if presentedSubscriptionQueue.last != subscription {
+                presentedSubscriptionQueue.append(subscription)
+            }
         case .library:
-            presentedLibrary.append(subscription)
+            if lastLibrarySubscriptionId != subscription {
+                presentedLibrary.append(subscription)
+                lastLibrarySubscriptionId = subscription
+            }
         }
     }
 
