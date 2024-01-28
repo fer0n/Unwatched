@@ -15,6 +15,7 @@ struct SendableVideo: Sendable, Codable {
     var youtubeChannelId: String?
     var feedTitle: String?
     var duration: Double?
+    var elapsedSeconds: Double = 0
     var chapters = [SendableChapter]()
 
     var publishedDate: Date?
@@ -51,6 +52,7 @@ struct SendableVideo: Sendable, Codable {
             publishedDate: publishedDate ?? self.publishedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
             duration: duration ?? self.duration,
+            elapsedSeconds: self.elapsedSeconds,
             videoDescription: description,
             chapters: newChapters.map { $0.getChapter },
             isYtShort: ytShortsInfo.isShort,
@@ -67,6 +69,7 @@ struct SendableVideo: Sendable, Codable {
         youtubeChannelId: String? = nil,
         feedTitle: String? = nil,
         duration: Double? = nil,
+        elapsedSeconds: Double = 0,
         chapters: [SendableChapter] = [SendableChapter](),
         publishedDate: Date? = nil,
         watched: Bool = false,
@@ -80,6 +83,7 @@ struct SendableVideo: Sendable, Codable {
         self.youtubeChannelId = youtubeChannelId
         self.feedTitle = feedTitle
         self.duration = duration
+        self.elapsedSeconds = elapsedSeconds
         self.chapters = chapters
         self.publishedDate = publishedDate
         self.watched = watched
@@ -87,7 +91,7 @@ struct SendableVideo: Sendable, Codable {
     }
 
     init(from decoder: Decoder) throws {
-        var container = try decoder.container(keyedBy: SendableVideoCodingKeys.self)
+        let container = try decoder.container(keyedBy: SendableVideoCodingKeys.self)
 
         persistendId = try container.decodeIfPresent(Int.self, forKey: .persistendId)
         youtubeId = try container.decode(String.self, forKey: .youtubeId)
@@ -96,6 +100,7 @@ struct SendableVideo: Sendable, Codable {
         thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
         youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
         duration = try container.decodeIfPresent(Double.self, forKey: .duration)
+        elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds) ?? 0
         publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
         watched = try container.decodeIfPresent(Bool.self, forKey: .watched) ?? false
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
@@ -111,6 +116,7 @@ struct SendableVideo: Sendable, Codable {
         try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
         try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
         try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encodeIfPresent(elapsedSeconds, forKey: .elapsedSeconds)
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
         try container.encode(watched, forKey: .watched)
         try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
@@ -126,6 +132,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
     case thumbnailUrl
     case youtubeChannelId
     case duration
+    case elapsedSeconds
     case publishedDate
     case watched
     case videoDescription
