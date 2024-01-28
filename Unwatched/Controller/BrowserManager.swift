@@ -15,7 +15,9 @@ import WebKit
     var title: String?
     var userName: String?
 
+    var desktopUserName: String?
     var firstPageLoaded = false
+    var isMobileVersion = true
 
     var channelTextRepresentation: String? {
         return title ?? userName ?? channelId ?? rssFeed
@@ -44,5 +46,6 @@ import WebKit
         self.rssFeed = nil
         self.title = nil
         self.userName = nil
+        self.desktopUserName = nil
     }
 }

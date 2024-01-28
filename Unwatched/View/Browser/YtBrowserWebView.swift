@@ -47,19 +47,28 @@ struct YtBrowserWebView: UIViewRepresentable {
             stopObserving()
         }
 
-        @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             print("--- new page loaded")
             if isFirstLoad {
                 isFirstLoad = false
                 parent.browserManager.firstPageLoaded = true
             }
-            guard let url = webView.url else {
-                print("no url found")
-                return
-            }
-            if let userName = UrlService.getChannelUserNameFromUrl(url: url) {
-                // is username page, reload the page
-                extractSubscriptionInfo(webView, userName: userName)
+            let previousUsername = parent.browserManager.desktopUserName
+            Task {
+                await MainActor.run {
+                    guard let url = webView.url else {
+                        print("no url found")
+                        return
+                    }
+
+                    if let userName = UrlService.getChannelUserNameFromUrl(
+                        url: url,
+                        previousUserName: previousUsername
+                    ) {
+                        // is username page, reload the page
+                        extractSubscriptionInfo(webView, userName: userName)
+                    }
+                }
             }
         }
 
@@ -86,27 +95,41 @@ struct YtBrowserWebView: UIViewRepresentable {
         }
 
         @MainActor
-        func forceReloadUrl(_ webView: WKWebView) {
-            if let url = webView.url {
-                print("URL changed: \(url)")
-                guard let userName = UrlService.getChannelUserNameFromUrl(url: url) else {
-                    parent.browserManager.clearInfo()
-                    print("no user name found")
-                    return
-                }
-                guard userName != parent.browserManager.userName else {
-                    print("same username as before")
-                    return
-                }
-                print("--- forceReloadUrl")
-                let request = URLRequest(url: url)
-                webView.load(request)
+        func handleUrlChange(_ webView: WKWebView) {
+            guard let url = webView.url else {
+                print("no url found")
+                return
             }
+            print("URL changed: \(url)")
+            handleIsMobilePage(url)
+            guard let userName = UrlService.getChannelUserNameFromUrl(
+                url: url,
+                previousUserName: parent.browserManager.desktopUserName
+            ) else {
+                parent.browserManager.clearInfo()
+                print("no user name found")
+                return
+            }
+            if [parent.browserManager.userName, parent.browserManager.desktopUserName].contains(userName) {
+                print("same username as before")
+                return
+            }
+            parent.browserManager.desktopUserName = userName
+
+            print("--- forceReloadUrl")
+            let request = URLRequest(url: url)
+            webView.load(request)
+
         }
 
+        func handleIsMobilePage(_ url: URL) {
+            parent.browserManager.isMobileVersion = UrlService.isMobileYoutubePage(url)
+        }
+
+        @MainActor
         func startObserving(webView: WKWebView) {
             observation = webView.observe(\.url, options: .new) { (webView, _) in
-                self.forceReloadUrl(webView)
+                self.handleUrlChange(webView)
             }
         }
 

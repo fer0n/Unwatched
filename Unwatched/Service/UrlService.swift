@@ -41,7 +41,7 @@ struct UrlService {
         throw SubscriptionError.notSupported
     }
 
-    static func getChannelUserNameFromUrl(url: URL) -> String? {
+    static func getChannelUserNameFromUrl(url: URL, previousUserName: String? = nil) -> String? {
         let urlString = url.absoluteString
 
         // https://www.youtube.com/@GAMERTAGVR/videos
@@ -59,6 +59,18 @@ struct UrlService {
             return userName
         }
 
+        // https://www.youtube.com/moviepilot
+        // some channels forward to this kind of url (non-mobile), but the username is already known by then
+        if let prev = previousUserName, urlString.contains("youtube.com/\(prev)") {
+            print("previousUserName!!", prev)
+            return previousUserName
+        }
+
         return nil
+    }
+
+    static func isMobileYoutubePage(_ url: URL) -> Bool {
+        let urlString = url.absoluteString
+        return urlString.contains("m.youtube.com")
     }
 }

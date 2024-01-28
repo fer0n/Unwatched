@@ -37,7 +37,10 @@ struct BrowserView: View, KeyboardReadable {
                                 .disabled(subscribeManager.isLoading)
                         }
                         Spacer()
-                            .frame(height: 60 + geometry.safeAreaInsets.bottom)
+                            .frame(height: (
+                                    browserManager.isMobileVersion ? 60 : 0)
+                                    + geometry.safeAreaInsets.bottom
+                            )
                     }
                 }
             }
