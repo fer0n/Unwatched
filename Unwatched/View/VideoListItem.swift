@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum VideoActions {
     case queueTop
@@ -13,8 +14,8 @@ enum VideoActions {
 }
 
 struct VideoListItem: View {
-    @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
 
     let video: Video
@@ -154,7 +155,13 @@ struct VideoListItem: View {
                     .font(.system(size: 14, weight: .regular))
                     .lineLimit(1)
                     .textCase(.uppercase)
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(.gray)
+                    .onTapGesture {
+                        if let sub = video.subscription {
+                            navManager.pushSubscription(sub)
+                        }
+                    }
+
             }
             if let duration = video.duration,
                let remaining = video.remainingTime,
@@ -220,13 +227,13 @@ struct VideoListItem: View {
 }
 
 #Preview {
-    let video = Video(
-        title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
-        url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
-        youtubeId: "_7vP9vsnYPc",
-        thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
-        publishedDate: Date(),
-        isYtShort: true)
+    let container = DataController.previewContainer
+    let context = ModelContext(container)
+    let fetch = FetchDescriptor<Video>()
+    let videos = try? context.fetch(fetch)
+    guard let video = videos?.first else {
+        return Text("no video found")
+    }
 
     return VideoListItem(
         video: video,
@@ -235,7 +242,8 @@ struct VideoListItem: View {
         hasQueueEntry: true,
         watched: true
     )
-    .modelContainer(DataController.previewContainer)
+    .modelContainer(container)
     .environment(NavigationManager())
     .environment(PlayerManager())
+    .environment(ImageCacheManager())
 }
