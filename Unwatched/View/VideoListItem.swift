@@ -210,7 +210,10 @@ struct VideoListItem: View {
 
     func addVideoToBottomQueue() {
         print("addVideoBottom")
-        VideoService.addToBottomQueue(video: video, modelContext: modelContext)
+        let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
+        if video.queueEntry?.order == 0 {
+            player.loadTopmostVideoFromQueue(after: task)
+        }
     }
 
     func clearVideoEverywhere() {

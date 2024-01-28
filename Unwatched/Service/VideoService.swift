@@ -82,17 +82,19 @@ class VideoService {
         return task
     }
 
-    static func addToBottomQueue(video: Video, modelContext: ModelContext) {
+    static func addToBottomQueue(video: Video, modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoId = video.persistentModelID
-        Task {
+        let task = Task {
             do {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.addToBottomQueue(videoId: videoId)
             } catch {
                 print("addToBottomQueue: \(error)")
+                throw error
             }
         }
+        return task
     }
 
     static func addForeignUrls(_ urls: [URL],
