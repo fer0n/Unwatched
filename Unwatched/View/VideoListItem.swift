@@ -172,8 +172,8 @@ struct VideoListItem: View {
                         .opacity(0.6)
                         .padding(.top, 3)
                         .padding(.trailing, 5)
-                    if video.hasFinished != true {
-                        Text(remaining.formattedSeconds ?? "")
+                    if video.hasFinished != true, let remaining = remaining.formattedSeconds {
+                        Text("-\(remaining)")
                             .font(.system(size: 12, weight: .regular))
                             .foregroundStyle(Color.gray)
                     }
