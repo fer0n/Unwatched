@@ -27,6 +27,7 @@ class VideoCrawler {
             subscriptionInfo.link = feedUrl
             return subscriptionInfo
         }
+        print("feedUrl", feedUrl)
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 

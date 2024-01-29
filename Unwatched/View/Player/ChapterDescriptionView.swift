@@ -27,7 +27,6 @@ struct ChapterDescriptionView: View {
                     if let sortedChapters = player.video?.sortedChapters {
                         chapterList(sortedChapters)
                             .padding(.horizontal)
-                            .highPriorityGesture(dragGesture(hasDescription, direction: .description))
                             .transition(.move(edge: .trailing))
                     }
                 } else {
@@ -35,11 +34,11 @@ struct ChapterDescriptionView: View {
                         Text(LocalizedStringKey(desc))
                             .padding(.horizontal)
                             .tint(.teal)
-                            .highPriorityGesture(dragGesture(hasChapters, direction: .chapters))
                             .transition(.move(edge: .leading))
                     }
                 }
             }
+            .highPriorityGesture(dragGesture(origin: navManager.selectedDetailPage))
             .toolbar {
                 if hasDescription && hasChapters {
                     @Bindable var navManager = navManager
@@ -95,13 +94,19 @@ struct ChapterDescriptionView: View {
         }
     }
 
-    func dragGesture(_ hasContent: Bool, direction: ChapterDescriptionPage) -> some Gesture {
+    func dragGesture(origin: ChapterDescriptionPage) -> some Gesture {
         DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .updating($dragState) { value, state, _ in
-                if !hasContent { return }
+                let hasChapters = player.video?.chapters.isEmpty == false
+                let hasDescription = player.video?.videoDescription != nil
+                if origin == .chapters && !hasDescription || origin == .description && !hasChapters {
+                    return
+                }
+
                 state = value.translation.width
-                if (direction == .description && state > 30) || (direction == .chapters && state < -30) {
+                if (origin == .chapters && state > 30) || (origin == .description && state < -30) {
                     Task.detached {
+                        let direction: ChapterDescriptionPage = origin == .description ? .chapters : .description
                         await MainActor.run {
                             withAnimation {
                                 navManager.selectedDetailPage = direction
