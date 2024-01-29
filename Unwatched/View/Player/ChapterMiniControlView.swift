@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct DescriptionMiniControlView: View {
+struct ChapterMiniControlView: View {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
 
@@ -25,6 +25,7 @@ struct DescriptionMiniControlView: View {
                     videoDescription(description, hasChapters)
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal)
             .padding(.vertical, 10)
             .background(Color.backgroundGray)
@@ -77,7 +78,7 @@ struct DescriptionMiniControlView: View {
 }
 
 #Preview {
-    DescriptionMiniControlView()
+    ChapterMiniControlView()
         .modelContainer(DataController.previewContainer)
         .environment(PlayerManager.getDummy())
 }

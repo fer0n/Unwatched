@@ -73,7 +73,7 @@ struct VideoPlayer: View {
                 .padding(.horizontal, 5)
             }
             Spacer()
-            DescriptionMiniControlView()
+            ChapterMiniControlView()
             playButton
             Spacer()
             Button {
