@@ -10,6 +10,8 @@ import SwiftData
 @Observable class NavigationManager: Codable {
     var showMenu = true
     var tab = Tab.queue
+    var showDescriptionDetail = false
+    var selectedDetailPage: ChapterDescriptionPage = .description
 
     var presentedSubscriptionQueue = [Subscription]()
     var presentedSubscriptionInbox = [Subscription]()

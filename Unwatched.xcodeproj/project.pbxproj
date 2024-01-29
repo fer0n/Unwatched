@@ -29,12 +29,12 @@
 		883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */; };
 		883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */; };
 		883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8162B5BA94900028D52 /* SheetPositionReader.swift */; };
-		883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */; };
+		883CA8192B5BB2FB00028D52 /* DescriptionMiniControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8182B5BB2FB00028D52 /* DescriptionMiniControlView.swift */; };
 		883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81A2B5BC81600028D52 /* RefreshManager.swift */; };
 		883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */; };
 		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
 		8845F0172B5054570086AA98 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0162B5054570086AA98 /* Chapter.swift */; };
-		8845F0192B50648D0086AA98 /* ChapterSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0182B50648D0086AA98 /* ChapterSelection.swift */; };
+		8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */; };
 		88632AF32B64FC0300C93F82 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF22B64FC0300C93F82 /* UserDataService.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
@@ -124,12 +124,12 @@
 		883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshToolbarButton.swift; sourceTree = "<group>"; };
 		883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerHeightPreferenceChange.swift; sourceTree = "<group>"; };
 		883CA8162B5BA94900028D52 /* SheetPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetPositionReader.swift; sourceTree = "<group>"; };
-		883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMiniControlView.swift; sourceTree = "<group>"; };
+		883CA8182B5BB2FB00028D52 /* DescriptionMiniControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionMiniControlView.swift; sourceTree = "<group>"; };
 		883CA81A2B5BC81600028D52 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribeManager.swift; sourceTree = "<group>"; };
 		8845F0142B500E8A0086AA98 /* AllVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVideosView.swift; sourceTree = "<group>"; };
 		8845F0162B5054570086AA98 /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
-		8845F0182B50648D0086AA98 /* ChapterSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterSelection.swift; sourceTree = "<group>"; };
+		8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterDescriptionView.swift; sourceTree = "<group>"; };
 		88632AF22B64FC0300C93F82 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
 		88632AF42B64FD8200C93F82 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
@@ -247,9 +247,9 @@
 				88D438A42B45ACD800482F29 /* YoutubeWebViewPlayer.swift */,
 				8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */,
 				883CA8102B5AFE8B00028D52 /* MiniPlayerView.swift */,
-				8845F0182B50648D0086AA98 /* ChapterSelection.swift */,
+				8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */,
 				88C205272B516D2A008EC51D /* ChapterListItem.swift */,
-				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
+				883CA8182B5BB2FB00028D52 /* DescriptionMiniControlView.swift */,
 				88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */,
 			);
 			path = Player;
@@ -574,7 +574,7 @@
 				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,
-				883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */,
+				883CA8192B5BB2FB00028D52 /* DescriptionMiniControlView.swift in Sources */,
 				883CA8112B5AFE8B00028D52 /* MiniPlayerView.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */,
@@ -619,7 +619,7 @@
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				88D858502B55AB4D0047E0E6 /* DateTimeConversion.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
-				8845F0192B50648D0086AA98 /* ChapterSelection.swift in Sources */,
+				8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
 				88D438A52B45ACD800482F29 /* YoutubeWebViewPlayer.swift in Sources */,

@@ -40,6 +40,7 @@ struct MiniPlayerView: View {
             }
             .onTapGesture {
                 navManager.showMenu = false
+                navManager.showDescriptionDetail = false
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal)

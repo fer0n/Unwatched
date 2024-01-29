@@ -181,6 +181,16 @@
         }
       }
     },
+    "chapters" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters"
+          }
+        }
+      }
+    },
     "clearAll" : {
       "localizations" : {
         "en" : {
@@ -296,6 +306,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete Image Cache"
+          }
+        }
+      }
+    },
+    "description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
           }
         }
       }
@@ -632,6 +652,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All available videos will be shown here, including manually added ones and videos from all subscriptions."
+          }
+        }
+      }
+    },
+    "page" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page"
           }
         }
       }
