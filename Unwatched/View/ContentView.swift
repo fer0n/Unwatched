@@ -20,7 +20,10 @@ struct ContentView: View {
         @Bindable var navManager = navManager
 
         let videoExists = player.video != nil
-        let hideMiniPlayer = (navManager.showMenu && sheetPos.swipedBelow) || navManager.showMenu == false
+        let hideMiniPlayer = (
+            (navManager.showMenu || navManager.showDescriptionDetail)
+                && sheetPos.swipedBelow
+        ) || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
         let detents: Set<PresentationDetent> = videoExists ? [.height(sheetPos.maxSheetHeight)] : [.large]
 
         GeometryReader { proxy in
@@ -37,6 +40,15 @@ struct ContentView: View {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
             .environment(player)
+            .sheet(isPresented: $navManager.showDescriptionDetail) {
+                ChapterDescriptionView()
+                    .environment(player)
+                    .presentationDetents(detents)
+                    .presentationBackgroundInteraction(
+                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                    )
+                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+            }
             .sheet(isPresented: $navManager.showMenu) {
                 MenuView()
                     .environment(refresher)

@@ -47,9 +47,10 @@ struct VideoPlayer: View {
                     }
                 subscriptionTitle
             }
-            .padding(.top)
+            .padding(.horizontal, 10)
+
             ZStack {
-                if let video = player.video {
+                if player.video != nil {
                     YoutubeWebViewPlayer(onVideoEnded: handleVideoEnded)
                 } else {
                     Rectangle()
@@ -63,15 +64,16 @@ struct VideoPlayer: View {
                 SpeedControlView(selectedSpeed: $player.playbackSpeed)
                 HStack {
                     customSettingsButton
-                    Spacer()
+                        .frame(maxWidth: .infinity)
                     watchedButton
-                    Spacer()
+                        .frame(maxWidth: .infinity)
                     continuousPlayButton
+                        .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal, 5)
             }
             Spacer()
-            ChapterMiniControlView()
+            DescriptionMiniControlView()
             playButton
             Spacer()
             Button {
@@ -80,14 +82,21 @@ struct VideoPlayer: View {
                 VStack {
                     Image(systemName: "chevron.up")
                     Text("showMenu")
+                        .font(.caption)
                         .padding(.bottom, 3)
                 }
                 .padding(.horizontal, 2)
             }
             .buttonStyle(CapsuleButtonStyle())
         }
+        .background(
+            LinearGradient(gradient: Gradient(
+                            colors: [Color.backgroundGray, Color.backgroundColor]),
+                           startPoint: .bottom, endPoint: .center
+            )
+        )
         .contentShape(Rectangle())
-        .gesture(
+        .highPriorityGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .local)
                 .updating($dragState) { value, state, _ in
                     state = value.translation.height
@@ -144,7 +153,7 @@ struct VideoPlayer: View {
                     .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
             }
         }
-        .padding(15)
+        .padding(10)
         .foregroundColor(.teal)
         .onTapGesture {
             if let sub = player.video?.subscription {

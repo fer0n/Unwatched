@@ -22,9 +22,9 @@ struct OutlineToggleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.system(size: 14))
-            .padding(.vertical, 15)
-            .padding(.horizontal, 15)
-            .frame(maxWidth: 110)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 10)
+            .frame(maxWidth: 100)
             .background(isOn ? Color.myAccentColor : Color.myBackgroundGray)
             .foregroundColor(isOn ? Color.backgroundColor : Color.myForegroundGray)
             .clipShape(RoundedRectangle(cornerRadius: 20))
