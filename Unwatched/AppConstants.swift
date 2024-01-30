@@ -5,8 +5,11 @@
 
 import Foundation
 import UniformTypeIdentifiers
+import SwiftUI
 
 struct Const {
+
+    static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     static let playerAboveSheetHeight: CGFloat = 60
     static let backupType = UTType("com.pentlandFirth.unwatchedbackup")

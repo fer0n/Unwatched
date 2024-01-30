@@ -17,7 +17,7 @@ struct VideoPlayer: View {
     @GestureState private var dragState: CGFloat = 0
     @State var continuousPlayWorkaround: Bool = false
     @State var isSubscribedSuccess: Bool?
-    @State var subscribeManager = SubscribeManager()
+    @State var hapticToggle: Bool = false
 
     @Binding var showMenu: Bool
 
@@ -25,29 +25,6 @@ struct VideoPlayer: View {
         @Bindable var player = player
 
         VStack(spacing: 10) {
-
-            VStack(spacing: 0) {
-                Text(player.video?.title ?? "")
-                    .font(.system(size: 20, weight: .heavy))
-                    .multilineTextAlignment(.center)
-                    .contextMenu(menuItems: {
-                        if let url = player.video?.url {
-                            ShareLink(item: url) {
-                                HStack {
-                                    Image(systemName: "square.and.arrow.up.fill")
-                                    Text("share")
-                                }
-                            }
-                        }
-                    })
-                    .onTapGesture {
-                        if let video = player.video {
-                            UIApplication.shared.open(video.url)
-                        }
-                    }
-                subscriptionTitle
-            }
-            .padding(.horizontal, 10)
 
             ZStack {
                 if player.video != nil {
@@ -60,43 +37,70 @@ struct VideoPlayer: View {
             .aspectRatio(16/9, contentMode: .fit)
             .frame(maxWidth: .infinity)
 
-            VStack {
-                SpeedControlView(selectedSpeed: $player.playbackSpeed)
+            Spacer()
+
+            ChapterMiniControlView()
+
+            Spacer()
+            Spacer()
+
+            VStack(spacing: 25) {
                 HStack {
+                    SpeedControlView(selectedSpeed: $player.playbackSpeed)
                     customSettingsButton
-                        .frame(maxWidth: .infinity)
+                }
+
+                HStack {
                     watchedButton
                         .frame(maxWidth: .infinity)
+                    playButton
                     continuousPlayButton
                         .frame(maxWidth: .infinity)
                 }
-                .padding(.horizontal, 5)
+                .padding(.horizontal, 10)
             }
+            .padding(.horizontal, 5)
+
             Spacer()
-            ChapterMiniControlView()
-            playButton
             Spacer()
-            Button {
-                setShowMenu()
-            } label: {
-                VStack {
-                    Image(systemName: "chevron.up")
-                    Text("showMenu")
-                        .font(.caption)
-                        .padding(.bottom, 3)
+
+            HStack {
+                Spacer()
+                    .frame(maxWidth: .infinity)
+                Button {
+                    setShowMenu()
+                } label: {
+                    VStack {
+                        Image(systemName: "chevron.up")
+                            .font(.system(size: 30))
+                        Text("showMenu")
+                            .font(.caption)
+                            .padding(.bottom, 3)
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal, 2)
+
+                Button {
+                    if let video = player.video {
+                        UIApplication.shared.open(video.url)
+                    }
+                } label: {
+                    Image(systemName: "link")
+                        .font(.system(size: 20))
+                }
+                .padding(5)
+                .contextMenu {
+                    if let url =  player.video?.url {
+                        ShareLink(item: url)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+
             }
-            .buttonStyle(CapsuleButtonStyle())
+            .padding(.horizontal, 30)
         }
-        .background(
-            LinearGradient(gradient: Gradient(
-                            colors: [Color.backgroundGray, Color.backgroundColor]),
-                           startPoint: .bottom, endPoint: .center
-            )
-        )
         .contentShape(Rectangle())
-        .highPriorityGesture(
+        .simultaneousGesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .local)
                 .updating($dragState) { value, state, _ in
                     state = value.translation.height
@@ -111,13 +115,16 @@ struct VideoPlayer: View {
         .onChange(of: player.video?.subscription) {
             // workaround to update ui, doesn't work without
         }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .sensoryFeedback(Const.sensoryFeedback, trigger: continuousPlay)
     }
 
     var watchedButton: some View {
         Button {
             markVideoWatched()
+            hapticToggle.toggle()
         } label: {
-            Text("mark\nwatched")
+            Image(systemName: "checkmark")
         }
         .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
     }
@@ -127,74 +134,33 @@ struct VideoPlayer: View {
             player.video?.subscription?.customSpeedSetting != nil
         }, set: { value in
             player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
+            hapticToggle.toggle()
         })) {
-            Text("custom\nsettings")
-                .fontWeight(.medium)
+            Image(systemName: "lock")
         }
-        .toggleStyle(OutlineToggleStyle())
+        .help("customSpeedSettings")
+        .toggleStyle(OutlineToggleStyle(isSmall: true))
         .disabled(player.video?.subscription == nil)
     }
 
     var continuousPlayButton: some View {
         Toggle(isOn: $continuousPlay) {
-            Text("continuous\nplay")
-                .fontWeight(.medium)
+            Image(systemName: "text.line.first.and.arrowtriangle.forward")
         }
         .toggleStyle(OutlineToggleStyle())
-    }
-
-    var subscriptionTitle: some View {
-        HStack {
-            Text(player.video?.subscription?.title ?? "–")
-                .textCase(.uppercase)
-            if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
-                Image(systemName: icon)
-                    .contentTransition(.symbolEffect(.replace))
-                    .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
-            }
-        }
-        .padding(10)
-        .foregroundColor(.teal)
-        .onTapGesture {
-            if let sub = player.video?.subscription {
-                navManager.pushSubscription(sub)
-                setShowMenu()
-            }
-        }
-        .contextMenu {
-            let isSubscribed = subscribeManager.isSubscribed(video: player.video)
-            Button {
-                withAnimation {
-                    subscribeManager.handleSubscription(
-                        video: player.video,
-                        container: modelContext.container)
-                }
-            } label: {
-                HStack {
-                    if isSubscribed {
-                        Image(systemName: "xmark")
-                        Text("unsubscribe")
-                    } else {
-                        Image(systemName: "plus")
-                        Text("subscribe")
-                    }
-                }
-            }
-            .disabled(subscribeManager.isLoading)
-        }
     }
 
     var playButton: some View {
         Button {
             player.isPlaying.toggle()
+            hapticToggle.toggle()
         } label: {
             Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .frame(width: 60, height: 60)
+                .frame(width: 80, height: 80)
                 .accentColor(.myAccentColor)
                 .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
-        .padding(20)
     }
 
     func markVideoWatched() {
