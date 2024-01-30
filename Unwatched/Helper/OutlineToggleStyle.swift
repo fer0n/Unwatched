@@ -6,38 +6,46 @@
 import SwiftUI
 
 struct OutlineToggleStyle: ToggleStyle {
+    var isSmall: Bool = false
+
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
         }, label: {
             configuration.label
-                .modifier(OutlineToggleModifier(isOn: configuration.isOn))
+                .modifier(OutlineToggleModifier(isOn: configuration.isOn, isSmall: isSmall))
         })
     }
 }
 
 struct OutlineToggleModifier: ViewModifier {
     let isOn: Bool
+    var isSmall: Bool = false
 
     func body(content: Content) -> some View {
         content
-            .font(.system(size: 14))
-            .padding(.vertical, 10)
-            .padding(.horizontal, 10)
-            .frame(maxWidth: 100)
+            .font(.system(size: isSmall ? 15 : 18))
+            .padding(isSmall ? 10 : 15)
             .background(isOn ? Color.myAccentColor : Color.myBackgroundGray)
             .foregroundColor(isOn ? Color.backgroundColor : Color.myForegroundGray)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(Circle())
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(isOn ? Color.clear : Color.myForegroundGray, lineWidth: 2)
+                Circle()
+                    .stroke(isOn ? Color.clear : Color.myForegroundGray, lineWidth: 1)
             )
     }
 }
 
 #Preview {
-    Toggle(isOn: .constant(true)) {
-        Text("custom\nsettings")
+    VStack {
+        Toggle(isOn: .constant(true)) {
+            Image(systemName: "checkmark")
+        }
+        .toggleStyle(OutlineToggleStyle())
+
+        Toggle(isOn: .constant(false)) {
+            Image(systemName: "checkmark")
+        }
+        .toggleStyle(OutlineToggleStyle(isSmall: true))
     }
-    .toggleStyle(OutlineToggleStyle())
 }

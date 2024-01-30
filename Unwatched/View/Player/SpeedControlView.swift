@@ -10,49 +10,130 @@ struct SpeedControlView: View {
     static let speeds: [Double] = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     let highlighted: [Double] = [1, 1.5, 2]
 
+    static let padding: CGFloat = 0
+    let frameHeight: CGFloat = 30
+    let maxHeight: CGFloat = 40
+    let coordinateSpace: NamedCoordinateSpace = .named("speed")
+
+    @State var hapticToggle = false
+    @State var width: CGFloat = 0
+    @State var itemWidth: CGFloat = 0
+    @State var midY: CGFloat = 0
+    @State var controlMinX: CGFloat = SpeedControlView.padding
+    @State private var dragState: CGFloat?
+
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 15.0)
+            Capsule()
                 .fill(Color.backgroundGray)
-                .frame(height: 50)
+                .frame(height: frameHeight)
                 .frame(maxWidth: .infinity)
 
             HStack(spacing: 0) {
                 ForEach(SpeedControlView.speeds, id: \.self) { speed in
                     let isHightlighted = highlighted.contains(speed)
-                    let isSelected = speed == selectedSpeed
-
-                    let maxFrameSize: CGFloat = 34
-                    let frameSize: CGFloat = isSelected ? maxFrameSize : isHightlighted ? 22 : 8
-                    let cornerRadius: CGFloat = isSelected ? 12 : isHightlighted ? 7 : 2
-                    let backgroundColor: Color = isSelected ? .myAccentColor : .clear
-                    let foregroundColor: Color = isSelected ? .backgroundColor : .foregroundGray
-                    let showStroke = !isSelected
-                    let fontSize: CGFloat = isSelected ? 17 : 12
+                    let frameSize: CGFloat = isHightlighted ? 20 : 5
+                    let foregroundColor: Color = .foregroundGray
 
                     ZStack {
-                        Color.clear
+                        Circle()
+                            .fill()
+                            .stroke(foregroundColor, lineWidth: 1.5)
+                            .foregroundStyle(isHightlighted ? .clear : foregroundColor)
+                            .frame(width: frameSize, height: frameSize)
+                            .frame(maxWidth: .infinity, maxHeight: maxHeight)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                self.selectedSpeed = speed
+                                withAnimation {
+                                    selectedSpeed = speed
+                                    controlMinX = getXPos(width, selectedSpeed)
+                                    hapticToggle.toggle()
+                                }
                             }
-                            .frame(width: maxFrameSize, height: maxFrameSize)
-                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                            .stroke(showStroke ? foregroundColor : .clear, lineWidth: 1.5)
-                            .fill(backgroundColor)
-                            .frame(width: frameSize, height: frameSize)
-                            .onTapGesture(perform: {self.selectedSpeed = speed})
-                        if isHightlighted || isSelected {
+                        if isHightlighted {
                             Text(SpeedControlView.formatSpeed(speed))
-                                .foregroundStyle(foregroundColor)
                                 .fontWeight(.medium)
-                                .font(.system(size: fontSize))
+                                .font(.system(size: 10))
+                                .foregroundStyle(foregroundColor)
                         }
                     }
                 }
             }
-            .padding(.horizontal, 2)
+            .overlay {
+                GeometryReader { geometry in
+                    Color.clear.preference(key: SpeedPreferenceKey.self, value: geometry.frame(in: coordinateSpace))
+                }
+            }
+            .onPreferenceChange(SpeedPreferenceKey.self) { minY in
+                self.width = minY.width
+                self.itemWidth = width / CGFloat(SpeedControlView.speeds.count)
+                self.midY = minY.midY
+                controlMinX = getXPos(width, selectedSpeed)
+            }
+            .padding(.horizontal, SpeedControlView.padding)
+
+            ZStack {
+                Circle()
+                    .fill()
+                    .frame(width: maxHeight, height: maxHeight)
+                Text(getFloatingText())
+                    .foregroundStyle(.black)
+                    .bold()
+                    .font(.system(size: 16))
+            }
+            .position(x: dragState ?? controlMinX, y: midY)
+            .frame(maxHeight: maxHeight)
+            .animation(.bouncy(duration: 0.4), value: controlMinX)
+            .transition(.identity)
         }
+        .onChange(of: selectedSpeed) {
+            controlMinX = getXPos(width, selectedSpeed)
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
+                .onChanged { gesture in
+                    let dragPosition = controlMinX + gesture.translation.width
+                    let cappedMax = max(dragPosition, SpeedControlView.padding + (itemWidth / 2))
+                    dragState = min(cappedMax, width - (SpeedControlView.padding + (itemWidth / 2)))
+                }
+                .onEnded { state in
+                    let value = state.translation.width
+                    let currentPos = controlMinX + value
+                    let selected = getSpeedFromPos(currentPos)
+                    controlMinX = currentPos
+                    selectedSpeed = selected
+
+                    withAnimation {
+                        controlMinX = getXPos(width, selected)
+                        hapticToggle.toggle()
+                        dragState = nil
+                    }
+                }
+        )
+        .coordinateSpace(.named("speed"))
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .padding(.horizontal, 5)
+    }
+
+    func getFloatingText() -> String {
+        if dragState == nil {
+            return SpeedControlView.formatSpeed(selectedSpeed) + "x"
+        }
+        let speed = getSpeedFromPos(dragState ?? 0)
+        return SpeedControlView.formatSpeed(speed) + "x"
+    }
+
+    func getSpeedFromPos(_ pos: CGFloat) -> Double {
+        let itemWidth = width / CGFloat(SpeedControlView.speeds.count)
+        let calculatedIndex = Int(round((pos / itemWidth) - 0.5) )
+        let index = max(0, min(calculatedIndex, SpeedControlView.speeds.count - 1))
+        let speed = SpeedControlView.speeds[index]
+        return speed
+    }
+
+    func getXPos(_ fullWidth: CGFloat, _ speed: CGFloat) -> CGFloat {
+        let selectedSpeedIndex = SpeedControlView.speeds.firstIndex(of: speed) ?? 0
+        return SpeedControlView.padding + (CGFloat(selectedSpeedIndex) * itemWidth) + (itemWidth / 2)
     }
 
     static func formatSpeed(_ speed: Double) -> String {
@@ -64,6 +145,13 @@ struct SpeedControlView: View {
     }
 }
 
+struct SpeedPreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
+    }
+}
+
 struct SpeedControlView_Previews: PreviewProvider {
     @State static var speed: Double = 1.0
 
@@ -72,7 +160,15 @@ struct SpeedControlView_Previews: PreviewProvider {
     }
 }
 
+struct SpeedControlViewPreview: View {
+    @State var selected: Double = 1.5
+    var body: some View {
+        SpeedControlView(selectedSpeed: $selected)
+            .modelContainer(DataController.previewContainer)
+            .padding()
+    }
+}
+
 #Preview {
-    SpeedControlView(selectedSpeed: .constant(1.5))
-        .modelContainer(DataController.previewContainer)
+    SpeedControlViewPreview()
 }

@@ -73,7 +73,7 @@ enum VideoSource {
         if let end = currentEndTime, let current = currentTime {
             let remaining = end - current
             if let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
-                return "\(rem) remaining"
+                return "\(rem)"
             }
         }
         return nil

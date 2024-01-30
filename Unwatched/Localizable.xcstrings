@@ -31,6 +31,9 @@
     "%lld video(s) available" : {
 
     },
+    "•" : {
+
+    },
     "addSubscription" : {
       "localizations" : {
         "en" : {
@@ -252,6 +255,7 @@
       }
     },
     "continuous\nplay" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -278,6 +282,7 @@
       "comment" : "Couldn't convert to URL"
     },
     "custom\nsettings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -286,6 +291,9 @@
           }
         }
       }
+    },
+    "customSpeedSettings" : {
+
     },
     "Default (%@x)" : {
 
@@ -470,6 +478,7 @@
       }
     },
     "mark\nwatched" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

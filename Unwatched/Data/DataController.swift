@@ -62,6 +62,7 @@ extension Video {
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
             publishedDate: Date(),
+            duration: 12352,
             videoDescription: "The Resident Evil 4 Remake VR mode is releasing as a free update to th",
             chapters: chapters)
     }
