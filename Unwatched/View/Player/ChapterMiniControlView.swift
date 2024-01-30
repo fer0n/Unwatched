@@ -29,9 +29,9 @@ struct ChapterMiniControlView: View {
                     }
 
                     Button {
-                        let val: ChapterDescriptionPage = player.video?.chapters != nil
-                            ? .chapters
-                            : .description
+                        let val: ChapterDescriptionPage = (player.video?.chapters ?? []).isEmpty
+                            ? .description
+                            : .chapters
                         navManager.selectedDetailPage = val
                         navManager.showDescriptionDetail = true
                     } label: {
