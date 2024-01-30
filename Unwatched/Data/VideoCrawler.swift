@@ -53,30 +53,60 @@ class VideoCrawler {
     static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
         let input = description
         do {
-            let regex = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+[-–•]?\s*(.+)"#)
-            let range = NSRange(input.startIndex..<input.endIndex, in: input)
+            let regexTimeThenTitle = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+[-–•]?\s*(.+)"#)
+            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)[-–:•]+\s?(\d+(?:\:\d+)+)"#)
 
-            var chapters: [SendableChapter] = []
-
-            regex.enumerateMatches(in: input, options: [], range: range) { match, _, _ in
-                if let match = match {
-                    let timeRange = Range(match.range(at: 1), in: input)!
-                    let titleRange = Range(match.range(at: 2), in: input)!
-
-                    let timeString = String(input[timeRange])
-                    let title = String(input[titleRange])
-                    if let time = timeToSeconds(timeString) {
-                        let chapter = SendableChapter(title: title, startTime: time)
-                        chapters.append(chapter)
-                    }
-                }
+            var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
+            if chapters?.isEmpty == true || chapters == nil {
+                print("regexTitleThenTime!")
+                //                print("input", input)
+                chapters = try? getChaptersViaRegex(regexTitleThenTime, input, 1, 2)
+                print("chapters", chapters)
             }
-            let chatpersWithDuration = setDuration(in: chapters, videoDuration: videoDuration)
-            return chatpersWithDuration
+
+            guard let chapters = chapters else {
+                return []
+            }
+
+            let chaptersWithDuration = setDuration(in: chapters, videoDuration: videoDuration)
+            return chaptersWithDuration
         } catch {
             print("Error creating regex: \(error)")
         }
         return []
+    }
+
+    static private func getChaptersViaRegex(
+        _ regex: NSRegularExpression,
+        _ input: String,
+        _ titleIndex: Int,
+        _ timeIndex: Int
+    ) throws -> [SendableChapter] {
+        print("getChaptersViaRegex")
+        let range = NSRange(input.startIndex..<input.endIndex, in: input)
+
+        var chapters: [SendableChapter] = []
+
+        regex.enumerateMatches(in: input, options: [], range: range) { match, _, _ in
+            print(">>> enumerateMatches")
+            if let match = match {
+                let timeRange = Range(match.range(at: timeIndex), in: input)!
+                let titleRange = Range(match.range(at: titleIndex), in: input)!
+
+                let timeString = String(input[timeRange])
+                let title = String(input[titleRange])
+
+                print("timeString", timeString)
+                print("title", title)
+                if let time = timeToSeconds(timeString) {
+                    print("time", time)
+                    let chapter = SendableChapter(title: title, startTime: time)
+                    print("chapter", chapter)
+                    chapters.append(chapter)
+                }
+            }
+        }
+        return chapters
     }
 
     static func setDuration(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
