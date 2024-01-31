@@ -32,10 +32,7 @@ struct QueueView: View {
                         ForEach(queue) { entry in
                             ZStack {
                                 if let video = entry.video {
-                                    VideoListItem(
-                                        video: video,
-                                        videoSwipeActions: [.queueBottom, .queueTop, .clear]
-                                    )
+                                    VideoListItem(video: video)
                                 }
                             }
                             .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))

@@ -11,6 +11,7 @@ enum VideoActions {
     case queueBottom
     case delete
     case clear
+    case more
 }
 
 struct VideoListItem: View {
@@ -31,7 +32,7 @@ struct VideoListItem: View {
     // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
-         videoSwipeActions: [VideoActions] = [.queueTop],
+         videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more],
          onClear: (() -> Void)? = nil) {
         self.video = video
         self.videoSwipeActions = videoSwipeActions
@@ -59,7 +60,7 @@ struct VideoListItem: View {
             .contentShape(Rectangle())
             .onTapGesture {
                 player.playVideo(video)
-                VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+                _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
                 withAnimation {
                     navManager.showMenu = false
                 }
@@ -127,6 +128,22 @@ struct VideoListItem: View {
                     Image(systemName: Const.clearSF)
                 }
                 .tint(Color.backgroundColor)
+            }
+            if videoSwipeActions.contains(.more) {
+                Menu {
+                    Button(action: markWatched) {
+                        Image(systemName: Const.watchedSF)
+                        Text("markWatched")
+                    }
+                    Button(action: moveToInbox) {
+                        Image(systemName: "tray.and.arrow.down.fill")
+                        Text("moveToInbox")
+                    }
+                    ShareLink(item: video.url)
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
+                .tint(Color.gray)
             }
         }
     }
@@ -208,22 +225,34 @@ struct VideoListItem: View {
         )
     }
 
+    func moveToInbox() {
+        let task = VideoService.moveVideoToInbox(video, modelContext: modelContext)
+        handlePotentialQueueChange(after: task)
+    }
+
+    func markWatched() {
+        let task = VideoService.markVideoWatched(video, modelContext: modelContext)
+        handlePotentialQueueChange(after: task)
+    }
+
     func addVideoToBottomQueue() {
         print("addVideoBottom")
         let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
-        if video.queueEntry?.order == 0 {
-            player.loadTopmostVideoFromQueue(after: task)
-        }
+        handlePotentialQueueChange(after: task)
     }
 
     func clearVideoEverywhere() {
         onClear?()
-        let isFirstQueueEntry = video.queueEntry?.order == 0
+        let order = video.queueEntry?.order
         let task = VideoService.clearFromEverywhere(
             video,
             modelContext: modelContext
         )
-        if isFirstQueueEntry {
+        handlePotentialQueueChange(after: task, order: order)
+    }
+
+    func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
+        if order == 0 || video.queueEntry?.order == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }
     }
@@ -238,13 +267,16 @@ struct VideoListItem: View {
         return Text("no video found")
     }
 
-    return VideoListItem(
-        video: video,
-        showVideoStatus: true,
-        hasInboxEntry: false,
-        hasQueueEntry: true,
-        watched: true
-    )
+    return List {
+        VideoListItem(
+            video: video,
+            showVideoStatus: true,
+            hasInboxEntry: false,
+            hasQueueEntry: true,
+            watched: true,
+            videoSwipeActions: [.queueTop, .queueBottom, .clear, .more]
+        )
+    }.listStyle(.plain)
     .modelContainer(container)
     .environment(NavigationManager())
     .environment(PlayerManager())

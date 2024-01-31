@@ -19,17 +19,19 @@ class VideoService {
         return task
     }
 
-    static func markVideoWatched(_ video: Video, modelContext: ModelContext ) {
+    static func markVideoWatched(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoId = video.id
-        Task {
+        let task = Task {
             do {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.markVideoWatched(videoId)
             } catch {
                 print("\(error)")
+                throw error
             }
         }
+        return task
     }
 
     static func moveQueueEntry(from source: IndexSet, to destination: Int, modelContext: ModelContext) -> Task<(), Error> {
@@ -42,6 +44,16 @@ class VideoService {
                 print("\(error)")
                 throw error
             }
+        }
+        return task
+    }
+
+    static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
+        let container = modelContext.container
+        let videoId = video.id
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.moveVideoToInbox(videoId)
         }
         return task
     }

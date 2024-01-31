@@ -157,7 +157,7 @@ struct VideoPlayer: View {
         } label: {
             Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .frame(width: 80, height: 80)
+                .frame(width: 90, height: 90)
                 .accentColor(.myAccentColor)
                 .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }

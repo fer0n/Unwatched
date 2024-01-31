@@ -477,13 +477,12 @@
         }
       }
     },
-    "mark\nwatched" : {
-      "extractionState" : "stale",
+    "markWatched" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mark Watched"
+            "value" : "Mark Watched"
           }
         }
       }
@@ -494,6 +493,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Most Recent Video"
+          }
+        }
+      }
+    },
+    "moveToInbox" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move to Inbox"
           }
         }
       }
