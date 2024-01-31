@@ -22,8 +22,7 @@ struct VideoListView: View {
                 showVideoStatus: true,
                 hasInboxEntry: video.inboxEntry != nil,
                 hasQueueEntry: video.queueEntry != nil,
-                watched: video.watched,
-                videoSwipeActions: [.queueTop, .queueBottom, .clear]
+                watched: video.watched
             )
         }
     }

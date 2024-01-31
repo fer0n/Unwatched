@@ -25,8 +25,7 @@ struct WatchHistoryView: View {
                                               showVideoStatus: true,
                                               hasInboxEntry: video.inboxEntry != nil,
                                               hasQueueEntry: video.queueEntry != nil,
-                                              watched: video.watched,
-                                              videoSwipeActions: [.queueTop, .clear])
+                                              watched: video.watched)
                             }
                         }
                     }

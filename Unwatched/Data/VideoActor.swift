@@ -177,6 +177,21 @@ actor VideoActor {
         try modelContext.save()
     }
 
+    func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
+        guard let video = modelContext.model(for: videoId) as? Video else {
+            print("moveVideoToInbox no video found")
+            return
+        }
+        if video.inboxEntry != nil {
+            clearEntries(from: video, except: InboxEntry.self)
+        } else {
+            clearEntries(from: video)
+            let inboxEntry = InboxEntry(video)
+            modelContext.insert(inboxEntry)
+        }
+        try modelContext.save()
+    }
+
     private func addToCorrectSubscription(_ video: Video, channelId: String) {
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubeChannelId == channelId

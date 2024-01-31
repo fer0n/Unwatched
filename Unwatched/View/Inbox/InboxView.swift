@@ -33,7 +33,6 @@ struct InboxView: View {
                                 if let video = entry.video {
                                     VideoListItem(
                                         video: video,
-                                        videoSwipeActions: [.queueTop, .queueBottom, .clear],
                                         onClear: {
                                             VideoService.deleteInboxEntry(
                                                 entry,
