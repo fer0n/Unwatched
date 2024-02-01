@@ -7,12 +7,6 @@
     "-%@" : {
 
     },
-    "–" : {
-
-    },
-    "@%@" : {
-
-    },
     "#s%@" : {
 
     },
@@ -20,15 +14,6 @@
 
     },
     "%@x" : {
-
-    },
-    "%lf" : {
-
-    },
-    "%lld" : {
-
-    },
-    "%lld video(s) available" : {
 
     },
     "•" : {
@@ -255,6 +240,7 @@
       }
     },
     "continuousPlay" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
