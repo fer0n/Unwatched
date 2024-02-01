@@ -46,15 +46,16 @@ struct SettingsView: View {
                 .tint(.teal)
 
                 Section(header: Text("shortsSettings"), footer: Text("shortsSettingsHelper")) {
+                    Toggle(isOn: $handleShortsDifferently) {
+                        Text("handleShortsDifferently")
+                    }
+                    .tint(.teal)
                     Picker("shortsDetection", selection: $shortsDetection) {
                         ForEach(ShortsDetection.allCases, id: \.self) {
                             Text($0.description)
                         }
                     }
-                    Toggle(isOn: $handleShortsDifferently) {
-                        Text("handleShortsDifferently")
-                    }
-                    .tint(.teal)
+                    .disabled(!handleShortsDifferently)
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
                     }
