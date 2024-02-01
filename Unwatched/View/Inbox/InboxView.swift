@@ -9,7 +9,7 @@ import SwiftData
 struct InboxView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Query(sort: \InboxEntry.video?.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
+    @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
     @State private var showingClearAllAlert = false
 
     var body: some View {
