@@ -210,6 +210,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                 event.target.setPlaybackRate(\(playbackSpeed));
                 sendMessage("playerReady");
                 sendMessage("duration", player.getDuration());
+                player.seekTo(\(startAt), true)
             }
 
             function onPlayerStateChange(event) {
