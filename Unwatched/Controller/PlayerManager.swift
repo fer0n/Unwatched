@@ -209,11 +209,15 @@ enum VideoSource {
             let newVideo = VideoService.getTopVideoInQueue(context)
             let videoId = newVideo?.persistentModelID
             await MainActor.run {
-                if let videoId = videoId, currentVideoId != videoId {
-                    let context = ModelContext(container)
-                    if let newVideo = context.model(for: videoId) as? Video {
-                        self.setNextVideo(newVideo, .nextUp)
+                if let videoId = videoId {
+                    if currentVideoId != videoId {
+                        let context = ModelContext(container)
+                        if let newVideo = context.model(for: videoId) as? Video {
+                            self.setNextVideo(newVideo, .nextUp)
+                        }
                     }
+                } else {
+                    clearVideo()
                 }
             }
         }

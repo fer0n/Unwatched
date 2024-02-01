@@ -254,17 +254,6 @@
         }
       }
     },
-    "continuous\nplay" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuous Play"
-          }
-        }
-      }
-    },
     "continuousPlay" : {
       "localizations" : {
         "en" : {
@@ -280,17 +269,6 @@
     },
     "Couldn't convert to URL: (noUrl)" : {
       "comment" : "Couldn't convert to URL"
-    },
-    "custom\nsettings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom Settings"
-          }
-        }
-      }
     },
     "customSpeedSettings" : {
 
