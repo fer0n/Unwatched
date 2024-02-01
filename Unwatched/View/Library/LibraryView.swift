@@ -21,6 +21,8 @@ struct LibraryView: View {
     @State var subManager = SubscribeManager()
     @State var text: String = ""
     @State var isDragOver: Bool = false
+    @State var isLoadingVideos = false
+    @State var addVideosSuccess: Bool?
 
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
@@ -167,6 +169,9 @@ struct LibraryView: View {
 
     var searchBar: some View {
         HStack(spacing: 0) {
+            let isLoading = subManager.isLoading || isLoadingVideos
+            let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
+
             Text("")
             TextField("searchLibraryOrEnterUrl", text: $text)
                 .submitLabel(.done)
@@ -174,15 +179,15 @@ struct LibraryView: View {
                     handleTextFieldSubmit()
                 }
                 .disabled(subManager.isLoading)
-            if subManager.isLoading {
+            if isLoading {
                 ProgressView()
-            } else if subManager.isSubscribedSuccess == true {
+            } else if isSuccess {
                 Image(systemName: "checkmark")
             } else if text.isEmpty {
                 Button("paste") {
                     let text = UIPasteboard.general.string ?? ""
                     if !text.isEmpty {
-                        subManager.addSubscriptionFromText(text)
+                        handleTextFieldSubmit(text)
                     }
                 }
                 .buttonStyle(CapsuleButtonStyle())
@@ -191,25 +196,73 @@ struct LibraryView: View {
             }
         }
         .onChange(of: subManager.isSubscribedSuccess) {
-            if subManager.isSubscribedSuccess != true {
-                return
-            }
-            text = ""
-            refresher.refreshAll()
-            Task {
-                await Task.sleep(s: 3)
-                await MainActor.run {
-                    subManager.isSubscribedSuccess = nil
-                }
+            delayedSubscriptionCheckmarkReset()
+        }
+        .onChange(of: addVideosSuccess) {
+            delayedVideoCheckmarkReset()
+        }
+    }
+
+    func delayedVideoCheckmarkReset() {
+        if addVideosSuccess != true {
+            return
+        }
+        text = ""
+        refresher.refreshAll()
+        Task {
+            await Task.sleep(s: 3)
+            await MainActor.run {
+                addVideosSuccess = nil
             }
         }
     }
 
-    func handleTextFieldSubmit() {
-        if UrlService.stringContainsUrl(text) {
-            let text = text
-            subManager.addSubscriptionFromText(text)
+    func delayedSubscriptionCheckmarkReset() {
+        if subManager.isSubscribedSuccess != true {
+            return
         }
+        text = ""
+        refresher.refreshAll()
+        Task {
+            await Task.sleep(s: 3)
+            await MainActor.run {
+                subManager.isSubscribedSuccess = nil
+            }
+        }
+    }
+
+    func handleTextFieldSubmit(_ inputText: String? = nil) {
+        let text = inputText ?? self.text
+        guard UrlService.stringContainsUrl(text) else {
+            print("no url found")
+            return
+        }
+        let (videoUrls, rest) = UrlService.extractVideoUrls(text)
+        addVideoUrls(videoUrls)
+        subManager.addSubscriptionFromText(rest)
+    }
+
+    func addVideoUrls(_ urls: [URL]) {
+        if !urls.isEmpty {
+            isLoadingVideos = true
+            let task = VideoService.addForeignUrls(urls, in: .queue, modelContext: modelContext)
+            Task {
+                do {
+                    try await task.value
+                    await MainActor.run {
+                        isLoadingVideos = false
+                        addVideosSuccess = true
+                        return
+                    }
+                } catch {
+                    print(error)
+                }
+                await MainActor.run {
+                    isLoadingVideos = false
+                }
+            }
+        }
+        print("urls", urls)
     }
 
     func handleUrlDrop(_ urls: [URL]) {
