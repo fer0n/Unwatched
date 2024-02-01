@@ -27,16 +27,18 @@ struct VideoListItem: View {
     // TODO: see if there's a better way to fix the "label doesn't update from bg tasks" issue
     // try to reproduce in mini project and ask on stackoverflow?
 
-    var videoSwipeActions: [VideoActions]
+    var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more]
     var onClear: (() -> Void)?
     // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
-         videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more],
+         videoSwipeActions: [VideoActions]? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
-        self.videoSwipeActions = videoSwipeActions
         self.onClear = onClear
+        if let actions = videoSwipeActions {
+            self.videoSwipeActions = actions
+        }
     }
 
     init(video: Video,
@@ -44,15 +46,17 @@ struct VideoListItem: View {
          hasInboxEntry: Bool,
          hasQueueEntry: Bool,
          watched: Bool,
-         videoSwipeActions: [VideoActions] = [.queueTop],
+         videoSwipeActions: [VideoActions]? = nil,
          onClear: (() -> Void)? = nil) {
         self.video = video
         self.showVideoStatus = showVideoStatus
         self.hasInboxEntry = hasInboxEntry
         self.hasQueueEntry = hasQueueEntry
         self.watched = watched
-        self.videoSwipeActions = videoSwipeActions
         self.onClear = onClear
+        if let actions = videoSwipeActions {
+            self.videoSwipeActions = actions
+        }
     }
 
     var body: some View {
@@ -135,9 +139,11 @@ struct VideoListItem: View {
                         Image(systemName: Const.watchedSF)
                         Text("markWatched")
                     }
-                    Button(action: moveToInbox) {
-                        Image(systemName: "tray.and.arrow.down.fill")
-                        Text("moveToInbox")
+                    if video.inboxEntry == nil {
+                        Button(action: moveToInbox) {
+                            Image(systemName: "tray.and.arrow.down.fill")
+                            Text("moveToInbox")
+                        }
                     }
                     ShareLink(item: video.url)
                 } label: {
