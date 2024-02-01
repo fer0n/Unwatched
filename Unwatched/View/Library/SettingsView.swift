@@ -8,7 +8,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
 
-    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = false
+    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
