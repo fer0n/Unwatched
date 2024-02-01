@@ -11,15 +11,16 @@ struct SpeedControlView: View {
     let highlighted: [Double] = [1, 1.5, 2]
 
     static let padding: CGFloat = 0
-    let frameHeight: CGFloat = 30
-    let maxHeight: CGFloat = 40
-    let coordinateSpace: NamedCoordinateSpace = .named("speed")
+    static let maxHeight: CGFloat = 40
+    static let midY: CGFloat = SpeedControlView.maxHeight / 2
 
+    let frameHeight: CGFloat = 30
+    let coordinateSpace: NamedCoordinateSpace = .named("speed")
     @State var hapticToggle = false
     @State var width: CGFloat = 0
     @State var itemWidth: CGFloat = 0
-    @State var midY: CGFloat = 0
-    @State var controlMinX: CGFloat = SpeedControlView.padding
+
+    @State var controlMinX: CGFloat?
     @State private var dragState: CGFloat?
 
     var body: some View {
@@ -41,7 +42,7 @@ struct SpeedControlView: View {
                             .stroke(foregroundColor, lineWidth: 1.5)
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
-                            .frame(maxWidth: .infinity, maxHeight: maxHeight)
+                            .frame(maxWidth: .infinity, maxHeight: SpeedControlView.maxHeight)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
@@ -67,24 +68,25 @@ struct SpeedControlView: View {
             .onPreferenceChange(SpeedPreferenceKey.self) { minY in
                 self.width = minY.width
                 self.itemWidth = width / CGFloat(SpeedControlView.speeds.count)
-                self.midY = minY.midY
                 controlMinX = getXPos(width, selectedSpeed)
             }
             .padding(.horizontal, SpeedControlView.padding)
 
-            ZStack {
-                Circle()
-                    .fill()
-                    .frame(width: maxHeight, height: maxHeight)
-                Text(getFloatingText())
-                    .foregroundStyle(.black)
-                    .bold()
-                    .font(.system(size: 16))
+            if let controlMinX = controlMinX {
+                ZStack {
+                    Circle()
+                        .fill()
+                        .frame(width: SpeedControlView.maxHeight, height: SpeedControlView.maxHeight)
+                    Text(getFloatingText())
+                        .foregroundStyle(.black)
+                        .bold()
+                        .font(.system(size: 16))
+                }
+                .position(x: dragState ?? controlMinX, y: SpeedControlView.midY)
+                .frame(maxHeight: SpeedControlView.maxHeight)
+                .animation(.bouncy(duration: 0.4), value: controlMinX)
+                .transition(.identity)
             }
-            .position(x: dragState ?? controlMinX, y: midY)
-            .frame(maxHeight: maxHeight)
-            .animation(.bouncy(duration: 0.4), value: controlMinX)
-            .transition(.identity)
         }
         .onChange(of: selectedSpeed) {
             controlMinX = getXPos(width, selectedSpeed)
@@ -92,13 +94,13 @@ struct SpeedControlView: View {
         .simultaneousGesture(
             DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
                 .onChanged { gesture in
-                    let dragPosition = controlMinX + gesture.translation.width
+                    let dragPosition = (controlMinX ?? 0) + gesture.translation.width
                     let cappedMax = max(dragPosition, SpeedControlView.padding + (itemWidth / 2))
                     dragState = min(cappedMax, width - (SpeedControlView.padding + (itemWidth / 2)))
                 }
                 .onEnded { state in
                     let value = state.translation.width
-                    let currentPos = controlMinX + value
+                    let currentPos = (controlMinX ?? 0) + value
                     let selected = getSpeedFromPos(currentPos)
                     controlMinX = currentPos
                     selectedSpeed = selected
