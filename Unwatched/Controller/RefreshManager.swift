@@ -33,19 +33,44 @@ import SwiftData
         }
     }
 
-    func refreshOnStartup() {
-        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
-        if !refreshOnStartup {
+    func handleAutoBackup() {
+        print("handleAutoBackup")
+        let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
+        guard automaticBackups == true else {
+            print("no auto backup on")
             return
         }
 
-        let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
-        let shouldRefresh = lastAutoRefreshDate == nil ||
-            lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
-
-        if shouldRefresh {
-            print("refreshing now")
-            self.refreshAll()
+        let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
+        if let lastAutoBackupDate = lastAutoBackupDate {
+            let calendar = Calendar.current
+            if calendar.isDateInToday(lastAutoBackupDate) {
+                print("last backup was today")
+                return
+            }
         }
+
+        if let container = container {
+            _ = UserDataService.saveToIcloud(container)
+            UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
+            print("saved backup")
+        }
+    }
+
+    func refreshOnStartup() {
+        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
+
+        if refreshOnStartup {
+            let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
+            let shouldRefresh = lastAutoRefreshDate == nil ||
+                lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
+
+            if shouldRefresh {
+                print("refreshing now")
+                self.refreshAll()
+            }
+        }
+
+        handleAutoBackup()
     }
 }

@@ -10,7 +10,7 @@ struct SendableVideo: Sendable, Codable {
     var persistendId: Int?
     var youtubeId: String
     var title: String
-    var url: URL
+    var url: URL?
     var thumbnailUrl: URL?
     var youtubeChannelId: String?
     var feedTitle: String?
@@ -64,7 +64,7 @@ struct SendableVideo: Sendable, Codable {
         persistendId: Int? = nil,
         youtubeId: String,
         title: String,
-        url: URL,
+        url: URL?,
         thumbnailUrl: URL? = nil,
         youtubeChannelId: String? = nil,
         feedTitle: String? = nil,

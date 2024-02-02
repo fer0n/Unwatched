@@ -65,4 +65,7 @@ struct Const {
     static let nowPlayingVideo = "nowPlayingVideo"
     static let lastAutoRefreshDate = "lastAutoRefreshDate"
     static let showTabBarLabels = "showTabBarLabels"
+
+    static let automaticBackups = "automaticBackups"
+    static let lastAutoBackupDate = "lastAutoBackupDate"
 }

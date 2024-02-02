@@ -12,12 +12,13 @@ final class Video: CustomStringConvertible, Exportable {
 
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-    @Relationship(deleteRule: .cascade) var chapters = [Chapter]()
+    @Relationship(inverse: \QueueEntry.video) var watchEntries: [WatchEntry]?
+    @Relationship(deleteRule: .cascade) var chapters: [Chapter]? = []
     @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
-    @Attribute(.unique) var youtubeId: String
+    var youtubeId: String = UUID().uuidString
 
-    var title: String
-    var url: URL
+    var title: String = "-"
+    var url: URL?
 
     var thumbnailUrl: URL?
     var publishedDate: Date?
@@ -32,7 +33,7 @@ final class Video: CustomStringConvertible, Exportable {
 
     // MARK: Computed Properties
     var sortedChapters: [Chapter] {
-        chapters.sorted(by: { $0.startTime < $1.startTime })
+        chapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
     }
 
     var remainingTime: Double? {
@@ -48,7 +49,7 @@ final class Video: CustomStringConvertible, Exportable {
     }
 
     var description: String {
-        return "Video: \(title) (\(url))"
+        return "Video: \(title) (\(url?.absoluteString ?? ""))"
     }
 
     var toExport: SendableVideo? {
@@ -68,7 +69,7 @@ final class Video: CustomStringConvertible, Exportable {
     }
 
     init(title: String,
-         url: URL,
+         url: URL?,
          youtubeId: String,
          thumbnailUrl: URL? = nil,
          publishedDate: Date? = nil,

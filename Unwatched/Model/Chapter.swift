@@ -3,8 +3,8 @@ import SwiftData
 
 @Model
 final class Chapter {
-    var title: String
-    var startTime: Double
+    var title: String = ""
+    var startTime: Double = 0
     var endTime: Double?
     var video: Video?
     var duration: Double?

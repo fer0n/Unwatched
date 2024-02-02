@@ -109,14 +109,13 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                                           chapters: chapters,
                                           publishedDate: publishedDate,
                                           videoDescription: currentDescription)
-                print("video", video.title)
+                // print("video", video.title)
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
                     // the first correct channelId with the "UC" prefix comes inside the first entry
                     subscriptionInfo?.youtubeChannelId = currentYoutubeChannelId
                     parser.abortParsing()
-                    print("aborting parsing early")
                     return
                 }
                 videos.append(video)

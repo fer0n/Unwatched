@@ -58,10 +58,7 @@ class VideoCrawler {
 
             var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
             if chapters?.isEmpty == true || chapters == nil {
-                print("regexTitleThenTime!")
-                //                print("input", input)
                 chapters = try? getChaptersViaRegex(regexTitleThenTime, input, 1, 2)
-                print("chapters", chapters)
             }
 
             guard let chapters = chapters else {
@@ -82,13 +79,11 @@ class VideoCrawler {
         _ titleIndex: Int,
         _ timeIndex: Int
     ) throws -> [SendableChapter] {
-        print("getChaptersViaRegex")
         let range = NSRange(input.startIndex..<input.endIndex, in: input)
 
         var chapters: [SendableChapter] = []
 
         regex.enumerateMatches(in: input, options: [], range: range) { match, _, _ in
-            print(">>> enumerateMatches")
             if let match = match {
                 let timeRange = Range(match.range(at: timeIndex), in: input)!
                 let titleRange = Range(match.range(at: titleIndex), in: input)!
@@ -96,12 +91,8 @@ class VideoCrawler {
                 let timeString = String(input[timeRange])
                 let title = String(input[titleRange])
 
-                print("timeString", timeString)
-                print("title", title)
                 if let time = timeToSeconds(timeString) {
-                    print("time", time)
                     let chapter = SendableChapter(title: title, startTime: time)
-                    print("chapter", chapter)
                     chapters.append(chapter)
                 }
             }

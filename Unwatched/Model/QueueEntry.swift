@@ -11,7 +11,7 @@ final class QueueEntry: CustomStringConvertible, Exportable, HasVideo {
     typealias ExportType = SendableQueueEntry
 
     var video: Video?
-    var order: Int
+    var order: Int = Int.max
 
     init(video: Video?, order: Int) {
         self.video = video

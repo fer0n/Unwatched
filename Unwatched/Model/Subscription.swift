@@ -10,13 +10,13 @@ import SwiftData
 final class Subscription: CustomStringConvertible, Exportable {
     typealias ExportType = SendableSubscription
 
-    @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]
-    @Attribute(.unique) var link: URL
+    @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
+    var link: URL?
 
-    var title: String
-    var subscribedDate: Date
+    var title: String = "-"
+    var subscribedDate: Date?
     var placeVideosIn = VideoPlacement.defaultPlacement
-    var isArchived: Bool
+    var isArchived: Bool = false
 
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
@@ -29,10 +29,10 @@ final class Subscription: CustomStringConvertible, Exportable {
     }
 
     init(videos: [Video] = [],
-         link: URL,
+         link: URL?,
 
          title: String,
-         subscribedDate: Date = .now,
+         subscribedDate: Date? = .now,
          placeVideosIn: VideoPlacement = .defaultPlacement,
          isArchived: Bool = false,
 
@@ -55,7 +55,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 
     var toExport: SendableSubscription? {
         SendableSubscription(
-            videosIds: videos.map { $0.persistentModelID.hashValue },
+            videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
             subscribedDate: subscribedDate,
@@ -71,10 +71,10 @@ final class Subscription: CustomStringConvertible, Exportable {
 
 struct SendableSubscription: Sendable, Codable {
     var videosIds = [Int]()
-    var link: URL
+    var link: URL?
 
     var title: String
-    var subscribedDate: Date = .now
+    var subscribedDate: Date? = .now
     var placeVideosIn = VideoPlacement.defaultPlacement
     var isArchived: Bool = false
 
@@ -109,7 +109,7 @@ struct SendableSubscription: Sendable, Codable {
 
 struct SubscriptionState: Identifiable {
     var id = UUID()
-    var url: URL
+    var url: URL?
     var title: String?
     var userName: String?
     var error: String?

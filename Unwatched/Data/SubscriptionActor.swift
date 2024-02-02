@@ -131,7 +131,7 @@ actor SubscriptionActor {
         return try UrlService.getFeedUrlFromChannelId(channelId)
     }
 
-    func getAllFeedUrls() throws -> [(title: String, link: URL)] {
+    func getAllFeedUrls() throws -> [(title: String, link: URL?)] {
         let predicate = #Predicate<Subscription> { $0.isArchived == false }
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: predicate)
         let subs = try modelContext.fetch(fetchDescriptor)
@@ -156,7 +156,7 @@ actor SubscriptionActor {
                 continue
             }
 
-            for video in sub.videos {
+            for video in sub.videos ?? [] {
                 if video.queueEntry == nil && !video.watched {
                     if let inboxEntry = video.inboxEntry {
                         modelContext.delete(inboxEntry)

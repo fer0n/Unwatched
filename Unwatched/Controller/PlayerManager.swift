@@ -25,7 +25,9 @@ enum VideoSource {
             currentTime = video?.elapsedSeconds ?? 0
             isPlaying = false
             currentChapter = nil
-            if video == oldValue && (UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false) {
+            if video != nil
+                && video == oldValue
+                && (UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false) {
                 print("> tapped existing video")
                 self.play()
             }
@@ -64,7 +66,7 @@ enum VideoSource {
         }
 
         var newTime = time ?? currentTime
-        if let time = newTime {
+        if let time = newTime, video?.elapsedSeconds != time {
             video?.elapsedSeconds = time
         }
     }

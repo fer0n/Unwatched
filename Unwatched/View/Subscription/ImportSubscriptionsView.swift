@@ -29,7 +29,7 @@ struct ImportSubscriptionsView: View {
                 if lhs.userName != rhs.userName {
                     return lhs.userName ?? "" > rhs.userName ?? ""
                 }
-                return lhs.url.absoluteString > rhs.url.absoluteString
+                return lhs.url?.absoluteString ?? "" > rhs.url?.absoluteString ?? ""
             }
 
             let partitionIndex = states.partition { !($0.success || $0.alreadyAdded) }

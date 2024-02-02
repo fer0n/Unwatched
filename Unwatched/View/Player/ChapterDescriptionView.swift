@@ -18,7 +18,7 @@ struct ChapterDescriptionView: View {
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
-        let hasChapters = player.video?.chapters.isEmpty == false
+        let hasChapters = player.video?.chapters?.isEmpty == false
         let hasDescription = player.video?.videoDescription != nil
 
         NavigationStack {
@@ -97,7 +97,7 @@ struct ChapterDescriptionView: View {
     func dragGesture(origin: ChapterDescriptionPage) -> some Gesture {
         DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .updating($dragState) { value, state, _ in
-                let hasChapters = player.video?.chapters.isEmpty == false
+                let hasChapters = player.video?.chapters?.isEmpty == false
                 let hasDescription = player.video?.videoDescription != nil
                 if origin == .chapters && !hasDescription || origin == .description && !hasChapters {
                     return
