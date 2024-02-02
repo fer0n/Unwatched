@@ -14,10 +14,8 @@ struct UnwatchedApp: App {
     @State var alerter: Alerter = Alerter()
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema(DataController.dbEntries)
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: DataController.schema, configurations: [DataController.modelConfig])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

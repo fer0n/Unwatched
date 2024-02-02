@@ -90,7 +90,8 @@ struct InboxView: View {
 
     func handleUrlDrop(_ items: [URL]) {
         print("handleUrlDrop inbox", items)
-        _ = VideoService.addForeignUrls(items, in: .inbox, modelContext: modelContext)
+        let container = modelContext.container
+        _ = VideoService.addForeignUrls(items, in: .inbox, container: container)
     }
 
     func clearAll() {
