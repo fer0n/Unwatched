@@ -71,7 +71,8 @@ struct QueueView: View {
 
     func handleUrlDrop(_ items: [URL], at index: Int) {
         print("handleUrlDrop", items)
-        let task = VideoService.addForeignUrls(items, in: .queue, at: index, modelContext: modelContext)
+        let container = modelContext.container
+        let task = VideoService.addForeignUrls(items, in: .queue, at: index, container: container)
         if index == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }

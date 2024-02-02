@@ -18,6 +18,14 @@ class DataController {
         CachedImage.self
     ]
 
+    static let schema = Schema(DataController.dbEntries)
+
+    static let modelConfig = ModelConfiguration(
+        schema: DataController.schema,
+        isStoredInMemoryOnly: false,
+        cloudKitDatabase: .none
+    )
+
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
             let schema = Schema(DataController.dbEntries)

@@ -245,7 +245,8 @@ struct LibraryView: View {
     func addVideoUrls(_ urls: [URL]) {
         if !urls.isEmpty {
             isLoadingVideos = true
-            let task = VideoService.addForeignUrls(urls, in: .queue, modelContext: modelContext)
+            let container = modelContext.container
+            let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
             Task {
                 do {
                     try await task.value

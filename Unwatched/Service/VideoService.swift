@@ -112,9 +112,8 @@ class VideoService {
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
                                at index: Int = 1,
-                               modelContext: ModelContext) -> Task<(), Error> {
+                               container: ModelContainer) -> Task<(), Error> {
         print("addForeignUrls")
-        let container = modelContext.container
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
