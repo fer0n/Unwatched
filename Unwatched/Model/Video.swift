@@ -12,7 +12,7 @@ final class Video: CustomStringConvertible, Exportable {
 
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-    @Relationship(inverse: \QueueEntry.video) var watchEntries: [WatchEntry]?
+    @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
     @Relationship(deleteRule: .cascade) var chapters: [Chapter]? = []
     @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
     var youtubeId: String = UUID().uuidString
