@@ -21,7 +21,7 @@ struct SubscriptionDetailView: View {
     // TODO: test if now the videoListItem might no longer need the hasInboxEntry etc. workaround?
 
     var body: some View {
-        let firstNonShort = subscription.videos.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
+        let firstNonShort = subscription.videos?.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
 
         VStack {
             List {

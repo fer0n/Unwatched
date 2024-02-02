@@ -74,6 +74,62 @@ struct UserDataService {
             print("error decoding: \(error)")
         }
     }
+
+    static func exportFile(_ container: ModelContainer) -> Data? {
+        do {
+            return try UserDataService.exportUserData(container: container)
+        } catch {
+            print("couldn't export: \(error)")
+        }
+        return nil
+    }
+
+    static func saveToIcloud(_ container: ModelContainer) -> Task<(), Never> {
+        return Task {
+            guard let data = self.exportFile(container) else {
+                print("no data when trying to save")
+                return
+            }
+            // store file at icloud documents folder
+            guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName()) else {
+                print("no filename could be created")
+                return
+            }
+            do {
+                try data.write(to: filename)
+            } catch {
+                print("saveToIcloud: \(error)")
+            }
+        }
+    }
+
+    static func getBackupsDirectory() -> URL? {
+        if let containerUrl = FileManager.default.url(
+            forUbiquityContainerIdentifier: nil
+        )?.appendingPathComponent("Documents/Backups") {
+            print("containerUrl", containerUrl)
+            if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
+                do {
+                    print("create directory")
+                    try FileManager.default.createDirectory(
+                        at: containerUrl, withIntermediateDirectories: true, attributes: nil
+                    )
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+            return containerUrl
+        }
+        print("returing nil")
+        return nil
+    }
+
+    static func getFileName() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd-hh-mm"
+        let dateString = formatter.string(from: Date())
+        return "\(dateString).unwatchedbackup"
+    }
 }
 
 // TODO: - import and see if videos show up

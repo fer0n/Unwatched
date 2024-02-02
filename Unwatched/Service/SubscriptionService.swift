@@ -17,7 +17,7 @@ class SubscriptionService {
         return try await repo.subscribeTo(channelId, subsciptionId)
     }
 
-    static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL)] {
+    static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL?)] {
         let repo = SubscriptionActor(modelContainer: container)
         return try await repo.getAllFeedUrls()
     }

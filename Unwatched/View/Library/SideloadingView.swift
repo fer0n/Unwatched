@@ -9,7 +9,7 @@ struct SideloadingView: View {
     var sidedloadedSubscriptions: [Subscription]
 
     var body: some View {
-        let subs = sidedloadedSubscriptions.filter({ !$0.videos.isEmpty })
+        let subs = sidedloadedSubscriptions.filter({ $0.videos?.isEmpty == false })
         ZStack {
             if subs.isEmpty {
                 ContentUnavailableView("noSideloadedSubscriptions",
@@ -20,7 +20,7 @@ struct SideloadingView: View {
                     SubscriptionListView(
                         sort: subscriptionSortOrder,
                         filter: #Predicate<Subscription> { $0.isArchived == true },
-                        manualFilter: { !$0.videos.isEmpty }
+                        manualFilter: { $0.videos?.isEmpty == false }
                     )
                     // TODO: add filtering here
                 }

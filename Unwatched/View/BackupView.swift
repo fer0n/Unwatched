@@ -9,12 +9,16 @@ struct BackupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
 
+    @AppStorage(Const.automaticBackups) var automaticBackups = true
+
     @State var isExporting = false
     @State var isExportingAll = false
     @State var showFileImporter = false
     @State var isDeleting = false
     @State var isDeletingEverything = false
     @State var showDeleteConfirmation = false
+    @State var fileNames = [URL]()
+    @State var fileToBeRestored: IdentifiableURL?
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -33,16 +37,37 @@ struct BackupView: View {
                 }
             }
 
-            Section {
-                let item = AsyncSharableFile(getFile: exportFile, isLoading: $isExporting)
-                ShareLink(item: item, preview: SharePreview("exportSubscriptions")) {
-                    Text("backupNow")
+            Section(header: Text("automaticBackups"), footer: Text("automaticBackupsHelper")) {
+                Toggle(isOn: $automaticBackups) {
+                    Text("backupToIcloud")
                 }
+                .tint(.teal)
+            }
 
-                Button {
-                    showFileImporter = true
-                } label: {
-                    Text("importBackup")
+            Button {
+                saveToIcloud()
+            } label: {
+                Text("backupNow")
+            }
+
+            Button {
+                showFileImporter = true
+            } label: {
+                Text("importBackup")
+            }
+
+            if !fileNames.isEmpty {
+                Section("latestUnwatchedBackups") {
+                    ForEach(fileNames, id: \.self) { file in
+                        let fileName = file.deletingPathExtension().lastPathComponent
+                        if let date = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate {
+                            Button {
+                                fileToBeRestored = IdentifiableURL(url: file)
+                            } label: {
+                                Text(date.formatted())
+                            }
+                        }
+                    }
                 }
             }
 
@@ -72,11 +97,19 @@ struct BackupView: View {
                     ActionSheet(title: Text("confirmDeleteEverything"),
                                 message: Text("confirmDeleteEverythingMessage"),
                                 buttons: [
-                                    .destructive(Text("deleteEverything")) { deleteEverything() },
+                                    .destructive(Text("deleteEverything")) { _ = deleteEverything() },
                                     .cancel()
                                 ])
                 }
             }
+        }
+        .actionSheet(item: $fileToBeRestored) { restoreFile in
+            ActionSheet(title: Text("restoreThisBackup?"),
+                        message: Text("restoreThisBackupMessage"),
+                        buttons: [
+                            .destructive(Text("restoreBackup")) { restoreBackup(restoreFile.url) },
+                            .cancel()
+                        ])
         }
         .navigationTitle("backup")
         .navigationBarTitleDisplayMode(.inline)
@@ -89,22 +122,65 @@ struct BackupView: View {
                 print(error.localizedDescription)
             }
         }
-
+        .onAppear {
+            getAllIcloudFiles()
+        }
     }
 
-    func deleteEverything() {
-        if isDeletingEverything { return }
+    func saveToIcloud() {
+        isExporting = true
+        let container = modelContext.container
+        let task = UserDataService.saveToIcloud(container)
+        Task {
+            await task.value
+            await MainActor.run {
+                self.getAllIcloudFiles()
+                isExporting = false
+            }
+        }
+    }
+
+    func restoreBackup(_ file: URL) {
+        let task = deleteEverything()
+        importFile(file, after: task)
+    }
+
+    func getAllIcloudFiles() {
+        let fileManager = FileManager.default
+        guard let backupsUrl = UserDataService.getBackupsDirectory() else {
+            print("no documents url")
+            return
+        }
+        withAnimation {
+            do {
+                let fileUrls = try fileManager
+                    .contentsOfDirectory(at: backupsUrl, includingPropertiesForKeys: [.creationDateKey])
+                let sortedFileUrls = fileUrls.sorted {
+                    let date0 = try? $0.resourceValues(forKeys: [.creationDateKey]).creationDate
+                    let date1 = try? $1.resourceValues(forKeys: [.creationDateKey]).creationDate
+                    return date0 ?? .distantPast > date1 ?? .distantPast
+                }
+                fileNames = Array(sortedFileUrls.prefix(5))
+            } catch {
+                print("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func deleteEverything() -> Task<(), Never>? {
+        if isDeletingEverything { return nil }
         let container = modelContext.container
         isDeletingEverything = true
         withAnimation {
             player.clearVideo()
         }
-        Task {
+        let task = Task {
             await VideoService.deleteEverything(container)
             await MainActor.run {
                 self.isDeletingEverything = false
             }
         }
+        return task
     }
 
     func deleteImageCache() {
@@ -120,63 +196,31 @@ struct BackupView: View {
         }
     }
 
-    func exportAllSubscriptions() async -> [(title: String, link: URL)] {
+    func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
         let container = modelContext.container
         let result = try? await SubscriptionService.getAllFeedUrls(container)
         return result ?? []
     }
 
-    func exportFile() -> Data? {
-        print("backupNow")
+    func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
+        print("importFile:", filePath)
         let container = modelContext.container
-        do {
-            return try UserDataService.exportUserData(container: container)
-        } catch {
-            print("couldn't export: \(error)")
-        }
-        return nil
-    }
+        let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
-    func importFile(_ filePath: URL) {
-        let container = modelContext.container
-        if filePath.startAccessingSecurityScopedResource() {
-
-            guard let data = try? Data(contentsOf: filePath) else {
-                print("no data")
-                return
+        Task {
+            await after?.value
+            if let data = try? Data(contentsOf: filePath) {
+                UserDataService.importBackup(data, container: container)
             }
-            UserDataService.importBackup(data, container: container)
-        }
-        filePath.stopAccessingSecurityScopedResource()
-    }
-}
-
-struct AsyncSharableFile: Transferable {
-    let getFile: () -> Data?
-    @Binding var isLoading: Bool
-
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .data) { item in
-            item.isLoading = true
-            if let data = item.getFile() {
-                item.isLoading = false
-                return data
-            } else {
-                item.isLoading = false
-                fatalError()
+            if isSecureAccess {
+                filePath.stopAccessingSecurityScopedResource()
             }
-        }
-        .suggestedFileName { _ in
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd-hh-mm"
-            let dateString = formatter.string(from: Date())
-            return "\(dateString).unwatchedbackup"
         }
     }
 }
 
 struct AsyncSharableUrls: Transferable {
-    let getUrls: () async -> [(title: String, link: URL)]
+    let getUrls: () async -> [(title: String, link: URL?)]
     @Binding var isLoading: Bool
 
     static var transferRepresentation: some TransferRepresentation {
@@ -184,7 +228,7 @@ struct AsyncSharableUrls: Transferable {
             item.isLoading = true
             let urls = await item.getUrls()
             let textUrls = urls
-                .map { "\($0.title)\n\($0.link.absoluteString)\n" }
+                .map { "\($0.title)\n\($0.link?.absoluteString)\n" }
                 .joined(separator: "\n")
             print("textUrls", textUrls)
             let data = textUrls.data(using: .utf8)
@@ -197,6 +241,11 @@ struct AsyncSharableUrls: Transferable {
             item.isLoading = false
         }
     }
+}
+
+struct IdentifiableURL: Identifiable {
+    let id = UUID()
+    let url: URL
 }
 
 #Preview {

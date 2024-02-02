@@ -45,7 +45,7 @@ actor VideoActor {
 
         // check if subs exists (in video or in db)
         if let existingSub = try subscriptionExists(channelId) {
-            existingSub.videos.append(video)
+            existingSub.videos?.append(video)
             return
         }
 
@@ -59,7 +59,7 @@ actor VideoActor {
         print("new sub: \(sub.isArchived)")
 
         modelContext.insert(sub)
-        sub.videos.append(video)
+        sub.videos?.append(video)
     }
 
     func subscriptionExists(_ channelId: String) throws -> Subscription? {
@@ -199,25 +199,28 @@ actor VideoActor {
         fetch.fetchLimit = 1
         let subscriptions = try? modelContext.fetch(fetch)
         if let sub = subscriptions?.first {
-            sub.videos.append(video)
-            for video in sub.videos {
+            sub.videos?.append(video)
+            for video in sub.videos ?? [] {
                 video.youtubeChannelId = sub.youtubeChannelId
             }
         }
     }
 
     private func getVideosNotAlreadyAdded(sub: Subscription, videos: [Video]) -> [Video] {
-        let videoIds = sub.videos.map { $0.youtubeId }
+        let videoIds = sub.videos?.map { $0.youtubeId } ?? []
         return videos.filter { !videoIds.contains($0.youtubeId) }
     }
 
     private func loadVideos(for sub: Subscription, defaultPlacementInfo: DefaultVideoPlacement) async throws {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        print("isFirstTimeLoading", isFirstTimeLoading)
+        guard let link = sub.link else {
+            print("loadVideos: no url found")
+            return
+        }
 
         // load videos from web
         let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
-            url: sub.link,
+            url: link,
             mostRecentPublishedDate: sub.mostRecentVideoDate)
         var newVideos = [Video]()
         for vid in loadedVideos {
@@ -232,7 +235,7 @@ actor VideoActor {
             modelContext.insert(video)
         }
 
-        sub.videos.append(contentsOf: newVideos)
+        sub.videos?.append(contentsOf: newVideos)
         let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
 
         triageSubscriptionVideos(sub,

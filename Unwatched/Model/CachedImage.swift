@@ -7,10 +7,10 @@ import Foundation
 import SwiftData
 
 @Model final class CachedImage {
-    @Attribute(.unique) var imageUrl: URL
-    @Attribute(.externalStorage) var imageData: Data
+    var imageUrl: URL?
+    @Attribute(.externalStorage) var imageData: Data?
     var video: Video?
-    var createdOn: Date
+    var createdOn: Date?
 
     init(_ imageUrl: URL, imageData: Data, video: Video? = nil) {
         self.imageUrl = imageUrl

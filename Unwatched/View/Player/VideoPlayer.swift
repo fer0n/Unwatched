@@ -81,8 +81,8 @@ struct VideoPlayer: View {
                 }
 
                 Button {
-                    if let video = player.video {
-                        UIApplication.shared.open(video.url)
+                    if let url = player.video?.url {
+                        UIApplication.shared.open(url)
                     }
                 } label: {
                     Image(systemName: "link")

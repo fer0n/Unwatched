@@ -32,7 +32,7 @@ class DataController {
         let video = Video.getDummy()
         sharedModelContainer.mainContext.insert(video)
         let sub = Subscription.getDummy()
-        sub.videos.append(video)
+        sub.videos?.append(video)
         sharedModelContainer.mainContext.insert(sub)
         try? sharedModelContainer.mainContext.save()
         return sharedModelContainer

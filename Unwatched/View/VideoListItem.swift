@@ -145,7 +145,9 @@ struct VideoListItem: View {
                             Text("moveToInbox")
                         }
                     }
-                    ShareLink(item: video.url)
+                    if let url = video.url {
+                        ShareLink(item: url)
+                    }
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
                 }

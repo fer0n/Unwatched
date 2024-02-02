@@ -14,7 +14,7 @@ struct SubscriptionInfoDetails: View {
     @Binding var requiresUnsubscribe: Bool
 
     var body: some View {
-        let availableVideos = "\(subscription.videos.count) video(s) available"
+        let availableVideos = "\(subscription.videos?.count ?? 0) video(s) available"
         let userName = (subscription.youtubeUserName.map { "@\($0)" } ?? subscription.title)
         // - channelId (enough to open the url)
 

@@ -129,6 +129,26 @@
         }
       }
     },
+    "automaticBackups" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic Backups"
+          }
+        }
+      }
+    },
+    "automaticBackupsHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched will automatically store a daily snapshot of your user data to iCloud Drive."
+          }
+        }
+      }
+    },
     "autoplayVideos" : {
       "localizations" : {
         "en" : {
@@ -155,6 +175,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Backup Now"
+          }
+        }
+      }
+    },
+    "backupToIcloud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Back Up To iCloud Drive"
           }
         }
       }
@@ -427,6 +457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid URL"
+          }
+        }
+      }
+    },
+    "latestUnwatchedBackups" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest Unwatched Backups"
           }
         }
       }
@@ -714,6 +754,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refresh on App start"
+          }
+        }
+      }
+    },
+    "restoreBackup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Backup"
+          }
+        }
+      }
+    },
+    "restoreThisBackup?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore This Backup?"
+          }
+        }
+      }
+    },
+    "restoreThisBackupMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All your current data will be deleted and the selected backup will be restored."
           }
         }
       }

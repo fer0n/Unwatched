@@ -24,7 +24,7 @@ struct SubscriptionStateView: View {
                     .frame(width: 25, height: 25)
                     .foregroundStyle(.white, color)
                     .symbolRenderingMode(.palette)
-                Text(state.title ?? state.userName ?? state.url.absoluteString)
+                Text(state.title ?? state.userName ?? state.url?.absoluteString ?? "-")
                     .font(.system(.headline))
                     .lineLimit(1)
                 Spacer()
@@ -44,7 +44,6 @@ struct SubscriptionStateView: View {
                     .font(.system(.body, design: .monospaced))
                     .lineLimit(nil)
                     .padding()
-                    .background(Color(.systemGray6))
                     .cornerRadius(10)
                     .padding([.bottom])
             }
