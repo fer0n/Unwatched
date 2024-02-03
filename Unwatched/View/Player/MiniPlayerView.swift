@@ -8,8 +8,14 @@ import SwiftUI
 struct MiniPlayerView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
+    @Environment(SheetPositionReader.self) var sheetPos
 
     var body: some View {
+        let hideMiniPlayer = (
+            (navManager.showMenu || navManager.showDescriptionDetail)
+                && sheetPos.swipedBelow
+        ) || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
+
         VStack {
             HStack(alignment: .center) {
                 if let video = player.video {
@@ -48,6 +54,8 @@ struct MiniPlayerView: View {
             Spacer()
         }
         .background(Color.backgroundColor)
+        .opacity(hideMiniPlayer ? 0 : 1)
+        .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
     }
 }
 

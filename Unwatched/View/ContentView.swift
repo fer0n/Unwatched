@@ -20,18 +20,21 @@ struct ContentView: View {
         @Bindable var navManager = navManager
 
         let videoExists = player.video != nil
-        let hideMiniPlayer = (
-            (navManager.showMenu || navManager.showDescriptionDetail)
-                && sheetPos.swipedBelow
-        ) || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
-        let detents: Set<PresentationDetent> = videoExists ? [.height(sheetPos.maxSheetHeight)] : [.large]
+        let detents: Set<PresentationDetent> = videoExists
+            ? [.height(sheetPos.maxSheetHeight), .height(sheetPos.playerControlHeight)]
+            : [.large]
+
+        let selectedDetent = Binding(
+            get: { sheetPos.selectedDetent ?? detents.first ?? .large },
+            set: { sheetPos.selectedDetent = $0 }
+        )
 
         GeometryReader { proxy in
             ZStack {
                 VideoPlayer(showMenu: $navManager.showMenu)
+                    .environment(sheetPos)
                 MiniPlayerView()
-                    .opacity(hideMiniPlayer ? 0 : 1)
-                    .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
+                    .environment(sheetPos)
                 if !videoExists {
                     VideoNotAvailableView()
                 }
@@ -43,19 +46,19 @@ struct ContentView: View {
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 ChapterDescriptionView()
                     .environment(player)
-                    .presentationDetents(detents)
+                    .presentationDetents([.height(sheetPos.playerControlHeight)])
                     .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                        .enabled(upThrough: .height(sheetPos.playerControlHeight))
                     )
-                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
             }
             .sheet(isPresented: $navManager.showMenu) {
                 MenuView()
                     .environment(refresher)
-                    .presentationDetents(detents)
+                    .presentationDetents(detents, selection: selectedDetent)
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.maxSheetHeight))
                     )
+                    .presentationContentInteraction(.scrolls)
                     .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
                     .environment(player)
             }
