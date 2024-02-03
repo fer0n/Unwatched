@@ -132,9 +132,6 @@ struct UserDataService {
     }
 }
 
-// TODO: - import and see if videos show up
-// TODO: - try maybe queue entries and try to link them together again
-
 struct UnwatchedBackup: Codable {
     var videos = [SendableVideo]()
     var queueEntries = [SendableQueueEntry]()

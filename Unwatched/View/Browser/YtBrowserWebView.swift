@@ -89,7 +89,9 @@ struct YtBrowserWebView: UIViewRepresentable {
                     print("Title: \(title)")
                     print("Image: \(image)")
 
-                    self.parent.browserManager.setFoundInfo(url, channelId, description, rssFeed, title, userName)
+                    self.parent.browserManager.setFoundInfo(ChannelInfo(
+                        url, channelId, description, rssFeed, title, userName
+                    ))
                 }
             }
         }
@@ -110,7 +112,7 @@ struct YtBrowserWebView: UIViewRepresentable {
                 print("no user name found")
                 return
             }
-            if [parent.browserManager.userName, parent.browserManager.desktopUserName].contains(userName) {
+            if [parent.browserManager.channel?.userName, parent.browserManager.desktopUserName].contains(userName) {
                 print("same username as before")
                 return
             }

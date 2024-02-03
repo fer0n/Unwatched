@@ -7,29 +7,41 @@ import SwiftUI
 import WebKit
 
 @Observable class BrowserManager {
-    var url: URL?
-
-    var channelId: String?
-    var description: String?
-    var rssFeed: String?
-    var title: String?
-    var userName: String?
+    var channel: ChannelInfo?
 
     var desktopUserName: String?
     var firstPageLoaded = false
     var isMobileVersion = true
 
     var channelTextRepresentation: String? {
-        return title ?? userName ?? channelId ?? rssFeed
+        return channel?.title ?? channel?.userName ?? channel?.channelId ?? channel?.rssFeed
     }
 
-    func setFoundInfo(
+    func setFoundInfo(_ info: ChannelInfo) {
+        self.channel = info
+    }
+
+    func clearInfo() {
+        self.channel = nil
+        self.desktopUserName = nil
+    }
+}
+
+struct ChannelInfo {
+    var url: URL?
+    var channelId: String?
+    var description: String?
+    var rssFeed: String?
+    var title: String?
+    var userName: String?
+
+    init(
         _ url: URL?,
         _ channelId: String?,
         _ description: String?,
         _ rssFeed: String?,
         _ title: String?,
-        _ userName: String
+        _ userName: String?
     ) {
         self.url = url
         self.channelId = channelId
@@ -37,15 +49,5 @@ import WebKit
         self.rssFeed = rssFeed
         self.title = title
         self.userName = userName
-    }
-
-    func clearInfo() {
-        self.url = nil
-        self.channelId = nil
-        self.description = nil
-        self.rssFeed = nil
-        self.title = nil
-        self.userName = nil
-        self.desktopUserName = nil
     }
 }
