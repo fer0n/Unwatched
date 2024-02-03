@@ -9,6 +9,7 @@ import SwiftData
 struct RefreshToolbarButton: ToolbarContent {
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
+    @State var isLoading = false
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
@@ -21,15 +22,32 @@ struct RefreshToolbarButton: ToolbarContent {
             } label: {
                 Image(systemName: Const.refreshSF)
                     .font(.system(size: 13))
-                    .rotationEffect(refresher.isLoading ? .degrees(360) : .degrees(0))
+                    .rotationEffect(isLoading ? .degrees(180) : .degrees(0))
                     .animation(
-                        refresher.isLoading ? Animation.linear(duration: 2).repeatForever(autoreverses: false) :
-                            .default, value: refresher.isLoading)
+                        isLoading ? Animation.linear(duration: 1).repeatForever(autoreverses: false) :
+                            .default, value: isLoading)
+            }
+            .onAppear {
+                guard isLoading != refresher.isLoading else {
+                    return
+                }
+                withAnimation {
+                    isLoading = refresher.isLoading
+                }
+            }
+            .onChange(of: refresher.isLoading) {
+                withAnimation {
+                    isLoading = refresher.isLoading
+                }
             }
         }
     }
 }
 
 // #Preview {
+//     Image(systemName: Const.refreshSF)
+//         .font(.system(size: 13))
+//         .symbolEffect(.variableColor.iterative, options: .repeating, value: true)
 //    RefreshToolbarButton()
+//         .environment(RefreshManager())
 // }
