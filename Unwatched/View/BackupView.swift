@@ -59,7 +59,6 @@ struct BackupView: View {
             if !fileNames.isEmpty {
                 Section("latestUnwatchedBackups") {
                     ForEach(fileNames, id: \.self) { file in
-                        let fileName = file.deletingPathExtension().lastPathComponent
                         if let date = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate {
                             Button {
                                 fileToBeRestored = IdentifiableURL(url: file)
@@ -228,7 +227,7 @@ struct AsyncSharableUrls: Transferable {
             item.isLoading = true
             let urls = await item.getUrls()
             let textUrls = urls
-                .map { "\($0.title)\n\($0.link?.absoluteString)\n" }
+                .map { "\($0.title)\n\($0.link?.absoluteString ?? "...")\n" }
                 .joined(separator: "\n")
             print("textUrls", textUrls)
             let data = textUrls.data(using: .utf8)

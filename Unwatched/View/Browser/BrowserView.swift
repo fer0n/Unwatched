@@ -46,11 +46,11 @@ struct BrowserView: View, KeyboardReadable {
             }
             .ignoresSafeArea(.all)
         }
-        .onChange(of: browserManager.userName) {
+        .onChange(of: browserManager.channel?.userName) {
             subscribeManager.reset()
         }
-        .onChange(of: browserManager.channelId) {
-            subscribeManager.setIsSubscribed(browserManager.channelId)
+        .onChange(of: browserManager.channel?.channelId) {
+            subscribeManager.setIsSubscribed(browserManager.channel?.channelId)
         }
         .onReceive(keyboardPublisher) { newIsKeyboardVisible in
             isKeyboardVisible = newIsKeyboardVisible
@@ -81,7 +81,7 @@ struct BrowserView: View, KeyboardReadable {
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
-        guard let channelId = browserManager.channelId,
+        guard let channelId = browserManager.channel?.channelId,
               let isSubscribed = subscribeManager.isSubscribedSuccess else {
             print("handleAddSubButton without channelId/isSubscribed")
             return

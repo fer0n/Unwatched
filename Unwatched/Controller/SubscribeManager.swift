@@ -157,6 +157,7 @@ import SwiftUI
                     }
                 } catch {
                     await MainActor.run {
+                        isSubscribedSuccess = false
                         // alerter.showError(error)
                         // TODO: throw error? Show alert?
                     }

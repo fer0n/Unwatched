@@ -22,7 +22,6 @@ struct SideloadingView: View {
                         filter: #Predicate<Subscription> { $0.isArchived == true },
                         manualFilter: { $0.videos?.isEmpty == false }
                     )
-                    // TODO: add filtering here
                 }
                 .navigationTitle("sideloads")
                 .navigationBarTitleDisplayMode(.inline)
