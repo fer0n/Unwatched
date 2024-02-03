@@ -12,6 +12,8 @@ struct ChapterMiniControlView: View {
     @State var subscribeManager = SubscribeManager()
     @State var triggerFeedback = false
 
+    var setShowMenu: () -> Void
+
     var body: some View {
         let hasChapters = player.currentChapter != nil
 
@@ -100,7 +102,7 @@ struct ChapterMiniControlView: View {
         .onTapGesture {
             if let sub = player.video?.subscription {
                 navManager.pushSubscription(sub)
-                navManager.showMenu = true
+                setShowMenu()
             }
         }
         .contextMenu {
@@ -183,7 +185,7 @@ struct ChapterMiniControlView: View {
 }
 
 #Preview {
-    ChapterMiniControlView()
+    ChapterMiniControlView(setShowMenu: {})
         .modelContainer(DataController.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager.getDummy())

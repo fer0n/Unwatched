@@ -10,6 +10,7 @@ struct VideoPlayer: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(Alerter.self) private var alerter
     @Environment(PlayerManager.self) var player
+    @Environment(SheetPositionReader.self) var sheetPos
 
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
@@ -24,7 +25,7 @@ struct VideoPlayer: View {
     var body: some View {
         @Bindable var player = player
 
-        VStack(spacing: 10) {
+        VStack(spacing: 0) {
 
             ZStack {
                 if player.video != nil {
@@ -36,68 +37,71 @@ struct VideoPlayer: View {
             }
             .aspectRatio(16/9, contentMode: .fit)
             .frame(maxWidth: .infinity)
-
-            Spacer()
-
-            ChapterMiniControlView()
-
-            Spacer()
-            Spacer()
-
-            VStack(spacing: 25) {
-                HStack {
-                    SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                    customSettingsButton
-                }
-
-                HStack {
-                    watchedButton
-                        .frame(maxWidth: .infinity)
-                    playButton
-                    continuousPlayButton
-                        .frame(maxWidth: .infinity)
-                }
-                .padding(.horizontal, 10)
-            }
-            .padding(.horizontal, 5)
-
-            Spacer()
-            Spacer()
-
-            HStack {
+            VStack(spacing: 10) {
                 Spacer()
+
+                ChapterMiniControlView(setShowMenu: setShowMenu)
+
+                Spacer()
+                Spacer()
+
+                VStack(spacing: 25) {
+                    HStack {
+                        SpeedControlView(selectedSpeed: $player.playbackSpeed)
+                        customSettingsButton
+                    }
+
+                    HStack {
+                        watchedButton
+                            .frame(maxWidth: .infinity)
+                        playButton
+                        continuousPlayButton
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .padding(.horizontal, 5)
+
+                Spacer()
+                Spacer()
+
+                HStack {
+                    Spacer()
+                        .frame(maxWidth: .infinity)
+                    Button {
+                        setShowMenu()
+                    } label: {
+                        VStack {
+                            Image(systemName: "chevron.up")
+                                .font(.system(size: 30))
+                            Text("showMenu")
+                                .font(.caption)
+                                .padding(.bottom, 3)
+                        }
+                        .padding(.horizontal)
+                    }
+
+                    Button {
+                        if let url = player.video?.url {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Image(systemName: "link")
+                            .font(.system(size: 20))
+                    }
+                    .padding(5)
+                    .contextMenu {
+                        if let url =  player.video?.url {
+                            ShareLink(item: url)
+                        }
+                    }
                     .frame(maxWidth: .infinity)
-                Button {
-                    setShowMenu()
-                } label: {
-                    VStack {
-                        Image(systemName: "chevron.up")
-                            .font(.system(size: 30))
-                        Text("showMenu")
-                            .font(.caption)
-                            .padding(.bottom, 3)
-                    }
-                    .padding(.horizontal)
                 }
-
-                Button {
-                    if let url = player.video?.url {
-                        UIApplication.shared.open(url)
-                    }
-                } label: {
-                    Image(systemName: "link")
-                        .font(.system(size: 20))
-                }
-                .padding(5)
-                .contextMenu {
-                    if let url =  player.video?.url {
-                        ShareLink(item: url)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-
+                .padding(.horizontal, 30)
             }
-            .padding(.horizontal, 30)
+            .innerSizeTrackerModifier(onChange: { size in
+                sheetPos.playerControlHeight = size.height
+            })
         }
         .contentShape(Rectangle())
         .simultaneousGesture(
@@ -190,6 +194,13 @@ struct VideoPlayer: View {
 
     func setShowMenu() {
         player.updateElapsedTime()
+        if player.video != nil {
+            if !player.isPlaying {
+                sheetPos.setDetentMiniPlayer()
+            } else {
+                sheetPos.setDetentVideoPlayer()
+            }
+        }
         showMenu = true
     }
 
@@ -209,4 +220,5 @@ struct VideoPlayer: View {
         .environment(NavigationManager.getDummy())
         .environment(Alerter())
         .environment(PlayerManager.getDummy())
+        .environment(SheetPositionReader())
 }
