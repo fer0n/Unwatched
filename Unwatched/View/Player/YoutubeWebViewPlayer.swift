@@ -32,9 +32,13 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
             webViewConfig.allowsInlineMediaPlayback = true
         }
 
+        let coordinator = context.coordinator
+        coordinator.previousState.videoId = player.video?.youtubeId
+        coordinator.previousState.playbackSpeed = player.playbackSpeed
+
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.navigationDelegate = context.coordinator
-        webView.configuration.userContentController.add(context.coordinator, name: "iosListener")
+        webView.configuration.userContentController.add(coordinator, name: "iosListener")
         webView.backgroundColor = UIColor(Color.backgroundGray)
         webView.isOpaque = false
         webView.loadHTMLString(htmlString, baseURL: nil)
@@ -63,7 +67,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
         let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
-            let script = "player.seekTo(\(seekTo), true)"
+            let script = "player.seekTo(\(seekTo), false)"
             uiView.evaluateJavaScript(script, completionHandler: nil)
             context.coordinator.previousState.seekPosition = seekPosition
         }
@@ -126,7 +130,7 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
                     VideoService.updateDuration(video, duration: duration)
                 }
             case "playbackRate":
-                guard let payload = payload, let playbackRate = Double(payload) else {
+                guard let payload = payload, let playbackRate = Double(payload), parent.player.playbackSpeed != playbackRate else {
                     return
                 }
                 parent.player.playbackSpeed = playbackRate
@@ -208,9 +212,9 @@ struct YoutubeWebViewPlayer: UIViewRepresentable {
 
             function onPlayerReady(event) {
                 event.target.setPlaybackRate(\(playbackSpeed));
+                player.cueVideoById('\(youtubeId)', \(startAt));
                 sendMessage("playerReady");
                 sendMessage("duration", player.getDuration());
-                player.seekTo(\(startAt), false)
             }
 
             function onPlayerStateChange(event) {
