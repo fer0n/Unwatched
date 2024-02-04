@@ -50,6 +50,11 @@ struct LibraryView: View {
                                            systemName: "checkmark.circle.fill",
                                            .green)
                     }
+                    NavigationLink(value: LibraryDestination.bookmarkedVideos) {
+                        LibraryNavListItem("bookmarkedVideos",
+                                           systemName: "bookmark.circle.fill",
+                                           .blue)
+                    }
                     if hasSideloads {
                         NavigationLink(value: LibraryDestination.sideloading) {
                             LibraryNavListItem("sideloads",
@@ -98,6 +103,8 @@ struct LibraryView: View {
                     SettingsView()
                 case .userData:
                     BackupView()
+                case .bookmarkedVideos:
+                    BookmarkedVideosView()
                 }
             }
             .toolbar {
@@ -276,6 +283,7 @@ enum LibraryDestination {
     case sideloading
     case watchHistory
     case allVideos
+    case bookmarkedVideos
     case userData
     case settings
 }

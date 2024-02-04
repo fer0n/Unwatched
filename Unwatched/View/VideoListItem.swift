@@ -139,6 +139,15 @@ struct VideoListItem: View {
                         Image(systemName: Const.watchedSF)
                         Text("markWatched")
                     }
+                    Button(action: toggleBookmark) {
+                        if video.bookmarkedDate != nil {
+                            Image(systemName: "bookmark.fill")
+                            Text("bookmarked")
+                        } else {
+                            Image(systemName: "bookmark")
+                            Text("addBookmark")
+                        }
+                    }
                     if video.inboxEntry == nil {
                         Button(action: moveToInbox) {
                             Image(systemName: "tray.and.arrow.down.fill")
@@ -236,6 +245,10 @@ struct VideoListItem: View {
     func moveToInbox() {
         let task = VideoService.moveVideoToInbox(video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
+    }
+
+    func toggleBookmark() {
+        VideoService.toggleBookmark(video, modelContext)
     }
 
     func markWatched() {

@@ -30,6 +30,7 @@ final class Video: CustomStringConvertible, Exportable {
     var youtubeChannelId: String?
     var isYtShort: Bool = false
     var isLikelyYtShort: Bool = false
+    var bookmarkedDate: Date?
 
     // MARK: Computed Properties
     var sortedChapters: [Chapter] {
@@ -64,7 +65,8 @@ final class Video: CustomStringConvertible, Exportable {
             elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
             watched: watched,
-            videoDescription: videoDescription
+            videoDescription: videoDescription,
+            bookmarkedDate: bookmarkedDate
         )
     }
 
@@ -79,7 +81,8 @@ final class Video: CustomStringConvertible, Exportable {
          videoDescription: String? = nil,
          chapters: [Chapter] = [],
          isYtShort: Bool = false,
-         isLikelyYtShort: Bool = false) {
+         isLikelyYtShort: Bool = false,
+         bookmarkedDate: Date? = nil) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
@@ -92,5 +95,6 @@ final class Video: CustomStringConvertible, Exportable {
         self.chapters = chapters
         self.isYtShort = isYtShort
         self.isLikelyYtShort = isLikelyYtShort
+        self.bookmarkedDate = bookmarkedDate
     }
 }

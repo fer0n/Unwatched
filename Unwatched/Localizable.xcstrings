@@ -19,6 +19,16 @@
     "•" : {
 
     },
+    "addBookmark" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Bookmark"
+          }
+        }
+      }
+    },
     "addSubscription" : {
       "localizations" : {
         "en" : {
@@ -189,6 +199,26 @@
         }
       }
     },
+    "bookmarked" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bookmarked"
+          }
+        }
+      }
+    },
+    "bookmarkedVideos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bookmarks"
+          }
+        }
+      }
+    },
     "cancel" : {
       "localizations" : {
         "en" : {
@@ -265,17 +295,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Contact Us"
-          }
-        }
-      }
-    },
-    "continuousPlay" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuous Play"
           }
         }
       }
@@ -534,6 +553,26 @@
     },
     "no video found" : {
 
+    },
+    "noBookmarkedVideosYet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Bookmarked Videos"
+          }
+        }
+      }
+    },
+    "noBookmarkedVideosYetDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bookmarked Videos will show up here"
+          }
+        }
+      }
     },
     "noHistoryItems" : {
       "localizations" : {
