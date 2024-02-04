@@ -7,7 +7,9 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
+
     @State var navManager: NavigationManager = {
         return loadNavigationManager()
     }()
@@ -70,13 +72,19 @@ struct ContentView: View {
             refresher.container = container
             player.container = container
             restoreNowPlayingVideo()
-            refresher.refreshOnStartup()
+            refresher.handleAutoBackup()
         }
         .innerSizeTrackerModifier(onChange: { newSize in
             sheetPos.sheetHeight = newSize.height
         })
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            saveData()
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                print("Active")
+                refresher.refreshOnStartup()
+            } else if scenePhase == .background {
+                print("background")
+                saveData()
+            }
         }
     }
 
@@ -103,15 +111,13 @@ struct ContentView: View {
     static func loadNavigationManager() -> NavigationManager {
         print("loadNavigationManager")
         if let savedNavManager = UserDefaults.standard.data(forKey: Const.navigationManager) {
-            print("loading savedNav")
             if let loadedNavManager = try? JSONDecoder().decode(
                 NavigationManager.self,
                 from: savedNavManager
             ) {
-                print("found state")
                 return loadedNavManager
             } else {
-                print("not found")
+                print("navmanager not found")
             }
         }
         return NavigationManager()

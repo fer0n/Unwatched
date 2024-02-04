@@ -70,7 +70,5 @@ import SwiftData
                 self.refreshAll()
             }
         }
-
-        handleAutoBackup()
     }
 }
