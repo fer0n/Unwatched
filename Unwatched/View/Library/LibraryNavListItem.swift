@@ -20,6 +20,7 @@ struct LibraryNavListItem: View {
         HStack {
             Image(systemName: systemName)
                 .resizable()
+                .scaledToFit()
                 .frame(width: 23, height: 23)
                 .foregroundStyle(.white, color)
                 .padding([.vertical, .trailing], 6)

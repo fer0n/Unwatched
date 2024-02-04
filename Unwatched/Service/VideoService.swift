@@ -167,4 +167,8 @@ class VideoService {
             print("Failed to clear everything")
         }
     }
+
+    static func toggleBookmark(_ video: Video, _ context: ModelContext) {
+        video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
+    }
 }
