@@ -53,6 +53,15 @@ final class Video: CustomStringConvertible, Exportable {
         return "Video: \(title) (\(url?.absoluteString ?? ""))"
     }
 
+    func isConsideredShorts(_ shortsDetection: ShortsDetection) -> Bool {
+        switch shortsDetection {
+        case .safe:
+            return isYtShort
+        case .moderate:
+            return isYtShort || isLikelyYtShort
+        }
+    }
+
     var toExport: SendableVideo? {
         SendableVideo(
             persistendId: self.persistentModelID.hashValue,

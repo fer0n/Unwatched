@@ -55,6 +55,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 
     var toExport: SendableSubscription? {
         SendableSubscription(
+            persistendId: self.persistentModelID,
             videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
@@ -70,6 +71,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 }
 
 struct SendableSubscription: Sendable, Codable {
+    var persistendId: PersistentIdentifier?
     var videosIds = [Int]()
     var link: URL?
 
@@ -83,7 +85,7 @@ struct SendableSubscription: Sendable, Codable {
     var youtubeChannelId: String?
     var youtubeUserName: String?
 
-    func getSubscription() -> Subscription {
+    func createSubscription() -> Subscription {
         Subscription(
             link: link,
             title: title,

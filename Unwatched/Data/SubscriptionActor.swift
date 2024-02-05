@@ -51,7 +51,7 @@ actor SubscriptionActor {
             for try await (subState, sendableSub) in group {
                 subscriptionStates.append(subState)
                 if let sendableSub = sendableSub {
-                    let sub = sendableSub.getSubscription()
+                    let sub = sendableSub.createSubscription()
                     modelContext.insert(sub)
                 }
             }

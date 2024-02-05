@@ -80,7 +80,7 @@ actor VideoActor {
             return nil
         }
         let title = videoData.title.isEmpty ? youtubeId : videoData.title
-        let video = videoData.getVideo(title: title, url: url, youtubeId: youtubeId)
+        let video = videoData.createVideo(title: title, url: url, youtubeId: youtubeId)
         modelContext.insert(video)
         if let channelId = videoData.youtubeChannelId {
             addToCorrectSubscription(video, channelId: channelId)
@@ -110,12 +110,53 @@ actor VideoActor {
         }
 
         let placementInfo = getDefaultVideoPlacement()
+        let sendableSubs: [SendableSubscription] = subs.compactMap { $0.toExport }
 
-        for sub in subs {
-            try await loadVideos(for: sub, defaultPlacementInfo: placementInfo)
+        try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
+            for sub in sendableSubs {
+                group.addTask {
+                    guard let url = sub.link else {
+                        return (sub, []) // TODO: throw no url found here?
+                    }
+                    let videos = try await VideoCrawler.loadVideosFromRSS(
+                        url: url,
+                        mostRecentPublishedDate: sub.mostRecentVideoDate)
+                    return (sub, videos)
+                }
+            }
+
+            for try await (sub, videos) in group {
+                if let subid = sub.persistendId, let modelSub = modelContext.model(for: subid) as? Subscription {
+                    try await loadVideos(for: modelSub, videos: videos, defaultPlacementInfo: placementInfo)
+                }
+            }
         }
-        // TODO: load all videos in a task group?
+
         try modelContext.save()
+    }
+
+    private func loadVideos(for sub: Subscription, videos: [SendableVideo], defaultPlacementInfo: DefaultVideoPlacement) async throws {
+        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
+        var newVideos = [Video]()
+        for vid in videos {
+            let video = vid.createVideo(youtubeChannelId: sub.youtubeChannelId)
+            newVideos.append(video)
+        }
+        updateRecentVideoDate(subscription: sub, videos: newVideos)
+        if isFirstTimeLoading {
+            newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
+        }
+        for video in newVideos {
+            modelContext.insert(video)
+        }
+
+        sub.videos?.append(contentsOf: newVideos)
+        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
+
+        triageSubscriptionVideos(sub,
+                                 videos: newVideos,
+                                 defaultPlacementInfo: defaultPlacementInfo,
+                                 limitVideos: limitVideos)
     }
 
     func getDefaultVideoPlacement() -> DefaultVideoPlacement {
@@ -211,39 +252,6 @@ actor VideoActor {
         return videos.filter { !videoIds.contains($0.youtubeId) }
     }
 
-    private func loadVideos(for sub: Subscription, defaultPlacementInfo: DefaultVideoPlacement) async throws {
-        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        guard let link = sub.link else {
-            print("loadVideos: no url found")
-            return
-        }
-
-        // load videos from web
-        let loadedVideos = try await VideoCrawler.loadVideosFromRSS(
-            url: link,
-            mostRecentPublishedDate: sub.mostRecentVideoDate)
-        var newVideos = [Video]()
-        for vid in loadedVideos {
-            let video = vid.getVideo(youtubeChannelId: sub.youtubeChannelId)
-            newVideos.append(video)
-        }
-        updateRecentVideoDate(subscription: sub, videos: newVideos)
-        if isFirstTimeLoading {
-            newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
-        }
-        for video in newVideos {
-            modelContext.insert(video)
-        }
-
-        sub.videos?.append(contentsOf: newVideos)
-        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
-
-        triageSubscriptionVideos(sub,
-                                 videos: newVideos,
-                                 defaultPlacementInfo: defaultPlacementInfo,
-                                 limitVideos: limitVideos)
-    }
-
     private func updateRecentVideoDate(subscription: Subscription, videos: [Video]) {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
@@ -274,16 +282,6 @@ actor VideoActor {
         }
     }
 
-    // TODO: Move this function somewhere central and use it whereever possible
-    private func videoIsConsideredShorts(_ video: Video, shortsDetection: ShortsDetection) -> Bool {
-        switch shortsDetection {
-        case .safe:
-            return video.isYtShort
-        case .moderate:
-            return video.isYtShort || video.isLikelyYtShort
-        }
-    }
-
     private func addSingleVideoTo(
         _ videos: [Video],
         videoPlacement: VideoPlacement,
@@ -291,7 +289,7 @@ actor VideoActor {
     ) {
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let isShorts = videoIsConsideredShorts(video, shortsDetection: defaultPlacement.shortsDetection)
+            let isShorts = video.isConsideredShorts(defaultPlacement.shortsDetection)
             let placement = isShorts ? defaultPlacement.shortsPlacement ?? videoPlacement : videoPlacement
             addVideosTo(videos: [video], placement: placement)
         }
