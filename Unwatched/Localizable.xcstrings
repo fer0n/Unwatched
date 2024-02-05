@@ -414,6 +414,7 @@
       }
     },
     "github" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -768,6 +769,7 @@
       }
     },
     "rateApp" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
