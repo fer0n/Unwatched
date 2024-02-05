@@ -10,10 +10,12 @@ struct RefreshToolbarButton: ToolbarContent {
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
     @State var isLoading = false
+    @State private var rotation = 0.0
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
+                if isLoading { return }
                 if let subId = refreshOnlySubscription {
                     refresher.refreshSubscription(subscriptionId: subId)
                 } else {
@@ -22,12 +24,10 @@ struct RefreshToolbarButton: ToolbarContent {
             } label: {
                 Image(systemName: Const.refreshSF)
                     .font(.system(size: 13))
-                    .rotationEffect(isLoading ? .degrees(180) : .degrees(0))
-                    .animation(
-                        isLoading ? Animation.linear(duration: 1).repeatForever(autoreverses: false) :
-                            .default, value: isLoading)
+                    .rotationEffect(Angle(degrees: rotation))
             }
             .onAppear {
+                // Workaround: if refresher.isLoading is set to true before the view appears, it doesn't animate
                 guard isLoading != refresher.isLoading else {
                     return
                 }
@@ -36,10 +36,24 @@ struct RefreshToolbarButton: ToolbarContent {
                 }
             }
             .onChange(of: refresher.isLoading) {
-                withAnimation {
-                    isLoading = refresher.isLoading
+                isLoading = refresher.isLoading
+            }
+            .onChange(of: isLoading) {
+                if isLoading {
+                    nextTurn()
                 }
             }
+            .modifier(AnimationCompletionCallback(animatedValue: rotation) {
+                if isLoading {
+                    nextTurn()
+                }
+            })
+        }
+    }
+
+    private func nextTurn() {
+        withAnimation(.linear(duration: 1)) {
+            rotation += 180
         }
     }
 }

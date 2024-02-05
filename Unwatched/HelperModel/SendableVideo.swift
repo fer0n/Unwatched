@@ -24,7 +24,7 @@ struct SendableVideo: Sendable, Codable {
     var videoDescription: String?
     var bookmarkedDate: Date?
 
-    func getVideo(
+    func createVideo(
         title: String? = nil,
         url: URL? = nil,
         youtubeId: String? = nil,

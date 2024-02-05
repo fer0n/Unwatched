@@ -42,7 +42,7 @@ struct UserDataService {
 
             // Videos, get id mapping
             for video in backup.videos {
-                let videoModel = video.getVideo()
+                let videoModel = video.createVideo()
                 context.insert(videoModel)
                 if let id = video.persistendId {
                     videoIdDict[id] = videoModel
