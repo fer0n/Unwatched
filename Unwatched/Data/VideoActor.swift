@@ -7,7 +7,8 @@ import Observation
 actor VideoActor {
     func addForeignVideo(from videoUrls: [URL],
                          in videoplacement: VideoPlacement,
-                         at index: Int) async throws {
+                         at index: Int,
+                         addImage: Bool = false) async throws {
         var videos = [Video]()
         for url in videoUrls {
             guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
@@ -22,8 +23,17 @@ actor VideoActor {
                 let res = try await createVideo(from: youtubeId, url: url)
                 if let video = res?.video {
                     try await addSubscriptionsForForeignVideos(video, feedTitle: res?.feedTitle)
+                    if addImage,
+                       let url = video.thumbnailUrl,
+                       let data = try? await ImageService.loadImageData(url: url) {
+                        let img = CachedImage(url, imageData: data)
+                        modelContext.insert(img)
+                        video.cachedImage = img
+                        // Workaround: avoids crash when adding video via shortcut
+                    }
                     videos.append(video)
                 }
+
             }
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)

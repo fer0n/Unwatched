@@ -112,12 +112,13 @@ class VideoService {
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
                                at index: Int = 1,
+                               addImage: Bool = false,
                                container: ModelContainer) -> Task<(), Error> {
         print("addForeignUrls")
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
-            try await repo.addForeignVideo(from: urls, in: videoPlacement, at: index)
+            try await repo.addForeignVideo(from: urls, in: videoPlacement, at: index, addImage: addImage)
         }
         return task
     }
