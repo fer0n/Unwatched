@@ -78,18 +78,18 @@ struct SettingsView: View {
                 .tint(.teal)
 
                 Section("contact") {
-                    LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
-                        Image(systemName: Const.rateAppSF)
-                    }
+                    // LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
+                    //    Image(systemName: Const.rateAppSF)
+                    // }
 
                     LinkItemView(destination: UrlService.emailUrl, label: "contactUs") {
                         Image(systemName: Const.contactMailSF)
                     }
 
-                    LinkItemView(destination: UrlService.githubUrl, label: "github") {
-                        Image("github-logo")
-                            .resizable()
-                    }
+                    // LinkItemView(destination: UrlService.githubUrl, label: "github") {
+                    //    Image("github-logo")
+                    //        .resizable()
+                    // }
                 }
 
                 Section {
