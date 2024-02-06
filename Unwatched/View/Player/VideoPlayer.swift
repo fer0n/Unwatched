@@ -27,23 +27,41 @@ struct VideoPlayer: View {
 
         VStack(spacing: 0) {
 
-            ZStack {
-                if player.video != nil {
-                    YoutubeWebViewPlayer(onVideoEnded: handleVideoEnded)
-                } else {
-                    Rectangle()
-                        .fill(Color.backgroundColor)
+            if player.embeddingDisabled {
+                PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
+                    .frame(maxHeight: .infinity)
+                    .frame(maxWidth: .infinity)
+                    .mask(LinearGradient(gradient: Gradient(
+                        stops: [
+                            .init(color: .black, location: 0),
+                            .init(color: .black, location: 0.9),
+                            .init(color: .clear, location: 1)
+                        ]
+                    ), startPoint: .top, endPoint: .bottom))
+            } else {
+                ZStack {
+                    if player.video != nil {
+                        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
+                    } else {
+                        Rectangle()
+                            .fill(Color.backgroundColor)
+                    }
                 }
+                .aspectRatio(16/9, contentMode: .fit)
+                .frame(maxWidth: .infinity)
             }
-            .aspectRatio(16/9, contentMode: .fit)
-            .frame(maxWidth: .infinity)
+
             VStack(spacing: 10) {
-                Spacer()
+                if !player.embeddingDisabled {
+                    Spacer()
+                }
 
                 ChapterMiniControlView(setShowMenu: setShowMenu)
 
-                Spacer()
-                Spacer()
+                if !player.embeddingDisabled {
+                    Spacer()
+                    Spacer()
+                }
 
                 VStack(spacing: 25) {
                     HStack {
@@ -62,12 +80,17 @@ struct VideoPlayer: View {
                 }
                 .padding(.horizontal, 5)
 
-                Spacer()
-                Spacer()
+                if !player.embeddingDisabled {
+                    Spacer()
+                    Spacer()
+                }
 
                 HStack {
-                    Spacer()
+                    // center menu button
+                    Image(systemName: "link")
+                        .opacity(0)
                         .frame(maxWidth: .infinity)
+
                     Button {
                         setShowMenu()
                     } label: {
@@ -159,9 +182,10 @@ struct VideoPlayer: View {
             player.isPlaying.toggle()
             hapticToggle.toggle()
         } label: {
+            let size: Double = player.embeddingDisabled ? 70 : 90
             Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
-                .frame(width: 90, height: 90)
+                .frame(width: size, height: size)
                 .accentColor(.myAccentColor)
                 .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
@@ -195,7 +219,7 @@ struct VideoPlayer: View {
     func setShowMenu() {
         player.updateElapsedTime()
         if player.video != nil {
-            if !player.isPlaying {
+            if !player.isPlaying || player.embeddingDisabled {
                 sheetPos.setDetentMiniPlayer()
             } else {
                 sheetPos.setDetentVideoPlayer()

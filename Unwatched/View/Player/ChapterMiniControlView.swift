@@ -77,7 +77,7 @@ struct ChapterMiniControlView: View {
                     }
                 }
             }
-            if let video = player.video {
+            if let video = player.video, !player.embeddingDisabled {
                 videoDescription(video, hasChapters)
             }
         }
