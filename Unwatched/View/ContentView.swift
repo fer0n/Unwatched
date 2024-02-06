@@ -23,8 +23,16 @@ struct ContentView: View {
 
         let videoExists = player.video != nil
         let detents: Set<PresentationDetent> = videoExists
-            ? [.height(sheetPos.maxSheetHeight), .height(sheetPos.playerControlHeight)]
+            ? Set([.height(sheetPos.maxSheetHeight)]).union(
+                player.embeddingDisabled
+                    ? []
+                    : [.height(sheetPos.playerControlHeight)]
+            )
             : [.large]
+
+        let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
+            ? [.medium]
+            : [.height(sheetPos.playerControlHeight)]
 
         let selectedDetent = Binding(
             get: { sheetPos.selectedDetent ?? detents.first ?? .large },
@@ -41,6 +49,8 @@ struct ContentView: View {
                     VideoNotAvailableView()
                 }
             }
+            .background(Color.backgroundColor)
+            .environment(\.colorScheme, .dark)
             .onAppear {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
@@ -48,7 +58,7 @@ struct ContentView: View {
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 ChapterDescriptionView()
                     .environment(player)
-                    .presentationDetents([.height(sheetPos.playerControlHeight)])
+                    .presentationDetents(chapterViewDetent)
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.playerControlHeight))
                     )

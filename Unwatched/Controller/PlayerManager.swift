@@ -14,6 +14,7 @@ enum VideoSource {
     var previousChapter: Chapter?
     var nextChapter: Chapter?
     var seekPosition: Double?
+    var embeddingDisabled: Bool = false
 
     var videoSource: VideoSource = .userInteraction
 
@@ -30,6 +31,10 @@ enum VideoSource {
                 && (UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false) {
                 print("> tapped existing video")
                 self.play()
+            } else {
+                withAnimation {
+                    embeddingDisabled = false
+                }
             }
         }
     }
@@ -225,11 +230,29 @@ enum VideoSource {
         }
     }
 
+    func handleAutoStart() {
+        switch videoSource {
+        case .continuousPlay:
+            let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
+            if continuousPlay {
+                play()
+            }
+        case .nextUp:
+            break
+        case .userInteraction:
+            let autoPlay = UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool ?? true
+            if  autoPlay {
+                play()
+            }
+        }
+    }
+
     static func getDummy() -> PlayerManager {
         let player = PlayerManager()
         player.video = Video.getDummy()
         player.currentTime = 10
         player.currentChapter = Chapter.getDummy()
+        player.embeddingDisabled = true
         return player
     }
 

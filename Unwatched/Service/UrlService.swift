@@ -17,6 +17,10 @@ struct UrlService {
         "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&controls=1&color=white"
     }
 
+    static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
+        "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
+    }
+
     static func stringContainsUrl (_ text: String) -> Bool {
         let regex = #"https:\/\/\w+\.\w+"#
         return text.matching(regex: regex) != nil
