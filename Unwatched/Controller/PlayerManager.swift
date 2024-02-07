@@ -22,21 +22,37 @@ enum VideoSource {
 
     var video: Video? {
         didSet {
-            currentEndTime = 0
-            currentTime = video?.elapsedSeconds ?? 0
-            isPlaying = false
-            currentChapter = nil
-            if video != nil
-                && video == oldValue
-                && (UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false) {
-                print("> tapped existing video")
-                self.play()
+            handleNewVideoSet(oldValue)
+        }
+    }
+
+    private func handleNewVideoSet(_ oldValue: Video?) {
+        currentEndTime = 0
+        currentTime = video?.elapsedSeconds ?? 0
+        isPlaying = false
+        currentChapter = nil
+        guard video != nil else {
+            return
+        }
+
+        let hasAutoPlay = UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false
+        if video == oldValue && hasAutoPlay {
+            print("> tapped existing video")
+            self.play()
+            return
+        }
+
+        withAnimation {
+            if requiresFetchingVideoData() {
+                embeddingDisabled = true
             } else {
-                withAnimation {
-                    embeddingDisabled = false
-                }
+                embeddingDisabled = false
             }
         }
+    }
+
+    func requiresFetchingVideoData() -> Bool {
+        VideoService.requiresFetchingVideoData(video)
     }
 
     var isConsideredWatched: Bool {

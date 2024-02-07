@@ -73,8 +73,15 @@ struct PlayerWebView: UIViewRepresentable {
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
             print("CUE VIDEO")
-            let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
-            uiView.evaluateJavaScript(script, completionHandler: nil)
+            if playerType == .youtube {
+                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, getStartPosition())) {
+                    let request = URLRequest(url: url)
+                    uiView.load(request)
+                }
+            } else {
+                let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
+                uiView.evaluateJavaScript(script, completionHandler: nil)
+            }
             context.coordinator.previousState.videoId = player.video?.youtubeId
         }
     }
@@ -160,19 +167,32 @@ struct PlayerWebView: UIViewRepresentable {
                 parent.player.handleAutoStart()
             case "currentTime":
                 handleTimeUpdate(payload)
+            case "updateTitle":
+                handleTitleUpdate(payload)
             case "duration":
                 handleDuration(payload)
             case "playbackRate":
-                guard let payload = payload,
-                      let playbackRate = Double(payload),
-                      parent.player.playbackSpeed != playbackRate else {
-                    return
-                }
-                parent.player.playbackSpeed = playbackRate
+                handlePlaybackSpeed(payload)
             case "error":
                 handleError(payload)
             default:
                 break
+            }
+        }
+
+        func handlePlaybackSpeed(_ payload: String?) {
+            guard let payload = payload,
+                  let playbackRate = Double(payload),
+                  parent.player.playbackSpeed != playbackRate else {
+                return
+            }
+            parent.player.playbackSpeed = playbackRate
+        }
+
+        func handleTitleUpdate(_ title: String?) {
+            if var title = title {
+                title = title.replacingOccurrences(of: " - YouTube", with: "")
+                self.parent.player.video?.title = title
             }
         }
 
@@ -222,12 +242,12 @@ struct PlayerWebView: UIViewRepresentable {
                 return
             }
             parent.player.handleAutoStart()
-
             let script = PlayerWebView.nonEmbeddedInitScript(
                 parent.player.playbackSpeed,
-                parent.getStartPosition()
+                parent.getStartPosition(),
+                parent.player.requiresFetchingVideoData()
             )
-            webView.evaluateJavaScript(script, completionHandler: nil)
+            webView.evaluateJavaScript(script)
         }
     }
 

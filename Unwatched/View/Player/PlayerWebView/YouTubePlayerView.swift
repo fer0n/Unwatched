@@ -18,7 +18,11 @@ extension PlayerWebView {
         webView.load(request)
     }
 
-    static func nonEmbeddedInitScript(_ playbackSpeed: Double, _ startAt: Double) -> String {
+    static func nonEmbeddedInitScript(
+        _ playbackSpeed: Double,
+        _ startAt: Double,
+        _ requiresFetchingVideoData: Bool?
+    ) -> String {
         """
         var timer;
         var video = document.querySelector('video');
@@ -45,6 +49,7 @@ extension PlayerWebView {
         video.addEventListener('loadedmetadata', function() {
             const duration = video.duration;
             sendMessage("duration", duration.toString());
+            \(requiresFetchingVideoData == true ? "sendMessage('updateTitle', document.title);" : "")
         });
 
         function startTimer() {

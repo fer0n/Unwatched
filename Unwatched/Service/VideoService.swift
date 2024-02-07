@@ -172,4 +172,8 @@ class VideoService {
     static func toggleBookmark(_ video: Video, _ context: ModelContext) {
         video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
     }
+
+    static func requiresFetchingVideoData(_ video: Video?) -> Bool {
+        return video?.title.isEmpty == true
+    }
 }
