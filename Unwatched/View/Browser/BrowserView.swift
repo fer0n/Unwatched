@@ -8,12 +8,13 @@ import WebKit
 import TipKit
 
 struct BrowserView: View, KeyboardReadable {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @Environment(RefreshManager.self) var refresher
+
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-
-    @Environment(\.modelContext) var modelContext
-    @Environment(RefreshManager.self) var refresher
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -22,29 +23,45 @@ struct BrowserView: View, KeyboardReadable {
         let subscriptionText = browserManager.channelTextRepresentation
 
         GeometryReader { geometry in
-            ZStack {
-                YtBrowserWebView(browserManager: browserManager)
-                if !isKeyboardVisible {
-                    VStack {
-                        Spacer()
-                        if subscriptionText == nil && browserManager.firstPageLoaded {
-                            TipView(ytBrowserTip)
-                                .padding(.horizontal)
+            VStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.down")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .padding(7)
+                        .frame(maxWidth: .infinity)
+                        .fontWeight(.semibold)
+                }
+                .tint(Color.myAccentColor)
+
+                ZStack {
+                    YtBrowserWebView(browserManager: browserManager)
+                    if !isKeyboardVisible {
+                        VStack {
+                            Spacer()
+                            if subscriptionText == nil && browserManager.firstPageLoaded {
+                                TipView(ytBrowserTip)
+                                    .padding(.horizontal)
+                                    .tint(.teal)
+                            }
+                            if let text = subscriptionText, !isKeyboardVisible {
+                                addSubButton(text)
+                                    .popoverTip(addButtonTip, arrowEdge: .bottom)
+                                    .disabled(subscribeManager.isLoading)
+                            }
+                            Spacer()
+                                .frame(height: (
+                                        browserManager.isMobileVersion ? 60 : 0)
+                                        + geometry.safeAreaInsets.bottom
+                                )
                         }
-                        if let text = subscriptionText, !isKeyboardVisible {
-                            addSubButton(text)
-                                .popoverTip(addButtonTip, arrowEdge: .bottom)
-                                .disabled(subscribeManager.isLoading)
-                        }
-                        Spacer()
-                            .frame(height: (
-                                    browserManager.isMobileVersion ? 60 : 0)
-                                    + geometry.safeAreaInsets.bottom
-                            )
                     }
                 }
             }
-            .ignoresSafeArea(.all)
+            .ignoresSafeArea(edges: [.bottom])
         }
         .onChange(of: browserManager.channel?.userName) {
             subscribeManager.reset()

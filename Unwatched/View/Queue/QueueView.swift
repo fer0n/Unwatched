@@ -5,28 +5,37 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct QueueView: View {
+    @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
+    @Query(filter: #Predicate<Subscription> { $0.isArchived == false })
+    var subscriptions: [Subscription]
 
     @State var value: Double = 1.5
+    var inboxTip = InboxHasVideosTip()
+    var inboxHasEntries: Bool = false
 
     var body: some View {
         @Bindable var navManager = navManager
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
                 if queue.isEmpty {
-                    ContentUnavailableView("noQueueItems",
-                                           systemImage: "rectangle.stack.badge.play.fill",
-                                           description: Text("noQueueItemsDescription"))
-                        .contentShape(Rectangle())
-                        .dropDestination(for: URL.self) { items, _ in
-                            handleUrlDrop(items, at: 0)
-                            return true
+                    contentUnavailable
+
+                    if inboxHasEntries {
+                        VStack {
+                            Spacer()
+                            TipView(inboxTip, arrowEdge: .bottom)
+                                .fixedSize()
                         }
+                    }
+
                 } else {
                     List {
                         ForEach(queue) { entry in
@@ -57,6 +66,43 @@ struct QueueView: View {
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
+        }
+        .onDisappear {
+            if inboxHasEntries {
+                inboxTip.invalidate(reason: .actionPerformed)
+            }
+        }
+    }
+
+    var contentUnavailable: some View {
+        ContentUnavailableView {
+            Label("noQueueItems", systemImage: "rectangle.stack.badge.play.fill")
+        } description: {
+            Text("noQueueItemsDescription")
+        } actions: {
+            if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
+                Link(destination: url) {
+                    Label("setupShareSheetAction", systemImage: "square.and.arrow.up.fill")
+                }
+                .bold()
+                .buttonStyle(.borderedProminent)
+            }
+
+            if subscriptions.isEmpty {
+                Button {
+                    navManager.showBrowserSheet = true
+                } label: {
+                    Label("addFeeds", systemImage: "plus")
+                        .bold()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .tint(.teal)
+        .contentShape(Rectangle())
+        .dropDestination(for: URL.self) { items, _ in
+            handleUrlDrop(items, at: 0)
+            return true
         }
     }
 

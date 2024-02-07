@@ -29,7 +29,11 @@ class DataController {
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
             let schema = Schema(DataController.dbEntries)
-            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            let modelConfiguration = ModelConfiguration(
+                schema: schema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
 
             do {
                 return try ModelContainer(for: schema, configurations: [modelConfiguration])

@@ -9,6 +9,7 @@ struct UrlService {
     static let youtubeStartPage = URL(string: "https://m.youtube.com?autoplay=0")
 
     // TODO: fix links once it's been open/submitted
+    static let shareShortcutUrl = URL(string: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
     static let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     static let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
     static let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!

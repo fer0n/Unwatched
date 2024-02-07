@@ -15,6 +15,10 @@ struct YtBrowserTip: Tip {
     var message: Text? {
         Text("addSubscriptionTipMessage")
     }
+
+    var image: Image? {
+        Image(systemName: "person.circle.fill")
+    }
 }
 
 struct AddButtonTip: Tip {

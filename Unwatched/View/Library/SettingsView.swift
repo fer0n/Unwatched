@@ -77,6 +77,14 @@ struct SettingsView: View {
                 }
                 .tint(.teal)
 
+                if let url = UrlService.shareShortcutUrl {
+                    Section("shareSheet") {
+                        Link(destination: url) {
+                            Label("setupShareSheetAction", systemImage: "square.and.arrow.up.fill")
+                        }
+                    }
+                }
+
                 Section("contact") {
                     // LinkItemView(destination: UrlService.writeReviewUrl, label: "rateApp") {
                     //    Image(systemName: Const.rateAppSF)
