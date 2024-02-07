@@ -68,4 +68,6 @@ struct Const {
 
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"
+
+    static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
 }

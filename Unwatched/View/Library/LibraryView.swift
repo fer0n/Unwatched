@@ -14,10 +14,8 @@ struct LibraryView: View {
 
     @Query var subscriptions: [Subscription]
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
-
     var sidedloadedSubscriptions: [Subscription]
 
-    @State var showBrowserSheet = false
     @State var subManager = SubscribeManager()
     @State var text: String = ""
     @State var isDragOver: Bool = false
@@ -127,7 +125,7 @@ struct LibraryView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        showBrowserSheet = true
+                        navManager.showBrowserSheet = true
                     }, label: {
                         Image(systemName: "plus")
                     })
@@ -137,12 +135,6 @@ struct LibraryView: View {
         }
         .onAppear {
             subManager.container = modelContext.container
-        }
-        .sheet(isPresented: $showBrowserSheet) {
-            BrowserView()
-                .onDisappear {
-
-                }
         }
         .sheet(isPresented: $subManager.showDropResults) {
             AddSubscriptionView(subManager: subManager)

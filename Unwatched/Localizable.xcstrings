@@ -29,6 +29,16 @@
         }
       }
     },
+    "addFeeds" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Feeds"
+          }
+        }
+      }
+    },
     "addSubscription" : {
       "localizations" : {
         "en" : {
@@ -44,7 +54,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add this channel to Unwatched"
+            "value" : "Add this feed to Unwatched"
           }
         }
       }
@@ -64,7 +74,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Subscriptions to Unwatched"
+            "value" : "Visit Any Channel Page"
           }
         }
       }
@@ -74,7 +84,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you visit a channel page, an 'Add Subscription'-Button will appear here."
+            "value" : "On all channel pages, an 'Add Channel'-Button will appear here. Use it to add feeds to Unwatched."
           }
         }
       }
@@ -215,16 +225,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bookmarks"
-          }
-        }
-      }
-    },
-    "cancel" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
           }
         }
       }
@@ -470,6 +470,46 @@
         }
       }
     },
+    "InboxHasVideosTip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Videos"
+          }
+        }
+      }
+    },
+    "InboxHasVideosTipMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap here to view them"
+          }
+        }
+      }
+    },
+    "InboxSwipeTip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe Left or Right"
+          }
+        }
+      }
+    },
+    "InboxSwipeTipMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Left will clear the video, right will give you the option to insert it at the top or bottom of the queue."
+          }
+        }
+      }
+    },
     "invalidUrl" : {
       "comment" : "Invalid URL Error",
       "localizations" : {
@@ -641,7 +681,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add videos manually or by marking subscriptions as \"Add to Queue\""
+            "value" : "Add videos manually or by following feeds."
           }
         }
       }
@@ -849,12 +889,32 @@
         }
       }
     },
+    "setupShareSheetAction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup Share Sheet"
+          }
+        }
+      }
+    },
     "share" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share"
+          }
+        }
+      }
+    },
+    "shareSheet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Sheet"
           }
         }
       }

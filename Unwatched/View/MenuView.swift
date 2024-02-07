@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-
 import SwiftData
 
 struct MenuView: View {
@@ -21,7 +20,7 @@ struct MenuView: View {
             TabView(selection: $navManager.tab.onUpdate { newValue in
                 handleSameTabTapped(newValue, proxy)
             }) {
-                QueueView()
+                QueueView(inboxHasEntries: !inbox.isEmpty)
                     .tabItem {
                         Image(systemName: Const.queueTagSF)
                         if showTabBarLabels {
@@ -36,7 +35,6 @@ struct MenuView: View {
                         if showTabBarLabels {
                             Text("inbox")
                         }
-
                     }
                     .tag(Tab.inbox)
 
@@ -49,9 +47,11 @@ struct MenuView: View {
                     }
                     .tag(Tab.library)
             }
-
             .environment(navManager)
             .tint(.myAccentColor)
+        }
+        .sheet(isPresented: $navManager.showBrowserSheet) {
+            BrowserView()
         }
     }
 

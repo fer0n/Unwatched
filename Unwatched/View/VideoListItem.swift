@@ -131,7 +131,7 @@ struct VideoListItem: View {
                 Button(action: clearVideoEverywhere) {
                     Image(systemName: Const.clearSF)
                 }
-                .tint(Color.backgroundColor)
+                .tint(.black)
             }
             if videoSwipeActions.contains(.more) {
                 Menu {

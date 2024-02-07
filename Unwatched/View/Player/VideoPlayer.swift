@@ -99,6 +99,7 @@ struct VideoPlayer: View {
                                 .font(.system(size: 30))
                             Text("showMenu")
                                 .font(.caption)
+                                .textCase(.uppercase)
                                 .padding(.bottom, 3)
                         }
                         .padding(.horizontal)

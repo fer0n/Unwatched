@@ -9,6 +9,7 @@ import SwiftData
 
 @Observable class NavigationManager: Codable {
     var showMenu = true
+    var showBrowserSheet = false
     var tab = Tab.queue
     var showDescriptionDetail = false
     var selectedDetailPage: ChapterDescriptionPage = .description
