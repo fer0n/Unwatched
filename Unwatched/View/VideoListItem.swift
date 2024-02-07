@@ -167,21 +167,24 @@ struct VideoListItem: View {
 
     var videoItemDetails: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text(video.title)
+            let videoTitle = !video.title.isEmpty ? video.title : video.youtubeId
+            Text(videoTitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.system(size: 15, weight: .medium))
                 .lineLimit(2)
-            HStack {
-                if let published = video.publishedDate {
-                    Text(published.formatted)
-                        .font(.system(size: 14, weight: .light))
-                        .font(.body)
-                        .foregroundStyle(Color.gray)
-                }
-                if video.isYtShort || video.isLikelyYtShort {
-                    Text("#s\(video.isYtShort == true ? "." : "")")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundStyle(Color.gray)
+            if video.publishedDate != nil || video.isYtShort || video.isLikelyYtShort {
+                HStack {
+                    if let published = video.publishedDate {
+                        Text(published.formatted)
+                            .font(.system(size: 14, weight: .light))
+                            .font(.body)
+                            .foregroundStyle(Color.gray)
+                    }
+                    if video.isYtShort || video.isLikelyYtShort {
+                        Text("#s\(video.isYtShort == true ? "." : "")")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundStyle(Color.gray)
+                    }
                 }
             }
             if let title = video.subscription?.title {
@@ -297,7 +300,8 @@ struct VideoListItem: View {
             watched: true,
             videoSwipeActions: [.queueTop, .queueBottom, .clear, .more]
         )
-    }.listStyle(.plain)
+    }
+    .listStyle(.plain)
     .modelContainer(container)
     .environment(NavigationManager())
     .environment(PlayerManager())

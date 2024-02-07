@@ -136,11 +136,11 @@ struct YtBrowserWebView: UIViewRepresentable {
         }
 
         var getSubscriptionInfoScript = """
-                var channelId = document.querySelector('meta[itemprop="identifier"]').getAttribute('content');
-                var description = document.querySelector('meta[name="description"]').getAttribute('content');
-                var rssFeed = document.querySelector('link[rel="alternate"][type="application/rss+xml"]').getAttribute('href');
-                var title = document.querySelector('meta[property="og:title"]').getAttribute('content');
-                var image = document.querySelector('link[rel="image_src"]').getAttribute('href');
+                var channelId = document.querySelector('meta[itemprop="identifier"]')?.getAttribute('content');
+                var description = document.querySelector('meta[name="description"]')?.getAttribute('content');
+                var rssFeed = document.querySelector('link[rel="alternate"][type="application/rss+xml"]')?.getAttribute('href');
+                var title = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
+                var image = document.querySelector('link[rel="image_src"]')?.getAttribute('href');
                 [channelId, description, rssFeed, title, image];
             """
 

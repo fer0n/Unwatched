@@ -86,11 +86,13 @@ actor VideoActor {
     }
 
     func createVideo(from youtubeId: String, url: URL) async throws -> (video: Video, feedTitle: String?)? {
-        guard let videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId) else {
-            return nil
+        var videoData: SendableVideo
+        if let data = try? await YoutubeDataAPI.getYtVideoInfo(youtubeId) {
+            videoData = data
+        } else {
+            videoData = SendableVideo(youtubeId: youtubeId, title: "", url: url)
         }
-        let title = videoData.title.isEmpty ? youtubeId : videoData.title
-        let video = videoData.createVideo(title: title, url: url, youtubeId: youtubeId)
+        let video = videoData.createVideo(url: url, youtubeId: youtubeId)
         modelContext.insert(video)
         if let channelId = videoData.youtubeChannelId {
             addToCorrectSubscription(video, channelId: channelId)
