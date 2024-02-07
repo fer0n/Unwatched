@@ -36,6 +36,18 @@ struct ImportSubscriptionsView: View {
             let successStates = Array(states[..<partitionIndex])
             let errorStates = Array(states[partitionIndex...])
 
+            if !errorStates.isEmpty {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("errorImporting")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    Text("errorImportingMessage")
+                        .font(.body)
+                        .foregroundStyle(.gray)
+                }
+                Spacer().frame(height: 40)
+            }
+
             VStack {
                 renderStates(successStates)
             }
