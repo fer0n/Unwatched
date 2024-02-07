@@ -371,6 +371,26 @@
         }
       }
     },
+    "errorImporting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some subscriptions couldn't be imported"
+          }
+        }
+      }
+    },
+    "errorImportingMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you entered a YouTube channel URL, try adding the RSS feed directly, or use the \"+\" button in the Library."
+          }
+        }
+      }
+    },
     "errorOccured" : {
       "localizations" : {
         "en" : {
@@ -754,6 +774,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All available videos will be shown here, including manually added ones and videos from all subscriptions."
+          }
+        }
+      }
+    },
+    "openBrowserNow" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Browser Now"
           }
         }
       }
