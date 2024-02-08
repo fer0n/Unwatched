@@ -65,6 +65,7 @@ class VideoService {
     }
 
     static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
+        entry.video?.clearedDate = .now
         modelContext.delete(entry)
     }
 

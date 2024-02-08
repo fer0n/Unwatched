@@ -129,6 +129,17 @@
         }
       }
     },
+    "allVideosSearch" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search All Videos"
+          }
+        }
+      }
+    },
     "appearance" : {
       "localizations" : {
         "en" : {
@@ -255,6 +266,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear All"
+          }
+        }
+      }
+    },
+    "clearedDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last Cleared Date"
           }
         }
       }
@@ -799,7 +820,14 @@
       }
     },
     "noYoutubeIdFound" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No YouTube video ID found"
+          }
+        }
+      }
     },
     "page" : {
       "localizations" : {
@@ -842,7 +870,25 @@
       }
     },
     "potentiallyFaultyYoutubeId" : {
-      "comment" : "(youtubeId)"
+      "comment" : "(youtubeId)",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube ID may be faulty"
+          }
+        }
+      }
+    },
+    "publishedDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Published Date"
+          }
+        }
+      }
     },
     "queue" : {
       "localizations" : {

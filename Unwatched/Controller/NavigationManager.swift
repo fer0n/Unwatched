@@ -13,6 +13,7 @@ import SwiftData
     var tab = Tab.queue
     var showDescriptionDetail = false
     var selectedDetailPage: ChapterDescriptionPage = .description
+    var searchFocused = false
 
     var presentedSubscriptionQueue = [Subscription]()
     var presentedSubscriptionInbox = [Subscription]()

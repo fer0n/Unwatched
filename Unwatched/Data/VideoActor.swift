@@ -343,6 +343,7 @@ actor VideoActor {
 
     private func clearEntries(from video: Video, except model: (any PersistentModel.Type)? = nil) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
+            inboxEntry.video?.clearedDate = .now
             modelContext.delete(inboxEntry)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
@@ -429,11 +430,13 @@ actor VideoActor {
 
     static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
         let deletedOrder = queueEntry.order
+        queueEntry.video?.clearedDate = .now
         modelContext.delete(queueEntry)
         VideoActor.updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
     }
 
     private static func deleteInboxEntry(entry: InboxEntry, modelContext: ModelContext) {
+        entry.video?.clearedDate = .now
         modelContext.delete(entry)
     }
 

@@ -22,7 +22,7 @@ struct ContentView: View {
         @Bindable var navManager = navManager
 
         let videoExists = player.video != nil
-        let detents: Set<PresentationDetent> = videoExists
+        let detents: Set<PresentationDetent> = videoExists && !navManager.searchFocused
             ? Set([.height(sheetPos.maxSheetHeight)]).union(
                 player.embeddingDisabled
                     ? []
@@ -73,6 +73,9 @@ struct ContentView: View {
                     .presentationContentInteraction(.scrolls)
                     .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
                     .environment(player)
+                    .presentationDragIndicator(navManager.searchFocused
+                                                ? .hidden
+                                                : .visible)
             }
         }
         .environment(navManager)
