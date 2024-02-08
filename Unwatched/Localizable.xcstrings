@@ -229,6 +229,16 @@
         }
       }
     },
+    "browseFeeds" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browse Feeds"
+          }
+        }
+      }
+    },
     "chapters" : {
       "localizations" : {
         "en" : {
@@ -356,17 +366,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can drag multiple channel URLs at the same time from your [YouTube subscriptions](https://youtube.com/feed/channels) and drop them here all at once.  Or use the \"+\" button in the tool bar to browse YouTube."
+            "value" : "Drop RSS feed/channel URLs here or use the \"Browse Feeds\" button above."
           }
         }
       }
     },
-    "dropUrlsHere" : {
+    "enterUrls" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Drop URLs Here"
+            "value" : "Feed/Video URLs"
           }
         }
       }
@@ -630,7 +640,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bookmarked Videos will show up here"
+            "value" : "Bookmarked videos will show up here"
           }
         }
       }
@@ -778,17 +788,6 @@
         }
       }
     },
-    "openBrowserNow" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Browser Now"
-          }
-        }
-      }
-    },
     "page" : {
       "localizations" : {
         "en" : {
@@ -900,12 +899,12 @@
         }
       }
     },
-    "searchLibraryOrEnterUrl" : {
+    "searchLibrary" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search library or enter URL(s)"
+            "value" : "Search library"
           }
         }
       }
@@ -1130,6 +1129,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User Data"
+          }
+        }
+      }
+    },
+    "videos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
           }
         }
       }

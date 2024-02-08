@@ -17,18 +17,11 @@ struct LibraryNavListItem: View {
     }
 
     var body: some View {
-        HStack {
-            Image(systemName: systemName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 23, height: 23)
-                .foregroundStyle(.white, color)
-                .padding([.vertical, .trailing], 6)
-            Text(text)
-        }
+        Label(text, systemImage: systemName)
+            .foregroundStyle(.white, color)
     }
 }
 
 #Preview {
-    LibraryNavListItem("star", systemName: "star")
+    LibraryNavListItem("star", systemName: "star", .cyan)
 }
