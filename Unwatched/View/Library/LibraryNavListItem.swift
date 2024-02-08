@@ -8,20 +8,18 @@ import SwiftUI
 struct LibraryNavListItem: View {
     var text: LocalizedStringKey
     var systemName: String
-    var color: Color
 
-    init(_ text: LocalizedStringKey, systemName: String, _ color: Color? = nil) {
+    init(_ text: LocalizedStringKey, systemName: String) {
         self.text = text
         self.systemName = systemName
-        self.color = color ?? .blue
     }
 
     var body: some View {
         Label(text, systemImage: systemName)
-            .foregroundStyle(.white, color)
+            .foregroundStyle(Color.myAccentColor)
     }
 }
 
 #Preview {
-    LibraryNavListItem("star", systemName: "star", .cyan)
+    LibraryNavListItem("star", systemName: "star")
 }

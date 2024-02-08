@@ -34,7 +34,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Feeds"
+            "value" : "Add Feeds via Browser"
           }
         }
       }
@@ -234,7 +234,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Feeds"
+            "value" : "Browser"
           }
         }
       }
@@ -386,7 +386,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Feed/Video URLs"
+            "value" : "Feed or video URL"
           }
         }
       }
