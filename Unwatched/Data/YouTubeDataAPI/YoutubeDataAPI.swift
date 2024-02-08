@@ -98,6 +98,9 @@ class YoutubeDataAPI {
                 duration: duration,
                 publishedDate: publishedDate,
                 videoDescription: item.snippet.description)
+        } else if response.items.count == 0 {
+            // request seems okay, youtubeVideoId was probably the issue
+            throw VideoError.faultyYoutubeVideoId(youtubeVideoId)
         }
 
         throw VideoError.noVideoFound
