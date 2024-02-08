@@ -22,6 +22,8 @@ struct AddToLibraryView: View {
             Label("browseFeeds", systemImage: "globe.desk.fill")
         })
         HStack {
+            Image(systemName: "link")
+                .foregroundStyle(.gray)
             TextField("enterUrls", text: $addText)
                 .keyboardType(.alphabet)
                 .autocorrectionDisabled(true)

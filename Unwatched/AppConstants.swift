@@ -34,6 +34,7 @@ struct Const {
     static let sideloadSF = "arrow.right.circle"
 
     static let filterSF = "line.3.horizontal.decrease.circle.fill"
+    static let filterEmptySF = "line.3.horizontal.decrease.circle"
     static let addSF = "plus"
 
     static let watchedSF = "checkmark.circle.fill"
@@ -70,4 +71,5 @@ struct Const {
     static let lastAutoBackupDate = "lastAutoBackupDate"
 
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
+    static let allVideosSortOrder = "allVideosSortOrder"
 }

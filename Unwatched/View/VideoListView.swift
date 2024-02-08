@@ -10,9 +10,12 @@ struct VideoListView: View {
     @Query var videos: [Video]
 
     init(subscriptionId: PersistentIdentifier? = nil,
-         ytShortsFilter: ShortsDetection? = nil) {
-        let filter = VideoListView.getVideoFilter(subscriptionId, ytShortsFilter)
-        _videos = Query(filter: filter, sort: \.publishedDate, order: .reverse)
+         ytShortsFilter: ShortsDetection? = nil,
+         sort: VideoSorting? = nil,
+         searchText: String = "") {
+        let filter = VideoListView.getVideoFilter(subscriptionId, ytShortsFilter, searchText)
+        let sorting = VideoListView.getVideoSorting(sort)
+        _videos = Query(filter: filter, sort: sorting, animation: .default)
     }
 
     var body: some View {
@@ -27,8 +30,21 @@ struct VideoListView: View {
         }
     }
 
+    static func getVideoSorting(_ sort: VideoSorting?) -> [SortDescriptor<Video>] {
+        switch sort {
+        case .clearedDate:
+            return [
+                SortDescriptor<Video>(\.clearedDate, order: .reverse),
+                SortDescriptor<Video>(\.publishedDate, order: .reverse)
+            ]
+        default:
+            return [SortDescriptor<Video>(\.publishedDate, order: .reverse)]
+        }
+    }
+
     static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,
-                               _ ytShortsFilter: ShortsDetection? = nil) -> Predicate<Video>? {
+                               _ ytShortsFilter: ShortsDetection? = nil,
+                               _ searchText: String = "") -> Predicate<Video>? {
         var filter: Predicate<Video>?
         let allSubscriptions = subscriptionId == nil
         if allSubscriptions {
@@ -36,10 +52,12 @@ struct VideoListView: View {
             case .safe:
                 filter = #Predicate<Video> { video in
                     video.isYtShort == false
+                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
                 }
             case .moderate:
                 filter = #Predicate<Video> { video in
                     (video.isYtShort == false && video.isLikelyYtShort == false)
+                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
                 }
             case .none:
                 break
@@ -50,15 +68,18 @@ struct VideoListView: View {
                 filter = #Predicate<Video> { video in
                     video.subscription?.persistentModelID == subscriptionId &&
                         video.isYtShort == false
+                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
                 }
             case .moderate:
                 filter = #Predicate<Video> { video in
                     video.subscription?.persistentModelID == subscriptionId &&
                         (video.isYtShort == false && video.isLikelyYtShort == false)
+                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
                 }
             case .none:
                 filter = #Predicate<Video> { video in
                     video.subscription?.persistentModelID == subscriptionId
+                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
                 }
             }
         }

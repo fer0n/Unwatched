@@ -15,7 +15,7 @@ struct LibraryView: View {
     var sidedloadedSubscriptions: [Subscription]
 
     @State var subManager = SubscribeManager()
-    @State var text: String = ""
+    @State var text = DebouncedText(0.1)
     @State var isDragOver: Bool = false
 
     var hasSideloads: Bool {
@@ -61,7 +61,10 @@ struct LibraryView: View {
 
                         SubscriptionListView(
                             sort: subscriptionSortOrder,
-                            manualFilter: { text.isEmpty || $0.title.localizedStandardContains(text) }
+                            manualFilter: {
+                                text.debounced.isEmpty
+                                    || $0.title.localizedStandardContains(text.debounced)
+                            }
                         )
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
@@ -128,13 +131,16 @@ struct LibraryView: View {
 
     var searchBar: some View {
         HStack(spacing: 0) {
-            TextField("searchLibrary", text: $text)
+            Image(systemName: "magnifyingglass")
+                .padding(.trailing, 5)
+                .foregroundStyle(.gray)
+            TextField("searchLibrary", text: $text.val)
                 .keyboardType(.alphabet)
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.done)
-            if !text.isEmpty {
-                TextFieldClearButton(text: $text)
+            if !text.val.isEmpty {
+                TextFieldClearButton(text: $text.val)
                     .padding(.trailing, 10)
             }
             Menu {

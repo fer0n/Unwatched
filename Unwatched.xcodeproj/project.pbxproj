@@ -81,6 +81,9 @@
 		88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
 		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
 		88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CEDA1F2B6641C6000E3E98 /* Exportable.swift */; };
+		88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AE62B751B6900BDBFDF /* VideoSorting.swift */; };
+		88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */; };
+		88D29AEF2B757E7300BDBFDF /* SearchableVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */; };
 		88D34D752B58F86800533B74 /* Alerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D34D742B58F86800533B74 /* Alerter.swift */; };
 		88D438A52B45ACD800482F29 /* EmbeddedPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A42B45ACD800482F29 /* EmbeddedPlayerView.swift */; };
 		88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */; };
@@ -182,6 +185,9 @@
 		88C205292B517732008EC51D /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		88C572322B53C8BD002FF07E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		88CEDA1F2B6641C6000E3E98 /* Exportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exportable.swift; sourceTree = "<group>"; };
+		88D29AE62B751B6900BDBFDF /* VideoSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSorting.swift; sourceTree = "<group>"; };
+		88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
+		88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableVideos.swift; sourceTree = "<group>"; };
 		88D34D742B58F86800533B74 /* Alerter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerter.swift; sourceTree = "<group>"; };
 		88D438A42B45ACD800482F29 /* EmbeddedPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPlayerView.swift; sourceTree = "<group>"; };
 		88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParserDelegate.swift; sourceTree = "<group>"; };
@@ -232,7 +238,9 @@
 				888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */,
 				88D8584F2B55AB4D0047E0E6 /* DateTimeConversion.swift */,
 				88D34D742B58F86800533B74 /* Alerter.swift */,
+				88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */,
 				881E513A2B59D577006384E4 /* SubscriptionSorting.swift */,
+				88D29AE62B751B6900BDBFDF /* VideoSorting.swift */,
 				881E513E2B59D9A8006384E4 /* Task.swift */,
 				883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */,
 				883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */,
@@ -277,6 +285,7 @@
 				881E51382B59D555006384E4 /* LibraryNavListItem.swift */,
 				888E1DFF2B7000DA00608F99 /* BookmarkedVideosView.swift */,
 				88C572322B53C8BD002FF07E /* SettingsView.swift */,
+				88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */,
 				8845F0142B500E8A0086AA98 /* AllVideosView.swift */,
 				8891F0B32B4EF3610098A3FB /* SideloadingView.swift */,
 				887AC8CB2B49584400512852 /* WatchHistoryView.swift */,
@@ -610,6 +619,7 @@
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
 				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,
+				88D29AEF2B757E7300BDBFDF /* SearchableVideos.swift in Sources */,
 				887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */,
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */,
@@ -632,6 +642,7 @@
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
 				88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */,
+				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */,
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
@@ -678,6 +689,7 @@
 				888C49C72B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift in Sources */,
 				88BABAC22B630EF8001FA0A4 /* ImageCacheManager.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
+				88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */,
 				88D858592B55AC820047E0E6 /* YtErrorResponseBody.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				88ADE8232B4ADCC3002F86F7 /* EmptyListItem.swift in Sources */,

@@ -23,6 +23,7 @@ struct SendableVideo: Sendable, Codable {
 
     var videoDescription: String?
     var bookmarkedDate: Date?
+    var clearedDate: Date?
 
     func createVideo(
         title: String? = nil,
@@ -58,7 +59,8 @@ struct SendableVideo: Sendable, Codable {
             chapters: newChapters.map { $0.getChapter },
             isYtShort: ytShortsInfo.isShort,
             isLikelyYtShort: ytShortsInfo.isLikelyShort,
-            bookmarkedDate: self.bookmarkedDate
+            bookmarkedDate: self.bookmarkedDate,
+            clearedDate: self.clearedDate
         )
     }
 
@@ -76,7 +78,8 @@ struct SendableVideo: Sendable, Codable {
         publishedDate: Date? = nil,
         watched: Bool = false,
         videoDescription: String? = nil,
-        bookmarkedDate: Date? = nil
+        bookmarkedDate: Date? = nil,
+        clearedDate: Date? = nil
     ) {
         self.persistendId = persistendId
         self.youtubeId = youtubeId
@@ -92,6 +95,7 @@ struct SendableVideo: Sendable, Codable {
         self.watched = watched
         self.videoDescription = videoDescription
         self.bookmarkedDate = bookmarkedDate
+        self.clearedDate = clearedDate
     }
 
     init(from decoder: Decoder) throws {
@@ -109,6 +113,7 @@ struct SendableVideo: Sendable, Codable {
         watched = try container.decodeIfPresent(Bool.self, forKey: .watched) ?? false
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
+        clearedDate = try container.decodeIfPresent(Date.self, forKey: .clearedDate)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -126,6 +131,7 @@ struct SendableVideo: Sendable, Codable {
         try container.encode(watched, forKey: .watched)
         try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
         try container.encodeIfPresent(bookmarkedDate, forKey: .bookmarkedDate)
+        try container.encodeIfPresent(clearedDate, forKey: .clearedDate)
     }
 }
 
@@ -143,4 +149,5 @@ enum SendableVideoCodingKeys: String, CodingKey {
     case watched
     case videoDescription
     case bookmarkedDate
+    case clearedDate
 }
