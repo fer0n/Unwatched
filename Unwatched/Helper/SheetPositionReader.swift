@@ -10,7 +10,7 @@ import SwiftUI
     // Sheet animation and height detection
     var swipedBelow: Bool = true
     var playerControlHeight: CGFloat = .zero
-    var selectedDetent: PresentationDetent?
+    @ObservationIgnored var selectedDetent: PresentationDetent?
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
 
