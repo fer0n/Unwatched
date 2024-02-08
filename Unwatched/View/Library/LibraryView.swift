@@ -34,24 +34,20 @@ struct LibraryView: View {
                 Section("videos") {
                     NavigationLink(value: LibraryDestination.allVideos) {
                         LibraryNavListItem("allVideos",
-                                           systemName: "play.rectangle.on.rectangle.fill",
-                                           .cyan)
+                                           systemName: "play.rectangle.on.rectangle.fill")
                     }
                     NavigationLink(value: LibraryDestination.watchHistory) {
                         LibraryNavListItem("watched",
-                                           systemName: "checkmark.circle.fill",
-                                           .green)
+                                           systemName: "checkmark")
                     }
                     NavigationLink(value: LibraryDestination.bookmarkedVideos) {
                         LibraryNavListItem("bookmarkedVideos",
-                                           systemName: "bookmark.circle.fill",
-                                           .blue)
+                                           systemName: "bookmark.fill")
                     }
                     if hasSideloads {
                         NavigationLink(value: LibraryDestination.sideloading) {
                             LibraryNavListItem("sideloads",
-                                               systemName: "arrow.forward.circle.fill",
-                                               .purple)
+                                               systemName: "arrow.forward.circle.fill")
                         }
                     }
                 }
