@@ -8,9 +8,7 @@ import SwiftData
 
 struct LibraryView: View {
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
-    @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Environment(RefreshManager.self) var refresher
 
     @Query var subscriptions: [Subscription]
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
@@ -19,8 +17,6 @@ struct LibraryView: View {
     @State var subManager = SubscribeManager()
     @State var text: String = ""
     @State var isDragOver: Bool = false
-    @State var isLoadingVideos = false
-    @State var addVideosSuccess: Bool?
 
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
@@ -32,12 +28,10 @@ struct LibraryView: View {
         NavigationStack(path: $navManager.presentedLibrary) {
             List {
                 Section {
-                    NavigationLink(value: LibraryDestination.settings) {
-                        LibraryNavListItem("settings", systemName: Const.settingsViewSF)
-                    }
-                    .id(topListItemId)
+                    AddToLibraryView(subManager: $subManager)
+                        .id(topListItemId)
                 }
-                Section {
+                Section("videos") {
                     NavigationLink(value: LibraryDestination.allVideos) {
                         LibraryNavListItem("allVideos",
                                            systemName: "play.rectangle.on.rectangle.fill",
@@ -64,7 +58,6 @@ struct LibraryView: View {
 
                 Section("subscriptions") {
                     if subscriptions.isEmpty {
-                        searchBar
                         dropArea
                             .listRowInsets(EdgeInsets())
                     } else {
@@ -107,37 +100,12 @@ struct LibraryView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Menu {
-                        ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
-                            Button {
-                                subscriptionSortOrder = sort
-                            } label: {
-                                HStack {
-                                    Image(systemName: sort.systemName)
-                                    Text(sort.description)
-                                }
-                            }
-                            .disabled(subscriptionSortOrder == sort)
-                        }
-                    } label: {
-                        Image(systemName: Const.filterSF)
+                    NavigationLink(value: LibraryDestination.settings) {
+                        Image(systemName: Const.settingsViewSF)
                     }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-                        navManager.showBrowserSheet = true
-                    }, label: {
-                        Image(systemName: "plus")
-                    })
                 }
                 RefreshToolbarButton()
             }
-        }
-        .onAppear {
-            subManager.container = modelContext.container
-        }
-        .sheet(isPresented: $subManager.showDropResults) {
-            AddSubscriptionView(subManager: subManager)
         }
     }
 
@@ -147,10 +115,6 @@ struct LibraryView: View {
                 .fill(isDragOver ? Color.teal.opacity(0.1) : .clear)
 
             VStack(spacing: 10) {
-                Text("dropUrlsHere")
-                    .font(.title2)
-                    .bold()
-                    .foregroundStyle(.gray)
                 Text("dropSubscriptionHelper")
                     .foregroundStyle(.gray)
                     .multilineTextAlignment(.center)
@@ -168,101 +132,24 @@ struct LibraryView: View {
 
     var searchBar: some View {
         HStack(spacing: 0) {
-            let isLoading = subManager.isLoading || isLoadingVideos
-            let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
-
-            Text("")
-            TextField("searchLibraryOrEnterUrl", text: $text)
-                .submitLabel(.done)
-                .onSubmit {
-                    handleTextFieldSubmit()
-                }
-                .disabled(subManager.isLoading)
-            if isLoading {
-                ProgressView()
-            } else if isSuccess {
-                Image(systemName: "checkmark")
-            } else if text.isEmpty {
-                Button("paste") {
-                    let text = UIPasteboard.general.string ?? ""
-                    if !text.isEmpty {
-                        handleTextFieldSubmit(text)
+            TextField("searchLibrary", text: $text)
+                .submitLabel(.search)
+            Menu {
+                ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
+                    Button {
+                        subscriptionSortOrder = sort
+                    } label: {
+                        HStack {
+                            Image(systemName: sort.systemName)
+                            Text(sort.description)
+                        }
                     }
+                    .disabled(subscriptionSortOrder == sort)
                 }
-                .buttonStyle(CapsuleButtonStyle())
-                .tint(Color.myAccentColor)
-                .disabled(subManager.isLoading)
+            } label: {
+                Image(systemName: Const.filterSF)
             }
         }
-        .onChange(of: subManager.isSubscribedSuccess) {
-            delayedSubscriptionCheckmarkReset()
-        }
-        .onChange(of: addVideosSuccess) {
-            delayedVideoCheckmarkReset()
-        }
-    }
-
-    func delayedVideoCheckmarkReset() {
-        if addVideosSuccess != true {
-            return
-        }
-        text = ""
-        refresher.refreshAll()
-        Task {
-            await Task.sleep(s: 3)
-            await MainActor.run {
-                addVideosSuccess = nil
-            }
-        }
-    }
-
-    func delayedSubscriptionCheckmarkReset() {
-        if subManager.isSubscribedSuccess != true {
-            return
-        }
-        text = ""
-        refresher.refreshAll()
-        Task {
-            await Task.sleep(s: 3)
-            await MainActor.run {
-                subManager.isSubscribedSuccess = nil
-            }
-        }
-    }
-
-    func handleTextFieldSubmit(_ inputText: String? = nil) {
-        let text = inputText ?? self.text
-        guard UrlService.stringContainsUrl(text) else {
-            print("no url found")
-            return
-        }
-        let (videoUrls, rest) = UrlService.extractVideoUrls(text)
-        addVideoUrls(videoUrls)
-        subManager.addSubscriptionFromText(rest)
-    }
-
-    func addVideoUrls(_ urls: [URL]) {
-        if !urls.isEmpty {
-            isLoadingVideos = true
-            let container = modelContext.container
-            let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
-            Task {
-                do {
-                    try await task.value
-                    await MainActor.run {
-                        isLoadingVideos = false
-                        addVideosSuccess = true
-                        return
-                    }
-                } catch {
-                    print(error)
-                }
-                await MainActor.run {
-                    isLoadingVideos = false
-                }
-            }
-        }
-        print("urls", urls)
     }
 
     func handleUrlDrop(_ urls: [URL]) {

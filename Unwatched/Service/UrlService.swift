@@ -81,8 +81,9 @@ struct UrlService {
 
     static func extractVideoUrls(_ text: String) -> (videoUrls: [URL], rest: String) {
         // https://www.youtube.com/watch?v=epBbbysk5cU
+        // https://www.m.youtube.com/watch?v=epBbbysk5cU
         // https://youtu.be/dtp6b76pMak
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(youtube.com\/watch\?v=\w+|youtu.be\/\w+))"#
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/watch\?v=\w+|youtu.be\/\w+))"#
         let matches = text.matchingMultiple(regex: regex)
         if let matches = matches {
             let urls = matches.compactMap { URL(string: $0) }
