@@ -129,7 +129,14 @@ struct LibraryView: View {
     var searchBar: some View {
         HStack(spacing: 0) {
             TextField("searchLibrary", text: $text)
-                .submitLabel(.search)
+                .keyboardType(.alphabet)
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
+                .submitLabel(.done)
+            if !text.isEmpty {
+                TextFieldClearButton(text: $text)
+                    .padding(.trailing, 10)
+            }
             Menu {
                 ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
                     Button {
@@ -169,4 +176,17 @@ enum LibraryDestination {
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())
+}
+
+struct TextFieldClearButton: View {
+    @Binding var text: String
+
+    var body: some View {
+        Button {
+            text = ""
+        } label: {
+            Image(systemName: "xmark.circle.fill")
+        }
+        .foregroundStyle(.gray)
+    }
 }

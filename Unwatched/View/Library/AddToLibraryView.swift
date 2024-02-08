@@ -23,6 +23,13 @@ struct AddToLibraryView: View {
         })
         HStack {
             TextField("enterUrls", text: $addText)
+                .keyboardType(.alphabet)
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
+                .submitLabel(.send)
+            if !addText.isEmpty {
+                TextFieldClearButton(text: $addText)
+            }
             pasteButton
         }
         .onSubmit {
@@ -68,7 +75,7 @@ struct AddToLibraryView: View {
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
         let text = inputText ?? self.addText
-        guard UrlService.stringContainsUrl(text) else {
+        guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
             print("no url found")
             return
         }
