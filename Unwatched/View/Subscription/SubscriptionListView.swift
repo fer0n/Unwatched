@@ -29,11 +29,13 @@ struct SubscriptionListView: View {
     }
 
     var body: some View {
-        let subs = manualFilter != nil ? subscriptions.filter(manualFilter!) : subscriptions
-        ForEach(subs) { sub in
-            NavigationLink(value: sub, label: {
-                SubscriptionListItem(subscription: sub)
-            })
+        ForEach(subscriptions) { sub in
+            let showSub = manualFilter != nil ? manualFilter?(sub) == true : true
+            if showSub {
+                NavigationLink(value: sub, label: {
+                    SubscriptionListItem(subscription: sub)
+                })
+            }
         }
     }
 }
