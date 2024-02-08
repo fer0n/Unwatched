@@ -5,14 +5,15 @@ import Observation
 // swiftlint:disable type_body_length
 @ModelActor
 actor VideoActor {
-    func addForeignVideo(from videoUrls: [URL],
-                         in videoplacement: VideoPlacement,
-                         at index: Int,
-                         addImage: Bool = false) async throws {
+    func addForeignVideos(from videoUrls: [URL],
+                          in videoplacement: VideoPlacement,
+                          at index: Int,
+                          addImage: Bool = false) async throws {
         var videos = [Video]()
+        var containsError = false
         for url in videoUrls {
             guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
-                print("no youtubeId found")
+                containsError = true
                 continue
             }
 
@@ -33,11 +34,13 @@ actor VideoActor {
                     }
                     videos.append(video)
                 }
-
             }
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
         try modelContext.save()
+        if containsError {
+            throw VideoError.noYoutubeId
+        }
     }
 
     func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {

@@ -15,6 +15,9 @@ struct BrowserView: View, KeyboardReadable {
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
+    @State var isDragOver = false
+    @State var isLoading = false
+    @State var isSuccess: Bool?
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -24,18 +27,7 @@ struct BrowserView: View, KeyboardReadable {
 
         GeometryReader { geometry in
             VStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.down")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .padding(7)
-                        .frame(maxWidth: .infinity)
-                        .fontWeight(.semibold)
-                }
-                .tint(Color.myAccentColor)
+                headerArea()
 
                 ZStack {
                     YtBrowserWebView(browserManager: browserManager)
@@ -78,6 +70,105 @@ struct BrowserView: View, KeyboardReadable {
         .onDisappear {
             if subscribeManager.hasNewSubscriptions {
                 refresher.refreshAll()
+            }
+        }
+    }
+
+    func headerArea() -> some View {
+        let showDropArea = isDragOver || isLoading || isSuccess != nil
+
+        return VStack {
+            if showDropArea {
+                Spacer()
+                    .frame(height: 40)
+            }
+            if showDropArea {
+                dropAreaContent
+                    .frame(maxWidth: .infinity)
+                    .onChange(of: isSuccess) {
+                        handleSuccessChange()
+                    }
+                Spacer()
+                    .frame(height: 40)
+            } else {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.down")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                        .padding(7)
+                        .frame(maxWidth: .infinity)
+                        .fontWeight(.semibold)
+                }
+            }
+        }
+        .background(showDropArea ? .black : .clear)
+        .tint(Color.myAccentColor)
+        .dropDestination(for: URL.self) { items, _ in
+            handleUrlDrop(items)
+            return true
+        } isTargeted: { targeted in
+            withAnimation {
+                isDragOver = targeted
+            }
+        }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: showDropArea)
+    }
+
+    var dropAreaContent: some View {
+        ZStack {
+            let size: CGFloat = 20
+
+            if isLoading {
+                ProgressView()
+            } else if isSuccess == true {
+                Image(systemName: "checkmark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+            } else if isSuccess == false {
+                Image(systemName: "xmark")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: size, height: size)
+            } else {
+                VStack {
+                    Image(systemName: Const.queueTagSF)
+                    Text("dropVideoUrlsHere")
+                }
+            }
+        }
+    }
+
+    func handleSuccessChange() {
+        if isSuccess != nil {
+            Task {
+                await Task.sleep(s: 1)
+                await MainActor.run {
+                    withAnimation {
+                        isSuccess = nil
+                    }
+                }
+            }
+        }
+    }
+
+    func handleUrlDrop(_ urls: [URL]) {
+        print("handleUrlDrop inbox", urls)
+        withAnimation {
+            isLoading = true
+        }
+        let container = modelContext.container
+        let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
+        Task {
+            let success: ()? = try? await task.value
+            await MainActor.run {
+                withAnimation {
+                    self.isSuccess = success != nil
+                    self.isLoading = false
+                }
             }
         }
     }

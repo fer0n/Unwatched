@@ -19,7 +19,7 @@ struct AddToLibraryView: View {
         Button(action: {
             navManager.showBrowserSheet = true
         }, label: {
-            Label("browseFeeds", systemImage: "plus.circle.fill")
+            Label("browseFeeds", systemImage: "plus")
         })
         HStack {
             TextField("enterUrls", text: $addText)

@@ -118,7 +118,7 @@ class VideoService {
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
-            try await repo.addForeignVideo(from: urls, in: videoPlacement, at: index, addImage: addImage)
+            try await repo.addForeignVideos(from: urls, in: videoPlacement, at: index, addImage: addImage)
         }
         return task
     }

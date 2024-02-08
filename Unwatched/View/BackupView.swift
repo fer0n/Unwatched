@@ -131,7 +131,7 @@ struct BackupView: View {
         let container = modelContext.container
         let task = UserDataService.saveToIcloud(container)
         Task {
-            await task.value
+            try await task.value
             await MainActor.run {
                 self.getAllIcloudFiles()
                 isExporting = false
