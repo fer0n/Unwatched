@@ -234,7 +234,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Browse Feeds"
+            "value" : "Add Feeds"
           }
         }
       }
@@ -367,6 +367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drop RSS feed/channel URLs here or use the \"Browse Feeds\" button above."
+          }
+        }
+      }
+    },
+    "dropVideoUrlsHere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Videos To Queue"
           }
         }
       }
@@ -787,6 +797,9 @@
           }
         }
       }
+    },
+    "noYoutubeIdFound" : {
+
     },
     "page" : {
       "localizations" : {

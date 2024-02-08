@@ -84,7 +84,7 @@ struct UserDataService {
         return nil
     }
 
-    static func saveToIcloud(_ container: ModelContainer) -> Task<(), Never> {
+    static func saveToIcloud(_ container: ModelContainer) -> Task<(), Error> {
         return Task {
             guard let data = self.exportFile(container) else {
                 print("no data when trying to save")
@@ -99,6 +99,7 @@ struct UserDataService {
                 try data.write(to: filename)
             } catch {
                 print("saveToIcloud: \(error)")
+                throw error
             }
         }
     }

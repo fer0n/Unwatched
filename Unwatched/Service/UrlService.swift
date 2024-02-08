@@ -30,7 +30,14 @@ struct UrlService {
     static func getYoutubeIdFromUrl(url: URL) -> String? {
         // https://www.youtube.com/watch?v=epBbbysk5cU
         let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        return urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value
+        if let id = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value {
+            return id
+        }
+        // https://youtu.be/dtp6b76pMak
+        // https://m.youtube.com/shorts/jH_QIBtX1gY
+        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))([^\/\?\n]+)|youtu.be\/([^\/\?\n]+))"#
+        let res = url.absoluteString.matching(regex: regex)
+        return res
     }
 
     static func isYoutubeFeedUrl(url: URL) -> Bool {
@@ -83,7 +90,8 @@ struct UrlService {
         // https://www.youtube.com/watch?v=epBbbysk5cU
         // https://www.m.youtube.com/watch?v=epBbbysk5cU
         // https://youtu.be/dtp6b76pMak
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/watch\?v=\w+|youtu.be\/\w+))"#
+        // https://m.youtube.com/shorts/jH_QIBtX1gY
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))[^\/\?\n]+|youtu.be\/[^\/\?\n]+))"#
         let matches = text.matchingMultiple(regex: regex)
         if let matches = matches {
             let urls = matches.compactMap { URL(string: $0) }

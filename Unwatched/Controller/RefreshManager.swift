@@ -51,9 +51,12 @@ import SwiftData
         }
 
         if let container = container {
-            _ = UserDataService.saveToIcloud(container)
-            UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-            print("saved backup")
+            let task = UserDataService.saveToIcloud(container)
+            Task {
+                try await task.value
+                UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
+                print("saved backup")
+            }
         }
     }
 
