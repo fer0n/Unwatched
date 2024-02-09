@@ -334,17 +334,18 @@ actor VideoActor {
         }
     }
 
-    func clearEntries(from videoId: PersistentIdentifier) throws {
+    func clearEntries(from videoId: PersistentIdentifier, updateCleared: Bool = false) throws {
         if let video = modelContext.model(for: videoId) as? Video {
-            clearEntries(from: video)
+            clearEntries(from: video, updateCleared: updateCleared)
             try modelContext.save()
         }
     }
 
-    private func clearEntries(from video: Video, except model: (any PersistentModel.Type)? = nil) {
+    private func clearEntries(from video: Video,
+                              except model: (any PersistentModel.Type)? = nil,
+                              updateCleared: Bool = false) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            inboxEntry.video?.clearedDate = .now
-            modelContext.delete(inboxEntry)
+            VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
             VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
@@ -430,13 +431,14 @@ actor VideoActor {
 
     static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
         let deletedOrder = queueEntry.order
-        queueEntry.video?.clearedDate = .now
         modelContext.delete(queueEntry)
         VideoActor.updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
     }
 
-    private static func deleteInboxEntry(entry: InboxEntry, modelContext: ModelContext) {
-        entry.video?.clearedDate = .now
+    static func deleteInboxEntry(_ entry: InboxEntry, updateCleared: Bool = false, modelContext: ModelContext) {
+        if updateCleared {
+            entry.video?.clearedInboxDate = .now
+        }
         modelContext.delete(entry)
     }
 

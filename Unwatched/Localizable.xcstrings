@@ -270,12 +270,12 @@
         }
       }
     },
-    "clearedDate" : {
+    "clearedInboxDate" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last Cleared Date"
+            "value" : "Last Cleared from Inbox"
           }
         }
       }

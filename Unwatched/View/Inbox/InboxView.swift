@@ -36,13 +36,7 @@ struct InboxView: View {
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(
-                                        video: video,
-                                        onClear: {
-                                            VideoService.deleteInboxEntry(
-                                                entry,
-                                                modelContext: modelContext
-                                            )
-                                        }
+                                        video: video
                                     )
                                 }
                             }
