@@ -32,9 +32,9 @@ struct VideoListView: View {
 
     static func getVideoSorting(_ sort: VideoSorting?) -> [SortDescriptor<Video>] {
         switch sort {
-        case .clearedDate:
+        case .clearedInboxDate:
             return [
-                SortDescriptor<Video>(\.clearedDate, order: .reverse),
+                SortDescriptor<Video>(\.clearedInboxDate, order: .reverse),
                 SortDescriptor<Video>(\.publishedDate, order: .reverse)
             ]
         default:

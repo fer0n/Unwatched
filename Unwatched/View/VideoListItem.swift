@@ -28,14 +28,10 @@ struct VideoListItem: View {
     // try to reproduce in mini project and ask on stackoverflow?
 
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more]
-    var onClear: (() -> Void)?
-    // TODO: in case the entry is present twice (probably better to avoid that in another way)
 
     init(video: Video,
-         videoSwipeActions: [VideoActions]? = nil,
-         onClear: (() -> Void)? = nil) {
+         videoSwipeActions: [VideoActions]? = nil) {
         self.video = video
-        self.onClear = onClear
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
         }
@@ -53,7 +49,6 @@ struct VideoListItem: View {
         self.hasInboxEntry = hasInboxEntry
         self.hasQueueEntry = hasQueueEntry
         self.watched = watched
-        self.onClear = onClear
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
         }
@@ -266,10 +261,10 @@ struct VideoListItem: View {
     }
 
     func clearVideoEverywhere() {
-        onClear?()
         let order = video.queueEntry?.order
         let task = VideoService.clearFromEverywhere(
             video,
+            updateCleared: true,
             modelContext: modelContext
         )
         handlePotentialQueueChange(after: task, order: order)

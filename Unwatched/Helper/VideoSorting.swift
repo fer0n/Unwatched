@@ -8,12 +8,12 @@ import SwiftUI
 
 enum VideoSorting: Int, CustomStringConvertible, CaseIterable {
     case publishedDate
-    case clearedDate
+    case clearedInboxDate
 
     var description: String {
         switch self {
-        case .clearedDate:
-            return String(localized: "clearedDate")
+        case .clearedInboxDate:
+            return String(localized: "clearedInboxDate")
         case .publishedDate:
             return String(localized: "publishedDate")
         }
@@ -21,8 +21,8 @@ enum VideoSorting: Int, CustomStringConvertible, CaseIterable {
 
     var systemName: String {
         switch self {
-        case .clearedDate:
-            return "clock.badge.xmark"
+        case .clearedInboxDate:
+            return "tray.and.arrow.up.fill"
         case .publishedDate:
             return "calendar.badge.plus"
         }

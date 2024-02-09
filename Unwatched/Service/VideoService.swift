@@ -65,20 +65,21 @@ class VideoService {
     }
 
     static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
-        entry.video?.clearedDate = .now
-        modelContext.delete(entry)
+        VideoActor.deleteInboxEntry(entry, modelContext: modelContext)
     }
 
     static func deleteQueueEntry(_ entry: QueueEntry, modelContext: ModelContext) {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }
 
-    static func clearFromEverywhere(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
+    static func clearFromEverywhere(_ video: Video,
+                                    updateCleared: Bool = false,
+                                    modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoId = video.id
         let task = Task {
             let repo = VideoActor(modelContainer: container)
-            try await repo.clearEntries(from: videoId)
+            try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
         }
         return task
     }
