@@ -36,7 +36,9 @@ struct InboxView: View {
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(
-                                        video: video
+                                        video: video,
+                                        clearRole: .destructive,
+                                        queueRole: .destructive
                                     )
                                 }
                             }
