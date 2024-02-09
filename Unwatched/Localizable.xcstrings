@@ -402,6 +402,16 @@
         }
       }
     },
+    "emptyYoutubeId" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't parse YoutubeId from URL"
+          }
+        }
+      }
+    },
     "enterUrls" : {
       "localizations" : {
         "en" : {

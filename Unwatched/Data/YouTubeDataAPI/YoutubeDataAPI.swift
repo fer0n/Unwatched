@@ -79,6 +79,9 @@ class YoutubeDataAPI {
     }
 
     static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
+        if youtubeVideoId.isEmpty {
+            throw VideoError.noYoutubeId
+        }
         print("getYtVideoInfo")
         let apiUrl = "\(baseUrl)videos?key=\(apiKey)&id=\(youtubeVideoId)&part=snippet,contentDetails"
         print("apiUrl", apiUrl)

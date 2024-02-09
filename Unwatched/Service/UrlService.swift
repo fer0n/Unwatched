@@ -34,8 +34,14 @@ struct UrlService {
             return id
         }
         // https://youtu.be/dtp6b76pMak
+        let shortRegex = #"(?:https\:\/\/)?(?:www\.)?youtu\.be\/([^\s\/\?\n]+)"#
+        if let res = url.absoluteString.matching(regex: shortRegex) {
+            return res
+        }
+
         // https://m.youtube.com/shorts/jH_QIBtX1gY
-        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))([^\/\?\n]+)|youtu.be\/([^\/\?\n]+))"#
+        // https://www.youtube.com/watch?v=epBbbysk5cU
+        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))([^\s\/\?\n]+))"#
         let res = url.absoluteString.matching(regex: regex)
         return res
     }
