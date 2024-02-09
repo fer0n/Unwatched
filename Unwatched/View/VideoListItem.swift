@@ -24,17 +24,23 @@ struct VideoListItem: View {
     var hasInboxEntry: Bool?
     var hasQueueEntry: Bool?
     var watched: Bool?
+    var clearRole: ButtonRole?
+    var queueRole: ButtonRole?
     // TODO: see if there's a better way to fix the "label doesn't update from bg tasks" issue
     // try to reproduce in mini project and ask on stackoverflow?
 
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more]
 
     init(video: Video,
-         videoSwipeActions: [VideoActions]? = nil) {
+         videoSwipeActions: [VideoActions]? = nil,
+         clearRole: ButtonRole? = nil,
+         queueRole: ButtonRole? = nil) {
         self.video = video
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
         }
+        self.clearRole = clearRole
+        self.queueRole = queueRole
     }
 
     init(video: Video,
@@ -105,16 +111,20 @@ struct VideoListItem: View {
     func getLeadingSwipeActions() -> some View {
         Group {
             if videoSwipeActions.contains(.queueTop) {
-                Button(action: addVideoToTopQueue) {
-                    Image(systemName: "text.insert")
-                }
-                .tint(.teal)
+                Button(role: queueRole,
+                       action: addVideoToTopQueue,
+                       label: {
+                        Image(systemName: "text.insert")
+                       })
+                    .tint(.teal)
             }
             if videoSwipeActions.contains(.queueBottom) {
-                Button(action: addVideoToBottomQueue) {
-                    Image(systemName: "text.append")
-                }
-                .tint(.mint)
+                Button(role: queueRole,
+                       action: addVideoToBottomQueue,
+                       label: {
+                        Image(systemName: "text.append")
+                       })
+                    .tint(.mint)
             }
         }
     }
@@ -123,10 +133,12 @@ struct VideoListItem: View {
         return Group {
             if videoSwipeActions.contains(.clear) &&
                 (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
-                Button(action: clearVideoEverywhere) {
-                    Image(systemName: Const.clearSF)
-                }
-                .tint(.black)
+                Button(role: clearRole,
+                       action: clearVideoEverywhere,
+                       label: {
+                        Image(systemName: Const.clearSF)
+                       })
+                    .tint(.black)
             }
             if videoSwipeActions.contains(.more) {
                 Menu {
