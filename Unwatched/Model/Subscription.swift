@@ -55,7 +55,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 
     var toExport: SendableSubscription? {
         SendableSubscription(
-            persistendId: self.persistentModelID,
+            persistentId: self.persistentModelID,
             videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
@@ -71,7 +71,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 }
 
 struct SendableSubscription: Sendable, Codable {
-    var persistendId: PersistentIdentifier?
+    var persistentId: PersistentIdentifier?
     var videosIds = [Int]()
     var link: URL?
 
@@ -106,6 +106,20 @@ struct SendableSubscription: Sendable, Codable {
             youtubeChannelId: youtubeChannelId,
             youtubeUserName: youtubeUserName
         )
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case persistentId,
+             videosIds,
+             link,
+             title,
+             subscribedDate,
+             placeVideosIn,
+             isArchived,
+             customSpeedSetting,
+             mostRecentVideoDate,
+             youtubeChannelId,
+             youtubeUserName
     }
 }
 

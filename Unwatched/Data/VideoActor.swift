@@ -148,7 +148,7 @@ actor VideoActor {
             }
 
             for try await (sub, videos) in group {
-                if let subid = sub.persistendId, let modelSub = modelContext.model(for: subid) as? Subscription {
+                if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
                     try await loadVideos(for: modelSub, videos: videos, defaultPlacementInfo: placementInfo)
                 }
             }
