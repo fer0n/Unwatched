@@ -8,7 +8,7 @@ import SwiftUI
 import SwiftData
 
 @Observable class NavigationManager: Codable {
-    var showMenu = true
+    var showMenu = false
     var showBrowserSheet = false
     var tab = Tab.queue
     var showDescriptionDetail = false

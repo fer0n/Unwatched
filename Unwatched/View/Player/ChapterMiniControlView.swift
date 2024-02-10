@@ -13,6 +13,7 @@ struct ChapterMiniControlView: View {
     @State var triggerFeedback = false
 
     var setShowMenu: () -> Void
+    var showInfo: Bool = true
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -77,7 +78,7 @@ struct ChapterMiniControlView: View {
                     }
                 }
             }
-            if let video = player.video, !player.embeddingDisabled {
+            if showInfo, let video = player.video, !player.embeddingDisabled {
                 videoDescription(video, hasChapters)
             }
         }

@@ -7,16 +7,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.scenePhase) var scenePhase
-    @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
+    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
 
-    @State var navManager: NavigationManager = {
-        return loadNavigationManager()
-    }()
-    @State var player = PlayerManager()
-    @State var refresher = RefreshManager()
     @State var sheetPos = SheetPositionReader()
-    @State var imageCacheManager = ImageCacheManager()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -39,25 +34,40 @@ struct ContentView: View {
             set: { sheetPos.selectedDetent = $0 }
         )
 
+        let bigScreen = sizeClass == .regular
+
         GeometryReader { proxy in
+            let isLandscape = proxy.size.width > proxy.size.height
+            let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+
             ZStack {
-                VideoPlayer(showMenu: $navManager.showMenu)
-                    .environment(sheetPos)
-                MiniPlayerView()
-                    .environment(sheetPos)
-                if !videoExists {
-                    VideoNotAvailableView()
+                layout {
+                    VideoPlayer(showMenu: bigScreen ? .constant(false) : $navManager.showMenu,
+                                compactSize: bigScreen,
+                                showInfo: isLandscape && bigScreen,
+                                showFullscreenButton: bigScreen)
+                    if bigScreen {
+                        MenuView()
+                            .frame(maxWidth: isLandscape
+                                    ? min(proxy.size.width * 0.4, 400)
+                                    : nil)
+                    }
+                }
+                if !bigScreen {
+                    MiniPlayerView()
+                    if !videoExists {
+                        VideoNotAvailableView()
+                    }
                 }
             }
+            .environment(sheetPos)
             .background(Color.backgroundColor)
             .environment(\.colorScheme, .dark)
             .onAppear {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
-            .environment(player)
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 ChapterDescriptionView()
-                    .environment(player)
                     .presentationDetents(chapterViewDetent)
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.playerControlHeight))
@@ -65,89 +75,20 @@ struct ContentView: View {
             }
             .sheet(isPresented: $navManager.showMenu) {
                 MenuView()
-                    .environment(refresher)
                     .presentationDetents(detents, selection: selectedDetent)
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.maxSheetHeight))
                     )
                     .presentationContentInteraction(.scrolls)
                     .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                    .environment(player)
                     .presentationDragIndicator(navManager.searchFocused
                                                 ? .hidden
                                                 : .visible)
             }
         }
-        .environment(navManager)
-        .environment(imageCacheManager)
-        .onAppear {
-            let container = modelContext.container
-            refresher.container = container
-            player.container = container
-            restoreNowPlayingVideo()
-            refresher.handleAutoBackup()
-        }
         .innerSizeTrackerModifier(onChange: { newSize in
             sheetPos.sheetHeight = newSize.height
         })
-        .onChange(of: scenePhase) {
-            if scenePhase == .active {
-                print("Active")
-                refresher.refreshOnStartup()
-            } else if scenePhase == .background {
-                print("background")
-                saveData()
-            }
-        }
-    }
-
-    func restoreNowPlayingVideo() {
-        print("restoreVideo")
-        var video: Video?
-
-        if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
-           let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) {
-            if player.video?.persistentModelID == videoId {
-                // current video is the one stored, all good
-                return
-            }
-            video = modelContext.model(for: videoId) as? Video
-        }
-
-        if let video = video {
-            player.setNextVideo(video, .nextUp)
-        } else {
-            player.loadTopmostVideoFromQueue()
-        }
-    }
-
-    static func loadNavigationManager() -> NavigationManager {
-        print("loadNavigationManager")
-        if let savedNavManager = UserDefaults.standard.data(forKey: Const.navigationManager) {
-            if let loadedNavManager = try? JSONDecoder().decode(
-                NavigationManager.self,
-                from: savedNavManager
-            ) {
-                return loadedNavManager
-            } else {
-                print("navmanager not found")
-            }
-        }
-        return NavigationManager()
-    }
-
-    func saveData() {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(navManager) {
-            UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
-        }
-
-        let videoId = player.video?.persistentModelID
-        let data = try? JSONEncoder().encode(videoId)
-        UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
-        let container = modelContext.container
-        imageCacheManager.persistCache(container)
-        print("saved state")
     }
 }
 
@@ -158,5 +99,8 @@ struct ContentView_Previews: PreviewProvider {
             .modelContainer(DataController.previewContainer)
             .environment(NavigationManager.getDummy())
             .environment(Alerter())
+            .environment(PlayerManager())
+            .environment(ImageCacheManager())
+            .environment(RefreshManager())
     }
 }

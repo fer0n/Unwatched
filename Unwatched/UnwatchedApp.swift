@@ -23,7 +23,7 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SetupView()
                 .accentColor(.myAccentColor)
                 .environment(alerter)
                 .alert(isPresented: $alerter.isShowingAlert) {

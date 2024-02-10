@@ -14,6 +14,7 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
     @GestureState private var dragState: CGFloat = 0
     @State var continuousPlayWorkaround: Bool = false
@@ -22,48 +23,61 @@ struct VideoPlayer: View {
 
     @Binding var showMenu: Bool
 
+    var compactSize = false
+    var showInfo = true
+    var showFullscreenButton = false
+
     var body: some View {
         @Bindable var player = player
+        let layout = compactSize
+            ? AnyLayout(HStackLayout(spacing: 25))
+            : AnyLayout(VStackLayout(spacing: 25))
 
         VStack(spacing: 0) {
-
-            if player.embeddingDisabled {
-                PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
-                    .frame(maxHeight: .infinity)
-                    .frame(maxWidth: .infinity)
-                    .mask(LinearGradient(gradient: Gradient(
-                        stops: [
-                            .init(color: .black, location: 0),
-                            .init(color: .black, location: 0.9),
-                            .init(color: .clear, location: 1)
-                        ]
-                    ), startPoint: .top, endPoint: .bottom))
-            } else {
+            if player.video != nil {
                 ZStack {
-                    if player.video != nil {
-                        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
+                    if player.embeddingDisabled {
+                        PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
+                            .frame(maxHeight: .infinity)
+                            .frame(maxWidth: .infinity)
+                            .mask(LinearGradient(gradient: Gradient(
+                                stops: [
+                                    .init(color: .black, location: 0),
+                                    .init(color: .black, location: 0.9),
+                                    .init(color: .clear, location: 1)
+                                ]
+                            ), startPoint: .top, endPoint: .bottom))
                     } else {
-                        Rectangle()
-                            .fill(Color.backgroundColor)
+                        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
+                            .aspectRatio(16/9, contentMode: .fit)
+                            .frame(maxWidth: .infinity)
                     }
                 }
-                .aspectRatio(16/9, contentMode: .fit)
-                .frame(maxWidth: .infinity)
+                // force reload if value changed (requires settings update
+                .id("videoPlayer-\(playVideoFullscreen)")
+                .onChange(of: playVideoFullscreen) {
+                    player.handleHotSwap()
+                }
+            } else {
+                Rectangle()
+                    .fill(Color.backgroundColor)
+                    .aspectRatio(16/9, contentMode: .fit)
+                    .frame(maxWidth: .infinity)
             }
 
             VStack(spacing: 10) {
-                if !player.embeddingDisabled {
+                if !player.embeddingDisabled && !compactSize {
                     Spacer()
                 }
 
-                ChapterMiniControlView(setShowMenu: setShowMenu)
+                ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
 
-                if !player.embeddingDisabled {
+                if !player.embeddingDisabled && !compactSize {
                     Spacer()
                     Spacer()
                 }
 
-                VStack(spacing: 25) {
+                layout {
                     HStack {
                         SpeedControlView(selectedSpeed: $player.playbackSpeed)
                         customSettingsButton
@@ -75,53 +89,24 @@ struct VideoPlayer: View {
                         playButton
                         continuousPlayButton
                             .frame(maxWidth: .infinity)
+                        if showFullscreenButton {
+                            fullscreenButton
+                            Spacer()
+                        }
                     }
                     .padding(.horizontal, 10)
                 }
-                .padding(.horizontal, 5)
+                .padding(.horizontal, compactSize ? 20 : 5)
 
-                if !player.embeddingDisabled {
+                if !player.embeddingDisabled && !compactSize {
                     Spacer()
                     Spacer()
                 }
 
-                HStack {
-                    // center menu button
-                    Image(systemName: "link")
-                        .opacity(0)
-                        .frame(maxWidth: .infinity)
-
-                    Button {
-                        setShowMenu()
-                    } label: {
-                        VStack {
-                            Image(systemName: "chevron.up")
-                                .font(.system(size: 30))
-                            Text("showMenu")
-                                .font(.caption)
-                                .textCase(.uppercase)
-                                .padding(.bottom, 3)
-                        }
-                        .padding(.horizontal)
-                    }
-
-                    Button {
-                        if let url = player.video?.url {
-                            UIApplication.shared.open(url)
-                        }
-                    } label: {
-                        Image(systemName: "link")
-                            .font(.system(size: 20))
-                    }
-                    .padding(5)
-                    .contextMenu {
-                        if let url =  player.video?.url {
-                            ShareLink(item: url)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
+                if !compactSize {
+                    footer
+                        .padding(.horizontal, 30)
                 }
-                .padding(.horizontal, 30)
             }
             .innerSizeTrackerModifier(onChange: { size in
                 sheetPos.playerControlHeight = size.height
@@ -129,7 +114,9 @@ struct VideoPlayer: View {
         }
         .contentShape(Rectangle())
         .simultaneousGesture(
-            DragGesture(minimumDistance: 30, coordinateSpace: .local)
+            compactSize
+                ? nil
+                : DragGesture(minimumDistance: 30, coordinateSpace: .local)
                 .updating($dragState) { value, state, _ in
                     state = value.translation.height
                     if state < -30 {
@@ -145,6 +132,46 @@ struct VideoPlayer: View {
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .sensoryFeedback(Const.sensoryFeedback, trigger: continuousPlay)
+    }
+
+    @MainActor
+    var footer: some View {
+        HStack {
+            // center menu button
+            Image(systemName: "link")
+                .opacity(0)
+                .frame(maxWidth: .infinity)
+
+            Button {
+                setShowMenu()
+            } label: {
+                VStack {
+                    Image(systemName: "chevron.up")
+                        .font(.system(size: 30))
+                    Text("showMenu")
+                        .font(.caption)
+                        .textCase(.uppercase)
+                        .padding(.bottom, 3)
+                }
+                .padding(.horizontal)
+            }
+
+            Button {
+                if let url = player.video?.url {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                Image(systemName: "link")
+                    .font(.system(size: 20))
+            }
+            .padding(5)
+            .contextMenu {
+                if let url =  player.video?.url {
+                    ShareLink(item: url)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
     }
 
     var watchedButton: some View {
@@ -183,7 +210,9 @@ struct VideoPlayer: View {
             player.isPlaying.toggle()
             hapticToggle.toggle()
         } label: {
-            let size: Double = player.embeddingDisabled ? 70 : 90
+            let size: Double = (player.embeddingDisabled || compactSize)
+                ? 70
+                : 90
             Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
                 .frame(width: size, height: size)
@@ -201,6 +230,15 @@ struct VideoPlayer: View {
                 video, modelContext: modelContext
             )
         }
+    }
+
+    var fullscreenButton: some View {
+        Toggle(isOn: $playVideoFullscreen) {
+            Image(systemName: playVideoFullscreen
+                    ? "rectangle.inset.filled"
+                    : "rectangle.slash.fill")
+        }
+        .toggleStyle(OutlineToggleStyle())
     }
 
     func handleVideoEnded() {
