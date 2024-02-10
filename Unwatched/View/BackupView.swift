@@ -45,7 +45,8 @@ struct BackupView: View {
             }
 
             Button {
-                saveToIcloud()
+                let deviceName = UIDevice.current.name
+                saveToIcloud(deviceName)
             } label: {
                 Text("backupNow")
             }
@@ -59,11 +60,18 @@ struct BackupView: View {
             if !fileNames.isEmpty {
                 Section("latestUnwatchedBackups") {
                     ForEach(fileNames, id: \.self) { file in
-                        if let date = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate {
-                            Button {
-                                fileToBeRestored = IdentifiableURL(url: file)
-                            } label: {
-                                Text(date.formatted())
+                        let (device, date) = getFileInfo(file)
+                        Button {
+                            fileToBeRestored = IdentifiableURL(url: file)
+                        } label: {
+                            VStack(alignment: .leading) {
+                                Text(date ?? "unknown date")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if let device = device {
+                                    Text(device)
+                                        .font(.caption)
+                                        .foregroundStyle(.gray)
+                                }
                             }
                         }
                     }
@@ -126,10 +134,20 @@ struct BackupView: View {
         }
     }
 
-    func saveToIcloud() {
+    func getFileInfo(_ file: URL) -> (deviceName: String?, dateString: String?) {
+        let fileName = file.lastPathComponent
+        let deviceName = fileName.contains("_")
+            ? fileName.components(separatedBy: "_").first
+            : nil
+        let date = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate
+        let dateString = date?.formatted()
+        return (deviceName, dateString)
+    }
+
+    func saveToIcloud(_ deviceName: String) {
         isExporting = true
         let container = modelContext.container
-        let task = UserDataService.saveToIcloud(container)
+        let task = UserDataService.saveToIcloud(deviceName, container)
         Task {
             try await task.value
             await MainActor.run {

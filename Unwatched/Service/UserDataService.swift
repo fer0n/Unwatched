@@ -84,14 +84,14 @@ struct UserDataService {
         return nil
     }
 
-    static func saveToIcloud(_ container: ModelContainer) -> Task<(), Error> {
+    static func saveToIcloud(_ deviceName: String, _ container: ModelContainer) -> Task<(), Error> {
         return Task {
             guard let data = self.exportFile(container) else {
                 print("no data when trying to save")
                 return
             }
             // store file at icloud documents folder
-            guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName()) else {
+            guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName)) else {
                 print("no filename could be created")
                 return
             }
@@ -125,11 +125,11 @@ struct UserDataService {
         return nil
     }
 
-    static func getFileName() -> String {
+    static func getFileName(_ deviceName: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd-hh-mm"
         let dateString = formatter.string(from: Date())
-        return "\(dateString).unwatchedbackup"
+        return "\(deviceName)_\(dateString).unwatchedbackup"
     }
 }
 
