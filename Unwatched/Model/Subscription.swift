@@ -109,8 +109,7 @@ struct SendableSubscription: Sendable, Codable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case persistentId,
-             videosIds,
+        case videosIds,
              link,
              title,
              subscribedDate,
