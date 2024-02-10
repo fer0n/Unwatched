@@ -33,7 +33,7 @@ import SwiftData
         }
     }
 
-    func handleAutoBackup() {
+    func handleAutoBackup(_ deviceName: String) {
         print("handleAutoBackup")
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
@@ -51,7 +51,7 @@ import SwiftData
         }
 
         if let container = container {
-            let task = UserDataService.saveToIcloud(container)
+            let task = UserDataService.saveToIcloud(deviceName, container)
             Task {
                 try await task.value
                 UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
