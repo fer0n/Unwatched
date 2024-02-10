@@ -20,9 +20,7 @@ struct PlayerWebView: UIViewRepresentable {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
-        if !playVideoFullscreen {
-            webViewConfig.allowsInlineMediaPlayback = true
-        }
+        webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
 
         let coordinator = context.coordinator
         coordinator.previousState.videoId = player.video?.youtubeId

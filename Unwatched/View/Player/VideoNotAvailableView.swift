@@ -9,6 +9,8 @@ import SwiftUI
 struct VideoNotAvailableView: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
+    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
@@ -44,11 +46,11 @@ struct VideoNotAvailableView: View {
         )
         .ignoresSafeArea(.all)
         .onTapGesture {
-            navManager.showMenu = true
+            showMenu()
         }
         .onAppear {
             if player.video == nil {
-                navManager.showMenu = true
+                showMenu()
             }
         }
         .gesture(
@@ -56,10 +58,16 @@ struct VideoNotAvailableView: View {
                 .updating($dragState) { value, state, _ in
                     state = value.translation.height
                     if state < -30 {
-                        navManager.showMenu = true
+                        showMenu()
                     }
                 }
         )
+    }
+
+    func showMenu() {
+        if sizeClass == .compact {
+            navManager.showMenu = true
+        }
     }
 }
 

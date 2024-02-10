@@ -75,6 +75,7 @@
 		88BABABE2B62932C001FA0A4 /* CachedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABABD2B62932C001FA0A4 /* CachedImageView.swift */; };
 		88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABABF2B629505001FA0A4 /* ImageService.swift */; };
 		88BABAC22B630EF8001FA0A4 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABAC12B630EF8001FA0A4 /* ImageCacheManager.swift */; };
+		88BDC3A32B76A9BF00656D63 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3A22B76A9BF00656D63 /* SetupView.swift */; };
 		88BE6C2F2B72089000456777 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE6C2E2B72089000456777 /* YouTubePlayerView.swift */; };
 		88BE6C312B723B9900456777 /* PlayerWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE6C302B723B9900456777 /* PlayerWebView.swift */; };
 		88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205272B516D2A008EC51D /* ChapterListItem.swift */; };
@@ -179,6 +180,7 @@
 		88BABABD2B62932C001FA0A4 /* CachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageView.swift; sourceTree = "<group>"; };
 		88BABABF2B629505001FA0A4 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		88BABAC12B630EF8001FA0A4 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		88BDC3A22B76A9BF00656D63 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		88BE6C2E2B72089000456777 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
 		88BE6C302B723B9900456777 /* PlayerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebView.swift; sourceTree = "<group>"; };
 		88C205272B516D2A008EC51D /* ChapterListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListItem.swift; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				88BABABD2B62932C001FA0A4 /* CachedImageView.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
 				88DFC0B02B44843A001895C8 /* ContentView.swift */,
+				88BDC3A22B76A9BF00656D63 /* SetupView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 				881E513F2B59D9A8006384E4 /* Task.swift in Sources */,
 				88DFC0C02B4489C2001895C8 /* VideoListItem.swift in Sources */,
 				8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */,
+				88BDC3A32B76A9BF00656D63 /* SetupView.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
 				88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */,
@@ -826,7 +830,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -871,7 +875,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;

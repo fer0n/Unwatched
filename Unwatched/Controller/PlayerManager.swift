@@ -5,6 +5,7 @@ enum VideoSource {
     case continuousPlay
     case nextUp
     case userInteraction
+    case hotSwap
 }
 
 @Observable class PlayerManager {
@@ -15,10 +16,11 @@ enum VideoSource {
     var nextChapter: Chapter?
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
-
     var videoSource: VideoSource = .userInteraction
 
     var container: ModelContainer?
+
+    @ObservationIgnored var previousIsPlaying = false
 
     var video: Video? {
         didSet {
@@ -80,13 +82,13 @@ enum VideoSource {
     @ObservationIgnored private var currentEndTime: Double?
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        print("updateElapsedTime")
+        print("updateElapsedTime", currentTime)
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             return
         }
 
-        var newTime = time ?? currentTime
+        let newTime = time ?? currentTime
         if let time = newTime, video?.elapsedSeconds != time {
             video?.elapsedSeconds = time
         }
@@ -247,6 +249,7 @@ enum VideoSource {
     }
 
     func handleAutoStart() {
+        print("handleAutoStart", videoSource)
         switch videoSource {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -260,7 +263,19 @@ enum VideoSource {
             if  autoPlay {
                 play()
             }
+        case .hotSwap:
+            if previousIsPlaying {
+                play()
+            }
         }
+    }
+
+    func handleHotSwap() {
+        print("handleHotSwap")
+        previousIsPlaying = isPlaying
+        pause()
+        self.videoSource = .hotSwap
+        updateElapsedTime()
     }
 
     static func getDummy() -> PlayerManager {
@@ -268,7 +283,7 @@ enum VideoSource {
         player.video = Video.getDummy()
         player.currentTime = 10
         player.currentChapter = Chapter.getDummy()
-        player.embeddingDisabled = true
+        // player.embeddingDisabled = true
         return player
     }
 
