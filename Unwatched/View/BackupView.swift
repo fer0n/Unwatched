@@ -116,7 +116,7 @@ struct BackupView: View {
                       allowedContentTypes: [backupType]) { result in
             switch result {
             case .success(let file):
-                importFile(file)
+                fileToBeRestored = IdentifiableURL(url: file)
             case .failure(let error):
                 print(error.localizedDescription)
             }
