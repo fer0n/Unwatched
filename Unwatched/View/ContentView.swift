@@ -44,7 +44,7 @@ struct ContentView: View {
                 layout {
                     VideoPlayer(showMenu: bigScreen ? .constant(false) : $navManager.showMenu,
                                 compactSize: bigScreen,
-                                showInfo: isLandscape && bigScreen,
+                                showInfo: !bigScreen || (isLandscape && bigScreen),
                                 showFullscreenButton: bigScreen)
                     if bigScreen {
                         MenuView()
@@ -72,6 +72,7 @@ struct ContentView: View {
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.playerControlHeight))
                     )
+                    .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $navManager.showMenu) {
                 MenuView()
