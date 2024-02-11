@@ -50,9 +50,12 @@ struct AddToLibraryView: View {
         ZStack {
             let isLoading = subManager.isLoading || isLoadingVideos
             let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
+            let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
             if isLoading {
                 ProgressView()
+            } else if failed {
+                Image(systemName: "xmark")
             } else if isSuccess {
                 Image(systemName: "checkmark")
             } else if addText.isEmpty {
@@ -87,7 +90,7 @@ struct AddToLibraryView: View {
     }
 
     func delayedVideoCheckmarkReset() {
-        if addVideosSuccess != true {
+        if addVideosSuccess == nil {
             return
         }
         addText = ""
@@ -101,7 +104,7 @@ struct AddToLibraryView: View {
     }
 
     func delayedSubscriptionCheckmarkReset() {
-        if subManager.isSubscribedSuccess != true {
+        if subManager.isSubscribedSuccess == nil {
             return
         }
         addText = ""
@@ -129,9 +132,10 @@ struct AddToLibraryView: View {
                     }
                 } catch {
                     print(error)
-                }
-                await MainActor.run {
-                    isLoadingVideos = false
+                    await MainActor.run {
+                        addVideosSuccess = false
+                        isLoadingVideos = false
+                    }
                 }
             }
         }
