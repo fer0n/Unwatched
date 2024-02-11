@@ -4,7 +4,7 @@ import SwiftData
 class SubscriptionService {
     static func addSubscriptions(from urls: [URL], modelContainer: ModelContainer) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.addSubscriptions(from: urls)
+        return try await repo.addSubscriptions(urls: urls)
     }
 
     static func addSubscriptions(
@@ -12,7 +12,7 @@ class SubscriptionService {
         modelContainer: ModelContainer
     ) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.addSubscriptions(from: sendableSubs)
+        return try await repo.addSubscriptions(sendableSubs: sendableSubs)
     }
 
     static func addSubscription(channelId: String? = nil,

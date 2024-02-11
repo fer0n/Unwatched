@@ -85,7 +85,7 @@ struct ImportSubscriptionsView: View {
                     VStack {
                         Spacer()
                         Button(action: startImport) {
-                            Text("importSelection")
+                            Text("Import \(selection.count) \(selection.count == 1 ? "subscription" : "subscriptions")")
                         }
                         .padding(importButtonPadding ? 10 : 0)
                         .buttonStyle(.borderedProminent)
@@ -161,6 +161,8 @@ struct ImportSubscriptionsView: View {
             let sub = parseRow(row)
             sendableSubs.append(sub)
         }
+        sendableSubs.sort(by: { $0.title < $1.title })
+        selection = Set(sendableSubs)
     }
 
     func parseRow(_ row: String) -> SendableSubscription {

@@ -29,7 +29,7 @@ actor SubscriptionActor {
 
         // if it doesn't exist get url and run the regular subscription flow
         let feedUrl = try UrlService.getFeedUrlFromChannelId(channelId)
-        let subStates = try await addSubscriptions(from: [feedUrl])
+        let subStates = try await addSubscriptions(urls: [feedUrl])
         if let first = subStates.first {
             if !(first.success || first.alreadyAdded) {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
@@ -38,36 +38,24 @@ actor SubscriptionActor {
         try modelContext.save()
     }
 
-    func addSubscriptions(from urls: [URL]) async throws -> [SubscriptionState] {
+    func addSubscriptions(
+        urls: [URL] = [],
+        sendableSubs: [SendableSubscription] = []
+    ) async throws -> [SubscriptionState] {
         var subscriptionStates = [SubscriptionState]()
 
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
-            for url in urls {
-                group.addTask {
-                    return await self.loadSubscriptionInfo(from: url, unarchiveSubIfAvailable: true)
+            if !urls.isEmpty {
+                for url in urls {
+                    group.addTask {
+                        return await self.loadSubscriptionInfo(from: url, unarchiveSubIfAvailable: true)
+                    }
                 }
-            }
-
-            for try await (subState, sendableSub) in group {
-                subscriptionStates.append(subState)
-                if let sendableSub = sendableSub {
-                    let sub = sendableSub.createSubscription()
-                    modelContext.insert(sub)
-                }
-            }
-        }
-        try modelContext.save()
-        return subscriptionStates
-    }
-
-    // TODO: combine this with the other add sub?
-    func addSubscriptions(from sendableSubs: [SendableSubscription]) async throws -> [SubscriptionState] {
-        var subscriptionStates = [SubscriptionState]()
-
-        try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
-            for sub in sendableSubs {
-                group.addTask {
-                    return await self.verifySubscriptionInfo(sub, unarchiveSubIfAvailable: true)
+            } else if !sendableSubs.isEmpty {
+                for sub in sendableSubs {
+                    group.addTask {
+                        return await self.verifySubscriptionInfo(sub, unarchiveSubIfAvailable: true)
+                    }
                 }
             }
 

@@ -550,6 +550,16 @@
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
     },
+    "Import %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Import %1$lld %2$@"
+          }
+        }
+      }
+    },
     "importBackup" : {
       "localizations" : {
         "en" : {
@@ -564,6 +574,7 @@
 
     },
     "importSelection" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
