@@ -20,6 +20,7 @@ struct VideoPlayer: View {
     @State var continuousPlayWorkaround: Bool = false
     @State var isSubscribedSuccess: Bool?
     @State var hapticToggle: Bool = false
+    @State var shareText: MyShareLink?
 
     @Binding var showMenu: Bool
 
@@ -156,21 +157,24 @@ struct VideoPlayer: View {
                 .padding(.horizontal)
             }
 
-            Button {
-                if let url = player.video?.url {
-                    UIApplication.shared.open(url)
+            Image(systemName: "link")
+                .font(.system(size: 20))
+                .onTapGesture {
+                    if let url = player.video?.url {
+                        UIApplication.shared.open(url)
+                    }
                 }
-            } label: {
-                Image(systemName: "link")
-                    .font(.system(size: 20))
-            }
-            .padding(5)
-            .contextMenu {
-                if let url =  player.video?.url {
-                    ShareLink(item: url)
+                .onLongPressGesture {
+                    if let url =  player.video?.url {
+                        shareText = MyShareLink(url: url)
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity)
+        }
+        .sheet(item: $shareText) { shareText in
+            ActivityView(url: shareText.url)
+                .presentationDetents([.medium, .large])
+                .ignoresSafeArea(.all)
         }
     }
 
