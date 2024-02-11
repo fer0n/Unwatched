@@ -34,7 +34,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Feeds via Browser"
+            "value" : "Add Feeds"
           }
         }
       }
@@ -125,17 +125,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All Videos"
-          }
-        }
-      }
-    },
-    "allVideosSearch" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search All Videos"
           }
         }
       }
@@ -372,6 +361,16 @@
         }
       }
     },
+    "deselectAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deselect All"
+          }
+        }
+      }
+    },
     "doNothing" : {
       "localizations" : {
         "en" : {
@@ -432,12 +431,32 @@
         }
       }
     },
-    "errorImportingMessage" : {
+    "errorImportingMessageChannelUrl" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you entered a YouTube channel URL, try adding the RSS feed directly, or use the \"+\" button in the Library."
+            "value" : "If you entered a YouTube channel URL, try adding the RSS feed directly."
+          }
+        }
+      }
+    },
+    "errorImportingMessageCsv" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The channels may no longer exist or don't provide an RSS feed."
+          }
+        }
+      }
+    },
+    "errorImportingTryBrowser" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can try to search for the missing channel via the in-app Browser (Library → Browser)"
           }
         }
       }
@@ -518,6 +537,16 @@
         }
       }
     },
+    "howToExportYoutubeSubscriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You first need to export your subscriptions from YouTube. \n\nYou can request your subscription data via YouTube Takeout. If you only specify \"Subscriptions\" for the export it should be much faster."
+          }
+        }
+      }
+    },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error"
     },
@@ -527,6 +556,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Backup"
+          }
+        }
+      }
+    },
+    "importing %lld subscriptions" : {
+
+    },
+    "importSelection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Selection"
+          }
+        }
+      }
+    },
+    "importSubscriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Subscriptions"
           }
         }
       }
@@ -981,6 +1033,26 @@
         }
       }
     },
+    "selectAll" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select All"
+          }
+        }
+      }
+    },
+    "selectFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select File"
+          }
+        }
+      }
+    },
     "settings" : {
       "localizations" : {
         "en" : {
@@ -1231,6 +1303,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        }
+      }
+    },
+    "youtubeTakeout" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open YouTube Takeout"
           }
         }
       }

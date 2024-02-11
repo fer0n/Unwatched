@@ -70,7 +70,7 @@ final class Subscription: CustomStringConvertible, Exportable {
     }
 }
 
-struct SendableSubscription: Sendable, Codable {
+struct SendableSubscription: Sendable, Codable, Hashable {
     var persistentId: PersistentIdentifier?
     var videosIds = [Int]()
     var link: URL?

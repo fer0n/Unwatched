@@ -95,6 +95,8 @@ struct LibraryView: View {
                     BackupView()
                 case .bookmarkedVideos:
                     BookmarkedVideosView()
+                case .importSubscriptions:
+                    ImportSubscriptionsView()
                 }
             }
             .toolbar {
@@ -174,6 +176,7 @@ enum LibraryDestination {
     case bookmarkedVideos
     case userData
     case settings
+    case importSubscriptions
 }
 
 #Preview {

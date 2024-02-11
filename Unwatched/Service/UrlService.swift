@@ -13,6 +13,7 @@ struct UrlService {
     static let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6444704240?action=write-review")!
     static let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
     static let githubUrl = URL(string: "https://github.com/fer0n/SplitBill")!
+    static let youtubeTakeoutUrl = URL(string: "https://takeout.google.com/takeout/custom/youtube")
 
     static func getEmbeddedYoutubeUrl (_ youtubeId: String) -> String {
         "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&controls=1&color=white"
