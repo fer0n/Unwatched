@@ -7,7 +7,6 @@ import SwiftUI
 
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
-    @Environment(\.dismiss) var dismiss
     @Environment(RefreshManager.self) var refresher
 
     @State var showFileImporter = false
@@ -19,98 +18,89 @@ struct ImportSubscriptionsView: View {
     @State var isLoading = false
     @State var searchString = ""
 
+    var importButtonPadding = false
+
     var body: some View {
-        NavigationStack {
-            VStack {
-                if sendableSubs.isEmpty {
-                    Text("howToExportYoutubeSubscriptions")
-                        .padding(10)
-                    if let url = UrlService.youtubeTakeoutUrl {
-                        Link(destination: url) {
-                            Text("youtubeTakeout")
-                        }
-                        .padding()
+        VStack {
+            if sendableSubs.isEmpty {
+                Text("howToExportYoutubeSubscriptions")
+                    .padding(10)
+                if let url = UrlService.youtubeTakeoutUrl {
+                    Link(destination: url) {
+                        Text("youtubeTakeout")
                     }
-                    Spacer()
-                        .frame(height: 50)
-                    Button {
-                        showFileImporter = true
-                    } label: {
-                        Text("selectFile")
+                    .padding()
+                }
+                Spacer()
+                    .frame(height: 50)
+                Button {
+                    showFileImporter = true
+                } label: {
+                    Text("selectFile")
+                }
+                .buttonStyle(.borderedProminent)
+                Spacer()
+            } else if isLoading {
+                ProgressView {
+                    Text("importing \(selection.count) subscriptions")
+                }
+            } else if !subStates.isEmpty {
+                ScrollView {
+                    VStack {
+                        SubStateOverview(subStates: subStates,
+                                         importSource: .csvImport)
+                            .padding(.horizontal)
                     }
-                    .buttonStyle(.borderedProminent)
-                    Spacer()
-                } else if isLoading {
-                    ProgressView {
-                        Text("importing \(selection.count) subscriptions")
-                    }
-                } else if !subStates.isEmpty {
-                    ScrollView {
-                        VStack {
-                            SubStateOverview(subStates: subStates,
-                                             importSource: .csvImport)
-                                .padding(.horizontal)
-                        }
-                    }
-                } else {
-                    ZStack {
-                        List(selection: $selection) {
+                }
+            } else {
+                ZStack {
+                    List(selection: $selection) {
 
-                            let filtered = sendableSubs.filter({
-                                searchString.isEmpty
-                                    || $0.title.localizedStandardContains(searchString)
-                            })
-                            if !filtered.isEmpty {
-                                ForEach(filtered, id: \.self) { sub in
-                                    Text(sub.title)
-                                }
-                                Spacer()
-                                    .frame(height: 50)
-                                    .listRowSeparator(.hidden)
+                        let filtered = sendableSubs.filter({
+                            searchString.isEmpty
+                                || $0.title.localizedStandardContains(searchString)
+                        })
+                        if !filtered.isEmpty {
+                            ForEach(filtered, id: \.self) { sub in
+                                Text(sub.title)
                             }
-                        }
-                        .searchable(text: $searchString)
-                        .listStyle(.plain)
-                        .environment(\.editMode, $editMode)
-                        .toolbar {
-                            ToolbarItem {
-                                Button(action: toggleSelection) {
-                                    Text(selection.count == sendableSubs.count
-                                            ? "deselectAll"
-                                            : "selectAll")
-                                }
-                            }
-                        }
-
-                        VStack {
                             Spacer()
-                            Button(action: startImport) {
-                                Text("importSelection")
-                            }
-                            .buttonStyle(.borderedProminent)
+                                .frame(height: 50)
+                                .listRowSeparator(.hidden)
                         }
                     }
-                }
-            }
-            .tint(.teal)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
+                    .searchable(text: $searchString)
+                    .listStyle(.plain)
+                    .environment(\.editMode, $editMode)
+                    .toolbar {
+                        ToolbarItem {
+                            Button(action: toggleSelection) {
+                                Text(selection.count == sendableSubs.count
+                                        ? "deselectAll"
+                                        : "selectAll")
+                            }
+                        }
                     }
-                    .tint(Color.myAccentColor)
+
+                    VStack {
+                        Spacer()
+                        Button(action: startImport) {
+                            Text("importSelection")
+                        }
+                        .padding(importButtonPadding ? 10 : 0)
+                        .buttonStyle(.borderedProminent)
+                    }
                 }
             }
-            .navigationTitle("importSubscriptions")
-            .navigationBarTitleDisplayMode(.inline)
-            .fileImporter(isPresented: $showFileImporter,
-                          allowedContentTypes: [.plainText], onCompletion: handleFileImport)
-            .onDisappear {
-                if !subStates.isEmpty {
-                    refresher.refreshAll()
-                }
+        }
+        .tint(.teal)
+        .navigationTitle("importSubscriptions")
+        .navigationBarTitleDisplayMode(.inline)
+        .fileImporter(isPresented: $showFileImporter,
+                      allowedContentTypes: [.plainText], onCompletion: handleFileImport)
+        .onDisappear {
+            if !subStates.isEmpty {
+                refresher.refreshAll()
             }
         }
     }

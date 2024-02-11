@@ -96,7 +96,7 @@ struct LibraryView: View {
                 case .bookmarkedVideos:
                     BookmarkedVideosView()
                 case .importSubscriptions:
-                    ImportSubscriptionsView()
+                    ImportSubscriptionsView(importButtonPadding: true)
                 }
             }
             .toolbar {

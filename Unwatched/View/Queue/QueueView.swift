@@ -66,7 +66,19 @@ struct QueueView: View {
             }
         }
         .sheet(isPresented: $showImportSheet) {
-            ImportSubscriptionsView()
+            NavigationStack {
+                ImportSubscriptionsView()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button {
+                                showImportSheet = false
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                            }
+                            .tint(Color.myAccentColor)
+                        }
+                    }
+            }
         }
         .listStyle(.plain)
         .onAppear {

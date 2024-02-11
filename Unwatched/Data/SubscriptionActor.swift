@@ -67,7 +67,7 @@ actor SubscriptionActor {
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             for sub in sendableSubs {
                 group.addTask {
-                    return await self.verifySubscriptionInfo(sub)
+                    return await self.verifySubscriptionInfo(sub, unarchiveSubIfAvailable: true)
                 }
             }
 
@@ -83,7 +83,10 @@ actor SubscriptionActor {
         return subscriptionStates
     }
 
-    func verifySubscriptionInfo(_ sub: SendableSubscription) async -> (SubscriptionState, SendableSubscription?) {
+    func verifySubscriptionInfo(
+        _ sub: SendableSubscription,
+        unarchiveSubIfAvailable: Bool = false
+    ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(title: sub.title)
         guard let channelId = sub.youtubeChannelId else {
             print("no channelId for verify")
@@ -92,7 +95,8 @@ actor SubscriptionActor {
         }
 
         if let title = getTitleIfSubscriptionExists(
-            channelId: sub.youtubeChannelId
+            channelId: sub.youtubeChannelId,
+            unarchiveSubIfAvailable
         ) {
             print("found existing sub via channelId")
             subState.title = title
