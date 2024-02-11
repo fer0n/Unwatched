@@ -143,9 +143,13 @@ struct ImportSubscriptionsView: View {
 
     func readFile(_ file: URL) {
         do {
+            let isSecureAccess = file.startAccessingSecurityScopedResource()
             let content = try String(contentsOf: file)
             let rows = content.components(separatedBy: "\n")
             parseRows(rows)
+            if isSecureAccess {
+                file.stopAccessingSecurityScopedResource()
+            }
         } catch {
             print("Failed to read file: \(error)")
         }
