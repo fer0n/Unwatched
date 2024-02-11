@@ -100,9 +100,12 @@ struct SettingsView: View {
                     // }
                 }
 
-                Section {
+                Section("userData") {
+                    NavigationLink(value: LibraryDestination.importSubscriptions) {
+                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
+                    }
                     NavigationLink(value: LibraryDestination.userData) {
-                        Text("userData")
+                        Label("userData", systemImage: "opticaldiscdrive.fill")
                     }
                 }
             }

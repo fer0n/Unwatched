@@ -17,6 +17,7 @@ struct QueueView: View {
     @Query(filter: #Predicate<Subscription> { $0.isArchived == false })
     var subscriptions: [Subscription]
 
+    @State var showImportSheet = false
     @State var value: Double = 1.5
     var inboxTip = InboxHasVideosTip()
     var inboxHasEntries: Bool = false
@@ -64,6 +65,9 @@ struct QueueView: View {
                 RefreshToolbarButton()
             }
         }
+        .sheet(isPresented: $showImportSheet) {
+            ImportSubscriptionsView()
+        }
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
@@ -90,8 +94,17 @@ struct QueueView: View {
             }
 
             if subscriptions.isEmpty {
-                Button {
-                    navManager.showBrowserSheet = true
+                Menu {
+                    Button {
+                        showImportSheet = true
+                    } label: {
+                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
+                    }
+                    Button {
+                        navManager.showBrowserSheet = true
+                    } label: {
+                        Label("browseFeeds", systemImage: "globe.desk.fill")
+                    }
                 } label: {
                     Label("addFeeds", systemImage: "plus")
                         .bold()

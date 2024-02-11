@@ -20,7 +20,8 @@ struct AddSubscriptionView: View {
                 if let errorMessage = subManager.errorMessage {
                     Text(errorMessage)
                 }
-                ImportSubscriptionsView(subStates: subManager.newSubs)
+                SubStateOverview(subStates: subManager.newSubs,
+                                 importSource: .urlImport)
                     .padding(.horizontal)
             }
             .padding(.horizontal)

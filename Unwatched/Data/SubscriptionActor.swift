@@ -60,6 +60,58 @@ actor SubscriptionActor {
         return subscriptionStates
     }
 
+    // TODO: combine this with the other add sub?
+    func addSubscriptions(from sendableSubs: [SendableSubscription]) async throws -> [SubscriptionState] {
+        var subscriptionStates = [SubscriptionState]()
+
+        try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
+            for sub in sendableSubs {
+                group.addTask {
+                    return await self.verifySubscriptionInfo(sub)
+                }
+            }
+
+            for try await (subState, sendableSub) in group {
+                subscriptionStates.append(subState)
+                if let sendableSub = sendableSub {
+                    let sub = sendableSub.createSubscription()
+                    modelContext.insert(sub)
+                }
+            }
+        }
+        try modelContext.save()
+        return subscriptionStates
+    }
+
+    func verifySubscriptionInfo(_ sub: SendableSubscription) async -> (SubscriptionState, SendableSubscription?) {
+        var subState = SubscriptionState(title: sub.title)
+        guard let channelId = sub.youtubeChannelId else {
+            print("no channelId for verify")
+            subState.error = "no channelId found" // TODO: Do this nicer?
+            return (subState, nil)
+        }
+
+        if let title = getTitleIfSubscriptionExists(
+            channelId: sub.youtubeChannelId
+        ) {
+            print("found existing sub via channelId")
+            subState.title = title
+            subState.alreadyAdded = true
+            return (subState, nil)
+        }
+
+        do {
+            let url = try UrlService.getFeedUrlFromChannelId(channelId)
+            let sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
+            subState.success = true
+            return (subState, sendableSub)
+        } catch {
+            subState.error = error.localizedDescription
+        }
+
+        return (subState, nil)
+    }
+
     func loadSubscriptionInfo(
         from url: URL,
         unarchiveSubIfAvailable: Bool = false

@@ -7,6 +7,14 @@ class SubscriptionService {
         return try await repo.addSubscriptions(from: urls)
     }
 
+    static func addSubscriptions(
+        from sendableSubs: [SendableSubscription],
+        modelContainer: ModelContainer
+    ) async throws -> [SubscriptionState] {
+        let repo = SubscriptionActor(modelContainer: modelContainer)
+        return try await repo.addSubscriptions(from: sendableSubs)
+    }
+
     static func addSubscription(channelId: String? = nil,
                                 subsciptionId: PersistentIdentifier? = nil,
                                 modelContainer: ModelContainer) async throws {
