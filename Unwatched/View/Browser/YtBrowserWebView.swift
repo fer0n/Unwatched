@@ -154,4 +154,5 @@ struct YtBrowserWebView: UIViewRepresentable {
 #Preview {
     BrowserView()
         .modelContainer(DataController.previewContainer)
+        .environment(RefreshManager())
 }
