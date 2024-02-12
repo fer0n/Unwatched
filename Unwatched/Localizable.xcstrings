@@ -16,6 +16,9 @@
     "%@x" : {
 
     },
+    "%lld" : {
+
+    },
     "•" : {
 
     },
@@ -503,17 +506,6 @@
         }
       }
     },
-    "github" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched on Github"
-          }
-        }
-      }
-    },
     "handleShortsDifferently" : {
       "localizations" : {
         "en" : {
@@ -572,17 +564,6 @@
     },
     "importing %lld subscriptions" : {
 
-    },
-    "importSelection" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import Selection"
-          }
-        }
-      }
     },
     "importSubscriptions" : {
       "localizations" : {
@@ -973,17 +954,6 @@
         }
       }
     },
-    "rateApp" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please Rate Unwatched"
-          }
-        }
-      }
-    },
     "recentlyAdded" : {
       "localizations" : {
         "en" : {
@@ -1180,6 +1150,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sideloads"
+          }
+        }
+      }
+    },
+    "sleepTimer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep Timer"
+          }
+        }
+      }
+    },
+    "sleepTimerOff" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep Timer Off"
           }
         }
       }

@@ -30,4 +30,13 @@ extension Double {
         formatter.zeroFormattingBehavior = .dropAll
         return formatter.string(from: TimeInterval(self))
     }
+
+    var formatTimeMinimal: String? {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .abbreviated
+        formatter.zeroFormattingBehavior = .dropAll
+        formatter.maximumUnitCount = 1
+        return formatter.string(from: TimeInterval(self))
+    }
 }
