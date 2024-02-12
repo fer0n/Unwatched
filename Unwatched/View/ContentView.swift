@@ -42,10 +42,14 @@ struct ContentView: View {
 
             ZStack {
                 layout {
-                    VideoPlayer(showMenu: bigScreen ? .constant(false) : $navManager.showMenu,
-                                compactSize: bigScreen,
-                                showInfo: !bigScreen || (isLandscape && bigScreen),
-                                showFullscreenButton: bigScreen)
+                    VideoPlayer(
+                        showMenu: bigScreen
+                            ? .constant(false)
+                            : $navManager.showMenu,
+                        compactSize: bigScreen,
+                        showInfo: !bigScreen || (isLandscape && bigScreen),
+                        showFullscreenButton: bigScreen
+                    )
                     if bigScreen {
                         MenuView()
                             .frame(maxWidth: isLandscape
@@ -87,6 +91,7 @@ struct ContentView: View {
                                                 : .visible)
             }
         }
+        .ignoresSafeArea(bigScreen ? .keyboard : [])
         .innerSizeTrackerModifier(onChange: { newSize in
             sheetPos.sheetHeight = newSize.height
         })
