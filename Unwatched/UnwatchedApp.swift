@@ -27,7 +27,7 @@ struct UnwatchedApp: App {
                 .accentColor(.myAccentColor)
                 .environment(alerter)
                 .alert(isPresented: $alerter.isShowingAlert) {
-                    alerter.alert ?? Alert(title: Text(""))
+                    alerter.alert ?? Alert(title: Text(verbatim: ""))
                 }
                 .task {
                     try? Tips.configure([

@@ -119,10 +119,10 @@ struct SpeedControlView: View {
 
     func getFloatingText() -> String {
         if dragState == nil {
-            return SpeedControlView.formatSpeed(selectedSpeed) + "x"
+            return SpeedControlView.formatSpeed(selectedSpeed) + "×"
         }
         let speed = getSpeedFromPos(dragState ?? 0)
-        return SpeedControlView.formatSpeed(speed) + "x"
+        return SpeedControlView.formatSpeed(speed) + "×"
     }
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {

@@ -21,5 +21,5 @@ struct LibraryNavListItem: View {
 }
 
 #Preview {
-    LibraryNavListItem("star", systemName: "star")
+    LibraryNavListItem("library", systemName: "star")
 }

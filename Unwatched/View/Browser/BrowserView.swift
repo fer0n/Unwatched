@@ -208,19 +208,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    //    BrowserView()
-    //        .modelContainer(DataController.previewContainer)
-    //        .environment(RefreshManager())
-
-    Button(action: { }) {
-        HStack {
-            Image(systemName: "check")
-                .contentTransition(.symbolEffect(.replace))
-            Text("text")
-        }
-        .padding(10)
-    }
-    .bold()
-    .buttonStyle(CapsuleButtonStyle(background: .white, foreground: .black))
-    .foregroundStyle(.black)
+    BrowserView()
+        .modelContainer(DataController.previewContainer)
+        .environment(RefreshManager())
 }
