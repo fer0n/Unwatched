@@ -138,10 +138,15 @@ struct VideoPlayer: View {
     @MainActor
     var footer: some View {
         HStack {
-            // center menu button
-            Image(systemName: "link")
-                .opacity(0)
+            if let video = player.video {
+                Button(action: toggleBookmark) {
+                    Image(systemName: video.bookmarkedDate != nil
+                            ? "bookmark.fill"
+                            : "bookmark")
+                        .contentTransition(.symbolEffect(.replace))
+                }
                 .frame(maxWidth: .infinity)
+            }
 
             Button {
                 setShowMenu()
@@ -157,19 +162,21 @@ struct VideoPlayer: View {
                 .padding(.horizontal)
             }
 
-            Image(systemName: "link")
-                .font(.system(size: 20))
-                .onTapGesture {
-                    if let url = player.video?.url {
-                        UIApplication.shared.open(url)
+            if let video = player.video {
+                Image(systemName: "link")
+                    .font(.system(size: 20))
+                    .onTapGesture {
+                        if let url = video.url {
+                            UIApplication.shared.open(url)
+                        }
                     }
-                }
-                .onLongPressGesture {
-                    if let url =  player.video?.url {
-                        shareText = MyShareLink(url: url)
+                    .onLongPressGesture {
+                        if let url =  player.video?.url {
+                            shareText = MyShareLink(url: url)
+                        }
                     }
-                }
-                .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity)
+            }
         }
         .sheet(item: $shareText) { shareText in
             ActivityView(url: shareText.url)
@@ -225,12 +232,18 @@ struct VideoPlayer: View {
         }
     }
 
+    func toggleBookmark() {
+        if let video = player.video {
+            VideoService.toggleBookmark(video, modelContext)
+        }
+    }
+
     func markVideoWatched() {
         print(">markVideoWatched")
         if let video = player.video {
             setShowMenu()
             setNextVideo(.nextUp)
-            VideoService.markVideoWatched(
+            _ = VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
         }
