@@ -137,11 +137,11 @@ struct ChapterDescriptionView: View {
     }
 }
 
-// #Preview {
-//    ChapterDescriptionView()
-//        .modelContainer(DataController.previewContainer)
-//        .environment(PlayerManager.getDummy())
-//         .environment(NavigationManager())
-//         .environment(RefreshManager())
-//         .environment(SubscribeManager())
-// }
+#Preview {
+    ChapterDescriptionView()
+        .modelContainer(DataController.previewContainer)
+        .environment(PlayerManager.getDummy())
+        .environment(NavigationManager())
+        .environment(RefreshManager())
+        .environment(SubscribeManager())
+}

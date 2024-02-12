@@ -37,3 +37,12 @@ struct ChapterListItem: View {
         }
     }
 }
+
+#Preview {
+    ChapterListItem(chapter: Chapter(
+        title: "Hello there",
+        time: 102
+    ), toggleChapter: { _ in },
+    timeText: "0 remaining")
+    .background(Color.gray)
+}

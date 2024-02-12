@@ -142,6 +142,22 @@ struct BrowserView: View, KeyboardReadable {
         }
     }
 
+    func addSubButton(_ text: String) -> some View {
+        Button(action: handleAddSubButton) {
+            HStack {
+                let systemName = subscribeManager.getSubscriptionSystemName()
+                Image(systemName: systemName)
+                    .contentTransition(.symbolEffect(.replace))
+                Text(text)
+            }
+            .padding(10)
+        }
+        .buttonStyle(CapsuleButtonStyle(
+                        background: Color.myAccentColor,
+                        foreground: Color.backgroundColor))
+        .bold()
+    }
+
     func handleSuccessChange() {
         if isSuccess != nil {
             Task {
@@ -173,19 +189,6 @@ struct BrowserView: View, KeyboardReadable {
         }
     }
 
-    func addSubButton(_ text: String) -> some View {
-        Button(action: handleAddSubButton) {
-            HStack {
-                let systemName = subscribeManager.getSubscriptionSystemName()
-                Image(systemName: systemName)
-                    .contentTransition(.symbolEffect(.replace))
-                Text(text)
-            }
-            .padding(10)
-        }
-        .buttonStyle(CapsuleButtonStyle())
-    }
-
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
@@ -205,8 +208,19 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView()
-        .modelContainer(DataController.previewContainer)
-        .environment(RefreshManager())
+    //    BrowserView()
+    //        .modelContainer(DataController.previewContainer)
+    //        .environment(RefreshManager())
 
+    Button(action: { }) {
+        HStack {
+            Image(systemName: "check")
+                .contentTransition(.symbolEffect(.replace))
+            Text("text")
+        }
+        .padding(10)
+    }
+    .bold()
+    .buttonStyle(CapsuleButtonStyle(background: .white, foreground: .black))
+    .foregroundStyle(.black)
 }

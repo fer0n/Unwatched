@@ -47,7 +47,7 @@ final class Video: CustomStringConvertible, Exportable {
         guard let duration = duration else {
             return nil
         }
-        return duration - 5 < elapsedSeconds
+        return duration - 10 < elapsedSeconds
     }
 
     var description: String {
