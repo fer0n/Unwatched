@@ -283,7 +283,7 @@ enum VideoSource {
         player.video = Video.getDummy()
         player.currentTime = 10
         player.currentChapter = Chapter.getDummy()
-        // player.embeddingDisabled = true
+        player.embeddingDisabled = true
         return player
     }
 

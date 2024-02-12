@@ -20,7 +20,6 @@ struct VideoPlayer: View {
     @State var continuousPlayWorkaround: Bool = false
     @State var isSubscribedSuccess: Bool?
     @State var hapticToggle: Bool = false
-    @State var shareText: MyShareLink?
 
     @Binding var showMenu: Bool
 
@@ -106,7 +105,6 @@ struct VideoPlayer: View {
 
                 if !compactSize {
                     footer
-                        .padding(.horizontal, 30)
                 }
             }
             .innerSizeTrackerModifier(onChange: { size in
@@ -139,6 +137,9 @@ struct VideoPlayer: View {
     var footer: some View {
         HStack {
             if let video = player.video {
+                SleepTimer(onEnded: onSleepTimerEnded)
+                    .frame(maxWidth: .infinity)
+
                 Button(action: toggleBookmark) {
                     Image(systemName: video.bookmarkedDate != nil
                             ? "bookmark.fill"
@@ -158,31 +159,26 @@ struct VideoPlayer: View {
                         .font(.caption)
                         .textCase(.uppercase)
                         .padding(.bottom, 3)
+                        .fixedSize()
                 }
-                .padding(.horizontal)
             }
+            .frame(maxWidth: .infinity)
 
             if let video = player.video {
-                Image(systemName: "link")
-                    .font(.system(size: 20))
-                    .onTapGesture {
-                        if let url = video.url {
-                            UIApplication.shared.open(url)
-                        }
-                    }
-                    .onLongPressGesture {
-                        if let url =  player.video?.url {
-                            shareText = MyShareLink(url: url)
-                        }
+                if let url = video.url {
+                    ShareLink(item: url) {
+                        Image(systemName: "square.and.arrow.up")
                     }
                     .frame(maxWidth: .infinity)
+
+                    Link(destination: url) {
+                        Image(systemName: "safari")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
             }
         }
-        .sheet(item: $shareText) { shareText in
-            ActivityView(url: shareText.url)
-                .presentationDetents([.medium, .large])
-                .ignoresSafeArea(.all)
-        }
+        .font(.system(size: 20))
     }
 
     var watchedButton: some View {
@@ -232,9 +228,29 @@ struct VideoPlayer: View {
         }
     }
 
+    var fullscreenButton: some View {
+        Toggle(isOn: $playVideoFullscreen) {
+            Image(systemName: playVideoFullscreen
+                    ? "rectangle.inset.filled"
+                    : "rectangle.slash.fill")
+        }
+        .toggleStyle(OutlineToggleStyle())
+    }
+
+    func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
+        var seconds = player.currentTime ?? 0
+        player.pause()
+        if let fadeOutSeconds = fadeOutSeconds, fadeOutSeconds > seconds {
+            seconds -= fadeOutSeconds
+        }
+        player.updateElapsedTime(seconds)
+
+    }
+
     func toggleBookmark() {
         if let video = player.video {
             VideoService.toggleBookmark(video, modelContext)
+            hapticToggle.toggle()
         }
     }
 
@@ -247,15 +263,6 @@ struct VideoPlayer: View {
                 video, modelContext: modelContext
             )
         }
-    }
-
-    var fullscreenButton: some View {
-        Toggle(isOn: $playVideoFullscreen) {
-            Image(systemName: playVideoFullscreen
-                    ? "rectangle.inset.filled"
-                    : "rectangle.slash.fill")
-        }
-        .toggleStyle(OutlineToggleStyle())
     }
 
     func handleVideoEnded() {
