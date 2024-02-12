@@ -1,25 +1,10 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
-    "-%@" : {
-
-    },
-    "#s%@" : {
-
-    },
     "%@" : {
 
     },
-    "%@x" : {
-
-    },
     "%lld" : {
-
-    },
-    "•" : {
 
     },
     "addBookmark" : {
@@ -329,10 +314,24 @@
       "comment" : "Couldn't convert to URL"
     },
     "customSpeedSettings" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom speed setting for this subscription"
+          }
+        }
+      }
     },
-    "Default (%@x)" : {
-
+    "defaultSpeed%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@×)"
+          }
+        }
+      }
     },
     "deleteEverything" : {
       "localizations" : {
@@ -515,9 +514,6 @@
           }
         }
       }
-    },
-    "Hello" : {
-
     },
     "hideShortsEverywhere" : {
       "localizations" : {
@@ -706,9 +702,6 @@
           }
         }
       }
-    },
-    "no video found" : {
-
     },
     "noBookmarkedVideosYet" : {
       "localizations" : {
@@ -1174,9 +1167,6 @@
         }
       }
     },
-    "star" : {
-
-    },
     "startVideosInFullscreen" : {
       "localizations" : {
         "en" : {
@@ -1237,9 +1227,6 @@
           }
         }
       }
-    },
-    "text" : {
-
     },
     "title" : {
       "localizations" : {

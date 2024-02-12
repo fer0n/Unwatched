@@ -188,7 +188,7 @@ struct VideoListItem: View {
                             .foregroundStyle(Color.gray)
                     }
                     if video.isYtShort || video.isLikelyYtShort {
-                        Text("#s\(video.isYtShort == true ? "." : "")")
+                        Text(verbatim: "#s\(video.isYtShort == true ? "." : "")")
                             .font(.system(size: 14, weight: .regular))
                             .foregroundStyle(Color.gray)
                     }
@@ -217,7 +217,7 @@ struct VideoListItem: View {
                         .padding(.top, 3)
                         .padding(.trailing, 5)
                     if video.hasFinished != true, let remaining = remaining.formattedSeconds {
-                        Text("-\(remaining)")
+                        Text(verbatim: "-\(remaining)")
                             .font(.system(size: 12, weight: .regular))
                             .foregroundStyle(Color.gray)
                     }
@@ -295,7 +295,7 @@ struct VideoListItem: View {
     let fetch = FetchDescriptor<Video>()
     let videos = try? context.fetch(fetch)
     guard let video = videos?.first else {
-        return Text("no video found")
+        return Text("noVideoFound")
     }
 
     return List {

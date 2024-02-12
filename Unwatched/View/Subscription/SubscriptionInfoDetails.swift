@@ -61,9 +61,9 @@ struct SubscriptionInfoDetails: View {
                         HStack {
                             Image(systemName: "timer")
                             if let custom = subscription.customSpeedSetting {
-                                Text("\(SpeedControlView.formatSpeed(custom))x")
+                                Text(verbatim: "\(SpeedControlView.formatSpeed(custom))×")
                             } else {
-                                Text("Default (\(SpeedControlView.formatSpeed(playbackSpeed))x)")
+                                Text("defaultSpeed\(SpeedControlView.formatSpeed(playbackSpeed))")
                             }
                         }
                         .padding(10)
