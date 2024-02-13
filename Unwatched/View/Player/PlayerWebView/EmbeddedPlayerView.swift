@@ -19,6 +19,7 @@ extension PlayerWebView {
         webView.loadHTMLString(htmlString, baseURL: nil)
     }
 
+    // swiftlint:disable function_body_length
     static func getYoutubeIframeHTML(youtubeId: String, playbackSpeed: Double, startAt: Double) -> String {
         """
         <meta name="viewport" content="width=device-width, shrink-to-fit=YES">
@@ -101,4 +102,5 @@ extension PlayerWebView {
         ></iframe>
     """
     }
+    // swiftlint:enable function_body_length
 }
