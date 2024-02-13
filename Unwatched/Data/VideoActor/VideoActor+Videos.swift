@@ -114,6 +114,8 @@ import Observation
             for try await (sub, videos) in group {
                 if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
                     try await loadVideos(for: modelSub, videos: videos, defaultPlacementInfo: placementInfo)
+                } else {
+                    print("missing info when trying to load videos")
                 }
             }
         }
