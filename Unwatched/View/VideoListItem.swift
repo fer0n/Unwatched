@@ -211,7 +211,7 @@ struct VideoListItem: View {
                let remaining = video.remainingTime,
                duration > 0 && remaining > 0 {
                 HStack(alignment: .center) {
-                    ProgressView(value: video.elapsedSeconds, total: duration)
+                    ProgressView(value: video.elapsedSeconds ?? 0, total: duration)
                         .tint(.teal)
                         .opacity(0.6)
                         .padding(.top, 3)
