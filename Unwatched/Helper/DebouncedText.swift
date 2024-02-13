@@ -7,7 +7,7 @@ import Foundation
 
 @Observable
 class DebouncedText {
-    @ObservationIgnored var task: Task<(), Never>?
+    @ObservationIgnored var task: Task<String?, Never>?
     @ObservationIgnored let delay: UInt64
 
     init(_ delay: Double = 0.5) {
@@ -15,19 +15,22 @@ class DebouncedText {
     }
 
     var debounced = ""
-    var val = "" {
-        didSet {
-            let newValue = val
-            task?.cancel()
-            task = Task.detached {
-                do {
-                    try await Task.sleep(nanoseconds: self.delay)
-                    await MainActor.run {
-                        self.debounced = newValue
-                    }
-                    print("> \(newValue)")
-                } catch { }
+    var val = ""
+
+    func handleDidSet() async {
+        let newValue = val
+        let delay = self.delay
+        task?.cancel()
+        task = Task.detached {
+            do {
+                try await Task.sleep(nanoseconds: delay)
+                return newValue
+            } catch {
+                return nil
             }
+        }
+        if let newValue = await task?.value {
+            self.debounced = newValue
         }
     }
 }

@@ -108,6 +108,9 @@ struct LibraryView: View {
                 RefreshToolbarButton()
             }
         }
+        .task(id: text.val) {
+            await text.handleDidSet()
+        }
     }
 
     var dropArea: some View {
