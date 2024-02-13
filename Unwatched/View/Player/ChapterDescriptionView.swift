@@ -15,6 +15,8 @@ struct ChapterDescriptionView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.dismiss) var dismiss
 
+    @State var selectedDetailPageTask: Task<ChapterDescriptionPage, Never>?
+
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
@@ -62,6 +64,15 @@ struct ChapterDescriptionView: View {
             .tint(Color.myAccentColor)
             .toolbarTitleDisplayMode(.inline)
         }
+        .task(id: selectedDetailPageTask) {
+            guard let task = selectedDetailPageTask else {
+                return
+            }
+            let direction = await task.value
+            withAnimation {
+                navManager.selectedDetailPage = direction
+            }
+        }
     }
 
     func chapterList(_ chapter: [Chapter]) -> some View {
@@ -105,13 +116,9 @@ struct ChapterDescriptionView: View {
 
                 state = value.translation.width
                 if (origin == .chapters && state > 30) || (origin == .description && state < -30) {
-                    Task.detached {
+                    selectedDetailPageTask = Task.detached {
                         let direction: ChapterDescriptionPage = origin == .description ? .chapters : .description
-                        await MainActor.run {
-                            withAnimation {
-                                navManager.selectedDetailPage = direction
-                            }
-                        }
+                        return direction
                     }
                 }
             }
