@@ -28,6 +28,9 @@ struct AllVideosView: View {
                 .listStyle(.plain)
             }
         }
+        .task(id: text.val) {
+            await text.handleDidSet()
+        }
         .navigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
