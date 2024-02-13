@@ -55,6 +55,7 @@ final class Subscription: CustomStringConvertible, Exportable {
 
     var toExport: SendableSubscription? {
         SendableSubscription(
+            persistentId: self.persistentModelID,
             videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
