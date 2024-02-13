@@ -373,6 +373,9 @@
         }
       }
     },
+    "Do something" : {
+
+    },
     "doNothing" : {
       "localizations" : {
         "en" : {
@@ -478,7 +481,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export Subscriptions"
+            "value" : "Export Subscription RSS Feeds"
           }
         }
       }
@@ -658,6 +661,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mark Watched"
+          }
+        }
+      }
+    },
+    "minimalBackups" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclude unimportant videos"
+          }
+        }
+      }
+    },
+    "minimalBackupsHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It is best to leave this on, as the backup files will likely be much smaller."
           }
         }
       }

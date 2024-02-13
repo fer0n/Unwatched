@@ -6,6 +6,11 @@
 import Foundation
 import SwiftData
 
+enum UserDataServiceError: Error {
+    case noDataToBackupFound
+    case directoryError
+}
+
 struct UserDataService {
 
     // saves user data as .unwatchedbackup
@@ -13,32 +18,76 @@ struct UserDataService {
         var backup = UnwatchedBackup()
         let context = ModelContext(container)
 
-        func fetchMapExportable<T: PersistentModel & Exportable>(_ model: T.Type) -> [T.ExportType] {
-            let fetch = FetchDescriptor<T>()
+        func fetchMapExportable<T: PersistentModel & Exportable>(
+            _ model: T.Type,
+            _ fetchDesc: FetchDescriptor<T>? = nil
+        ) -> [T.ExportType] {
+            let fetch = fetchDesc ?? FetchDescriptor<T>()
             if let items = try? context.fetch(fetch) {
                 return items.compactMap { $0.toExport }
             }
             return []
         }
 
-        backup.videos           = fetchMapExportable(Video.self)
+        let fetchVideos = getVideoFetchIfMinimal()
+        let fetched = fetchMapExportable(Video.self, fetchVideos)
+        print("fetched", fetched.count)
+        backup.videos = fetched
+        if fetchVideos != nil {
+            _ = fetchMapExportable(Video.self)
+            // Bug: otherwise subscription fails (maybe because it doesn't have the videos ready otherwise?)
+            // also happens if subscriptions is called before fetching videos
+        }
+        backup.subscriptions    = fetchMapExportable(Subscription.self)
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
         backup.watchEntries     = fetchMapExportable(WatchEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
-        backup.subscriptions    = fetchMapExportable(Subscription.self)
+
+        if checkIfBackupEmpty(backup) {
+            print("checkIfBackupEmpty")
+            throw UserDataServiceError.noDataToBackupFound
+        }
 
         let encoder = JSONEncoder()
         return try encoder.encode(backup)
     }
 
+    static func getVideoFetchIfMinimal() -> FetchDescriptor<Video>? {
+        let minimalBackups = UserDefaults.standard.object(forKey: Const.minimalBackups) as? Bool ?? true
+        if minimalBackups {
+            guard let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) else {
+                return nil
+            }
+            print("returning fetch")
+            return FetchDescriptor<Video>(predicate: #Predicate {
+                $0.bookmarkedDate != nil
+                    || $0.watched == true
+                    || $0.queueEntry != nil
+                    || $0.inboxEntry != nil
+                    || ($0.publishedDate ?? lastWeek) > lastWeek
+            })
+        }
+        return nil
+    }
+
+    static func checkIfBackupEmpty(_ backup: UnwatchedBackup) -> Bool {
+        return backup.videos.isEmpty
+            && backup.queueEntries.isEmpty
+            && backup.watchEntries.isEmpty
+            && backup.inboxEntries.isEmpty
+            && backup.subscriptions.isEmpty
+    }
+
     // loads user data from .unwatchedbackup files
     static func importBackup(_ data: Data, container: ModelContainer) {
+        print("importBackup, userdataservice")
         var videoIdDict = [Int: Video]()
 
         let context = ModelContext(container)
         let decoder = JSONDecoder()
         do {
             let backup = try decoder.decode(UnwatchedBackup.self, from: data)
+            print("backup", backup)
 
             // Videos, get id mapping
             for video in backup.videos {
@@ -75,27 +124,22 @@ struct UserDataService {
         }
     }
 
-    static func exportFile(_ container: ModelContainer) -> Data? {
+    static func exportFile(_ container: ModelContainer) throws -> Data {
         do {
             return try UserDataService.exportUserData(container: container)
         } catch {
             print("couldn't export: \(error)")
+            throw error
         }
-        return nil
     }
 
     static func saveToIcloud(_ deviceName: String, _ container: ModelContainer) -> Task<(), Error> {
         return Task {
-            guard let data = self.exportFile(container) else {
-                print("no data when trying to save")
-                return
-            }
-            // store file at icloud documents folder
-            guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName)) else {
-                print("no filename could be created")
-                return
-            }
             do {
+                let data = try self.exportFile(container)
+                guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName)) else {
+                    throw UserDataServiceError.directoryError
+                }
                 try data.write(to: filename)
             } catch {
                 print("saveToIcloud: \(error)")
@@ -126,9 +170,8 @@ struct UserDataService {
     }
 
     static func getFileName(_ deviceName: String) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd-hh-mm"
-        let dateString = formatter.string(from: Date())
+        let dateFormatter = ISO8601DateFormatter()
+        let dateString = dateFormatter.string(from: Date())
         return "\(deviceName)_\(dateString).unwatchedbackup"
     }
 }

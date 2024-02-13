@@ -26,7 +26,7 @@ struct CapsuleButtonStyle<S: ShapeStyle>: ButtonStyle {
 }
 
 #Preview {
-    Button(action: {}) {
+    Button { } label: {
         Text(verbatim: "Hello")
     }
     .buttonStyle(CapsuleButtonStyle())

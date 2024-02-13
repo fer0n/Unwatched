@@ -19,6 +19,8 @@ struct SettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
 
+    @State var isExportingAll = false
+
     var body: some View {
         VStack {
             List {
@@ -80,7 +82,7 @@ struct SettingsView: View {
                 if let url = UrlService.shareShortcutUrl {
                     Section("shareSheet") {
                         Link(destination: url) {
-                            Label("setupShareSheetAction", systemImage: "square.and.arrow.up.fill")
+                            Label("setupShareSheetAction", systemImage: "square.and.arrow.up.on.square.fill")
                         }
                     }
                 }
@@ -95,6 +97,15 @@ struct SettingsView: View {
                     NavigationLink(value: LibraryDestination.importSubscriptions) {
                         Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
                     }
+                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
+                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
+                        if isExportingAll {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Label("exportSubscriptions", systemImage: "square.and.arrow.up.fill")
+                        }
+                    }
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: "opticaldiscdrive.fill")
                     }
@@ -104,6 +115,12 @@ struct SettingsView: View {
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
         .tint(.myAccentColor)
+    }
+
+    func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
+        let container = modelContext.container
+        let result = try? await SubscriptionService.getAllFeedUrls(container)
+        return result ?? []
     }
 }
 

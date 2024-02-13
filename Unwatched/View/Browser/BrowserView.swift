@@ -18,6 +18,7 @@ struct BrowserView: View, KeyboardReadable {
     @State var isDragOver = false
     @State var isLoading = false
     @State var isSuccess: Bool?
+    @State var droppedUrls = [URL]()
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -55,6 +56,15 @@ struct BrowserView: View, KeyboardReadable {
             }
             .ignoresSafeArea(edges: [.bottom])
         }
+        .task(id: isSuccess) {
+            await handleSuccessChange()
+        }
+        .task(id: droppedUrls) {
+            guard !droppedUrls.isEmpty else {
+                return
+            }
+            await handleUrlDrop(droppedUrls)
+        }
         .onChange(of: browserManager.channel?.userName) {
             subscribeManager.reset()
         }
@@ -85,9 +95,6 @@ struct BrowserView: View, KeyboardReadable {
             if showDropArea {
                 dropAreaContent
                     .frame(maxWidth: .infinity)
-                    .onChange(of: isSuccess) {
-                        handleSuccessChange()
-                    }
                 Spacer()
                     .frame(height: 40)
             } else {
@@ -107,7 +114,7 @@ struct BrowserView: View, KeyboardReadable {
         .background(showDropArea ? .black : .clear)
         .tint(Color.myAccentColor)
         .dropDestination(for: URL.self) { items, _ in
-            handleUrlDrop(items)
+            droppedUrls = items
             return true
         } isTargeted: { targeted in
             withAnimation {
@@ -158,34 +165,28 @@ struct BrowserView: View, KeyboardReadable {
         .bold()
     }
 
-    func handleSuccessChange() {
+    func handleSuccessChange() async {
         if isSuccess != nil {
-            Task {
-                await Task.sleep(s: 1)
-                await MainActor.run {
-                    withAnimation {
-                        isSuccess = nil
-                    }
+            do {
+                try await Task.sleep(s: 1)
+                withAnimation {
+                    isSuccess = nil
                 }
-            }
+            } catch {}
         }
     }
 
-    func handleUrlDrop(_ urls: [URL]) {
+    func handleUrlDrop(_ urls: [URL]) async {
         print("handleUrlDrop inbox", urls)
         withAnimation {
             isLoading = true
         }
         let container = modelContext.container
         let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
-        Task {
-            let success: ()? = try? await task.value
-            await MainActor.run {
-                withAnimation {
-                    self.isSuccess = success != nil
-                    self.isLoading = false
-                }
-            }
+        let success: ()? = try? await task.value
+        withAnimation {
+            self.isSuccess = success != nil
+            self.isLoading = false
         }
     }
 

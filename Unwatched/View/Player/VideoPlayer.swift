@@ -8,7 +8,6 @@ import SwiftUI
 struct VideoPlayer: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Environment(Alerter.self) private var alerter
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
 
@@ -272,7 +271,7 @@ struct VideoPlayer: View {
         }
         print(">handleVideoEnded")
         if let video = player.video {
-            VideoService.markVideoWatched(
+            _ = VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
         }
@@ -305,7 +304,6 @@ struct VideoPlayer: View {
     VideoPlayer(showMenu: .constant(false))
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
-        .environment(Alerter())
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())
 }

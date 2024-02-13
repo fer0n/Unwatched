@@ -15,7 +15,7 @@ struct SendableVideo: Sendable, Codable {
     var youtubeChannelId: String?
     var feedTitle: String?
     var duration: Double?
-    var elapsedSeconds: Double = 0
+    var elapsedSeconds: Double?
     var chapters = [SendableChapter]()
 
     var publishedDate: Date?
@@ -57,6 +57,7 @@ struct SendableVideo: Sendable, Codable {
             elapsedSeconds: self.elapsedSeconds,
             videoDescription: description,
             chapters: newChapters.map { $0.getChapter },
+            watched: self.watched,
             isYtShort: ytShortsInfo.isShort,
             isLikelyYtShort: ytShortsInfo.isLikelyShort,
             bookmarkedDate: self.bookmarkedDate,
@@ -73,7 +74,7 @@ struct SendableVideo: Sendable, Codable {
         youtubeChannelId: String? = nil,
         feedTitle: String? = nil,
         duration: Double? = nil,
-        elapsedSeconds: Double = 0,
+        elapsedSeconds: Double? = nil,
         chapters: [SendableChapter] = [SendableChapter](),
         publishedDate: Date? = nil,
         watched: Bool = false,
@@ -108,7 +109,7 @@ struct SendableVideo: Sendable, Codable {
         thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
         youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
         duration = try container.decodeIfPresent(Double.self, forKey: .duration)
-        elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds) ?? 0
+        elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds)
         publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
         watched = try container.decodeIfPresent(Bool.self, forKey: .watched) ?? false
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
@@ -128,7 +129,9 @@ struct SendableVideo: Sendable, Codable {
         try container.encodeIfPresent(duration, forKey: .duration)
         try container.encodeIfPresent(elapsedSeconds, forKey: .elapsedSeconds)
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
-        try container.encode(watched, forKey: .watched)
+        if watched {
+            try container.encode(watched, forKey: .watched)
+        }
         try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
         try container.encodeIfPresent(bookmarkedDate, forKey: .bookmarkedDate)
         try container.encodeIfPresent(clearedInboxDate, forKey: .clearedInboxDate)

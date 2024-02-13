@@ -3,7 +3,10 @@ import SwiftUI
 import Observation
 
 class VideoService {
-    static func loadNewVideosInBg(subscriptionIds: [PersistentIdentifier]? = nil, container: ModelContainer) -> Task<(), Error> {
+    static func loadNewVideosInBg(
+        subscriptionIds: [PersistentIdentifier]? = nil,
+        container: ModelContainer
+    ) -> Task<(), Error> {
         print("loadNewVideosInBg")
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
@@ -34,7 +37,11 @@ class VideoService {
         return task
     }
 
-    static func moveQueueEntry(from source: IndexSet, to destination: Int, modelContext: ModelContext) -> Task<(), Error> {
+    static func moveQueueEntry(
+        from source: IndexSet,
+        to destination: Int,
+        modelContext: ModelContext
+    ) -> Task<(), Error> {
         let container = modelContext.container
         let task = Task.detached {
             do {
