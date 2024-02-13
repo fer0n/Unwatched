@@ -21,11 +21,10 @@ struct Const {
 
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
-    static let videoPlayerTabSF = "chevron.up.circle"
     static let queueTagSF = "rectangle.stack"
     static let inboxTabEmptySF = "tray"
     static let inboxTabFullSF = "tray.full"
-    static let libraryTabSF = "books.vertical.fill"
+    static let libraryTabSF = "books.vertical"
 
     static let settingsViewSF = "gearshape.fill"
     static let allVideosViewSF = "play.rectangle.on.rectangle"
