@@ -7,7 +7,7 @@ import SwiftUI
 
 extension Color {
     static var myAccentColor: Color {
-        return Color("accentColor")
+        return Color("myAccentColor")
     }
     static var backgroundColor: Color {
         return Color("BackgroundColor")
