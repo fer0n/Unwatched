@@ -100,9 +100,11 @@ struct UserDataService {
 
             func insertModelsFor<T: ModelConvertable>(_ entries: [T]) {
                 for entry in entries {
-                    var modelEntry = entry.toModel
-                    context.insert(modelEntry)
-                    modelEntry.video = videoIdDict[entry.videoId]
+                    if let video = videoIdDict[entry.videoId] {
+                        var modelEntry = entry.toModel
+                        context.insert(modelEntry)
+                        modelEntry.video = video
+                    }
                 }
             }
 
