@@ -76,7 +76,6 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = ""
             currentPublishedDate = ""
             currentYoutubeChannelId = ""
-            // TODO: why the += ? better way to load all this?
         }
     }
 

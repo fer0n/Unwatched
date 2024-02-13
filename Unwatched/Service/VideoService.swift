@@ -159,8 +159,6 @@ class VideoService {
             return nextVideo.video
         }
         return nil
-        // TODO: worth putting this on the background thread?
-        // TODO: worth getting the actual queueEntry for the current video first and then continue?
     }
 
     static func deleteEverything(_ container: ModelContainer) async {

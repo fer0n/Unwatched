@@ -181,8 +181,6 @@ import SwiftUI
     }
 
     func addSubscription(from urls: [URL]) {
-
-        //        newSubs = nil
         guard let container = container else {
             print("no container in addSubscriptionFromText")
             return
