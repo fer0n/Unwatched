@@ -9,6 +9,9 @@ import SwiftData
 struct CachedImageView<Content, Content2>: View where Content: View, Content2: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ImageCacheManager.self) var cacheManager
+
+    @State var imageTask: Task<ImageCacheInfo, Error>?
+
     var video: Video?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
@@ -31,28 +34,33 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
                 .onAppear {
                     loadImage()
                 }
+                .task(id: imageTask) {
+                    guard imageTask != nil,
+                          let videoId = video?.persistentModelID else {
+                        return
+                    }
+                    if let imageInfo = try? await imageTask?.value {
+                        cacheManager[videoId] = imageInfo
+                    }
+                }
         }
     }
 
-    func loadImage () {
+    func loadImage() {
         guard let video = video,
               let url = video.thumbnailUrl,
               cacheManager[video.persistentModelID] == nil else {
             return
         }
         let videoId = video.persistentModelID
-        Task.detached {
+        imageTask = Task.detached {
             let imageData = try await ImageService.loadImageData(url: url)
-            let cacheInfo = ImageCacheInfo(
+            return ImageCacheInfo(
                 url: url,
                 data: imageData,
                 videoId: videoId,
                 uiImage: UIImage(data: imageData)
             )
-            await Task.yield()
-            await MainActor.run {
-                cacheManager[videoId] = cacheInfo
-            }
         }
     }
 
