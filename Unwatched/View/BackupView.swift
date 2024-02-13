@@ -8,34 +8,25 @@ import SwiftUI
 struct BackupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
+    @Environment(Alerter.self) private var alerter
 
     @AppStorage(Const.automaticBackups) var automaticBackups = true
+    @AppStorage(Const.minimalBackups) var minimalBackups = true
 
-    @State var isExporting = false
-    @State var isExportingAll = false
     @State var showFileImporter = false
-    @State var isDeleting = false
-    @State var isDeletingEverything = false
     @State var showDeleteConfirmation = false
     @State var fileNames = [URL]()
     @State var fileToBeRestored: IdentifiableURL?
+
+    @State var isDeletingTask: Task<(), Never>?
+    @State var isDeletingEverythingTask: Task<(), Never>?
+    @State var saveToIcloudTask: Task<(), any Error>?
+    @State var saveDeviceNameToIcloud: String?
 
     var body: some View {
         let backupType = Const.backupType ?? .json
 
         List {
-            let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
-            ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                if isExportingAll {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, alignment: .center)
-                } else {
-                    HStack {
-                        Image(systemName: "square.and.arrow.up")
-                        Text("exportSubscriptions")
-                    }
-                }
-            }
 
             Section(header: Text("automaticBackups"), footer: Text("automaticBackupsHelper")) {
                 Toggle(isOn: $automaticBackups) {
@@ -44,9 +35,15 @@ struct BackupView: View {
                 .tint(.teal)
             }
 
+            Section(footer: Text("minimalBackupsHelper")) {
+                Toggle(isOn: $minimalBackups) {
+                    Text("minimalBackups")
+                }
+                .tint(.teal)
+            }
+
             Button {
-                let deviceName = UIDevice.current.name
-                saveToIcloud(deviceName)
+                saveDeviceNameToIcloud = UIDevice.current.name
             } label: {
                 Text("backupNow")
             }
@@ -60,18 +57,26 @@ struct BackupView: View {
             if !fileNames.isEmpty {
                 Section("latestUnwatchedBackups") {
                     ForEach(fileNames, id: \.self) { file in
-                        let (device, date) = getFileInfo(file)
+                        let info = getFileInfo(file)
                         Button {
                             fileToBeRestored = IdentifiableURL(url: file)
                         } label: {
                             VStack(alignment: .leading) {
-                                Text(date ?? "unknown date")
+                                Text(info.dateString ?? "unknown date")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                if let device = device {
-                                    Text(device)
-                                        .font(.caption)
-                                        .foregroundStyle(.gray)
+                                HStack(spacing: 0) {
+                                    if let device = info.deviceName {
+                                        Text(device)
+                                    }
+                                    if info.deviceName != nil && info.fileSizeString != nil {
+                                        Text(verbatim: " • ")
+                                    }
+                                    if let size = info.fileSizeString {
+                                        Text(verbatim: size)
+                                    }
                                 }
+                                .font(.caption)
+                                .foregroundStyle(.gray)
                             }
                         }
                     }
@@ -82,7 +87,7 @@ struct BackupView: View {
                 Button(role: .destructive, action: {
                     deleteImageCache()
                 }, label: {
-                    if isDeleting {
+                    if isDeletingTask != nil {
                         ProgressView()
                             .frame(maxWidth: .infinity, alignment: .center)
                     } else {
@@ -93,7 +98,7 @@ struct BackupView: View {
                 Button(role: .destructive, action: {
                     showDeleteConfirmation = true
                 }, label: {
-                    if isDeletingEverything {
+                    if isDeletingEverythingTask != nil {
                         ProgressView()
                             .frame(maxWidth: .infinity, alignment: .center)
                     } else {
@@ -129,32 +134,51 @@ struct BackupView: View {
                 print(error.localizedDescription)
             }
         }
+        .task(id: isDeletingTask) {
+            guard isDeletingTask != nil else { return }
+            await isDeletingTask?.value
+            isDeletingTask = nil
+        }
+        .task(id: isDeletingEverythingTask) {
+            guard isDeletingEverythingTask != nil else { return }
+            await isDeletingEverythingTask?.value
+            isDeletingEverythingTask = nil
+        }
+        .task(id: saveToIcloudTask) {
+            do {
+                try await saveToIcloudTask?.value
+                self.getAllIcloudFiles()
+            } catch {
+                alerter.showError(error)
+            }
+        }
+        .task(id: saveDeviceNameToIcloud) {
+            guard let deviceName = saveDeviceNameToIcloud else {
+                return
+            }
+            await saveToIcloud(deviceName)
+            saveDeviceNameToIcloud = nil
+        }
         .onAppear {
             getAllIcloudFiles()
         }
     }
 
-    func getFileInfo(_ file: URL) -> (deviceName: String?, dateString: String?) {
+    func getFileInfo(_ file: URL) -> FileInfo {
         let fileName = file.lastPathComponent
         let deviceName = fileName.contains("_")
             ? fileName.components(separatedBy: "_").first
             : nil
-        let date = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate
-        let dateString = date?.formatted()
-        return (deviceName, dateString)
+        let resourceValues = try? file.resourceValues(forKeys: [.creationDateKey, .totalFileAllocatedSizeKey])
+        let dateString = resourceValues?.creationDate?.formatted()
+        let fileSize = resourceValues?.totalFileAllocatedSize
+        let fileSizeString = fileSize.map { ByteCountFormatter.string(fromByteCount: Int64($0), countStyle: .file) }
+        return FileInfo(deviceName: deviceName, dateString: dateString, fileSizeString: fileSizeString)
     }
 
-    func saveToIcloud(_ deviceName: String) {
-        isExporting = true
+    func saveToIcloud(_ deviceName: String) async {
         let container = modelContext.container
-        let task = UserDataService.saveToIcloud(deviceName, container)
-        Task {
-            try await task.value
-            await MainActor.run {
-                self.getAllIcloudFiles()
-                isExporting = false
-            }
-        }
+        saveToIcloudTask = UserDataService.saveToIcloud(deviceName, container)
     }
 
     func restoreBackup(_ file: URL) {
@@ -185,38 +209,25 @@ struct BackupView: View {
     }
 
     func deleteEverything() -> Task<(), Never>? {
-        if isDeletingEverything { return nil }
+        if isDeletingEverythingTask != nil { return nil }
         let container = modelContext.container
-        isDeletingEverything = true
         withAnimation {
             player.clearVideo()
         }
         let task = Task {
             await VideoService.deleteEverything(container)
-            await MainActor.run {
-                self.isDeletingEverything = false
-            }
         }
+        isDeletingEverythingTask = task
         return task
     }
 
     func deleteImageCache() {
-        if isDeleting { return }
+        if isDeletingTask != nil { return }
         let container = modelContext.container
-        isDeleting = true
-        Task {
+        isDeletingTask = Task {
             let task = ImageService.deleteAllImages(container)
             try? await task.value
-            await MainActor.run {
-                self.isDeleting = false
-            }
         }
-    }
-
-    func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
-        let container = modelContext.container
-        let result = try? await SubscriptionService.getAllFeedUrls(container)
-        return result ?? []
     }
 
     func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
@@ -226,9 +237,15 @@ struct BackupView: View {
 
         Task {
             await after?.value
-            if let data = try? Data(contentsOf: filePath) {
+            print("after task done")
+            do {
+                let data = try Data(contentsOf: filePath)
+                print("data is there")
                 UserDataService.importBackup(data, container: container)
+            } catch {
+                print("error when importing: \(error)")
             }
+            print("data")
             if isSecureAccess {
                 filePath.stopAccessingSecurityScopedResource()
             }
@@ -236,35 +253,12 @@ struct BackupView: View {
     }
 }
 
-struct AsyncSharableUrls: Transferable {
-    let getUrls: () async -> [(title: String, link: URL?)]
-    @Binding var isLoading: Bool
-
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .plainText) { item in
-            item.isLoading = true
-            let urls = await item.getUrls()
-            let textUrls = urls
-                .map { "\($0.title)\n\($0.link?.absoluteString ?? "...")\n" }
-                .joined(separator: "\n")
-            print("textUrls", textUrls)
-            let data = textUrls.data(using: .utf8)
-            if let data = data {
-                item.isLoading = false
-                return data
-            } else {
-                fatalError()
-            }
-            item.isLoading = false
-        }
-    }
-}
-
-struct IdentifiableURL: Identifiable {
-    let id = UUID()
-    let url: URL
-}
-
 #Preview {
     BackupView()
+}
+
+struct FileInfo {
+    let deviceName: String?
+    let dateString: String?
+    let fileSizeString: String?
 }

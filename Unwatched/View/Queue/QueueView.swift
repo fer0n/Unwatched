@@ -99,7 +99,7 @@ struct QueueView: View {
         } actions: {
             if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
                 Link(destination: url) {
-                    Label("setupShareSheetAction", systemImage: "square.and.arrow.up.fill")
+                    Label("setupShareSheetAction", systemImage: "square.and.arrow.up.on.square.fill")
                 }
                 .bold()
                 .buttonStyle(.borderedProminent)

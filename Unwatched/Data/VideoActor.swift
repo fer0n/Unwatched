@@ -157,7 +157,11 @@ actor VideoActor {
         try modelContext.save()
     }
 
-    private func loadVideos(for sub: Subscription, videos: [SendableVideo], defaultPlacementInfo: DefaultVideoPlacement) async throws {
+    private func loadVideos(
+        for sub: Subscription,
+        videos: [SendableVideo],
+        defaultPlacementInfo: DefaultVideoPlacement
+    ) async throws {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         var newVideos = [Video]()
         for vid in videos {

@@ -14,6 +14,7 @@ struct AddToLibraryView: View {
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
     @State var isLoadingVideos = false
+    @State var videoUrls = [URL]()
 
     var body: some View {
         Button(action: {
@@ -44,6 +45,15 @@ struct AddToLibraryView: View {
         .sheet(isPresented: $subManager.showDropResults) {
             AddSubscriptionView(subManager: subManager)
         }
+        .task(id: addVideosSuccess) {
+            await delayedVideoCheckmarkReset()
+        }
+        .task(id: subManager.isSubscribedSuccess) {
+            await delayedSubscriptionCheckmarkReset()
+        }
+        .task(id: videoUrls) {
+            await addVideoUrls(videoUrls)
+        }
     }
 
     var pasteButton: some View {
@@ -70,12 +80,6 @@ struct AddToLibraryView: View {
                 .disabled(subManager.isLoading)
             }
         }
-        .onChange(of: subManager.isSubscribedSuccess) {
-            delayedSubscriptionCheckmarkReset()
-        }
-        .onChange(of: addVideosSuccess) {
-            delayedVideoCheckmarkReset()
-        }
     }
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
@@ -84,62 +88,51 @@ struct AddToLibraryView: View {
             print("no url found")
             return
         }
-        let (videoUrls, rest) = UrlService.extractVideoUrls(text)
-        addVideoUrls(videoUrls)
+        let (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
+        videoUrls = videoUrlsLocal
         subManager.addSubscriptionFromText(rest)
     }
 
-    func delayedVideoCheckmarkReset() {
+    func delayedVideoCheckmarkReset() async {
         if addVideosSuccess == nil {
             return
         }
         addText = ""
         refresher.refreshAll()
-        Task {
-            await Task.sleep(s: 3)
-            await MainActor.run {
-                addVideosSuccess = nil
-            }
-        }
+        do {
+            try await Task.sleep(s: 3)
+            addVideosSuccess = nil
+        } catch { }
     }
 
-    func delayedSubscriptionCheckmarkReset() {
+    func delayedSubscriptionCheckmarkReset() async {
         if subManager.isSubscribedSuccess == nil {
             return
         }
         addText = ""
         refresher.refreshAll()
-        Task {
-            await Task.sleep(s: 3)
-            await MainActor.run {
-                subManager.isSubscribedSuccess = nil
-            }
-        }
+        do {
+            try await Task.sleep(s: 3)
+            subManager.isSubscribedSuccess = nil
+        } catch { }
     }
 
-    func addVideoUrls(_ urls: [URL]) {
+    func addVideoUrls(_ urls: [URL]) async {
         if !urls.isEmpty {
             isLoadingVideos = true
             let container = modelContext.container
             let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
-            Task {
-                do {
-                    try await task.value
-                    await MainActor.run {
-                        isLoadingVideos = false
-                        addVideosSuccess = true
-                        return
-                    }
-                } catch {
-                    print(error)
-                    await MainActor.run {
-                        addVideosSuccess = false
-                        isLoadingVideos = false
-                    }
-                }
+            do {
+                try await task.value
+                isLoadingVideos = false
+                addVideosSuccess = true
+                return
+            } catch {
+                print(error)
+                addVideosSuccess = false
+                isLoadingVideos = false
             }
         }
-        print("urls", urls)
     }
 }
 

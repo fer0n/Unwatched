@@ -23,7 +23,7 @@ final class Video: CustomStringConvertible, Exportable {
     var thumbnailUrl: URL?
     var publishedDate: Date?
     var duration: Double?
-    var elapsedSeconds: Double = 0
+    var elapsedSeconds: Double?
     var videoDescription: String?
     var watched = false
     var subscription: Subscription?
@@ -40,14 +40,14 @@ final class Video: CustomStringConvertible, Exportable {
 
     var remainingTime: Double? {
         guard let duration = duration else { return nil }
-        return duration - elapsedSeconds
+        return duration - (elapsedSeconds ?? 0)
     }
 
     var hasFinished: Bool? {
         guard let duration = duration else {
             return nil
         }
-        return duration - 10 < elapsedSeconds
+        return duration - 10 < (elapsedSeconds ?? 0)
     }
 
     var description: String {
@@ -88,9 +88,10 @@ final class Video: CustomStringConvertible, Exportable {
          publishedDate: Date? = nil,
          youtubeChannelId: String? = nil,
          duration: Double? = nil,
-         elapsedSeconds: Double = 0,
+         elapsedSeconds: Double? = nil,
          videoDescription: String? = nil,
          chapters: [Chapter] = [],
+         watched: Bool = false,
          isYtShort: Bool = false,
          isLikelyYtShort: Bool = false,
          bookmarkedDate: Date? = nil,
@@ -105,6 +106,7 @@ final class Video: CustomStringConvertible, Exportable {
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
         self.chapters = chapters
+        self.watched = watched
         self.isYtShort = isYtShort
         self.isLikelyYtShort = isLikelyYtShort
         self.bookmarkedDate = bookmarkedDate
