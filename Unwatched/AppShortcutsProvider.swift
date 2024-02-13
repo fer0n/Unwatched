@@ -1,7 +1,5 @@
 import Intents
 import SwiftData
-
-// StartMeditationIntent creates a meditation session.
 import AppIntents
 
 struct AddYoutubeURL: AppIntent {
