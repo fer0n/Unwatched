@@ -80,7 +80,7 @@ struct ChapterDescriptionView: View {
         VStack(alignment: .leading, spacing: 15) {
             Text(verbatim: video.title)
                 .font(.system(.title2))
-                .fontWeight(.semibold)
+                .fontWeight(.bold)
             VStack(alignment: .leading) {
                 if let subTitle = video.subscription?.title {
                     Text(verbatim: subTitle)
@@ -94,7 +94,7 @@ struct ChapterDescriptionView: View {
             }
             .foregroundStyle(.gray)
             if let desc = video.videoDescription {
-                Text(verbatim: desc)
+                Text(LocalizedStringKey(desc))
             }
         }
     }
