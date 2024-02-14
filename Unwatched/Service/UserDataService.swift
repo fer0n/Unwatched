@@ -116,7 +116,11 @@ struct UserDataService {
             for subscription in backup.subscriptions {
                 let subscriptionModel = subscription.toModel
                 context.insert(subscriptionModel)
-                subscriptionModel.videos = subscription.videosIds.compactMap { videoIdDict[$0] }
+
+                subscriptionModel.onlyTriageAfter = subscriptionModel.mostRecentVideoDate
+                subscriptionModel.mostRecentVideoDate = nil
+                let videos = subscription.videosIds.compactMap { videoIdDict[$0] }
+                subscriptionModel.videos = videos
             }
 
             try context.save()
