@@ -48,10 +48,10 @@ class SubscriptionService {
         return video?.subscription?.isArchived == false
     }
 
-    static func isSubscribed(_ channelId: String? = nil, container: ModelContainer) -> Task<(Bool), Never> {
+    static func isSubscribed(_ channelId: String, container: ModelContainer) -> Task<(Bool), Never> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
-            return await repo.getTitleIfSubscriptionExists(channelId: channelId) != nil
+            return await repo.isSubscribed(channelId: channelId)
         }
     }
 }

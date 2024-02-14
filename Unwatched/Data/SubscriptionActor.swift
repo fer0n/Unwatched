@@ -25,6 +25,8 @@ actor SubscriptionActor {
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
             first.isArchived = false
+            try modelContext.save()
+            return
         }
 
         // if it doesn't exist get url and run the regular subscription flow
@@ -137,6 +139,18 @@ actor SubscriptionActor {
             subState.error = error.localizedDescription
         }
         return (subState, nil)
+    }
+
+    func isSubscribed(channelId: String) -> Bool {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            channelId == $0.youtubeChannelId
+        })
+        fetch.fetchLimit = 1
+        let subs = try? modelContext.fetch(fetch)
+        if let first = subs?.first {
+            return !first.isArchived
+        }
+        return false
     }
 
     func getTitleIfSubscriptionExists(channelId: String? = nil,
