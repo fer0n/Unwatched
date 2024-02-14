@@ -20,49 +20,50 @@ struct ChapterDescriptionView: View {
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
-        let hasChapters = player.video?.chapters?.isEmpty == false
-        let hasDescription = player.video?.videoDescription != nil
-
         NavigationStack {
-            ScrollView {
-                if navManager.selectedDetailPage == .chapters {
-                    if let sortedChapters = player.video?.sortedChapters {
-                        chapterList(sortedChapters)
-                            .padding(.horizontal)
-                            .transition(.move(edge: .trailing))
-                    }
-                } else {
-                    if let desc = player.video?.videoDescription {
-                        Text(LocalizedStringKey(desc))
+            if let video = player.video {
+                let hasChapters = video.chapters?.isEmpty == false
+                let hasDescription = video.videoDescription != nil
+                let sorted = video.sortedChapters
+
+                ScrollView {
+                    if navManager.selectedDetailPage == .chapters {
+                        if !sorted.isEmpty {
+                            chapterList(sorted)
+                                .padding(.horizontal)
+                                .transition(.move(edge: .trailing))
+                        }
+                    } else {
+                        descriptionDetails(video)
                             .padding(.horizontal)
                             .tint(.teal)
                             .transition(.move(edge: .leading))
                     }
                 }
-            }
-            .highPriorityGesture(dragGesture(origin: navManager.selectedDetailPage))
-            .toolbar {
-                if hasDescription && hasChapters {
-                    @Bindable var navManager = navManager
-                    ToolbarItem(placement: .principal) {
-                        Picker("page", selection: $navManager.selectedDetailPage) {
-                            Text("description").tag(ChapterDescriptionPage.description)
-                            Text("chapters").tag(ChapterDescriptionPage.chapters)
+                .highPriorityGesture(dragGesture(origin: navManager.selectedDetailPage))
+                .toolbar {
+                    if hasDescription && hasChapters {
+                        @Bindable var navManager = navManager
+                        ToolbarItem(placement: .principal) {
+                            Picker("page", selection: $navManager.selectedDetailPage) {
+                                Text("description").tag(ChapterDescriptionPage.description)
+                                Text("chapters").tag(ChapterDescriptionPage.chapters)
+                            }
+                            .pickerStyle(.segmented)
+                            .frame(maxWidth: .infinity)
                         }
-                        .pickerStyle(.segmented)
-                        .frame(maxWidth: .infinity)
+                    }
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                        }
                     }
                 }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                    }
-                }
+                .tint(Color.myAccentColor)
+                .toolbarTitleDisplayMode(.inline)
             }
-            .tint(Color.myAccentColor)
-            .toolbarTitleDisplayMode(.inline)
         }
         .task(id: selectedDetailPageTask) {
             guard let task = selectedDetailPageTask else {
@@ -71,6 +72,29 @@ struct ChapterDescriptionView: View {
             let direction = await task.value
             withAnimation {
                 navManager.selectedDetailPage = direction
+            }
+        }
+    }
+
+    func descriptionDetails(_ video: Video) -> some View {
+        VStack(alignment: .leading, spacing: 15) {
+            Text(verbatim: video.title)
+                .font(.system(.title2))
+                .fontWeight(.semibold)
+            VStack(alignment: .leading) {
+                if let subTitle = video.subscription?.title {
+                    Text(verbatim: subTitle)
+                }
+                if let published = video.publishedDate {
+                    Text(verbatim: "\(published.formatted)")
+                }
+                if let timeString = video.duration?.formattedSeconds {
+                    Text(verbatim: timeString)
+                }
+            }
+            .foregroundStyle(.gray)
+            if let desc = video.videoDescription {
+                Text(verbatim: desc)
             }
         }
     }
@@ -151,4 +175,6 @@ struct ChapterDescriptionView: View {
         .environment(NavigationManager())
         .environment(RefreshManager())
         .environment(SubscribeManager())
+        .environment(ImageCacheManager())
+        .environment(SheetPositionReader())
 }

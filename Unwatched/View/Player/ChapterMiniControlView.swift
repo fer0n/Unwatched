@@ -158,11 +158,11 @@ struct ChapterMiniControlView: View {
         } label: {
             HStack {
                 if let published = video.publishedDate {
-                    Text("\(published.formatted)")
+                    Text(verbatim: "\(published.formatted)")
                     Text(verbatim: "•")
                 }
                 if let duration = video.duration?.formattedSeconds {
-                    Text("\(duration)")
+                    Text(verbatim: "\(duration)")
                     Text(verbatim: "•")
                 }
                 Image(systemName: "quote.bubble.fill")
