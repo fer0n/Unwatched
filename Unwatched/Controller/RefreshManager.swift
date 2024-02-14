@@ -35,12 +35,6 @@ import SwiftData
 
     func handleAutoBackup(_ deviceName: String) {
         print("handleAutoBackup")
-        let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
-        guard automaticBackups == true else {
-            print("no auto backup on")
-            return
-        }
-
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
@@ -48,6 +42,12 @@ import SwiftData
                 print("last backup was today")
                 return
             }
+        }
+
+        let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
+        guard automaticBackups == true else {
+            print("no auto backup on")
+            return
         }
 
         if let container = container {

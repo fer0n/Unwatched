@@ -29,13 +29,12 @@ struct SetupView: View {
                 refresher.container = container
                 player.container = container
                 restoreNowPlayingVideo()
-                let deviceName = UIDevice.current.name
-                refresher.handleAutoBackup(deviceName)
             }
             .onChange(of: scenePhase) {
                 if scenePhase == .active {
                     print("Active")
                     refresher.refreshOnStartup()
+                    refresher.handleAutoBackup(UIDevice.current.name)
                 } else if scenePhase == .background {
                     print("background")
                     saveData()
