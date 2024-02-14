@@ -37,6 +37,7 @@ extension Double {
         formatter.unitsStyle = .abbreviated
         formatter.zeroFormattingBehavior = .dropAll
         formatter.maximumUnitCount = 1
+        formatter.calendar?.locale = Locale(identifier: "en_US_POSIX")
         return formatter.string(from: TimeInterval(self))
     }
 }
