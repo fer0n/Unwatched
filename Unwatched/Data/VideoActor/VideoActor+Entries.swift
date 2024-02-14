@@ -52,7 +52,7 @@ extension VideoActor {
     }
 
     func getVideosNotAlreadyAdded(sub: Subscription, videos: [Video]) -> [Video] {
-        let videoIds = sub.videos?.map { $0.youtubeId } ?? []
+        let videoIds = Set(sub.videos?.map { $0.youtubeId } ?? [])
         return videos.filter { !videoIds.contains($0.youtubeId) }
     }
 
@@ -68,7 +68,11 @@ extension VideoActor {
                                   videos: [Video],
                                   defaultPlacementInfo: DefaultVideoPlacement,
                                   limitVideos: Int?) {
-        let videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
+        var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
+        if let cutOffDate = sub.onlyTriageAfter {
+            videosToAdd = videosToAdd.filter { $0.publishedDate ?? .distantPast > cutOffDate }
+            sub.onlyTriageAfter = nil
+        }
 
         var placement = sub.placeVideosIn
         if sub.placeVideosIn == .defaultPlacement {

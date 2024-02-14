@@ -158,7 +158,6 @@ import Observation
         var shortsPlacement: VideoPlacement?
         var shortsDetection: ShortsDetection = .safe
 
-        // TODO: is this thread safe? Put this into a static function somewhere else
         if UserDefaults.standard.bool(forKey: Const.handleShortsDifferently) {
             let shortsPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsPlacement)
             shortsPlacement = VideoPlacement(rawValue: shortsPlacementRaw)

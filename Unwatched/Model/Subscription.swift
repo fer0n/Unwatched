@@ -20,6 +20,9 @@ final class Subscription: CustomStringConvertible, Exportable {
 
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
+    // when importing a backup, load more videos but only triage the ones that are new compared to the old one
+    var onlyTriageAfter: Date?
+
     var youtubeChannelId: String?
     var youtubeUserName: String?
     // TODO: there's a difference between handles/usernames/cids, should be handled better
