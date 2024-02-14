@@ -33,6 +33,10 @@ import SwiftUI
     }
 
     func setIsSubscribed(_ channelId: String?) {
+        guard let channelId = channelId else {
+            print("no channelId to check subscription status")
+            return
+        }
         guard let container = container else {
             print("checkIsSubscribed has no ModelContainer")
             return
