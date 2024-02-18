@@ -61,7 +61,6 @@ import MediaPlayer
         remainingSeconds += minutes * 60
         print("remainingSeconds", remainingSeconds)
         resetAudioFadeOut()
-        startTimer()
     }
 
     func startTimer() {
@@ -125,6 +124,16 @@ import MediaPlayer
     func restoreVolume() {
         if let oldVolume = oldVolume {
             setVolumeTo = oldVolume
+        }
+    }
+
+    func pauseTimer() {
+        timer.upstream.connect().cancel()
+    }
+
+    func resumeTimer() {
+        if remainingSeconds > 0 {
+            startTimer()
         }
     }
 }
