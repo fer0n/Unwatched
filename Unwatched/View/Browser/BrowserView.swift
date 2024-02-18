@@ -56,6 +56,7 @@ struct BrowserView: View, KeyboardReadable {
             }
             .ignoresSafeArea(edges: [.bottom])
         }
+        .background(Color.youtubeWebBackground)
         .task(id: isSuccess) {
             await handleSuccessChange()
         }
@@ -111,7 +112,7 @@ struct BrowserView: View, KeyboardReadable {
                 }
             }
         }
-        .background(showDropArea ? .black : .clear)
+        .background(showDropArea ? .teal : .clear)
         .tint(Color.myAccentColor)
         .dropDestination(for: URL.self) { items, _ in
             droppedUrls = items
@@ -126,7 +127,7 @@ struct BrowserView: View, KeyboardReadable {
 
     var dropAreaContent: some View {
         ZStack {
-            let size: CGFloat = 20
+            let size: CGFloat = 30
 
             if isLoading {
                 ProgressView()
@@ -143,10 +144,15 @@ struct BrowserView: View, KeyboardReadable {
             } else {
                 VStack {
                     Image(systemName: Const.queueTagSF)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: size, height: size)
                     Text("dropVideoUrlsHere")
+                        .fontWeight(.medium)
                 }
             }
         }
+        .foregroundStyle(.white)
     }
 
     func addSubButton(_ text: String) -> some View {
@@ -209,7 +215,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView()
+    BrowserView(isDragOver: true)
         .modelContainer(DataController.previewContainer)
         .environment(RefreshManager())
 }

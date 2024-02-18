@@ -7,18 +7,21 @@ import SwiftUI
 
 extension Color {
     static var myAccentColor: Color {
-        return Color("myAccentColor")
+        Color("myAccentColor")
     }
     static var backgroundColor: Color {
-        return Color("BackgroundColor")
+        Color("BackgroundColor")
     }
     static var grayColor: Color {
-        return Color("CustomGray")
+        Color("CustomGray")
     }
     static var myBackgroundGray: Color {
-        return Color("backgroundGray")
+        Color("backgroundGray")
     }
     static var myForegroundGray: Color {
-        return Color("foregroundGray")
+        Color("foregroundGray")
+    }
+    static var youtubeWebBackground: Color {
+        Color("YouTubeWebBackground")
     }
 }
