@@ -7,6 +7,8 @@ import SwiftUI
 import MediaPlayer
 
 struct SleepTimer: View {
+    @Environment(PlayerManager.self) var player
+
     @State private var showPopover = false
     @State var slider: UISlider?
     @State var hapticToggle: Bool = false
@@ -54,6 +56,17 @@ struct SleepTimer: View {
                 .padding()
                 .presentationCompactAdaptation(.popover)
         }
+        .onChange(of: player.isPlaying) {
+            handleTimerPause()
+        }
+    }
+
+    func handleTimerPause() {
+        if player.isPlaying {
+            viewModel.resumeTimer()
+        } else {
+            viewModel.pauseTimer()
+        }
     }
 
     func addTimeButton(_ minutes: Int) -> some View {
@@ -66,6 +79,7 @@ struct SleepTimer: View {
                 viewModel.addTime(minutes)
             }
             viewModel.restoreVolume()
+            handleTimerPause()
             hapticToggle.toggle()
         } label: {
             Label("\(minutes)", systemImage: "plus")
