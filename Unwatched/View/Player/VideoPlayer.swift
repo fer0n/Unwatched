@@ -265,17 +265,18 @@ struct VideoPlayer: View {
     }
 
     func handleVideoEnded() {
-        guard continuousPlayWorkaround == true else {
-            player.pause()
-            return
-        }
         print(">handleVideoEnded")
         if let video = player.video {
             _ = VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
         }
-        setNextVideo(.continuousPlay)
+        if continuousPlayWorkaround == true {
+            setNextVideo(.continuousPlay)
+        } else {
+            player.pause()
+            setNextVideo(.nextUp)
+        }
     }
 
     func setShowMenu() {
@@ -296,7 +297,9 @@ struct VideoPlayer: View {
             return
         }
         print("next", next.title)
-        player.setNextVideo(next, source)
+        withAnimation {
+            player.setNextVideo(next, source)
+        }
     }
 }
 
