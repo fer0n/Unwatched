@@ -8,12 +8,13 @@ import WebKit
 
 struct YtBrowserWebView: UIViewRepresentable {
     var browserManager: BrowserManager
+    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
     func makeUIView(context: Context) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
         webViewConfig.allowsPictureInPictureMediaPlayback = true
-        webViewConfig.allowsInlineMediaPlayback = true
+        webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
