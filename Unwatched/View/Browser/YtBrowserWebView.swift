@@ -19,7 +19,7 @@ struct YtBrowserWebView: UIViewRepresentable {
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = context.coordinator
-        webView.backgroundColor = UIColor.systemBackground
+        webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
         if let url = UrlService.youtubeStartPage {
