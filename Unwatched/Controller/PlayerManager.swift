@@ -33,6 +33,7 @@ enum VideoSource {
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
+        handleChapterChange()
         guard video != nil else {
             return
         }
