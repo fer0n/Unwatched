@@ -86,12 +86,13 @@ struct VideoPlayer: View {
                         watchedButton
                             .frame(maxWidth: .infinity)
                         playButton
-                        continuousPlayButton
+                        nextVideoButton
                             .frame(maxWidth: .infinity)
                         if showFullscreenButton {
                             fullscreenButton
                             Spacer()
                         }
+
                     }
                     .padding(.horizontal, 10)
                 }
@@ -204,11 +205,26 @@ struct VideoPlayer: View {
         .disabled(player.video?.subscription == nil)
     }
 
-    var continuousPlayButton: some View {
-        Toggle(isOn: $continuousPlay) {
-            Image(systemName: "text.line.first.and.arrowtriangle.forward")
+    var nextVideoButton: some View {
+        ZStack {
+            let manualNext = !continuousPlay
+                && player.videoEnded
+                && !player.isPlaying
+            Button {
+                if manualNext {
+                    markVideoWatched(showMenu: false, source: .userInteraction)
+                } else {
+                    continuousPlay.toggle()
+                }
+            } label: {
+                Image(systemName: manualNext
+                        ? "forward.end.fill"
+                        : "text.line.first.and.arrowtriangle.forward"
+                )
+                .modifier(OutlineToggleModifier(isOn: manualNext ? false : continuousPlay))
+                .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+            }
         }
-        .toggleStyle(OutlineToggleStyle())
     }
 
     var playButton: some View {
@@ -243,7 +259,6 @@ struct VideoPlayer: View {
             seconds -= fadeOutSeconds
         }
         player.updateElapsedTime(seconds)
-
     }
 
     func toggleBookmark() {
@@ -253,11 +268,13 @@ struct VideoPlayer: View {
         }
     }
 
-    func markVideoWatched() {
+    func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
         print(">markVideoWatched")
         if let video = player.video {
-            setShowMenu()
-            setNextVideo(.nextUp)
+            if showMenu {
+                setShowMenu()
+            }
+            setNextVideo(source)
             _ = VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
@@ -266,16 +283,16 @@ struct VideoPlayer: View {
 
     func handleVideoEnded() {
         print(">handleVideoEnded")
-        if let video = player.video {
-            _ = VideoService.markVideoWatched(
-                video, modelContext: modelContext
-            )
-        }
         if continuousPlayWorkaround == true {
+            if let video = player.video {
+                _ = VideoService.markVideoWatched(
+                    video, modelContext: modelContext
+                )
+            }
             setNextVideo(.continuousPlay)
         } else {
             player.pause()
-            setNextVideo(.nextUp)
+            player.videoEnded = true
         }
     }
 
