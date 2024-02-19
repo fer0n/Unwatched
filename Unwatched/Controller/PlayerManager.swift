@@ -17,6 +17,7 @@ enum VideoSource {
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
     var videoSource: VideoSource = .userInteraction
+    var videoEnded: Bool = false
 
     var container: ModelContainer?
 
@@ -33,6 +34,7 @@ enum VideoSource {
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
+        videoEnded = false
         handleChapterChange()
         guard video != nil else {
             return
@@ -210,11 +212,19 @@ enum VideoSource {
         if !self.isPlaying {
             self.isPlaying = true
         }
+        updateVideoEnded()
     }
 
     func pause() {
         if self.isPlaying {
             self.isPlaying = false
+        }
+        updateVideoEnded()
+    }
+
+    private func updateVideoEnded() {
+        if videoEnded {
+            videoEnded = false
         }
     }
 

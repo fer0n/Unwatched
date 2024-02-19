@@ -23,9 +23,10 @@ struct OutlineToggleModifier: ViewModifier {
     var isSmall: Bool = false
 
     func body(content: Content) -> some View {
+        let size: CGFloat = isSmall ? 35 : 45
         content
             .font(.system(size: isSmall ? 15 : 18))
-            .padding(isSmall ? 10 : 15)
+            .frame(width: size, height: size)
             .background(isOn ? Color.myAccentColor : Color.myBackgroundGray)
             .foregroundColor(isOn ? Color.backgroundColor : Color.myForegroundGray)
             .clipShape(Circle())
