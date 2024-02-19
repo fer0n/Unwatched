@@ -32,12 +32,7 @@ struct PlayerWebView: UIViewRepresentable {
         webView.backgroundColor = UIColor.systemBackground
         webView.isOpaque = false
 
-        let startAt = getStartPosition()
-        if playerType == .youtubeEmbedded {
-            setupEmbeddedYouTubePlayer(webView: webView, startAt: startAt)
-        } else {
-            setupYouTubePlayer(webView: webView, startAt: startAt)
-        }
+        loadWebContent(webView)
         return webView
     }
 
@@ -72,7 +67,7 @@ struct PlayerWebView: UIViewRepresentable {
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
             print("CUE VIDEO")
             if playerType == .youtube {
-                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, getStartPosition())) {
+                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, player.getStartPosition())) {
                     let request = URLRequest(url: url)
                     uiView.load(request)
                 }
@@ -84,12 +79,14 @@ struct PlayerWebView: UIViewRepresentable {
         }
     }
 
-    func getStartPosition() -> Double {
-        var startAt = player.video?.elapsedSeconds ?? 0
-        if player.video?.hasFinished == true {
-            startAt = 0
+    @MainActor
+    func loadWebContent(_ webView: WKWebView) {
+        let startAt = player.getStartPosition()
+        if playerType == .youtubeEmbedded {
+            setupEmbeddedYouTubePlayer(webView: webView, startAt: startAt)
+        } else {
+            setupYouTubePlayer(webView: webView, startAt: startAt)
         }
-        return startAt
     }
 
     func getPlayScript() -> String {
@@ -134,6 +131,11 @@ struct PlayerWebView: UIViewRepresentable {
 
         init(_ parent: PlayerWebView) {
             self.parent = parent
+        }
+
+        @MainActor
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+            parent.loadWebContent(webView)
         }
 
         func userContentController(_ userContentController: WKUserContentController,
@@ -235,14 +237,14 @@ struct PlayerWebView: UIViewRepresentable {
             }
         }
 
-        @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
             if parent.playerType != .youtube {
                 return
             }
             parent.player.handleAutoStart()
             let script = PlayerWebView.nonEmbeddedInitScript(
                 parent.player.playbackSpeed,
-                parent.getStartPosition(),
+                parent.player.getStartPosition(),
                 parent.player.requiresFetchingVideoData()
             )
             webView.evaluateJavaScript(script)

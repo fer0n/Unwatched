@@ -271,6 +271,14 @@ enum VideoSource {
         }
     }
 
+    func getStartPosition() -> Double {
+        var startAt = video?.elapsedSeconds ?? 0
+        if video?.hasFinished == true {
+            startAt = 0
+        }
+        return startAt
+    }
+
     func handleHotSwap() {
         print("handleHotSwap")
         previousIsPlaying = isPlaying
