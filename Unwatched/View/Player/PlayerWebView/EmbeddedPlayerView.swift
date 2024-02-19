@@ -15,7 +15,6 @@ extension PlayerWebView {
             playbackSpeed: player.playbackSpeed,
             startAt: startAt
         )
-
         webView.loadHTMLString(htmlString, baseURL: nil)
     }
 
