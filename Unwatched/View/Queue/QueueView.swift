@@ -99,7 +99,11 @@ struct QueueView: View {
         } actions: {
             if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
                 Link(destination: url) {
-                    Label("setupShareSheetAction", systemImage: "square.and.arrow.up.on.square.fill")
+                    Image(systemName: "square.and.arrow.up.on.square.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                    Text("setupShareSheetAction")
                 }
                 .bold()
                 .buttonStyle(.borderedProminent)
@@ -110,7 +114,11 @@ struct QueueView: View {
                     Button {
                         showImportSheet = true
                     } label: {
-                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
+                        Image(systemName: "square.and.arrow.down.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                        Text("importSubscriptions")
                     }
                     Button {
                         navManager.showBrowserSheet = true
