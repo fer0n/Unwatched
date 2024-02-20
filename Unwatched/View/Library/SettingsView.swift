@@ -10,7 +10,6 @@ struct SettingsView: View {
 
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
 
@@ -38,9 +37,6 @@ struct SettingsView: View {
                 }
 
                 Section(header: Text("playback"), footer: Text("playbackHelper")) {
-                    Toggle(isOn: $autoplayVideos) {
-                        Text("autoplayVideos")
-                    }
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }

@@ -8,7 +8,6 @@ import WebKit
 
 struct PlayerWebView: UIViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.autoplayVideos) var autoplayVideos: Bool = true
     @AppStorage(Const.playbackSpeed) var playbackSpeed = 1.0
     // workaround: view doesn't update otherwise
     @Environment(PlayerManager.self) var player
