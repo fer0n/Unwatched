@@ -33,13 +33,13 @@ struct SpeedControlView: View {
             HStack(spacing: 0) {
                 ForEach(SpeedControlView.speeds, id: \.self) { speed in
                     let isHightlighted = highlighted.contains(speed)
-                    let frameSize: CGFloat = isHightlighted ? 20 : 5
+                    let frameSize: CGFloat = 5
                     let foregroundColor: Color = .foregroundGray
 
                     ZStack {
                         Circle()
                             .fill()
-                            .stroke(foregroundColor, lineWidth: 1.5)
+                            .stroke(isHightlighted ? .clear : foregroundColor, lineWidth: 1.5)
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
                             .frame(maxWidth: .infinity, maxHeight: SpeedControlView.maxHeight)
@@ -53,8 +53,8 @@ struct SpeedControlView: View {
                             }
                         if isHightlighted {
                             Text(SpeedControlView.formatSpeed(speed))
-                                .fontWeight(.medium)
-                                .font(.system(size: 10))
+                                .fontWeight(.bold)
+                                .font(.system(size: 12))
                                 .foregroundStyle(foregroundColor)
                         }
                     }

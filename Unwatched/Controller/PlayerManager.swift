@@ -34,7 +34,7 @@ enum VideoSource {
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
-        videoEnded = false
+        setVideoEnded(false)
         handleChapterChange()
         guard video != nil else {
             return
@@ -222,9 +222,28 @@ enum VideoSource {
         updateVideoEnded()
     }
 
+    func handlePlayButton() {
+        if videoEnded {
+            seekPosition = 0
+            play()
+        } else if isPlaying {
+            pause()
+        } else {
+            play()
+        }
+    }
+
+    func setVideoEnded(_ value: Bool) {
+        if value != videoEnded {
+            withAnimation {
+                videoEnded = value
+            }
+        }
+    }
+
     private func updateVideoEnded() {
         if videoEnded {
-            videoEnded = false
+            setVideoEnded(false)
         }
     }
 
@@ -302,7 +321,7 @@ enum VideoSource {
         player.video = Video.getDummy()
         //        player.currentTime = 10
         //        player.currentChapter = Chapter.getDummy()
-        player.embeddingDisabled = true
+        //        player.embeddingDisabled = true
         return player
     }
 
