@@ -246,9 +246,23 @@ enum VideoSource {
         }
     }
 
-    func clearVideo() {
+    private func hardClearVideo() {
         self.video = nil
         UserDefaults.standard.set(nil, forKey: Const.nowPlayingVideo)
+    }
+
+    func clearVideo() {
+        guard let video = video,
+              let container = container else {
+            return
+        }
+        let modelContext = ModelContext(container)
+        let task = VideoService.clearFromEverywhere(
+            video,
+            updateCleared: true,
+            modelContext: modelContext
+        )
+        loadTopmostVideoFromQueue(after: task)
     }
 
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
@@ -271,7 +285,7 @@ enum VideoSource {
                         }
                     }
                 } else {
-                    clearVideo()
+                    hardClearVideo()
                 }
             }
         }

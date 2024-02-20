@@ -192,6 +192,16 @@ struct VideoPlayer: View {
             Image(systemName: "checkmark")
         }
         .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
+        .padding(3)
+        .contextMenu {
+            if let video = player.video {
+                Button {
+                    player.clearVideo()
+                } label: {
+                    Label("clearVideo", systemImage: "xmark")
+                }
+            }
+        }
     }
 
     var customSettingsButton: some View {
@@ -227,6 +237,16 @@ struct VideoPlayer: View {
                 )
                 .modifier(OutlineToggleModifier(isOn: manualNext ? false : continuousPlay))
                 .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+            }
+            .padding(3)
+            .contextMenu {
+                if !manualNext {
+                    Button {
+                        markVideoWatched(showMenu: false, source: .userInteraction)
+                    } label: {
+                        Label("nextVideo", systemImage: "forward.end.fill")
+                    }
+                }
             }
         }
     }
