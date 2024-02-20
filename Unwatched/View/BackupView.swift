@@ -169,10 +169,17 @@ struct BackupView: View {
         let deviceName = fileName.contains("_")
             ? fileName.components(separatedBy: "_").first
             : nil
-        let resourceValues = try? file.resourceValues(forKeys: [.creationDateKey, .totalFileAllocatedSizeKey])
-        let dateString = resourceValues?.creationDate?.formatted()
-        let fileSize = resourceValues?.totalFileAllocatedSize
-        let fileSizeString = fileSize.map { ByteCountFormatter.string(fromByteCount: Int64($0), countStyle: .file) }
+        var fileSizeString: String?
+        var dateString: String?
+
+        if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: file.path) {
+            if let fileSizeInBytes = fileAttributes[.size] as? Int64 {
+                fileSizeString = ByteCountFormatter.string(fromByteCount: fileSizeInBytes, countStyle: .file)
+            }
+            if let date = fileAttributes[.creationDate] as? Date {
+                dateString = date.formatted()
+            }
+        }
         return FileInfo(deviceName: deviceName, dateString: dateString, fileSizeString: fileSizeString)
     }
 
