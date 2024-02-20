@@ -33,15 +33,7 @@ struct MiniPlayerView: View {
 
                     Text(video.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Button {
-                        player.isPlaying.toggle()
-                    } label: {
-                        Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .accentColor(.myAccentColor)
-                            .contentTransition(.symbolEffect(.replace, options: .speed(7)))
-                    }
+                    PlayButton(size: 30)
                 }
             }
             .onTapGesture {

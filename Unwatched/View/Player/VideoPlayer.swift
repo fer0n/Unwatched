@@ -85,7 +85,11 @@ struct VideoPlayer: View {
                     HStack {
                         watchedButton
                             .frame(maxWidth: .infinity)
-                        playButton
+                        PlayButton(size:
+                                    (player.embeddingDisabled || compactSize)
+                                    ? 70
+                                    : 90
+                        )
                         nextVideoButton
                             .frame(maxWidth: .infinity)
                         if showFullscreenButton {
@@ -130,7 +134,6 @@ struct VideoPlayer: View {
             // workaround to update ui, doesn't work without
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .sensoryFeedback(Const.sensoryFeedback, trigger: continuousPlay)
     }
 
     @MainActor
@@ -216,6 +219,7 @@ struct VideoPlayer: View {
                 } else {
                     continuousPlay.toggle()
                 }
+                hapticToggle.toggle()
             } label: {
                 Image(systemName: manualNext
                         ? "forward.end.fill"
@@ -224,22 +228,6 @@ struct VideoPlayer: View {
                 .modifier(OutlineToggleModifier(isOn: manualNext ? false : continuousPlay))
                 .contentTransition(.symbolEffect(.replace, options: .speed(7)))
             }
-        }
-    }
-
-    var playButton: some View {
-        Button {
-            player.isPlaying.toggle()
-            hapticToggle.toggle()
-        } label: {
-            let size: Double = (player.embeddingDisabled || compactSize)
-                ? 70
-                : 90
-            Image(systemName: player.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                .resizable()
-                .frame(width: size, height: size)
-                .accentColor(.myAccentColor)
-                .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
     }
 
@@ -283,6 +271,7 @@ struct VideoPlayer: View {
 
     func handleVideoEnded() {
         print(">handleVideoEnded")
+
         if continuousPlayWorkaround == true {
             if let video = player.video {
                 _ = VideoService.markVideoWatched(
@@ -292,7 +281,8 @@ struct VideoPlayer: View {
             setNextVideo(.continuousPlay)
         } else {
             player.pause()
-            player.videoEnded = true
+            player.seekPosition = nil
+            player.setVideoEnded(true)
         }
     }
 

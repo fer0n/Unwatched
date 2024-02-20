@@ -157,11 +157,14 @@ struct PlayerWebView: UIViewRepresentable {
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "pause":
+                previousState.isPlaying = false
                 parent.player.pause()
                 handleTimeUpdate(payload, persist: true)
             case "play":
+                previousState.isPlaying = true
                 parent.player.play()
             case "ended":
+                previousState.isPlaying = false
                 parent.onVideoEnded()
             case "unstarted":
                 parent.player.handleAutoStart()
