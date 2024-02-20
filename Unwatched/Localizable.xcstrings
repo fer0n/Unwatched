@@ -251,22 +251,6 @@
         }
       }
     },
-    "autoplayVideos" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Videos Automatisch Starten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autoplay videos"
-          }
-        }
-      }
-    },
     "backup" : {
       "localizations" : {
         "de" : {
@@ -1506,13 +1490,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn \"Autoplay\" aktiviert ist, wird das Video nach der Auswahl eines Videos abgespielt. \"Vollbild\" limitiert die Wiedergabe eines Videos auf den Vollbildmodus. Am iPad ist \"Vollbild\" notwendig um Picture-in-picture zu starten, am iPhone funktioniert es mit oder ohne."
+            "value" : "\"Vollbild\" limitiert die Wiedergabe eines Videos auf den Vollbildmodus. Am iPad ist \"Vollbild\" notwendig um Picture-in-picture zu starten, am iPhone funktioniert es mit oder ohne."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If \"Autoplay\" is enabled the video will start playing after selecting it from a list. \"Fullscreen\" set to true will only allow playing a video in fullscreen. On iPads, this is required to play videos Picture-in-picture. On iPhones, PiP works regardless."
+            "value" : "\"Fullscreen\" set to true will only allow playing a video in fullscreen. On iPads, this is required to play videos Picture-in-picture. On iPhones, PiP works regardless."
           }
         }
       }

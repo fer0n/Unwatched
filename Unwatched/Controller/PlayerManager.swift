@@ -40,8 +40,7 @@ enum VideoSource {
             return
         }
 
-        let hasAutoPlay = UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool != false
-        if video == oldValue && hasAutoPlay {
+        if video == oldValue {
             print("> tapped existing video")
             self.play()
             return
@@ -289,10 +288,7 @@ enum VideoSource {
         case .nextUp:
             break
         case .userInteraction:
-            let autoPlay = UserDefaults.standard.object(forKey: Const.autoplayVideos) as? Bool ?? true
-            if  autoPlay {
-                play()
-            }
+            play()
         case .hotSwap:
             if previousIsPlaying {
                 play()
