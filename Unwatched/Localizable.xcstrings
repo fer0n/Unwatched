@@ -395,6 +395,22 @@
         }
       }
     },
+    "clearVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video aus Queue entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Video from Queue"
+          }
+        }
+      }
+    },
     "confirmClearAll" : {
       "localizations" : {
         "de" : {
@@ -1158,6 +1174,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Videos"
+          }
+        }
+      }
+    },
+    "nextVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächstes Video"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Video"
           }
         }
       }
