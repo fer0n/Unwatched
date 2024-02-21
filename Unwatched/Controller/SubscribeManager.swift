@@ -18,6 +18,13 @@ import SwiftUI
     var showDropResults = false
 
     var hasNewSubscriptions = false
+    var videoToSubscribeTo: Video? {
+        didSet {
+            Task {
+                await handleSubscription()
+            }
+        }
+    }
 
     init(isLoading: Bool = false) {
         self.isLoading = isLoading
@@ -127,16 +134,16 @@ import SwiftUI
         }
     }
 
-    func handleSubscription(video: Video?, container: ModelContainer) {
-        guard let video = video else {
+    func handleSubscription() async {
+        guard let video = videoToSubscribeTo, let container = container else {
             return
         }
 
+        videoToSubscribeTo = nil
         isSubscribedSuccess = nil
         isLoading = true
 
         let isSubscribed = isSubscribed(video: video)
-
         if isSubscribed {
             guard let subId = video.subscription?.id else {
                 print("no subId to un/subscribe")
@@ -147,27 +154,27 @@ import SwiftUI
                 [subId],
                 container: container)
             isLoading = false
+            isLoading = false
         } else {
             let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId
             let subId = video.subscription?.id
-            Task {
-                do {
-                    try await SubscriptionService.addSubscription(
-                        channelId: channelId,
-                        subsciptionId: subId,
-                        modelContainer: container)
-                    await MainActor.run {
-                        isSubscribedSuccess = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        isSubscribedSuccess = false
-                        // alerter.showError(error)
-                        // TODO: throw error? Show alert?
-                    }
-                }
-                isLoading = false
+            do {
+                try await SubscriptionService.addSubscription(
+                    channelId: channelId,
+                    subsciptionId: subId,
+                    modelContainer: container)
+                isSubscribedSuccess = true
+            } catch {
+                print("error subscribing:", error)
+                isSubscribedSuccess = false
             }
+            isLoading = false
+            do {
+                try await Task.sleep(s: 3)
+                withAnimation {
+                    isSubscribedSuccess = nil
+                }
+            } catch {}
         }
     }
 
