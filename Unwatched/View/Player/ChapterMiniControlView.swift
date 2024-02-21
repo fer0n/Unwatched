@@ -66,7 +66,9 @@ struct ChapterMiniControlView: View {
                 GridRow {
                     Color.clear.fixedSize()
 
-                    subscriptionTitle
+                    if let sub = player.video?.subscription {
+                        subscriptionTitle(sub: sub)
+                    }
 
                     if hasChapters, let remaining = player.currentRemaining {
                         Text(remaining)
@@ -87,33 +89,31 @@ struct ChapterMiniControlView: View {
         .padding(.horizontal)
         .padding(.vertical, 10)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
+        .onAppear {
+            subscribeManager.container = modelContext.container
+        }
     }
 
-    var subscriptionTitle: some View {
-        HStack {
-            Text(player.video?.subscription?.title ?? "–")
-            if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
-                Image(systemName: icon)
-                    .contentTransition(.symbolEffect(.replace))
-                    .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
+    func subscriptionTitle(sub: Subscription) -> some View {
+        Button {
+            navManager.pushSubscription(sub)
+            setShowMenu()
+        } label: {
+            HStack {
+                Text(sub.title)
+                if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
+                    Image(systemName: icon)
+                        .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
+                }
             }
-        }
-        .padding(5)
-        .foregroundStyle(.gray)
-        .onTapGesture {
-            if let sub = player.video?.subscription {
-                navManager.pushSubscription(sub)
-                setShowMenu()
-            }
+            .padding(5)
+            .foregroundStyle(.gray)
         }
         .contextMenu {
             let isSubscribed = subscribeManager.isSubscribed(video: player.video)
             Button {
-                withAnimation {
-                    subscribeManager.handleSubscription(
-                        video: player.video,
-                        container: modelContext.container)
-                }
+                subscribeManager.videoToSubscribeTo = player.video
             } label: {
                 HStack {
                     if isSubscribed {
