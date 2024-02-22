@@ -50,4 +50,8 @@ struct ChannelInfo {
         self.title = title
         self.userName = userName
     }
+
+    init(channelId: String?) {
+        self.channelId = channelId
+    }
 }

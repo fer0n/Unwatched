@@ -121,7 +121,7 @@ struct QueueView: View {
                         Text("importSubscriptions")
                     }
                     Button {
-                        navManager.showBrowserSheet = true
+                        navManager.openBrowserUrl = .youtubeStartPage
                     } label: {
                         Label("browseFeeds", systemImage: "globe.desk.fill")
                     }
