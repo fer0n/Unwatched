@@ -20,6 +20,8 @@ struct BrowserView: View, KeyboardReadable {
     @State var isSuccess: Bool?
     @State var droppedUrls = [URL]()
 
+    var url: URL? = UrlService.youtubeStartPage
+
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
 
@@ -31,7 +33,9 @@ struct BrowserView: View, KeyboardReadable {
                 headerArea()
 
                 ZStack {
-                    YtBrowserWebView(browserManager: browserManager)
+                    if let url = url {
+                        YtBrowserWebView(url: url, browserManager: browserManager)
+                    }
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
@@ -77,6 +81,7 @@ struct BrowserView: View, KeyboardReadable {
         }
         .onAppear {
             subscribeManager.container = modelContext.container
+            subscribeManager.setIsSubscribed(browserManager.channel?.channelId)
         }
         .onDisappear {
             if subscribeManager.hasNewSubscriptions {

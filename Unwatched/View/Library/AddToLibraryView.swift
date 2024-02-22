@@ -18,7 +18,7 @@ struct AddToLibraryView: View {
 
     var body: some View {
         Button(action: {
-            navManager.showBrowserSheet = true
+            navManager.openBrowserUrl = .youtubeStartPage
         }, label: {
             Label("browseFeeds", systemImage: "globe.desk.fill")
         })

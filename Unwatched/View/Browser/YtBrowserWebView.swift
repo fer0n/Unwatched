@@ -7,6 +7,7 @@ import SwiftUI
 import WebKit
 
 struct YtBrowserWebView: UIViewRepresentable {
+    var url: URL
     var browserManager: BrowserManager
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
@@ -22,10 +23,8 @@ struct YtBrowserWebView: UIViewRepresentable {
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
-        if let url = UrlService.youtubeStartPage {
-            let request = URLRequest(url: url)
-            webView.load(request)
-        }
+        let request = URLRequest(url: url)
+        webView.load(request)
         return webView
     }
 
@@ -48,50 +47,60 @@ struct YtBrowserWebView: UIViewRepresentable {
             stopObserving()
         }
 
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             print("--- new page loaded")
             if isFirstLoad {
                 isFirstLoad = false
                 parent.browserManager.firstPageLoaded = true
             }
-            let previousUsername = parent.browserManager.desktopUserName
-            Task {
-                await MainActor.run {
-                    guard let url = webView.url else {
-                        print("no url found")
-                        return
-                    }
+            guard let url = webView.url else {
+                print("no url found")
+                return
+            }
 
-                    if let userName = UrlService.getChannelUserNameFromUrl(
-                        url: url,
-                        previousUserName: previousUsername
-                    ) {
-                        // is username page, reload the page
-                        extractSubscriptionInfo(webView, userName: userName)
-                    }
-                }
+            print("about to extract info")
+            let (userName, channelId) = getInfoFromUrl(url)
+            if userName != nil || channelId != nil {
+                // is username page, reload the page
+                extractSubscriptionInfo(webView, userName: userName, channelId: channelId)
             }
         }
 
-        @MainActor func extractSubscriptionInfo(_ webView: WKWebView, userName: String) {
+        func getInfoFromUrl(_ url: URL) -> (userName: String?, channelId: String?) {
+            let previousUsername = parent.browserManager.desktopUserName
+            if let userName = UrlService.getChannelUserNameFromUrl(
+                url: url,
+                previousUserName: previousUsername
+            ) {
+                return (userName: userName, channelId: nil)
+            }
+            if let channelId = UrlService.getChannelIdFromUrl(url) {
+                return (userName: nil, channelId: channelId)
+            }
+            return (nil, nil)
+        }
+
+        @MainActor func extractSubscriptionInfo(_ webView: WKWebView, userName: String?, channelId: String?) {
+            print("extractSubscriptionInfo")
             let url = webView.url
             webView.evaluateJavaScript(getSubscriptionInfoScript) { (result, error) in
                 if let error = error {
                     print("JavaScript evaluation error: \(error)")
                 } else if let array = result as? [String] {
-                    let channelId = array[0]
+                    let pageChannelId = array[0]
                     let description = array[1]
                     let rssFeed = array[2]
                     let title = array[3]
                     let image = array[4]
-                    print("Channel ID: \(channelId)")
+                    let id = channelId ?? pageChannelId
+                    print("Channel ID: \(id)")
                     print("Description: \(description)")
                     print("RSS Feed: \(rssFeed)")
                     print("Title: \(title)")
                     print("Image: \(image)")
 
                     self.parent.browserManager.setFoundInfo(ChannelInfo(
-                        url, channelId, description, rssFeed, title, userName
+                        url, id, description, rssFeed, title, userName
                     ))
                 }
             }
@@ -105,24 +114,51 @@ struct YtBrowserWebView: UIViewRepresentable {
             }
             print("URL changed: \(url)")
             handleIsMobilePage(url)
-            guard let userName = UrlService.getChannelUserNameFromUrl(
-                url: url,
-                previousUserName: parent.browserManager.desktopUserName
-            ) else {
-                parent.browserManager.clearInfo()
-                print("no user name found")
+
+            if isFirstLoad { return }
+
+            let hasNewUserName = handleHasNewUserName(url)
+            let hasChannelId = handleHasNewChannelId(url)
+
+            if !hasNewUserName && !hasChannelId {
                 return
             }
-            if [parent.browserManager.channel?.userName, parent.browserManager.desktopUserName].contains(userName) {
-                print("same username as before")
-                return
-            }
-            parent.browserManager.desktopUserName = userName
 
             print("--- forceReloadUrl")
             let request = URLRequest(url: url)
             webView.load(request)
+        }
 
+        func handleHasNewChannelId(_ url: URL) -> Bool {
+            guard let channelId = UrlService.getChannelIdFromUrl(url) else {
+                print("no channel id")
+                return false
+            }
+            if parent.browserManager.channel?.channelId == channelId {
+                print("same channelId as before")
+                return false
+            }
+            print("has new channelId:", channelId)
+            parent.browserManager.setFoundInfo(ChannelInfo(channelId: channelId))
+            return true
+        }
+
+        func handleHasNewUserName(_ url: URL) -> Bool {
+            let userName = UrlService.getChannelUserNameFromUrl(
+                url: url,
+                previousUserName: parent.browserManager.desktopUserName
+            )
+            guard let userName = userName else {
+                parent.browserManager.clearInfo()
+                print("no user name found")
+                return false
+            }
+            if [parent.browserManager.channel?.userName, parent.browserManager.desktopUserName].contains(userName) {
+                print("same username as before")
+                return false
+            }
+            parent.browserManager.desktopUserName = userName
+            return true
         }
 
         func handleIsMobilePage(_ url: URL) {

@@ -7,6 +7,7 @@ import Foundation
 
 struct UrlService {
     static let youtubeStartPage = URL(string: "https://m.youtube.com?autoplay=0")
+    static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
     static let shareShortcutUrl = URL(string: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
     static let emailUrl = URL(string: "mailto:scores.templates@gmail.com")!
@@ -85,6 +86,14 @@ struct UrlService {
         return nil
     }
 
+    static func getChannelIdFromUrl(_ url: URL) -> String? {
+        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+        if let channelId = url.absoluteString.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#) {
+            return channelId
+        }
+        return nil
+    }
+
     static func isMobileYoutubePage(_ url: URL) -> Bool {
         let urlString = url.absoluteString
         return urlString.contains("m.youtube.com")
@@ -103,5 +112,12 @@ struct UrlService {
             return (urls, rest)
         }
         return ([], text)
+    }
+
+    static func getYoutubeChannelUrl(_ channelId: String?) -> String? {
+        if let channelId = channelId {
+            return "https://www.youtube.com/channel/\(channelId)"
+        }
+        return nil
     }
 }

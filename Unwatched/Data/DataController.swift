@@ -57,6 +57,7 @@ extension Subscription {
             link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
             title: "Virtual Reality Oasis",
             isArchived: false,
+            youtubeChannelId: "UCsmk8NDVMct75j_Bfb9Ah7w",
             youtubeUserName: "VirtualRealityOasis")
     }
 }
