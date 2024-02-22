@@ -319,11 +319,8 @@ struct VideoPlayer: View {
     }
 
     func setNextVideo(_ source: VideoSource) {
-        guard let next = VideoService.getNextVideoInQueue(modelContext) else {
-            print("no next video found")
-            return
-        }
-        print("next", next.title)
+        let next = VideoService.getNextVideoInQueue(modelContext)
+        print("next", next?.title ?? "no video found")
         withAnimation {
             player.setNextVideo(next, source)
         }

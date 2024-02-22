@@ -197,8 +197,10 @@ enum VideoSource {
             UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
     }
 
-    func setNextVideo(_ video: Video, _ source: VideoSource) {
-        self.videoSource = source
+    func setNextVideo(_ video: Video?, _ source: VideoSource) {
+        if video != nil {
+            self.videoSource = source
+        }
         self.video = video
     }
 
