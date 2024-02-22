@@ -9,6 +9,7 @@ import SwiftData
 @Observable class RefreshManager {
     var container: ModelContainer?
     var isLoading: Bool = false
+    var isAnimating: Bool = false
 
     func refreshAll() {
         refresh()
