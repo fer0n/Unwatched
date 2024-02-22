@@ -7,6 +7,7 @@ import SwiftUI
 import SwiftData
 
 struct MenuView: View {
+    @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
@@ -26,7 +27,9 @@ struct MenuView: View {
                 ),
                 TabRoute(
                     view: AnyView(InboxView()),
-                    image: inbox.isEmpty ? Const.inboxTabEmptySF : Const.inboxTabFullSF,
+                    image: inbox.isEmpty
+                        ? (refresher.isAnimating ? "tray.and.arrow.down" : Const.inboxTabEmptySF)
+                        : Const.inboxTabFullSF,
                     text: "inbox",
                     tag: Tab.inbox
                 ),
