@@ -70,10 +70,8 @@ struct BrowserView: View, KeyboardReadable {
             }
             await handleUrlDrop(droppedUrls)
         }
-        .onChange(of: browserManager.channel?.userName) {
-            subscribeManager.reset()
-        }
         .onChange(of: browserManager.channel?.channelId) {
+            subscribeManager.reset()
             subscribeManager.setIsSubscribed(browserManager.channel?.channelId)
         }
         .onReceive(keyboardPublisher) { newIsKeyboardVisible in
