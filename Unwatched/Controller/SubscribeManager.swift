@@ -39,8 +39,8 @@ import SwiftUI
         return SubscriptionService.isSubscribed(video)
     }
 
-    func setIsSubscribed(_ channelId: String?) {
-        guard let channelId = channelId else {
+    func setIsSubscribed(_ channelInfo: ChannelInfo?) {
+        guard let channelId = channelInfo?.channelId else {
             print("no channelId to check subscription status")
             return
         }
@@ -50,7 +50,7 @@ import SwiftUI
         }
         isLoading = true
         Task {
-            let task = SubscriptionService.isSubscribed(channelId, container: container)
+            let task = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
             let isSubscribed = await task.value
             await MainActor.run {
                 self.isSubscribedSuccess = isSubscribed

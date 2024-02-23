@@ -81,7 +81,7 @@ struct VideoListItem: View {
     var videoItem: some View {
         ZStack(alignment: .topLeading) {
             HStack {
-                CachedImageView(video: video) { image in
+                CachedImageView(imageHolder: video) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

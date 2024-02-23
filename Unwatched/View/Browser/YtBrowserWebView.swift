@@ -91,16 +91,16 @@ struct YtBrowserWebView: UIViewRepresentable {
                     let description = array[1]
                     let rssFeed = array[2]
                     let title = array[3]
-                    let image = array[4]
+                    let imageUrl = array[4]
                     let id = channelId ?? pageChannelId
                     print("Channel ID: \(id)")
                     print("Description: \(description)")
                     print("RSS Feed: \(rssFeed)")
                     print("Title: \(title)")
-                    print("Image: \(image)")
+                    print("Image: \(imageUrl)")
 
                     self.parent.browserManager.setFoundInfo(ChannelInfo(
-                        url, id, description, rssFeed, title, userName
+                        url, id, description, rssFeed, title, userName, imageUrl
                     ))
                 }
             }

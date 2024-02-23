@@ -15,49 +15,36 @@ struct SubscriptionInfoDetails: View {
     @Binding var requiresUnsubscribe: Bool
 
     var body: some View {
-        let availableVideos = "\(subscription.videos?.count ?? 0) video(s) available"
+        VStack(alignment: .leading) {
+            headerDetails
 
-        VStack(alignment: .leading, spacing: 20) {
-            if let userName = subscription.youtubeUserName {
-                Text(verbatim: "@\(userName)")
-                    .font(.title2)
-                    .foregroundStyle(Color.gray)
-                    .padding(.horizontal)
-            }
+            ScrollView(.horizontal) {
+                HStack {
+                    subscribeButton
+                        .buttonStyle(CapsuleButtonStyle())
 
-            VStack(alignment: .leading) {
-                Text(availableVideos)
-                    .font(.system(size: 14))
-                    .font(.body)
-                    .foregroundStyle(Color.gray)
-                    .padding(.horizontal)
-
-                ScrollView(.horizontal) {
-                    HStack {
-                        subscribeButton
-                            .buttonStyle(CapsuleButtonStyle())
-
-                        if let url = UrlService.getYoutubeChannelUrl(
-                            userName: subscription.youtubeUserName,
-                            channelId: subscription.youtubeChannelId) {
-                            Button {
-                                navManager.openBrowserUrl = .url(url)
-                            } label: {
-                                Image(systemName: "globe.desk.fill")
-                                    .padding(10)
-                            }
-                            .buttonStyle(CapsuleButtonStyle())
-
-                            ShareLink(item: url) {
-                                Image(systemName: "square.and.arrow.up.fill")
-                                    .padding(10)
-                            }
-                            .buttonStyle(CapsuleButtonStyle())
+                    if let url = UrlService.getYoutubeChannelUrl(
+                        userName: subscription.youtubeUserName,
+                        channelId: subscription.youtubeChannelId) {
+                        Button {
+                            navManager.openBrowserUrl = .url(url)
+                        } label: {
+                            Image(systemName: "globe.desk.fill")
+                                .padding(10)
                         }
+                        .buttonStyle(CapsuleButtonStyle())
+
+                        ShareLink(item: url) {
+                            Image(systemName: "square.and.arrow.up.fill")
+                                .padding(10)
+                        }
+                        .buttonStyle(CapsuleButtonStyle())
                     }
-                    .padding(.horizontal)
                 }
+                .padding(.horizontal)
             }
+            Spacer()
+                .frame(height: 20)
             VStack(alignment: .leading, spacing: 5) {
                 Text("settings")
                     .font(.subheadline)
@@ -85,6 +72,45 @@ struct SubscriptionInfoDetails: View {
             .disabled(subscription.isArchived)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    var headerDetails: some View {
+        ZStack {
+            let availableVideos = "\(subscription.videos?.count ?? 0) video(s) available"
+            let hasImage = subscription.thumbnailUrl != nil
+
+            HStack {
+                if hasImage {
+                    ZStack {
+                        CachedImageView(imageHolder: subscription) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+
+                        } placeholder: {
+                            Color.clear
+                        }
+                    }
+                    .frame(width: 80, height: 80)
+                    .clipShape(Circle())
+                }
+
+                VStack(alignment: .leading, spacing: hasImage ? 5 : 0) {
+                    if let userName = subscription.youtubeUserName {
+                        Text(verbatim: "@\(userName)")
+                            .font(.title2)
+                            .foregroundStyle(Color.myAccentColor)
+                    }
+
+                    Text(availableVideos)
+                        .font(.system(size: 14))
+                        .font(.body)
+                        .foregroundStyle(Color.gray)
+                }
+            }
+            .padding(.bottom, 10)
+            .padding(.horizontal)
+        }
     }
 
     var subscribeButton: some View {
@@ -141,6 +167,7 @@ struct SubscriptionInfoDetails: View {
                 .environment(NavigationManager())
                 .environment(RefreshManager())
                 .environment(PlayerManager())
+                .environment(ImageCacheManager())
             Color.blue
             Spacer()
         }
@@ -151,6 +178,7 @@ struct SubscriptionInfoDetails: View {
                 .environment(NavigationManager())
                 .environment(RefreshManager())
                 .environment(PlayerManager())
+                .environment(ImageCacheManager())
             Spacer()
         }
     }

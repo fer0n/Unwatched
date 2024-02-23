@@ -19,7 +19,7 @@ struct MiniPlayerView: View {
         VStack {
             HStack(alignment: .center) {
                 if let video = player.video {
-                    CachedImageView(video: video) { image in
+                    CachedImageView(imageHolder: video) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)

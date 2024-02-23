@@ -14,17 +14,30 @@ class ImageService {
         container: ModelContainer) -> Task<(), Error> {
         let task = Task {
             let context = ModelContext(container)
-            cache.forEach { (videoId, info) in
-                guard let video = context.model(for: videoId) as? Video else {
-                    return
+            cache.forEach { (holderId, info) in
+
+                // Video
+                if let video = context.model(for: holderId) as? Video {
+                    if video.cachedImage != nil {
+                        print("video !has image")
+                        return
+                    }
+                    let imageCache = CachedImage(info.url, imageData: info.data)
+                    context.insert(imageCache)
+                    video.cachedImage = imageCache
+                } else
+
+                // Subscription
+                if let sub = context.model(for: holderId) as? Subscription {
+                    if sub.cachedImage != nil {
+                        print("sub !has image")
+                        return
+                    }
+                    let imageCache = CachedImage(info.url, imageData: info.data)
+                    context.insert(imageCache)
+                    sub.cachedImage = imageCache
                 }
-                if video.cachedImage != nil {
-                    print("!has image")
-                    return
-                }
-                let imageCache = CachedImage(info.url, imageData: info.data)
-                context.insert(imageCache)
-                video.cachedImage = imageCache
+
                 print("saved")
             }
             try context.save()
