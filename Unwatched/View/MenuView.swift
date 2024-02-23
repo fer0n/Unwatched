@@ -76,11 +76,6 @@ struct MenuView: View {
             .environment(navManager)
             .tint(.myAccentColor)
         }
-        .onChange(of: hasNewInboxItems) {
-            if hasNewInboxItems && navManager.tab == .inbox {
-                hasNewInboxItems = false
-            }
-        }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
             let url = browserUrl.getUrl
             BrowserView(url: url)

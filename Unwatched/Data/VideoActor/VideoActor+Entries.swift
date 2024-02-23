@@ -112,7 +112,9 @@ extension VideoActor {
     }
 
     private func addVideosToInbox(_ videos: [Video]) {
-        UserDefaults.standard.setValue(true, forKey: Const.hasNewInboxItems)
+        if !videos.isEmpty {
+            UserDefaults.standard.setValue(true, forKey: Const.hasNewInboxItems)
+        }
         for video in videos {
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
