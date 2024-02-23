@@ -57,6 +57,7 @@ struct InboxView: View {
             }
             .onAppear {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
+                UserDefaults.standard.setValue(false, forKey: Const.hasNewInboxItems)
             }
             .toolbar {
                 RefreshToolbarButton()

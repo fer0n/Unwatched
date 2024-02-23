@@ -102,8 +102,8 @@ import SwiftData
 }
 
 enum NavManagerCodingKeys: CodingKey {
-    case showMenu
-    case tab
+    case showMenu, tab
+
 }
 
 enum Tab: Codable {

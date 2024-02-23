@@ -11,8 +11,15 @@ struct MenuView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
+    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
+
+    @MainActor
+    init() {
+        let unselectedItemColor = UIColor.lightGray
+        UITabBarItem.appearance().badgeColor = unselectedItemColor
+    }
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -31,7 +38,8 @@ struct MenuView: View {
                         ? (refresher.isAnimating ? "tray.and.arrow.down" : Const.inboxTabEmptySF)
                         : Const.inboxTabFullSF,
                     text: "inbox",
-                    tag: Tab.inbox
+                    tag: Tab.inbox,
+                    showBadge: hasNewInboxItems && navManager.tab != .inbox
                 ),
                 TabRoute(
                     view: AnyView(LibraryView()),
@@ -43,7 +51,7 @@ struct MenuView: View {
 
         ScrollViewReader { proxy in
             TabView(selection: $navManager.tab.onUpdate { newValue in
-                handleSameTabTapped(newValue, proxy)
+                handleTabChanged(newValue, proxy)
             }) {
                 ForEach(tabs, id: \.tag) { tab in
                     tab.view
@@ -57,11 +65,17 @@ struct MenuView: View {
                                 Text(tab.text)
                             }
                         }
+                        .badge(tab.showBadge ? Const.emptyString : nil)
                         .tag(tab.tag)
                 }
             }
             .environment(navManager)
             .tint(.myAccentColor)
+        }
+        .onChange(of: hasNewInboxItems) {
+            if hasNewInboxItems && navManager.tab == .inbox {
+                hasNewInboxItems = false
+            }
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
             let url = browserUrl.getUrl
@@ -75,7 +89,7 @@ struct MenuView: View {
         )
     }
 
-    func handleSameTabTapped(_ newTab: Tab, _ proxy: ScrollViewProxy) {
+    func handleTabChanged(_ newTab: Tab, _ proxy: ScrollViewProxy) {
         if newTab == navManager.tab {
             withAnimation {
                 let isTopView = navManager.handleTappedTwice()
@@ -92,6 +106,7 @@ struct TabRoute {
     var image: String
     var text: LocalizedStringKey
     var tag: Tab
+    var showBadge: Bool = false
 }
 
 #Preview {
