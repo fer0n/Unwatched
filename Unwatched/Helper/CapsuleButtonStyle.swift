@@ -20,7 +20,7 @@ struct CapsuleButtonStyle<S: ShapeStyle>: ButtonStyle {
             .opacity(isEnabled ? 1 : 0.2)
             .padding(.vertical, 5)
             .padding(.horizontal, 10)
-            .background(Capsule().fill(background))
+            .background(background, in: Capsule())
             .foregroundStyle(foreground)
     }
 }
