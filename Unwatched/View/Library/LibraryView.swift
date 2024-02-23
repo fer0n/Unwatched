@@ -168,7 +168,8 @@ struct LibraryView: View {
 
     func handleUrlDrop(_ urls: [URL]) {
         print("handleUrlDrop inbox", urls)
-        subManager.addSubscription(from: urls)
+        let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
+        subManager.addSubscription(channelInfo: channelInfo)
     }
 }
 

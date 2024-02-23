@@ -18,6 +18,13 @@ struct SubscriptionInfoDetails: View {
         let availableVideos = "\(subscription.videos?.count ?? 0) video(s) available"
 
         VStack(alignment: .leading, spacing: 20) {
+            if let userName = subscription.youtubeUserName {
+                Text(verbatim: "@\(userName)")
+                    .font(.title2)
+                    .foregroundStyle(Color.gray)
+                    .padding(.horizontal)
+            }
+
             VStack(alignment: .leading) {
                 Text(availableVideos)
                     .font(.system(size: 14))
@@ -30,7 +37,9 @@ struct SubscriptionInfoDetails: View {
                         subscribeButton
                             .buttonStyle(CapsuleButtonStyle())
 
-                        if let url = UrlService.getYoutubeChannelUrl(subscription.youtubeChannelId) {
+                        if let url = UrlService.getYoutubeChannelUrl(
+                            userName: subscription.youtubeUserName,
+                            channelId: subscription.youtubeChannelId) {
                             Button {
                                 navManager.openBrowserUrl = .url(url)
                             } label: {

@@ -2,9 +2,9 @@ import Foundation
 import SwiftData
 
 class SubscriptionService {
-    static func addSubscriptions(from urls: [URL], modelContainer: ModelContainer) async throws -> [SubscriptionState] {
+    static func addSubscriptions(channelInfo: [ChannelInfo], modelContainer: ModelContainer) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.addSubscriptions(urls: urls)
+        return try await repo.addSubscriptions(channelInfo: channelInfo)
     }
 
     static func addSubscriptions(
@@ -15,14 +15,14 @@ class SubscriptionService {
         return try await repo.addSubscriptions(sendableSubs: sendableSubs)
     }
 
-    static func addSubscription(channelId: String? = nil,
+    static func addSubscription(channelInfo: ChannelInfo? = nil,
                                 subsciptionId: PersistentIdentifier? = nil,
                                 modelContainer: ModelContainer) async throws {
-        guard channelId != nil || subsciptionId != nil else {
+        guard channelInfo != nil || subsciptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.subscribeTo(channelId, subsciptionId)
+        return try await repo.subscribeTo(channelInfo, subsciptionId)
     }
 
     static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL?)] {
