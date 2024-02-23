@@ -7,10 +7,11 @@ import Foundation
 import SwiftData
 
 @Model
-final class Subscription: CustomStringConvertible, Exportable {
+final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder {
     typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
+    @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
     var link: URL?
 
     var title: String = "-"
@@ -27,6 +28,8 @@ final class Subscription: CustomStringConvertible, Exportable {
     var youtubeUserName: String?
     // TODO: there's a difference between handles/usernames/cids, should be handled better
 
+    var thumbnailUrl: URL?
+
     var description: String {
         return title
     }
@@ -42,7 +45,8 @@ final class Subscription: CustomStringConvertible, Exportable {
          customSpeedSetting: Double? = nil,
          mostRecentVideoDate: Date? = nil,
          youtubeChannelId: String? = nil,
-         youtubeUserName: String? = nil) {
+         youtubeUserName: String? = nil,
+         thumbnailUrl: URL? = nil) {
         self.videos = videos
         self.link = link
         self.title = title
@@ -54,6 +58,7 @@ final class Subscription: CustomStringConvertible, Exportable {
         self.mostRecentVideoDate = mostRecentVideoDate
         self.youtubeChannelId = youtubeChannelId
         self.youtubeUserName = youtubeUserName
+        self.thumbnailUrl = thumbnailUrl
     }
 
     var toExport: SendableSubscription? {
@@ -68,7 +73,8 @@ final class Subscription: CustomStringConvertible, Exportable {
             customSpeedSetting: customSpeedSetting,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
-            youtubeUserName: youtubeUserName
+            youtubeUserName: youtubeUserName,
+            thumbnailUrl: thumbnailUrl
         )
     }
 }
@@ -88,12 +94,15 @@ struct SendableSubscription: Sendable, Codable, Hashable {
     var youtubeChannelId: String?
     var youtubeUserName: String?
 
+    var thumbnailUrl: URL?
+
     func createSubscription() -> Subscription {
         Subscription(
             link: link,
             title: title,
             youtubeChannelId: youtubeChannelId,
-            youtubeUserName: youtubeUserName
+            youtubeUserName: youtubeUserName,
+            thumbnailUrl: thumbnailUrl
         )
     }
 
@@ -107,7 +116,8 @@ struct SendableSubscription: Sendable, Codable, Hashable {
             customSpeedSetting: customSpeedSetting,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
-            youtubeUserName: youtubeUserName
+            youtubeUserName: youtubeUserName,
+            thumbnailUrl: thumbnailUrl
         )
     }
 
@@ -121,7 +131,8 @@ struct SendableSubscription: Sendable, Codable, Hashable {
              customSpeedSetting,
              mostRecentVideoDate,
              youtubeChannelId,
-             youtubeUserName
+             youtubeUserName,
+             thumbnailUrl
     }
 }
 

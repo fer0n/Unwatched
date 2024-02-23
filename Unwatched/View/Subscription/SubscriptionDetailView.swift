@@ -19,8 +19,6 @@ struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
 
     var body: some View {
-        let firstNonShort = subscription.videos?.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
-
         VStack {
             List {
                 VStack {
@@ -31,7 +29,7 @@ struct SubscriptionDetailView: View {
                 .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
                 .background(
-                    CachedImageView(video: firstNonShort) { image in
+                    CachedImageView(imageHolder: cachedImageHolder) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -72,6 +70,13 @@ struct SubscriptionDetailView: View {
                 SubscriptionService.deleteSubscriptions([subId], container: container)
             }
         }
+    }
+
+    var cachedImageHolder: CachedImageHolder? {
+        if subscription.thumbnailUrl != nil {
+            return subscription
+        }
+        return subscription.videos?.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
     }
 
     var shortsFilter: ShortsDetection? {

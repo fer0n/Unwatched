@@ -72,14 +72,17 @@ struct BrowserView: View, KeyboardReadable {
         }
         .onChange(of: browserManager.channel?.channelId) {
             subscribeManager.reset()
-            subscribeManager.setIsSubscribed(browserManager.channel?.channelId)
+            subscribeManager.setIsSubscribed(browserManager.channel)
+        }
+        .onChange(of: browserManager.channel?.userName) {
+            handleChannelInfoChanged(browserManager.channel)
         }
         .onReceive(keyboardPublisher) { newIsKeyboardVisible in
             isKeyboardVisible = newIsKeyboardVisible
         }
         .onAppear {
             subscribeManager.container = modelContext.container
-            subscribeManager.setIsSubscribed(browserManager.channel?.channelId)
+            subscribeManager.setIsSubscribed(browserManager.channel)
         }
         .onDisappear {
             if subscribeManager.hasNewSubscriptions {
@@ -172,6 +175,16 @@ struct BrowserView: View, KeyboardReadable {
                         background: Color.myAccentColor,
                         foreground: Color.backgroundColor))
         .bold()
+    }
+
+    func handleChannelInfoChanged(_ channelInfo: ChannelInfo?) {
+        guard channelInfo?.channelId != nil,
+              let channelId = channelInfo?.channelId else {
+            print("no channel id after change")
+            return
+        }
+        let container = modelContext.container
+        _ = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
     }
 
     func handleSuccessChange() async {

@@ -46,15 +46,6 @@ actor SubscriptionActor {
         try modelContext.save()
     }
 
-    static func mergeChannelInfoAndSendableSub(_ info: ChannelInfo,
-                                               _ sendableSub: SendableSubscription?) -> SendableSubscription {
-        var sub = sendableSub ?? SendableSubscription(title: info.title ?? "")
-        sub.link = sub.link ?? info.rssFeedUrl
-        sub.youtubeChannelId = sub.youtubeChannelId ?? info.channelId
-        sub.youtubeUserName = sub.youtubeUserName ?? info.userName
-        return sub
-    }
-
     func addSubscriptions(
         channelInfo: [ChannelInfo] = [],
         sendableSubs: [SendableSubscription] = []
@@ -163,16 +154,41 @@ actor SubscriptionActor {
         return (subState, nil)
     }
 
-    func isSubscribed(channelId: String) -> Bool {
+    func isSubscribed(channelId: String, updateChannelInfo: ChannelInfo? = nil) -> Bool {
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             channelId == $0.youtubeChannelId
         })
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
+            updateSubscriptionInfo(first, info: updateChannelInfo)
             return !first.isArchived
         }
         return false
+    }
+
+    private func updateSubscriptionInfo(_ sub: Subscription, info: ChannelInfo?) {
+        print("updateSubscriptionInfo", info)
+        guard let info = info else {
+            print("no info to update subscription with")
+            return
+        }
+        sub.youtubeUserName = sub.youtubeUserName ?? info.userName
+        sub.thumbnailUrl = sub.thumbnailUrl ?? info.imageUrl
+        if sub.title.isEmpty, let title = info.title {
+            sub.title = title
+        }
+        try? modelContext.save()
+    }
+
+    private static func mergeChannelInfoAndSendableSub(_ info: ChannelInfo,
+                                                       _ sendableSub: SendableSubscription?) -> SendableSubscription {
+        var sub = sendableSub ?? SendableSubscription(title: info.title ?? "")
+        sub.link = sub.link ?? info.rssFeedUrl
+        sub.youtubeChannelId = sub.youtubeChannelId ?? info.channelId
+        sub.youtubeUserName = sub.youtubeUserName ?? info.userName
+        sub.thumbnailUrl = sub.thumbnailUrl ?? info.imageUrl
+        return sub
     }
 
     func getTitleIfSubscriptionExists(channelId: String? = nil,

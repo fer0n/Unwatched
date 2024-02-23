@@ -12,6 +12,7 @@ struct ChannelInfo {
     var rssFeed: String?
     var title: String?
     var userName: String?
+    var imageUrl: URL?
 
     var rssFeedUrl: URL? {
         get {
@@ -37,7 +38,8 @@ struct ChannelInfo {
         _ description: String?,
         _ rssFeed: String?,
         _ title: String?,
-        _ userName: String?
+        _ userName: String?,
+        _ imageUrl: String?
     ) {
         self.url = url
         self.channelId = channelId
@@ -45,6 +47,9 @@ struct ChannelInfo {
         self.rssFeed = rssFeed
         self.title = title
         self.userName = userName
+        if let imageUrl = imageUrl {
+            self.imageUrl = URL(string: imageUrl)
+        }
     }
 
     init(channelId: String?) {

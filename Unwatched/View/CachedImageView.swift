@@ -12,16 +12,16 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
 
     @State var imageTask: Task<ImageCacheInfo, Error>?
 
-    var video: Video?
+    var imageHolder: CachedImageHolder?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
 
     init(
-        video: Video?,
+        imageHolder: CachedImageHolder?,
         @ViewBuilder content: @escaping (Image) -> Content,
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
-        self.video = video
+        self.imageHolder = imageHolder
         self.contentImage = content
         self.placeholder = placeholder
     }
@@ -36,39 +36,39 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
                 }
                 .task(id: imageTask) {
                     guard imageTask != nil,
-                          let videoId = video?.persistentModelID else {
+                          let holderId = imageHolder?.persistentModelID else {
                         return
                     }
                     if let imageInfo = try? await imageTask?.value {
-                        cacheManager[videoId] = imageInfo
+                        cacheManager[holderId] = imageInfo
                     }
                 }
         }
     }
 
     func loadImage() {
-        guard let video = video,
-              let url = video.thumbnailUrl,
-              cacheManager[video.persistentModelID] == nil else {
+        guard let imageHolder = imageHolder,
+              let url = imageHolder.thumbnailUrl,
+              cacheManager[imageHolder.persistentModelID] == nil else {
             return
         }
-        let videoId = video.persistentModelID
+        let holderId = imageHolder.persistentModelID
         imageTask = Task.detached {
             let imageData = try await ImageService.loadImageData(url: url)
             return ImageCacheInfo(
                 url: url,
                 data: imageData,
-                videoId: videoId,
+                holderId: holderId,
                 uiImage: UIImage(data: imageData)
             )
         }
     }
 
     var getUIImage: UIImage? {
-        if let imageData = video?.cachedImage?.imageData {
+        if let imageData = imageHolder?.cachedImage?.imageData {
             return UIImage(data: imageData)
         }
-        if let cacheInfo = cacheManager[video?.persistentModelID] {
+        if let cacheInfo = cacheManager[imageHolder?.persistentModelID] {
             if let uiImage = cacheInfo.uiImage {
                 return uiImage
             }
@@ -77,7 +77,3 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
         return nil
     }
 }
-
-// #Preview {
-//    CachedImageView(video: Video.getDummy())
-// }

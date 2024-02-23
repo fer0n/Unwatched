@@ -36,6 +36,6 @@ import SwiftData
 struct ImageCacheInfo {
     var url: URL
     var data: Data
-    var videoId: PersistentIdentifier
+    var holderId: PersistentIdentifier
     var uiImage: UIImage?
 }
