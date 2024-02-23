@@ -114,9 +114,12 @@ struct UrlService {
         return ([], text)
     }
 
-    static func getYoutubeChannelUrl(_ channelId: String?) -> String? {
+    static func getYoutubeChannelUrl(userName: String? = nil, channelId: String? = nil) -> String? {
+        if let userName = userName {
+            return "https://m.youtube.com/@\(userName)/videos"
+        }
         if let channelId = channelId {
-            return "https://www.youtube.com/channel/\(channelId)"
+            return "https://www.youtube.com/channel/\(channelId)/videos"
         }
         return nil
     }

@@ -8,7 +8,7 @@ import SwiftData
 
 @ModelActor
 actor SubscriptionActor {
-    func subscribeTo(_ channelId: String?, _ subsciptionId: PersistentIdentifier?) async throws {
+    func subscribeTo(_ channelInfo: ChannelInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
             sub.isArchived = false
@@ -17,7 +17,7 @@ actor SubscriptionActor {
             return
         }
 
-        guard let channelId = channelId else {
+        guard let channelId = channelInfo?.channelId else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.youtubeChannelId == channelId })
@@ -28,10 +28,16 @@ actor SubscriptionActor {
             try modelContext.save()
             return
         }
-
+        guard let channelInfo = channelInfo else {
+            print("no channel info here")
+            return
+        }
         // if it doesn't exist get url and run the regular subscription flow
-        let feedUrl = try UrlService.getFeedUrlFromChannelId(channelId)
-        let subStates = try await addSubscriptions(urls: [feedUrl])
+        if channelInfo.rssFeed == nil {
+            throw SubscriptionError.notSupported
+        }
+
+        let subStates = try await addSubscriptions(channelInfo: [channelInfo])
         if let first = subStates.first {
             if !(first.success || first.alreadyAdded) {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
@@ -40,17 +46,33 @@ actor SubscriptionActor {
         try modelContext.save()
     }
 
+    static func mergeChannelInfoAndSendableSub(_ info: ChannelInfo,
+                                               _ sendableSub: SendableSubscription?) -> SendableSubscription {
+        var sub = sendableSub ?? SendableSubscription(title: info.title ?? "")
+        sub.link = sub.link ?? info.rssFeedUrl
+        sub.youtubeChannelId = sub.youtubeChannelId ?? info.channelId
+        sub.youtubeUserName = sub.youtubeUserName ?? info.userName
+        return sub
+    }
+
     func addSubscriptions(
-        urls: [URL] = [],
+        channelInfo: [ChannelInfo] = [],
         sendableSubs: [SendableSubscription] = []
     ) async throws -> [SubscriptionState] {
         var subscriptionStates = [SubscriptionState]()
 
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
-            if !urls.isEmpty {
-                for url in urls {
-                    group.addTask {
-                        return await self.loadSubscriptionInfo(from: url, unarchiveSubIfAvailable: true)
+            if !channelInfo.isEmpty {
+                for info in channelInfo {
+                    if let url = info.rssFeedUrl {
+                        group.addTask {
+                            let (subState, sendableSub) = await self.loadSubscriptionInfo(from: url, unarchiveSubIfAvailable: true)
+                            let newSendableSub = SubscriptionActor.mergeChannelInfoAndSendableSub(info, sendableSub)
+                            return (subState, newSendableSub)
+                        }
+                    } else {
+                        print("channel info has no url")
+                        throw SubscriptionError.noInfoFoundToSubscribeTo
                     }
                 }
             } else if !sendableSubs.isEmpty {
@@ -175,7 +197,9 @@ actor SubscriptionActor {
 
     static func getSubscription(url: URL, userName: String? = nil) async throws -> SendableSubscription? {
         let feedUrl = try await SubscriptionActor.getChannelFeedFromUrl(url: url, userName: userName)
-        return try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
+        var sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
+        sendableSub.youtubeUserName = sendableSub.youtubeUserName ?? userName
+        return sendableSub
     }
 
     static func getChannelFeedFromUrl(url: URL, userName: String?) async throws -> URL {

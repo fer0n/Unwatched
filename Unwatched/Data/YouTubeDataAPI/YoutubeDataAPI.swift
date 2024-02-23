@@ -11,21 +11,20 @@ class YoutubeDataAPI {
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
-    static func getYtChannelId(from userName: String) async throws -> String {
+    static func getYtChannelId(from handle: String) async throws -> String {
         var lemnosLifeError: Error?
         do {
-            return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: userName)
+            return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: handle)
         } catch {
             lemnosLifeError = error
             print("\(error)")
         }
         do {
-            return try await YoutubeDataAPI.getYtChannelIdViaList(userName)
+            return try await YoutubeDataAPI.getYtChannelIdViaList(handle)
         } catch {
             print("\(error)")
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername(lemnosLifeError?.localizedDescription)
-        // return try await YoutubeDataAPI.getYtChannelIdViaSearch(from: userName)
     }
 
     static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
@@ -38,9 +37,9 @@ class YoutubeDataAPI {
         throw SubscriptionError.failedGettingChannelIdFromUsername("getChannelIdViaLemnoslife")
     }
 
-    private static func getYtChannelIdViaList(_ username: String) async throws -> String {
+    private static func getYtChannelIdViaList(_ handle: String) async throws -> String {
         print("getYtChannelIdViaList")
-        let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forUsername=\(username)&part=id"
+        let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
         print("apiUrl", apiUrl)
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
@@ -49,18 +48,6 @@ class YoutubeDataAPI {
         }
 
         throw SubscriptionError.failedGettingChannelIdFromUsername("getYtChannelIdViaList")
-    }
-
-    static func getYtChannelIdViaSearch(from userName: String) async throws -> String {
-        print("getYtChannelIdViaSearch")
-        let apiUrl = "\(baseUrl)search?key=\(apiKey)&q=\(userName)&type=channel&part=id,snippet"
-        print("apiUrl", apiUrl)
-        let channelInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelInfo.self)
-        if let item = channelInfo.items.first {
-            return item.id.channelId
-        }
-
-        throw SubscriptionError.failedGettingChannelIdFromUsername("getYtChannelIdViaSearch")
     }
 
     private static func handleYoutubeRequest<T>(url: String, model: T.Type) async throws -> T where T: Decodable {

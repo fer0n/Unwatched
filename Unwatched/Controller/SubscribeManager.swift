@@ -105,7 +105,7 @@ import SwiftUI
         }
     }
 
-    func addSubscription(_ channelId: String? = nil, subscriptionId: PersistentIdentifier? = nil) {
+    func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) {
         guard let container = container else {
             print("addNewSubscription has no container")
             return
@@ -115,7 +115,7 @@ import SwiftUI
         isLoading = true
         Task {
             do {
-                try await SubscriptionService.addSubscription(channelId: channelId,
+                try await SubscriptionService.addSubscription(channelInfo: channelInfo,
                                                               subsciptionId: subscriptionId,
                                                               modelContainer: container)
                 await MainActor.run {
@@ -157,10 +157,11 @@ import SwiftUI
             isLoading = false
         } else {
             let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId
+            let channelInfo = ChannelInfo(channelId: channelId)
             let subId = video.subscription?.id
             do {
                 try await SubscriptionService.addSubscription(
-                    channelId: channelId,
+                    channelInfo: channelInfo,
                     subsciptionId: subId,
                     modelContainer: container)
                 isSubscribedSuccess = true
@@ -188,10 +189,11 @@ import SwiftUI
         if urls.isEmpty {
             errorMessage = "No urls found"
         }
-        addSubscription(from: urls)
+        let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
+        addSubscription(channelInfo: channelInfo)
     }
 
-    func addSubscription(from urls: [URL]) {
+    func addSubscription(channelInfo: [ChannelInfo]) {
         guard let container = container else {
             print("no container in addSubscriptionFromText")
             return
@@ -202,7 +204,7 @@ import SwiftUI
         Task.detached {
             print("load new")
             do {
-                let subs = try await SubscriptionService.addSubscriptions(from: urls, modelContainer: container)
+                let subs = try await SubscriptionService.addSubscriptions(channelInfo: channelInfo, modelContainer: container)
                 let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
                 await MainActor.run {
                     self.newSubs = subs

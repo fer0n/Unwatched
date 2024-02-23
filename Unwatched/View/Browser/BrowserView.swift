@@ -202,7 +202,8 @@ struct BrowserView: View, KeyboardReadable {
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
-        guard let channelId = browserManager.channel?.channelId,
+        guard let channelInfo = browserManager.channel,
+              let channelId = channelInfo.channelId,
               let isSubscribed = subscribeManager.isSubscribedSuccess else {
             print("handleAddSubButton without channelId/isSubscribed")
             return
@@ -211,7 +212,7 @@ struct BrowserView: View, KeyboardReadable {
         if isSubscribed {
             subscribeManager.unsubscribe(channelId)
         } else {
-            subscribeManager.addSubscription(channelId)
+            subscribeManager.addSubscription(channelInfo)
         }
 
     }
