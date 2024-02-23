@@ -36,8 +36,10 @@ struct MenuView: View {
                 ),
                 TabRoute(
                     view: AnyView(InboxView()),
-                    image: inbox.isEmpty
-                        ? (refresher.isAnimating ? "tray.and.arrow.down" : Const.inboxTabEmptySF)
+                    image: refresher.showLoadingAnimation
+                        ? "tray.and.arrow.down"
+                        : inbox.isEmpty
+                        ? Const.inboxTabEmptySF
                         : Const.inboxTabFullSF,
                     text: "inbox",
                     tag: Tab.inbox,

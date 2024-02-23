@@ -9,7 +9,10 @@ import SwiftData
 @Observable class RefreshManager {
     var container: ModelContainer?
     var isLoading: Bool = false
-    var isAnimating: Bool = false
+    var showLoadingAnimation: Bool = false
+
+    @ObservationIgnored var loadingStart: Date?
+    @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
     func refreshAll() {
         refresh()
@@ -24,14 +27,26 @@ import SwiftData
         if let container = container {
             if isLoading { return }
             isLoading = true
+            loadingStart = .now
+            showLoadingAnimation = true
             Task {
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
                 try? await task.value
                 await MainActor.run {
                     isLoading = false
                 }
+                await disableLoadingAnimation()
             }
         }
+    }
+
+    private func disableLoadingAnimation() async {
+        let timeSinceLoadingStart = loadingStart?.timeIntervalSinceNow ?? 0
+        let duration = max(timeSinceLoadingStart + minimumAnimationDuration, 0)
+        if duration > 0 {
+            try? await Task.sleep(s: duration)
+        }
+        showLoadingAnimation = false
     }
 
     func handleAutoBackup(_ deviceName: String) {
