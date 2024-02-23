@@ -48,8 +48,9 @@ struct SubscriptionInfoDetails: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("settings")
                     .font(.subheadline)
-                    .foregroundStyle(Color.gray)
+                    .foregroundStyle(.secondary)
                     .padding(.horizontal)
+                    .padding(.leading, 10)
 
                 ScrollView(.horizontal) {
                     HStack {
@@ -99,13 +100,16 @@ struct SubscriptionInfoDetails: View {
                     if let userName = subscription.youtubeUserName {
                         Text(verbatim: "@\(userName)")
                             .font(.title2)
-                            .foregroundStyle(Color.myAccentColor)
+                            .foregroundStyle(.primary)
                     }
+
+                    let hasOtherInfos = subscription.youtubeUserName != nil || hasImage
 
                     Text(availableVideos)
                         .font(.system(size: 14))
                         .font(.body)
-                        .foregroundStyle(Color.gray)
+                        .foregroundStyle(.secondary)
+                        .padding(.leading, hasOtherInfos ? 0 : 10)
                 }
             }
             .padding(.bottom, 10)
