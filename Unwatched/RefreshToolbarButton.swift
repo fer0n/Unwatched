@@ -41,14 +41,11 @@ struct RefreshToolbarButton: ToolbarContent {
             .onChange(of: isLoading) {
                 if isLoading {
                     nextTurn()
-                    refresher.isAnimating = true
                 }
             }
             .modifier(AnimationCompletionCallback(animatedValue: rotation) {
                 if isLoading {
                     nextTurn()
-                } else {
-                    refresher.isAnimating = false
                 }
             })
         }
