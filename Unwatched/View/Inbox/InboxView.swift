@@ -8,6 +8,8 @@ import SwiftData
 import TipKit
 
 struct InboxView: View {
+    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
@@ -57,7 +59,13 @@ struct InboxView: View {
             }
             .onAppear {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
-                UserDefaults.standard.setValue(false, forKey: Const.hasNewInboxItems)
+                hasNewInboxItems = false
+            }
+            .task(id: hasNewInboxItems) {
+                if hasNewInboxItems && navManager.tab == .inbox {
+                    print("turning off inbox badge")
+                    hasNewInboxItems = false
+                }
             }
             .toolbar {
                 RefreshToolbarButton()
