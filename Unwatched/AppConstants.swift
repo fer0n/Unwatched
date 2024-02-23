@@ -73,4 +73,5 @@ struct Const {
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     static let allVideosSortOrder = "allVideosSortOrder"
     static let hasNewInboxItems = "hasNewInboxItems"
+    static let showNewInboxBadge = "showNewInboxBadge"
 }
