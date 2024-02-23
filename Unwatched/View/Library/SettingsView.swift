@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
+    @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
 
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
@@ -71,6 +72,9 @@ struct SettingsView: View {
                 Section("appearance") {
                     Toggle(isOn: $showTabBarLabels) {
                         Text("showTabBarLabels")
+                    }
+                    Toggle(isOn: $showNewInboxBadge) {
+                        Text("showNewInboxBadge")
                     }
                 }
                 .tint(.teal)

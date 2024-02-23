@@ -12,6 +12,8 @@ struct MenuView: View {
     @Environment(NavigationManager.self) private var navManager
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
+    @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
+
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
 
@@ -39,7 +41,7 @@ struct MenuView: View {
                         : Const.inboxTabFullSF,
                     text: "inbox",
                     tag: Tab.inbox,
-                    showBadge: hasNewInboxItems && navManager.tab != .inbox
+                    showBadge: showNewInboxBadge && hasNewInboxItems && navManager.tab != .inbox
                 ),
                 TabRoute(
                     view: AnyView(LibraryView()),
