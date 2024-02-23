@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Const {
 
+    static let emptyString = ""
     static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     static let playerAboveSheetHeight: CGFloat = 60
@@ -71,4 +72,5 @@ struct Const {
 
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     static let allVideosSortOrder = "allVideosSortOrder"
+    static let hasNewInboxItems = "hasNewInboxItems"
 }
