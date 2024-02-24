@@ -23,6 +23,20 @@ struct MenuView: View {
         UITabBarItem.appearance().badgeColor = unselectedItemColor
     }
 
+    var getInboxSymbol: Image {
+        let isLoading = refresher.showLoadingAnimation
+        let isEmpty = inbox.isEmpty
+        let currentTab = navManager.tab == .inbox
+
+        let full = isEmpty ? "" : ".full"
+        if !isLoading {
+            return Image(systemName: "tray\(full)")
+        }
+
+        let fill = currentTab ? ".fill" : ""
+        return Image("custom.tray.loading\(fill)")
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
 
@@ -30,24 +44,20 @@ struct MenuView: View {
             [
                 TabRoute(
                     view: AnyView(QueueView(inboxHasEntries: !inbox.isEmpty)),
-                    image: Const.queueTagSF,
+                    image: Image(systemName: Const.queueTagSF),
                     text: "queue",
                     tag: Tab.queue
                 ),
                 TabRoute(
                     view: AnyView(InboxView()),
-                    image: refresher.showLoadingAnimation
-                        ? "tray.and.arrow.down"
-                        : inbox.isEmpty
-                        ? Const.inboxTabEmptySF
-                        : Const.inboxTabFullSF,
+                    image: getInboxSymbol,
                     text: "inbox",
                     tag: Tab.inbox,
                     showBadge: showNewInboxBadge && hasNewInboxItems && navManager.tab != .inbox
                 ),
                 TabRoute(
                     view: AnyView(LibraryView()),
-                    image: "books.vertical",
+                    image: Image(systemName: "books.vertical"),
                     text: "library",
                     tag: Tab.library
                 )
@@ -60,16 +70,17 @@ struct MenuView: View {
                 ForEach(tabs, id: \.tag) { tab in
                     tab.view
                         .tabItem {
-                            Image(systemName: tab.image)
+                            tab.image
                                 .environment(\.symbolVariants,
                                              navManager.tab == tab.tag
                                                 ? .fill
                                                 : .none)
-                            if showTabBarLabels {
+                            if tab.showBadge {
+                                Text(verbatim: "●")
+                            } else if showTabBarLabels {
                                 Text(tab.text)
                             }
                         }
-                        .badge(tab.showBadge ? Const.emptyString : nil)
                         .tag(tab.tag)
                 }
             }
@@ -102,7 +113,7 @@ struct MenuView: View {
 
 struct TabRoute {
     var view: AnyView
-    var image: String
+    var image: Image
     var text: LocalizedStringKey
     var tag: Tab
     var showBadge: Bool = false
