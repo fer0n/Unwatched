@@ -147,11 +147,17 @@ struct VideoListItem: View {
                         Text("markWatched")
                     }
                     Button(action: toggleBookmark) {
-                        if video.bookmarkedDate != nil {
-                            Image(systemName: "bookmark.fill")
+                        let isBookmarked = video.bookmarkedDate != nil
+
+                        Image(systemName: "bookmark")
+                            .environment(\.symbolVariants,
+                                         isBookmarked
+                                            ? .fill
+                                            : .none)
+                        if isBookmarked {
                             Text("bookmarked")
                         } else {
-                            Image(systemName: "bookmark")
+
                             Text("addBookmark")
                         }
                     }
