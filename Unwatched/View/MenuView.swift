@@ -24,7 +24,7 @@ struct MenuView: View {
     }
 
     var getInboxSymbol: Image {
-        let isLoading = refresher.showLoadingAnimation
+        let isLoading = refresher.isLoading
         let isEmpty = inbox.isEmpty
         let currentTab = navManager.tab == .inbox
 
