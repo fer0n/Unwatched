@@ -49,6 +49,8 @@ struct Const {
     static let circleBackgroundSF = "circle.fill"
     static let checkmarkSF = "checkmark"
 
+    static let videoDescriptionSF = "quote.bubble.fill"
+
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
