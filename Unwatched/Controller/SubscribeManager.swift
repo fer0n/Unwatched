@@ -204,7 +204,10 @@ import SwiftUI
         Task.detached {
             print("load new")
             do {
-                let subs = try await SubscriptionService.addSubscriptions(channelInfo: channelInfo, modelContainer: container)
+                let subs = try await SubscriptionService.addSubscriptions(
+                    channelInfo: channelInfo,
+                    modelContainer: container
+                )
                 let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
                 await MainActor.run {
                     self.newSubs = subs

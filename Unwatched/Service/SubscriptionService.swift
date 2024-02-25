@@ -2,7 +2,9 @@ import Foundation
 import SwiftData
 
 class SubscriptionService {
-    static func addSubscriptions(channelInfo: [ChannelInfo], modelContainer: ModelContainer) async throws -> [SubscriptionState] {
+    static func addSubscriptions(
+        channelInfo: [ChannelInfo],
+        modelContainer: ModelContainer) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: modelContainer)
         return try await repo.addSubscriptions(channelInfo: channelInfo)
     }
