@@ -194,7 +194,7 @@ struct VideoPlayer: View {
         .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
         .padding(3)
         .contextMenu {
-            if let video = player.video {
+            if player.video != nil {
                 Button {
                     player.clearVideo()
                 } label: {

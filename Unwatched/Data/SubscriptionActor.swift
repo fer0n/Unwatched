@@ -12,7 +12,7 @@ actor SubscriptionActor {
         sub.isArchived = false
         sub.subscribedDate = .now
     }
-    
+
     func subscribeTo(_ channelInfo: ChannelInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
@@ -173,7 +173,6 @@ actor SubscriptionActor {
     }
 
     private func updateSubscriptionInfo(_ sub: Subscription, info: ChannelInfo?) {
-        print("updateSubscriptionInfo", info)
         guard let info = info else {
             print("no info to update subscription with")
             return

@@ -35,7 +35,7 @@ extension String {
         do {
             let regex = try NSRegularExpression(pattern: regex)
             let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
-            var result = results.compactMap {
+            let result = results.compactMap {
                 if let range = Range($0.range, in: self) {
                     return String(self[range])
                 }
