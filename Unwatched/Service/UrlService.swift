@@ -104,6 +104,7 @@ struct UrlService {
         // https://www.m.youtube.com/watch?v=epBbbysk5cU
         // https://youtu.be/dtp6b76pMak
         // https://m.youtube.com/shorts/jH_QIBtX1gY
+        // swiftlint:disable:next line_length
         let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))[^\/\?\n]+|youtu.be\/[^\/\?\n]+))"#
         let matches = text.matchingMultiple(regex: regex)
         if let matches = matches {

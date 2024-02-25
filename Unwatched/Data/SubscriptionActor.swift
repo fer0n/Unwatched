@@ -62,7 +62,10 @@ actor SubscriptionActor {
                 for info in channelInfo {
                     if let url = info.rssFeedUrl {
                         group.addTask {
-                            let (subState, sendableSub) = await self.loadSubscriptionInfo(from: url, unarchiveSubIfAvailable: true)
+                            let (subState, sendableSub) = await self.loadSubscriptionInfo(
+                                from: url,
+                                unarchiveSubIfAvailable: true
+                            )
                             let newSendableSub = SubscriptionActor.mergeChannelInfoAndSendableSub(info, sendableSub)
                             return (subState, newSendableSub)
                         }
@@ -98,7 +101,7 @@ actor SubscriptionActor {
         var subState = SubscriptionState(title: sub.title)
         guard let channelId = sub.youtubeChannelId else {
             print("no channelId for verify")
-            subState.error = "no channelId found" // TODO: Do this nicer?
+            subState.error = "no channelId found"
             return (subState, nil)
         }
 

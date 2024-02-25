@@ -152,39 +152,7 @@ struct VideoListItem: View {
                     .tint(.black)
             }
             if videoSwipeActions.contains(.more) {
-                Menu {
-                    Button(action: markWatched) {
-                        Image(systemName: Const.watchedSF)
-                        Text("markWatched")
-                    }
-                    Button(action: toggleBookmark) {
-                        let isBookmarked = video.bookmarkedDate != nil
-
-                        Image(systemName: "bookmark")
-                            .environment(\.symbolVariants,
-                                         isBookmarked
-                                            ? .fill
-                                            : .none)
-                        if isBookmarked {
-                            Text("bookmarked")
-                        } else {
-
-                            Text("addBookmark")
-                        }
-                    }
-                    if video.inboxEntry == nil {
-                        Button(action: moveToInbox) {
-                            Image(systemName: "tray.and.arrow.down.fill")
-                            Text("moveToInbox")
-                        }
-                    }
-                    if let url = video.url {
-                        ShareLink(item: url)
-                    }
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                }
-                .tint(Color.gray)
+                moreMenu
             }
             if videoSwipeActions.contains(.details) {
                 Button {
@@ -195,6 +163,42 @@ struct VideoListItem: View {
                 .tint(Color(UIColor.lightGray))
             }
         }
+    }
+
+    var moreMenu: some View {
+        Menu {
+            Button(action: markWatched) {
+                Image(systemName: Const.watchedSF)
+                Text("markWatched")
+            }
+            Button(action: toggleBookmark) {
+                let isBookmarked = video.bookmarkedDate != nil
+
+                Image(systemName: "bookmark")
+                    .environment(\.symbolVariants,
+                                 isBookmarked
+                                    ? .fill
+                                    : .none)
+                if isBookmarked {
+                    Text("bookmarked")
+                } else {
+
+                    Text("addBookmark")
+                }
+            }
+            if video.inboxEntry == nil {
+                Button(action: moveToInbox) {
+                    Image(systemName: "tray.and.arrow.down.fill")
+                    Text("moveToInbox")
+                }
+            }
+            if let url = video.url {
+                ShareLink(item: url)
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle.fill")
+        }
+        .tint(Color.gray)
     }
 
     func addVideoToTopQueue() {
