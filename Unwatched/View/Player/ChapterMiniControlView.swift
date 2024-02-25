@@ -165,7 +165,7 @@ struct ChapterMiniControlView: View {
                     Text(verbatim: "\(duration)")
                     Text(verbatim: "•")
                 }
-                Image(systemName: "quote.bubble.fill")
+                Image(systemName: Const.videoDescriptionSF)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)

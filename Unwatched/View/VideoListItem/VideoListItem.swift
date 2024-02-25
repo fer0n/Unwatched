@@ -158,7 +158,7 @@ struct VideoListItem: View {
                 Button {
                     showInfo = true
                 } label: {
-                    Image(systemName: "info.circle.fill")
+                    Image(systemName: Const.videoDescriptionSF)
                 }
                 .tint(Color(UIColor.lightGray))
             }
