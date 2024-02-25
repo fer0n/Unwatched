@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8804A3ED2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */; };
 		8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */; };
 		8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */; };
 		8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
@@ -124,6 +125,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionDetailView.swift; sourceTree = "<group>"; };
 		8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemDetails.swift; sourceTree = "<group>"; };
 		8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemStatus.swift; sourceTree = "<group>"; };
 		8804F91E2B4805A100E19B7A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				88FA62D72B8485EA00924959 /* PlayButton.swift */,
 				883CA8102B5AFE8B00028D52 /* MiniPlayerView.swift */,
 				8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */,
+				8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */,
 				88C205272B516D2A008EC51D /* ChapterListItem.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
 				88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */,
@@ -724,6 +727,7 @@
 				88D858502B55AB4D0047E0E6 /* DateTimeConversion.swift in Sources */,
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
+				8804A3ED2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift in Sources */,
 				8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,

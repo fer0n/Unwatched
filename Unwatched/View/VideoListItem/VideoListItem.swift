@@ -12,12 +12,15 @@ enum VideoActions {
     case delete
     case clear
     case more
+    case details
 }
 
 struct VideoListItem: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
+
+    @State var showInfo = false
 
     let video: Video
     var showVideoStatus: Bool = false
@@ -29,7 +32,7 @@ struct VideoListItem: View {
     // TODO: see if there's a better way to fix the "label doesn't update from bg tasks" issue
     // try to reproduce in mini project and ask on stackoverflow?
 
-    var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more]
+    var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details]
 
     init(video: Video,
          videoSwipeActions: [VideoActions]? = nil,
@@ -75,6 +78,14 @@ struct VideoListItem: View {
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 getTrailingSwipeActions()
+            }
+            .popover(isPresented: $showInfo) {
+                ScrollView {
+                    DescriptionDetailView(video: video)
+                        .padding(.top)
+                }
+                .presentationDragIndicator(.visible)
+                .presentationCompactAdaptation(.sheet)
             }
     }
 
@@ -175,6 +186,14 @@ struct VideoListItem: View {
                 }
                 .tint(Color.gray)
             }
+            if videoSwipeActions.contains(.details) {
+                Button {
+                    showInfo = true
+                } label: {
+                    Image(systemName: "info.circle.fill")
+                }
+                .tint(Color(UIColor.lightGray))
+            }
         }
     }
 
@@ -239,8 +258,7 @@ struct VideoListItem: View {
             showVideoStatus: true,
             hasInboxEntry: false,
             hasQueueEntry: true,
-            watched: true,
-            videoSwipeActions: [.queueTop, .queueBottom, .clear, .more]
+            watched: true
         )
     }
     .listStyle(.plain)
