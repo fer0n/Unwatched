@@ -21,11 +21,7 @@ import MediaPlayer
     var lowerVolumeBy: Float?
     var setVolumeTo: Float?
 
-    @ObservationIgnored private var onEnded: (_ fadeOutSeconds: Double?) -> Void
-
-    init(onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
-        self.onEnded = onEnded
-    }
+    @ObservationIgnored var onEnded: ((_ fadeOutSeconds: Double?) -> Void)?
 
     var remainingText: String? {
         if remainingSeconds > 0 {
@@ -82,7 +78,7 @@ import MediaPlayer
         } else if remainingSeconds > 0 {
             remainingSeconds -= 1
         } else {
-            onEnded(startFadeOutTime.map { Double($0) })
+            onEnded?(startFadeOutTime.map { Double($0) })
             stopTimer()
         }
     }

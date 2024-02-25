@@ -14,8 +14,9 @@ struct SleepTimer: View {
     @State var hapticToggle: Bool = false
     @State var viewModel: SleepTimerViewModel
 
-    init(onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
-        viewModel = SleepTimerViewModel(onEnded: onEnded)
+    init(viewModel: SleepTimerViewModel, onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
+        viewModel.onEnded = onEnded
+        self.viewModel = viewModel
     }
 
     var body: some View {

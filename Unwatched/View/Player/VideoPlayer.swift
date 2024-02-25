@@ -25,6 +25,7 @@ struct VideoPlayer: View {
     var compactSize = false
     var showInfo = true
     var showFullscreenButton = false
+    var sleepTimerVM = SleepTimerViewModel()
 
     var body: some View {
         @Bindable var player = player
@@ -77,6 +78,10 @@ struct VideoPlayer: View {
                 }
 
                 layout {
+                    if compactSize {
+                        SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
+                    }
+
                     HStack {
                         SpeedControlView(selectedSpeed: $player.playbackSpeed)
                         customSettingsButton
@@ -106,9 +111,10 @@ struct VideoPlayer: View {
                     Spacer()
                     Spacer()
                 }
-
                 if !compactSize {
-                    footer
+                    VideoPlayerFooter(setShowMenu: setShowMenu,
+                                      sleepTimerVM: sleepTimerVM,
+                                      onSleepTimerEnded: onSleepTimerEnded)
                 }
             }
             .innerSizeTrackerModifier(onChange: { size in
@@ -136,52 +142,13 @@ struct VideoPlayer: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 
-    @MainActor
-    var footer: some View {
-        HStack {
-            if let video = player.video {
-                SleepTimer(onEnded: onSleepTimerEnded)
-                    .frame(maxWidth: .infinity)
-
-                Button(action: toggleBookmark) {
-                    Image(systemName: video.bookmarkedDate != nil
-                            ? "bookmark.fill"
-                            : "bookmark")
-                        .contentTransition(.symbolEffect(.replace))
-                }
-                .frame(maxWidth: .infinity)
-            }
-
-            Button {
-                setShowMenu()
-            } label: {
-                VStack {
-                    Image(systemName: "chevron.up")
-                        .font(.system(size: 30))
-                    Text("showMenu")
-                        .font(.caption)
-                        .textCase(.uppercase)
-                        .padding(.bottom, 3)
-                        .fixedSize()
-                }
-            }
-            .frame(maxWidth: .infinity)
-
-            if let video = player.video {
-                if let url = video.url {
-                    ShareLink(item: url) {
-                        Image(systemName: "square.and.arrow.up")
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    Link(destination: url) {
-                        Image(systemName: "safari")
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-            }
+    func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
+        var seconds = player.currentTime ?? 0
+        player.pause()
+        if let fadeOutSeconds = fadeOutSeconds, fadeOutSeconds > seconds {
+            seconds -= fadeOutSeconds
         }
-        .font(.system(size: 20))
+        player.updateElapsedTime(seconds)
     }
 
     var watchedButton: some View {
@@ -258,22 +225,6 @@ struct VideoPlayer: View {
                     : "rectangle.slash.fill")
         }
         .toggleStyle(OutlineToggleStyle())
-    }
-
-    func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
-        var seconds = player.currentTime ?? 0
-        player.pause()
-        if let fadeOutSeconds = fadeOutSeconds, fadeOutSeconds > seconds {
-            seconds -= fadeOutSeconds
-        }
-        player.updateElapsedTime(seconds)
-    }
-
-    func toggleBookmark() {
-        if let video = player.video {
-            VideoService.toggleBookmark(video, modelContext)
-            hapticToggle.toggle()
-        }
     }
 
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
