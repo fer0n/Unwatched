@@ -73,7 +73,7 @@ struct QueueView: View {
                             Button {
                                 showImportSheet = false
                             } label: {
-                                Image(systemName: "xmark.circle.fill")
+                                Image(systemName: Const.clearSF)
                             }
                             .tint(Color.myAccentColor)
                         }
