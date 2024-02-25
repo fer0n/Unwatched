@@ -10,9 +10,7 @@ enum BrowserUrl: Identifiable {
     case url(_ url: String)
 
     var id: String {
-        get {
-            getUrlString
-        }
+        getUrlString
     }
 
     var getUrlString: String {
