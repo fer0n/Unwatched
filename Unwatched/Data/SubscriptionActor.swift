@@ -8,10 +8,15 @@ import SwiftData
 
 @ModelActor
 actor SubscriptionActor {
+    private func unarchive(_ sub: Subscription) {
+        sub.isArchived = false
+        sub.subscribedDate = .now
+    }
+    
     func subscribeTo(_ channelInfo: ChannelInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
-            sub.isArchived = false
+            unarchive(sub)
             print("successfully subscribed via subId")
             try modelContext.save()
             return
@@ -24,7 +29,7 @@ actor SubscriptionActor {
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
-            first.isArchived = false
+            unarchive(first)
             try modelContext.save()
             return
         }
@@ -203,7 +208,7 @@ actor SubscriptionActor {
         let subs = try? modelContext.fetch(fetch)
         if let sub = subs?.first {
             if unarchiveSubIfAvailable {
-                sub.isArchived = false
+                unarchive(sub)
             }
             let title = sub.title
             return title

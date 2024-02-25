@@ -121,7 +121,12 @@ struct SubscriptionInfoDetails: View {
         Button {
             requiresUnsubscribe = true
             withAnimation {
-                subscription.isArchived.toggle()
+                if subscription.isArchived {
+                    subscription.isArchived = false
+                    subscription.subscribedDate = .now
+                } else {
+                    subscription.isArchived = true
+                }
             }
         } label: {
             HStack {
