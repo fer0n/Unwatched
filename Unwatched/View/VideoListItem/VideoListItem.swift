@@ -79,13 +79,23 @@ struct VideoListItem: View {
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 getTrailingSwipeActions()
             }
-            .popover(isPresented: $showInfo) {
-                ScrollView {
-                    DescriptionDetailView(video: video)
-                        .padding(.top)
+            .sheet(isPresented: $showInfo) {
+                NavigationStack {
+                    ScrollView {
+                        DescriptionDetailView(video: video)
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button {
+                                showInfo = false
+                            } label: {
+                                Image(systemName: Const.clearSF)
+                            }
+                            .tint(Color.myAccentColor)
+                        }
+                    }
                 }
                 .presentationDragIndicator(.visible)
-                .presentationCompactAdaptation(.sheet)
             }
     }
 

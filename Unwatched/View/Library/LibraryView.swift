@@ -198,7 +198,7 @@ struct TextFieldClearButton: View {
         Button {
             text = ""
         } label: {
-            Image(systemName: "xmark.circle.fill")
+            Image(systemName: Const.clearSF)
         }
         .foregroundStyle(.gray)
     }
