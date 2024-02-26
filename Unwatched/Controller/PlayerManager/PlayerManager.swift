@@ -40,7 +40,7 @@ enum VideoSource {
             return
         }
 
-        if video == oldValue {
+        if video != nil && video?.url == oldValue?.url {
             print("> tapped existing video")
             self.play()
             return
