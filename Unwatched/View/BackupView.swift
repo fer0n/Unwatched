@@ -45,8 +45,13 @@ struct BackupView: View {
             Button {
                 saveDeviceNameToIcloud = UIDevice.current.name
             } label: {
-                Text("backupNow")
+                if saveDeviceNameToIcloud != nil {
+                    ProgressView()
+                } else {
+                    Text("backupNow")
+                }
             }
+            .disabled(saveDeviceNameToIcloud != nil)
 
             Button {
                 showFileImporter = true
