@@ -17,6 +17,7 @@ struct LibraryView: View {
     @State var subManager = SubscribeManager()
     @State var text = DebouncedText(0.1)
     @State var isDragOver: Bool = false
+    @State var droppedUrls: [URL]?
 
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
@@ -111,6 +112,9 @@ struct LibraryView: View {
         .task(id: text.val) {
             await text.handleDidSet()
         }
+        .task(id: droppedUrls) {
+            await addDroppedUrls()
+        }
     }
 
     var dropArea: some View {
@@ -166,10 +170,17 @@ struct LibraryView: View {
         }
     }
 
-    func handleUrlDrop(_ urls: [URL]) {
+    func addDroppedUrls() async {
+        guard let urls = droppedUrls else {
+            return
+        }
         print("handleUrlDrop inbox", urls)
         let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
-        subManager.addSubscription(channelInfo: channelInfo)
+        await subManager.addSubscription(channelInfo: channelInfo)
+    }
+
+    func handleUrlDrop(_ urls: [URL]) {
+        droppedUrls = urls
     }
 }
 

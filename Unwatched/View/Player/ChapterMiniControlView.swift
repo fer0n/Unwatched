@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChapterMiniControlView: View {
     @Environment(\.modelContext) var modelContext
@@ -11,6 +12,8 @@ struct ChapterMiniControlView: View {
     @Environment(NavigationManager.self) var navManager
     @State var subscribeManager = SubscribeManager()
     @State var triggerFeedback = false
+
+    @State var videoIdToSubscribeTo: PersistentIdentifier?
 
     var setShowMenu: () -> Void
     var showInfo: Bool = true
@@ -92,6 +95,11 @@ struct ChapterMiniControlView: View {
         .onAppear {
             subscribeManager.container = modelContext.container
         }
+        .task(id: videoIdToSubscribeTo) {
+            if let videoId = videoIdToSubscribeTo {
+                await subscribeManager.handleSubscription(videoId)
+            }
+        }
     }
 
     func subscriptionTitle(sub: Subscription) -> some View {
@@ -113,7 +121,7 @@ struct ChapterMiniControlView: View {
         .contextMenu {
             let isSubscribed = subscribeManager.isSubscribed(video: player.video)
             Button {
-                subscribeManager.videoToSubscribeTo = player.video
+                videoIdToSubscribeTo = player.video?.persistentModelID
             } label: {
                 HStack {
                     if isSubscribed {

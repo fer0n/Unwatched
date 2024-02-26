@@ -19,6 +19,7 @@ struct BrowserView: View, KeyboardReadable {
     @State var isLoading = false
     @State var isSuccess: Bool?
     @State var droppedUrls = [URL]()
+    @State var changeSubscriptionOf: ChannelInfo?
 
     var url: URL? = UrlService.youtubeStartPage
 
@@ -70,9 +71,12 @@ struct BrowserView: View, KeyboardReadable {
             }
             await handleUrlDrop(droppedUrls)
         }
-        .onChange(of: browserManager.channel?.channelId) {
+        .task(id: browserManager.channel?.channelId) {
             subscribeManager.reset()
-            subscribeManager.setIsSubscribed(browserManager.channel)
+            await subscribeManager.setIsSubscribed(browserManager.channel)
+        }
+        .task(id: changeSubscriptionOf?.channelId) {
+            await handleSubscriptionChange()
         }
         .onChange(of: browserManager.channel?.userName) {
             handleChannelInfoChanged(browserManager.channel)
@@ -82,7 +86,9 @@ struct BrowserView: View, KeyboardReadable {
         }
         .onAppear {
             subscribeManager.container = modelContext.container
-            subscribeManager.setIsSubscribed(browserManager.channel)
+            Task {
+                await subscribeManager.setIsSubscribed(browserManager.channel)
+            }
         }
         .onDisappear {
             if subscribeManager.hasNewSubscriptions {
@@ -215,19 +221,21 @@ struct BrowserView: View, KeyboardReadable {
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
-        guard let channelInfo = browserManager.channel,
+        changeSubscriptionOf = browserManager.channel
+    }
+
+    func handleSubscriptionChange() async {
+        guard let channelInfo = changeSubscriptionOf,
               let channelId = channelInfo.channelId,
               let isSubscribed = subscribeManager.isSubscribedSuccess else {
             print("handleAddSubButton without channelId/isSubscribed")
             return
         }
-
         if isSubscribed {
-            subscribeManager.unsubscribe(channelId)
+            await subscribeManager.unsubscribe(channelId)
         } else {
-            subscribeManager.addSubscription(channelInfo)
+            await subscribeManager.addSubscription(channelInfo)
         }
-
     }
 }
 

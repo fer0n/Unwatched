@@ -18,13 +18,6 @@ import SwiftUI
     var showDropResults = false
 
     var hasNewSubscriptions = false
-    var videoToSubscribeTo: Video? {
-        didSet {
-            Task {
-                await handleSubscription()
-            }
-        }
-    }
 
     init(isLoading: Bool = false) {
         self.isLoading = isLoading
@@ -39,7 +32,7 @@ import SwiftUI
         return SubscriptionService.isSubscribed(video)
     }
 
-    func setIsSubscribed(_ channelInfo: ChannelInfo?) {
+    func setIsSubscribed(_ channelInfo: ChannelInfo?) async {
         guard let channelId = channelInfo?.channelId else {
             print("no channelId to check subscription status")
             return
@@ -49,14 +42,10 @@ import SwiftUI
             return
         }
         isLoading = true
-        Task {
-            let task = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
-            let isSubscribed = await task.value
-            await MainActor.run {
-                self.isSubscribedSuccess = isSubscribed
-                isLoading = false
-            }
-        }
+        let task = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
+        let isSubscribed = await task.value
+        self.isSubscribedSuccess = isSubscribed
+        isLoading = false
     }
 
     func getSubscriptionSystemName(video: Video?) -> String? {
@@ -82,30 +71,24 @@ import SwiftUI
         return "plus"
     }
 
-    func unsubscribe(_ channelId: String) {
+    func unsubscribe(_ channelId: String) async {
         guard let container = container else {
             print("addNewSubscription has no container")
             return
         }
         isSubscribedSuccess = nil
         isLoading = true
-        Task {
-            do {
-                let task = SubscriptionService.unsubscribe(channelId, container: container)
-                try await task.value
-                await MainActor.run {
-                    isSubscribedSuccess = false
-                }
-            } catch {
-                print("unsubscribe error: \(error)")
-            }
-            await MainActor.run {
-                isLoading = false
-            }
+        do {
+            let task = SubscriptionService.unsubscribe(channelId, container: container)
+            try await task.value
+            isSubscribedSuccess = false
+        } catch {
+            print("unsubscribe error: \(error)")
         }
+        isLoading = false
     }
 
-    func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) {
+    func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) async {
         guard let container = container else {
             print("addNewSubscription has no container")
             return
@@ -113,33 +96,28 @@ import SwiftUI
 
         isSubscribedSuccess = nil
         isLoading = true
-        Task {
-            do {
-                try await SubscriptionService.addSubscription(channelInfo: channelInfo,
-                                                              subsciptionId: subscriptionId,
-                                                              modelContainer: container)
-                await MainActor.run {
-                    isSubscribedSuccess = true
-                    hasNewSubscriptions = true
-                }
-            } catch {
-                print("addNewSubscription error: \(error)")
-                await MainActor.run {
-                    isSubscribedSuccess = false
-                }
-            }
-            await MainActor.run {
-                isLoading = false
-            }
+        do {
+            try await SubscriptionService.addSubscription(channelInfo: channelInfo,
+                                                          subsciptionId: subscriptionId,
+                                                          modelContainer: container)
+            isSubscribedSuccess = true
+            hasNewSubscriptions = true
+        } catch {
+            print("addNewSubscription error: \(error)")
+            isSubscribedSuccess = false
         }
+        isLoading = false
     }
 
-    func handleSubscription() async {
-        guard let video = videoToSubscribeTo, let container = container else {
+    func handleSubscription(_ videoId: PersistentIdentifier) async {
+        guard let container = container else {
             return
         }
-
-        videoToSubscribeTo = nil
+        let context = ModelContext(container)
+        guard let video = context.model(for: videoId) as? Video else {
+            print("handleSubscription: video not found")
+            return
+        }
         isSubscribedSuccess = nil
         isLoading = true
 
@@ -179,7 +157,7 @@ import SwiftUI
         }
     }
 
-    func addSubscriptionFromText(_ text: String) {
+    func addSubscriptionFromText(_ text: String) async {
         let urls: [URL] = text.components(separatedBy: "\n").compactMap { str in
             if !str.isValidURL || str.isEmpty {
                 return nil
@@ -190,10 +168,10 @@ import SwiftUI
             errorMessage = "No urls found"
         }
         let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
-        addSubscription(channelInfo: channelInfo)
+        await addSubscription(channelInfo: channelInfo)
     }
 
-    func addSubscription(channelInfo: [ChannelInfo]) {
+    func addSubscription(channelInfo: [ChannelInfo]) async {
         guard let container = container else {
             print("no container in addSubscriptionFromText")
             return
@@ -201,33 +179,25 @@ import SwiftUI
         errorMessage = nil
         isLoading = true
 
-        Task.detached {
-            print("load new")
-            do {
-                let subs = try await SubscriptionService.addSubscriptions(
-                    channelInfo: channelInfo,
-                    modelContainer: container
-                )
-                let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
-                await MainActor.run {
-                    self.newSubs = subs
-                    if hasError {
-                        self.showDropResults = true
-                    } else {
-                        self.isSubscribedSuccess = true
-                    }
-                }
-            } catch {
-                print("\(error)")
-                await MainActor.run {
-                    self.errorMessage = error.localizedDescription
-                    self.showDropResults = true
-                }
+        print("load new")
+        do {
+            let subs = try await SubscriptionService.addSubscriptions(
+                channelInfo: channelInfo,
+                modelContainer: container
+            )
+            let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
+            self.newSubs = subs
+            if hasError {
+                self.showDropResults = true
+            } else {
+                self.isSubscribedSuccess = true
             }
-            await MainActor.run {
-                self.isLoading = false
-            }
+        } catch {
+            print("\(error)")
+            self.errorMessage = error.localizedDescription
+            self.showDropResults = true
         }
+        self.isLoading = false
     }
 }
 
