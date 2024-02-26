@@ -16,6 +16,8 @@ struct AddToLibraryView: View {
     @State var isLoadingVideos = false
     @State var videoUrls = [URL]()
 
+    @State var addSubscriptionFromText: String?
+
     var body: some View {
         Button(action: {
             navManager.openBrowserUrl = .youtubeStartPage
@@ -54,6 +56,9 @@ struct AddToLibraryView: View {
         .task(id: videoUrls) {
             await addVideoUrls(videoUrls)
         }
+        .task(id: addSubscriptionFromText) {
+            await handleAddSubscriptionFromText()
+        }
     }
 
     var pasteButton: some View {
@@ -90,7 +95,13 @@ struct AddToLibraryView: View {
         }
         let (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
         videoUrls = videoUrlsLocal
-        subManager.addSubscriptionFromText(rest)
+        addSubscriptionFromText = rest
+    }
+
+    func handleAddSubscriptionFromText() async {
+        if let text = addSubscriptionFromText {
+            await subManager.addSubscriptionFromText(text)
+        }
     }
 
     func delayedVideoCheckmarkReset() async {
