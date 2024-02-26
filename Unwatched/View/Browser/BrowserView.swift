@@ -133,7 +133,7 @@ struct BrowserView: View, KeyboardReadable {
 
     var dropAreaContent: some View {
         ZStack {
-            let size: CGFloat = 30
+            let size: CGFloat = 20
 
             if isLoading {
                 ProgressView()
@@ -152,7 +152,7 @@ struct BrowserView: View, KeyboardReadable {
                     Image(systemName: Const.queueTagSF)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: size, height: size)
+                        .frame(width: 30, height: 30)
                     Text("dropVideoUrlsHere")
                         .fontWeight(.medium)
                 }
