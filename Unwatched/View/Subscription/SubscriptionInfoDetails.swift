@@ -64,13 +64,13 @@ struct SubscriptionInfoDetails: View {
                                 ?? "questionmark"
                             return (text, img)
                         })
+                        .disabled(subscription.isArchived)
                         Spacer()
                     }
                     .padding(.horizontal)
                 }
             }
             .padding(.bottom, 15)
-            .disabled(subscription.isArchived)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
