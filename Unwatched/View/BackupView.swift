@@ -21,7 +21,6 @@ struct BackupView: View {
     @State var isDeletingTask: Task<(), Never>?
     @State var isDeletingEverythingTask: Task<(), Never>?
     @State var saveToIcloudTask: Task<(), any Error>?
-    @State var saveDeviceNameToIcloud: String?
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -42,16 +41,12 @@ struct BackupView: View {
                 .tint(.teal)
             }
 
-            Button {
-                saveDeviceNameToIcloud = UIDevice.current.name
+            AsyncButton {
+                await saveToIcloud(UIDevice.current.name)
             } label: {
-                if saveDeviceNameToIcloud != nil {
-                    ProgressView()
-                } else {
-                    Text("backupNow")
-                }
+                Text("backupNow")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .disabled(saveDeviceNameToIcloud != nil)
 
             Button {
                 showFileImporter = true
@@ -156,13 +151,6 @@ struct BackupView: View {
             } catch {
                 alerter.showError(error)
             }
-        }
-        .task(id: saveDeviceNameToIcloud) {
-            guard let deviceName = saveDeviceNameToIcloud else {
-                return
-            }
-            await saveToIcloud(deviceName)
-            saveDeviceNameToIcloud = nil
         }
         .onAppear {
             getAllIcloudFiles()

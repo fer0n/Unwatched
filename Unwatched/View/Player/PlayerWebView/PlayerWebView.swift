@@ -41,17 +41,17 @@ struct PlayerWebView: UIViewRepresentable {
 
         if prev.playbackSpeed != player.playbackSpeed {
             print("SPEED")
-            uiView.evaluateJavaScript(getSetPlaybackRateScript(), completionHandler: nil)
+            uiView.evaluateJavaScript(getSetPlaybackRateScript())
             context.coordinator.previousState.playbackSpeed = player.playbackSpeed
         }
 
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
                 print("PLAY")
-                uiView.evaluateJavaScript(getPlayScript(), completionHandler: nil)
+                uiView.evaluateJavaScript(getPlayScript())
             } else {
                 print("PAUSE")
-                uiView.evaluateJavaScript(getPauseScript(), completionHandler: nil)
+                uiView.evaluateJavaScript(getPauseScript())
             }
             context.coordinator.previousState.isPlaying = player.isPlaying
         }
@@ -59,7 +59,7 @@ struct PlayerWebView: UIViewRepresentable {
         let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
             print("SEEK")
-            uiView.evaluateJavaScript(getSeekToScript(seekTo), completionHandler: nil)
+            uiView.evaluateJavaScript(getSeekToScript(seekTo))
             context.coordinator.previousState.seekPosition = seekPosition
         }
 
@@ -72,7 +72,7 @@ struct PlayerWebView: UIViewRepresentable {
                 }
             } else {
                 let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
-                uiView.evaluateJavaScript(script, completionHandler: nil)
+                uiView.evaluateJavaScript(script)
             }
             context.coordinator.previousState.videoId = player.video?.youtubeId
         }
