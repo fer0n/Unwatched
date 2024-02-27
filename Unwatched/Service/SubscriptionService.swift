@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-class SubscriptionService {
+struct SubscriptionService {
     static func addSubscriptions(
         channelInfo: [ChannelInfo],
         modelContainer: ModelContainer) async throws -> [SubscriptionState] {

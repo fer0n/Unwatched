@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Observable class RefreshManager {
-    var container: ModelContainer?
+    weak var container: ModelContainer?
     var isLoading: Bool = false
 
     @ObservationIgnored var loadingStart: Date?

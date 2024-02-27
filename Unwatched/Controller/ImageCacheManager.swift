@@ -20,16 +20,15 @@ import SwiftData
         }
     }
 
-    func persistCache(_ container: ModelContainer) {
+    func persistCache(_ container: ModelContainer) async {
         let cache = cache
-        Task {
-            let task = ImageService.persistImages(cache: cache, container: container)
+        let task = ImageService.persistImages(cache: cache, container: container)
+        do {
             try await task.value
-            await MainActor.run {
-                self.cache = [:]
-            }
+            self.cache = [:]
+        } catch {
+            print("error while trying to persist cache: \(error)")
         }
-
     }
 }
 

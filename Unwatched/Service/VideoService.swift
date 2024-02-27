@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 import Observation
 
-class VideoService {
+struct VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         container: ModelContainer

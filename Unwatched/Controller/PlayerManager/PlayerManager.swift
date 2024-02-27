@@ -11,19 +11,19 @@ enum VideoSource {
 @Observable class PlayerManager {
     var isPlaying: Bool = false
     var currentTime: Double?
-    var currentChapter: Chapter?
-    var previousChapter: Chapter?
-    var nextChapter: Chapter?
+    weak var currentChapter: Chapter?
+    weak var previousChapter: Chapter?
+    weak var nextChapter: Chapter?
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
     var videoSource: VideoSource = .userInteraction
     var videoEnded: Bool = false
 
-    var container: ModelContainer?
+    weak var container: ModelContainer?
 
     @ObservationIgnored var previousIsPlaying = false
 
-    var video: Video? {
+    weak var video: Video? {
         didSet {
             handleNewVideoSet(oldValue)
         }

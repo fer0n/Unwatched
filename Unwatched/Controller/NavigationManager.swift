@@ -21,7 +21,7 @@ import SwiftData
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
-    @ObservationIgnored private var lastLibrarySubscriptionId: Subscription?
+    @ObservationIgnored private var lastLibrarySubscriptionId: PersistentIdentifier?
 
     init() { }
 
@@ -50,9 +50,9 @@ import SwiftData
                 presentedSubscriptionQueue.append(subscription)
             }
         case .library:
-            if lastLibrarySubscriptionId != subscription {
+            if lastLibrarySubscriptionId != subscription.persistentModelID {
                 presentedLibrary.append(subscription)
-                lastLibrarySubscriptionId = subscription
+                lastLibrarySubscriptionId = subscription.persistentModelID
             }
         }
     }

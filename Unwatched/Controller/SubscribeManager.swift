@@ -8,7 +8,7 @@ import SwiftData
 import SwiftUI
 
 @Observable class SubscribeManager {
-    var container: ModelContainer?
+    weak var container: ModelContainer?
 
     var isSubscribedSuccess: Bool?
     var isLoading: Bool

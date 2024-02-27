@@ -37,7 +37,9 @@ struct SetupView: View {
                     refresher.handleAutoBackup(UIDevice.current.name)
                 } else if scenePhase == .background {
                     print("background")
-                    saveData()
+                    Task {
+                        await saveData()
+                    }
                 }
             }
     }
@@ -77,7 +79,7 @@ struct SetupView: View {
         return NavigationManager()
     }
 
-    func saveData() {
+    func saveData() async {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(navManager) {
             UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
@@ -87,7 +89,7 @@ struct SetupView: View {
         let data = try? JSONEncoder().encode(videoId)
         UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
         let container = modelContext.container
-        imageCacheManager.persistCache(container)
+        await imageCacheManager.persistCache(container)
         print("saved state")
     }
 }

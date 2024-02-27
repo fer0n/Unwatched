@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-class ImageService {
+struct ImageService {
 
     static func persistImages(
         cache: [PersistentIdentifier: ImageCacheInfo],
