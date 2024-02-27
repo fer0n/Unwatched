@@ -11,9 +11,9 @@ enum VideoSource {
 @Observable class PlayerManager {
     var isPlaying: Bool = false
     var currentTime: Double?
-    weak var currentChapter: Chapter?
-    weak var previousChapter: Chapter?
-    weak var nextChapter: Chapter?
+    var currentChapter: Chapter?
+    var previousChapter: Chapter?
+    var nextChapter: Chapter?
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
     var videoSource: VideoSource = .userInteraction

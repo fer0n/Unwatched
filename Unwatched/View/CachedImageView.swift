@@ -47,12 +47,11 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
     }
 
     func loadImage() {
-        guard let imageHolder = imageHolder,
-              let url = imageHolder.thumbnailUrl,
-              cacheManager[imageHolder.persistentModelID] == nil else {
+        guard let holderId = imageHolder?.persistentModelID,
+              let url = imageHolder?.thumbnailUrl,
+              cacheManager[holderId] == nil else {
             return
         }
-        let holderId = imageHolder.persistentModelID
         imageTask = Task.detached {
             let imageData = try await ImageService.loadImageData(url: url)
             return ImageCacheInfo(
