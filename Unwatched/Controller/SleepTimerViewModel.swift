@@ -23,6 +23,10 @@ import MediaPlayer
 
     @ObservationIgnored var onEnded: ((_ fadeOutSeconds: Double?) -> Void)?
 
+    deinit {
+        timer.upstream.connect().cancel()
+    }
+
     var remainingText: String? {
         if remainingSeconds > 0 {
             let remaining = Double(remainingSeconds)

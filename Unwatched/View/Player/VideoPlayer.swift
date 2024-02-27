@@ -25,7 +25,7 @@ struct VideoPlayer: View {
     var compactSize = false
     var showInfo = true
     var showFullscreenButton = false
-    var sleepTimerVM = SleepTimerViewModel()
+    @State var sleepTimerVM = SleepTimerViewModel()
 
     var body: some View {
         @Bindable var player = player

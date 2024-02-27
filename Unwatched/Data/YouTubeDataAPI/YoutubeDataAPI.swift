@@ -1,6 +1,6 @@
 import Foundation
 
-class YoutubeDataAPI {
+struct YoutubeDataAPI {
     static var apiKey: String {
         let apiKey = Credentials.apiKey
         guard let apiKey = apiKey else {

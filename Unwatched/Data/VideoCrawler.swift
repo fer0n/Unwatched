@@ -5,7 +5,7 @@
 
 import Foundation
 
-class VideoCrawler {
+struct VideoCrawler {
     static func parseFeedUrl(_ url: URL, limitVideos: Int?, cutoffDate: Date?) async throws -> RSSParserDelegate {
         let (data, _) = try await URLSession.shared.data(from: url)
         let parser = XMLParser(data: data)
