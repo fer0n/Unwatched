@@ -32,11 +32,13 @@ struct SetupView: View {
             }
             .onChange(of: scenePhase) {
                 if scenePhase == .active {
+                    player.isInBackground = false
                     print("Active")
                     refresher.refreshOnStartup()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 } else if scenePhase == .background {
                     print("background")
+                    player.isInBackground = true
                     Task {
                         await saveData()
                     }

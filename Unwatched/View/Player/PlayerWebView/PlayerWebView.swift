@@ -156,9 +156,7 @@ struct PlayerWebView: UIViewRepresentable {
         func handleJsMessages(_ topic: String, _ payload: String?) {
             switch topic {
             case "pause":
-                previousState.isPlaying = false
-                parent.player.pause()
-                handleTimeUpdate(payload, persist: true)
+                handlePause(payload)
             case "play":
                 previousState.isPlaying = true
                 parent.player.play()
@@ -180,6 +178,15 @@ struct PlayerWebView: UIViewRepresentable {
             default:
                 break
             }
+        }
+
+        func handlePause(_ payload: String?) {
+            if !parent.player.isInBackground {
+                // workaround: hard pause when entering background (resumes playing otherwise when coming back)
+                previousState.isPlaying = false
+            }
+            parent.player.pause()
+            handleTimeUpdate(payload, persist: true)
         }
 
         func handlePlaybackSpeed(_ payload: String?) {

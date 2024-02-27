@@ -21,6 +21,7 @@ enum VideoSource {
 
     weak var container: ModelContainer?
 
+    @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
 
     weak var video: Video? {
