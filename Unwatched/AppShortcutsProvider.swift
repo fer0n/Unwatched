@@ -21,7 +21,6 @@ struct AddYoutubeURL: AppIntent {
 
     static var parameterSummary: some ParameterSummary {
         Summary("Add video from \(\.$youtubeUrl)")
-        // TODO: translate this
     }
 }
 

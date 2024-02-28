@@ -102,7 +102,8 @@ import Observation
             for sub in sendableSubs {
                 group.addTask {
                     guard let url = sub.link else {
-                        return (sub, []) // TODO: throw no url found here?
+                        print("sub has no url: \(sub.title)")
+                        return (sub, [])
                     }
                     let videos = try await VideoCrawler.loadVideosFromRSS(
                         url: url,

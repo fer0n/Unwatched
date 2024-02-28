@@ -15,6 +15,7 @@ struct SubscriptionDetailView: View {
     @State var isLoading = false
     @State var subscribeManager = SubscribeManager()
     @State var requiresUnsubscribe = false
+    @State var loadNewVideosTask: Task<(), Never>?
 
     @Bindable var subscription: Subscription
 
@@ -62,6 +63,12 @@ struct SubscriptionDetailView: View {
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
+        .task(id: loadNewVideosTask) {
+            if let task = loadNewVideosTask {
+                await task.value
+                isLoading = false
+            }
+        }
         .onDisappear {
             print("onDisappear")
             if subscription.isArchived && requiresUnsubscribe {
@@ -88,14 +95,11 @@ struct SubscriptionDetailView: View {
         isLoading = true
         let container = modelContext.container
         let subId = subscription.persistentModelID
-        Task {
+        loadNewVideosTask = Task {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: [subId],
                 container: container)
             try? await task.value
-            await MainActor.run {
-                isLoading = false
-            }
         }
     }
 }

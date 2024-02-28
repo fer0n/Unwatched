@@ -17,6 +17,7 @@ struct ImportSubscriptionsView: View {
     @State var editMode = EditMode.active
     @State var isLoading = false
     @State var searchString = ""
+    @State var loadSubStatesTask: Task<[SubscriptionState], Error>?
 
     var importButtonPadding = false
 
@@ -103,6 +104,17 @@ struct ImportSubscriptionsView: View {
                 refresher.refreshAll()
             }
         }
+        .task(id: loadSubStatesTask) {
+            guard let task = loadSubStatesTask else {
+                return
+            }
+            do {
+                subStates = try await task.value
+            } catch {
+                print("error loading subStates: \(error)")
+            }
+            isLoading = false
+        }
     }
 
     func startImport() {
@@ -113,14 +125,10 @@ struct ImportSubscriptionsView: View {
 
         let container = modelContext.container
         let subs = Array(selection)
-        Task {
-            let res = try await SubscriptionService.addSubscriptions(
+        loadSubStatesTask = Task {
+            return try await SubscriptionService.addSubscriptions(
                 from: subs,
                 modelContainer: container)
-            await MainActor.run {
-                subStates = res
-                isLoading = false
-            }
         }
     }
 

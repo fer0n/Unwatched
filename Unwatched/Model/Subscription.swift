@@ -26,7 +26,6 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
 
     var youtubeChannelId: String?
     var youtubeUserName: String?
-    // TODO: there's a difference between handles/usernames/cids, should be handled better
 
     var thumbnailUrl: URL?
 

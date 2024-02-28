@@ -29,8 +29,6 @@ struct VideoListItem: View {
     var watched: Bool?
     var clearRole: ButtonRole?
     var queueRole: ButtonRole?
-    // TODO: see if there's a better way to fix the "label doesn't update from bg tasks" issue
-    // try to reproduce in mini project and ask on stackoverflow?
 
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details]
 
