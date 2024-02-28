@@ -6,9 +6,11 @@
 import SwiftUI
 
 struct VideoPlayerFooter: View {
+    @Environment(NavigationManager.self) var navManager
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
+    @Binding var openBrowserUrl: BrowserUrl?
 
     var setShowMenu: (() -> Void)?
     var sleepTimerVM: SleepTimerViewModel
@@ -53,8 +55,10 @@ struct VideoPlayerFooter: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    Link(destination: url) {
-                        Image(systemName: "safari")
+                    Button {
+                        openBrowserUrl = .url(url.absoluteString)
+                    } label: {
+                        Image(systemName: "globe.desk")
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -73,5 +77,5 @@ struct VideoPlayerFooter: View {
 }
 
 #Preview {
-    VideoPlayerFooter(sleepTimerVM: SleepTimerViewModel(), onSleepTimerEnded: { _ in })
+    VideoPlayerFooter(openBrowserUrl: .constant(.url("asdf")), sleepTimerVM: SleepTimerViewModel(), onSleepTimerEnded: { _ in })
 }

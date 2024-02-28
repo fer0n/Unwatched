@@ -123,7 +123,7 @@ struct QueueView: View {
                     Button {
                         navManager.openBrowserUrl = .youtubeStartPage
                     } label: {
-                        Label("browseFeeds", systemImage: "globe.desk.fill")
+                        Label("browseFeeds", systemImage: Const.appBrowserSF)
                     }
                 } label: {
                     Label("addFeeds", systemImage: "plus")

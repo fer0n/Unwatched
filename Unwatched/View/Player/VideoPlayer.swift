@@ -19,6 +19,7 @@ struct VideoPlayer: View {
     @State var continuousPlayWorkaround: Bool = false
     @State var isSubscribedSuccess: Bool?
     @State var hapticToggle: Bool = false
+    @State var openBrowserUrl: BrowserUrl?
 
     @Binding var showMenu: Bool
 
@@ -112,7 +113,8 @@ struct VideoPlayer: View {
                     Spacer()
                 }
                 if !compactSize {
-                    VideoPlayerFooter(setShowMenu: setShowMenu,
+                    VideoPlayerFooter(openBrowserUrl: $openBrowserUrl,
+                                      setShowMenu: setShowMenu,
                                       sleepTimerVM: sleepTimerVM,
                                       onSleepTimerEnded: onSleepTimerEnded)
                 }
@@ -138,6 +140,10 @@ struct VideoPlayer: View {
         })
         .onChange(of: player.video?.subscription) {
             // workaround to update ui, doesn't work without
+        }
+        .sheet(item: $openBrowserUrl) { browserUrl in
+            let url = browserUrl.getUrl
+            BrowserView(url: url)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }

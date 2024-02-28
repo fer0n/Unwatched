@@ -50,6 +50,7 @@ struct Const {
     static let checkmarkSF = "checkmark"
 
     static let videoDescriptionSF = "quote.bubble.fill"
+    static let appBrowserSF = "globe.desk.fill"
 
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
