@@ -140,12 +140,14 @@ struct UserDataService {
     }
 
     static func saveToIcloud(_ deviceName: String, _ container: ModelContainer) -> Task<(), Error> {
+
         return Task {
             do {
-                let data = try self.exportFile(container)
-                guard let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName)) else {
+                let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName))
+                guard let filename = filename else {
                     throw UserDataServiceError.directoryError
                 }
+                let data = try self.exportFile(container)
                 try data.write(to: filename)
             } catch {
                 print("saveToIcloud: \(error)")
