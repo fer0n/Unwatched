@@ -77,5 +77,8 @@ struct VideoPlayerFooter: View {
 }
 
 #Preview {
-    VideoPlayerFooter(openBrowserUrl: .constant(.url("asdf")), sleepTimerVM: SleepTimerViewModel(), onSleepTimerEnded: { _ in })
+    VideoPlayerFooter(
+        openBrowserUrl: .constant(.url("asdf")),
+        sleepTimerVM: SleepTimerViewModel(),
+        onSleepTimerEnded: { _ in })
 }
