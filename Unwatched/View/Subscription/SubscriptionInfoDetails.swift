@@ -29,7 +29,7 @@ struct SubscriptionInfoDetails: View {
                         Button {
                             navManager.openBrowserUrl = .url(url)
                         } label: {
-                            Image(systemName: "globe.desk.fill")
+                            Image(systemName: Const.appBrowserSF)
                                 .padding(10)
                         }
                         .buttonStyle(CapsuleButtonStyle())
