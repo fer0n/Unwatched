@@ -9,6 +9,7 @@ import SwiftData
 @Observable class RefreshManager {
     weak var container: ModelContainer?
     var isLoading: Bool = false
+    var loadingTask: Task<(), Never>?
 
     @ObservationIgnored var loadingStart: Date?
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
@@ -27,12 +28,10 @@ import SwiftData
             if isLoading { return }
             isLoading = true
             loadingStart = .now
-            Task {
+            loadingTask = Task {
+                try? await Task.sleep(s: 2)
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
                 try? await task.value
-                await MainActor.run {
-                    isLoading = false
-                }
             }
         }
     }

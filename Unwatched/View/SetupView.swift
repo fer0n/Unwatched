@@ -44,6 +44,12 @@ struct SetupView: View {
                     }
                 }
             }
+            .task(id: refresher.loadingTask) {
+                if let task = refresher.loadingTask {
+                    await task.value
+                    refresher.isLoading = false
+                }
+            }
     }
 
     func restoreNowPlayingVideo() {
