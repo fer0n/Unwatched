@@ -25,7 +25,7 @@ struct AnimationCompletionCallback: AnimatableModifier {
 
     func checkIfFinished() {
         if animatableData == targetValue {
-            DispatchQueue.main.async {
+            Task {
                 self.completion()
             }
         }
