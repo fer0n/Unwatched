@@ -16,7 +16,7 @@ enum VideoSource {
     var nextChapter: Chapter?
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
-    var videoSource: VideoSource = .userInteraction
+    var videoSource: VideoSource?
     var videoEnded: Bool = false
 
     weak var container: ModelContainer?
@@ -216,8 +216,12 @@ enum VideoSource {
     }
 
     func handleAutoStart() {
-        print("handleAutoStart", videoSource)
-        switch videoSource {
+        print("handleAutoStart")
+        guard let source = videoSource else {
+            return
+        }
+        print(source)
+        switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
             if continuousPlay {
@@ -232,6 +236,7 @@ enum VideoSource {
                 play()
             }
         }
+        videoSource = nil
     }
 
     func getStartPosition() -> Double {
