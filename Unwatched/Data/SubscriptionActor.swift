@@ -62,12 +62,14 @@ actor SubscriptionActor {
                 for info in channelInfo {
                     if let url = info.rssFeedUrl {
                         group.addTask {
-                            let (subState, sendableSub) = await self.loadSubscriptionInfo(
+                            var (subState, sendableSub) = await self.loadSubscriptionInfo(
                                 from: url,
                                 unarchiveSubIfAvailable: true
                             )
-                            let newSendableSub = SubscriptionActor.mergeChannelInfoAndSendableSub(info, sendableSub)
-                            return (subState, newSendableSub)
+                            if let sub = sendableSub {
+                                sendableSub = SubscriptionActor.mergeChannelInfoAndSendableSub(info, sub)
+                            }
+                            return (subState, sendableSub)
                         }
                     } else {
                         print("channel info has no url")
@@ -137,7 +139,7 @@ actor SubscriptionActor {
             if let title = getTitleIfSubscriptionExists(
                 userName: subState.userName, unarchiveSubIfAvailable
             ) {
-                print("found existing sub via userName")
+                print("loadSubscriptionInfo: found existing sub via userName")
                 subState.title = title
                 subState.alreadyAdded = true
                 return (subState, nil)
@@ -146,10 +148,10 @@ actor SubscriptionActor {
             if let sendableSub = try await SubscriptionActor.getSubscription(url: url, userName: subState.userName) {
                 if let channelId = sendableSub.youtubeChannelId,
                    let title = getTitleIfSubscriptionExists(channelId: channelId, unarchiveSubIfAvailable) {
-                    print("found existing sub via channelId")
+                    print("loadSubscriptionInfo: found existing sub via channelId")
                     subState.title = title
                     subState.alreadyAdded = true
-                    return (subState, sendableSub)
+                    return (subState, nil)
                 }
 
                 subState.title = sendableSub.title
@@ -189,8 +191,8 @@ actor SubscriptionActor {
     }
 
     private static func mergeChannelInfoAndSendableSub(_ info: ChannelInfo,
-                                                       _ sendableSub: SendableSubscription?) -> SendableSubscription {
-        var sub = sendableSub ?? SendableSubscription(title: info.title ?? "")
+                                                       _ sendableSub: SendableSubscription) -> SendableSubscription {
+        var sub = sendableSub
         sub.link = sub.link ?? info.rssFeedUrl
         sub.youtubeChannelId = sub.youtubeChannelId ?? info.channelId
         sub.youtubeUserName = sub.youtubeUserName ?? info.userName

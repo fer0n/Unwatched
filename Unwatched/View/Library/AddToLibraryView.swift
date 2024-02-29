@@ -42,7 +42,9 @@ struct AddToLibraryView: View {
         }
         .disabled(subManager.isLoading)
         .onAppear {
-            subManager.container = modelContext.container
+            if subManager.container == nil {
+                subManager.container = modelContext.container
+            }
         }
         .sheet(isPresented: $subManager.showDropResults) {
             AddSubscriptionView(subManager: subManager)
@@ -101,6 +103,7 @@ struct AddToLibraryView: View {
     func handleAddSubscriptionFromText() async {
         if let text = addSubscriptionFromText {
             await subManager.addSubscriptionFromText(text)
+            addSubscriptionFromText = nil
         }
     }
 
@@ -124,8 +127,8 @@ struct AddToLibraryView: View {
         refresher.refreshAll()
         do {
             try await Task.sleep(s: 3)
-            subManager.isSubscribedSuccess = nil
         } catch { }
+        subManager.isSubscribedSuccess = nil
     }
 
     func addVideoUrls(_ urls: [URL]) async {
