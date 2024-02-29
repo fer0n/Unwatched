@@ -115,8 +115,8 @@ struct AddToLibraryView: View {
         refresher.refreshAll()
         do {
             try await Task.sleep(s: 3)
-            addVideosSuccess = nil
         } catch { }
+        addVideosSuccess = nil
     }
 
     func delayedSubscriptionCheckmarkReset() async {
@@ -124,11 +124,11 @@ struct AddToLibraryView: View {
             return
         }
         addText = ""
-        refresher.refreshAll()
         do {
             try await Task.sleep(s: 3)
         } catch { }
         subManager.isSubscribedSuccess = nil
+        refresher.refreshAll()
     }
 
     func addVideoUrls(_ urls: [URL]) async {
@@ -146,6 +146,7 @@ struct AddToLibraryView: View {
                 addVideosSuccess = false
                 isLoadingVideos = false
             }
+            videoUrls = []
         }
     }
 }
