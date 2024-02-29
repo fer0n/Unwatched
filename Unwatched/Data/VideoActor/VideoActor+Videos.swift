@@ -13,6 +13,7 @@ import Observation
         for url in videoUrls {
             guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
                 containsError = true
+                print("continue, containsError")
                 continue
             }
 
