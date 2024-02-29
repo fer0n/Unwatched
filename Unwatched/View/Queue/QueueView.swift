@@ -60,6 +60,7 @@ struct QueueView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
+                    .foregroundStyle(Color.myAccentColor)
             }
             .toolbar {
                 RefreshToolbarButton()

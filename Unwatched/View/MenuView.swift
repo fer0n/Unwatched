@@ -85,7 +85,7 @@ struct MenuView: View {
                 }
             }
             .environment(navManager)
-            .tint(.myAccentColor)
+            .tint(.teal)
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
             let url = browserUrl.getUrl
