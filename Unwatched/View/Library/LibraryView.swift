@@ -108,7 +108,9 @@ struct LibraryView: View {
                 }
                 RefreshToolbarButton()
             }
+            .tint(.teal)
         }
+        .tint(navManager.lastLibrarySubscriptionId == nil ? .teal : Color.myAccentColor)
         .task(id: text.val) {
             await text.handleDidSet()
         }

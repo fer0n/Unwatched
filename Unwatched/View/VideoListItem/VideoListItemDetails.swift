@@ -47,6 +47,7 @@ struct VideoListItemDetails: View {
                 HStack(alignment: .center) {
                     ProgressView(value: video.elapsedSeconds ?? 0, total: duration)
                         .foregroundStyle(.teal)
+                        .tint(.teal)
                         .opacity(0.6)
                         .padding(.top, 3)
                         .padding(.trailing, 5)
