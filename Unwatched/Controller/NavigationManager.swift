@@ -31,6 +31,16 @@ import SwiftData
 
     init() { }
 
+    static func load() -> NavigationManager {
+        if let savedNavManager = UserDefaults.standard.data(forKey: Const.navigationManager),
+           let loadedNavManager = try? JSONDecoder().decode(NavigationManager.self, from: savedNavManager) {
+            return loadedNavManager
+        } else {
+            print("navmanager not found")
+            return NavigationManager()
+        }
+    }
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: NavManagerCodingKeys.self)
 

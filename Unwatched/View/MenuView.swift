@@ -9,7 +9,7 @@ import SwiftData
 struct MenuView: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) private var navManager
+    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
     @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
@@ -84,7 +84,6 @@ struct MenuView: View {
                         .tag(tab.tag)
                 }
             }
-            .environment(navManager)
             .tint(.teal)
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
