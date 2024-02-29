@@ -65,7 +65,9 @@ struct QueueView: View {
             .toolbar {
                 RefreshToolbarButton()
             }
+            .tint(.teal)
         }
+        .tint(Color.myAccentColor)
         .sheet(isPresented: $showImportSheet) {
             NavigationStack {
                 ImportSubscriptionsView()

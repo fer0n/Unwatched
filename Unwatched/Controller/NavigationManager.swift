@@ -27,7 +27,7 @@ import SwiftData
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
-    @ObservationIgnored private var lastLibrarySubscriptionId: PersistentIdentifier?
+    var lastLibrarySubscriptionId: PersistentIdentifier?
 
     init() { }
 

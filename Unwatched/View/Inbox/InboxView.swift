@@ -75,7 +75,9 @@ struct InboxView: View {
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
+            .tint(.teal)
         }
+        .tint(Color.myAccentColor)
         .actionSheet(isPresented: $showingClearAllAlert) {
             ActionSheet(title: Text("confirmClearAll"),
                         message: Text("areYouSureClearAll"),
