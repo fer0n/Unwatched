@@ -9,9 +9,7 @@ struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
 
-    @State var navManager: NavigationManager = {
-        return loadNavigationManager()
-    }()
+    @State var navManager = NavigationManager.load()
     @State var player = PlayerManager()
     @State var refresher = RefreshManager()
     @State var imageCacheManager = ImageCacheManager()
@@ -70,21 +68,6 @@ struct SetupView: View {
         } else {
             player.loadTopmostVideoFromQueue()
         }
-    }
-
-    static func loadNavigationManager() -> NavigationManager {
-        print("loadNavigationManager")
-        if let savedNavManager = UserDefaults.standard.data(forKey: Const.navigationManager) {
-            if let loadedNavManager = try? JSONDecoder().decode(
-                NavigationManager.self,
-                from: savedNavManager
-            ) {
-                return loadedNavManager
-            } else {
-                print("navmanager not found")
-            }
-        }
-        return NavigationManager()
     }
 
     func saveData() async {
