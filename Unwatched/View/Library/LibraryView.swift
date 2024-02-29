@@ -200,6 +200,7 @@ enum LibraryDestination {
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())
+        .environment(ImageCacheManager())
 }
 
 struct TextFieldClearButton: View {

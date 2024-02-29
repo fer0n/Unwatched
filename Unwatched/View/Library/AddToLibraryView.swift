@@ -22,7 +22,13 @@ struct AddToLibraryView: View {
         Button(action: {
             navManager.openBrowserUrl = .youtubeStartPage
         }, label: {
-            Label("browseFeeds", systemImage: Const.appBrowserSF)
+            Label {
+                Text("browseFeeds")
+                    .foregroundStyle(Color.myAccentColor)
+            } icon: {
+                Image(systemName: Const.appBrowserSF)
+                    .foregroundStyle(.teal)
+            }
         })
         HStack {
             Image(systemName: "link")

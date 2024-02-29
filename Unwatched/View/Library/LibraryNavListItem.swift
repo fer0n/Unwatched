@@ -15,8 +15,13 @@ struct LibraryNavListItem: View {
     }
 
     var body: some View {
-        Label(text, systemImage: systemName)
-            .foregroundStyle(Color.myAccentColor)
+        Label {
+            Text(text)
+        } icon: {
+            Image(systemName: systemName)
+                .foregroundStyle(.teal)
+        }
+        .foregroundStyle(Color.myAccentColor)
     }
 }
 
