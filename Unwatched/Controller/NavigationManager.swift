@@ -17,7 +17,13 @@ import SwiftData
 
     var presentedSubscriptionQueue = [Subscription]()
     var presentedSubscriptionInbox = [Subscription]()
-    var presentedLibrary = NavigationPath()
+    var presentedLibrary = NavigationPath() {
+        didSet {
+            if oldValue.count > presentedLibrary.count {
+                lastLibrarySubscriptionId = nil
+            }
+        }
+    }
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
@@ -91,6 +97,7 @@ import SwiftData
         case .library:
             if !presentedLibrary.isEmpty {
                 presentedLibrary.removeLast()
+                lastLibrarySubscriptionId = nil
             }
         }
     }
