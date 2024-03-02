@@ -8,31 +8,29 @@ import SwiftData
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
-    var isLoading: Bool = false
-    var loadingTask: Task<(), Never>?
+    @MainActor var isLoading: Bool = false
 
     @ObservationIgnored var loadingStart: Date?
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
-    func refreshAll() {
-        refresh()
+    func refreshAll() async {
+        await refresh()
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
 
-    func refreshSubscription(subscriptionId: PersistentIdentifier) {
-        refresh(subscriptionIds: [subscriptionId])
+    func refreshSubscription(subscriptionId: PersistentIdentifier) async {
+        await refresh(subscriptionIds: [subscriptionId])
     }
 
-    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil) {
+    @MainActor
+    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil) async {
         if let container = container {
             if isLoading { return }
             isLoading = true
             loadingStart = .now
-            loadingTask = Task {
-                try? await Task.sleep(s: 2)
-                let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
-                try? await task.value
-            }
+            let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
+            try? await task.value
+            isLoading = false
         }
     }
 
@@ -63,7 +61,7 @@ import SwiftData
         }
     }
 
-    func refreshOnStartup() {
+    func refreshOnStartup() async {
         let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
 
         if refreshOnStartup {
@@ -73,7 +71,7 @@ import SwiftData
 
             if shouldRefresh {
                 print("refreshing now")
-                self.refreshAll()
+                await self.refreshAll()
             }
         }
     }

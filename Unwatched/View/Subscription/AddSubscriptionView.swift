@@ -28,7 +28,9 @@ struct AddSubscriptionView: View {
         }
         .onDisappear {
             if subManager.newSubs != nil {
-                refresher.refreshAll()
+                Task {
+                    await refresher.refreshAll()
+                }
             }
         }
     }

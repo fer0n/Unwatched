@@ -28,11 +28,11 @@ struct SetupView: View {
                 player.container = container
                 restoreNowPlayingVideo()
             }
-            .onChange(of: scenePhase) {
+            .task(id: scenePhase) {
                 if scenePhase == .active {
                     player.isInBackground = false
                     print("Active")
-                    refresher.refreshOnStartup()
+                    await refresher.refreshOnStartup()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 } else if scenePhase == .background {
                     print("background")
@@ -40,12 +40,6 @@ struct SetupView: View {
                     Task {
                         await saveData()
                     }
-                }
-            }
-            .task(id: refresher.loadingTask) {
-                if let task = refresher.loadingTask {
-                    await task.value
-                    refresher.isLoading = false
                 }
             }
     }

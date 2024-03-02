@@ -6,48 +6,40 @@
 import SwiftUI
 import SwiftData
 
-struct RefreshToolbarButton: ToolbarContent {
+struct CoreRefreshButton: View {
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
-    @State var isLoading = false
     @State private var rotation = 0.0
 
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button {
-                if isLoading { return }
-                if let subId = refreshOnlySubscription {
-                    refresher.refreshSubscription(subscriptionId: subId)
-                } else {
-                    refresher.refreshAll()
-                }
-            } label: {
-                Image(systemName: Const.refreshSF)
-                    .font(.system(size: 13))
-                    .rotationEffect(Angle(degrees: rotation))
+    var body: some View {
+        Button {
+            Task { @MainActor in
+                await refresh()
             }
-            .onAppear {
-                // Workaround: if refresher.isLoading is set to true before the view appears, it doesn't animate
-                guard isLoading != refresher.isLoading else {
-                    return
-                }
-                withAnimation {
-                    isLoading = refresher.isLoading
-                }
+        } label: {
+            Image(systemName: Const.refreshSF)
+                .font(.system(size: 13))
+                .rotationEffect(Angle(degrees: rotation))
+        }
+        .task(id: refresher.isLoading) {
+            if refresher.isLoading {
+                nextTurn()
             }
-            .onChange(of: refresher.isLoading) {
-                isLoading = refresher.isLoading
+        }
+        .modifier(AnimationCompletionCallback(animatedValue: rotation) {
+            if refresher.isLoading {
+                nextTurn()
             }
-            .onChange(of: isLoading) {
-                if isLoading {
-                    nextTurn()
-                }
-            }
-            .modifier(AnimationCompletionCallback(animatedValue: rotation) {
-                if isLoading {
-                    nextTurn()
-                }
-            })
+        })
+    }
+
+    @MainActor
+    private func refresh() async {
+        if refresher.isLoading { return }
+        if let subId = refreshOnlySubscription {
+            await refresher.refreshSubscription(subscriptionId: subId)
+        } else {
+            await refresher.refreshAll()
         }
     }
 
@@ -56,6 +48,17 @@ struct RefreshToolbarButton: ToolbarContent {
             rotation += 180
         }
     }
+}
+
+struct RefreshToolbarButton: ToolbarContent {
+    var refreshOnlySubscription: PersistentIdentifier?
+
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+        }
+    }
+
 }
 
 // #Preview {
