@@ -69,7 +69,7 @@ struct BackupView: View {
                                         Text(device)
                                     }
                                     if info.deviceName != nil && info.fileSizeString != nil {
-                                        Text(verbatim: " • ")
+                                        Text(verbatim: " \(Const.dotString) ")
                                     }
                                     if let size = info.fileSizeString {
                                         Text(verbatim: size)
