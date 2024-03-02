@@ -17,25 +17,7 @@ struct MenuView: View {
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
 
-    @MainActor
-    init() {
-        let unselectedItemColor = UIColor.lightGray
-        UITabBarItem.appearance().badgeColor = unselectedItemColor
-    }
-
-    var getInboxSymbol: Image {
-        let isLoading = refresher.isLoading
-        let isEmpty = inbox.isEmpty
-        let currentTab = navManager.tab == .inbox
-
-        let full = isEmpty ? "" : ".full"
-        if !isLoading {
-            return Image(systemName: "tray\(full)")
-        }
-
-        let fill = currentTab ? ".fill" : ""
-        return Image("custom.tray.loading\(fill)")
-    }
+    var showCancelButton: Bool = false
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -43,20 +25,21 @@ struct MenuView: View {
         let tabs: [TabRoute] =
             [
                 TabRoute(
-                    view: AnyView(QueueView(inboxHasEntries: !inbox.isEmpty)),
+                    view: AnyView(QueueView(inboxHasEntries: !inbox.isEmpty,
+                                            showCancelButton: showCancelButton)),
                     image: Image(systemName: Const.queueTagSF),
                     text: "queue",
                     tag: Tab.queue
                 ),
                 TabRoute(
-                    view: AnyView(InboxView()),
+                    view: AnyView(InboxView(showCancelButton: showCancelButton)),
                     image: getInboxSymbol,
                     text: "inbox",
                     tag: Tab.inbox,
                     showBadge: showNewInboxBadge && hasNewInboxItems && navManager.tab != .inbox
                 ),
                 TabRoute(
-                    view: AnyView(LibraryView()),
+                    view: AnyView(LibraryView(showCancelButton: showCancelButton)),
                     image: Image(systemName: "books.vertical"),
                     text: "library",
                     tag: Tab.library
@@ -90,6 +73,20 @@ struct MenuView: View {
             let url = browserUrl.getUrl
             BrowserView(url: url)
         }
+    }
+
+    var getInboxSymbol: Image {
+        let isLoading = refresher.isLoading
+        let isEmpty = inbox.isEmpty
+        let currentTab = navManager.tab == .inbox
+
+        let full = isEmpty ? "" : ".full"
+        if !isLoading {
+            return Image(systemName: "tray\(full)")
+        }
+
+        let fill = currentTab ? ".fill" : ""
+        return Image("custom.tray.loading\(fill)")
     }
 
     func markVideoWatched(video: Video) {

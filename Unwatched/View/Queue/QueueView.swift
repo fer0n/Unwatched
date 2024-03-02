@@ -21,6 +21,7 @@ struct QueueView: View {
     @State var value: Double = 1.5
     var inboxTip = InboxHasVideosTip()
     var inboxHasEntries: Bool = false
+    var showCancelButton: Bool = false
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -63,6 +64,9 @@ struct QueueView: View {
                     .foregroundStyle(Color.myAccentColor)
             }
             .toolbar {
+                if showCancelButton {
+                    DismissToolbarButton()
+                }
                 RefreshToolbarButton()
             }
             .tint(.teal)

@@ -24,15 +24,12 @@ struct ChapterDescriptionView: View {
             if let video = player.video {
                 let hasChapters = video.chapters?.isEmpty == false
                 let hasDescription = video.videoDescription != nil
-                let sorted = video.sortedChapters
 
                 ScrollView {
                     if navManager.selectedDetailPage == .chapters {
-                        if !sorted.isEmpty {
-                            chapterList(sorted)
-                                .padding(.horizontal)
-                                .transition(.move(edge: .trailing))
-                        }
+                        ChapterList(video: video)
+                            .padding(.horizontal)
+                            .transition(.move(edge: .trailing))
                     } else {
                         DescriptionDetailView(video: video)
                             .transition(.move(edge: .leading))
@@ -74,36 +71,6 @@ struct ChapterDescriptionView: View {
         }
     }
 
-    func chapterList(_ chapter: [Chapter]) -> some View {
-        VStack {
-            ForEach(chapter) { chapter in
-                let isCurrent = chapter == player.currentChapter
-                let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.myAccentColor
-                let backgroundColor: Color = isCurrent ? Color.myAccentColor : Color.myBackgroundGray
-
-                Button {
-                    if !chapter.isActive {
-                        toggleChapter(chapter)
-                    } else {
-                        setChapter(chapter)
-                    }
-                } label: {
-                    ChapterListItem(chapter: chapter,
-                                    toggleChapter: toggleChapter,
-                                    timeText: getTimeText(chapter, isCurrent: isCurrent))
-                        .padding(10)
-                        .background(
-                            backgroundColor
-                                .clipShape(RoundedRectangle(cornerRadius: 15.0))
-                        )
-                        .opacity(chapter.isActive ? 1 : 0.6)
-                        .id(chapter.persistentModelID)
-                }
-                .tint(foregroundColor)
-            }
-        }
-    }
-
     func dragGesture(origin: ChapterDescriptionPage) -> some Gesture {
         DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .updating($dragState) { value, state, _ in
@@ -121,25 +88,6 @@ struct ChapterDescriptionView: View {
                     }
                 }
             }
-    }
-
-    func toggleChapter(_ chapter: Chapter) {
-        chapter.isActive.toggle()
-        player.handleChapterChange()
-    }
-
-    func setChapter(_ chapter: Chapter) {
-        player.setChapter(chapter)
-    }
-
-    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String {
-        guard isCurrent,
-              let endTime = chapter.endTime,
-              let currentTime = player.currentTime else {
-            return chapter.duration?.formattedSeconds ?? ""
-        }
-        let remaining = endTime - currentTime
-        return "\(remaining.formattedSeconds ?? "") remaining"
     }
 }
 

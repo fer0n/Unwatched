@@ -30,6 +30,7 @@ struct PlayerWebView: UIViewRepresentable {
         webView.configuration.userContentController.add(coordinator, name: "iosListener")
         webView.backgroundColor = UIColor.systemBackground
         webView.isOpaque = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
 
         loadWebContent(webView)
         return webView

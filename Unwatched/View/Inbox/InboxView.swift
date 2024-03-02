@@ -15,6 +15,7 @@ struct InboxView: View {
     @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
     @State private var showingClearAllAlert = false
 
+    var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
 
     var body: some View {
@@ -68,6 +69,9 @@ struct InboxView: View {
                 }
             }
             .toolbar {
+                if showCancelButton {
+                    DismissToolbarButton()
+                }
                 RefreshToolbarButton()
             }
             .navigationTitle("inbox")

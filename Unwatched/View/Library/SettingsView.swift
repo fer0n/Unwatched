@@ -13,6 +13,7 @@ struct SettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
+    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
 
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
@@ -40,6 +41,9 @@ struct SettingsView: View {
                 Section(header: Text("playback"), footer: Text("playbackHelper")) {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
+                    }
+                    Toggle(isOn: $showFullscreenControls) {
+                        Text("showFullscreenControls")
                     }
                 }
                 .tint(.teal)
