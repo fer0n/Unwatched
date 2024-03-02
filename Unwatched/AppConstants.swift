@@ -84,4 +84,6 @@ struct Const {
     static let hasNewInboxItems = "hasNewInboxItems"
     static let showNewInboxBadge = "showNewInboxBadge"
     static let showFullscreenControls = "showFullscreenControls"
+
+    static let selectedDetent = "selectedDetent"
 }

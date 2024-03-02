@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 
+
 @Observable class SheetPositionReader {
     // Sheet animation and height detection
     var swipedBelow: Bool = true
@@ -13,6 +14,26 @@ import SwiftUI
     @ObservationIgnored var selectedDetent: PresentationDetent?
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
+
+    static func load() -> SheetPositionReader {
+        let sheetPos = SheetPositionReader()
+
+        if let savedDetent = UserDefaults.standard.data(forKey: Const.selectedDetent),
+           let loadedDetentEncoding = try? JSONDecoder().decode(PresentationDetentEncoding.self, from: savedDetent) {
+            let detent = loadedDetentEncoding.toPresentationDetent()
+            sheetPos.selectedDetent = detent
+        }
+        return sheetPos
+    }
+
+    func save() {
+        let encoder = JSONEncoder()
+        let detent = selectedDetent?.encode(playerControlHeight)
+
+        if let encoded = try? encoder.encode(detent) {
+            UserDefaults.standard.set(encoded, forKey: Const.selectedDetent)
+        }
+    }
 
     var maxSheetHeight: CGFloat {
         sheetHeight - Const.playerAboveSheetHeight

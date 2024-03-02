@@ -10,8 +10,7 @@ struct ContentView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
-
-    @State var sheetPos = SheetPositionReader()
+    @Environment(SheetPositionReader.self) var sheetPos
 
     var body: some View {
         @Bindable var navManager = navManager
