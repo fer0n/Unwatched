@@ -7,13 +7,16 @@ import SwiftUI
 
 struct OutlineToggleStyle: ToggleStyle {
     var isSmall: Bool = false
+    var stroke: Bool = true
 
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
         }, label: {
             configuration.label
-                .modifier(OutlineToggleModifier(isOn: configuration.isOn, isSmall: isSmall))
+                .modifier(OutlineToggleModifier(isOn: configuration.isOn,
+                                                isSmall: isSmall,
+                                                stroke: stroke))
         })
     }
 }
@@ -21,6 +24,7 @@ struct OutlineToggleStyle: ToggleStyle {
 struct OutlineToggleModifier: ViewModifier {
     let isOn: Bool
     var isSmall: Bool = false
+    var stroke: Bool = true
 
     func body(content: Content) -> some View {
         let size: CGFloat = isSmall ? 35 : 45
@@ -32,7 +36,7 @@ struct OutlineToggleModifier: ViewModifier {
             .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(isOn ? Color.clear : Color.myForegroundGray, lineWidth: 1)
+                    .stroke(isOn || !stroke ? Color.clear : Color.myForegroundGray, lineWidth: 1)
             )
     }
 }

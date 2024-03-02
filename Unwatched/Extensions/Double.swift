@@ -32,6 +32,9 @@ extension Double {
     }
 
     var formatTimeMinimal: String? {
+        if 10 < self && self < 60 {
+            return "<1m"
+        }
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .abbreviated

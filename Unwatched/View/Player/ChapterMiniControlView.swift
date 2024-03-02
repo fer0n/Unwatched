@@ -26,7 +26,7 @@ struct ChapterMiniControlView: View {
                 GridRow {
                     if hasChapters {
                         Button(action: goToPrevious) {
-                            Image(systemName: "backward.end.fill")
+                            Image(systemName: Const.previousChapterSF)
                                 .font(.system(size: 25))
                         }
                         .disabled(player.previousChapter == nil)
@@ -57,7 +57,7 @@ struct ChapterMiniControlView: View {
 
                     if hasChapters {
                         Button(action: goToNext) {
-                            Image(systemName: "forward.end.fill")
+                            Image(systemName: Const.nextChapterSF)
                                 .font(.system(size: 25))
                         }
                         .disabled(player.nextChapter == nil)
@@ -73,7 +73,7 @@ struct ChapterMiniControlView: View {
                         subscriptionTitle(sub: sub)
                     }
 
-                    if hasChapters, let remaining = player.currentRemaining {
+                    if hasChapters, let remaining = player.currentRemainingText {
                         Text(remaining)
                             .foregroundStyle(Color.foregroundGray)
                             .font(.system(size: 14))

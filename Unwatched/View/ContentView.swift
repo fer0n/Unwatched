@@ -39,6 +39,7 @@ struct ContentView: View {
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
             let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+            let landscapeFullscreen = !bigScreen && isLandscape
 
             ZStack {
                 layout {
@@ -48,7 +49,8 @@ struct ContentView: View {
                             : $navManager.showMenu,
                         compactSize: bigScreen,
                         showInfo: !bigScreen || (isLandscape && bigScreen),
-                        showFullscreenButton: bigScreen
+                        showFullscreenButton: bigScreen,
+                        landscapeFullscreen: landscapeFullscreen
                     )
                     if bigScreen {
                         MenuView()
@@ -79,7 +81,7 @@ struct ContentView: View {
                     .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $navManager.showMenu) {
-                MenuView()
+                MenuView(showCancelButton: landscapeFullscreen)
                     .presentationDetents(detents, selection: selectedDetent)
                     .presentationBackgroundInteraction(
                         .enabled(upThrough: .height(sheetPos.maxSheetHeight))

@@ -52,6 +52,10 @@ struct Const {
     static let videoDescriptionSF = "quote.bubble.fill"
     static let appBrowserSF = "globe.desk.fill"
 
+    static let nextChapterSF = "forward.end.fill"
+    static let previousChapterSF = "backward.end.fill"
+    static let nextVideoSF = "forward.end.alt.fill"
+
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
@@ -77,4 +81,5 @@ struct Const {
     static let allVideosSortOrder = "allVideosSortOrder"
     static let hasNewInboxItems = "hasNewInboxItems"
     static let showNewInboxBadge = "showNewInboxBadge"
+    static let showFullscreenControls = "showFullscreenControls"
 }

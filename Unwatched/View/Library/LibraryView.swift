@@ -19,6 +19,8 @@ struct LibraryView: View {
     @State var isDragOver: Bool = false
     @State var droppedUrls: [URL]?
 
+    var showCancelButton: Bool = false
+
     var hasSideloads: Bool {
         !sidedloadedSubscriptions.isEmpty
     }
@@ -101,6 +103,9 @@ struct LibraryView: View {
                 }
             }
             .toolbar {
+                if showCancelButton {
+                    DismissToolbarButton()
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink(value: LibraryDestination.settings) {
                         Image(systemName: Const.settingsViewSF)

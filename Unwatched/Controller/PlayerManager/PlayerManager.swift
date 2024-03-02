@@ -97,12 +97,17 @@ enum VideoSource {
         }
     }
 
-    var currentRemaining: String? {
+    var currentRemaining: Double? {
         if let end = currentEndTime, let current = currentTime {
-            let remaining = end - current
-            if let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
-                return "\(rem)"
-            }
+            return max(end - current, 0)
+        }
+        return nil
+    }
+
+    var currentRemainingText: String? {
+        if let remaining = currentRemaining,
+           let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
+            return "\(rem)"
         }
         return nil
     }
@@ -260,7 +265,7 @@ enum VideoSource {
         let player = PlayerManager()
         player.video = Video.getDummy()
         //        player.currentTime = 10
-        //        player.currentChapter = Chapter.getDummy()
+        player.currentChapter = Chapter.getDummy()
         //        player.embeddingDisabled = true
         return player
     }

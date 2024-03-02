@@ -36,9 +36,6 @@ struct SleepTimer: View {
         .onAppear {
             slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
         }
-        .onReceive(viewModel.timer) { _ in
-            viewModel.handleTimerUpdate()
-        }
         .task(id: viewModel.lowerVolumeBy) {
             if let vol = viewModel.lowerVolumeBy {
                 slider?.value -= vol

@@ -14,6 +14,7 @@ struct VideoPlayer: View {
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
 
     @GestureState private var dragState: CGFloat = 0
     @State var continuousPlayWorkaround: Bool = false
@@ -28,6 +29,8 @@ struct VideoPlayer: View {
     var showFullscreenButton = false
     @State var sleepTimerVM = SleepTimerViewModel()
 
+    var landscapeFullscreen = true
+
     var body: some View {
         @Bindable var player = player
         let layout = compactSize
@@ -36,7 +39,7 @@ struct VideoPlayer: View {
 
         VStack(spacing: 0) {
             if player.video != nil {
-                ZStack {
+                HStack {
                     if player.embeddingDisabled {
                         PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
                             .frame(maxHeight: .infinity)
@@ -51,10 +54,16 @@ struct VideoPlayer: View {
                     } else {
                         PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
                             .aspectRatio(16/9, contentMode: .fit)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxHeight: landscapeFullscreen ? .infinity : nil)
+                            .frame(maxWidth: !landscapeFullscreen ? .infinity : nil)
+                    }
+
+                    if landscapeFullscreen && showFullscreenControls {
+                        FullscreenPlayerControls(markVideoWatched: markVideoWatched)
                     }
                 }
-                // force reload if value changed (requires settings update
+                .frame(maxWidth: !showFullscreenControls ? .infinity : nil)
+                // force reload if value changed (requires settings update)
                 .id("videoPlayer-\(playVideoFullscreen)")
                 .onChange(of: playVideoFullscreen) {
                     player.handleHotSwap()
@@ -66,62 +75,64 @@ struct VideoPlayer: View {
                     .frame(maxWidth: .infinity)
             }
 
-            VStack(spacing: 10) {
-                if !player.embeddingDisabled && !compactSize {
-                    Spacer()
-                }
-
-                ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
-
-                if !player.embeddingDisabled && !compactSize {
-                    Spacer()
-                    Spacer()
-                }
-
-                layout {
-                    if compactSize {
-                        SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
+            if !landscapeFullscreen {
+                VStack(spacing: 10) {
+                    if !player.embeddingDisabled && !compactSize {
+                        Spacer()
                     }
 
-                    HStack {
-                        SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                        customSettingsButton
+                    ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
+
+                    if !player.embeddingDisabled && !compactSize {
+                        Spacer()
+                        Spacer()
                     }
 
-                    HStack {
-                        watchedButton
-                            .frame(maxWidth: .infinity)
-                        PlayButton(size:
-                                    (player.embeddingDisabled || compactSize)
-                                    ? 70
-                                    : 90
-                        )
-                        nextVideoButton
-                            .frame(maxWidth: .infinity)
-                        if showFullscreenButton {
-                            fullscreenButton
-                            Spacer()
+                    layout {
+                        if compactSize {
+                            SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
                         }
 
-                    }
-                    .padding(.horizontal, 10)
-                }
-                .padding(.horizontal, compactSize ? 20 : 5)
+                        HStack {
+                            SpeedControlView(selectedSpeed: $player.playbackSpeed)
+                            customSettingsButton
+                        }
 
-                if !player.embeddingDisabled && !compactSize {
-                    Spacer()
-                    Spacer()
+                        HStack {
+                            watchedButton
+                                .frame(maxWidth: .infinity)
+                            PlayButton(size:
+                                        (player.embeddingDisabled || compactSize)
+                                        ? 70
+                                        : 90
+                            )
+                            NextVideoButton(markVideoWatched: markVideoWatched)
+                                .frame(maxWidth: .infinity)
+                            if showFullscreenButton {
+                                fullscreenButton
+                                Spacer()
+                            }
+
+                        }
+                        .padding(.horizontal, 10)
+                    }
+                    .padding(.horizontal, compactSize ? 20 : 5)
+
+                    if !player.embeddingDisabled && !compactSize {
+                        Spacer()
+                        Spacer()
+                    }
+                    if !compactSize {
+                        VideoPlayerFooter(openBrowserUrl: $openBrowserUrl,
+                                          setShowMenu: setShowMenu,
+                                          sleepTimerVM: sleepTimerVM,
+                                          onSleepTimerEnded: onSleepTimerEnded)
+                    }
                 }
-                if !compactSize {
-                    VideoPlayerFooter(openBrowserUrl: $openBrowserUrl,
-                                      setShowMenu: setShowMenu,
-                                      sleepTimerVM: sleepTimerVM,
-                                      onSleepTimerEnded: onSleepTimerEnded)
-                }
+                .innerSizeTrackerModifier(onChange: { size in
+                    sheetPos.playerControlHeight = size.height
+                })
             }
-            .innerSizeTrackerModifier(onChange: { size in
-                sheetPos.playerControlHeight = size.height
-            })
         }
         .contentShape(Rectangle())
         .simultaneousGesture(
@@ -146,6 +157,8 @@ struct VideoPlayer: View {
             BrowserView(url: url)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
+        .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)
     }
 
     func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
@@ -189,39 +202,6 @@ struct VideoPlayer: View {
         .help("customSpeedSettings")
         .toggleStyle(OutlineToggleStyle(isSmall: true))
         .disabled(player.video?.subscription == nil)
-    }
-
-    var nextVideoButton: some View {
-        ZStack {
-            let manualNext = !continuousPlay
-                && player.videoEnded
-                && !player.isPlaying
-            Button {
-                if manualNext {
-                    markVideoWatched(showMenu: false, source: .userInteraction)
-                } else {
-                    continuousPlay.toggle()
-                }
-                hapticToggle.toggle()
-            } label: {
-                Image(systemName: manualNext
-                        ? "forward.end.fill"
-                        : "text.line.first.and.arrowtriangle.forward"
-                )
-                .modifier(OutlineToggleModifier(isOn: manualNext ? false : continuousPlay))
-                .contentTransition(.symbolEffect(.replace, options: .speed(7)))
-            }
-            .padding(3)
-            .contextMenu {
-                if !manualNext {
-                    Button {
-                        markVideoWatched(showMenu: false, source: .userInteraction)
-                    } label: {
-                        Label("nextVideo", systemImage: "forward.end.fill")
-                    }
-                }
-            }
-        }
     }
 
     var fullscreenButton: some View {

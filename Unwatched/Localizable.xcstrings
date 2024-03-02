@@ -1609,7 +1609,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Refresh on App start"
+            "value" : "Refresh on App Start"
           }
         }
       }
@@ -1854,6 +1854,22 @@
         }
       }
     },
+    "showFullscreenControls" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild-Steuerelemente anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Fullscreen Controls"
+          }
+        }
+      }
+    },
     "showMenu" : {
       "localizations" : {
         "de" : {
@@ -1875,13 +1891,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kennzeichen für Inbox anzeigen"
+            "value" : "Kennzeichen für Inbox Anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show badge on inbox"
+            "value" : "Show Badge on Inbox"
           }
         }
       }
@@ -1961,7 +1977,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Start videos in fullscreen"
+            "value" : "Start Videos in Fullscreen"
           }
         }
       }

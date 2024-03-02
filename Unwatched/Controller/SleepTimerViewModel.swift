@@ -15,8 +15,8 @@ import MediaPlayer
     @ObservationIgnored private var oldVolume: Float?
     @ObservationIgnored private var volumeStep: Float?
 
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    var remainingSeconds: Int = -1
+    var timer: Timer?
+    var remainingSeconds: Int = 0
 
     var lowerVolumeBy: Float?
     var setVolumeTo: Float?
@@ -24,7 +24,7 @@ import MediaPlayer
     @ObservationIgnored var onEnded: ((_ fadeOutSeconds: Double?) -> Void)?
 
     deinit {
-        timer.upstream.connect().cancel()
+        timer?.invalidate()
     }
 
     var remainingText: String? {
@@ -64,16 +64,12 @@ import MediaPlayer
     }
 
     func startTimer() {
-        self.timer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            self.handleTimerUpdate()
+        }
     }
 
     func handleTimerUpdate() {
-        if remainingSeconds == -1 {
-            // initial value
-            stopTimer()
-            return
-        }
-
         handleAudioFadeOut()
         if remainingSeconds == 1 {
             withAnimation {
@@ -82,13 +78,14 @@ import MediaPlayer
         } else if remainingSeconds > 0 {
             remainingSeconds -= 1
         } else {
+            print("onEnded", remainingSeconds)
             onEnded?(startFadeOutTime.map { Double($0) })
             stopTimer()
         }
     }
 
     func stopTimer() {
-        timer.upstream.connect().cancel()
+        timer?.invalidate()
         withAnimation {
             remainingSeconds = 0
         }
@@ -128,11 +125,12 @@ import MediaPlayer
     }
 
     func pauseTimer() {
-        timer.upstream.connect().cancel()
+        timer?.invalidate()
+        timer = nil
     }
 
     func resumeTimer() {
-        if remainingSeconds > 0 {
+        if remainingSeconds > 0 && timer == nil {
             startTimer()
         }
     }
