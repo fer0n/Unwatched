@@ -835,6 +835,22 @@
         }
       }
     },
+    "hideMenuOnPlay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menü beim Abspielen Minimieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Menu on Play"
+          }
+        }
+      }
+    },
     "hideShortsEverywhere" : {
       "localizations" : {
         "de" : {

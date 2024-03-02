@@ -16,9 +16,12 @@ enum VideoActions {
 }
 
 struct VideoListItem: View {
+    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
+    @Environment(SheetPositionReader.self) private var sheetPos
 
     @State var showInfo = false
 
@@ -67,6 +70,9 @@ struct VideoListItem: View {
             .onTapGesture {
                 player.playVideo(video)
                 _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+                if !hideMenuOnPlay {
+                    return
+                }
                 withAnimation {
                     navManager.showMenu = false
                 }

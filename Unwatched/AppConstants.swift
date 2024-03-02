@@ -86,4 +86,5 @@ struct Const {
     static let showFullscreenControls = "showFullscreenControls"
 
     static let selectedDetent = "selectedDetent"
+    static let hideMenuOnPlay = "hideMenuOnPlay"
 }
