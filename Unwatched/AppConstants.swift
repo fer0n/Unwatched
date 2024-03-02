@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Const {
 
-    static let emptyString = ""
+    static let dotString = "•"
     static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     static let playerAboveSheetHeight: CGFloat = 60
@@ -50,6 +50,8 @@ struct Const {
     static let checkmarkSF = "checkmark"
 
     static let videoDescriptionSF = "quote.bubble.fill"
+    static let chaptersSF = "checklist.checked"
+
     static let appBrowserSF = "globe.desk.fill"
 
     static let nextChapterSF = "forward.end.fill"

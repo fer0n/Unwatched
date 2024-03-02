@@ -41,7 +41,7 @@ struct FullscreenPlayerControls: View {
                     Button {
                         showChapters = true
                     } label: {
-                        Image(systemName: Const.videoDescriptionSF)
+                        Image(systemName: Const.chaptersSF)
                             .modifier(PlayerControlButtonStyle())
                     }
                 }
