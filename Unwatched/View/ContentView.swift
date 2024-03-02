@@ -65,7 +65,6 @@ struct ContentView: View {
                     }
                 }
             }
-            .environment(sheetPos)
             .background(Color.backgroundColor)
             .environment(\.colorScheme, .dark)
             .onAppear {

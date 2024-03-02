@@ -19,6 +19,7 @@ struct SettingsView: View {
     @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
+    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
 
     @State var isExportingAll = false
 
@@ -38,12 +39,19 @@ struct SettingsView: View {
                     .tint(.teal)
                 }
 
-                Section(header: Text("playback"), footer: Text("playbackHelper")) {
-                    Toggle(isOn: $playVideoFullscreen) {
-                        Text("startVideosInFullscreen")
-                    }
+                Section(header: Text("playback")) {
                     Toggle(isOn: $showFullscreenControls) {
                         Text("showFullscreenControls")
+                    }
+                    Toggle(isOn: $hideMenuOnPlay) {
+                        Text("hideMenuOnPlay")
+                    }
+                }
+                .tint(.teal)
+
+                Section(footer: Text("playbackHelper")) {
+                    Toggle(isOn: $playVideoFullscreen) {
+                        Text("startVideosInFullscreen")
                     }
                 }
                 .tint(.teal)
