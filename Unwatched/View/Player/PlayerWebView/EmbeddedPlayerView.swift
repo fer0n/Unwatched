@@ -48,6 +48,10 @@ extension PlayerWebView {
                             sendMessage("error", event.data);
                         },
                     },
+                    playerVars: {
+                        'iv_load_policy': 3,
+                        'rel': 0
+                    }
                 });
             }
 
