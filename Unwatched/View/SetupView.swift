@@ -10,6 +10,7 @@ struct SetupView: View {
     @Environment(\.modelContext) var modelContext
 
     @State var navManager = NavigationManager.load()
+    @State var sheetPos = SheetPositionReader.load()
     @State var player = PlayerManager()
     @State var refresher = RefreshManager()
     @State var imageCacheManager = ImageCacheManager()
@@ -22,6 +23,7 @@ struct SetupView: View {
             .environment(navManager)
             .environment(imageCacheManager)
             .environment(refresher)
+            .environment(sheetPos)
             .onAppear {
                 let container = modelContext.container
                 refresher.container = container
@@ -65,10 +67,8 @@ struct SetupView: View {
     }
 
     func saveData() async {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(navManager) {
-            UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
-        }
+        navManager.save()
+        sheetPos.save()
 
         let videoId = player.video?.persistentModelID
         let data = try? JSONEncoder().encode(videoId)

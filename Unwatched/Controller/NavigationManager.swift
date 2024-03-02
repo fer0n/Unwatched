@@ -41,6 +41,13 @@ import SwiftData
         }
     }
 
+    func save() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self) {
+            UserDefaults.standard.set(encoded, forKey: Const.navigationManager)
+        }
+    }
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: NavManagerCodingKeys.self)
 
