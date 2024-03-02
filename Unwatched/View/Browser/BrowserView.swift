@@ -92,7 +92,9 @@ struct BrowserView: View, KeyboardReadable {
         }
         .onDisappear {
             if subscribeManager.hasNewSubscriptions {
-                refresher.refreshAll()
+                Task {
+                    await refresher.refreshAll()
+                }
             }
         }
     }

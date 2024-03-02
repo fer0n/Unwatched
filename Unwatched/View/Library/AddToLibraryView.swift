@@ -59,6 +59,16 @@ struct AddToLibraryView: View {
             await delayedVideoCheckmarkReset()
         }
         .task(id: subManager.isSubscribedSuccess) {
+            if subManager.isSubscribedSuccess == true {
+                await refresher.refreshAll()
+            }
+        }
+        .task(id: addVideosSuccess) {
+            if addVideosSuccess == true {
+                await refresher.refreshAll()
+            }
+        }
+        .task(id: subManager.isSubscribedSuccess) {
             await delayedSubscriptionCheckmarkReset()
         }
         .task(id: videoUrls) {
@@ -118,7 +128,6 @@ struct AddToLibraryView: View {
             return
         }
         addText = ""
-        refresher.refreshAll()
         do {
             try await Task.sleep(s: 3)
         } catch { }
@@ -134,11 +143,11 @@ struct AddToLibraryView: View {
             try await Task.sleep(s: 3)
         } catch { }
         subManager.isSubscribedSuccess = nil
-        refresher.refreshAll()
     }
 
     func addVideoUrls(_ urls: [URL]) async {
         if !urls.isEmpty {
+            videoUrls = []
             isLoadingVideos = true
             let container = modelContext.container
             let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
@@ -152,7 +161,6 @@ struct AddToLibraryView: View {
                 addVideosSuccess = false
                 isLoadingVideos = false
             }
-            videoUrls = []
         }
     }
 }

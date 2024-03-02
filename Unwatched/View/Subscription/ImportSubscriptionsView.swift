@@ -101,7 +101,9 @@ struct ImportSubscriptionsView: View {
                       allowedContentTypes: [.plainText], onCompletion: handleFileImport)
         .onDisappear {
             if !subStates.isEmpty {
-                refresher.refreshAll()
+                Task {
+                    await refresher.refreshAll()
+                }
             }
         }
         .task(id: loadSubStatesTask) {

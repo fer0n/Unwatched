@@ -75,6 +75,7 @@ struct MenuView: View {
         }
     }
 
+    @MainActor
     var getInboxSymbol: Image {
         let isLoading = refresher.isLoading
         let isEmpty = inbox.isEmpty
