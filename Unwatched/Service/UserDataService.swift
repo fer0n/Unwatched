@@ -5,6 +5,9 @@
 
 import Foundation
 import SwiftData
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "UserDataService")
 
 enum UserDataServiceError: Error {
     case noDataToBackupFound
@@ -31,7 +34,7 @@ struct UserDataService {
 
         let fetchVideos = getVideoFetchIfMinimal()
         let fetched = fetchMapExportable(Video.self, fetchVideos)
-        print("fetched", fetched.count)
+        log.info("fetched \(fetched.count)")
         backup.videos = fetched
         if fetchVideos != nil {
             _ = fetchMapExportable(Video.self)
@@ -44,7 +47,7 @@ struct UserDataService {
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
 
         if checkIfBackupEmpty(backup) {
-            print("checkIfBackupEmpty")
+            log.info("checkIfBackupEmpty")
             throw UserDataServiceError.noDataToBackupFound
         }
 
@@ -58,7 +61,7 @@ struct UserDataService {
             guard let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) else {
                 return nil
             }
-            print("returning fetch")
+            log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
                     || $0.watched == true
@@ -80,14 +83,13 @@ struct UserDataService {
 
     // loads user data from .unwatchedbackup files
     static func importBackup(_ data: Data, container: ModelContainer) {
-        print("importBackup, userdataservice")
+        log.info("importBackup, userdataservice")
         var videoIdDict = [Int: Video]()
 
         let context = ModelContext(container)
         let decoder = JSONDecoder()
         do {
             let backup = try decoder.decode(UnwatchedBackup.self, from: data)
-            print("backup", backup)
 
             // Videos, get id mapping
             for video in backup.videos {
@@ -126,7 +128,7 @@ struct UserDataService {
             try context.save()
 
         } catch {
-            print("error decoding: \(error)")
+            log.error("error decoding: \(error)")
         }
     }
 
@@ -134,7 +136,7 @@ struct UserDataService {
         do {
             return try UserDataService.exportUserData(container: container)
         } catch {
-            print("couldn't export: \(error)")
+            log.error("couldn't export: \(error)")
             throw error
         }
     }
@@ -150,7 +152,7 @@ struct UserDataService {
                 let data = try self.exportFile(container)
                 try data.write(to: filename)
             } catch {
-                print("saveToIcloud: \(error)")
+                log.error("saveToIcloud: \(error)")
                 throw error
             }
         }
@@ -160,20 +162,20 @@ struct UserDataService {
         if let containerUrl = FileManager.default.url(
             forUbiquityContainerIdentifier: nil
         )?.appendingPathComponent("Documents/Backups") {
-            print("containerUrl", containerUrl)
+            log.info("containerUrl \(containerUrl)")
             if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
                 do {
-                    print("create directory")
+                    log.info("create directory")
                     try FileManager.default.createDirectory(
                         at: containerUrl, withIntermediateDirectories: true, attributes: nil
                     )
                 } catch {
-                    print(error.localizedDescription)
+                    log.error("\(error.localizedDescription)")
                 }
             }
             return containerUrl
         }
-        print("returing nil")
+        log.info("backupsDirectory: nil")
         return nil
     }
 

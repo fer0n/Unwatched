@@ -17,7 +17,6 @@ struct AsyncSharableUrls: Transferable {
             let textUrls = urls
                 .map { "\($0.title)\n\($0.link?.absoluteString ?? "...")\n" }
                 .joined(separator: "\n")
-            print("textUrls", textUrls)
             let data = textUrls.data(using: .utf8)
             if let data = data {
                 item.isLoading = false

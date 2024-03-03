@@ -5,6 +5,9 @@
 
 import SwiftUI
 import WebKit
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "PlayerWebView")
 
 struct PlayerWebView: UIViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
@@ -37,21 +40,20 @@ struct PlayerWebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        // print("updateUiView")
         let prev = context.coordinator.previousState
 
         if prev.playbackSpeed != player.playbackSpeed {
-            print("SPEED")
+            log.info("SPEED")
             uiView.evaluateJavaScript(getSetPlaybackRateScript())
             context.coordinator.previousState.playbackSpeed = player.playbackSpeed
         }
 
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
-                print("PLAY")
+                log.info("PLAY")
                 uiView.evaluateJavaScript(getPlayScript())
             } else {
-                print("PAUSE")
+                log.info("PAUSE")
                 uiView.evaluateJavaScript(getPauseScript())
             }
             context.coordinator.previousState.isPlaying = player.isPlaying
@@ -59,13 +61,13 @@ struct PlayerWebView: UIViewRepresentable {
 
         let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
-            print("SEEK")
+            log.info("SEEK")
             uiView.evaluateJavaScript(getSeekToScript(seekTo))
             context.coordinator.previousState.seekPosition = seekPosition
         }
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
-            print("CUE VIDEO")
+            log.info("CUE VIDEO")
             if playerType == .youtube {
                 if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, player.getStartPosition())) {
                     let request = URLRequest(url: url)
@@ -148,7 +150,7 @@ struct PlayerWebView: UIViewRepresentable {
                 let payload = body[safe: 1]
                 let payloadString = payload.map { String($0) }
                 if topic != "currentTime" {
-                    debugPrint(messageBody)
+                    log.info("\(messageBody)")
                 }
                 handleJsMessages(String(topic), payloadString)
             }

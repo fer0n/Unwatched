@@ -5,6 +5,9 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "LibraryView")
 
 struct LibraryView: View {
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
@@ -181,7 +184,7 @@ struct LibraryView: View {
         guard let urls = droppedUrls else {
             return
         }
-        print("handleUrlDrop inbox", urls)
+        log.info("handleUrlDrop library \(urls)")
         let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
         await subManager.addSubscription(channelInfo: channelInfo)
     }

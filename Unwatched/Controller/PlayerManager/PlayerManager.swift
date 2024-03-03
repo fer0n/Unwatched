@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import OSLog
 
 enum VideoSource {
     case continuousPlay
@@ -7,6 +8,8 @@ enum VideoSource {
     case userInteraction
     case hotSwap
 }
+
+private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
 
 @Observable class PlayerManager {
     var isPlaying: Bool = false
@@ -42,7 +45,7 @@ enum VideoSource {
         }
 
         if video != nil && video?.url == oldValue?.url {
-            print("> tapped existing video")
+            log.info("> tapped existing video")
             self.play()
             return
         }
@@ -85,7 +88,7 @@ enum VideoSource {
     @ObservationIgnored var currentEndTime: Double?
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        print("updateElapsedTime")
+        log.info("updateElapsedTime")
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             return
@@ -197,7 +200,7 @@ enum VideoSource {
 
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
         guard let container = container else {
-            print("no container handleUpdatedQueue")
+            log.error("loadTopmostVideoFromQueue: no container")
             return
         }
         let currentVideoId = video?.persistentModelID
@@ -222,11 +225,12 @@ enum VideoSource {
     }
 
     func handleAutoStart() {
-        print("handleAutoStart")
+        log.info("handleAutoStart")
         guard let source = videoSource else {
+            log.info("no source, stopping")
             return
         }
-        print(source)
+        log.info("source: \(String(describing: source))")
         switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -254,7 +258,7 @@ enum VideoSource {
     }
 
     func handleHotSwap() {
-        print("handleHotSwap")
+        log.info("handleHotSwap")
         previousIsPlaying = isPlaying
         pause()
         self.videoSource = .hotSwap

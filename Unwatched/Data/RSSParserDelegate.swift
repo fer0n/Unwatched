@@ -4,6 +4,9 @@
 //
 
 import Foundation
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "RSSParserDelegate")
 
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
@@ -108,7 +111,6 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                                           chapters: chapters,
                                           publishedDate: publishedDate,
                                           videoDescription: currentDescription)
-                // print("video", video.title)
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
@@ -119,7 +121,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 }
                 videos.append(video)
             } else {
-                print("couldn't create the video")
+                log.warning("couldn't create the video")
             }
             currentTitle = ""
             currentLink = ""

@@ -44,7 +44,6 @@ struct SendableVideo: Sendable, Codable {
             newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
         }
         let ytShortsInfo = VideoCrawler.isYtShort(title, description: description)
-        print("ytShortsInfo: \(title)", ytShortsInfo)
 
         return Video(
             title: title,
