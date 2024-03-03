@@ -8,6 +8,7 @@ import UniformTypeIdentifiers
 import SwiftUI
 
 struct Const {
+    static let bundleId = "com.pentlandFirth.Unwatched"
 
     static let dotString = "•"
     static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)

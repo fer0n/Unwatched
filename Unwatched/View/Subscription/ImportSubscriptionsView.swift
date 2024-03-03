@@ -4,6 +4,9 @@
 //
 
 import SwiftUI
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "ImportSubscriptionsView")
 
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
@@ -113,14 +116,14 @@ struct ImportSubscriptionsView: View {
             do {
                 subStates = try await task.value
             } catch {
-                print("error loading subStates: \(error)")
+                log.error("error loading subStates: \(error)")
             }
             isLoading = false
         }
     }
 
     func startImport() {
-        print("startImport")
+        log.info("startImport")
         withAnimation {
             isLoading = true
         }
@@ -147,7 +150,7 @@ struct ImportSubscriptionsView: View {
         case .success(let file):
             readFile(file)
         case .failure(let error):
-            print(error.localizedDescription)
+            log.info("\(error.localizedDescription)")
         }
     }
 
@@ -161,7 +164,7 @@ struct ImportSubscriptionsView: View {
                 file.stopAccessingSecurityScopedResource()
             }
         } catch {
-            print("Failed to read file: \(error)")
+            log.error("Failed to read file: \(error)")
         }
     }
 
@@ -177,7 +180,7 @@ struct ImportSubscriptionsView: View {
 
     func parseRow(_ row: String) -> SendableSubscription {
         let columns = row.components(separatedBy: ",")
-        print("columns", columns)
+        log.info("columns \(columns)")
         let channelId = columns[0]
         // let channelUrl = columns[1] | not needed
         let channelTitle = columns[2]

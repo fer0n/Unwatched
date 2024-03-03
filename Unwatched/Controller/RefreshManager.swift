@@ -5,6 +5,9 @@
 
 import Foundation
 import SwiftData
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
@@ -35,19 +38,19 @@ import SwiftData
     }
 
     func handleAutoBackup(_ deviceName: String) {
-        print("handleAutoBackup")
+        log.info("handleAutoBackup")
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
             if calendar.isDateInToday(lastAutoBackupDate) {
-                print("last backup was today")
+                log.info("last backup was today")
                 return
             }
         }
 
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
-            print("no auto backup on")
+            log.info("no auto backup on")
             return
         }
 
@@ -56,7 +59,7 @@ import SwiftData
             Task {
                 try await task.value
                 UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-                print("saved backup")
+                log.info("saved backup")
             }
         }
     }
@@ -70,7 +73,7 @@ import SwiftData
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
 
             if shouldRefresh {
-                print("refreshing now")
+                log.info("refreshing now")
                 await self.refreshAll()
             }
         }

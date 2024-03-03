@@ -6,6 +6,9 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "InboxView")
 
 struct InboxView: View {
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
@@ -64,7 +67,7 @@ struct InboxView: View {
             }
             .task(id: hasNewInboxItems) {
                 if hasNewInboxItems && navManager.tab == .inbox {
-                    print("turning off inbox badge")
+                    log.info("turning off inbox badge")
                     hasNewInboxItems = false
                 }
             }
@@ -129,7 +132,7 @@ struct InboxView: View {
     }
 
     func handleUrlDrop(_ items: [URL]) {
-        print("handleUrlDrop inbox", items)
+        log.info("handleUrlDrop inbox \(items)")
         let container = modelContext.container
         _ = VideoService.addForeignUrls(items, in: .inbox, container: container)
     }

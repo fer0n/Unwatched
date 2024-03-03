@@ -20,7 +20,6 @@ func parseDurationToSeconds(_ duration: String) -> Double? {
     // Extract minutes if present
     if let minuteRange = durationString.range(of: "M") {
         if let minutes = Double(durationString[..<minuteRange.lowerBound]) {
-            print("minutes", minutes)
             totalSeconds += minutes * 60
             durationString.removeSubrange(..<minuteRange.upperBound)
         }
@@ -29,7 +28,6 @@ func parseDurationToSeconds(_ duration: String) -> Double? {
     // Extract seconds if present
     if let secondRange = durationString.range(of: "S") {
         if let seconds = Double(durationString[..<secondRange.lowerBound]) {
-            print("seconds", seconds)
             totalSeconds += seconds
         }
     }

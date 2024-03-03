@@ -70,7 +70,6 @@ struct SubscriptionDetailView: View {
             }
         }
         .onDisappear {
-            print("onDisappear")
             if subscription.isArchived && requiresUnsubscribe {
                 let subId = subscription.persistentModelID
                 let container = modelContext.container
