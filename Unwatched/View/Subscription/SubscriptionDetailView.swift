@@ -8,6 +8,7 @@ import SwiftData
 
 struct SubscriptionDetailView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
@@ -69,12 +70,11 @@ struct SubscriptionDetailView: View {
                 isLoading = false
             }
         }
+        .onAppear {
+            handleOnAppear()
+        }
         .onDisappear {
-            if subscription.isArchived && requiresUnsubscribe {
-                let subId = subscription.persistentModelID
-                let container = modelContext.container
-                SubscriptionService.deleteSubscriptions([subId], container: container)
-            }
+            handleOnDisappear()
         }
     }
 
@@ -87,6 +87,23 @@ struct SubscriptionDetailView: View {
 
     var shortsFilter: ShortsDetection? {
         (handleShortsDifferently && hideShortsEverywhere) ? shortsDetection : nil
+    }
+
+    func handleOnAppear() {
+        if navManager.tab == .library {
+            navManager.lastLibrarySubscriptionId = subscription.persistentModelID
+        }
+    }
+
+    func handleOnDisappear() {
+        if subscription.isArchived && requiresUnsubscribe {
+            let subId = subscription.persistentModelID
+            let container = modelContext.container
+            SubscriptionService.deleteSubscriptions([subId], container: container)
+        }
+        if navManager.tab == .library {
+            navManager.lastLibrarySubscriptionId = nil
+        }
     }
 
     func loadNewVideos() {
@@ -117,6 +134,7 @@ struct SubscriptionDetailView: View {
                 .environment(RefreshManager())
                 .environment(PlayerManager())
                 .environment(ImageCacheManager())
+                .environment(SheetPositionReader())
         }
     } else {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
@@ -125,5 +143,6 @@ struct SubscriptionDetailView: View {
             .environment(RefreshManager())
             .environment(PlayerManager())
             .environment(ImageCacheManager())
+            .environment(SheetPositionReader())
     }
 }
