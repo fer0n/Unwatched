@@ -103,6 +103,8 @@ struct LibraryView: View {
                     BookmarkedVideosView()
                 case .importSubscriptions:
                     ImportSubscriptionsView(importButtonPadding: true)
+                case .debug:
+                    DebugView()
                 }
             }
             .toolbar {
@@ -202,6 +204,7 @@ enum LibraryDestination {
     case userData
     case settings
     case importSubscriptions
+    case debug
 }
 
 #Preview {

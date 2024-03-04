@@ -106,11 +106,20 @@ extension VideoActor {
         }
     }
 
-    func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 0) {
+    func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 1) {
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {
             insertQueueEntries(at: index, videos: videos)
+        } else {
+            return
+        }
+
+        videos.forEach { video in
+            if let sendable = video.toExport {
+                let title = video.subscription?.title ?? ""
+                newVideos.addVideo(sendable, for: title, in: placement)
+            }
         }
     }
 

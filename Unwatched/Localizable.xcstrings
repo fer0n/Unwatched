@@ -11,6 +11,22 @@
         }
       }
     },
+    "%lld New Videos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Neue Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld New Videos"
+          }
+        }
+      }
+    },
     "addBookmark" : {
       "localizations" : {
         "de" : {
@@ -525,6 +541,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom speed setting for this subscription"
+          }
+        }
+      }
+    },
+    "debug" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debugging"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        }
+      }
+    },
+    "debugNoNewVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: Keine Neuen Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: No New Videos"
+          }
+        }
+      }
+    },
+    "debugNoNewVideosSubtitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deaktiviere diese Nachricht in Bibliothek → Einstellungen → Debug"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn this off under Library → Settings → Debug"
           }
         }
       }
@@ -1129,6 +1193,22 @@
         }
       }
     },
+    "monitorBackgroundFetches" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrundaktualisierungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitor Background Fetches"
+          }
+        }
+      }
+    },
     "mostRecentVideo" : {
       "localizations" : {
         "de" : {
@@ -1383,6 +1463,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos of channels you haven't subscribed to will show up here"
+          }
+        }
+      }
+    },
+    "notifications" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        }
+      }
+    },
+    "notificationsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Videos werden im Hintergrund abgerufen und eine Benachrichtigung ausgelöst. Dies ist nicht mit dem Energiesparmodus kompatibel und kann verzögert sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New videos will be fetched in the background and trigger a notification. This is not compatible with low power mode and may be delayed."
           }
         }
       }
@@ -2139,6 +2251,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User Data"
+          }
+        }
+      }
+    },
+    "videoAddedToInbox" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Videos in Inbox"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos Added to Inbox"
+          }
+        }
+      }
+    },
+    "videoAddedToQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Videos in Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos Added to Queue"
           }
         }
       }

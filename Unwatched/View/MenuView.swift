@@ -29,20 +29,20 @@ struct MenuView: View {
                                             showCancelButton: showCancelButton)),
                     image: Image(systemName: Const.queueTagSF),
                     text: "queue",
-                    tag: Tab.queue
+                    tag: NavigationTab.queue
                 ),
                 TabRoute(
                     view: AnyView(InboxView(showCancelButton: showCancelButton)),
                     image: getInboxSymbol,
                     text: "inbox",
-                    tag: Tab.inbox,
+                    tag: NavigationTab.inbox,
                     showBadge: showNewInboxBadge && hasNewInboxItems && navManager.tab != .inbox
                 ),
                 TabRoute(
                     view: AnyView(LibraryView(showCancelButton: showCancelButton)),
                     image: Image(systemName: "books.vertical"),
                     text: "library",
-                    tag: Tab.library
+                    tag: NavigationTab.library
                 )
             ]
 
@@ -96,7 +96,7 @@ struct MenuView: View {
         )
     }
 
-    func handleTabChanged(_ newTab: Tab, _ proxy: ScrollViewProxy) {
+    func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
         if newTab == navManager.tab {
             withAnimation {
                 let isTopView = navManager.handleTappedTwice()
@@ -112,7 +112,7 @@ struct TabRoute {
     var view: AnyView
     var image: Image
     var text: LocalizedStringKey
-    var tag: Tab
+    var tag: NavigationTab
     var showBadge: Bool = false
 }
 

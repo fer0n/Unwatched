@@ -35,6 +35,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
         return SubscriptionService.isSubscribed(video)
     }
 
+    @MainActor
     func setIsSubscribed(_ channelInfo: ChannelInfo?) async {
         guard let channelId = channelInfo?.channelId else {
             log.info("no channelId to check subscription status")
@@ -175,6 +176,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
         await addSubscription(channelInfo: channelInfo)
     }
 
+    @MainActor
     func addSubscription(channelInfo: [ChannelInfo]) async {
         guard let container = container else {
             log.warning("no container in addSubscriptionFromText")

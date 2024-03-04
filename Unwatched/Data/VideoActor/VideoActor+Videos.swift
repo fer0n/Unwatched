@@ -7,6 +7,8 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
 
 // Video
 @ModelActor actor VideoActor {
+    var newVideos = NewVideosNotificationInfo()
+
     func addForeignVideos(from videoUrls: [URL],
                           in videoplacement: VideoPlacement,
                           at index: Int,
@@ -87,7 +89,8 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
         return videos?.first
     }
 
-    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws {
+    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
+        newVideos = NewVideosNotificationInfo()
         log.info("loadVideos")
         var subs = [Subscription]()
         if subscriptionIds == nil {
@@ -125,6 +128,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
         }
 
         try modelContext.save()
+        return newVideos
     }
 
     private func loadVideos(
@@ -136,6 +140,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
         var newVideos = [Video]()
         for vid in videos {
             let video = vid.createVideo(youtubeChannelId: sub.youtubeChannelId)
+
             newVideos.append(video)
         }
         updateRecentVideoDate(subscription: sub, videos: newVideos)

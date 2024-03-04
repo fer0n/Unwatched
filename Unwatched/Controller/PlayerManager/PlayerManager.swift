@@ -45,7 +45,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
         }
 
         if video != nil && video?.url == oldValue?.url {
-            log.info("> tapped existing video")
+            log.info("Tapped existing video")
             self.play()
             return
         }

@@ -160,7 +160,7 @@ struct VideoListItem: View {
     func getTrailingSwipeActions() -> some View {
         return Group {
             if videoSwipeActions.contains(.clear) &&
-                (hasInboxEntry == true || hasQueueEntry == true || [Tab.queue, Tab.inbox].contains(navManager.tab)) {
+                (hasInboxEntry == true || hasQueueEntry == true || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)) {
                 Button(role: clearRole,
                        action: clearVideoEverywhere,
                        label: {

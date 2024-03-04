@@ -9,12 +9,12 @@ struct VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         container: ModelContainer
-    ) -> Task<(), Error> {
-        log.info("loadNewVideosInBg")
-        let task = Task.detached {
+    ) -> Task<NewVideosNotificationInfo, Error> {
+        return Task.detached {
+            log.info("loadNewVideosInBg")
             let repo = VideoActor(modelContainer: container)
             do {
-                try await repo.loadVideos(
+                return try await repo.loadVideos(
                     subscriptionIds
                 )
             } catch {
@@ -22,7 +22,6 @@ struct VideoService {
                 throw error
             }
         }
-        return task
     }
 
     static func markVideoWatched(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
