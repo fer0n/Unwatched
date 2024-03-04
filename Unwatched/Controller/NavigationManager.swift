@@ -13,7 +13,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "NavigationManager
 @Observable class NavigationManager: Codable {
     var showMenu = false
     var openBrowserUrl: BrowserUrl?
-    var tab = Tab.queue
+    var tab = NavigationTab.queue
     var showDescriptionDetail = false
     var selectedDetailPage: ChapterDescriptionPage = .description
     var searchFocused = false
@@ -55,7 +55,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "NavigationManager
         let container = try decoder.container(keyedBy: NavManagerCodingKeys.self)
 
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
-        tab = try container.decode(Tab.self, forKey: .tab)
+        tab = try container.decode(NavigationTab.self, forKey: .tab)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -80,6 +80,13 @@ private let log = Logger(subsystem: Const.bundleId, category: "NavigationManager
                 presentedLibrary.append(subscription)
                 lastLibrarySubscriptionId = subscription.persistentModelID
             }
+        }
+    }
+
+    func navigateTo(_ tab: NavigationTab) {
+        self.tab = tab
+        if !showMenu {
+            showMenu = true
         }
     }
 
@@ -133,7 +140,7 @@ enum NavManagerCodingKeys: CodingKey {
 
 }
 
-enum Tab: Codable {
+enum NavigationTab: String, Codable {
     case inbox
     case queue
     case library

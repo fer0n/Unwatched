@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import BackgroundTasks
 import OSLog
 
 private let log = Logger(subsystem: Const.bundleId, category: "SetupView")
@@ -11,8 +12,8 @@ private let log = Logger(subsystem: Const.bundleId, category: "SetupView")
 struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) var navManager
 
-    @State var navManager = NavigationManager.load()
     @State var sheetPos = SheetPositionReader.load()
     @State var player = PlayerManager()
     @State var refresher = RefreshManager()
@@ -23,7 +24,6 @@ struct SetupView: View {
     var body: some View {
         ContentView()
             .environment(player)
-            .environment(navManager)
             .environment(imageCacheManager)
             .environment(refresher)
             .environment(sheetPos)
@@ -34,17 +34,21 @@ struct SetupView: View {
                 restoreNowPlayingVideo()
             }
             .task(id: scenePhase) {
-                if scenePhase == .active {
+                switch scenePhase {
+                case .active:
                     player.isInBackground = false
                     log.info("Active")
                     await refresher.refreshOnStartup()
                     refresher.handleAutoBackup(UIDevice.current.name)
-                } else if scenePhase == .background {
+                case .background:
                     log.info("background")
                     player.isInBackground = true
                     Task {
                         await saveData()
                     }
+                    RefreshManager.scheduleVideoRefresh()
+                default:
+                    break
                 }
             }
     }

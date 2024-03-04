@@ -16,10 +16,15 @@ struct Const {
     static let playerAboveSheetHeight: CGFloat = 60
     static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
+    static let tapDestination = "tapDestination"
+
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
     static let minInboxEntriesToShowClear = 4
     static let autoRefreshIntervalSeconds: Double = 8 * 60
+
+    static let earliestBackgroundBeginSeconds: Double = 40 * 60
+    static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
@@ -88,4 +93,8 @@ struct Const {
 
     static let selectedDetent = "selectedDetent"
     static let hideMenuOnPlay = "hideMenuOnPlay"
+
+    static let videoAddedToInbox = "videoAddedToInbox"
+    static let videoAddedToQueue = "videoAddedToQueue"
+    static let monitorBackgroundFetches = "monitorBackgroundFetches"
 }

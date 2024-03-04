@@ -4,11 +4,13 @@
 //
 
 import SwiftUI
+import OSLog
+
+private let log = Logger(subsystem: Const.bundleId, category: "SettingsView")
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
 
-    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
@@ -21,11 +23,25 @@ struct SettingsView: View {
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
 
+    @AppStorage(Const.videoAddedToInbox) var videoAddedToInbox: Bool = false
+    @AppStorage(Const.videoAddedToQueue) var videoAddedToQueue: Bool = false
+
     @State var isExportingAll = false
 
     var body: some View {
         VStack {
             List {
+                Section(header: Text("notifications"), footer: Text("notificationsHelper")) {
+                    Toggle(isOn: $videoAddedToInbox) {
+                        Text("videoAddedToInbox")
+                    }
+
+                    Toggle(isOn: $videoAddedToQueue) {
+                        Text("videoAddedToQueue")
+                    }
+                }
+                .tint(.teal)
+
                 Section("videoSettings") {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
@@ -33,8 +49,15 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    Toggle(isOn: $refreshOnStartup) {
-                        Text("refreshOnStartup")
+                    .onChange(of: videoAddedToQueue) {
+                        if videoAddedToQueue {
+                            NotificationManager.askNotificationPermission()
+                        }
+                    }
+                    .onChange(of: videoAddedToInbox) {
+                        if videoAddedToInbox {
+                            NotificationManager.askNotificationPermission()
+                        }
                     }
                     .tint(.teal)
                 }
@@ -121,6 +144,10 @@ struct SettingsView: View {
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: "opticaldiscdrive.fill")
                     }
+                }
+
+                NavigationLink(value: LibraryDestination.debug) {
+                    Label("debug", systemImage: "ladybug.fill")
                 }
             }
         }

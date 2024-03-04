@@ -5,12 +5,13 @@
 
 import SwiftUI
 import SwiftData
-import WebKit
 import TipKit
 
 @main
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
+    @State var navManager = NavigationManager.load()
     @State var alerter: Alerter = Alerter()
 
     var sharedModelContainer: ModelContainer = {
@@ -35,22 +36,19 @@ struct UnwatchedApp: App {
                         .datastoreLocation(.applicationDefault)
                     ])
                 }
+                .onAppear {
+                    setUpAppDelegate()
+                }
         }
         .modelContainer(sharedModelContainer)
-    }
-}
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-    func woraroundInitialWebViewDelay() {
-        let webView = WKWebView()
-        webView.loadHTMLString("", baseURL: nil)
+        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in
+            let container = sharedModelContainer
+            await RefreshManager.handleBackgroundVideoRefresh(container)
+        }
+        .environment(navManager)
     }
 
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-    ) -> Bool {
-        woraroundInitialWebViewDelay()
-        return true
+    func setUpAppDelegate() {
+        appDelegate.navManager = navManager
     }
 }

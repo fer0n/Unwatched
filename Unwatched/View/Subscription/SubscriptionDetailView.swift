@@ -98,7 +98,7 @@ struct SubscriptionDetailView: View {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: [subId],
                 container: container)
-            try? await task.value
+            _ = try? await task.value
         }
     }
 }
