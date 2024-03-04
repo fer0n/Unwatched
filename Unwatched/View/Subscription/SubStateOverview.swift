@@ -49,10 +49,10 @@ struct SubStateOverview: View {
                         .fontWeight(.semibold)
                     Text(getErrorMessage())
                         .font(.body)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                     Text("errorImportingTryBrowser")
                         .font(.body)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(.secondary)
                 }
                 Spacer().frame(height: 40)
             }

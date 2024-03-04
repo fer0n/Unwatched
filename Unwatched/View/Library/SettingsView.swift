@@ -40,7 +40,6 @@ struct SettingsView: View {
                         Text("videoAddedToQueue")
                     }
                 }
-                .tint(.teal)
 
                 Section("videoSettings") {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
@@ -59,7 +58,6 @@ struct SettingsView: View {
                             NotificationManager.askNotificationPermission()
                         }
                     }
-                    .tint(.teal)
                 }
 
                 Section(header: Text("playback")) {
@@ -70,20 +68,17 @@ struct SettingsView: View {
                         Text("hideMenuOnPlay")
                     }
                 }
-                .tint(.teal)
 
                 Section(footer: Text("playbackHelper")) {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
                 }
-                .tint(.teal)
 
                 Section(header: Text("shortsSettings"), footer: Text("shortsSettingsHelper")) {
                     Toggle(isOn: $handleShortsDifferently) {
                         Text("handleShortsDifferently")
                     }
-                    .tint(.teal)
                     Picker("shortsDetection", selection: $shortsDetection) {
                         ForEach(ShortsDetection.allCases, id: \.self) {
                             Text($0.description)
@@ -93,7 +88,6 @@ struct SettingsView: View {
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
                     }
-                    .tint(.teal)
                     .disabled(!handleShortsDifferently)
                     Picker("newShorts", selection: $defaultShortsPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
@@ -112,19 +106,18 @@ struct SettingsView: View {
                         Text("showNewInboxBadge")
                     }
                 }
-                .tint(.teal)
 
                 if let url = UrlService.shareShortcutUrl {
                     Section("shareSheet") {
                         Link(destination: url) {
-                            Label("setupShareSheetAction", systemImage: "square.and.arrow.up.on.square.fill")
+                            LibraryNavListItem("setupShareSheetAction", systemName: "square.and.arrow.up.on.square.fill")
                         }
                     }
                 }
 
                 Section("contact") {
-                    LinkItemView(destination: UrlService.emailUrl, label: "contactUs") {
-                        Image(systemName: Const.contactMailSF)
+                    Link(destination: UrlService.emailUrl) {
+                        LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
                 }
 
@@ -138,7 +131,7 @@ struct SettingsView: View {
                             ProgressView()
                                 .frame(maxWidth: .infinity, alignment: .center)
                         } else {
-                            Label("exportSubscriptions", systemImage: "square.and.arrow.up.fill")
+                            LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
                         }
                     }
                     NavigationLink(value: LibraryDestination.userData) {
@@ -153,7 +146,7 @@ struct SettingsView: View {
         }
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
-        .tint(.myAccentColor)
+        .tint(.teal)
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL?)] {

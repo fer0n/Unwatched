@@ -79,7 +79,7 @@ struct BackupView: View {
                                     }
                                 }
                                 .font(.caption)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.secondary)
                             }
                         }
                     }
