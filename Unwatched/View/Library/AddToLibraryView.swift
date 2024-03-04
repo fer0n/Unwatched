@@ -35,7 +35,7 @@ struct AddToLibraryView: View {
         })
         HStack {
             Image(systemName: "link")
-                .foregroundStyle(.gray)
+                .foregroundStyle(.secondary)
             TextField("enterUrls", text: $addText)
                 .keyboardType(.alphabet)
                 .autocorrectionDisabled(true)

@@ -116,7 +116,7 @@ struct ChapterMiniControlView: View {
                 }
             }
             .padding(5)
-            .foregroundStyle(.gray)
+            .foregroundStyle(.secondary)
         }
         .contextMenu {
             let isSubscribed = subscribeManager.isSubscribed(video: player.video)

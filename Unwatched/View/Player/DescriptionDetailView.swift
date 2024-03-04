@@ -24,7 +24,7 @@ struct DescriptionDetailView: View {
                     Text(verbatim: timeString)
                 }
             }
-            .foregroundStyle(.gray)
+            .foregroundStyle(.secondary)
             if let desc = video.videoDescription {
                 Text(LocalizedStringKey(desc))
             }

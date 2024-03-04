@@ -29,6 +29,8 @@ struct DebugView: View {
                 NotificationManager.askNotificationPermission()
             }
         }
+        .navigationTitle("debug")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
 }

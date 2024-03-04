@@ -136,7 +136,7 @@ struct LibraryView: View {
 
             VStack(spacing: 10) {
                 Text("dropSubscriptionHelper")
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .tint(.teal)
             }
@@ -154,7 +154,7 @@ struct LibraryView: View {
         HStack(spacing: 0) {
             Image(systemName: "magnifyingglass")
                 .padding(.trailing, 5)
-                .foregroundStyle(.gray)
+                .foregroundStyle(.secondary)
             TextField("searchLibrary", text: $text.val)
                 .keyboardType(.alphabet)
                 .autocorrectionDisabled(true)
@@ -225,6 +225,6 @@ struct TextFieldClearButton: View {
         } label: {
             Image(systemName: Const.clearSF)
         }
-        .foregroundStyle(.gray)
+        .foregroundStyle(.secondary)
     }
 }
