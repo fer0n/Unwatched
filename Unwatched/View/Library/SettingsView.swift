@@ -110,7 +110,10 @@ struct SettingsView: View {
                 if let url = UrlService.shareShortcutUrl {
                     Section("shareSheet") {
                         Link(destination: url) {
-                            LibraryNavListItem("setupShareSheetAction", systemName: "square.and.arrow.up.on.square.fill")
+                            LibraryNavListItem(
+                                "setupShareSheetAction",
+                                systemName: "square.and.arrow.up.on.square.fill"
+                            )
                         }
                     }
                 }

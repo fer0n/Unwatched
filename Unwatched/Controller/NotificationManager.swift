@@ -15,12 +15,12 @@ struct NotificationManager {
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInbox)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueue)
 
-        if let (title, subtitle) = newVideoInfo.getNewVideoText(
+        if let (title, body) = newVideoInfo.getNewVideoText(
             includeInbox: notifyAboutInbox,
             includeQueue: notifyAboutQueue) {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)
             let userInfo = getUserInfo(tab: tabDestination)
-            sendNotification(title, subtitle, userInfo: userInfo)
+            sendNotification(title, body: body, userInfo: userInfo)
         }
     }
 
@@ -40,11 +40,15 @@ struct NotificationManager {
 
     private static func sendNotification(_ title: String,
                                          _ subtitle: String? = nil,
+                                         body: String? = nil,
                                          userInfo: [AnyHashable: Any]? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title
         if let subtitle = subtitle {
             content.subtitle = subtitle
+        }
+        if let body = body {
+            content.body = body
         }
         content.sound = UNNotificationSound.default
         if let userInfo = userInfo {
@@ -61,8 +65,8 @@ struct NotificationManager {
     static func notifyHasRun() {
         if UserDefaults.standard.bool(forKey: Const.monitorBackgroundFetches) {
             let title = String(localized: "debugNoNewVideos")
-            let subtitle = String(localized: "debugNoNewVideosSubtitle")
-            sendNotification(title, subtitle)
+            let body = String(localized: "debugNoNewVideosSubtitle")
+            sendNotification(title, body: body)
         }
     }
 
