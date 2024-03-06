@@ -7,8 +7,6 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "LibraryView")
-
 struct LibraryView: View {
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
     @Environment(NavigationManager.self) private var navManager
@@ -186,7 +184,7 @@ struct LibraryView: View {
         guard let urls = droppedUrls else {
             return
         }
-        log.info("handleUrlDrop library \(urls)")
+        Logger.log.info("handleUrlDrop library \(urls)")
         let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
         await subManager.addSubscription(channelInfo: channelInfo)
     }

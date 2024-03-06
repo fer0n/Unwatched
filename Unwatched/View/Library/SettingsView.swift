@@ -6,8 +6,6 @@
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "SettingsView")
-
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
 

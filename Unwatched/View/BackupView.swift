@@ -6,8 +6,6 @@
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "BackupView")
-
 struct BackupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
@@ -134,7 +132,7 @@ struct BackupView: View {
             case .success(let file):
                 fileToBeRestored = IdentifiableURL(url: file)
             case .failure(let error):
-                log.error("\(error.localizedDescription)")
+                Logger.log.error("\(error.localizedDescription)")
             }
         }
         .task(id: isDeletingTask) {
@@ -192,7 +190,7 @@ struct BackupView: View {
     func getAllIcloudFiles() {
         let fileManager = FileManager.default
         guard let backupsUrl = UserDataService.getBackupsDirectory() else {
-            log.warning("no documents url")
+            Logger.log.warning("no documents url")
             return
         }
         withAnimation {
@@ -206,7 +204,7 @@ struct BackupView: View {
                 }
                 fileNames = Array(sortedFileUrls.prefix(5))
             } catch {
-                log.error("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
+                Logger.log.error("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
             }
         }
     }
@@ -234,19 +232,19 @@ struct BackupView: View {
     }
 
     func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
-        log.info("importFile: \(filePath)")
+        Logger.log.info("importFile: \(filePath)")
         let container = modelContext.container
         let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
         Task {
             await after?.value
-            log.info("after task done")
+            Logger.log.info("after task done")
             do {
                 let data = try Data(contentsOf: filePath)
-                log.info("data is there")
+                Logger.log.info("data is there")
                 UserDataService.importBackup(data, container: container)
             } catch {
-                log.error("error when importing: \(error)")
+                Logger.log.error("error when importing: \(error)")
             }
             if isSecureAccess {
                 filePath.stopAccessingSecurityScopedResource()

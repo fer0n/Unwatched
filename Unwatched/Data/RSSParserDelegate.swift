@@ -6,8 +6,6 @@
 import Foundation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "RSSParserDelegate")
-
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
     var subscriptionInfo: SendableSubscription?
@@ -121,7 +119,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 }
                 videos.append(video)
             } else {
-                log.warning("couldn't create the video")
+                Logger.log.warning("couldn't create the video")
             }
             currentTitle = ""
             currentLink = ""

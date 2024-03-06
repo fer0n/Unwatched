@@ -6,8 +6,6 @@
 import Foundation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "VideoCrawler")
-
 struct VideoCrawler {
     static func parseFeedUrl(_ url: URL, limitVideos: Int?, cutoffDate: Date?) async throws -> RSSParserDelegate {
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -19,7 +17,7 @@ struct VideoCrawler {
     }
 
     static func loadVideosFromRSS(url: URL, mostRecentPublishedDate: Date?) async throws -> [SendableVideo] {
-        log.info("loadVideosFromRSS \(url)")
+        Logger.log.info("loadVideosFromRSS \(url)")
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil, cutoffDate: mostRecentPublishedDate)
         return rssParserDelegate.videos
     }
@@ -30,7 +28,7 @@ struct VideoCrawler {
             subscriptionInfo.link = feedUrl
             return subscriptionInfo
         }
-        log.info("feedUrl \(feedUrl)")
+        Logger.log.info("feedUrl \(feedUrl)")
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
@@ -71,7 +69,7 @@ struct VideoCrawler {
             let chaptersWithDuration = setDuration(in: chapters, videoDuration: videoDuration)
             return chaptersWithDuration
         } catch {
-            log.error("Error creating regex: \(error)")
+            Logger.log.error("Error creating regex: \(error)")
         }
         return []
     }

@@ -8,8 +8,6 @@ import SwiftData
 import BackgroundTasks
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
-
 @Observable class RefreshManager {
     weak var container: ModelContainer?
     @MainActor var isLoading: Bool = false
@@ -39,19 +37,19 @@ private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
     }
 
     func handleAutoBackup(_ deviceName: String) {
-        log.info("handleAutoBackup")
+        Logger.log.info("handleAutoBackup")
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
             if calendar.isDateInToday(lastAutoBackupDate) {
-                log.info("last backup was today")
+                Logger.log.info("last backup was today")
                 return
             }
         }
 
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
-            log.info("no auto backup on")
+            Logger.log.info("no auto backup on")
             return
         }
 
@@ -60,7 +58,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
             Task {
                 try await task.value
                 UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-                log.info("saved backup")
+                Logger.log.info("saved backup")
             }
         }
     }
@@ -74,22 +72,22 @@ private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
 
             if shouldRefresh {
-                log.info("refreshing now")
+                Logger.log.info("refreshing now")
                 await self.refreshAll()
             }
         }
     }
 
     static func scheduleVideoRefresh() {
-        log.info("scheduleVideoRefresh()")
+        Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            log.error("Error scheduleVideoRefresh: \(error)")
+            Logger.log.error("Error scheduleVideoRefresh: \(error)")
         }
-        log.info("Scheduled background task") // Breakpoint 1 HERE
+        Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
@@ -99,25 +97,25 @@ private let log = Logger(subsystem: Const.bundleId, category: "RefreshManager")
     }
 
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
-        log.info("Background task running now")
+        Logger.log.info("Background task running now")
         do {
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if Task.isCancelled {
-                log.info("background task has been cancelled")
+                Logger.log.info("background task has been cancelled")
             }
 
             if newVideos.videoCount == 0 {
-                log.info("notifyHasRun")
+                Logger.log.info("notifyHasRun")
                 NotificationManager.notifyHasRun()
             } else {
-                log.info("notifyNewVideos")
+                Logger.log.info("notifyNewVideos")
                 NotificationManager.notifyNewVideos(newVideos)
             }
             scheduleVideoRefresh()
         } catch {
-            log.error("Error during background refresh: \(error)")
+            Logger.log.error("Error during background refresh: \(error)")
         }
     }
 }

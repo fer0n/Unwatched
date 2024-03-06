@@ -8,8 +8,6 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "ImageCacheManager")
-
 @Observable class ImageCacheManager {
     private var cache: [PersistentIdentifier: ImageCacheInfo] = [:]
     subscript(id: PersistentIdentifier?) -> ImageCacheInfo? {
@@ -30,7 +28,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "ImageCacheManager
             try await task.value
             self.cache = [:]
         } catch {
-            log.error("error while trying to persist cache: \(error)")
+            Logger.log.error("error while trying to persist cache: \(error)")
         }
     }
 }

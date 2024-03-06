@@ -7,8 +7,6 @@ import SwiftUI
 import BackgroundTasks
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "SetupView")
-
 struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
@@ -37,11 +35,11 @@ struct SetupView: View {
                 switch scenePhase {
                 case .active:
                     player.isInBackground = false
-                    log.info("Active")
+                    Logger.log.info("Active")
                     await refresher.refreshOnStartup()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 case .background:
-                    log.info("background")
+                    Logger.log.info("background")
                     player.isInBackground = true
                     Task {
                         await saveData()
@@ -54,7 +52,7 @@ struct SetupView: View {
     }
 
     func restoreNowPlayingVideo() {
-        log.info("restoreVideo")
+        Logger.log.info("restoreVideo")
         var video: Video?
 
         if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
@@ -82,7 +80,7 @@ struct SetupView: View {
         UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
         let container = modelContext.container
         await imageCacheManager.persistCache(container)
-        log.info("saved state")
+        Logger.log.info("saved state")
     }
 }
 

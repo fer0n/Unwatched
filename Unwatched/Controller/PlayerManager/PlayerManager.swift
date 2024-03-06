@@ -9,8 +9,6 @@ enum VideoSource {
     case hotSwap
 }
 
-private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
-
 @Observable class PlayerManager {
     var isPlaying: Bool = false
     var currentTime: Double?
@@ -45,7 +43,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
         }
 
         if video != nil && video?.url == oldValue?.url {
-            log.info("Tapped existing video")
+            Logger.log.info("Tapped existing video")
             self.play()
             return
         }
@@ -88,7 +86,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
     @ObservationIgnored var currentEndTime: Double?
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        log.info("updateElapsedTime")
+        Logger.log.info("updateElapsedTime")
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             return
@@ -200,7 +198,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
 
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
         guard let container = container else {
-            log.error("loadTopmostVideoFromQueue: no container")
+            Logger.log.error("loadTopmostVideoFromQueue: no container")
             return
         }
         let currentVideoId = video?.persistentModelID
@@ -225,12 +223,12 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
     }
 
     func handleAutoStart() {
-        log.info("handleAutoStart")
+        Logger.log.info("handleAutoStart")
         guard let source = videoSource else {
-            log.info("no source, stopping")
+            Logger.log.info("no source, stopping")
             return
         }
-        log.info("source: \(String(describing: source))")
+        Logger.log.info("source: \(String(describing: source))")
         switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -258,7 +256,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "PlayerManager")
     }
 
     func handleHotSwap() {
-        log.info("handleHotSwap")
+        Logger.log.info("handleHotSwap")
         previousIsPlaying = isPlaying
         pause()
         self.videoSource = .hotSwap

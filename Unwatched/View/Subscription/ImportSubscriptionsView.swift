@@ -6,8 +6,6 @@
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "ImportSubscriptionsView")
-
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
@@ -116,14 +114,14 @@ struct ImportSubscriptionsView: View {
             do {
                 subStates = try await task.value
             } catch {
-                log.error("error loading subStates: \(error)")
+                Logger.log.error("error loading subStates: \(error)")
             }
             isLoading = false
         }
     }
 
     func startImport() {
-        log.info("startImport")
+        Logger.log.info("startImport")
         withAnimation {
             isLoading = true
         }
@@ -150,7 +148,7 @@ struct ImportSubscriptionsView: View {
         case .success(let file):
             readFile(file)
         case .failure(let error):
-            log.info("\(error.localizedDescription)")
+            Logger.log.info("\(error.localizedDescription)")
         }
     }
 
@@ -164,7 +162,7 @@ struct ImportSubscriptionsView: View {
                 file.stopAccessingSecurityScopedResource()
             }
         } catch {
-            log.error("Failed to read file: \(error)")
+            Logger.log.error("Failed to read file: \(error)")
         }
     }
 
@@ -180,7 +178,7 @@ struct ImportSubscriptionsView: View {
 
     func parseRow(_ row: String) -> SendableSubscription {
         let columns = row.components(separatedBy: ",")
-        log.info("columns \(columns)")
+        Logger.log.info("columns \(columns)")
         let channelId = columns[0]
         // let channelUrl = columns[1] | not needed
         let channelTitle = columns[2]

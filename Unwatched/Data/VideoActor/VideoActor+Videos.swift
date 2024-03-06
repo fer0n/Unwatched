@@ -3,8 +3,6 @@ import SwiftUI
 import Observation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
-
 // Video
 @ModelActor actor VideoActor {
     var newVideos = NewVideosNotificationInfo()
@@ -18,11 +16,11 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
         for url in videoUrls {
             guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
                 containsError = true
-                log.info("addForeignVideos continue, containsError (no youtubeId)")
+                Logger.log.info("addForeignVideos continue, containsError (no youtubeId)")
                 continue
             }
 
-            log.info("videoAlreadyExists?")
+            Logger.log.info("videoAlreadyExists?")
             if let video = videoAlreadyExists(youtubeId) {
                 videos.append(video)
             } else {
@@ -49,15 +47,15 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
     }
 
     private func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
-        log.info("addSubscriptionsForVideos")
+        Logger.log.info("addSubscriptionsForVideos")
         guard let channelId = video.youtubeChannelId else {
-            log.info("no channel Id/title found in video")
+            Logger.log.info("no channel Id/title found in video")
             return
         }
 
         // video already added, done here
         guard video.subscription == nil else {
-            log.info("video already has a subscription")
+            Logger.log.info("video already has a subscription")
             return
         }
 
@@ -74,7 +72,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
             title: feedTitle ?? "",
             isArchived: true,
             youtubeChannelId: channelId)
-        log.info("new sub: \(sub.isArchived)")
+        Logger.log.info("new sub: \(sub.isArchived)")
 
         modelContext.insert(sub)
         sub.videos?.append(video)
@@ -91,13 +89,13 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
 
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
         newVideos = NewVideosNotificationInfo()
-        log.info("loadVideos")
+        Logger.log.info("loadVideos")
         var subs = [Subscription]()
         if subscriptionIds == nil {
             subs = try getAllActiveSubscriptions()
-            log.info("all subs \(subs)")
+            Logger.log.info("all subs \(subs)")
         } else {
-            log.info("found some, fetching")
+            Logger.log.info("found some, fetching")
             subs = try fetchSubscriptions(subscriptionIds)
         }
 
@@ -108,7 +106,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
             for sub in sendableSubs {
                 group.addTask {
                     guard let url = sub.link else {
-                        log.info("sub has no url: \(sub.title)")
+                        Logger.log.info("sub has no url: \(sub.title)")
                         return (sub, [])
                     }
                     let videos = try await VideoCrawler.loadVideosFromRSS(
@@ -122,7 +120,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "VideoActor")
                 if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
                     try await loadVideos(for: modelSub, videos: videos, defaultPlacementInfo: placementInfo)
                 } else {
-                    log.info("missing info when trying to load videos")
+                    Logger.log.info("missing info when trying to load videos")
                 }
             }
         }

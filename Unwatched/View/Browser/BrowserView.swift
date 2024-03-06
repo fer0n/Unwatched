@@ -8,8 +8,6 @@ import WebKit
 import TipKit
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "BrowserView")
-
 struct BrowserView: View, KeyboardReadable {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
@@ -191,7 +189,7 @@ struct BrowserView: View, KeyboardReadable {
     func handleChannelInfoChanged(_ channelInfo: ChannelInfo?) {
         guard channelInfo?.channelId != nil,
               let channelId = channelInfo?.channelId else {
-            log.info("no channel id after change")
+            Logger.log.info("no channel id after change")
             return
         }
         let container = modelContext.container
@@ -210,7 +208,7 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func handleUrlDrop(_ urls: [URL]) async {
-        log.info("handleUrlDrop inbox \(urls)")
+        Logger.log.info("handleUrlDrop inbox \(urls)")
         withAnimation {
             isLoading = true
         }
@@ -233,7 +231,7 @@ struct BrowserView: View, KeyboardReadable {
         guard let channelInfo = changeSubscriptionOf,
               let channelId = channelInfo.channelId,
               let isSubscribed = subscribeManager.isSubscribedSuccess else {
-            log.info("handleAddSubButton without channelId/isSubscribed")
+            Logger.log.info("handleAddSubButton without channelId/isSubscribed")
             return
         }
         if isSubscribed {

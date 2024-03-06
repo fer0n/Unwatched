@@ -1,8 +1,6 @@
 import Foundation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "String")
-
 extension String {
     var isValidURL: Bool {
         guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else {
@@ -46,7 +44,7 @@ extension String {
             }
             return result
         } catch let error {
-            log.error("invalid regex: \(error.localizedDescription)")
+            Logger.log.error("invalid regex: \(error.localizedDescription)")
             return nil
         }
     }

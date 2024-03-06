@@ -7,8 +7,6 @@ import Foundation
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "NotificationManager")
-
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) {
@@ -57,7 +55,7 @@ struct NotificationManager {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
-                log.error("Error scheduling notification: \(error)")
+                Logger.log.error("Error scheduling notification: \(error)")
             }
         }
     }
@@ -80,7 +78,7 @@ struct NotificationManager {
     static func askNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
             if let error {
-                log.error("Error when asking for notification permission: \(error)")
+                Logger.log.error("Error when asking for notification permission: \(error)")
             }
         }
     }

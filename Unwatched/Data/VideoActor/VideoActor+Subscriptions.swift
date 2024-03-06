@@ -8,8 +8,6 @@ import SwiftUI
 import Observation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "VideoActor+Subscriptions")
-
 // Subscriptions
 extension VideoActor {
 
@@ -38,7 +36,7 @@ extension VideoActor {
                 if let loadedSub = modelContext.model(for: id) as? Subscription {
                     subs.append(loadedSub)
                 } else {
-                    log.warning("Subscription not found for id: \(id.hashValue)")
+                    Logger.log.warning("Subscription not found for id: \(id.hashValue)")
                 }
             }
         } else {
