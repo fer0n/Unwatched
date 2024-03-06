@@ -15,6 +15,8 @@ import OSLog
     @ObservationIgnored var loadingStart: Date?
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
+    init() { }
+
     func refreshAll() async {
         await refresh()
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
