@@ -8,8 +8,6 @@ import SwiftData
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager")
-
 @Observable class SubscribeManager {
     weak var container: ModelContainer?
 
@@ -38,11 +36,11 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
     @MainActor
     func setIsSubscribed(_ channelInfo: ChannelInfo?) async {
         guard let channelId = channelInfo?.channelId else {
-            log.info("no channelId to check subscription status")
+            Logger.log.info("no channelId to check subscription status")
             return
         }
         guard let container = container else {
-            log.warning("checkIsSubscribed has no ModelContainer")
+            Logger.log.warning("checkIsSubscribed has no ModelContainer")
             return
         }
         isLoading = true
@@ -77,7 +75,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
 
     func unsubscribe(_ channelId: String) async {
         guard let container = container else {
-            log.warning("addNewSubscription has no container")
+            Logger.log.warning("addNewSubscription has no container")
             return
         }
         isSubscribedSuccess = nil
@@ -87,14 +85,14 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
             try await task.value
             isSubscribedSuccess = false
         } catch {
-            log.error("unsubscribe error: \(error)")
+            Logger.log.error("unsubscribe error: \(error)")
         }
         isLoading = false
     }
 
     func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) async {
         guard let container = container else {
-            log.warning("addNewSubscription has no container")
+            Logger.log.warning("addNewSubscription has no container")
             return
         }
 
@@ -107,7 +105,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
-            log.error("addNewSubscription error: \(error)")
+            Logger.log.error("addNewSubscription error: \(error)")
             isSubscribedSuccess = false
         }
         isLoading = false
@@ -119,7 +117,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
         }
         let context = ModelContext(container)
         guard let video = context.model(for: videoId) as? Video else {
-            log.info("handleSubscription: video not found")
+            Logger.log.info("handleSubscription: video not found")
             return
         }
         isSubscribedSuccess = nil
@@ -128,7 +126,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
         let isSubscribed = isSubscribed(video: video)
         if isSubscribed {
             guard let subId = video.subscription?.id else {
-                log.info("no subId to un/subscribe")
+                Logger.log.info("no subId to un/subscribe")
                 isLoading = false
                 return
             }
@@ -148,7 +146,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
                     modelContainer: container)
                 isSubscribedSuccess = true
             } catch {
-                log.error("error subscribing: \(error)")
+                Logger.log.error("error subscribing: \(error)")
                 isSubscribedSuccess = false
             }
             isLoading = false
@@ -179,13 +177,13 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
     @MainActor
     func addSubscription(channelInfo: [ChannelInfo]) async {
         guard let container = container else {
-            log.warning("no container in addSubscriptionFromText")
+            Logger.log.warning("no container in addSubscriptionFromText")
             return
         }
         errorMessage = nil
         isLoading = true
 
-        log.info("load new")
+        Logger.log.info("load new")
         do {
             let subs = try await SubscriptionService.addSubscriptions(
                 channelInfo: channelInfo,
@@ -199,7 +197,7 @@ private let log = Logger(subsystem: Const.bundleId, category: "SubscribeManager"
                 self.isSubscribedSuccess = true
             }
         } catch {
-            log.error("\(error)")
+            Logger.log.error("\(error)")
             self.errorMessage = error.localizedDescription
             self.showDropResults = true
         }

@@ -8,8 +8,6 @@ import SwiftUI
 import Observation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "VideoActor+Entries")
-
 // Entries
 extension VideoActor {
 
@@ -41,7 +39,7 @@ extension VideoActor {
 
     func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
         guard let video = modelContext.model(for: videoId) as? Video else {
-            log.warning("moveVideoToInbox no video found")
+            Logger.log.warning("moveVideoToInbox no video found")
             return
         }
         if video.inboxEntry != nil {
@@ -62,7 +60,7 @@ extension VideoActor {
     func updateRecentVideoDate(subscription: Subscription, videos: [Video]) {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
-            log.info("mostRecentDate \(mostRecentDate)")
+            Logger.log.info("mostRecentDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -155,7 +153,7 @@ extension VideoActor {
 
     func addToBottomQueue(videoId: PersistentIdentifier) throws {
         guard let video = modelContext.model(for: videoId) as? Video else {
-            log.warning("addToBottomQueue couldn't find a video")
+            Logger.log.warning("addToBottomQueue couldn't find a video")
             return
         }
 
@@ -212,7 +210,7 @@ extension VideoActor {
                 queueEntry.order = index
             }
         } catch {
-            log.error("insertQueueEntries: \(error)")
+            Logger.log.error("insertQueueEntries: \(error)")
         }
     }
 
@@ -237,7 +235,7 @@ extension VideoActor {
                 queueEntry.order -= 1
             }
         } catch {
-            log.error("No queue entry found to delete")
+            Logger.log.error("No queue entry found to delete")
         }
     }
 }

@@ -6,8 +6,6 @@
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "AddToLibraryView")
-
 struct AddToLibraryView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -111,7 +109,7 @@ struct AddToLibraryView: View {
     func handleTextFieldSubmit(_ inputText: String? = nil) {
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
-            log.warning("no url found")
+            Logger.log.warning("no url found")
             return
         }
         let (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
@@ -160,7 +158,7 @@ struct AddToLibraryView: View {
                 addVideosSuccess = true
                 return
             } catch {
-                log.error("\(error)")
+                Logger.log.error("\(error)")
                 addVideosSuccess = false
                 isLoadingVideos = false
             }

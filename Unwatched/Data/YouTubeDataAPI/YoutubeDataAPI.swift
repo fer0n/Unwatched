@@ -1,8 +1,6 @@
 import Foundation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "YoutubeDataAPI")
-
 struct YoutubeDataAPI {
     static var apiKey: String {
         let apiKey = Credentials.apiKey
@@ -20,18 +18,18 @@ struct YoutubeDataAPI {
             return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: handle)
         } catch {
             lemnosLifeError = error
-            log.error("\(error)")
+            Logger.log.error("\(error)")
         }
         do {
             return try await YoutubeDataAPI.getYtChannelIdViaList(handle)
         } catch {
-            log.error("\(error)")
+            Logger.log.error("\(error)")
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername(lemnosLifeError?.localizedDescription)
     }
 
     static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
-        log.info("getLemnoslifeChannelId")
+        Logger.log.info("getLemnoslifeChannelId")
         let url = "https://yt.lemnoslife.com/channels?handle=@\(handle)"
         let channelInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: YtChannelId.self)
         if let item = channelInfo.items.first {
@@ -41,9 +39,9 @@ struct YoutubeDataAPI {
     }
 
     private static func getYtChannelIdViaList(_ handle: String) async throws -> String {
-        log.info("getYtChannelIdViaList")
+        Logger.log.info("getYtChannelIdViaList")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
-        log.info("apiUrl \(apiUrl)")
+        Logger.log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
         if let item = response.items.first {
@@ -72,9 +70,9 @@ struct YoutubeDataAPI {
         if youtubeVideoId.isEmpty {
             throw VideoError.noYoutubeId
         }
-        log.info("getYtVideoInfo")
+        Logger.log.info("getYtVideoInfo")
         let apiUrl = "\(baseUrl)videos?key=\(apiKey)&id=\(youtubeVideoId)&part=snippet,contentDetails"
-        log.info("apiUrl \(apiUrl)")
+        Logger.log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtVideoInfo.self)
         if let item = response.items.first {

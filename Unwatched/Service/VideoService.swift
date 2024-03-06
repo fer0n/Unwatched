@@ -3,22 +3,20 @@ import SwiftUI
 import Observation
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "VideoService")
-
 struct VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         container: ModelContainer
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
-            log.info("loadNewVideosInBg")
+            Logger.log.info("loadNewVideosInBg")
             let repo = VideoActor(modelContainer: container)
             do {
                 return try await repo.loadVideos(
                     subscriptionIds
                 )
             } catch {
-                log.error("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -32,7 +30,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.markVideoWatched(videoId)
             } catch {
-                log.error("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -50,7 +48,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.moveQueueEntry(from: source, to: destination)
             } catch {
-                log.error("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -113,7 +111,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.addToBottomQueue(videoId: videoId)
             } catch {
-                log.error("addToBottomQueue: \(error)")
+                Logger.log.error("addToBottomQueue: \(error)")
                 throw error
             }
         }
@@ -125,7 +123,7 @@ struct VideoService {
                                at index: Int = 1,
                                addImage: Bool = false,
                                container: ModelContainer) -> Task<(), Error> {
-        log.info("addForeignUrls")
+        Logger.log.info("addForeignUrls")
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
@@ -174,7 +172,7 @@ struct VideoService {
             try context.delete(model: Video.self)
             try context.save()
         } catch {
-            log.error("Failed to clear everything")
+            Logger.log.error("Failed to clear everything")
         }
     }
 

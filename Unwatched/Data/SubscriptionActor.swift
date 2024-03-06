@@ -7,8 +7,6 @@ import Foundation
 import SwiftData
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "SubscriptionActor")
-
 @ModelActor
 actor SubscriptionActor {
     private func unarchive(_ sub: Subscription) {
@@ -20,7 +18,7 @@ actor SubscriptionActor {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
             unarchive(sub)
-            log.info("successfully subscribed via subId")
+            Logger.log.info("successfully subscribed via subId")
             try modelContext.save()
             return
         }
@@ -37,7 +35,7 @@ actor SubscriptionActor {
             return
         }
         guard let channelInfo = channelInfo else {
-            log.info("no channel info here")
+            Logger.log.info("no channel info here")
             return
         }
         // if it doesn't exist get url and run the regular subscription flow
@@ -75,7 +73,7 @@ actor SubscriptionActor {
                             return (subState, sendableSub)
                         }
                     } else {
-                        log.warning("channel info has no url")
+                        Logger.log.warning("channel info has no url")
                         throw SubscriptionError.noInfoFoundToSubscribeTo
                     }
                 }
@@ -105,7 +103,7 @@ actor SubscriptionActor {
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(title: sub.title)
         guard let channelId = sub.youtubeChannelId else {
-            log.info("no channelId for verify")
+            Logger.log.info("no channelId for verify")
             subState.error = "no channelId found"
             return (subState, nil)
         }
@@ -114,7 +112,7 @@ actor SubscriptionActor {
             channelId: sub.youtubeChannelId,
             unarchiveSubIfAvailable
         ) {
-            log.info("found existing sub via channelId")
+            Logger.log.info("found existing sub via channelId")
             subState.title = title
             subState.alreadyAdded = true
             return (subState, nil)
@@ -142,7 +140,7 @@ actor SubscriptionActor {
             if let title = getTitleIfSubscriptionExists(
                 userName: subState.userName, unarchiveSubIfAvailable
             ) {
-                log.info("loadSubscriptionInfo: found existing sub via userName")
+                Logger.log.info("loadSubscriptionInfo: found existing sub via userName")
                 subState.title = title
                 subState.alreadyAdded = true
                 return (subState, nil)
@@ -151,7 +149,7 @@ actor SubscriptionActor {
             if let sendableSub = try await SubscriptionActor.getSubscription(url: url, userName: subState.userName) {
                 if let channelId = sendableSub.youtubeChannelId,
                    let title = getTitleIfSubscriptionExists(channelId: channelId, unarchiveSubIfAvailable) {
-                    log.info("loadSubscriptionInfo: found existing sub via channelId")
+                    Logger.log.info("loadSubscriptionInfo: found existing sub via channelId")
                     subState.title = title
                     subState.alreadyAdded = true
                     return (subState, nil)
@@ -182,7 +180,7 @@ actor SubscriptionActor {
 
     private func updateSubscriptionInfo(_ sub: Subscription, info: ChannelInfo?) {
         guard let info = info else {
-            log.info("no info to update subscription with")
+            Logger.log.info("no info to update subscription with")
             return
         }
         sub.youtubeUserName = sub.youtubeUserName ?? info.userName
@@ -254,7 +252,7 @@ actor SubscriptionActor {
         })
         fetch.fetchLimit = 1
         guard let first = try modelContext.fetch(fetch).first else {
-            log.warning("nothing found to unsubscribe")
+            Logger.log.warning("nothing found to unsubscribe")
             return
         }
         try deleteSubscriptions([first.persistentModelID])

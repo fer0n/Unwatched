@@ -8,8 +8,6 @@ import SwiftData
 import SwiftUI
 import OSLog
 
-private let log = Logger(subsystem: Const.bundleId, category: "ImageService")
-
 struct ImageService {
 
     static func persistImages(
@@ -22,7 +20,7 @@ struct ImageService {
                 // Video
                 if let video = context.model(for: holderId) as? Video {
                     if video.cachedImage != nil {
-                        log.info("video !has image")
+                        Logger.log.info("video !has image")
                         return
                     }
                     let imageCache = CachedImage(info.url, imageData: info.data)
@@ -33,7 +31,7 @@ struct ImageService {
                 // Subscription
                 if let sub = context.model(for: holderId) as? Subscription {
                     if sub.cachedImage != nil {
-                        log.info("sub !has image")
+                        Logger.log.info("sub !has image")
                         return
                     }
                     let imageCache = CachedImage(info.url, imageData: info.data)
@@ -41,7 +39,7 @@ struct ImageService {
                     sub.cachedImage = imageCache
                 }
 
-                log.info("saved")
+                Logger.log.info("saved")
             }
             try context.save()
         }
