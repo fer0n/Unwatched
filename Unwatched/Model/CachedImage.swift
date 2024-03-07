@@ -10,6 +10,7 @@ import SwiftData
     var imageUrl: URL?
     @Attribute(.externalStorage) var imageData: Data?
     var video: Video?
+    var subscription: Subscription?
     var createdOn: Date?
 
     init(_ imageUrl: URL, imageData: Data, video: Video? = nil) {

@@ -12,25 +12,33 @@ struct CoreRefreshButton: View {
     @State private var rotation = 0.0
 
     var body: some View {
-        Button {
-            Task { @MainActor in
-                await refresh()
+        HStack {
+            if refresher.isSyncingIcloud {
+                Image(systemName: "icloud.and.arrow.down.fill")
+                    .opacity(0.5)
             }
-        } label: {
-            Image(systemName: Const.refreshSF)
-                .font(.system(size: 13))
-                .rotationEffect(Angle(degrees: rotation))
-        }
-        .task(id: refresher.isLoading) {
-            if refresher.isLoading {
-                nextTurn()
+            Button {
+                Task { @MainActor in
+                    await refresh()
+                }
+            } label: {
+                Image(systemName: Const.refreshSF)
+                    .rotationEffect(Angle(degrees: rotation))
             }
+            .disabled(refresher.isSyncingIcloud)
         }
+        .font(.system(size: 13))
         .modifier(AnimationCompletionCallback(animatedValue: rotation) {
             if refresher.isLoading {
                 nextTurn()
             }
         })
+        .task(id: refresher.isLoading) {
+            if refresher.isLoading {
+                nextTurn()
+            }
+        }
+
     }
 
     @MainActor

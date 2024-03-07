@@ -11,7 +11,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
     typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
-    @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
+    @Relationship(deleteRule: .cascade, inverse: \CachedImage.subscription) var cachedImage: CachedImage?
     var link: URL?
 
     var title: String = "-"

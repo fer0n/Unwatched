@@ -36,7 +36,7 @@ struct SetupView: View {
                 case .active:
                     player.isInBackground = false
                     Logger.log.info("Active")
-                    await refresher.refreshOnStartup()
+                    await refresher.handleBecameActive()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 case .background:
                     Logger.log.info("background")
@@ -44,6 +44,7 @@ struct SetupView: View {
                     Task {
                         await saveData()
                     }
+                    refresher.handleBecameInactive()
                     RefreshManager.scheduleVideoRefresh()
                 default:
                     break

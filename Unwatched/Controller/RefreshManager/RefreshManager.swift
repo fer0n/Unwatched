@@ -5,19 +5,32 @@
 
 import Foundation
 import SwiftData
+import Combine
+import CoreData
 import BackgroundTasks
 import OSLog
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
     @MainActor var isLoading: Bool = false
+    @MainActor var isSyncingIcloud: Bool = false
 
     @ObservationIgnored var loadingStart: Date?
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
-    init() { }
+    @ObservationIgnored var cancellables: Set<AnyCancellable> = []
+    @ObservationIgnored var syncDoneTask: Task<(), Never>?
+
+    init() {
+        setupCloudKitListener()
+    }
+
+    deinit {
+        cancelCloudKitListener()
+    }
 
     func refreshAll() async {
+        cancelCloudKitListener()
         await refresh()
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
@@ -65,7 +78,34 @@ import OSLog
         }
     }
 
-    func refreshOnStartup() async {
+    func handleBecameActive() async {
+        if cancellables.isEmpty {
+            setupCloudKitListener()
+        }
+        Logger.log.info("iCloud sync: refreshOnStartup started")
+        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+        if enableIcloudSync {
+            syncDoneTask?.cancel()
+            syncDoneTask = Task {
+                do {
+                    // timeout in case CloudKit sync doesn't start
+                    try await Task.sleep(s: 3)
+                    await executeRefreshOnStartup()
+                } catch {
+                    Logger.log.info("error: \(error)")
+                }
+            }
+        } else {
+            await executeRefreshOnStartup()
+        }
+    }
+
+    func handleBecameInactive() {
+        cancelCloudKitListener()
+    }
+
+    func executeRefreshOnStartup() async {
+        Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
         let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
 
         if refreshOnStartup {
@@ -77,9 +117,13 @@ import OSLog
                 Logger.log.info("refreshing now")
                 await self.refreshAll()
             }
+            cancelCloudKitListener()
         }
     }
+}
 
+// Background Refresh
+extension RefreshManager {
     static func scheduleVideoRefresh() {
         Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)

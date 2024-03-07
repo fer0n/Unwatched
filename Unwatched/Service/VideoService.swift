@@ -1,6 +1,5 @@
 import SwiftData
 import SwiftUI
-import Observation
 import OSLog
 
 struct VideoService {

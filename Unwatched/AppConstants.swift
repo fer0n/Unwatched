@@ -89,6 +89,7 @@ struct Const {
     static let allVideosSortOrder = "allVideosSortOrder"
     static let hasNewInboxItems = "hasNewInboxItems"
     static let showNewInboxBadge = "showNewInboxBadge"
+    static let enableIcloudSync = "enableIcloudSync"
     static let showFullscreenControls = "showFullscreenControls"
 
     static let selectedDetent = "selectedDetent"
