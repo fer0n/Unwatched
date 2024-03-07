@@ -171,22 +171,6 @@
         }
       }
     },
-    "addYoutubeUrl" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube URL hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add YouTube URL"
-          }
-        }
-      }
-    },
     "allVideos" : {
       "localizations" : {
         "de" : {
@@ -954,6 +938,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "HTTP request fehlgeschlagen (message)"
+          }
+        }
+      }
+    },
+    "icloudSync" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        }
+      }
+    },
+    "icloudSyncHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experimentelle Einstellung. Erstelle ein Backup bevor der Aktivierung. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is experimental, make sure to backup everything before enabling this. Requires app restart to take effect."
           }
         }
       }
@@ -1742,6 +1758,38 @@
         }
       }
     },
+    "removedDuplicates %lld %lld %lld %lld %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld\nBilder: %5$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld\nImages: %5$lld"
+          }
+        }
+      }
+    },
+    "removeDuplicates" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplikate Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Duplicates"
+          }
+        }
+      }
+    },
     "restoreBackup" : {
       "localizations" : {
         "de" : {
@@ -2207,6 +2255,22 @@
         }
       }
     },
+    "syncToIcloud" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit iCloud synchronisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync via iCloud"
+          }
+        }
+      }
+    },
     "unsubscribe" : {
       "localizations" : {
         "de" : {
@@ -2347,22 +2411,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open YouTube Takeout"
-          }
-        }
-      }
-    },
-    "youtubeUrl" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube URL"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube URL"
           }
         }
       }

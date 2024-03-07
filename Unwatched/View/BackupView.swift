@@ -13,6 +13,7 @@ struct BackupView: View {
 
     @AppStorage(Const.automaticBackups) var automaticBackups = true
     @AppStorage(Const.minimalBackups) var minimalBackups = true
+    @AppStorage(Const.enableIcloudSync) var enableIcloudSync = false
 
     @State var showFileImporter = false
     @State var showDeleteConfirmation = false
@@ -27,6 +28,13 @@ struct BackupView: View {
         let backupType = Const.backupType ?? .json
 
         List {
+
+            Section(header: Text("icloudSync"), footer: Text("icloudSyncHelper")) {
+                Toggle(isOn: $enableIcloudSync) {
+                    Text("syncToIcloud")
+                }
+                .tint(.teal)
+            }
 
             Section(header: Text("automaticBackups"), footer: Text("automaticBackupsHelper")) {
                 Toggle(isOn: $automaticBackups) {
@@ -255,6 +263,12 @@ struct BackupView: View {
 
 #Preview {
     BackupView()
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
+        .environment(ImageCacheManager())
+        .environment(Alerter())
 }
 
 struct FileInfo {

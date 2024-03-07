@@ -3,7 +3,6 @@ import SwiftData
 
 struct SideloadingView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
 
     @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
     var sidedloadedSubscriptions: [Subscription]
@@ -18,7 +17,7 @@ struct SideloadingView: View {
             } else {
                 List {
                     SubscriptionListView(
-                        sort: subscriptionSortOrder,
+                        sort: .title,
                         filter: #Predicate<Subscription> { $0.isArchived == true },
                         manualFilter: { $0.videos?.isEmpty == false }
                     )

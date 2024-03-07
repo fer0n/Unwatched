@@ -14,13 +14,22 @@ struct UnwatchedApp: App {
     @State var navManager = NavigationManager.load()
     @State var alerter: Alerter = Alerter()
 
-    var sharedModelContainer: ModelContainer = {
+    var sharedModelContainer: ModelContainer
+
+    init() {
+        let enableIcloudSync = UserDefaults.standard.object(forKey: Const.enableIcloudSync) as? Bool ?? false
         do {
-            return try ModelContainer(for: DataController.schema, configurations: [DataController.modelConfig])
+            let config = ModelConfiguration(
+                schema: DataController.schema,
+                isStoredInMemoryOnly: false,
+                cloudKitDatabase: enableIcloudSync ? .automatic : .none
+            )
+
+            sharedModelContainer = try ModelContainer(for: DataController.schema, configurations: [config])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {
