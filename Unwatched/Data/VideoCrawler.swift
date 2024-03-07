@@ -55,7 +55,7 @@ struct VideoCrawler {
         let input = description
         do {
             let regexTimeThenTitle = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s+[-–•]?\s*(.+)"#)
-            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)[-–:•]+\s?(\d+(?:\:\d+)+)"#)
+            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)[-– :•]+\s?(\d+(?:\:\d+)+)"#)
 
             var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
             if chapters?.isEmpty == true || chapters == nil {
