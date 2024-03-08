@@ -31,7 +31,8 @@ struct ChapterList: View {
                         ChapterListItem(chapter: chapter,
                                         toggleChapter: toggleChapter,
                                         timeText: getTimeText(chapter, isCurrent: isCurrent))
-                            .padding(isCompact ? 3 : 10)
+                            .padding(isCompact ? 4 : 10)
+                            .padding(.trailing, 4)
                             .background(
                                 backgroundColor
                                     .clipShape(RoundedRectangle(cornerRadius: 15.0))

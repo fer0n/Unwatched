@@ -48,11 +48,17 @@ struct FullscreenPlayerControls: View {
             }
             .popover(isPresented: $showChapters) {
                 if let video = player.video {
-                    ScrollView {
-                        ChapterList(video: video, isCompact: true)
-                            .padding(6)
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            ChapterList(video: video, isCompact: true)
+                                .padding(6)
+                        }
+                        .onAppear {
+                            proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
+                        }
+                        .scrollIndicators(.hidden)
+                        .presentationCompactAdaptation(.popover)
                     }
-                    .presentationCompactAdaptation(.popover)
                 }
             }
             .frame(maxHeight: .infinity)
