@@ -171,6 +171,22 @@
         }
       }
     },
+    "addYoutubeUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube URL hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add YouTube URL"
+          }
+        }
+      }
+    },
     "allVideos" : {
       "localizations" : {
         "de" : {
@@ -2411,6 +2427,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open YouTube Takeout"
+          }
+        }
+      }
+    },
+    "youtubeUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube URL"
           }
         }
       }

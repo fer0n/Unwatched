@@ -117,7 +117,7 @@ struct VideoListItem: View {
                     Color.backgroundColor
                         .frame(width: 160, height: 90)
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 15.0))
+                .clipShape(.rect(cornerRadius: 15.0))
                 .padding(showVideoStatus ? 5 : 0)
 
                 VideoListItemDetails(video: video)

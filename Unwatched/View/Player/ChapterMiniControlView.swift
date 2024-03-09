@@ -178,7 +178,7 @@ struct ChapterMiniControlView: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(Color.backgroundGray)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .clipShape(.rect(cornerRadius: 10))
         }
     }
 
