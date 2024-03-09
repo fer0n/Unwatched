@@ -35,7 +35,7 @@ struct ChapterList: View {
                             .padding(.trailing, 4)
                             .background(
                                 backgroundColor
-                                    .clipShape(RoundedRectangle(cornerRadius: 15.0))
+                                    .clipShape(.rect(cornerRadius: 15.0))
                             )
                             .opacity(chapter.isActive ? 1 : 0.6)
                             .id(chapter.persistentModelID)
