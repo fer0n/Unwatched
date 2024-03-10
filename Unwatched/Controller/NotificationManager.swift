@@ -10,8 +10,8 @@ import OSLog
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) {
-        let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInbox)
-        let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueue)
+        let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
+        let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
         if let (title, body) = newVideoInfo.getNewVideoText(
             includeInbox: notifyAboutInbox,
@@ -61,7 +61,7 @@ struct NotificationManager {
     }
 
     static func notifyHasRun() {
-        if UserDefaults.standard.bool(forKey: Const.monitorBackgroundFetches) {
+        if UserDefaults.standard.bool(forKey: Const.monitorBackgroundFetchesNotification) {
             let title = String(localized: "debugNoNewVideos")
             let body = String(localized: "debugNoNewVideosSubtitle")
             sendNotification(title, body: body)
@@ -75,11 +75,25 @@ struct NotificationManager {
         return [Const.tapDestination: tab.rawValue]
     }
 
-    static func askNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
-            if let error {
-                Logger.log.error("Error when asking for notification permission: \(error)")
+    static func askNotificationPermission() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
+                if let error = error {
+                    Logger.log.error("Error when asking for notification permission: \(error)")
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
             }
+        }
+    }
+
+    static func areNotificationsDisabled() async -> Bool {
+        await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().getNotificationSettings(completionHandler: { settings in
+                let isDenied = settings.authorizationStatus == .denied
+                continuation.resume(returning: isDenied)
+            })
         }
     }
 }

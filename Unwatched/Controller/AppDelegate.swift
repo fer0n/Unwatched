@@ -22,6 +22,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     ) -> Bool {
         woraroundInitialWebViewDelay()
         notificationCenter.delegate = self
+        notificationCenter.removeAllDeliveredNotifications()
+        notificationCenter.removeAllPendingNotificationRequests()
         return true
     }
 

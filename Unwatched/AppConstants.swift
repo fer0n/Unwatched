@@ -95,7 +95,7 @@ struct Const {
     static let selectedDetent = "selectedDetent"
     static let hideMenuOnPlay = "hideMenuOnPlay"
 
-    static let videoAddedToInbox = "videoAddedToInbox"
-    static let videoAddedToQueue = "videoAddedToQueue"
-    static let monitorBackgroundFetches = "monitorBackgroundFetches"
+    static let videoAddedToInboxNotification = "videoAddedToInboxNotification"
+    static let videoAddedToQueueNotification = "videoAddedToQueueNotification"
+    static let monitorBackgroundFetchesNotification = "monitorBackgroundFetchesNotification"
 }

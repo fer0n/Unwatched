@@ -120,6 +120,12 @@ struct CleanupService {
 
     func sortVideos(_ videos: [Video]) -> [Video] {
         videos.sorted { (vid0: Video, vid1: Video) -> Bool in
+            let sub0 = vid0.subscription != nil
+            let sub1 = vid1.subscription != nil
+            if sub0 != sub1 {
+                return sub1
+            }
+
             let queue0 = vid0.queueEntry != nil
             let queue1 = vid1.queueEntry != nil
             if queue0 != queue1 {

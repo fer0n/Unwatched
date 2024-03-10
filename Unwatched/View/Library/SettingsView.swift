@@ -8,6 +8,7 @@ import OSLog
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(Alerter.self) var alerter
 
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
@@ -21,15 +22,16 @@ struct SettingsView: View {
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
 
-    @AppStorage(Const.videoAddedToInbox) var videoAddedToInbox: Bool = false
-    @AppStorage(Const.videoAddedToQueue) var videoAddedToQueue: Bool = false
+    @AppStorage(Const.videoAddedToInboxNotification) var videoAddedToInbox: Bool = false
+    @AppStorage(Const.videoAddedToQueueNotification) var videoAddedToQueue: Bool = false
 
     @State var isExportingAll = false
+    @State var notificationsDisabled = false
 
     var body: some View {
         VStack {
             List {
-                Section(header: Text("notifications"), footer: Text("notificationsHelper")) {
+                Section(header: Text("notifications"), footer: notificationsDisabled ? Text("notificationsDisabledHelper") : Text("notificationsHelper")) {
                     Toggle(isOn: $videoAddedToInbox) {
                         Text("videoAddedToInbox")
                     }
@@ -38,6 +40,7 @@ struct SettingsView: View {
                         Text("videoAddedToQueue")
                     }
                 }
+                .disabled(notificationsDisabled)
 
                 Section("videoSettings") {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
@@ -48,12 +51,12 @@ struct SettingsView: View {
                     .pickerStyle(.menu)
                     .onChange(of: videoAddedToQueue) {
                         if videoAddedToQueue {
-                            NotificationManager.askNotificationPermission()
+                            handleNotificationPermission()
                         }
                     }
                     .onChange(of: videoAddedToInbox) {
                         if videoAddedToInbox {
-                            NotificationManager.askNotificationPermission()
+                            handleNotificationPermission()
                         }
                     }
                 }
@@ -148,12 +151,27 @@ struct SettingsView: View {
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
         .tint(.teal)
+        .onAppear {
+            Task {
+                notificationsDisabled = await NotificationManager.areNotificationsDisabled()
+            }
+        }
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
         let container = modelContext.container
         let result = try? await SubscriptionService.getAllFeedUrls(container)
         return result ?? []
+    }
+
+    func handleNotificationPermission() {
+        Task {
+            do {
+                try await NotificationManager.askNotificationPermission()
+            } catch {
+                alerter.showError(error)
+            }
+        }
     }
 }
 
