@@ -48,11 +48,6 @@ struct VideoNotAvailableView: View {
         .onTapGesture {
             showMenu()
         }
-        .onAppear {
-            if player.video == nil {
-                showMenu()
-            }
-        }
         .gesture(
             DragGesture(minimumDistance: 30, coordinateSpace: .local)
                 .updating($dragState) { value, state, _ in
