@@ -7,7 +7,9 @@ import SwiftUI
 
 struct DebugView: View {
     @Environment(\.modelContext) var modelContext
-    @AppStorage(Const.monitorBackgroundFetches) var monitorBackgroundFetches: Bool = false
+    @Environment(Alerter.self) var alerter
+
+    @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
@@ -43,9 +45,13 @@ struct DebugView: View {
             }
         }
         .tint(.teal)
-        .onChange(of: monitorBackgroundFetches) {
+        .task(id: monitorBackgroundFetches) {
             if monitorBackgroundFetches {
-                NotificationManager.askNotificationPermission()
+                do {
+                    try await NotificationManager.askNotificationPermission()
+                } catch {
+                    alerter.showError(error)
+                }
             }
         }
         .navigationTitle("debug")

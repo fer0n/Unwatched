@@ -1515,6 +1515,22 @@
         }
       }
     },
+    "notificationsDisabledHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benachrichtigungen sind für Unwatched deaktiviert. Aktiviere sie zuerst in den Einstellungen, falls du sie erhalten möchtest."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications have been disabled for Unwatched. If you wish to receive notifications, you need to enable them in Settings first."
+          }
+        }
+      }
+    },
     "notificationsHelper" : {
       "localizations" : {
         "de" : {
