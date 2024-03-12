@@ -17,7 +17,7 @@ struct UnwatchedApp: App {
     var sharedModelContainer: ModelContainer
 
     init() {
-        let enableIcloudSync = UserDefaults.standard.object(forKey: Const.enableIcloudSync) as? Bool ?? false
+        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         do {
             let config = ModelConfiguration(
                 schema: DataController.schema,
