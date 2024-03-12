@@ -35,6 +35,7 @@ struct SetupView: View {
                 switch scenePhase {
                 case .active:
                     player.isInBackground = false
+                    clearNotifications()
                     Logger.log.info("Active")
                     await refresher.handleBecameActive()
                     refresher.handleAutoBackup(UIDevice.current.name)
@@ -50,6 +51,12 @@ struct SetupView: View {
                     break
                 }
             }
+    }
+
+    func clearNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
     }
 
     func restoreNowPlayingVideo() {
