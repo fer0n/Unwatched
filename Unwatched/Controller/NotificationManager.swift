@@ -96,4 +96,9 @@ struct NotificationManager {
             })
         }
     }
+
+    static func setBadgeNumer(_ number: Int) {
+        let center = UNUserNotificationCenter.current()
+        center.setBadgeCount(number)
+    }
 }

@@ -1536,13 +1536,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Neue Videos werden im Hintergrund abgerufen und eine Benachrichtigung ausgelöst. Dies ist nicht mit dem Energiesparmodus kompatibel und kann verzögert sein."
+            "value" : "Neue Videos werden im Hintergrund lokal geladen und lösen eine Benachrichtigung aus."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New videos will be fetched in the background and trigger a notification. This is not compatible with low power mode and may be delayed."
+            "value" : "New videos will be fetched in the background on device and trigger a notification. This will not be instant."
           }
         }
       }

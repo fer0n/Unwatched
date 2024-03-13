@@ -146,6 +146,7 @@ extension RefreshManager {
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
         Logger.log.info("Background task running now")
         do {
+            scheduleVideoRefresh()
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
@@ -158,9 +159,9 @@ extension RefreshManager {
                 NotificationManager.notifyHasRun()
             } else {
                 Logger.log.info("notifyNewVideos")
+                NotificationManager.setBadgeNumer(1)
                 NotificationManager.notifyNewVideos(newVideos)
             }
-            scheduleVideoRefresh()
         } catch {
             Logger.log.error("Error during background refresh: \(error)")
         }
