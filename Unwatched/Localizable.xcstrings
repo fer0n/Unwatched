@@ -267,22 +267,6 @@
         }
       }
     },
-    "backup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Backup"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Backup"
-          }
-        }
-      }
-    },
     "backupNow" : {
       "localizations" : {
         "de" : {
@@ -471,22 +455,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This cannot be undone. You can create a backup if you wish to restore the data in the future."
-          }
-        }
-      }
-    },
-    "contact" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kontakt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Contact"
           }
         }
       }
@@ -931,6 +899,22 @@
         }
       }
     },
+    "hideShortsEverywhereHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts sind weiterhin in der Inbox, Queue und Gesehen-Ansicht sichtbar. Sie werden nicht länger unter \"Alle Videos\" und bei Abos angezeigt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts will still be visible in the Inbox, Queue, and Watch History. But they will be hidden from \"All Videos\" and under subscriptions."
+          }
+        }
+      }
+    },
     "howToExportYoutubeSubscriptions" : {
       "localizations" : {
         "de" : {
@@ -1302,6 +1286,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Videos"
+          }
+        }
+      }
+    },
+    "newVideosHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wo neue Videos hinzugefügt werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where new videos will be added to"
           }
         }
       }
@@ -1966,22 +1966,6 @@
         }
       }
     },
-    "shareSheet" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share Sheet"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share Sheet"
-          }
-        }
-      }
-    },
     "shortsDetection" : {
       "localizations" : {
         "de" : {
@@ -2051,13 +2035,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos mit \"#Shorts\" im Titel/Beschreibung gelten als \"sicher\" und sind mit \"#s.\" (\".-Suffix\") gekennzeichnet. Videos mit Hashtags im Titel gelten als \"moderat\" und sind mit \"#s\" gekennzeichnet."
+            "value" : "\"Sicher\": Videos mit \"#Shorts\" im Video Titel oder der Beschreibung \"Moderat\": Videos mit Hashtags im Titel \nVideos die als \"Sicher\" identifiziert werden sind mit \"#s.\" markiert, \"Moderate\" mit \"#s\"."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos with \"#Shorts\" in the title/description are considered \"safe\" and marked with \"#s.\" (\".\" suffix). Videos with hashtags inside the title are considered \"moderate\" and marked with \"#s\"."
+            "value" : "\"Safe\": Videos with \"#Shorts\" in the title/description \"Moderate\": Videos with hashtags inside the title  Videos detected as \"Safe\" are marked with \"#s.\", \"Moderate\" videos are marked with \"#s\"."
           }
         }
       }
@@ -2074,6 +2058,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Fullscreen Controls"
+          }
+        }
+      }
+    },
+    "showFullscreenControlsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Während ein Video spielt, halte dein iPhone horizontal, um das Video im Vollbildmodus abzuspielen. Das ist hilfreich, wenn du Videos kontinuierlich abspielen möchtest, ohne wiederholt in den Vollbildmodus wechseln zu müssen. Steuerelemente, z.B. für Kapitel, können am rechten Rand des Videos angezeigt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "While playing a video, hold your iPhone horizontal to play the video fullscreen. This is helpful if you want to keep playing videos continuously without having to enter fullscreen repeatedly. Controls, such as for chapters, can be shown on the right edge of the video."
           }
         }
       }

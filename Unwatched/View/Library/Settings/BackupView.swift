@@ -132,7 +132,7 @@ struct BackupView: View {
                             .cancel()
                         ])
         }
-        .navigationTitle("backup")
+        .navigationTitle("userData")
         .navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [backupType]) { result in
