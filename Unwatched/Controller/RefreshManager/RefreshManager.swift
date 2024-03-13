@@ -159,7 +159,7 @@ extension RefreshManager {
                 NotificationManager.notifyHasRun()
             } else {
                 Logger.log.info("notifyNewVideos")
-                NotificationManager.setBadgeNumer(1)
+                NotificationManager.increaseBadgeNumer(by: newVideos.videoCount)
                 NotificationManager.notifyNewVideos(newVideos)
             }
         } catch {
