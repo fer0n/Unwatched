@@ -57,6 +57,7 @@ struct SetupView: View {
         let center = UNUserNotificationCenter.current()
         center.removeAllDeliveredNotifications()
         center.removeAllPendingNotificationRequests()
+        center.setBadgeCount(0)
     }
 
     func restoreNowPlayingVideo() {
