@@ -97,8 +97,23 @@ struct NotificationManager {
         }
     }
 
-    static func setBadgeNumer(_ number: Int) {
+    static func increaseBadgeNumer(by number: Int) {
+        let oldCount = UserDefaults.standard.integer(forKey: Const.badgeCount)
+        let newValue = oldCount + number
+
         let center = UNUserNotificationCenter.current()
-        center.setBadgeCount(number)
+        if UserDefaults.standard.bool(forKey: Const.showNotificationBadge) {
+            center.setBadgeCount(newValue)
+        }
+        UserDefaults.standard.set(newValue, forKey: Const.badgeCount)
+    }
+
+    static func clearNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
+
+        center.setBadgeCount(0)
+        UserDefaults.standard.setValue(0, forKey: Const.badgeCount)
     }
 }

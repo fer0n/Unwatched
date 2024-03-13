@@ -24,6 +24,7 @@ struct SettingsView: View {
 
     @AppStorage(Const.videoAddedToInboxNotification) var videoAddedToInbox: Bool = false
     @AppStorage(Const.videoAddedToQueueNotification) var videoAddedToQueue: Bool = false
+    @AppStorage(Const.showNotificationBadge) var showNotificationBadge: Bool = false
 
     @State var isExportingAll = false
     @State var notificationsDisabled = false
@@ -31,13 +32,20 @@ struct SettingsView: View {
     var body: some View {
         VStack {
             List {
-                Section(header: Text("notifications"), footer: notificationsDisabled ? Text("notificationsDisabledHelper") : Text("notificationsHelper")) {
+                Section(header: Text("notifications"),
+                        footer: notificationsDisabled
+                            ? Text("notificationsDisabledHelper")
+                            : Text("notificationsHelper")) {
                     Toggle(isOn: $videoAddedToInbox) {
                         Text("videoAddedToInbox")
                     }
 
                     Toggle(isOn: $videoAddedToQueue) {
                         Text("videoAddedToQueue")
+                    }
+
+                    Toggle(isOn: $showNotificationBadge) {
+                        Text("showNotificationBadge")
                     }
                 }
                 .disabled(notificationsDisabled)
@@ -56,6 +64,11 @@ struct SettingsView: View {
                     }
                     .onChange(of: videoAddedToInbox) {
                         if videoAddedToInbox {
+                            handleNotificationPermission()
+                        }
+                    }
+                    .onChange(of: showNotificationBadge) {
+                        if showNotificationBadge {
                             handleNotificationPermission()
                         }
                     }

@@ -98,4 +98,6 @@ struct Const {
     static let videoAddedToInboxNotification = "videoAddedToInboxNotification"
     static let videoAddedToQueueNotification = "videoAddedToQueueNotification"
     static let monitorBackgroundFetchesNotification = "monitorBackgroundFetchesNotification"
+    static let badgeCount = "badgeCount"
+    static let showNotificationBadge = "showNotificationBadge"
 }

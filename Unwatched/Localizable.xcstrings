@@ -2110,6 +2110,22 @@
         }
       }
     },
+    "showNotificationBadge" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icon Kennzeichen für neue Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icon Badge for new Videos"
+          }
+        }
+      }
+    },
     "showTabBarLabels" : {
       "localizations" : {
         "de" : {
