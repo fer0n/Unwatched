@@ -58,4 +58,12 @@ extension RefreshManager {
         }
         await executeRefreshOnStartup()
     }
+
+    func quickDuplicateCleanup() {
+        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+        guard enableIcloudSync, let container = container else {
+            return
+        }
+        _ = CleanupService.cleanupDuplicates(container, onlyIfDuplicateEntriesExist: true)
+    }
 }
