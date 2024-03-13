@@ -14,7 +14,7 @@ struct CoreRefreshButton: View {
     var body: some View {
         HStack {
             if refresher.isSyncingIcloud {
-                Image(systemName: "icloud.and.arrow.down.fill")
+                Image(systemName: "icloud.fill")
                     .opacity(0.5)
             }
             Button {

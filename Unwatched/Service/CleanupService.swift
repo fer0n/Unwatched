@@ -8,10 +8,11 @@ import SwiftUI
 import OSLog
 
 struct CleanupService {
-    static func cleanupDuplicates(_ container: ModelContainer) -> Task<RemovedDuplicatesInfo, Never> {
+    static func cleanupDuplicates(_ container: ModelContainer,
+                                  onlyIfDuplicateEntriesExist: Bool = false) -> Task<RemovedDuplicatesInfo, Never> {
         return Task(priority: .background) {
             let repo = CleanupActor(modelContainer: container)
-            return await repo.removeAllDuplicates()
+            return await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
         }
     }
 }
@@ -19,8 +20,14 @@ struct CleanupService {
 @ModelActor actor CleanupActor {
     var duplicateInfo = RemovedDuplicatesInfo()
 
-    func removeAllDuplicates() -> RemovedDuplicatesInfo {
+    func removeAllDuplicates(onlyIfDuplicateEntriesExist: Bool = false) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
+
+        if onlyIfDuplicateEntriesExist && !hasDuplicateEntries() {
+            Logger.log.info("Has duplicate inbox entries")
+            return duplicateInfo
+        }
+        Logger.log.info("removing duplicates now")
 
         removeSubscriptionDuplicates()
         removeVideoDuplicates()
@@ -33,13 +40,29 @@ struct CleanupService {
         return duplicateInfo
     }
 
-    func removeDuplicates<T>(_ items: [T],
-                             keySelector: (T) -> AnyHashable,
-                             sort: ([T]) -> [T]) -> [T] where T: Equatable {
+    private func hasDuplicateEntries() -> Bool {
+        return hasDuplicateInboxEntries()
+    }
+
+    private func hasDuplicateInboxEntries() -> Bool {
+        let fetch = FetchDescriptor<InboxEntry>()
+        if let entries = try? modelContext.fetch(fetch) {
+            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeChannelId })
+            return !duplicates.isEmpty
+        }
+        return false
+    }
+
+    func getDuplicates<T: Equatable>(from items: [T],
+                                     keySelector: (T) -> AnyHashable,
+                                     sort: (([T]) -> [T])? = nil) -> [T] {
         var removableDuplicates: [T] = []
         let grouped = Dictionary(grouping: items, by: keySelector)
         for (_, group) in grouped where group.count > 1 {
-            let sortedGroup = sort(group)
+            var sortedGroup = group
+            if let sort = sort {
+                sortedGroup = sort(group)
+            }
             let keeper = sortedGroup.first
             let removableItems = sortedGroup.filter { $0 != keeper }
             removableDuplicates.append(contentsOf: removableItems)
@@ -74,7 +97,7 @@ struct CleanupService {
         guard let subs = try? modelContext.fetch(fetch) else {
             return
         }
-        let duplicates = removeDuplicates(subs, keySelector: { $0.youtubeChannelId }, sort: sortSubscriptions)
+        let duplicates = getDuplicates(from: subs, keySelector: { $0.youtubeChannelId }, sort: sortSubscriptions)
         duplicateInfo.countSubscriptions = duplicates.count
         for duplicate in duplicates {
             if let videos = duplicate.videos {
@@ -111,7 +134,7 @@ struct CleanupService {
         guard let videos = try? modelContext.fetch(fetch) else {
             return
         }
-        let duplicates = removeDuplicates(videos, keySelector: { $0.url }, sort: sortVideos)
+        let duplicates = getDuplicates(from: videos, keySelector: { $0.url }, sort: sortVideos)
         duplicateInfo.countVideos = duplicates.count
         for duplicate in duplicates {
             deleteVideo(duplicate)
@@ -126,6 +149,16 @@ struct CleanupService {
                 return sub1
             }
 
+            let cleared0 = vid0.clearedInboxDate != nil
+            let cleared1 = vid1.clearedInboxDate != nil
+            if cleared0 != cleared1 {
+                return cleared1
+            }
+
+            if vid0.watched != vid1.watched {
+                return vid1.watched
+            }
+
             let queue0 = vid0.queueEntry != nil
             let queue1 = vid1.queueEntry != nil
             if queue0 != queue1 {
@@ -136,10 +169,6 @@ struct CleanupService {
             let inbox1 = vid1.inboxEntry != nil
             if inbox0 != inbox1 {
                 return inbox1
-            }
-
-            if vid0.watched != vid1.watched {
-                return vid1.watched
             }
 
             let sec0 = vid0.elapsedSeconds ?? 0
@@ -164,7 +193,7 @@ struct CleanupService {
         guard let images = try? modelContext.fetch(fetch) else {
             return
         }
-        let toBeRemoved = removeDuplicates(images, keySelector: { $0.imageUrl }, sort: sortImages)
+        let toBeRemoved = getDuplicates(from: images, keySelector: { $0.imageUrl }, sort: sortImages)
         duplicateInfo.countImages += toBeRemoved.count
         for items in toBeRemoved {
             modelContext.delete(items)
