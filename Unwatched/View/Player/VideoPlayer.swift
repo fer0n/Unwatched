@@ -135,6 +135,7 @@ struct VideoPlayer: View {
                 })
             }
         }
+        .tint(.neutralAccentColor)
         .contentShape(Rectangle())
         .simultaneousGesture(
             compactSize

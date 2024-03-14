@@ -71,7 +71,6 @@ struct SettingsView: View {
         }
         .navigationTitle("settings")
         .navigationBarTitleDisplayMode(.inline)
-        .tint(.teal)
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
@@ -91,13 +90,13 @@ struct LinkItemView<Content: View>: View {
             HStack(spacing: 20) {
                 content()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(.myAccentColor)
+                    .tint(.neutralAccentColor)
                 Text(label)
                     .lineLimit(1)
                     .truncationMode(.tail)
                 Spacer()
                 Image(systemName: Const.listItemChevronSF)
-                    .foregroundColor(.myAccentColor)
+                    .tint(.neutralAccentColor)
             }
         }
     }

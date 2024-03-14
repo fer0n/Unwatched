@@ -100,4 +100,6 @@ struct Const {
     static let monitorBackgroundFetchesNotification = "monitorBackgroundFetchesNotification"
     static let badgeCount = "badgeCount"
     static let showNotificationBadge = "showNotificationBadge"
+
+    static let themeColor = "themeColor"
 }

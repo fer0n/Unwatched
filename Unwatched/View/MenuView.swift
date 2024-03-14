@@ -67,7 +67,6 @@ struct MenuView: View {
                         .tag(tab.tag)
                 }
             }
-            .tint(.teal)
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
             let url = browserUrl.getUrl

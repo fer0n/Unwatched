@@ -11,6 +11,8 @@ struct AddToLibraryView: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(RefreshManager.self) var refresher
 
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+
     @Binding var subManager: SubscribeManager
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
@@ -25,10 +27,10 @@ struct AddToLibraryView: View {
         }, label: {
             Label {
                 Text("browseFeeds")
-                    .foregroundStyle(Color.myAccentColor)
+                    .foregroundStyle(Color.neutralAccentColor)
             } icon: {
                 Image(systemName: Const.appBrowserSF)
-                    .foregroundStyle(.teal)
+                    .tint(theme.color)
             }
         })
         HStack {
@@ -100,7 +102,7 @@ struct AddToLibraryView: View {
                     }
                 }
                 .buttonStyle(CapsuleButtonStyle())
-                .tint(Color.myAccentColor)
+                .tint(.neutralAccentColor)
                 .disabled(subManager.isLoading)
             }
         }

@@ -10,6 +10,7 @@ import OSLog
 
 struct QueueView: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -62,7 +63,7 @@ struct QueueView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
-                    .foregroundStyle(Color.myAccentColor)
+                    .foregroundStyle(Color.neutralAccentColor)
             }
             .toolbar {
                 if showCancelButton {
@@ -70,9 +71,9 @@ struct QueueView: View {
                 }
                 RefreshToolbarButton()
             }
-            .tint(.teal)
+            .tint(theme.color)
         }
-        .tint(Color.myAccentColor)
+        .tint(.neutralAccentColor)
         .sheet(isPresented: $showImportSheet) {
             NavigationStack {
                 ImportSubscriptionsView()
@@ -83,7 +84,7 @@ struct QueueView: View {
                             } label: {
                                 Image(systemName: Const.clearSF)
                             }
-                            .tint(Color.myAccentColor)
+                            .tint(.neutralAccentColor)
                         }
                     }
             }
@@ -140,7 +141,6 @@ struct QueueView: View {
                 .buttonStyle(.borderedProminent)
             }
         }
-        .tint(.teal)
         .contentShape(Rectangle())
         .dropDestination(for: URL.self) { items, _ in
             handleUrlDrop(items, at: 0)

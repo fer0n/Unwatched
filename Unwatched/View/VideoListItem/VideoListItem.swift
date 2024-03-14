@@ -96,7 +96,6 @@ struct VideoListItem: View {
                             } label: {
                                 Image(systemName: Const.clearSF)
                             }
-                            .tint(Color.myAccentColor)
                         }
                     }
                 }
@@ -216,7 +215,7 @@ struct VideoListItem: View {
         } label: {
             Image(systemName: "ellipsis.circle.fill")
         }
-        .tint(Color.gray)
+        .tint(.gray)
     }
 
     func addVideoToTopQueue() {
@@ -287,5 +286,6 @@ struct VideoListItem: View {
     .modelContainer(container)
     .environment(NavigationManager())
     .environment(PlayerManager())
+    .environment(SheetPositionReader())
     .environment(ImageCacheManager())
 }

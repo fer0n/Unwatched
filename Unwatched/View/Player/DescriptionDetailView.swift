@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct DescriptionDetailView: View {
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+
     var video: Video
 
     var body: some View {
@@ -30,8 +32,8 @@ struct DescriptionDetailView: View {
             }
             Spacer()
         }
+        .tint(theme.color)
         .padding(.horizontal)
-        .tint(.teal)
     }
 }
 

@@ -203,6 +203,22 @@
         }
       }
     },
+    "appColor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Farbe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Color"
+          }
+        }
+      }
+    },
     "appearance" : {
       "localizations" : {
         "de" : {
@@ -295,6 +311,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back Up To iCloud Drive"
+          }
+        }
+      }
+    },
+    "blackWhite" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwarz/Weiß"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black/White"
+          }
+        }
+      }
+    },
+    "blue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blau"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blue"
           }
         }
       }
@@ -851,6 +899,22 @@
         }
       }
     },
+    "green" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grün"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green"
+          }
+        }
+      }
+    },
     "handleShortsDifferently" : {
       "localizations" : {
         "de" : {
@@ -1205,6 +1269,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It is best to leave this on, as the backup files will likely be much smaller."
+          }
+        }
+      }
+    },
+    "mint" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minze"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mint"
           }
         }
       }
@@ -1645,6 +1725,22 @@
         }
       }
     },
+    "orange" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orange"
+          }
+        }
+      }
+    },
     "page" : {
       "localizations" : {
         "de" : {
@@ -1742,6 +1838,22 @@
         }
       }
     },
+    "purple" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lila"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purple"
+          }
+        }
+      }
+    },
     "queue" : {
       "localizations" : {
         "de" : {
@@ -1770,6 +1882,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recently Added"
+          }
+        }
+      }
+    },
+    "red" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rot"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red"
           }
         }
       }
@@ -2319,6 +2447,22 @@
         }
       }
     },
+    "teal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blaugrün"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teal"
+          }
+        }
+      }
+    },
     "unsubscribe" : {
       "localizations" : {
         "de" : {
@@ -2443,6 +2587,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        }
+      }
+    },
+    "yellow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelb"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yellow"
           }
         }
       }

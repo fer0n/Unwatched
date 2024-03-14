@@ -31,7 +31,7 @@ struct ChapterListItem: View {
                     .foregroundStyle(Color.backgroundColor)
                 if chapter.isActive {
                     Image(systemName: Const.checkmarkSF)
-                        .foregroundStyle(Color.myAccentColor)
+                        .foregroundStyle(Color.neutralAccentColor)
                 }
             }
         }
