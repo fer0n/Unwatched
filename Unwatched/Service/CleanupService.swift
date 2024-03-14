@@ -149,14 +149,20 @@ struct CleanupService {
                 return sub1
             }
 
+            if vid0.watched != vid1.watched {
+                return vid1.watched
+            }
+
             let cleared0 = vid0.clearedInboxDate != nil
             let cleared1 = vid1.clearedInboxDate != nil
             if cleared0 != cleared1 {
                 return cleared1
             }
 
-            if vid0.watched != vid1.watched {
-                return vid1.watched
+            let sec0 = vid0.elapsedSeconds ?? 0
+            let sec1 = vid1.elapsedSeconds ?? 0
+            if sec0 != sec1 {
+                return sec0 > sec1
             }
 
             let queue0 = vid0.queueEntry != nil
@@ -165,15 +171,8 @@ struct CleanupService {
                 return queue1
             }
 
-            let inbox0 = vid0.inboxEntry != nil
             let inbox1 = vid1.inboxEntry != nil
-            if inbox0 != inbox1 {
-                return inbox1
-            }
-
-            let sec0 = vid0.elapsedSeconds ?? 0
-            let sec1 = vid1.elapsedSeconds ?? 0
-            return sec0 > sec1
+            return inbox1
         }
     }
 
