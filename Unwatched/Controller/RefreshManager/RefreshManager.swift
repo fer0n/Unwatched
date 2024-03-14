@@ -15,7 +15,6 @@ import OSLog
     @MainActor var isLoading: Bool = false
     @MainActor var isSyncingIcloud: Bool = false
 
-    @ObservationIgnored var loadingStart: Date?
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
@@ -44,11 +43,10 @@ import OSLog
         if let container = container {
             if isLoading { return }
             isLoading = true
-            loadingStart = .now
+            quickDuplicateCleanup()
             let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
             _ = try? await task.value
             isLoading = false
-            quickDuplicateCleanup()
         }
     }
 

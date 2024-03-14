@@ -55,6 +55,7 @@ struct InboxView: View {
                         if inboxEntries.count > Const.minInboxEntriesToShowClear {
                             clearAllButton
                                 .listRowSeparator(.hidden)
+                                .foregroundStyle(theme.color)
                         }
                     }
                     .listStyle(.plain)
