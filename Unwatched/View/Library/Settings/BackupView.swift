@@ -33,21 +33,18 @@ struct BackupView: View {
                 Toggle(isOn: $enableIcloudSync) {
                     Text("syncToIcloud")
                 }
-                .tint(.teal)
             }
 
             Section(header: Text("automaticBackups"), footer: Text("automaticBackupsHelper")) {
                 Toggle(isOn: $automaticBackups) {
                     Text("backupToIcloud")
                 }
-                .tint(.teal)
             }
 
             Section(footer: Text("minimalBackupsHelper")) {
                 Toggle(isOn: $minimalBackups) {
                     Text("minimalBackups")
                 }
-                .tint(.teal)
             }
 
             AsyncButton {

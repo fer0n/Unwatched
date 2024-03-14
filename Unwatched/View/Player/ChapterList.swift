@@ -18,8 +18,8 @@ struct ChapterList: View {
             VStack(spacing: isCompact ? 4 : 10) {
                 ForEach(sorted) { chapter in
                     let isCurrent = chapter == player.currentChapter
-                    let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.myAccentColor
-                    let backgroundColor: Color = isCurrent ? Color.myAccentColor : Color.myBackgroundGray
+                    let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
+                    let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.myBackgroundGray
 
                     Button {
                         if !chapter.isActive {

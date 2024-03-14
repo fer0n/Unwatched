@@ -10,7 +10,7 @@ struct CapsuleButtonStyle<S: ShapeStyle>: ButtonStyle {
     var background: S
     var foreground: Color
 
-    init(background: S = Material.thin, foreground: Color = .myAccentColor) {
+    init(background: S = Material.thin, foreground: Color = .neutralAccentColor) {
         self.background = background
         self.foreground = foreground
     }

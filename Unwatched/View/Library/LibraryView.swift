@@ -9,6 +9,8 @@ import OSLog
 
 struct LibraryView: View {
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+
     @Environment(NavigationManager.self) private var navManager
 
     @Query var subscriptions: [Subscription]
@@ -124,9 +126,9 @@ struct LibraryView: View {
                 }
                 RefreshToolbarButton()
             }
-            .tint(.teal)
+            .tint(theme.color)
         }
-        .tint(navManager.lastLibrarySubscriptionId == nil ? .teal : Color.myAccentColor)
+        .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
         .task(id: text.val) {
             await text.handleDidSet()
         }
@@ -138,13 +140,12 @@ struct LibraryView: View {
     var dropArea: some View {
         ZStack {
             Rectangle()
-                .fill(isDragOver ? Color.teal.opacity(0.1) : .clear)
+                .fill(isDragOver ? theme.color.opacity(0.1) : .clear)
 
             VStack(spacing: 10) {
                 Text("dropSubscriptionHelper")
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                    .tint(.teal)
             }
             .padding(25)
         }

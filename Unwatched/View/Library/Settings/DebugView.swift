@@ -11,6 +11,7 @@ struct DebugView: View {
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
@@ -36,7 +37,7 @@ struct DebugView: View {
                 } label: {
                     Text("removeDuplicates")
                 }
-                .foregroundStyle(.teal)
+                .tint(theme.color)
 
                 if let info = cleanupInfo {
                     Text("removedDuplicates \(info.countVideos) \(info.countQueueEntries) \(info.countInboxEntries) \(info.countSubscriptions) \(info.countImages)")
@@ -44,7 +45,6 @@ struct DebugView: View {
                 }
             }
         }
-        .tint(.teal)
         .task(id: monitorBackgroundFetches) {
             if monitorBackgroundFetches {
                 do {
@@ -63,4 +63,5 @@ struct DebugView: View {
 #Preview {
     DebugView()
         .modelContainer(DataController.previewContainer)
+        .environment(Alerter())
 }

@@ -104,11 +104,11 @@ struct SleepTimer: View {
             .disabled(viewModel.remainingSeconds <= 0)
             .padding()
         }
-        .tint(.teal)
     }
 
 }
 
-// #Preview {
-//    SleepTimer(onEnded: { _ in })
-// }
+#Preview {
+    SleepTimer(viewModel: SleepTimerViewModel(), onEnded: { _ in })
+        .environment(PlayerManager())
+}

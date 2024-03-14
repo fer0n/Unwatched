@@ -17,11 +17,10 @@ struct LibraryNavListItem: View {
     var body: some View {
         Label {
             Text(text)
+                .foregroundStyle(Color.neutralAccentColor)
         } icon: {
             Image(systemName: systemName)
-                .foregroundStyle(.teal)
         }
-        .foregroundStyle(Color.myAccentColor)
     }
 }
 

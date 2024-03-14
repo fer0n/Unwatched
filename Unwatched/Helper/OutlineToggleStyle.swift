@@ -31,12 +31,12 @@ struct OutlineToggleModifier: ViewModifier {
         content
             .font(.system(size: isSmall ? 15 : 18))
             .frame(width: size, height: size)
-            .background(isOn ? Color.myAccentColor : Color.myBackgroundGray)
-            .foregroundColor(isOn ? Color.backgroundColor : Color.myForegroundGray)
+            .background(isOn ? Color.neutralAccentColor : Color.myBackgroundGray)
+            .tint(isOn ? .backgroundColor : .myForegroundGray)
             .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(isOn || !stroke ? Color.clear : Color.myForegroundGray, lineWidth: 1)
+                    .stroke(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
             )
     }
 }

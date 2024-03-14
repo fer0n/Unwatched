@@ -17,10 +17,13 @@ struct SetupView: View {
     @State var refresher = RefreshManager()
     @State var imageCacheManager = ImageCacheManager()
 
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
+
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 
     var body: some View {
         ContentView()
+            .tint(theme.color)
             .environment(player)
             .environment(imageCacheManager)
             .environment(refresher)

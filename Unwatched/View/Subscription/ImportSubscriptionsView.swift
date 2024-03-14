@@ -95,7 +95,6 @@ struct ImportSubscriptionsView: View {
                 }
             }
         }
-        .tint(.teal)
         .navigationTitle("importSubscriptions")
         .navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $showFileImporter,

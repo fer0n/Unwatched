@@ -11,6 +11,8 @@ struct VideoNotAvailableView: View {
     @Environment(PlayerManager.self) private var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
 
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
@@ -32,13 +34,7 @@ struct VideoNotAvailableView: View {
                 Color.backgroundColor
                 Rectangle()
                     .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: navManager.showMenu ?
-                                                [.black, .black] :
-                                                [.teal, .green]),
-                            startPoint: .top,
-                            endPoint: .bottom)
-
+                        navManager.showMenu ? Color.black.gradient : theme.color.gradient
                     )
                     .opacity(0.4)
                     .animation(.bouncy(duration: 1.5), value: navManager.showMenu)
@@ -72,5 +68,6 @@ struct VideoNotAvailable_Previews: PreviewProvider {
         VideoNotAvailableView()
             .modelContainer(DataController.previewContainer)
             .environment(NavigationManager.getDummy())
+            .environment(PlayerManager())
     }
 }

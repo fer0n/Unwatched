@@ -34,7 +34,6 @@ struct UnwatchedApp: App {
     var body: some Scene {
         WindowGroup {
             SetupView()
-                .accentColor(.myAccentColor)
                 .environment(alerter)
                 .alert(isPresented: $alerter.isShowingAlert) {
                     alerter.alert ?? Alert(title: Text(verbatim: ""))

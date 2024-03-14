@@ -92,7 +92,7 @@ struct FullscreenPlayerControls: View {
         .font(.system(size: 16))
         .opacity(0.6)
         .padding(.vertical)
-        .foregroundStyle(Color.myAccentColor)
+        .foregroundStyle(Color.neutralAccentColor)
     }
 
     var currentRemaining: String? {

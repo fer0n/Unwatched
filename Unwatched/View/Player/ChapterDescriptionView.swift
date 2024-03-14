@@ -56,7 +56,7 @@ struct ChapterDescriptionView: View {
                         }
                     }
                 }
-                .tint(Color.myAccentColor)
+                .tint(.neutralAccentColor)
                 .toolbarTitleDisplayMode(.inline)
             }
         }

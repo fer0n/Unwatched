@@ -10,6 +10,7 @@ import OSLog
 
 struct InboxView: View {
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -80,9 +81,9 @@ struct InboxView: View {
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }
-            .tint(.teal)
+            .tint(theme.color)
         }
-        .tint(Color.myAccentColor)
+        .tint(.neutralAccentColor)
         .actionSheet(isPresented: $showingClearAllAlert) {
             ActionSheet(title: Text("confirmClearAll"),
                         message: Text("areYouSureClearAll"),
@@ -148,7 +149,6 @@ struct InboxView: View {
                 Image(systemName: Const.clearSF)
                     .resizable()
                     .frame(width: 30, height: 30)
-                    .foregroundColor(.teal)
                 Spacer()
             }.padding()
         }

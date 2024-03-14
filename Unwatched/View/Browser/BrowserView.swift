@@ -13,6 +13,8 @@ struct BrowserView: View, KeyboardReadable {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
 
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
@@ -44,7 +46,6 @@ struct BrowserView: View, KeyboardReadable {
                             if subscriptionText == nil && browserManager.firstPageLoaded {
                                 TipView(ytBrowserTip)
                                     .padding(.horizontal)
-                                    .tint(.teal)
                             }
                             if let text = subscriptionText, !isKeyboardVisible {
                                 addSubButton(text)
@@ -127,8 +128,8 @@ struct BrowserView: View, KeyboardReadable {
                 }
             }
         }
-        .background(showDropArea ? .teal : .clear)
-        .tint(Color.myAccentColor)
+        .background(showDropArea ? theme.color : .clear)
+        .tint(.neutralAccentColor)
         .dropDestination(for: URL.self) { items, _ in
             droppedUrls = items
             return true
@@ -181,7 +182,7 @@ struct BrowserView: View, KeyboardReadable {
             .padding(10)
         }
         .buttonStyle(CapsuleButtonStyle(
-                        background: Color.myAccentColor,
+                        background: Color.neutralAccentColor,
                         foreground: Color.backgroundColor))
         .bold()
     }

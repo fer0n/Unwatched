@@ -36,7 +36,7 @@ struct CorePlayButton<Content>: View where Content: View {
                                         ? 180
                                         : 0)
             )
-            .accentColor(.myAccentColor)
+            .foregroundStyle(Color.neutralAccentColor)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
