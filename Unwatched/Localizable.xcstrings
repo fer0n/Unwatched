@@ -1950,6 +1950,22 @@
         }
       }
     },
+    "requireClearConfirmation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestätigung zum Leeren der Inbox erforderlich"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Require Clear Inbox Confirmation"
+          }
+        }
+      }
+    },
     "restoreBackup" : {
       "localizations" : {
         "de" : {
