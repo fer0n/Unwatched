@@ -14,9 +14,7 @@ struct UnwatchedApp: App {
     @State var navManager = NavigationManager.load()
     @State var alerter: Alerter = Alerter()
 
-    var sharedModelContainer: ModelContainer
-
-    init() {
+    var sharedModelContainer: ModelContainer {
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         do {
             let config = ModelConfiguration(
@@ -24,8 +22,7 @@ struct UnwatchedApp: App {
                 isStoredInMemoryOnly: false,
                 cloudKitDatabase: enableIcloudSync ? .automatic : .none
             )
-
-            sharedModelContainer = try ModelContainer(for: DataController.schema, configurations: [config])
+            return try ModelContainer(for: DataController.schema, configurations: [config])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -47,9 +44,9 @@ struct UnwatchedApp: App {
                 .onAppear {
                     setUpAppDelegate()
                 }
+                .environment(navManager)
         }
         .modelContainer(sharedModelContainer)
-        .environment(navManager)
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
             let container = await sharedModelContainer
             await RefreshManager.handleBackgroundVideoRefresh(container)
