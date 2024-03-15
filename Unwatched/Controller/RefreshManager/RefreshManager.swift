@@ -151,7 +151,6 @@ extension RefreshManager {
             if Task.isCancelled {
                 Logger.log.info("background task has been cancelled")
             }
-
             if newVideos.videoCount == 0 {
                 Logger.log.info("notifyHasRun")
                 NotificationManager.notifyHasRun()

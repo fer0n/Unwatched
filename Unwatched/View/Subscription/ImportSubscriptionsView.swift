@@ -168,16 +168,21 @@ struct ImportSubscriptionsView: View {
     func parseRows(_ rows: [String]) {
         let validRows = rows.dropFirst().filter { !$0.isEmpty }
         for row in validRows {
-            let sub = parseRow(row)
-            sendableSubs.append(sub)
+            if let sub = parseRow(row) {
+                sendableSubs.append(sub)
+            }
         }
         sendableSubs.sort(by: { $0.title < $1.title })
         selection = Set(sendableSubs)
     }
 
-    func parseRow(_ row: String) -> SendableSubscription {
+    func parseRow(_ row: String) -> SendableSubscription? {
         let columns = row.components(separatedBy: ",")
         Logger.log.info("columns \(columns)")
+        guard columns.count >= 3 else {
+            Logger.log.error("Invalid row: \(row)")
+            return nil
+        }
         let channelId = columns[0]
         // let channelUrl = columns[1] | not needed
         let channelTitle = columns[2]
