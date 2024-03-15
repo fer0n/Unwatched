@@ -561,6 +561,22 @@
         }
       }
     },
+    "darkGreen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkelgrün"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Green"
+          }
+        }
+      }
+    },
     "debug" : {
       "localizations" : {
         "de" : {
