@@ -87,6 +87,7 @@ struct LinkItemView<Content: View>: View {
 
     var body: some View {
         Link(destination: destination) {
+
             HStack(spacing: 20) {
                 content()
                     .frame(width: 24, height: 24)

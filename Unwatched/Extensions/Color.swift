@@ -10,6 +10,7 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
     case orange
     case yellow
     case green
+    case darkGreen
     case mint
     case teal
     case blue
@@ -26,6 +27,8 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
             return .yellow
         case .green:
             return .green
+        case .darkGreen:
+            return .darkGreen
         case .mint:
             return .mint
         case .teal:
@@ -49,6 +52,8 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
             return String(localized: "yellow")
         case .green:
             return String(localized: "green")
+        case .darkGreen:
+            return String(localized: "darkGreen")
         case .mint:
             return String(localized: "mint")
         case .teal:
