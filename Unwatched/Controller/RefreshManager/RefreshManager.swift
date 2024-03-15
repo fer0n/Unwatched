@@ -43,10 +43,10 @@ import OSLog
         if let container = container {
             if isLoading { return }
             isLoading = true
-            quickDuplicateCleanup()
             let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
             _ = try? await task.value
             isLoading = false
+            quickDuplicateCleanup()
         }
     }
 
