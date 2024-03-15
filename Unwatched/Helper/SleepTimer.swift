@@ -8,6 +8,7 @@ import MediaPlayer
 
 struct SleepTimer: View {
     @Environment(PlayerManager.self) var player
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State private var showPopover = false
     @State var slider: UISlider?
@@ -104,6 +105,7 @@ struct SleepTimer: View {
             .disabled(viewModel.remainingSeconds <= 0)
             .padding()
         }
+        .tint(theme.color)
     }
 
 }
