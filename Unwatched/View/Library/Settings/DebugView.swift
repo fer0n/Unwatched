@@ -14,6 +14,8 @@ struct DebugView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
+    @State var logs = LogManager()
+    @State var exportShown = false
 
     var body: some View {
         List {
@@ -44,6 +46,18 @@ struct DebugView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+
+            Section("logs") {
+                Button {
+                    logs.export()
+                    exportShown = true
+                } label: {
+                    Text("exportLogs")
+                }
+                .sheet(isPresented: $exportShown) {
+                    ShareView(items: [logs.entries.joined(separator: "\n")])
+                }
+            }
         }
         .task(id: monitorBackgroundFetches) {
             if monitorBackgroundFetches {
@@ -57,7 +71,6 @@ struct DebugView: View {
         .navigationTitle("debug")
         .navigationBarTitleDisplayMode(.inline)
     }
-
 }
 
 #Preview {
