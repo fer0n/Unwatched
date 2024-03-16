@@ -20,11 +20,13 @@ class DataController {
 
     static let schema = Schema(DataController.dbEntries)
 
-    static let modelConfig = ModelConfiguration(
-        schema: DataController.schema,
-        isStoredInMemoryOnly: false,
-        cloudKitDatabase: .none
-    )
+    static func modelConfig(_ isStoredInMemoryOnly: Bool = false) -> ModelConfiguration {
+        ModelConfiguration(
+            schema: DataController.schema,
+            isStoredInMemoryOnly: isStoredInMemoryOnly,
+            cloudKitDatabase: .none
+        )
+    }
 
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
