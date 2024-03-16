@@ -8,7 +8,6 @@ import OSLog
 
 struct VideoPlayer: View {
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
 

@@ -6,7 +6,10 @@
 import SwiftUI
 
 struct SpeedControlView: View {
+    @Environment(NavigationManager.self) private var navManager
+
     @Binding var selectedSpeed: Double
+
     static let speeds: [Double] = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     let highlighted: [Double] = [1, 1.5, 2]
 
@@ -49,6 +52,7 @@ struct SpeedControlView: View {
                                     selectedSpeed = speed
                                     controlMinX = getXPos(width, selectedSpeed)
                                     hapticToggle.toggle()
+                                    dragState = nil
                                 }
                             }
                         if isHightlighted {
@@ -90,6 +94,14 @@ struct SpeedControlView: View {
         }
         .onChange(of: selectedSpeed) {
             controlMinX = getXPos(width, selectedSpeed)
+        }
+        .onChange(of: navManager.showMenu) {
+            if !navManager.showMenu {
+                return
+            }
+            withAnimation {
+                dragState = nil
+            }
         }
         .simultaneousGesture(
             DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
