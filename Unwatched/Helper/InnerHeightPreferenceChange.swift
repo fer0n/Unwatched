@@ -7,7 +7,7 @@ import Foundation
 import SwiftUI
 
 struct InnerSizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = CGSize()
+    static var defaultValue: CGSize { CGSize() }
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
         value = nextValue()
     }
@@ -37,7 +37,7 @@ extension View {
 
 // geo.frame(in: .global).minY
 struct GlobalMinYPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = .zero
+    static var defaultValue: CGFloat { .zero }
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
@@ -66,7 +66,7 @@ extension View {
 }
 
 struct HeightAndOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect = CGRect()
+    static var defaultValue: CGRect { CGRect() }
     static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
         value = nextValue()
     }

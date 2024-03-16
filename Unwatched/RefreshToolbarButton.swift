@@ -33,12 +33,11 @@ struct CoreRefreshButton: View {
                 nextTurn()
             }
         })
-        .task(id: refresher.isLoading) {
+        .onChange(of: refresher.isLoading) {
             if refresher.isLoading {
                 nextTurn()
             }
         }
-
     }
 
     @MainActor
