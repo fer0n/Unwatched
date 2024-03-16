@@ -67,7 +67,7 @@ struct InboxView: View {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
                 hasNewInboxItems = false
             }
-            .task(id: hasNewInboxItems) {
+            .onChange(of: hasNewInboxItems) {
                 if hasNewInboxItems && navManager.tab == .inbox {
                     Logger.log.info("turning off inbox badge")
                     hasNewInboxItems = false
