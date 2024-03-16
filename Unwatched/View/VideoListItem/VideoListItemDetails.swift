@@ -8,6 +8,8 @@ import SwiftUI
 struct VideoListItemDetails: View {
     @Environment(NavigationManager.self) private var navManager
     var video: Video
+    var videoDuration: Double?
+    // workaround: doesn't update instantly otherwise
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -41,7 +43,7 @@ struct VideoListItemDetails: View {
                         }
                     }
             }
-            if let duration = video.duration,
+            if let duration = videoDuration ?? video.duration,
                let remaining = video.remainingTime,
                duration > 0 && remaining > 0 {
                 HStack(alignment: .center) {
