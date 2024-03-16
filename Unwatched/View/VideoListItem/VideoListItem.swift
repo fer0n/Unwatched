@@ -30,6 +30,7 @@ struct VideoListItem: View {
     var showVideoStatus: Bool = false
     var hasInboxEntry: Bool?
     var hasQueueEntry: Bool?
+    var videoDuration: Double?
     var watched: Bool?
     var clearRole: ButtonRole?
     var queueRole: ButtonRole?
@@ -38,12 +39,14 @@ struct VideoListItem: View {
 
     init(video: Video,
          videoSwipeActions: [VideoActions]? = nil,
+         videoDuration: Double? = nil,
          clearRole: ButtonRole? = nil,
          queueRole: ButtonRole? = nil) {
         self.video = video
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
         }
+        self.videoDuration = videoDuration
         self.clearRole = clearRole
         self.queueRole = queueRole
     }
@@ -119,7 +122,7 @@ struct VideoListItem: View {
                 .clipShape(.rect(cornerRadius: 15.0))
                 .padding(showVideoStatus ? 5 : 0)
 
-                VideoListItemDetails(video: video)
+                VideoListItemDetails(video: video, videoDuration: videoDuration)
             }
             if showVideoStatus {
                 VideoListItemStatus(

@@ -46,6 +46,7 @@ struct QueueView: View {
                             ZStack {
                                 if let video = entry.video {
                                     VideoListItem(video: video,
+                                                  videoDuration: video.duration,
                                                   clearRole: .destructive)
                                 }
                             }
