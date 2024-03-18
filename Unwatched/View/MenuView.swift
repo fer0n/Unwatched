@@ -11,6 +11,7 @@ struct MenuView: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
+
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems: Bool = false
