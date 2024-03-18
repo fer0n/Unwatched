@@ -11,6 +11,7 @@ import OSLog
 struct QueueView: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -47,7 +48,8 @@ struct QueueView: View {
                                 if let video = entry.video {
                                     VideoListItem(video: video,
                                                   videoDuration: video.duration,
-                                                  clearRole: .destructive)
+                                                  clearRole: .destructive,
+                                                  onChange: handleVideoChange)
                                 }
                             }
                             .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
@@ -93,10 +95,17 @@ struct QueueView: View {
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
+            hasNewQueueItems = false
         }
         .onDisappear {
+            hasNewQueueItems = false
             if inboxHasEntries {
                 inboxTip.invalidate(reason: .actionPerformed)
+            }
+        }
+        .onChange(of: player.isPlaying) {
+            if navManager.tab == .queue && player.isPlaying {
+                handleVideoChange()
             }
         }
     }
@@ -149,6 +158,14 @@ struct QueueView: View {
         }
     }
 
+    func handleVideoChange() {
+        if hasNewQueueItems {
+            withAnimation {
+                hasNewQueueItems = false
+            }
+        }
+    }
+
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
         let task = VideoService.moveQueueEntry(from: source,
                                                to: destination,
@@ -156,6 +173,7 @@ struct QueueView: View {
         if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue(after: task)
         }
+        handleVideoChange()
     }
 
     func handleUrlDrop(_ items: [URL], at index: Int) {

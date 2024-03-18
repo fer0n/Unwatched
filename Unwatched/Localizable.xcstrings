@@ -2286,34 +2286,34 @@
         }
       }
     },
-    "showNewInboxBadge" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kennzeichen für Inbox Anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Badge on Inbox"
-          }
-        }
-      }
-    },
     "showNotificationBadge" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icon Kennzeichen für neue Videos"
+            "value" : "App Icon Kennzeichen für neue Videos"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icon Badge for new Videos"
+            "value" : "App Icon Badge for new Videos"
+          }
+        }
+      }
+    },
+    "showTabBarBadge" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tab Bar Kennzeichen bei neuen Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tab Bar Badge for new Videos"
           }
         }
       }

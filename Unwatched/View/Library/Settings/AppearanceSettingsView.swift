@@ -7,7 +7,7 @@ import SwiftUI
 
 struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
+    @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
 
     var body: some View {
@@ -15,8 +15,8 @@ struct AppearanceSettingsView: View {
             Toggle(isOn: $showTabBarLabels) {
                 Text("showTabBarLabels")
             }
-            Toggle(isOn: $showNewInboxBadge) {
-                Text("showNewInboxBadge")
+            Toggle(isOn: $showTabBarBadge) {
+                Text("showTabBarBadge")
             }
 
             Section("appColor") {

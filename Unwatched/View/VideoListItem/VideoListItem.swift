@@ -34,6 +34,7 @@ struct VideoListItem: View {
     var watched: Bool?
     var clearRole: ButtonRole?
     var queueRole: ButtonRole?
+    var onChange: (() -> Void)?
 
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details]
 
@@ -41,7 +42,8 @@ struct VideoListItem: View {
          videoSwipeActions: [VideoActions]? = nil,
          videoDuration: Double? = nil,
          clearRole: ButtonRole? = nil,
-         queueRole: ButtonRole? = nil) {
+         queueRole: ButtonRole? = nil,
+         onChange: (() -> Void)? = nil) {
         self.video = video
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
@@ -49,6 +51,7 @@ struct VideoListItem: View {
         self.videoDuration = videoDuration
         self.clearRole = clearRole
         self.queueRole = queueRole
+        self.onChange = onChange
     }
 
     init(video: Video,
@@ -228,26 +231,31 @@ struct VideoListItem: View {
             videos: [video],
             modelContext: modelContext
         )
+        onChange?()
     }
 
     func moveToInbox() {
         let task = VideoService.moveVideoToInbox(video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
+        onChange?()
     }
 
     func toggleBookmark() {
         VideoService.toggleBookmark(video, modelContext)
+        onChange?()
     }
 
     func markWatched() {
         let task = VideoService.markVideoWatched(video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
+        onChange?()
     }
 
     func addVideoToBottomQueue() {
         Logger.log.info("addVideoBottom")
         let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
+        onChange?()
     }
 
     func clearVideoEverywhere() {
@@ -258,6 +266,7 @@ struct VideoListItem: View {
             modelContext: modelContext
         )
         handlePotentialQueueChange(after: task, order: order)
+        onChange?()
     }
 
     func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
