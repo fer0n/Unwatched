@@ -66,7 +66,6 @@ struct InboxView: View {
             }
             .onAppear {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
-                hasNewInboxItems = false
             }
             .onDisappear {
                 hasNewInboxItems = false

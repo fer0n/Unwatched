@@ -95,7 +95,6 @@ struct QueueView: View {
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
-            hasNewQueueItems = false
         }
         .onDisappear {
             hasNewQueueItems = false

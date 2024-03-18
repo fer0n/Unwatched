@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct MenuView: View {
     @Environment(RefreshManager.self) var refresher
@@ -98,6 +99,7 @@ struct MenuView: View {
     }
 
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
+        Logger.log.info("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             withAnimation {
                 let isTopView = navManager.handleTappedTwice()
@@ -105,6 +107,11 @@ struct MenuView: View {
                     proxy.scrollTo(navManager.topListItemId, anchor: .bottom)
                 }
             }
+        }
+        if newTab == .inbox {
+            UserDefaults.standard.set(false, forKey: Const.hasNewInboxItems)
+        } else if newTab == .queue {
+            UserDefaults.standard.set(false, forKey: Const.hasNewQueueItems)
         }
     }
 }
