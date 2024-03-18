@@ -102,11 +102,6 @@ struct QueueView: View {
                 inboxTip.invalidate(reason: .actionPerformed)
             }
         }
-        .onChange(of: player.isPlaying) {
-            if navManager.tab == .queue && player.isPlaying {
-                handleVideoChange()
-            }
-        }
     }
 
     var contentUnavailable: some View {

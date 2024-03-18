@@ -10,11 +10,13 @@ struct VideoPlayer: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
+    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
 
     @GestureState private var dragState: CGFloat = 0
     @State var continuousPlayWorkaround: Bool = false
@@ -152,6 +154,11 @@ struct VideoPlayer: View {
         })
         .onChange(of: player.video?.subscription) {
             // workaround to update ui, doesn't work without
+        }
+        .onChange(of: player.isPlaying) {
+            if hasNewQueueItems == true && navManager.showMenu && player.isPlaying && navManager.tab == .queue {
+                hasNewQueueItems = false
+            }
         }
         .sheet(item: $openBrowserUrl) { browserUrl in
             let url = browserUrl.getUrl
