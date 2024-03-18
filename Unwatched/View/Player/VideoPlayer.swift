@@ -12,14 +12,12 @@ struct VideoPlayer: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
 
     @GestureState private var dragState: CGFloat = 0
-    @State var continuousPlayWorkaround: Bool = false
     @State var isSubscribedSuccess: Bool?
     @State var hapticToggle: Bool = false
     @State var openBrowserUrl: BrowserUrl?
@@ -149,9 +147,6 @@ struct VideoPlayer: View {
                     }
                 }
         )
-        .onChange(of: continuousPlay, { _, newValue in
-            continuousPlayWorkaround = newValue
-        })
         .onChange(of: player.video?.subscription) {
             // workaround to update ui, doesn't work without
         }
@@ -235,9 +230,10 @@ struct VideoPlayer: View {
     }
 
     func handleVideoEnded() {
-        Logger.log.info(">handleVideoEnded")
+        let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
+        Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
 
-        if continuousPlayWorkaround == true {
+        if continuousPlay {
             if let video = player.video {
                 _ = VideoService.markVideoWatched(
                     video, modelContext: modelContext
