@@ -12,7 +12,8 @@ struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
-    @AppStorage(Const.showNewInboxBadge) var showNewInboxBadge: Bool = true
+    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems: Bool = false
+    @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
 
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
@@ -29,14 +30,15 @@ struct MenuView: View {
                                             showCancelButton: showCancelButton)),
                     image: Image(systemName: Const.queueTagSF),
                     text: "queue",
-                    tag: NavigationTab.queue
+                    tag: NavigationTab.queue,
+                    showBadge: showTabBarBadge && hasNewQueueItems
                 ),
                 TabRoute(
                     view: AnyView(InboxView(showCancelButton: showCancelButton)),
                     image: getInboxSymbol,
                     text: "inbox",
                     tag: NavigationTab.inbox,
-                    showBadge: showNewInboxBadge && hasNewInboxItems && navManager.tab != .inbox
+                    showBadge: showTabBarBadge && hasNewInboxItems
                 ),
                 TabRoute(
                     view: AnyView(LibraryView(showCancelButton: showCancelButton)),

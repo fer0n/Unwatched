@@ -109,6 +109,9 @@ extension VideoActor {
             addVideosToInbox(videos)
         } else if placement == .queue {
             insertQueueEntries(at: index, videos: videos)
+            if !videos.isEmpty {
+                UserDefaults.standard.setValue(true, forKey: Const.hasNewQueueItems)
+            }
         } else {
             return
         }

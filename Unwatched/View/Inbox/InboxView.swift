@@ -45,7 +45,8 @@ struct InboxView: View {
                                     VideoListItem(
                                         video: video,
                                         clearRole: .destructive,
-                                        queueRole: .destructive
+                                        queueRole: .destructive,
+                                        onChange: handleVideoChange
                                     )
                                 }
                             }
@@ -67,11 +68,8 @@ struct InboxView: View {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
                 hasNewInboxItems = false
             }
-            .onChange(of: hasNewInboxItems) {
-                if hasNewInboxItems && navManager.tab == .inbox {
-                    Logger.log.info("turning off inbox badge")
-                    hasNewInboxItems = false
-                }
+            .onDisappear {
+                hasNewInboxItems = false
             }
             .toolbar {
                 if showCancelButton {
@@ -123,6 +121,14 @@ struct InboxView: View {
         swipeTip.invalidate(reason: .actionPerformed)
     }
 
+    func handleVideoChange() {
+        if hasNewInboxItems {
+            withAnimation {
+                hasNewInboxItems = false
+            }
+        }
+    }
+
     func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
             let entry = inboxEntries[index]
@@ -143,6 +149,7 @@ struct InboxView: View {
     func clearAll() {
         hapticToggle.toggle()
         VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
+        handleVideoChange()
     }
 
     var clearAllButton: some View {
