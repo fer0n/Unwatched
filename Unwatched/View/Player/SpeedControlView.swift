@@ -96,11 +96,10 @@ struct SpeedControlView: View {
             controlMinX = getXPos(width, selectedSpeed)
         }
         .onChange(of: navManager.showMenu) {
-            if !navManager.showMenu {
-                return
-            }
-            withAnimation {
-                dragState = nil
+            if dragState != nil {
+                withAnimation {
+                    dragState = nil
+                }
             }
         }
         .simultaneousGesture(
