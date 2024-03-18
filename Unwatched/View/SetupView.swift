@@ -39,7 +39,7 @@ struct SetupView: View {
                 case .active:
                     player.isInBackground = false
                     NotificationManager.clearNotifications()
-                    Logger.log.info("Active")
+                    Logger.log.info("active")
                     await refresher.handleBecameActive()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 case .background:
@@ -50,6 +50,9 @@ struct SetupView: View {
                     }
                     refresher.handleBecameInactive()
                     RefreshManager.scheduleVideoRefresh()
+                case .inactive:
+                    Logger.log.info("inactive")
+                    saveCurrentVideo()
                 default:
                     break
                 }
@@ -79,13 +82,15 @@ struct SetupView: View {
     func saveData() async {
         navManager.save()
         sheetPos.save()
-
-        let videoId = player.video?.persistentModelID
-        let data = try? JSONEncoder().encode(videoId)
-        UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
         let container = modelContext.container
         await imageCacheManager.persistCache(container)
         Logger.log.info("saved state")
+    }
+
+    func saveCurrentVideo() {
+        let videoId = player.video?.persistentModelID
+        let data = try? JSONEncoder().encode(videoId)
+        UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
     }
 }
 
