@@ -12,6 +12,7 @@ struct AddToLibraryView: View {
     @Environment(RefreshManager.self) var refresher
 
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
     @Binding var subManager: SubscribeManager
     @State var addText: String = ""
@@ -22,17 +23,20 @@ struct AddToLibraryView: View {
     @State var addSubscriptionFromText: String?
 
     var body: some View {
-        Button(action: {
-            navManager.openBrowserUrl = .youtubeStartPage
-        }, label: {
-            Label {
-                Text("browseFeeds")
-                    .foregroundStyle(Color.neutralAccentColor)
-            } icon: {
-                Image(systemName: Const.appBrowserSF)
-                    .tint(theme.color)
-            }
-        })
+        if !browserAsTab {
+            Button(action: {
+                navManager.openUrlInApp(.youtubeStartPage)
+            }, label: {
+                Label {
+                    Text("browseFeeds")
+                        .foregroundStyle(Color.neutralAccentColor)
+                } icon: {
+                    Image(systemName: Const.appBrowserSF)
+                        .tint(theme.color)
+                }
+            })
+        }
+
         HStack {
             Image(systemName: "link")
                 .foregroundStyle(.secondary)

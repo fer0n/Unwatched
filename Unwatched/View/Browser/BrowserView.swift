@@ -24,7 +24,11 @@ struct BrowserView: View, KeyboardReadable {
     @State var droppedUrls = [URL]()
     @State var changeSubscriptionOf: ChannelInfo?
 
-    var url: URL? = UrlService.youtubeStartPage
+    var url: Binding<BrowserUrl?> = .constant(nil)
+    var startUrl: BrowserUrl?
+
+    var showHeader: Bool = true
+    var safeArea: Bool = true
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -34,12 +38,14 @@ struct BrowserView: View, KeyboardReadable {
 
         GeometryReader { geometry in
             VStack {
-                headerArea()
+                if showHeader {
+                    headerArea()
+                }
 
                 ZStack {
-                    if let url = url {
-                        YtBrowserWebView(url: url, browserManager: browserManager)
-                    }
+                    YtBrowserWebView(url: url,
+                                     startUrl: startUrl,
+                                     browserManager: browserManager)
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
@@ -55,13 +61,13 @@ struct BrowserView: View, KeyboardReadable {
                             Spacer()
                                 .frame(height: (
                                         browserManager.isMobileVersion ? 60 : 0)
-                                        + geometry.safeAreaInsets.bottom
+                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
                                 )
                         }
                     }
                 }
             }
-            .ignoresSafeArea(edges: [.bottom])
+            .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
         .background(Color.youtubeWebBackground)
         .task(id: isSuccess) {
@@ -244,7 +250,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(isDragOver: true)
+    BrowserView(isDragOver: true, startUrl: BrowserUrl.youtubeStartPage)
         .modelContainer(DataController.previewContainer)
         .environment(RefreshManager())
 }

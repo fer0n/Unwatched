@@ -8,9 +8,19 @@ import WebKit
 import OSLog
 
 struct YtBrowserWebView: UIViewRepresentable {
-    var url: URL
-    var browserManager: BrowserManager
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+
+    @Binding var url: BrowserUrl?
+    var startUrl: BrowserUrl?
+    var browserManager: BrowserManager
+
+    init(url: Binding<BrowserUrl?> = .constant(nil), startUrl: BrowserUrl? = nil, browserManager: BrowserManager) {
+        self._url = url
+        if startUrl == nil {
+            self.startUrl = url.wrappedValue
+        }
+        self.browserManager = browserManager
+    }
 
     func makeUIView(context: Context) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
@@ -24,12 +34,21 @@ struct YtBrowserWebView: UIViewRepresentable {
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
-        let request = URLRequest(url: url)
-        webView.load(request)
+        if let requestUrl = (startUrl ?? BrowserUrl.youtubeStartPage).getUrl {
+            let request = URLRequest(url: requestUrl)
+            webView.load(request)
+            url = nil
+        }
         return webView
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) { }
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        if url != nil, let requestUrl = url?.getUrl {
+            let request = URLRequest(url: requestUrl)
+            uiView.load(request)
+            url = nil
+        }
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -192,8 +211,8 @@ struct YtBrowserWebView: UIViewRepresentable {
     }
 }
 
-#Preview {
-    BrowserView()
-        .modelContainer(DataController.previewContainer)
-        .environment(RefreshManager())
-}
+// #Preview {
+//    BrowserView(url: .contant(BrowserUrl.youtubeStartPage))
+//        .modelContainer(DataController.previewContainer)
+//        .environment(RefreshManager())
+// }

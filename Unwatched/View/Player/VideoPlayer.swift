@@ -20,7 +20,7 @@ struct VideoPlayer: View {
     @GestureState private var dragState: CGFloat = 0
     @State var isSubscribedSuccess: Bool?
     @State var hapticToggle: Bool = false
-    @State var openBrowserUrl: BrowserUrl?
+    @State var browserUrl: BrowserUrl?
 
     @Binding var showMenu: Bool
 
@@ -123,7 +123,7 @@ struct VideoPlayer: View {
                         Spacer()
                     }
                     if !compactSize {
-                        VideoPlayerFooter(openBrowserUrl: $openBrowserUrl,
+                        VideoPlayerFooter(openBrowserUrl: openBrowserUrl,
                                           setShowMenu: setShowMenu,
                                           sleepTimerVM: sleepTimerVM,
                                           onSleepTimerEnded: onSleepTimerEnded)
@@ -155,13 +155,24 @@ struct VideoPlayer: View {
                 hasNewQueueItems = false
             }
         }
-        .sheet(item: $openBrowserUrl) { browserUrl in
-            let url = browserUrl.getUrl
-            BrowserView(url: url)
+        .sheet(item: $browserUrl) { browserUrl in
+            BrowserView(startUrl: browserUrl)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
         .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)
+    }
+
+    func openBrowserUrl(_ url: BrowserUrl) {
+        print("openBrowserUrl", url)
+        let browserAsTab = UserDefaults.standard.bool(forKey: Const.browserAsTab)
+        print("browserAsTab", browserAsTab)
+        if browserAsTab {
+            sheetPos.setDetentMiniPlayer()
+            navManager.openUrlInApp(url)
+        } else {
+            browserUrl = url
+        }
     }
 
     func onSleepTimerEnded(_ fadeOutSeconds: Double?) {

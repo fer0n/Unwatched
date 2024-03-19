@@ -16,6 +16,7 @@ struct MenuView: View {
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems: Bool = false
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
+    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
     @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
@@ -47,6 +48,17 @@ struct MenuView: View {
                     image: Image(systemName: "books.vertical"),
                     text: "library",
                     tag: NavigationTab.library
+                ),
+                TabRoute(
+                    view: AnyView(BrowserView(
+                        url: $navManager.openTabBrowserUrl,
+                        showHeader: false,
+                        safeArea: false
+                    )),
+                    image: Image(systemName: "globe.desk"),
+                    text: "browser",
+                    tag: NavigationTab.browser,
+                    show: browserAsTab
                 )
             ]
 
@@ -55,26 +67,27 @@ struct MenuView: View {
                 handleTabChanged(newValue, proxy)
             }) {
                 ForEach(tabs, id: \.tag) { tab in
-                    tab.view
-                        .tabItem {
-                            tab.image
-                                .environment(\.symbolVariants,
-                                             navManager.tab == tab.tag
-                                                ? .fill
-                                                : .none)
-                            if tab.showBadge {
-                                Text(verbatim: "●")
-                            } else if showTabBarLabels {
-                                Text(tab.text)
+                    if tab.show {
+                        tab.view
+                            .tabItem {
+                                tab.image
+                                    .environment(\.symbolVariants,
+                                                 navManager.tab == tab.tag
+                                                    ? .fill
+                                                    : .none)
+                                if tab.showBadge {
+                                    Text(verbatim: "●")
+                                } else if showTabBarLabels {
+                                    Text(tab.text)
+                                }
                             }
-                        }
-                        .tag(tab.tag)
+                            .tag(tab.tag)
+                    }
                 }
             }
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
-            let url = browserUrl.getUrl
-            BrowserView(url: url)
+            BrowserView(startUrl: browserUrl)
         }
     }
 
@@ -123,6 +136,7 @@ struct TabRoute {
     var text: LocalizedStringKey
     var tag: NavigationTab
     var showBadge: Bool = false
+    var show: Bool = true
 }
 
 #Preview {
