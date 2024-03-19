@@ -16,6 +16,7 @@ struct YtBrowserWebView: UIViewRepresentable {
 
     init(url: Binding<BrowserUrl?> = .constant(nil), startUrl: BrowserUrl? = nil, browserManager: BrowserManager) {
         self._url = url
+        self.startUrl = startUrl
         if startUrl == nil {
             self.startUrl = url.wrappedValue
         }
@@ -34,12 +35,13 @@ struct YtBrowserWebView: UIViewRepresentable {
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
         context.coordinator.startObserving(webView: webView)
-        if let requestUrl = (startUrl ?? BrowserUrl.youtubeStartPage).getUrl {
+        if let requestUrl = (startUrl ?? url ?? BrowserUrl.youtubeStartPage).getUrl {
             let request = URLRequest(url: requestUrl)
             webView.load(request)
             url = nil
         }
         return webView
+
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
