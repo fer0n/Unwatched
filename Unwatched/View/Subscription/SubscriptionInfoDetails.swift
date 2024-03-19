@@ -77,7 +77,10 @@ struct SubscriptionInfoDetails: View {
 
     var headerDetails: some View {
         ZStack {
-            let availableVideos = "\(subscription.videos?.count ?? 0) video(s) available"
+            let count = subscription.videos?.count ?? 0
+            let availableVideos = String(
+                AttributedString(localized: "^[\(count) video](inflect: true) available").characters
+            )
             let hasImage = subscription.thumbnailUrl != nil
 
             HStack {

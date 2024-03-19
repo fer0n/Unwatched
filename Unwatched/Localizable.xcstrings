@@ -27,6 +27,22 @@
         }
       }
     },
+    "^[%lld video](inflect: true) available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Video](inflect: true) Verfügbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Video](inflect: true) Available"
+          }
+        }
+      }
+    },
     "addBookmark" : {
       "localizations" : {
         "de" : {
