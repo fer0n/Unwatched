@@ -9,14 +9,22 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
+    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
     var body: some View {
+
         List {
-            Toggle(isOn: $showTabBarLabels) {
-                Text("showTabBarLabels")
+            Toggle(isOn: $browserAsTab) {
+                Text("browserAsTab")
             }
-            Toggle(isOn: $showTabBarBadge) {
-                Text("showTabBarBadge")
+
+            Section {
+                Toggle(isOn: $showTabBarLabels) {
+                    Text("showTabBarLabels")
+                }
+                Toggle(isOn: $showTabBarBadge) {
+                    Text("showTabBarBadge")
+                }
             }
 
             Section("appColor") {

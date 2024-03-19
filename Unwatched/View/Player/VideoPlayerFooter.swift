@@ -10,8 +10,8 @@ struct VideoPlayerFooter: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
-    @Binding var openBrowserUrl: BrowserUrl?
 
+    var openBrowserUrl: (BrowserUrl) -> Void
     var setShowMenu: (() -> Void)?
     var sleepTimerVM: SleepTimerViewModel
     var onSleepTimerEnded: (Double?) -> Void
@@ -56,7 +56,7 @@ struct VideoPlayerFooter: View {
                     .frame(maxWidth: .infinity)
 
                     Button {
-                        openBrowserUrl = .url(url.absoluteString)
+                        openBrowserUrl(.url(url.absoluteString))
                     } label: {
                         Image(systemName: "globe.desk")
                     }
@@ -78,7 +78,7 @@ struct VideoPlayerFooter: View {
 
 #Preview {
     VideoPlayerFooter(
-        openBrowserUrl: .constant(.url("asdf")),
+        openBrowserUrl: { _ in },
         sleepTimerVM: SleepTimerViewModel(),
         onSleepTimerEnded: { _ in })
 }

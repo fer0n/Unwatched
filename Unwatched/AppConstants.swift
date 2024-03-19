@@ -93,6 +93,7 @@ struct Const {
     static let showTabBarBadge = "showTabBarBadge"
     static let enableIcloudSync = "enableIcloudSync"
     static let showFullscreenControls = "showFullscreenControls"
+    static let browserAsTab = "browserAsTab"
 
     static let selectedDetent = "selectedDetent"
     static let hideMenuOnPlay = "hideMenuOnPlay"

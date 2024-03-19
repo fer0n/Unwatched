@@ -27,7 +27,7 @@ struct SubscriptionInfoDetails: View {
                         userName: subscription.youtubeUserName,
                         channelId: subscription.youtubeChannelId) {
                         Button {
-                            navManager.openBrowserUrl = .url(url)
+                            navManager.openUrlInApp(.url(url))
                         } label: {
                             Image(systemName: Const.appBrowserSF)
                                 .padding(10)

@@ -134,7 +134,7 @@ struct QueueView: View {
                         Text("importSubscriptions")
                     }
                     Button {
-                        navManager.openBrowserUrl = .youtubeStartPage
+                        navManager.openUrlInApp(.youtubeStartPage)
                     } label: {
                         Label("browseFeeds", systemImage: Const.appBrowserSF)
                     }

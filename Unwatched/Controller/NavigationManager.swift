@@ -11,6 +11,8 @@ import OSLog
 @Observable class NavigationManager: Codable {
     var showMenu = false
     var openBrowserUrl: BrowserUrl?
+    var openTabBrowserUrl: BrowserUrl?
+
     var tab = NavigationTab.queue
     var showDescriptionDetail = false
     var selectedDetailPage: ChapterDescriptionPage = .description
@@ -73,11 +75,18 @@ import OSLog
             if presentedSubscriptionQueue.last != subscription {
                 presentedSubscriptionQueue.append(subscription)
             }
+        case .browser:
+            tab = .library
+            pushToLibrary(subscription)
         case .library:
-            if lastLibrarySubscriptionId != subscription.persistentModelID {
-                presentedLibrary.append(subscription)
-                lastLibrarySubscriptionId = subscription.persistentModelID
-            }
+            pushToLibrary(subscription)
+        }
+    }
+
+    func pushToLibrary(_ subscription: Subscription) {
+        if lastLibrarySubscriptionId != subscription.persistentModelID {
+            presentedLibrary.append(subscription)
+            lastLibrarySubscriptionId = subscription.persistentModelID
         }
     }
 
@@ -105,6 +114,8 @@ import OSLog
             isOnTopView = presentedSubscriptionQueue.isEmpty
         case .library:
             isOnTopView = presentedLibrary.isEmpty
+        case .browser:
+            openTabBrowserUrl = .youtubeStartPage
         }
 
         if !isOnTopView {
@@ -124,6 +135,18 @@ import OSLog
                 presentedLibrary.removeLast()
                 lastLibrarySubscriptionId = nil
             }
+        case .browser:
+            break
+        }
+    }
+
+    func openUrlInApp(_ url: BrowserUrl) {
+        if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
+            openTabBrowserUrl = url
+            tab = .browser
+            showMenu = true
+        } else {
+            openBrowserUrl = url
         }
     }
 
@@ -142,4 +165,5 @@ enum NavigationTab: String, Codable {
     case inbox
     case queue
     case library
+    case browser
 }
