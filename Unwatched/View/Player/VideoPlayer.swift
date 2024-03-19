@@ -161,6 +161,15 @@ struct VideoPlayer: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
         .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)
+        .onChange(of: landscapeFullscreen) {
+            if landscapeFullscreen && player.isPlaying && navManager.showMenu && sheetPos.isVideoPlayer {
+                navManager.showMenu = false
+                sheetPos.hadMenuOpen = true
+            } else if !landscapeFullscreen && sheetPos.hadMenuOpen {
+                sheetPos.hadMenuOpen = false
+                navManager.showMenu = true
+            }
+        }
     }
 
     func openBrowserUrl(_ url: BrowserUrl) {

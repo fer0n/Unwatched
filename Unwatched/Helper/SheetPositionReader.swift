@@ -15,6 +15,7 @@ import OSLog
     @ObservationIgnored var selectedDetent: PresentationDetent?
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
+    @ObservationIgnored var hadMenuOpen: Bool = false
 
     static func load() -> SheetPositionReader {
         let sheetPos = SheetPositionReader()
@@ -38,6 +39,14 @@ import OSLog
 
     var maxSheetHeight: CGFloat {
         sheetHeight - Const.playerAboveSheetHeight
+    }
+
+    var isMiniPlayer: Bool {
+        selectedDetent == .height(maxSheetHeight)
+    }
+
+    var isVideoPlayer: Bool {
+        selectedDetent == .height(playerControlHeight)
     }
 
     func setTopSafeArea(_ topSafeArea: CGFloat) {
