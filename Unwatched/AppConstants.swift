@@ -67,6 +67,7 @@ struct Const {
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
+    static let goToQueueOnPlay = "goToQueueOnPlay"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"

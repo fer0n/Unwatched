@@ -979,6 +979,22 @@
         }
       }
     },
+    "goToQueueOnPlay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue beim Abspielen Öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go to Queue on Play"
+          }
+        }
+      }
+    },
     "green" : {
       "localizations" : {
         "de" : {
@@ -1890,13 +1906,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Vollbild\" limitiert die Wiedergabe eines Videos auf den Vollbildmodus. Am iPad ist \"Vollbild\" notwendig um Picture-in-picture zu starten, am iPhone funktioniert es mit oder ohne."
+            "value" : "Limitiert die Wiedergabe eines Videos auf den Vollbildmodus. Am iPad ist \"Vollbild\" notwendig um Picture-in-picture zu starten, am iPhone funktioniert es mit oder ohne."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Fullscreen\" set to true will only allow playing a video in fullscreen. On iPads, this is required to play videos Picture-in-picture. On iPhones, PiP works regardless."
+            "value" : "Will only allow playing a video in fullscreen. On iPad, this is required to play videos Picture-in-picture. On iPhone, PiP works regardless."
           }
         }
       }
@@ -2291,13 +2307,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vollbild-Steuerelemente anzeigen"
+            "value" : "Querformat Vollbild-Steuerelemente anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show Fullscreen Controls"
+            "value" : "Show Landscape Fullscreen Controls"
           }
         }
       }

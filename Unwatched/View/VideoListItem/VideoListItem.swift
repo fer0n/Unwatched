@@ -18,6 +18,7 @@ enum VideoActions {
 
 struct VideoListItem: View {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
+    @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -77,11 +78,14 @@ struct VideoListItem: View {
             .onTapGesture {
                 player.playVideo(video)
                 _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
-                if !hideMenuOnPlay {
-                    return
+                if hideMenuOnPlay {
+                    withAnimation {
+                        navManager.showMenu = false
+                    }
                 }
-                withAnimation {
-                    navManager.showMenu = false
+
+                if goToQueueOnPlay {
+                    navManager.navigateToQueue()
                 }
             }
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
