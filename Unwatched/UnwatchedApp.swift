@@ -60,8 +60,8 @@ struct UnwatchedApp: App {
         }
         .modelContainer(UnwatchedApp.sharedModelContainer)
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
-            let container = await UnwatchedApp.sharedModelContainer
-            await RefreshManager.handleBackgroundVideoRefresh(container)
+            // let container = await UnwatchedApp.sharedModelContainer
+            // await RefreshManager.handleBackgroundVideoRefresh(container)
         }
     }
 
