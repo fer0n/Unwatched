@@ -97,6 +97,11 @@ import OSLog
         }
     }
 
+    func navigateToQueue() {
+        self.tab = .queue
+        presentedSubscriptionQueue.removeAll()
+    }
+
     func setScrollId(_ value: String?, _ differentiator: String = "") {
         topListItemId = NavigationManager.getScrollId(value, differentiator)
     }
