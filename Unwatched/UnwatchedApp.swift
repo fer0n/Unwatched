@@ -14,7 +14,7 @@ struct UnwatchedApp: App {
     @State var navManager = NavigationManager.load()
     @State var alerter: Alerter = Alerter()
 
-    static var sharedModelContainer: ModelContainer {
+    static var sharedModelContainer: ModelContainer = {
         var inMemory = false
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
 
@@ -38,7 +38,7 @@ struct UnwatchedApp: App {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }
+    }()
 
     var body: some Scene {
         WindowGroup {
