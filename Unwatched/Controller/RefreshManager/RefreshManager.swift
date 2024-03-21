@@ -125,14 +125,14 @@ import OSLog
 extension RefreshManager {
     static func scheduleVideoRefresh() {
         Logger.log.info("scheduleVideoRefresh()")
-        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
-        do {
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            Logger.log.error("Error scheduleVideoRefresh: \(error)")
-        }
-        Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
+        // let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
+        // request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
+        // do {
+        //     try BGTaskScheduler.shared.submit(request)
+        // } catch {
+        //     Logger.log.error("Error scheduleVideoRefresh: \(error)")
+        // }
+        // Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
