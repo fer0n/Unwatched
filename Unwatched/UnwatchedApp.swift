@@ -14,7 +14,7 @@ struct UnwatchedApp: App {
     @State var navManager = NavigationManager.load()
     @State var alerter: Alerter = Alerter()
 
-    static var sharedModelContainer: ModelContainer = {
+    var sharedModelContainer: ModelContainer = {
         var inMemory = false
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
 
@@ -58,7 +58,7 @@ struct UnwatchedApp: App {
                 }
                 .environment(navManager)
         }
-        .modelContainer(UnwatchedApp.sharedModelContainer)
+        .modelContainer(sharedModelContainer)
         // .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
         // let container = await UnwatchedApp.sharedModelContainer
         // await RefreshManager.handleBackgroundVideoRefresh(container)
