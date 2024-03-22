@@ -6,7 +6,6 @@
 import Foundation
 import SwiftUI
 import SwiftData
-import OSLog
 
 @Observable class NavigationManager: Codable {
     var showMenu = false
@@ -39,7 +38,7 @@ import OSLog
            let loadedNavManager = try? JSONDecoder().decode(NavigationManager.self, from: savedNavManager) {
             return loadedNavManager
         } else {
-            Logger.log.info("navManager not found")
+            print("navManager not found")
             return NavigationManager()
         }
     }

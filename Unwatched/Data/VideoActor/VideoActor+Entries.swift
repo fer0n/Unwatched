@@ -6,7 +6,6 @@
 import SwiftData
 import SwiftUI
 import Observation
-import OSLog
 
 // Entries
 extension VideoActor {
@@ -39,7 +38,7 @@ extension VideoActor {
 
     func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
         guard let video = modelContext.model(for: videoId) as? Video else {
-            Logger.log.warning("moveVideoToInbox no video found")
+            print("moveVideoToInbox no video found")
             return
         }
         if video.inboxEntry != nil {
@@ -60,7 +59,7 @@ extension VideoActor {
     func updateRecentVideoDate(subscription: Subscription, videos: [Video]) {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
-            Logger.log.info("mostRecentDate \(mostRecentDate)")
+            print("mostRecentDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -156,7 +155,7 @@ extension VideoActor {
 
     func addToBottomQueue(videoId: PersistentIdentifier) throws {
         guard let video = modelContext.model(for: videoId) as? Video else {
-            Logger.log.warning("addToBottomQueue couldn't find a video")
+            print("addToBottomQueue couldn't find a video")
             return
         }
 
@@ -213,7 +212,7 @@ extension VideoActor {
                 queueEntry.order = index
             }
         } catch {
-            Logger.log.error("insertQueueEntries: \(error)")
+            print("insertQueueEntries: \(error)")
         }
     }
 
@@ -238,7 +237,7 @@ extension VideoActor {
                 queueEntry.order -= 1
             }
         } catch {
-            Logger.log.error("No queue entry found to delete")
+            print("No queue entry found to delete")
         }
     }
 }

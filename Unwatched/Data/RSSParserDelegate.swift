@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import OSLog
 
 class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
@@ -119,7 +118,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 }
                 videos.append(video)
             } else {
-                Logger.log.warning("couldn't create the video")
+                print("couldn't create the video")
             }
             currentTitle = ""
             currentLink = ""

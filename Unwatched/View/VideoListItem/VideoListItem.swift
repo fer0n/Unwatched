@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import OSLog
 
 enum VideoActions {
     case queueTop
@@ -229,7 +228,7 @@ struct VideoListItem: View {
     }
 
     func addVideoToTopQueue() {
-        Logger.log.info("addVideoTop")
+        print("addVideoTop")
         _ = VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
@@ -256,7 +255,7 @@ struct VideoListItem: View {
     }
 
     func addVideoToBottomQueue() {
-        Logger.log.info("addVideoBottom")
+        print("addVideoBottom")
         let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
         onChange?()
