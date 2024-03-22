@@ -124,14 +124,15 @@ import OSLog
 // Background Refresh
 extension RefreshManager {
     static func scheduleVideoRefresh() {
-        Logger.log.info("scheduleVideoRefresh()")
-        // let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
-        // request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
-        // do {
-        //     try BGTaskScheduler.shared.submit(request)
-        // } catch {
-        //     Logger.log.error("Error scheduleVideoRefresh: \(error)")
-        // }
+        // Logger.log.info("scheduleVideoRefresh()")
+        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            // Logger.log.error("Error scheduleVideoRefresh: \(error)")
+            print("error scheduling background task: \(error)")
+        }
         // Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
@@ -142,20 +143,20 @@ extension RefreshManager {
     }
 
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
-        Logger.log.info("Background task running now")
+        // Logger.log.info("Background task running now")
         do {
-            scheduleVideoRefresh()
+            // scheduleVideoRefresh() NEXT: try it without this
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if Task.isCancelled {
-                Logger.log.info("background task has been cancelled")
+                // Logger.log.info("background task has been cancelled")
             }
             if newVideos.videoCount == 0 {
-                Logger.log.info("notifyHasRun")
+                // Logger.log.info("notifyHasRun")
                 NotificationManager.notifyHasRun()
             } else {
-                Logger.log.info("notifyNewVideos")
+                // Logger.log.info("notifyNewVideos")
                 NotificationManager.increaseBadgeNumer(by: newVideos.videoCount)
                 NotificationManager.notifyNewVideos(newVideos)
             }

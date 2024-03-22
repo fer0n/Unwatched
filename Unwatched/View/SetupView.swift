@@ -34,14 +34,16 @@ struct SetupView: View {
                 player.container = container
                 restoreNowPlayingVideo()
             }
-            .task(id: scenePhase) {
+            .onChange(of: scenePhase) {
                 switch scenePhase {
                 case .active:
                     player.isInBackground = false
                     NotificationManager.clearNotifications()
                     Logger.log.info("active")
-                    await refresher.handleBecameActive()
-                    refresher.handleAutoBackup(UIDevice.current.name)
+                    Task {
+                        await refresher.handleBecameActive()
+                        refresher.handleAutoBackup(UIDevice.current.name)
+                    }
                 case .background:
                     Logger.log.info("background")
                     player.isInBackground = true
