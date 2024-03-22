@@ -42,27 +42,28 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SetupView()
-                .environment(alerter)
-                .alert(isPresented: $alerter.isShowingAlert) {
-                    alerter.alert ?? Alert(title: Text(verbatim: ""))
-                }
-                .task {
-                    try? Tips.configure([
-                        .displayFrequency(.immediate),
-                        .datastoreLocation(.applicationDefault)
-                    ])
-                }
-                .onAppear {
-                    setUpAppDelegate()
-                }
-                .environment(navManager)
+            AnyView(SetupView()
+                        .environment(alerter)
+                        .alert(isPresented: $alerter.isShowingAlert) {
+                            alerter.alert ?? Alert(title: Text(verbatim: ""))
+                        }
+                        .task {
+                            try? Tips.configure([
+                                .displayFrequency(.immediate),
+                                .datastoreLocation(.applicationDefault)
+                            ])
+                        }
+                        .onAppear {
+                            setUpAppDelegate()
+                        }
+                        .environment(navManager))
         }
         .modelContainer(sharedModelContainer)
-        // .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
-        // let container = await UnwatchedApp.sharedModelContainer
-        // await RefreshManager.handleBackgroundVideoRefresh(container)
-        // }
+        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
+            print("backgroundTask has run successfully")
+            // let container = await UnwatchedApp.sharedModelContainer
+            // await RefreshManager.handleBackgroundVideoRefresh(container)
+        }
     }
 
     func setUpAppDelegate() {
