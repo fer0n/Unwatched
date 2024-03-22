@@ -145,13 +145,13 @@ extension RefreshManager {
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
         // Logger.log.info("Background task running now")
         do {
-            // scheduleVideoRefresh() NEXT: try it without this
+            // scheduleVideoRefresh()
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
-            if Task.isCancelled {
-                // Logger.log.info("background task has been cancelled")
-            }
+            // if Task.isCancelled {
+            // Logger.log.info("background task has been cancelled")
+            // }
             if newVideos.videoCount == 0 {
                 // Logger.log.info("notifyHasRun")
                 NotificationManager.notifyHasRun()
