@@ -23,7 +23,7 @@ struct Const {
     static let minInboxEntriesToShowClear = 2
     static let autoRefreshIntervalSeconds: Double = 8 * 60
 
-    static let earliestBackgroundBeginSeconds: Double = 40 * 60
+    static let earliestBackgroundBeginSeconds: Double = 30 * 60
     static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
     // MARK: - SF Symbols
