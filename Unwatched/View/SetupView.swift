@@ -5,7 +5,6 @@
 
 import SwiftUI
 import BackgroundTasks
-import OSLog
 
 struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -39,19 +38,19 @@ struct SetupView: View {
                 case .active:
                     player.isInBackground = false
                     NotificationManager.clearNotifications()
-                    Logger.log.info("active")
+                    print("active")
                     await refresher.handleBecameActive()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 case .background:
-                    Logger.log.info("background")
+                    print("background")
                     player.isInBackground = true
                     Task {
                         await saveData()
                     }
                     refresher.handleBecameInactive()
-                    // RefreshManager.scheduleVideoRefresh()
+                // RefreshManager.scheduleVideoRefresh()
                 case .inactive:
-                    Logger.log.info("inactive")
+                    print("inactive")
                     saveCurrentVideo()
                 default:
                     break
@@ -60,7 +59,7 @@ struct SetupView: View {
     }
 
     func restoreNowPlayingVideo() {
-        Logger.log.info("restoreVideo")
+        print("restoreVideo")
         var video: Video?
 
         if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
@@ -84,7 +83,7 @@ struct SetupView: View {
         sheetPos.save()
         let container = modelContext.container
         await imageCacheManager.persistCache(container)
-        Logger.log.info("saved state")
+        print("saved state")
     }
 
     func saveCurrentVideo() {

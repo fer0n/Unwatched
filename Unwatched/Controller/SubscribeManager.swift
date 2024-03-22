@@ -6,7 +6,6 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import OSLog
 
 @Observable class SubscribeManager {
     weak var container: ModelContainer?
@@ -36,11 +35,11 @@ import OSLog
     @MainActor
     func setIsSubscribed(_ channelInfo: ChannelInfo?) async {
         guard let channelId = channelInfo?.channelId else {
-            Logger.log.info("no channelId to check subscription status")
+            print("no channelId to check subscription status")
             return
         }
         guard let container = container else {
-            Logger.log.warning("checkIsSubscribed has no ModelContainer")
+            print("checkIsSubscribed has no ModelContainer")
             return
         }
         isLoading = true
@@ -75,7 +74,7 @@ import OSLog
 
     func unsubscribe(_ channelId: String) async {
         guard let container = container else {
-            Logger.log.warning("addNewSubscription has no container")
+            print("addNewSubscription has no container")
             return
         }
         isSubscribedSuccess = nil
@@ -85,14 +84,14 @@ import OSLog
             try await task.value
             isSubscribedSuccess = false
         } catch {
-            Logger.log.error("unsubscribe error: \(error)")
+            print("unsubscribe error: \(error)")
         }
         isLoading = false
     }
 
     func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) async {
         guard let container = container else {
-            Logger.log.warning("addNewSubscription has no container")
+            print("addNewSubscription has no container")
             return
         }
 
@@ -105,7 +104,7 @@ import OSLog
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
-            Logger.log.error("addNewSubscription error: \(error)")
+            print("addNewSubscription error: \(error)")
             isSubscribedSuccess = false
         }
         isLoading = false
@@ -117,7 +116,7 @@ import OSLog
         }
         let context = ModelContext(container)
         guard let video = context.model(for: videoId) as? Video else {
-            Logger.log.info("handleSubscription: video not found")
+            print("handleSubscription: video not found")
             return
         }
         isSubscribedSuccess = nil
@@ -126,7 +125,7 @@ import OSLog
         let isSubscribed = isSubscribed(video: video)
         if isSubscribed {
             guard let subId = video.subscription?.id else {
-                Logger.log.info("no subId to un/subscribe")
+                print("no subId to un/subscribe")
                 isLoading = false
                 return
             }
@@ -146,7 +145,7 @@ import OSLog
                     modelContainer: container)
                 isSubscribedSuccess = true
             } catch {
-                Logger.log.error("error subscribing: \(error)")
+                print("error subscribing: \(error)")
                 isSubscribedSuccess = false
             }
             isLoading = false
@@ -177,13 +176,13 @@ import OSLog
     @MainActor
     func addSubscription(channelInfo: [ChannelInfo]) async {
         guard let container = container else {
-            Logger.log.warning("no container in addSubscriptionFromText")
+            print("no container in addSubscriptionFromText")
             return
         }
         errorMessage = nil
         isLoading = true
 
-        Logger.log.info("load new")
+        print("load new")
         do {
             let subs = try await SubscriptionService.addSubscriptions(
                 channelInfo: channelInfo,
@@ -197,7 +196,7 @@ import OSLog
                 self.isSubscribedSuccess = true
             }
         } catch {
-            Logger.log.error("\(error)")
+            print("\(error)")
             self.errorMessage = error.localizedDescription
             self.showDropResults = true
         }

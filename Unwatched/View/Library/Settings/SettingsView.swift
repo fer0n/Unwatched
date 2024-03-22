@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import OSLog
 
 struct SettingsView: View {
     @Environment(\.modelContext) var modelContext

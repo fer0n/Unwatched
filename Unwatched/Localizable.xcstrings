@@ -914,6 +914,7 @@
       }
     },
     "exportLogs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1322,6 +1323,7 @@
       }
     },
     "logs" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

@@ -5,7 +5,6 @@
 
 import Foundation
 import SwiftUI
-import OSLog
 
 @Observable class SheetPositionReader {
 
@@ -54,12 +53,12 @@ import OSLog
     }
 
     func setDetentMiniPlayer() {
-        Logger.log.info("setDetentMiniPlayer()")
+        print("setDetentMiniPlayer()")
         selectedDetent = .height(maxSheetHeight)
     }
 
     func setDetentVideoPlayer() {
-        Logger.log.info("setDetentVideoPlayer()")
+        print("setDetentVideoPlayer()")
         selectedDetent = .height(playerControlHeight)
     }
 

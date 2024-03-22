@@ -6,7 +6,6 @@
 import Foundation
 import SwiftUI
 import MediaPlayer
-import OSLog
 
 @Observable class SleepTimerViewModel {
     @ObservationIgnored private var startFadeOutAtSecond: Int = 40
@@ -58,9 +57,9 @@ import OSLog
     }
 
     func addTime(_ minutes: Int) {
-        Logger.log.info("addTime \(minutes)")
+        print("addTime \(minutes)")
         remainingSeconds += minutes * 60
-        Logger.log.info("remainingSeconds \(self.remainingSeconds)")
+        print("remainingSeconds \(self.remainingSeconds)")
         resetAudioFadeOut()
     }
 
@@ -79,7 +78,7 @@ import OSLog
         } else if remainingSeconds > 0 {
             remainingSeconds -= 1
         } else {
-            Logger.log.info("onEnded \(self.remainingSeconds)")
+            print("onEnded \(self.remainingSeconds)")
             onEnded?(startFadeOutTime.map { Double($0) })
             stopTimer()
         }

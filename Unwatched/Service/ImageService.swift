@@ -6,7 +6,6 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import OSLog
 
 struct ImageService {
 
@@ -20,7 +19,7 @@ struct ImageService {
                 // Video
                 if let video = context.model(for: holderId) as? Video {
                     if video.cachedImage != nil {
-                        Logger.log.info("video !has image")
+                        print("video !has image")
                         return
                     }
                     let imageCache = CachedImage(info.url, imageData: info.data)
@@ -31,7 +30,7 @@ struct ImageService {
                 // Subscription
                 if let sub = context.model(for: holderId) as? Subscription {
                     if sub.cachedImage != nil {
-                        Logger.log.info("sub !has image")
+                        print("sub !has image")
                         return
                     }
                     let imageCache = CachedImage(info.url, imageData: info.data)
@@ -39,7 +38,7 @@ struct ImageService {
                     sub.cachedImage = imageCache
                 }
 
-                Logger.log.info("saved")
+                print("saved")
             }
             try context.save()
         }

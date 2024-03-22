@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import OSLog
 
 enum VideoSource {
     case continuousPlay
@@ -43,7 +42,7 @@ enum VideoSource {
         }
 
         if video != nil && video?.url == oldValue?.url {
-            Logger.log.info("Tapped existing video")
+            print("Tapped existing video")
             self.play()
             return
         }
@@ -86,7 +85,7 @@ enum VideoSource {
     @ObservationIgnored var currentEndTime: Double?
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        Logger.log.info("updateElapsedTime")
+        print("updateElapsedTime")
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             return
@@ -198,7 +197,7 @@ enum VideoSource {
 
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
         guard let container = container else {
-            Logger.log.error("loadTopmostVideoFromQueue: no container")
+            print("loadTopmostVideoFromQueue: no container")
             return
         }
         let currentVideoId = video?.persistentModelID
@@ -223,12 +222,12 @@ enum VideoSource {
     }
 
     func handleAutoStart() {
-        Logger.log.info("handleAutoStart")
+        print("handleAutoStart")
         guard let source = videoSource else {
-            Logger.log.info("no source, stopping")
+            print("no source, stopping")
             return
         }
-        Logger.log.info("source: \(String(describing: source))")
+        print("source: \(String(describing: source))")
         switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -256,7 +255,7 @@ enum VideoSource {
     }
 
     func handleHotSwap() {
-        Logger.log.info("handleHotSwap")
+        print("handleHotSwap")
         previousIsPlaying = isPlaying
         pause()
         self.videoSource = .hotSwap

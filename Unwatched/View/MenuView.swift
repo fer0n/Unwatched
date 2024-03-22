@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import OSLog
 
 struct MenuView: View {
     @Environment(RefreshManager.self) var refresher
@@ -113,7 +112,7 @@ struct MenuView: View {
     }
 
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
-        Logger.log.info("handleTabChanged \(newTab.rawValue)")
+        print("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             withAnimation {
                 let isTopView = navManager.handleTappedTwice()

@@ -6,7 +6,6 @@
 import SwiftUI
 import SwiftData
 import TipKit
-import OSLog
 
 struct QueueView: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
@@ -56,7 +55,7 @@ struct QueueView: View {
                         }
                         .onMove(perform: moveQueueEntry)
                         .dropDestination(for: URL.self) { items, index in
-                            Logger.log.info("drop at index \(index)")
+                            print("drop at index \(index)")
                             handleUrlDrop(items, at: index)
                         }
                     }
@@ -171,7 +170,7 @@ struct QueueView: View {
     }
 
     func handleUrlDrop(_ items: [URL], at index: Int) {
-        Logger.log.info("handleUrlDrop \(items)")
+        print("handleUrlDrop \(items)")
         let container = modelContext.container
         let task = VideoService.addForeignUrls(items, in: .queue, at: index, container: container)
         if index == 0 {

@@ -5,7 +5,6 @@
 
 import SwiftUI
 import WebKit
-import OSLog
 
 struct PlayerWebView: UIViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
@@ -41,17 +40,17 @@ struct PlayerWebView: UIViewRepresentable {
         let prev = context.coordinator.previousState
 
         if prev.playbackSpeed != player.playbackSpeed {
-            Logger.log.info("SPEED")
+            print("SPEED")
             uiView.evaluateJavaScript(getSetPlaybackRateScript())
             context.coordinator.previousState.playbackSpeed = player.playbackSpeed
         }
 
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
-                Logger.log.info("PLAY")
+                print("PLAY")
                 uiView.evaluateJavaScript(getPlayScript())
             } else {
-                Logger.log.info("PAUSE")
+                print("PAUSE")
                 uiView.evaluateJavaScript(getPauseScript())
             }
             context.coordinator.previousState.isPlaying = player.isPlaying
@@ -59,13 +58,13 @@ struct PlayerWebView: UIViewRepresentable {
 
         let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
-            Logger.log.info("SEEK")
+            print("SEEK")
             uiView.evaluateJavaScript(getSeekToScript(seekTo))
             context.coordinator.previousState.seekPosition = seekPosition
         }
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
-            Logger.log.info("CUE VIDEO")
+            print("CUE VIDEO")
             if playerType == .youtube {
                 if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, player.getStartPosition())) {
                     let request = URLRequest(url: url)
@@ -148,7 +147,7 @@ struct PlayerWebView: UIViewRepresentable {
                 let payload = body[safe: 1]
                 let payloadString = payload.map { String($0) }
                 if topic != "currentTime" {
-                    Logger.log.info("\(messageBody)")
+                    print("\(messageBody)")
                 }
                 handleJsMessages(String(topic), payloadString)
             }

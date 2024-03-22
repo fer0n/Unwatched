@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import OSLog
 
 struct BackupView: View {
     @Environment(PlayerManager.self) var player
@@ -137,7 +136,7 @@ struct BackupView: View {
             case .success(let file):
                 fileToBeRestored = IdentifiableURL(url: file)
             case .failure(let error):
-                Logger.log.error("\(error.localizedDescription)")
+                print("\(error.localizedDescription)")
             }
         }
         .task(id: isDeletingTask) {
@@ -195,7 +194,7 @@ struct BackupView: View {
     func getAllIcloudFiles() {
         let fileManager = FileManager.default
         guard let backupsUrl = UserDataService.getBackupsDirectory() else {
-            Logger.log.warning("no documents url")
+            print("no documents url")
             return
         }
         withAnimation {
@@ -209,7 +208,7 @@ struct BackupView: View {
                 }
                 fileNames = Array(sortedFileUrls.prefix(5))
             } catch {
-                Logger.log.error("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
+                print("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
             }
         }
     }
@@ -237,19 +236,19 @@ struct BackupView: View {
     }
 
     func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
-        Logger.log.info("importFile: \(filePath)")
+        print("importFile: \(filePath)")
         let container = modelContext.container
         let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
         Task {
             await after?.value
-            Logger.log.info("after task done")
+            print("after task done")
             do {
                 let data = try Data(contentsOf: filePath)
-                Logger.log.info("data is there")
+                print("data is there")
                 UserDataService.importBackup(data, container: container)
             } catch {
-                Logger.log.error("error when importing: \(error)")
+                print("error when importing: \(error)")
             }
             if isSecureAccess {
                 filePath.stopAccessingSecurityScopedResource()
