@@ -121,45 +121,45 @@ import BackgroundTasks
 }
 
 // Background Refresh
-// extension RefreshManager {
-//    static func scheduleVideoRefresh() {
-//        print("scheduleVideoRefresh()")
-//        // let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
-//        // request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
-//        // do {
-//        //     try BGTaskScheduler.shared.submit(request)
-//        // } catch {
-//        //     print("Error scheduleVideoRefresh: \(error)")
-//        // }
-//        // print("Scheduled background task") // Breakpoint 1 HERE
-//
-//        // swiftlint:disable:next line_length
-//        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
-//
-//        // swiftlint:disable:next line_length
-//        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
-//    }
-//
-//    static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
-//        print("Background task running now")
-//        do {
-//            scheduleVideoRefresh()
-//            let task = VideoService.loadNewVideosInBg(container: container)
-//            let newVideos = try await task.value
-//            UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
-//            if Task.isCancelled {
-//                print("background task has been cancelled")
-//            }
-//            if newVideos.videoCount == 0 {
-//                print("notifyHasRun")
-//                NotificationManager.notifyHasRun()
-//            } else {
-//                print("notifyNewVideos")
-//                NotificationManager.increaseBadgeNumer(by: newVideos.videoCount)
-//                NotificationManager.notifyNewVideos(newVideos)
-//            }
-//        } catch {
-//            print("Error during background refresh: \(error)")
-//        }
-//    }
-// }
+extension RefreshManager {
+    static func scheduleVideoRefresh() {
+        print("scheduleVideoRefresh()")
+        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Error scheduleVideoRefresh: \(error)")
+        }
+        print("Scheduled background task") // Breakpoint 1 HERE
+
+        // swiftlint:disable:next line_length
+        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
+
+        // swiftlint:disable:next line_length
+        // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
+    }
+
+    static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
+        print("Background task running now")
+        do {
+            scheduleVideoRefresh()
+            let task = VideoService.loadNewVideosInBg(container: container)
+            let newVideos = try await task.value
+            UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
+            if Task.isCancelled {
+                print("background task has been cancelled")
+            }
+            if newVideos.videoCount == 0 {
+                print("notifyHasRun")
+                NotificationManager.notifyHasRun()
+            } else {
+                print("notifyNewVideos")
+                NotificationManager.increaseBadgeNumer(by: newVideos.videoCount)
+                NotificationManager.notifyNewVideos(newVideos)
+            }
+        } catch {
+            print("Error during background refresh: \(error)")
+        }
+    }
+}
