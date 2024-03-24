@@ -48,6 +48,7 @@ struct SetupView: View {
                         await saveData()
                     }
                     refresher.handleBecameInactive()
+                    RefreshManager.scheduleVideoRefresh()
                 case .inactive:
                     print("inactive")
                     saveCurrentVideo()
