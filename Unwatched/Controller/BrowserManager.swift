@@ -7,22 +7,25 @@ import SwiftUI
 import WebKit
 
 @Observable class BrowserManager {
-    var channel: ChannelInfo?
+    var info: SubscriptionInfo?
 
     var desktopUserName: String?
     var firstPageLoaded = false
     var isMobileVersion = true
 
     var channelTextRepresentation: String? {
-        return channel?.title ?? channel?.userName ?? channel?.channelId ?? channel?.rssFeed
+        if info?.playlistId != nil {
+            return "Playlist\(info?.title != nil ? " (\(info?.title ?? ""))" : "")"
+        }
+        return info?.title ?? info?.userName ?? info?.channelId ?? info?.rssFeed
     }
 
-    func setFoundInfo(_ info: ChannelInfo) {
-        self.channel = info
+    func setFoundInfo(_ info: SubscriptionInfo) {
+        self.info = info
     }
 
     func clearInfo() {
-        self.channel = nil
+        self.info = nil
         self.desktopUserName = nil
     }
 }

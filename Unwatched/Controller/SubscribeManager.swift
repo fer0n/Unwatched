@@ -34,17 +34,15 @@ import OSLog
     }
 
     @MainActor
-    func setIsSubscribed(_ channelInfo: ChannelInfo?) async {
-        guard let channelId = channelInfo?.channelId else {
-            Logger.log.info("no channelId to check subscription status")
-            return
-        }
+    func setIsSubscribed(_ subscriptionInfo: SubscriptionInfo?) async {
         guard let container = container else {
             Logger.log.warning("checkIsSubscribed has no ModelContainer")
             return
         }
         isLoading = true
-        let task = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
+        var task = SubscriptionService.isSubscribed(channelId: subscriptionInfo?.channelId,
+                                                    playlistId: subscriptionInfo?.playlistId,
+                                                    container: container)
         let isSubscribed = await task.value
         self.isSubscribedSuccess = isSubscribed
         isLoading = false
@@ -73,15 +71,16 @@ import OSLog
         return "plus"
     }
 
-    func unsubscribe(_ channelId: String) async {
-        guard let container = container else {
-            Logger.log.warning("addNewSubscription has no container")
+    func unsubscribe(_ info: SubscriptionInfo) async {
+        guard let container = container,
+              info.channelId != nil && info.playlistId != nil else {
+            Logger.log.warning("addNewSubscription has no container/channelId/playlistId")
             return
         }
         isSubscribedSuccess = nil
         isLoading = true
         do {
-            let task = SubscriptionService.unsubscribe(channelId, container: container)
+            let task = SubscriptionService.unsubscribe(info, container: container)
             try await task.value
             isSubscribedSuccess = false
         } catch {
@@ -90,7 +89,8 @@ import OSLog
         isLoading = false
     }
 
-    func addSubscription(_ channelInfo: ChannelInfo? = nil, subscriptionId: PersistentIdentifier? = nil) async {
+    func addSubscription(_ subscriptionInfo: SubscriptionInfo? = nil,
+                         subscriptionId: PersistentIdentifier? = nil) async {
         guard let container = container else {
             Logger.log.warning("addNewSubscription has no container")
             return
@@ -99,13 +99,14 @@ import OSLog
         isSubscribedSuccess = nil
         isLoading = true
         do {
-            try await SubscriptionService.addSubscription(channelInfo: channelInfo,
+            try await SubscriptionService.addSubscription(subscriptionInfo: subscriptionInfo,
                                                           subsciptionId: subscriptionId,
                                                           modelContainer: container)
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
             Logger.log.error("addNewSubscription error: \(error)")
+            errorMessage = error.localizedDescription
             isSubscribedSuccess = false
         }
         isLoading = false
@@ -137,11 +138,11 @@ import OSLog
             isLoading = false
         } else {
             let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId
-            let channelInfo = ChannelInfo(channelId: channelId)
+            let subscriptionInfo = SubscriptionInfo(channelId: channelId)
             let subId = video.subscription?.id
             do {
                 try await SubscriptionService.addSubscription(
-                    channelInfo: channelInfo,
+                    subscriptionInfo: subscriptionInfo,
                     subsciptionId: subId,
                     modelContainer: container)
                 isSubscribedSuccess = true
@@ -170,12 +171,12 @@ import OSLog
             errorMessage = "No urls found"
             return
         }
-        let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
-        await addSubscription(channelInfo: channelInfo)
+        let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
+        await addSubscription(subscriptionInfo: subscriptionInfo)
     }
 
     @MainActor
-    func addSubscription(channelInfo: [ChannelInfo]) async {
+    func addSubscription(subscriptionInfo: [SubscriptionInfo]) async {
         guard let container = container else {
             Logger.log.warning("no container in addSubscriptionFromText")
             return
@@ -186,7 +187,7 @@ import OSLog
         Logger.log.info("load new")
         do {
             let subs = try await SubscriptionService.addSubscriptions(
-                channelInfo: channelInfo,
+                subscriptionInfo: subscriptionInfo,
                 modelContainer: container
             )
             let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil

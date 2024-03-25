@@ -40,6 +40,7 @@ struct SetupView: View {
 
                 let container = modelContext.container
                 refresher.container = container
+                refresher.showError = alerter.showError
                 player.container = container
                 restoreNowPlayingVideo()
             }

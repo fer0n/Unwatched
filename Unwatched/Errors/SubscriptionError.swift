@@ -12,6 +12,7 @@ enum SubscriptionError: LocalizedError {
     case httpRequestFailed(_ message: String)
     case notAnUrl(_ noUrl: String)
     case noInfoFoundToSubscribeTo
+    case noInfoFoundToUnsibscribe
     case couldNotSubscribe(_ message: String)
 
     var errorDescription: String? {
@@ -38,6 +39,8 @@ enum SubscriptionError: LocalizedError {
             return NSLocalizedString("noInfoFoundToSubscribeTo", comment: "No info found to subscribe to")
         case .couldNotSubscribe(let message):
             return NSLocalizedString("Could not subscribe: \(message)", comment: "Could not subscribe")
+        case .noInfoFoundToUnsibscribe:
+            return NSLocalizedString("noInfoFoundToUnsibscribe", comment: "noInfoFoundToUnsibscribe")
         }
     }
 }

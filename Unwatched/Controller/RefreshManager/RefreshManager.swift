@@ -20,6 +20,8 @@ import OSLog
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
 
+    var showError: ((_ error: any Error) -> Void)?
+
     init() {
         setupCloudKitListener()
     }
@@ -43,8 +45,12 @@ import OSLog
         if let container = container {
             if isLoading { return }
             isLoading = true
-            let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
-            _ = try? await task.value
+            do {
+                let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
+                _ = try await task.value
+            } catch {
+                showError?(error)
+            }
             isLoading = false
             quickDuplicateCleanup()
         }

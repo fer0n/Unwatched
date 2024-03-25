@@ -15,6 +15,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
     var link: URL?
 
     var title: String = "-"
+    var author: String?
     var subscribedDate: Date?
     var placeVideosIn = VideoPlacement.defaultPlacement
     var isArchived: Bool = false
@@ -25,9 +26,14 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
     var onlyTriageAfter: Date?
 
     var youtubeChannelId: String?
+    var youtubePlaylistId: String?
     var youtubeUserName: String?
 
     var thumbnailUrl: URL?
+
+    var displayTitle: String {
+        "\(title)\(author != nil ? " - \(author ?? "")" : "")"
+    }
 
     var description: String {
         return title
@@ -37,6 +43,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
          link: URL?,
 
          title: String,
+         author: String? = nil,
          subscribedDate: Date? = .now,
          placeVideosIn: VideoPlacement = .defaultPlacement,
          isArchived: Bool = false,
@@ -44,11 +51,13 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
          customSpeedSetting: Double? = nil,
          mostRecentVideoDate: Date? = nil,
          youtubeChannelId: String? = nil,
+         youtubePlaylistId: String? = nil,
          youtubeUserName: String? = nil,
          thumbnailUrl: URL? = nil) {
         self.videos = videos
         self.link = link
         self.title = title
+        self.author = author
         self.subscribedDate = subscribedDate
         self.placeVideosIn = placeVideosIn
         self.isArchived = isArchived
@@ -56,6 +65,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
         self.customSpeedSetting = customSpeedSetting
         self.mostRecentVideoDate = mostRecentVideoDate
         self.youtubeChannelId = youtubeChannelId
+        self.youtubePlaylistId = youtubePlaylistId
         self.youtubeUserName = youtubeUserName
         self.thumbnailUrl = thumbnailUrl
     }
@@ -66,12 +76,14 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
             videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
             link: link,
             title: title,
+            author: author,
             subscribedDate: subscribedDate,
             placeVideosIn: placeVideosIn,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
+            youtubePlaylistId: youtubePlaylistId,
             youtubeUserName: youtubeUserName,
             thumbnailUrl: thumbnailUrl
         )
@@ -84,6 +96,7 @@ struct SendableSubscription: Sendable, Codable, Hashable {
     var link: URL?
 
     var title: String
+    var author: String?
     var subscribedDate: Date? = .now
     var placeVideosIn = VideoPlacement.defaultPlacement
     var isArchived: Bool = false
@@ -91,6 +104,7 @@ struct SendableSubscription: Sendable, Codable, Hashable {
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
     var youtubeChannelId: String?
+    var youtubePlaylistId: String?
     var youtubeUserName: String?
 
     var thumbnailUrl: URL?
@@ -99,7 +113,9 @@ struct SendableSubscription: Sendable, Codable, Hashable {
         Subscription(
             link: link,
             title: title,
+            author: author,
             youtubeChannelId: youtubeChannelId,
+            youtubePlaylistId: youtubePlaylistId,
             youtubeUserName: youtubeUserName,
             thumbnailUrl: thumbnailUrl
         )
@@ -109,12 +125,14 @@ struct SendableSubscription: Sendable, Codable, Hashable {
         Subscription(
             link: link,
             title: title,
+            author: author,
             subscribedDate: subscribedDate,
             placeVideosIn: placeVideosIn,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
+            youtubePlaylistId: youtubePlaylistId,
             youtubeUserName: youtubeUserName,
             thumbnailUrl: thumbnailUrl
         )
@@ -124,12 +142,14 @@ struct SendableSubscription: Sendable, Codable, Hashable {
         case videosIds,
              link,
              title,
+             author,
              subscribedDate,
              placeVideosIn,
              isArchived,
              customSpeedSetting,
              mostRecentVideoDate,
              youtubeChannelId,
+             youtubePlaylistId,
              youtubeUserName,
              thumbnailUrl
     }
@@ -140,6 +160,7 @@ struct SubscriptionState: Identifiable {
     var url: URL?
     var title: String?
     var userName: String?
+    var playlistId: String?
     var error: String?
     var success = false
     var alreadyAdded = false

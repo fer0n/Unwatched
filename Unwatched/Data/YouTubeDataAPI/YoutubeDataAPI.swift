@@ -31,8 +31,8 @@ struct YoutubeDataAPI {
     static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
         Logger.log.info("getLemnoslifeChannelId")
         let url = "https://yt.lemnoslife.com/channels?handle=@\(handle)"
-        let channelInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: YtChannelId.self)
-        if let item = channelInfo.items.first {
+        let subscriptionInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: YtChannelId.self)
+        if let item = subscriptionInfo.items.first {
             return item.id
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername("getChannelIdViaLemnoslife")

@@ -15,7 +15,7 @@ struct SubscriptionListItem: View {
 
     var body: some View {
         HStack {
-            Text(subscription.title)
+            Text(subscription.displayTitle)
                 .lineLimit(1)
             Spacer()
             if let date = subscription.mostRecentVideoDate {

@@ -14,7 +14,7 @@ actor SubscriptionActor {
         sub.subscribedDate = .now
     }
 
-    func subscribeTo(_ channelInfo: ChannelInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
+    func subscribeTo(_ info: SubscriptionInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
             unarchive(sub)
@@ -23,10 +23,21 @@ actor SubscriptionActor {
             return
         }
 
-        guard let channelId = channelInfo?.channelId else {
+        print("info", info)
+        var fetch: FetchDescriptor<Subscription>
+        if let playlistId = info?.playlistId {
+            print("playlistId", playlistId)
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == playlistId
+            })
+        } else if let channelId = info?.channelId {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
+            })
+        } else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
-        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.youtubeChannelId == channelId })
+
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
@@ -34,16 +45,16 @@ actor SubscriptionActor {
             try modelContext.save()
             return
         }
-        guard let channelInfo = channelInfo else {
+        guard let subscriptionInfo = info else {
             Logger.log.info("no channel info here")
             return
         }
         // if it doesn't exist get url and run the regular subscription flow
-        if channelInfo.rssFeed == nil {
+        if subscriptionInfo.rssFeed == nil {
             throw SubscriptionError.notSupported
         }
 
-        let subStates = try await addSubscriptions(channelInfo: [channelInfo])
+        let subStates = try await addSubscriptions(subscriptionInfo: [subscriptionInfo])
         if let first = subStates.first {
             if !(first.success || first.alreadyAdded) {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
@@ -53,14 +64,14 @@ actor SubscriptionActor {
     }
 
     func addSubscriptions(
-        channelInfo: [ChannelInfo] = [],
+        subscriptionInfo: [SubscriptionInfo] = [],
         sendableSubs: [SendableSubscription] = []
     ) async throws -> [SubscriptionState] {
         var subscriptionStates = [SubscriptionState]()
-
+        print("addSubscriptions", subscriptionStates)
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
-            if !channelInfo.isEmpty {
-                for info in channelInfo {
+            if !subscriptionInfo.isEmpty {
+                for info in subscriptionInfo {
                     if let url = info.rssFeedUrl {
                         group.addTask {
                             var (subState, sendableSub) = await self.loadSubscriptionInfo(
@@ -68,7 +79,7 @@ actor SubscriptionActor {
                                 unarchiveSubIfAvailable: true
                             )
                             if let sub = sendableSub {
-                                sendableSub = SubscriptionActor.mergeChannelInfoAndSendableSub(info, sub)
+                                sendableSub = SubscriptionActor.mergeSubscriptionInfoAndSendableSub(info, sub)
                             }
                             return (subState, sendableSub)
                         }
@@ -101,12 +112,8 @@ actor SubscriptionActor {
         _ sub: SendableSubscription,
         unarchiveSubIfAvailable: Bool = false
     ) async -> (SubscriptionState, SendableSubscription?) {
+        print("verifySubscriptionInfo: \(sub.title), youtubePlaylistId: \(sub.youtubePlaylistId)")
         var subState = SubscriptionState(title: sub.title)
-        guard let channelId = sub.youtubeChannelId else {
-            Logger.log.info("no channelId for verify")
-            subState.error = "no channelId found"
-            return (subState, nil)
-        }
 
         if let title = getTitleIfSubscriptionExists(
             channelId: sub.youtubeChannelId,
@@ -119,7 +126,17 @@ actor SubscriptionActor {
         }
 
         do {
-            let url = try UrlService.getFeedUrlFromChannelId(channelId)
+            var url: URL
+            if let playlistId = sub.youtubePlaylistId {
+                url = try UrlService.getPlaylistFeedUrl(playlistId)
+            } else if let channelId = sub.youtubeChannelId {
+                url = try UrlService.getFeedUrlFromChannelId(channelId)
+            } else {
+                Logger.log.info("no info for verify")
+                subState.error = "no info found"
+                return (subState, nil)
+            }
+            Logger.log.info("url: \(url.absoluteString)")
             let sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
             subState.success = true
             return (subState, sendableSub)
@@ -136,9 +153,13 @@ actor SubscriptionActor {
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(url: url)
         do {
-            subState.userName = UrlService.getChannelUserNameFromUrl(url: url)
+            subState.userName = UrlService.getChannelUserNameFromUrl(url)
+            subState.playlistId = UrlService.getPlaylistIdFromUrl(url)
+
             if let title = getTitleIfSubscriptionExists(
-                userName: subState.userName, unarchiveSubIfAvailable
+                userName: subState.userName,
+                playlistId: subState.playlistId,
+                unarchiveSubIfAvailable
             ) {
                 Logger.log.info("loadSubscriptionInfo: found existing sub via userName")
                 subState.title = title
@@ -146,9 +167,14 @@ actor SubscriptionActor {
                 return (subState, nil)
             }
 
-            if let sendableSub = try await SubscriptionActor.getSubscription(url: url, userName: subState.userName) {
-                if let channelId = sendableSub.youtubeChannelId,
-                   let title = getTitleIfSubscriptionExists(channelId: channelId, unarchiveSubIfAvailable) {
+            if let sendableSub = try await SubscriptionActor.getSubscription(url: url,
+                                                                             userName: subState.userName,
+                                                                             playlistId: subState.playlistId) {
+                let channelId = sendableSub.youtubeChannelId
+                if channelId != nil || sendableSub.youtubePlaylistId != nil,
+                   let title = getTitleIfSubscriptionExists(channelId: channelId,
+                                                            playlistId: subState.playlistId,
+                                                            unarchiveSubIfAvailable) {
                     Logger.log.info("loadSubscriptionInfo: found existing sub via channelId")
                     subState.title = title
                     subState.alreadyAdded = true
@@ -165,20 +191,32 @@ actor SubscriptionActor {
         return (subState, nil)
     }
 
-    func isSubscribed(channelId: String, updateChannelInfo: ChannelInfo? = nil) -> Bool {
-        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            channelId == $0.youtubeChannelId
-        })
+    func isSubscribed(channelId: String?, playlistId: String?, updateInfo: SubscriptionInfo? = nil) -> Bool {
+        var fetch: FetchDescriptor<Subscription>
+        if let playlistId = playlistId {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                playlistId == $0.youtubePlaylistId
+            })
+        } else if let channelId = channelId {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && channelId == $0.youtubeChannelId
+            })
+        } else {
+            Logger.log.error("isSubscribed: Neither channelId nor playlistId given")
+            return false
+        }
+
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)
         if let first = subs?.first {
-            updateSubscriptionInfo(first, info: updateChannelInfo)
+            updateSubscriptionInfo(first, info: updateInfo)
             return !first.isArchived
         }
         return false
     }
 
-    private func updateSubscriptionInfo(_ sub: Subscription, info: ChannelInfo?) {
+    private func updateSubscriptionInfo(_ sub: Subscription, info: SubscriptionInfo?) {
+        Logger.log.info("updateSubscriptionInfo: \(sub.title), \(info.debugDescription)")
         guard let info = info else {
             Logger.log.info("no info to update subscription with")
             return
@@ -191,8 +229,8 @@ actor SubscriptionActor {
         try? modelContext.save()
     }
 
-    private static func mergeChannelInfoAndSendableSub(_ info: ChannelInfo,
-                                                       _ sendableSub: SendableSubscription) -> SendableSubscription {
+    private static func mergeSubscriptionInfoAndSendableSub(_ info: SubscriptionInfo,
+                                                            _ sendableSub: SendableSubscription) -> SendableSubscription {
         var sub = sendableSub
         sub.link = sub.link ?? info.rssFeedUrl
         sub.youtubeChannelId = sub.youtubeChannelId ?? info.channelId
@@ -203,10 +241,12 @@ actor SubscriptionActor {
 
     func getTitleIfSubscriptionExists(channelId: String? = nil,
                                       userName: String? = nil,
+                                      playlistId: String? = nil,
                                       _ unarchiveSubIfAvailable: Bool = false) -> String? {
-        if channelId == nil && userName == nil { return nil }
+        if channelId == nil && userName == nil && playlistId == nil { return nil }
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            (channelId != nil && channelId == $0.youtubeChannelId) ||
+            (playlistId != nil && playlistId == $0.youtubePlaylistId) &&
+                (channelId != nil && channelId == $0.youtubeChannelId) ||
                 (userName != nil && $0.youtubeUserName == userName)
         })
         fetch.fetchLimit = 1
@@ -221,18 +261,30 @@ actor SubscriptionActor {
         return nil
     }
 
-    static func getSubscription(url: URL, userName: String? = nil) async throws -> SendableSubscription? {
-        let feedUrl = try await SubscriptionActor.getChannelFeedFromUrl(url: url, userName: userName)
+    static func getSubscription(url: URL,
+                                userName: String? = nil,
+                                playlistId: String? = nil) async throws -> SendableSubscription? {
+        let feedUrl = try await SubscriptionActor.getChannelFeedFromUrl(url: url,
+                                                                        userName: userName,
+                                                                        playlistId: playlistId)
+        Logger.log.info("getSubscription, feed: \(feedUrl.absoluteString)")
         var sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
         sendableSub.youtubeUserName = sendableSub.youtubeUserName ?? userName
         return sendableSub
     }
 
-    static func getChannelFeedFromUrl(url: URL, userName: String?) async throws -> URL {
+    static func getChannelFeedFromUrl(url: URL, userName: String?, playlistId: String?) async throws -> URL {
+        print("getChannelFeedFromUrl")
         if UrlService.isYoutubeFeedUrl(url: url) {
+            print("isYoutubeFeedUrl")
             return url
         }
+        if let playlistId = playlistId, let feedUrl = try? UrlService.getPlaylistFeedUrl(playlistId) {
+            print("isPlaylistId")
+            return feedUrl
+        }
         guard let userName = userName else {
+            print("no username")
             throw SubscriptionError.failedGettingChannelIdFromUsername("Username was empty")
         }
         let channelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
@@ -246,9 +298,13 @@ actor SubscriptionActor {
         return subs.map { (title: $0.title, link: $0.link) }
     }
 
-    func unsubscribe(_ channelId: String) throws {
+    func unsubscribe(_ channelId: String?, playlistId: String?) throws {
+        if channelId == nil && playlistId == nil {
+            throw SubscriptionError.noInfoFoundToUnsibscribe
+        }
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.youtubeChannelId == channelId
+            (channelId != nil && $0.youtubeChannelId == channelId)
+                || (playlistId != nil && $0.youtubePlaylistId == playlistId)
         })
         fetch.fetchLimit = 1
         guard let first = try modelContext.fetch(fetch).first else {

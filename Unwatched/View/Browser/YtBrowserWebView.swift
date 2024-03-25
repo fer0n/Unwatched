@@ -81,28 +81,31 @@ struct YtBrowserWebView: UIViewRepresentable {
             }
 
             Logger.log.info("about to extract info")
-            let (userName, channelId) = getInfoFromUrl(url)
-            if userName != nil || channelId != nil {
+            let info = getInfoFromUrl(url)
+            if info.userName != nil || info.channelId != nil || info.playlistId != nil {
                 // is username page, reload the page
-                extractSubscriptionInfo(webView, userName: userName, channelId: channelId)
+                extractSubscriptionInfo(webView, info)
             }
         }
 
-        func getInfoFromUrl(_ url: URL) -> (userName: String?, channelId: String?) {
+        func getInfoFromUrl(_ url: URL) -> SubscriptionInfo {
             let previousUsername = parent.browserManager.desktopUserName
             if let userName = UrlService.getChannelUserNameFromUrl(
-                url: url,
+                url,
                 previousUserName: previousUsername
             ) {
-                return (userName: userName, channelId: nil)
+                return SubscriptionInfo(userName: userName)
             }
             if let channelId = UrlService.getChannelIdFromUrl(url) {
-                return (userName: nil, channelId: channelId)
+                return SubscriptionInfo(channelId: channelId)
             }
-            return (nil, nil)
+            if let playlistId = UrlService.getPlaylistIdFromUrl(url) {
+                return SubscriptionInfo(playlistId: playlistId)
+            }
+            return SubscriptionInfo()
         }
 
-        @MainActor func extractSubscriptionInfo(_ webView: WKWebView, userName: String?, channelId: String?) {
+        @MainActor func extractSubscriptionInfo(_ webView: WKWebView, _ info: SubscriptionInfo) {
             Logger.log.info("extractSubscriptionInfo")
             let url = webView.url
             webView.evaluateJavaScript(getSubscriptionInfoScript) { (result, error) in
@@ -114,16 +117,17 @@ struct YtBrowserWebView: UIViewRepresentable {
                     let rssFeed = array[2]
                     let title = array[3]
                     let imageUrl = array[4]
-                    let id = channelId ?? pageChannelId
+                    let id = info.channelId ?? pageChannelId
                     Logger.log.info("Channel ID: \(id)")
                     Logger.log.info("Description: \(description)")
                     Logger.log.info("RSS Feed: \(rssFeed)")
                     Logger.log.info("Title: \(title)")
                     Logger.log.info("Image: \(imageUrl)")
-
-                    self.parent.browserManager.setFoundInfo(ChannelInfo(
-                        url, id, description, rssFeed, title, userName, imageUrl
+                    self.parent.browserManager.setFoundInfo(SubscriptionInfo(
+                        url, id, description, rssFeed, title, info.userName, info.playlistId, imageUrl
                     ))
+                } else {
+                    Logger.log.warning("no result received: \(result.debugDescription)")
                 }
             }
         }
@@ -140,9 +144,17 @@ struct YtBrowserWebView: UIViewRepresentable {
             if isFirstLoad { return }
 
             let hasNewUserName = handleHasNewUserName(url)
-            let hasChannelId = handleHasNewChannelId(url)
+            let hasNewChannelId = handleHasNewChannelId(url)
+            let newPlaylistId = getNewPlaylistId(url)
 
-            if !hasNewUserName && !hasChannelId {
+            if let playlistId = newPlaylistId {
+                // does not require a force reload
+                extractSubscriptionInfo(webView, SubscriptionInfo(playlistId: playlistId))
+                return
+            }
+
+            // && !hasNewPlaylistId reload necessary?
+            if !hasNewUserName && !hasNewChannelId {
                 return
             }
 
@@ -151,23 +163,36 @@ struct YtBrowserWebView: UIViewRepresentable {
             webView.load(request)
         }
 
+        func getNewPlaylistId(_ url: URL) -> String? {
+            guard let playlistId = UrlService.getPlaylistIdFromUrl(url) else {
+                Logger.log.info("no channel id")
+                return nil
+            }
+            if parent.browserManager.info?.playlistId == playlistId {
+                Logger.log.info("same playlistId as before")
+                return nil
+            }
+            Logger.log.info("has new playlistId: \(playlistId)")
+            return playlistId
+        }
+
         func handleHasNewChannelId(_ url: URL) -> Bool {
             guard let channelId = UrlService.getChannelIdFromUrl(url) else {
                 Logger.log.info("no channel id")
                 return false
             }
-            if parent.browserManager.channel?.channelId == channelId {
+            if parent.browserManager.info?.channelId == channelId {
                 Logger.log.info("same channelId as before")
                 return false
             }
             Logger.log.info("has new channelId: \(channelId)")
-            parent.browserManager.setFoundInfo(ChannelInfo(channelId: channelId))
+            parent.browserManager.setFoundInfo(SubscriptionInfo(channelId: channelId))
             return true
         }
 
         func handleHasNewUserName(_ url: URL) -> Bool {
             let userName = UrlService.getChannelUserNameFromUrl(
-                url: url,
+                url,
                 previousUserName: parent.browserManager.desktopUserName
             )
             guard let userName = userName else {
@@ -175,7 +200,7 @@ struct YtBrowserWebView: UIViewRepresentable {
                 Logger.log.info("no user name found")
                 return false
             }
-            if [parent.browserManager.channel?.userName, parent.browserManager.desktopUserName].contains(userName) {
+            if [parent.browserManager.info?.userName, parent.browserManager.desktopUserName].contains(userName) {
                 Logger.log.info("same username as before")
                 return false
             }

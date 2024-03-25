@@ -108,7 +108,7 @@ struct ChapterMiniControlView: View {
             setShowMenu()
         } label: {
             HStack {
-                Text(sub.title)
+                Text(sub.displayTitle)
                 if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
                     Image(systemName: icon)
                         .contentTransition(.symbolEffect(.replace))

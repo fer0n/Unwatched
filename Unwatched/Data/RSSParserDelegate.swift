@@ -33,17 +33,22 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentYoutubeId = currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
-    var currentYoutubeChannelId: String = "" {
-        didSet {
-            currentYoutubeChannelId = currentYoutubeChannelId.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
     var currentPublishedDate: String = "" {
         didSet {
             currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
     var currentDescription: String = ""
+    var currentUri: String = "" {
+        didSet {
+            currentUri = currentUri.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+    var currentAuthor: String = "" {
+        didSet {
+            currentAuthor = currentAuthor.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
 
     init(limitVideos: Int?, cutoffDate: Date?) {
         self.limitVideos = limitVideos
@@ -64,19 +69,21 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         } else if elementName == "media:thumbnail" {
             thumbnailUrl = attributeDict["url"] ?? ""
         } else if elementName == "entry",
-                  subscriptionInfo == nil,
-                  let url = URL(string: currentLink) {
-            // this tactic requires the channel info to come before the first entity
+                  subscriptionInfo == nil {
+            let url = URL(string: currentLink)
+            let channelId = getChannelIdFromAuthorUri(currentUri)
             subscriptionInfo = SendableSubscription(
                 link: url,
                 title: currentTitle,
-                youtubeChannelId: currentYoutubeChannelId)
+                author: currentAuthor,
+                youtubeChannelId: channelId)
             currentTitle = ""
             currentLink = ""
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
-            currentYoutubeChannelId = ""
+            currentUri = ""
+            currentAuthor = ""
         }
     }
 
@@ -85,10 +92,15 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         case "title": currentTitle += string
         case "yt:videoId": currentYoutubeId += string
         case "published": currentPublishedDate += string
-        case "yt:channelId": currentYoutubeChannelId += string
         case "media:description": currentDescription += string
+        case "uri": currentUri += string
+        case "name": currentAuthor += string
         default: break
         }
+    }
+
+    func getChannelIdFromAuthorUri(_ uri: String) -> String? {
+        UrlService.getChannelIdFromUrl(uri)
     }
 
     func parser(_ parser: XMLParser,
@@ -112,8 +124,8 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
 
                 if (limitVideos != nil && videos.count >= limitVideos!) ||
                     cutoffDate != nil && publishedDate <= cutoffDate! {
-                    // the first correct channelId with the "UC" prefix comes inside the first entry
-                    subscriptionInfo?.youtubeChannelId = currentYoutubeChannelId
+                    let channelId = getChannelIdFromAuthorUri(currentUri)
+                    subscriptionInfo?.youtubeChannelId = channelId
                     parser.abortParsing()
                     return
                 }
@@ -126,8 +138,9 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
-            currentYoutubeChannelId = ""
             currentDescription = ""
+            currentUri = ""
+            currentAuthor = ""
         }
     }
 }

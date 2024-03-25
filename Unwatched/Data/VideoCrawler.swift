@@ -8,7 +8,12 @@ import OSLog
 
 struct VideoCrawler {
     static func parseFeedUrl(_ url: URL, limitVideos: Int?, cutoffDate: Date?) async throws -> RSSParserDelegate {
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
+            throw URLError(.badServerResponse)
+        }
+
         let parser = XMLParser(data: data)
         let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos, cutoffDate: cutoffDate)
         parser.delegate = rssParserDelegate
@@ -23,12 +28,20 @@ struct VideoCrawler {
     }
 
     static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
+        Logger.log.info("loadSubscriptionFromRSS \(feedUrl)")
         let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0, cutoffDate: nil)
         if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
+            if let playlistId = UrlService.getPlaylistIdFromUrl(feedUrl.absoluteString) {
+                subscriptionInfo.youtubePlaylistId = playlistId
+            }
+            if let author = subscriptionInfo.author, author == subscriptionInfo.title {
+                subscriptionInfo.author = nil
+            }
+            print("subscriptionInfo", subscriptionInfo)
             return subscriptionInfo
         }
-        Logger.log.info("feedUrl \(feedUrl)")
+        Logger.log.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 

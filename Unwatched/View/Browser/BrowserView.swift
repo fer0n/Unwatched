@@ -22,7 +22,6 @@ struct BrowserView: View, KeyboardReadable {
     @State var isLoading = false
     @State var isSuccess: Bool?
     @State var droppedUrls = [URL]()
-    @State var changeSubscriptionOf: ChannelInfo?
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
@@ -79,15 +78,17 @@ struct BrowserView: View, KeyboardReadable {
             }
             await handleUrlDrop(droppedUrls)
         }
-        .task(id: browserManager.channel?.channelId) {
+        .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
-            await subscribeManager.setIsSubscribed(browserManager.channel)
+            await subscribeManager.setIsSubscribed(browserManager.info)
         }
-        .task(id: changeSubscriptionOf?.channelId) {
-            await handleSubscriptionChange()
+        .task(id: browserManager.info?.playlistId) {
+            subscribeManager.reset()
+            handleSubscriptionInfoChanged(browserManager.info)
+            await subscribeManager.setIsSubscribed(browserManager.info)
         }
-        .onChange(of: browserManager.channel?.userName) {
-            handleChannelInfoChanged(browserManager.channel)
+        .onChange(of: browserManager.info?.userName) {
+            handleSubscriptionInfoChanged(browserManager.info)
         }
         .onReceive(keyboardPublisher) { newIsKeyboardVisible in
             isKeyboardVisible = newIsKeyboardVisible
@@ -95,7 +96,7 @@ struct BrowserView: View, KeyboardReadable {
         .onAppear {
             subscribeManager.container = modelContext.container
             Task {
-                await subscribeManager.setIsSubscribed(browserManager.channel)
+                await subscribeManager.setIsSubscribed(browserManager.info)
             }
         }
         .onDisappear {
@@ -178,29 +179,42 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func addSubButton(_ text: String) -> some View {
-        Button(action: handleAddSubButton) {
-            HStack {
-                let systemName = subscribeManager.getSubscriptionSystemName()
-                Image(systemName: systemName)
-                    .contentTransition(.symbolEffect(.replace))
-                Text(text)
+        VStack {
+            if let error = subscribeManager.errorMessage {
+                Button {
+                    subscribeManager.errorMessage = nil
+                } label: {
+                    Text(verbatim: error)
+                }
+                .buttonStyle(CapsuleButtonStyle())
             }
-            .padding(10)
+            Button(action: handleAddSubButton) {
+                HStack {
+                    let systemName = subscribeManager.getSubscriptionSystemName()
+                    Image(systemName: systemName)
+                        .contentTransition(.symbolEffect(.replace))
+                    Text(text)
+                }
+                .padding(10)
+            }
+            .buttonStyle(CapsuleButtonStyle(
+                            background: Color.neutralAccentColor,
+                            foreground: Color.backgroundColor))
+            .bold()
         }
-        .buttonStyle(CapsuleButtonStyle(
-                        background: Color.neutralAccentColor,
-                        foreground: Color.backgroundColor))
-        .bold()
     }
 
-    func handleChannelInfoChanged(_ channelInfo: ChannelInfo?) {
-        guard channelInfo?.channelId != nil,
-              let channelId = channelInfo?.channelId else {
-            Logger.log.info("no channel id after change")
+    func handleSubscriptionInfoChanged(_ subscriptionInfo: SubscriptionInfo?) {
+        Logger.log.info("handleSubscriptionInfoChanged")
+        guard let info = subscriptionInfo else {
+            Logger.log.info("no subscriptionInfo after change")
             return
         }
         let container = modelContext.container
-        _ = SubscriptionService.isSubscribed(channelId, updateChannelInfo: channelInfo, container: container)
+        _ = SubscriptionService.isSubscribed(channelId: info.channelId,
+                                             playlistId: info.playlistId,
+                                             updateSubscriptionInfo: info,
+                                             container: container)
     }
 
     func handleSuccessChange() async {
@@ -231,20 +245,24 @@ struct BrowserView: View, KeyboardReadable {
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
-        changeSubscriptionOf = browserManager.channel
+        Task {
+            await handleSubscriptionChange(browserManager.info)
+        }
     }
 
-    func handleSubscriptionChange() async {
-        guard let channelInfo = changeSubscriptionOf,
-              let channelId = channelInfo.channelId,
-              let isSubscribed = subscribeManager.isSubscribedSuccess else {
-            Logger.log.info("handleAddSubButton without channelId/isSubscribed")
+    func handleSubscriptionChange(_ info: SubscriptionInfo?) async {
+        Logger.log.info("handleSubscriptionChange")
+        guard let isSubscribed = subscribeManager.isSubscribedSuccess,
+              let subscriptionInfo = info else {
+            Logger.log.info("handleAddSubButton without info/isSubscribed")
             return
         }
+        print("isSubscribed: \(isSubscribed), \(subscriptionInfo)")
+        // TODO: Here: unsubscribe should work for playlistId and regular channel
         if isSubscribed {
-            await subscribeManager.unsubscribe(channelId)
+            await subscribeManager.unsubscribe(subscriptionInfo)
         } else {
-            await subscribeManager.addSubscription(channelInfo)
+            await subscribeManager.addSubscription(subscriptionInfo)
         }
     }
 }
