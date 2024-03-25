@@ -11,9 +11,6 @@ import TipKit
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    @State var navManager = NavigationManager.load()
-    @State var alerter: Alerter = Alerter()
-
     var sharedModelContainer: ModelContainer = {
         var inMemory = false
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
@@ -42,30 +39,18 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AnyView(SetupView()
-                        .environment(alerter)
-                        .alert(isPresented: $alerter.isShowingAlert) {
-                            alerter.alert ?? Alert(title: Text(verbatim: ""))
-                        }
-                        .task {
-                            try? Tips.configure([
-                                .displayFrequency(.immediate),
-                                .datastoreLocation(.applicationDefault)
-                            ])
-                        }
-                        .onAppear {
-                            setUpAppDelegate()
-                        }
-                        .environment(navManager))
+            SetupView(appDelegate: appDelegate)
+                .task {
+                    try? Tips.configure([
+                        .displayFrequency(.immediate),
+                        .datastoreLocation(.applicationDefault)
+                    ])
+                }
         }
         .modelContainer(sharedModelContainer)
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
             let container = await sharedModelContainer
             await RefreshManager.handleBackgroundVideoRefresh(container)
         }
-    }
-
-    func setUpAppDelegate() {
-        appDelegate.navManager = navManager
     }
 }
