@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import OSLog
 
 @Observable class ImageCacheManager {
     private var cache: [PersistentIdentifier: ImageCacheInfo] = [:]
@@ -27,7 +28,7 @@ import SwiftData
             try await task.value
             self.cache = [:]
         } catch {
-            print("error while trying to persist cache: \(error)")
+            Logger.log.error("error while trying to persist cache: \(error)")
         }
     }
 }

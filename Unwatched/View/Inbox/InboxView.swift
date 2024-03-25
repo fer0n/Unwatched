@@ -6,6 +6,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import OSLog
 
 struct InboxView: View {
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
@@ -139,7 +140,7 @@ struct InboxView: View {
     }
 
     func handleUrlDrop(_ items: [URL]) {
-        print("handleUrlDrop inbox \(items)")
+        Logger.log.info("handleUrlDrop inbox \(items)")
         let container = modelContext.container
         _ = VideoService.addForeignUrls(items, in: .inbox, container: container)
     }

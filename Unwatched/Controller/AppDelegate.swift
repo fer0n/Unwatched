@@ -5,6 +5,7 @@
 
 import Foundation
 import WebKit
+import OSLog
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     weak var navManager: NavigationManager?
@@ -28,7 +29,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        print("Received in-App notification")
+        Logger.log.info("Received in-App notification")
         completionHandler([])
     }
 
@@ -41,9 +42,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             Task { @MainActor in
                 navManager?.navigateTo(tab)
             }
-            print("Notification destination: \(destination))")
+            Logger.log.info("Notification destination: \(destination))")
         } else {
-            print("Tap on notification without destination")
+            Logger.log.info("Tap on notification without destination")
         }
         completionHandler()
     }

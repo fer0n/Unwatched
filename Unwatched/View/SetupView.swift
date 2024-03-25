@@ -5,6 +5,7 @@
 
 import SwiftUI
 import BackgroundTasks
+import OSLog
 
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
@@ -47,11 +48,11 @@ struct SetupView: View {
                 case .active:
                     player.isInBackground = false
                     NotificationManager.clearNotifications()
-                    print("active")
+                    Logger.log.info("active")
                     await refresher.handleBecameActive()
                     refresher.handleAutoBackup(UIDevice.current.name)
                 case .background:
-                    print("background")
+                    Logger.log.info("background")
                     player.isInBackground = true
                     Task {
                         await saveData()
@@ -59,7 +60,7 @@ struct SetupView: View {
                     refresher.handleBecameInactive()
                     RefreshManager.scheduleVideoRefresh()
                 case .inactive:
-                    print("inactive")
+                    Logger.log.info("inactive")
                     saveCurrentVideo()
                 default:
                     break
@@ -72,7 +73,7 @@ struct SetupView: View {
     }
 
     func restoreNowPlayingVideo() {
-        print("restoreVideo")
+        Logger.log.info("restoreVideo")
         var video: Video?
 
         if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
@@ -96,7 +97,7 @@ struct SetupView: View {
         sheetPos.save()
         let container = modelContext.container
         await imageCacheManager.persistCache(container)
-        print("saved state")
+        Logger.log.info("saved state")
     }
 
     func saveCurrentVideo() {

@@ -5,6 +5,7 @@
 
 import SwiftData
 import SwiftUI
+import OSLog
 
 struct CleanupService {
     static func cleanupDuplicates(_ container: ModelContainer,
@@ -23,10 +24,10 @@ struct CleanupService {
         duplicateInfo = RemovedDuplicatesInfo()
 
         if onlyIfDuplicateEntriesExist && !hasDuplicateEntries() {
-            print("Has duplicate inbox entries")
+            Logger.log.info("Has duplicate inbox entries")
             return duplicateInfo
         }
-        print("removing duplicates now")
+        Logger.log.info("removing duplicates now")
 
         removeSubscriptionDuplicates()
         removeVideoDuplicates()

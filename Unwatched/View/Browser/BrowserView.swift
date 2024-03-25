@@ -6,6 +6,7 @@
 import SwiftUI
 import WebKit
 import TipKit
+import OSLog
 
 struct BrowserView: View, KeyboardReadable {
     @Environment(\.dismiss) var dismiss
@@ -195,7 +196,7 @@ struct BrowserView: View, KeyboardReadable {
     func handleChannelInfoChanged(_ channelInfo: ChannelInfo?) {
         guard channelInfo?.channelId != nil,
               let channelId = channelInfo?.channelId else {
-            print("no channel id after change")
+            Logger.log.info("no channel id after change")
             return
         }
         let container = modelContext.container
@@ -214,7 +215,7 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func handleUrlDrop(_ urls: [URL]) async {
-        print("handleUrlDrop inbox \(urls)")
+        Logger.log.info("handleUrlDrop inbox \(urls)")
         withAnimation {
             isLoading = true
         }
@@ -237,7 +238,7 @@ struct BrowserView: View, KeyboardReadable {
         guard let channelInfo = changeSubscriptionOf,
               let channelId = channelInfo.channelId,
               let isSubscribed = subscribeManager.isSubscribedSuccess else {
-            print("handleAddSubButton without channelId/isSubscribed")
+            Logger.log.info("handleAddSubButton without channelId/isSubscribed")
             return
         }
         if isSubscribed {
