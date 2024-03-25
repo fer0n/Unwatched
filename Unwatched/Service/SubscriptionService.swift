@@ -3,10 +3,10 @@ import SwiftData
 
 struct SubscriptionService {
     static func addSubscriptions(
-        channelInfo: [ChannelInfo],
+        subscriptionInfo: [SubscriptionInfo],
         modelContainer: ModelContainer) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.addSubscriptions(channelInfo: channelInfo)
+        return try await repo.addSubscriptions(subscriptionInfo: subscriptionInfo)
     }
 
     static func addSubscriptions(
@@ -17,14 +17,14 @@ struct SubscriptionService {
         return try await repo.addSubscriptions(sendableSubs: sendableSubs)
     }
 
-    static func addSubscription(channelInfo: ChannelInfo? = nil,
+    static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
                                 subsciptionId: PersistentIdentifier? = nil,
                                 modelContainer: ModelContainer) async throws {
-        guard channelInfo != nil || subsciptionId != nil else {
+        guard subscriptionInfo != nil || subsciptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
         let repo = SubscriptionActor(modelContainer: modelContainer)
-        return try await repo.subscribeTo(channelInfo, subsciptionId)
+        return try await repo.subscribeTo(subscriptionInfo, subsciptionId)
     }
 
     static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL?)] {
@@ -39,10 +39,10 @@ struct SubscriptionService {
         }
     }
 
-    static func unsubscribe(_ channelId: String, container: ModelContainer) -> Task<(), Error> {
+    static func unsubscribe(_ info: SubscriptionInfo, container: ModelContainer) -> Task<(), Error> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
-            return try await repo.unsubscribe(channelId)
+            return try await repo.unsubscribe(info.channelId, playlistId: info.playlistId)
         }
     }
 
@@ -50,12 +50,25 @@ struct SubscriptionService {
         return video?.subscription?.isArchived == false
     }
 
-    static func isSubscribed(_ channelId: String,
-                             updateChannelInfo: ChannelInfo? = nil,
+    static func isSubscribed(channelId: String? = nil,
+                             playlistId: String? = nil,
+                             updateSubscriptionInfo: SubscriptionInfo? = nil,
                              container: ModelContainer) -> Task<(Bool), Never> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
-            return await repo.isSubscribed(channelId: channelId, updateChannelInfo: updateChannelInfo)
+            return await repo.isSubscribed(channelId: channelId,
+                                           playlistId: playlistId,
+                                           updateInfo: updateSubscriptionInfo)
         }
+    }
+
+    static func getRegularChannel(_ channelId: String, container: ModelContainer) -> Subscription? {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
+        })
+        fetch.fetchLimit = 1
+        let modelContext = ModelContext(container)
+        let subs = try? modelContext.fetch(fetch)
+        return subs?.first
     }
 }

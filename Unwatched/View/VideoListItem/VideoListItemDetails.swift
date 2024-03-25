@@ -32,7 +32,7 @@ struct VideoListItemDetails: View {
                     }
                 }
             }
-            if let title = video.subscription?.title {
+            if let title = video.subscription?.displayTitle {
                 Text(title)
                     .font(.system(size: 14, weight: .regular))
                     .lineLimit(1)

@@ -97,7 +97,9 @@ struct CleanupService {
         guard let subs = try? modelContext.fetch(fetch) else {
             return
         }
-        let duplicates = getDuplicates(from: subs, keySelector: { $0.youtubeChannelId }, sort: sortSubscriptions)
+        let duplicates = getDuplicates(from: subs, keySelector: {
+            ($0.youtubeChannelId ?? "") + ($0.youtubePlaylistId ?? "")
+        }, sort: sortSubscriptions)
         duplicateInfo.countSubscriptions = duplicates.count
         for duplicate in duplicates {
             if let videos = duplicate.videos {
@@ -134,7 +136,9 @@ struct CleanupService {
         guard let videos = try? modelContext.fetch(fetch) else {
             return
         }
-        let duplicates = getDuplicates(from: videos, keySelector: { $0.url }, sort: sortVideos)
+        let duplicates = getDuplicates(from: videos, keySelector: {
+            ($0.url?.absoluteString ?? "") + ($0.subscription?.youtubePlaylistId ?? "")
+        }, sort: sortVideos)
         duplicateInfo.countVideos = duplicates.count
         for duplicate in duplicates {
             deleteVideo(duplicate)

@@ -200,8 +200,7 @@ struct PlayerWebView: UIViewRepresentable {
         }
 
         func handleTitleUpdate(_ title: String?) {
-            if var title = title {
-                title = title.replacingOccurrences(of: " - YouTube", with: "")
+            if let title = UrlService.getCleanTitle(title) {
                 self.parent.player.video?.title = title
             }
         }

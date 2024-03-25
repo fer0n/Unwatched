@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import OSLog
 
 struct UrlService {
     static let youtubeStartPage = URL(string: "https://m.youtube.com?autoplay=0")
@@ -58,7 +59,7 @@ struct UrlService {
         throw SubscriptionError.notSupported
     }
 
-    static func getChannelUserNameFromUrl(url: URL, previousUserName: String? = nil) -> String? {
+    static func getChannelUserNameFromUrl(_ url: URL, previousUserName: String? = nil) -> String? {
         let urlString = url.absoluteString
 
         // https://www.youtube.com/@GAMERTAGVR/videos
@@ -86,11 +87,45 @@ struct UrlService {
     }
 
     static func getChannelIdFromUrl(_ url: URL) -> String? {
+        return getChannelIdFromUrl(url.absoluteString)
+    }
+
+    static func getChannelIdFromUrl(_ url: String) -> String? {
         // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        if let channelId = url.absoluteString.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#) {
+        if let channelId = url.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#) {
             return channelId
         }
         return nil
+    }
+
+    static func getPlaylistIdFromUrl(_ url: URL) -> String? {
+        getPlaylistIdFromUrl(url.absoluteString)
+    }
+
+    static func getPlaylistIdFromUrl(_ url: String) -> String? {
+        // https://www.youtube.com/feeds/videos.xml?playlist_id=PLKp8CenWaxrBvyoP7cq3ESrXhnS7yGaTh
+        if let playlistId = url.matching(regex: #"\/videos\.xml\?playlist_id=([^\s\/\?\n#]+)"#) {
+            return playlistId
+        }
+        // https://www.youtube.com/playlist?list=PL6BHqJ_7o92sPDB2UpgWBYdeyeSs-pc8_
+        if let playlistId = url.matching(regex: #"\/playlist\?list=([^\s\/\?\n#]+)"#) {
+            return playlistId
+        }
+        return nil
+    }
+
+    static func getCleanTitle(_ title: String?) -> String? {
+        if let title = title {
+            return title.replacingOccurrences(of: " - YouTube", with: "")
+        }
+        return nil
+    }
+
+    static func getPlaylistFeedUrl(_ playlistId: String) throws -> URL {
+        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?playlist_id=\(playlistId)") {
+            return channelFeedUrl
+        }
+        throw SubscriptionError.notSupported
     }
 
     static func isMobileYoutubePage(_ url: URL) -> Bool {
@@ -114,13 +149,22 @@ struct UrlService {
         return ([], text)
     }
 
-    static func getYoutubeChannelUrl(userName: String? = nil, channelId: String? = nil) -> String? {
+    static func getYoutubeUrl(userName: String? = nil,
+                              channelId: String? = nil,
+                              playlistId: String? = nil,
+                              mobile: Bool = true) -> String? {
+        print("getYoutubeUrl", getYoutubeUrl)
+        var baseUrl = "https://\(mobile ? "m." : "")youtube.com"
+        if let playlistId = playlistId {
+            return "\(baseUrl)/playlist?list=\(playlistId)"
+        }
         if let userName = userName {
-            return "https://m.youtube.com/@\(userName)/videos"
+            return "\(baseUrl)/@\(userName)/videos"
         }
         if let channelId = channelId {
-            return "https://www.youtube.com/channel/\(channelId)/videos"
+            return "\(baseUrl)/channel/\(channelId)/videos"
         }
+        Logger.log.warning("nothing to create a url from")
         return nil
     }
 }

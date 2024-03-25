@@ -8,6 +8,8 @@ import SwiftData
 
 struct SubscriptionInfoDetails: View {
     @Environment(NavigationManager.self) var navManager
+    @Environment(\.modelContext) var modelContext
+
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1
 
@@ -23,9 +25,10 @@ struct SubscriptionInfoDetails: View {
                     subscribeButton
                         .buttonStyle(CapsuleButtonStyle())
 
-                    if let url = UrlService.getYoutubeChannelUrl(
+                    if let url = UrlService.getYoutubeUrl(
                         userName: subscription.youtubeUserName,
-                        channelId: subscription.youtubeChannelId) {
+                        channelId: subscription.youtubeChannelId,
+                        playlistId: subscription.youtubePlaylistId) {
                         Button {
                             navManager.openUrlInApp(.url(url))
                         } label: {
@@ -33,7 +36,12 @@ struct SubscriptionInfoDetails: View {
                                 .padding(10)
                         }
                         .buttonStyle(CapsuleButtonStyle())
-
+                    }
+                    if let url = UrlService.getYoutubeUrl(
+                        userName: subscription.youtubeUserName,
+                        channelId: subscription.youtubeChannelId,
+                        playlistId: subscription.youtubePlaylistId,
+                        mobile: false) {
                         ShareLink(item: url) {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)
@@ -105,8 +113,22 @@ struct SubscriptionInfoDetails: View {
                             .font(.title2)
                             .foregroundStyle(.primary)
                     }
+                    if let author = subscription.author {
+                        Text(verbatim: author)
+                            .font(.title2)
+                            .foregroundStyle(.primary)
+                            .onTapGesture {
+                                let container = modelContext.container
+                                if let channelId = subscription.youtubeChannelId,
+                                   let regularChannel = SubscriptionService.getRegularChannel(
+                                    channelId,
+                                    container: container) {
+                                    navManager.pushSubscription(regularChannel)
+                                }
+                            }
+                    }
 
-                    let hasOtherInfos = subscription.youtubeUserName != nil || hasImage
+                    let hasOtherInfos = subscription.youtubeUserName != nil || hasImage || subscription.author != nil
 
                     Text(availableVideos)
                         .font(.system(size: 14))

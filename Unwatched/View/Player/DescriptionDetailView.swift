@@ -16,7 +16,7 @@ struct DescriptionDetailView: View {
                 .font(.system(.title2))
                 .fontWeight(.bold)
             VStack(alignment: .leading) {
-                if let subTitle = video.subscription?.title {
+                if let subTitle = video.subscription?.displayTitle {
                     Text(verbatim: subTitle)
                 }
                 if let published = video.publishedDate {

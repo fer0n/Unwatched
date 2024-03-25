@@ -69,7 +69,7 @@ struct LibraryView: View {
                             sort: subscriptionSortOrder,
                             manualFilter: {
                                 text.debounced.isEmpty
-                                    || $0.title.localizedStandardContains(text.debounced)
+                                    || $0.displayTitle.localizedStandardContains(text.debounced)
                             }
                         )
                         .dropDestination(for: URL.self) { items, _ in
@@ -194,8 +194,8 @@ struct LibraryView: View {
             return
         }
         Logger.log.info("handleUrlDrop library \(urls)")
-        let channelInfo = urls.map { ChannelInfo(rssFeedUrl: $0) }
-        await subManager.addSubscription(channelInfo: channelInfo)
+        let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
+        await subManager.addSubscription(subscriptionInfo: subscriptionInfo)
     }
 
     func handleUrlDrop(_ urls: [URL]) {
