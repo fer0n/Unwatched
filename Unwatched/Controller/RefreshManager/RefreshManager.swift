@@ -124,7 +124,7 @@ import BackgroundTasks
 extension RefreshManager {
     static func scheduleVideoRefresh() {
         print("scheduleVideoRefresh()")
-        let request = BGProcessingTaskRequest(identifier: Const.backgroundAppRefreshId)
+        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
             try BGTaskScheduler.shared.submit(request)
