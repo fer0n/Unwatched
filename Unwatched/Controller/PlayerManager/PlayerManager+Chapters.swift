@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import OSLog
 
 extension PlayerManager {
 
@@ -19,15 +20,15 @@ extension PlayerManager {
     }
 
     func handleChapterChange() {
-        print("handleChapterChange")
+        Logger.log.info("handleChapterChange")
         guard let time = currentTime else {
-            print("no time")
+            Logger.log.info("no time")
             return
         }
 
         guard let chapters = video?.sortedChapters, let video = video, !chapters.isEmpty else {
             currentEndTime = nil // stop monitoring this video for chapters
-            print("no info to check for chapters")
+            Logger.log.info("no info to check for chapters")
             return
         }
         guard let current = chapters.first(where: { chapter in
@@ -49,7 +50,7 @@ extension PlayerManager {
             if let nextActive = chapters.first(where: { chapter in
                 chapter.startTime > current.startTime && chapter.isActive
             }) {
-                print("skip to next chapter: \(nextActive.title)")
+                Logger.log.info("skip to next chapter: \(nextActive.title)")
                 seekPosition = nextActive.startTime
             } else if let duration = video.duration {
                 seekPosition = duration

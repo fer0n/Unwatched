@@ -6,6 +6,7 @@
 import SwiftData
 import SwiftUI
 import Observation
+import OSLog
 
 // Subscriptions
 extension VideoActor {
@@ -35,7 +36,7 @@ extension VideoActor {
                 if let loadedSub = modelContext.model(for: id) as? Subscription {
                     subs.append(loadedSub)
                 } else {
-                    print("Subscription not found for id: \(id.hashValue)")
+                    Logger.log.warning("Subscription not found for id: \(id.hashValue)")
                 }
             }
         } else {

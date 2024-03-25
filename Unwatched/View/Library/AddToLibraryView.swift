@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct AddToLibraryView: View {
     @Environment(\.modelContext) var modelContext
@@ -114,7 +115,7 @@ struct AddToLibraryView: View {
     func handleTextFieldSubmit(_ inputText: String? = nil) {
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
-            print("no url found")
+            Logger.log.warning("no url found")
             return
         }
         let (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
@@ -163,7 +164,7 @@ struct AddToLibraryView: View {
                 addVideosSuccess = true
                 return
             } catch {
-                print("\(error)")
+                Logger.log.error("\(error)")
                 addVideosSuccess = false
                 isLoadingVideos = false
             }

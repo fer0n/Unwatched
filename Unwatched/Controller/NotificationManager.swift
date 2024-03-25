@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import OSLog
 
 struct NotificationManager {
 
@@ -54,7 +55,7 @@ struct NotificationManager {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
-                print("Error scheduling notification: \(error)")
+                Logger.log.error("Error scheduling notification: \(error)")
             }
         }
     }
@@ -78,7 +79,7 @@ struct NotificationManager {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
                 if let error = error {
-                    print("Error when asking for notification permission: \(error)")
+                    Logger.log.error("Error when asking for notification permission: \(error)")
                     continuation.resume(throwing: error)
                 } else {
                     continuation.resume()

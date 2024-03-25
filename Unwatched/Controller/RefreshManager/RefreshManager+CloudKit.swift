@@ -4,7 +4,7 @@
 //
 
 import Foundation
-
+import OSLog
 import CoreData
 
 extension RefreshManager {
@@ -14,7 +14,7 @@ extension RefreshManager {
             return
         }
 
-        print("iCloud sync: Setting up sync notification")
+        Logger.log.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
                 guard let self else { return }
@@ -47,12 +47,12 @@ extension RefreshManager {
     }
 
     func cancelCloudKitListener() {
-        print("iCloud sync: cancelling sync notification")
+        Logger.log.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
     }
 
     func handleIcloudSyncDone() async {
-        print("iCloud sync: handleIcloudSyncDone")
+        Logger.log.info("iCloud sync: handleIcloudSyncDone")
         Task { @MainActor in
             self.isSyncingIcloud = false
         }

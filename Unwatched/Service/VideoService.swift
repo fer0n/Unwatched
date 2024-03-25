@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import OSLog
 
 struct VideoService {
     static func loadNewVideosInBg(
@@ -7,14 +8,14 @@ struct VideoService {
         container: ModelContainer
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
-            print("loadNewVideosInBg")
+            Logger.log.info("loadNewVideosInBg")
             let repo = VideoActor(modelContainer: container)
             do {
                 return try await repo.loadVideos(
                     subscriptionIds
                 )
             } catch {
-                print("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -28,7 +29,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.markVideoWatched(videoId)
             } catch {
-                print("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -46,7 +47,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.moveQueueEntry(from: source, to: destination)
             } catch {
-                print("\(error)")
+                Logger.log.error("\(error)")
                 throw error
             }
         }
@@ -109,7 +110,7 @@ struct VideoService {
                 let repo = VideoActor(modelContainer: container)
                 try await repo.addToBottomQueue(videoId: videoId)
             } catch {
-                print("addToBottomQueue: \(error)")
+                Logger.log.error("addToBottomQueue: \(error)")
                 throw error
             }
         }
@@ -121,7 +122,7 @@ struct VideoService {
                                at index: Int = 1,
                                addImage: Bool = false,
                                container: ModelContainer) -> Task<(), Error> {
-        print("addForeignUrls")
+        Logger.log.info("addForeignUrls")
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
@@ -170,7 +171,7 @@ struct VideoService {
             try context.delete(model: Video.self)
             try context.save()
         } catch {
-            print("Failed to clear everything")
+            Logger.log.error("Failed to clear everything")
         }
     }
 

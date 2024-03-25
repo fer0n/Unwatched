@@ -8,6 +8,7 @@ import SwiftData
 import Combine
 import CoreData
 import BackgroundTasks
+import OSLog
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
@@ -50,19 +51,19 @@ import BackgroundTasks
     }
 
     func handleAutoBackup(_ deviceName: String) {
-        print("handleAutoBackup")
+        Logger.log.info("handleAutoBackup")
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
             if calendar.isDateInToday(lastAutoBackupDate) {
-                print("last backup was today")
+                Logger.log.info("last backup was today")
                 return
             }
         }
 
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
-            print("no auto backup on")
+            Logger.log.info("no auto backup on")
             return
         }
 
@@ -71,7 +72,7 @@ import BackgroundTasks
             Task {
                 try await task.value
                 UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-                print("saved backup")
+                Logger.log.info("saved backup")
             }
         }
     }
@@ -80,7 +81,7 @@ import BackgroundTasks
         if cancellables.isEmpty {
             setupCloudKitListener()
         }
-        print("iCloud sync: refreshOnStartup started")
+        Logger.log.info("iCloud sync: refreshOnStartup started")
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         if enableIcloudSync {
             syncDoneTask?.cancel()
@@ -90,7 +91,7 @@ import BackgroundTasks
                     try await Task.sleep(s: 3)
                     await executeRefreshOnStartup()
                 } catch {
-                    print("error: \(error)")
+                    Logger.log.info("error: \(error)")
                 }
             }
         } else {
@@ -103,7 +104,7 @@ import BackgroundTasks
     }
 
     func executeRefreshOnStartup() async {
-        print("iCloud sync: executeRefreshOnStartup refreshOnStartup")
+        Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
         let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
 
         if refreshOnStartup {
@@ -112,7 +113,7 @@ import BackgroundTasks
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
 
             if shouldRefresh {
-                print("refreshing now")
+                Logger.log.info("refreshing now")
                 await self.refreshAll()
             }
             cancelCloudKitListener()
@@ -123,15 +124,15 @@ import BackgroundTasks
 // Background Refresh
 extension RefreshManager {
     static func scheduleVideoRefresh() {
-        print("scheduleVideoRefresh()")
+        Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            print("Error scheduleVideoRefresh: \(error)")
+            Logger.log.info("Error scheduleVideoRefresh: \(error)")
         }
-        print("Scheduled background task") // Breakpoint 1 HERE
+        Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]

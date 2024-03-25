@@ -1,4 +1,5 @@
 import Foundation
+import OSLog
 
 extension String {
     var isValidURL: Bool {
@@ -43,7 +44,7 @@ extension String {
             }
             return result
         } catch let error {
-            print("invalid regex: \(error.localizedDescription)")
+            Logger.log.error("invalid regex: \(error.localizedDescription)")
             return nil
         }
     }

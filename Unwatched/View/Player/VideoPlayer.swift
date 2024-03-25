@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct VideoPlayer: View {
     @Environment(\.modelContext) var modelContext
@@ -236,7 +237,7 @@ struct VideoPlayer: View {
     }
 
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
-        print(">markVideoWatched")
+        Logger.log.info(">markVideoWatched")
         if let video = player.video {
             if showMenu {
                 setShowMenu()
@@ -250,7 +251,7 @@ struct VideoPlayer: View {
 
     func handleVideoEnded() {
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
-        print(">handleVideoEnded, continuousPlay: \(continuousPlay)")
+        Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
 
         if continuousPlay {
             if let video = player.video {
@@ -280,7 +281,7 @@ struct VideoPlayer: View {
 
     func setNextVideo(_ source: VideoSource) {
         let next = VideoService.getNextVideoInQueue(modelContext)
-        print("setNextVideo \(next?.title ?? "no video found")")
+        Logger.log.info("setNextVideo \(next?.title ?? "no video found")")
         withAnimation {
             player.setNextVideo(next, source)
         }
