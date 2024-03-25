@@ -130,7 +130,7 @@ extension RefreshManager {
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            Logger.log.error("Error scheduleVideoRefresh: \(error)")
+            Logger.log.info("Error scheduleVideoRefresh: \(error)")
         }
         Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
 
@@ -142,25 +142,25 @@ extension RefreshManager {
     }
 
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
-        Logger.log.info("Background task running now")
+        print("Background task running now")
         do {
             scheduleVideoRefresh()
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
-            // if Task.isCancelled {
-            // Logger.log.info("background task has been cancelled")
-            // }
+            if Task.isCancelled {
+                print("background task has been cancelled")
+            }
             if newVideos.videoCount == 0 {
-                Logger.log.info("notifyHasRun")
+                print("notifyHasRun")
                 NotificationManager.notifyHasRun()
             } else {
-                Logger.log.info("notifyNewVideos")
+                print("notifyNewVideos")
                 NotificationManager.increaseBadgeNumer(by: newVideos.videoCount)
                 NotificationManager.notifyNewVideos(newVideos)
             }
         } catch {
-            Logger.log.error("Error during background refresh: \(error)")
+            print("Error during background refresh: \(error)")
         }
     }
 }

@@ -8,18 +8,20 @@ import BackgroundTasks
 import OSLog
 
 struct SetupView: View {
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
+
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) var navManager
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 
     @State var sheetPos = SheetPositionReader.load()
     @State var player = PlayerManager()
     @State var refresher = RefreshManager()
     @State var imageCacheManager = ImageCacheManager()
+    @State var alerter: Alerter = Alerter()
+    @State var navManager = NavigationManager.load()
 
-    @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
-
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    let appDelegate: AppDelegate
 
     var body: some View {
         ContentView()
@@ -28,7 +30,14 @@ struct SetupView: View {
             .environment(imageCacheManager)
             .environment(refresher)
             .environment(sheetPos)
+            .environment(alerter)
+            .environment(navManager)
+            .alert(isPresented: $alerter.isShowingAlert) {
+                alerter.alert ?? Alert(title: Text(verbatim: ""))
+            }
             .onAppear {
+                setUpAppDelegate()
+
                 let container = modelContext.container
                 refresher.container = container
                 player.container = container
@@ -59,6 +68,10 @@ struct SetupView: View {
                     break
                 }
             }
+    }
+
+    func setUpAppDelegate() {
+        appDelegate.navManager = navManager
     }
 
     func restoreNowPlayingVideo() {
@@ -97,5 +110,5 @@ struct SetupView: View {
 }
 
 #Preview {
-    SetupView()
+    SetupView(appDelegate: AppDelegate())
 }
