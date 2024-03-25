@@ -8,6 +8,8 @@ import SwiftUI
 struct ChapterList: View {
     @Environment(PlayerManager.self) var player
 
+    @State var toggleHaptic = false
+
     var video: Video
     var isCompact: Bool = false
 
@@ -44,11 +46,13 @@ struct ChapterList: View {
                     .tint(foregroundColor)
                 }
             }
+            .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
         }
     }
 
     func toggleChapter(_ chapter: Chapter) {
         chapter.isActive.toggle()
+        toggleHaptic.toggle()
         player.handleChapterChange()
     }
 
