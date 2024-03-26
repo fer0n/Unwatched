@@ -9,7 +9,7 @@ import TipKit
 
 @main
 struct UnwatchedApp: App {
-    // @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var sharedModelContainer: ModelContainer = {
         var inMemory = false
@@ -39,9 +39,7 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Text(verbatim: "This is a crash test version, choose a different build if you want to use the App")
-                .padding()
-            // SetupView(appDelegate: appDelegate)
+            SetupView(appDelegate: appDelegate)
             //     .task {
             //         try? Tips.configure([
             //             .displayFrequency(.immediate),
