@@ -16,17 +16,17 @@ struct NotificationSettingsView: View {
 
     var body: some View {
         List {
-            Section(footer: notificationsDisabled
-                        ? Text("notificationsDisabledHelper")
-                        : Text("notificationsHelper")) {
-                Toggle(isOn: $videoAddedToInbox) {
-                    Text("videoAddedToInbox")
-                }
-
-                Toggle(isOn: $videoAddedToQueue) {
-                    Text("videoAddedToQueue")
-                }
-            }
+            // Section(footer: notificationsDisabled
+            //             ? Text("notificationsDisabledHelper")
+            //             : Text("notificationsHelper")) {
+            //     Toggle(isOn: $videoAddedToInbox) {
+            //         Text("videoAddedToInbox")
+            //     }
+            //
+            //     Toggle(isOn: $videoAddedToQueue) {
+            //         Text("videoAddedToQueue")
+            //     }
+            // }
 
             Section {
                 Toggle(isOn: $showNotificationBadge) {

@@ -1711,6 +1711,7 @@
       }
     },
     "notificationsDisabledHelper" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1727,6 +1728,7 @@
       }
     },
     "notificationsHelper" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2643,6 +2645,7 @@
       }
     },
     "videoAddedToInbox" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2659,6 +2662,7 @@
       }
     },
     "videoAddedToQueue" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
