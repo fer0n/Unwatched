@@ -40,17 +40,17 @@ struct UnwatchedApp: App {
     var body: some Scene {
         WindowGroup {
             SetupView(appDelegate: appDelegate)
-            //     .task {
-            //         try? Tips.configure([
-            //             .displayFrequency(.immediate),
-            //             .datastoreLocation(.applicationDefault)
-            // ])
-            // }
+                .task {
+                    try? Tips.configure([
+                        .displayFrequency(.immediate),
+                        .datastoreLocation(.applicationDefault)
+                    ])
+                }
         }
         .modelContainer(sharedModelContainer)
-        // .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
-        //     let container = await sharedModelContainer
-        //     await RefreshManager.handleBackgroundVideoRefresh(container)
-        // }
+        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
+            let container = await sharedModelContainer
+            await RefreshManager.handleBackgroundVideoRefresh(container)
+        }
     }
 }
