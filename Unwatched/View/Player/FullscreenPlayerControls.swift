@@ -59,6 +59,7 @@ struct FullscreenPlayerControls: View {
                         .scrollIndicators(.hidden)
                         .presentationCompactAdaptation(.popover)
                     }
+                    .frame(maxWidth: 350)
                 }
             }
             .frame(maxHeight: .infinity)
