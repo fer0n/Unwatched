@@ -64,16 +64,16 @@ struct SpeedControlView: View {
                     }
                 }
             }
-            .overlay {
-                GeometryReader { geometry in
-                    Color.clear.preference(key: SpeedPreferenceKey.self, value: geometry.frame(in: coordinateSpace))
-                }
-            }
-            .onPreferenceChange(SpeedPreferenceKey.self) { minY in
-                self.width = minY.width
-                self.itemWidth = width / CGFloat(SpeedControlView.speeds.count)
-                controlMinX = getXPos(width, selectedSpeed)
-            }
+            //            .overlay {
+            //                GeometryReader { geometry in
+            //                    Color.clear.preference(key: SpeedPreferenceKey.self, value: geometry.frame(in: coordinateSpace))
+            //                }
+            //            }
+            //            .onPreferenceChange(SpeedPreferenceKey.self) { minY in
+            //                self.width = minY.width
+            //                self.itemWidth = width / CGFloat(SpeedControlView.speeds.count)
+            //                controlMinX = getXPos(width, selectedSpeed)
+            //            }
             .padding(.horizontal, SpeedControlView.padding)
 
             if let controlMinX = controlMinX {

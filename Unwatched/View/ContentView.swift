@@ -16,13 +16,14 @@ struct ContentView: View {
         @Bindable var navManager = navManager
 
         let videoExists = player.video != nil
-        let detents: Set<PresentationDetent> = videoExists && !navManager.searchFocused
-            ? Set([.height(sheetPos.maxSheetHeight)]).union(
-                player.embeddingDisabled
-                    ? []
-                    : [.height(sheetPos.playerControlHeight)]
-            )
-            : [.large]
+        //        let detents: Set<PresentationDetent> = videoExists && !navManager.searchFocused
+        //            ? Set([.height(sheetPos.maxSheetHeight)]).union(
+        //                player.embeddingDisabled
+        //                    ? []
+        //                    : [.height(sheetPos.playerControlHeight)]
+        //            )
+        //            : [.large]
+        let detents: Set<PresentationDetent> = [.large]
 
         let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
             ? [.medium]
@@ -35,66 +36,66 @@ struct ContentView: View {
 
         let bigScreen = sizeClass == .regular
 
-        GeometryReader { proxy in
-            let isLandscape = proxy.size.width > proxy.size.height
-            let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
-            let landscapeFullscreen = !bigScreen && isLandscape
+        //        GeometryReader { proxy in
+        let isLandscape = false // proxy.size.width > proxy.size.height
+        let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+        let landscapeFullscreen = !bigScreen && isLandscape
 
-            ZStack {
-                layout {
-                    VideoPlayer(
-                        showMenu: bigScreen
-                            ? .constant(false)
-                            : $navManager.showMenu,
-                        compactSize: bigScreen,
-                        showInfo: !bigScreen || (isLandscape && bigScreen),
-                        showFullscreenButton: bigScreen,
-                        landscapeFullscreen: landscapeFullscreen
-                    )
-                    if bigScreen {
-                        MenuView()
-                            .frame(maxWidth: isLandscape
-                                    ? min(proxy.size.width * 0.4, 400)
-                                    : nil)
-                    }
-                }
-                if !bigScreen {
-                    MiniPlayerView()
-                    if !videoExists {
-                        VideoNotAvailableView()
-                    }
+        ZStack {
+            layout {
+                VideoPlayer(
+                    showMenu: bigScreen
+                        ? .constant(false)
+                        : $navManager.showMenu,
+                    compactSize: bigScreen,
+                    showInfo: !bigScreen || (isLandscape && bigScreen),
+                    showFullscreenButton: bigScreen,
+                    landscapeFullscreen: landscapeFullscreen
+                )
+                if bigScreen {
+                    MenuView()
+                        .frame(maxWidth: isLandscape
+                                ? 400 // min(proxy.size.width * 0.4, 400)
+                                : nil)
                 }
             }
-            .background(Color.backgroundColor)
-            .environment(\.colorScheme, .dark)
-            .onAppear {
-                sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
-            }
-            .sheet(isPresented: $navManager.showDescriptionDetail) {
-                ChapterDescriptionView()
-                    .presentationDetents(chapterViewDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.playerControlHeight))
-                    )
-                    .presentationDragIndicator(.visible)
-            }
-            .sheet(isPresented: $navManager.showMenu) {
-                MenuView(showCancelButton: landscapeFullscreen)
-                    .presentationDetents(detents, selection: selectedDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                    )
-                    .presentationContentInteraction(.scrolls)
-                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                    .presentationDragIndicator(navManager.searchFocused
-                                                ? .hidden
-                                                : .visible)
+            if !bigScreen {
+                MiniPlayerView()
+                if !videoExists {
+                    VideoNotAvailableView()
+                }
             }
         }
+        .background(Color.backgroundColor)
+        .environment(\.colorScheme, .dark)
+        //            .onAppear {
+        //                sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
+        //            }
+        .sheet(isPresented: $navManager.showDescriptionDetail) {
+            ChapterDescriptionView()
+                .presentationDetents(chapterViewDetent)
+                .presentationBackgroundInteraction(
+                    .enabled(upThrough: .height(sheetPos.playerControlHeight))
+                )
+                .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $navManager.showMenu) {
+            MenuView(showCancelButton: landscapeFullscreen)
+                .presentationDetents(detents, selection: selectedDetent)
+                .presentationBackgroundInteraction(
+                    .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                )
+                .presentationContentInteraction(.scrolls)
+            //                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+            //                    .presentationDragIndicator(navManager.searchFocused
+            //                                                ? .hidden
+            //                                                : .visible)
+        }
+        //        }
         .ignoresSafeArea(bigScreen ? .keyboard : [])
-        .innerSizeTrackerModifier(onChange: { newSize in
-            sheetPos.sheetHeight = newSize.height
-        })
+        //        .innerSizeTrackerModifier(onChange: { newSize in
+        //            sheetPos.sheetHeight = newSize.height
+        //        })
     }
 }
 

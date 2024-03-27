@@ -24,10 +24,8 @@ struct SetupView: View {
     let appDelegate: AppDelegate
 
     var body: some View {
-        Text(verbatim: "This is a crash test version, choose a different build if you want to use the App")
-            .padding()
-            // ContentView()
-            // .tint(theme.color)
+        ContentView()
+            .tint(theme.color)
             .environment(player)
             .environment(imageCacheManager)
             .environment(refresher)

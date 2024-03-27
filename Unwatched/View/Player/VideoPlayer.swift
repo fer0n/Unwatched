@@ -129,9 +129,9 @@ struct VideoPlayer: View {
                                           onSleepTimerEnded: onSleepTimerEnded)
                     }
                 }
-                .innerSizeTrackerModifier(onChange: { size in
-                    sheetPos.playerControlHeight = size.height
-                })
+                //                .innerSizeTrackerModifier(onChange: { size in
+                //                    sheetPos.playerControlHeight = size.height
+                //                })
             }
         }
         .tint(.neutralAccentColor)
