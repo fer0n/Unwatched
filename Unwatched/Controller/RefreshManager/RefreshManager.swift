@@ -150,7 +150,7 @@ extension RefreshManager {
     static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
         print("Background task running now")
         do {
-            scheduleVideoRefresh()
+            // scheduleVideoRefresh()
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)

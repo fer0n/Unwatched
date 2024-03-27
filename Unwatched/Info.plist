@@ -27,7 +27,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
-		<string>fetch</string>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
