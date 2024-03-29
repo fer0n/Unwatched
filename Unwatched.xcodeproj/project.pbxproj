@@ -67,6 +67,7 @@
 		887AC8D42B49CECF00512852 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 887AC8D32B49CECF00512852 /* Localizable.xcstrings */; };
 		887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D52B49D0BE00512852 /* VideoPlacement.swift */; };
 		887CA9452B52E72700E344EC /* AppShortcutsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */; };
+		887DBB552BB6AC5A0012238A /* ClearAllVideosButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887DBB542BB6AC5A0012238A /* ClearAllVideosButton.swift */; };
 		887E72922B91ED9500928946 /* FullscreenPlayerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72912B91ED9500928946 /* FullscreenPlayerControls.swift */; };
 		887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72932B91F6D400928946 /* NextVideoButton.swift */; };
 		887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72952B92219C00928946 /* DismissToolbarButton.swift */; };
@@ -113,6 +114,9 @@
 		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
 		88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC372BA49D63000202D9 /* ShareView.swift */; };
 		88CAEC3A2BA49D88000202D9 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC392BA49D88000202D9 /* LogManager.swift */; };
+		88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */; };
+		88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
+		88CBE34B2BB7711500B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
 		88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CEDA1F2B6641C6000E3E98 /* Exportable.swift */; };
 		88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AE62B751B6900BDBFDF /* VideoSorting.swift */; };
 		88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */; };
@@ -219,6 +223,7 @@
 		887AC8D32B49CECF00512852 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		887AC8D52B49D0BE00512852 /* VideoPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlacement.swift; sourceTree = "<group>"; };
 		887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcutsProvider.swift; sourceTree = "<group>"; };
+		887DBB542BB6AC5A0012238A /* ClearAllVideosButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearAllVideosButton.swift; sourceTree = "<group>"; };
 		887E72912B91ED9500928946 /* FullscreenPlayerControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPlayerControls.swift; sourceTree = "<group>"; };
 		887E72932B91F6D400928946 /* NextVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideoButton.swift; sourceTree = "<group>"; };
 		887E72952B92219C00928946 /* DismissToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissToolbarButton.swift; sourceTree = "<group>"; };
@@ -265,6 +270,8 @@
 		88C572322B53C8BD002FF07E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		88CAEC372BA49D63000202D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		88CAEC392BA49D88000202D9 /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
+		88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlViewModelTests.swift; sourceTree = "<group>"; };
+		88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedContolViewModel.swift; sourceTree = "<group>"; };
 		88CEDA1F2B6641C6000E3E98 /* Exportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exportable.swift; sourceTree = "<group>"; };
 		88D29AE62B751B6900BDBFDF /* VideoSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSorting.swift; sourceTree = "<group>"; };
 		88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
@@ -394,6 +401,7 @@
 			children = (
 				882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */,
 				882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */,
+				88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */,
 			);
 			path = UnwatchedUITests;
 			sourceTree = "<group>";
@@ -476,7 +484,6 @@
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				88190E3A2B99D30300F048C3 /* RefreshManager */,
 				8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */,
-				883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */,
 				883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */,
 				88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */,
 			);
@@ -558,6 +565,15 @@
 			path = PlayerWebView;
 			sourceTree = "<group>";
 		};
+		88CBE3482BB76F7800B5722F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */,
+				88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		88D8584E2B55AB140047E0E6 /* YouTubeDataAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -605,6 +621,7 @@
 				8898B6802B48464000348D01 /* Errors */,
 				886E79B82B46FFC700554E1F /* Extensions */,
 				883CA81C2B5BD22600028D52 /* Controller */,
+				88CBE3482BB76F7800B5722F /* ViewModel */,
 				88DFC0C42B448ABF001895C8 /* View */,
 				881E51402B5A6414006384E4 /* HelperModel */,
 				88DFC0C32B448AB0001895C8 /* Model */,
@@ -659,6 +676,7 @@
 				8804A3F02B8B893300D3F4F1 /* VideoListItem */,
 				88BABABD2B62932C001FA0A4 /* CachedImageView.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
+				887DBB542BB6AC5A0012238A /* ClearAllVideosButton.swift */,
 				88DFC0B02B44843A001895C8 /* ContentView.swift */,
 				88BDC3A22B76A9BF00656D63 /* SetupView.swift */,
 			);
@@ -810,7 +828,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */,
+				88CBE34B2BB7711500B5722F /* SpeedContolViewModel.swift in Sources */,
 				882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */,
+				88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,12 +844,14 @@
 				8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */,
 				883327FF2B8DB286001B3895 /* AsyncButton.swift in Sources */,
 				88BDC3A32B76A9BF00656D63 /* SetupView.swift in Sources */,
+				887DBB552BB6AC5A0012238A /* ClearAllVideosButton.swift in Sources */,
 				88BDC3AB2B79F0DE00656D63 /* SleepTimer.swift in Sources */,
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
 				88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */,
 				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
+				88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */,
 				88CAEC3A2BA49D88000202D9 /* LogManager.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */,

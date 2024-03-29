@@ -51,8 +51,8 @@ struct ChapterList: View {
     }
 
     func toggleChapter(_ chapter: Chapter) {
-        chapter.isActive.toggle()
         toggleHaptic.toggle()
+        chapter.isActive.toggle()
         player.handleChapterChange()
     }
 

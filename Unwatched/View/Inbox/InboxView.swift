@@ -11,13 +11,10 @@ import OSLog
 struct InboxView: View {
     @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
-    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
-    @State private var showingClearAllAlert = false
-    @State private var hapticToggle = false
 
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
@@ -55,10 +52,9 @@ struct InboxView: View {
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
                         }
-                        if inboxEntries.count >= Const.minInboxEntriesToShowClear {
-                            clearAllButton
+                        if inboxEntries.count >= Const.minListEntriesToShowClear {
+                            ClearAllVideosButton(clearAll: clearAll)
                                 .listRowSeparator(.hidden)
-                                .foregroundStyle(theme.color)
                         }
                     }
                     .listStyle(.plain)
@@ -84,15 +80,6 @@ struct InboxView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
-        .actionSheet(isPresented: $showingClearAllAlert) {
-            ActionSheet(title: Text("confirmClearAll"),
-                        message: Text("areYouSureClearAll"),
-                        buttons: [
-                            .destructive(Text("clearAll")) { clearAll() },
-                            .cancel()
-                        ])
-        }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 
     var swipeTipView: some View {
@@ -146,29 +133,9 @@ struct InboxView: View {
     }
 
     func clearAll() {
-        hapticToggle.toggle()
         VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
         handleVideoChange()
     }
-
-    var clearAllButton: some View {
-        Button {
-            if requireClearConfirmation {
-                showingClearAllAlert = true
-            } else {
-                clearAll()
-            }
-        } label: {
-            HStack {
-                Spacer()
-                Image(systemName: Const.clearSF)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                Spacer()
-            }.padding()
-        }
-    }
-
 }
 
 #Preview {

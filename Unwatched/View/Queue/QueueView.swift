@@ -12,6 +12,7 @@ struct QueueView: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
+    @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -58,6 +59,10 @@ struct QueueView: View {
                         .dropDestination(for: URL.self) { items, index in
                             Logger.log.info("drop at index \(index)")
                             handleUrlDrop(items, at: index)
+                        }
+                        if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
+                            ClearAllVideosButton(clearAll: clearAll)
+                                .listRowSeparator(.hidden)
                         }
                     }
                 }
@@ -177,6 +182,11 @@ struct QueueView: View {
         if index == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }
+    }
+
+    func clearAll() {
+        VideoService.deleteQueueEntries(queue, modelContext: modelContext)
+        handleVideoChange()
     }
 }
 
