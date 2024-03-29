@@ -167,20 +167,20 @@ struct SubscriptionInfoDetails: View {
 
     var speedSetting: some View {
         Menu {
-            ForEach(Array(SpeedControlView.speeds), id: \.self) { speed in
+            ForEach(Array(SpeedControlViewModel.speeds), id: \.self) { speed in
                 Button {
                     subscription.customSpeedSetting = speed
                 } label: {
-                    Text(SpeedControlView.formatSpeed(speed))
+                    Text(SpeedControlViewModel.formatSpeed(speed))
                 }
             }
         } label: {
             HStack {
                 Image(systemName: "timer")
                 if let custom = subscription.customSpeedSetting {
-                    Text(verbatim: "\(SpeedControlView.formatSpeed(custom))×")
+                    Text(verbatim: "\(SpeedControlViewModel.formatSpeed(custom))×")
                 } else {
-                    Text("defaultSpeed\(SpeedControlView.formatSpeed(playbackSpeed))")
+                    Text("defaultSpeed\(SpeedControlViewModel.formatSpeed(playbackSpeed))")
                 }
             }
             .padding(10)
