@@ -35,39 +35,39 @@ struct BrowserView: View, KeyboardReadable {
     var body: some View {
         let subscriptionText = browserManager.channelTextRepresentation
 
-        //        GeometryReader { geometry in
-        VStack {
-            if showHeader {
-                headerArea()
-            }
+        GeometryReader { geometry in
+            VStack {
+                if showHeader {
+                    headerArea()
+                }
 
-            ZStack {
-                YtBrowserWebView(url: url,
-                                 startUrl: startUrl,
-                                 browserManager: browserManager)
-                if !isKeyboardVisible {
-                    VStack {
-                        Spacer()
-                        if subscriptionText == nil && browserManager.firstPageLoaded {
-                            TipView(ytBrowserTip)
-                                .padding(.horizontal)
+                ZStack {
+                    YtBrowserWebView(url: url,
+                                     startUrl: startUrl,
+                                     browserManager: browserManager)
+                    if !isKeyboardVisible {
+                        VStack {
+                            Spacer()
+                            if subscriptionText == nil && browserManager.firstPageLoaded {
+                                TipView(ytBrowserTip)
+                                    .padding(.horizontal)
+                            }
+                            if let text = subscriptionText, !isKeyboardVisible {
+                                addSubButton(text)
+                                    .popoverTip(addButtonTip, arrowEdge: .bottom)
+                                    .disabled(subscribeManager.isLoading)
+                            }
+                            Spacer()
+                                .frame(height: (
+                                        browserManager.isMobileVersion ? 60 : 0)
+                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
+                                )
                         }
-                        if let text = subscriptionText, !isKeyboardVisible {
-                            addSubButton(text)
-                                .popoverTip(addButtonTip, arrowEdge: .bottom)
-                                .disabled(subscribeManager.isLoading)
-                        }
-                        Spacer()
-                        //                                .frame(height: (
-                        //                                        browserManager.isMobileVersion ? 60 : 0)
-                        //                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
-                        //                                )
                     }
                 }
             }
+            .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
-        .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
-        //        }
         .background(Color.youtubeWebBackground)
         .task(id: isSuccess) {
             await handleSuccessChange()
