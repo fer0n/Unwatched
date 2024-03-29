@@ -12,6 +12,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
+    @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
 
     var body: some View {
         List {
@@ -24,8 +25,13 @@ struct VideoSettingsView: View {
                 .pickerStyle(.menu)
             }
 
-            Toggle(isOn: $requireClearConfirmation) {
-                Text("requireClearConfirmation")
+            Section("clearVideos") {
+                Toggle(isOn: $requireClearConfirmation) {
+                    Text("requireClearConfirmation")
+                }
+                Toggle(isOn: $showClearQueueButton) {
+                    Text("showClearQueueButton")
+                }
             }
 
             Section(header: Text("shortsSettings")) {

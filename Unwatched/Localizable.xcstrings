@@ -256,13 +256,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bist du sicher dass du alle Videos aus der Inbox entfernen möchtest?"
+            "value" : "Bist du sicher dass du alle Videos aus der Liste entfernen möchtest?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to clear all items from the inbox?"
+            "value" : "Are you sure you want to clear all items from the list?"
           }
         }
       }
@@ -507,6 +507,22 @@
         }
       }
     },
+    "clearVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Videos"
+          }
+        }
+      }
+    },
     "confirmClearAll" : {
       "localizations" : {
         "de" : {
@@ -560,7 +576,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kontaktiere Uns"
+            "value" : "Kontakt"
           }
         },
         "en" : {
@@ -1628,7 +1644,21 @@
       }
     },
     "noInfoFoundToUnsibscribe" : {
-      "comment" : "noInfoFoundToUnsibscribe"
+      "comment" : "noInfoFoundToUnsibscribe",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Information gefunden um das Abo zu beenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No info found to unsubscribe"
+          }
+        }
+      }
     },
     "noQueueItems" : {
       "localizations" : {
@@ -2070,13 +2100,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bestätigung zum Leeren der Inbox erforderlich"
+            "value" : "Bestätigung zum Leeren erforderlich"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Require Clear Inbox Confirmation"
+            "value" : "Require Clear Confirmation"
           }
         }
       }
@@ -2301,6 +2331,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Safe\": Videos with \"#Shorts\" in the title/description \"Moderate\": Videos with hashtags inside the title  Videos detected as \"Safe\" are marked with \"#s.\", \"Moderate\" videos are marked with \"#s\"."
+          }
+        }
+      }
+    },
+    "showClearQueueButton" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Queue Leeren\" Button anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Clear Queue Button"
           }
         }
       }
