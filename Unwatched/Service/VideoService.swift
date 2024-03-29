@@ -74,6 +74,12 @@ struct VideoService {
         VideoActor.deleteInboxEntry(entry, modelContext: modelContext)
     }
 
+    static func deleteQueueEntries(_ entries: [QueueEntry], modelContext: ModelContext) {
+        for entry in entries {
+            deleteQueueEntry(entry, modelContext: modelContext)
+        }
+    }
+
     static func deleteQueueEntry(_ entry: QueueEntry, modelContext: ModelContext) {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }

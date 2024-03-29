@@ -20,7 +20,7 @@ struct Const {
 
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
-    static let minInboxEntriesToShowClear = 2
+    static let minListEntriesToShowClear = 2
     static let autoRefreshIntervalSeconds: Double = 8 * 60
 
     static let earliestBackgroundBeginSeconds: Double = 30 * 60
@@ -82,6 +82,7 @@ struct Const {
     static let lastAutoRefreshDate = "lastAutoRefreshDate"
     static let showTabBarLabels = "showTabBarLabels"
     static let requireClearConfirmation = "requireClearConfirmation"
+    static let showClearQueueButton = "showClearQueueButton"
 
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"
