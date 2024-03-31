@@ -38,11 +38,11 @@ struct ContentView: View {
 
         //        GeometryReader { proxy in
         let isLandscape = false // proxy.size.width > proxy.size.height
-        let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+        // let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
         let landscapeFullscreen = !bigScreen && isLandscape
 
         ZStack {
-            layout {
+            VStack {
                 VideoPlayer(
                     showMenu: bigScreen
                         ? .constant(false)

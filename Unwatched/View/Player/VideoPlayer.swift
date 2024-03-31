@@ -33,9 +33,9 @@ struct VideoPlayer: View {
 
     var body: some View {
         @Bindable var player = player
-        let layout = compactSize
-            ? AnyLayout(HStackLayout(spacing: 25))
-            : AnyLayout(VStackLayout(spacing: 25))
+        //        let layout = compactSize
+        //            ? AnyLayout(HStackLayout(spacing: 25))
+        //            : AnyLayout(VStackLayout(spacing: 25))
 
         VStack(spacing: 0) {
             if player.video != nil {
@@ -88,7 +88,7 @@ struct VideoPlayer: View {
                         Spacer()
                     }
 
-                    layout {
+                    VStack {
                         if compactSize {
                             SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
                         }
