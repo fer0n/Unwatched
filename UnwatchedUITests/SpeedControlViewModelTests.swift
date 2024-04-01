@@ -30,6 +30,12 @@ class SpeedControlViewModelTests: XCTestCase {
         XCTAssertEqual(speed, 1.0, "Expected speed to be 1.0 for position .nan")
     }
 
+    func testGetSpeedFromWidthPosNaN() {
+        viewModel.width = .nan
+        let speed = viewModel.getSpeedFromPos(0)
+        XCTAssertEqual(speed, 1.0, "Expected speed to be 1.0 for position .nan")
+    }
+
     func testGetXPos() {
         let xPos = viewModel.getXPos(100, 1.5)
         XCTAssertEqual(xPos, 55, "Expected x position to be 55 for speed 1.5")

@@ -13,10 +13,11 @@ class SpeedControlViewModel {
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
         let itemWidth = width / CGFloat(Self.speeds.count)
         var calculatedIndex: Int {
-            if pos.isNaN || pos.isInfinite {
+            let res = round((pos / itemWidth) - 0.5)
+            if res.isNaN || res.isInfinite {
                 return 0
             }
-            return Int(round((pos / itemWidth) - 0.5) )
+            return Int(res)
         }
         let index = max(0, min(calculatedIndex, Self.speeds.count - 1))
         let speed = Self.speeds[index]
