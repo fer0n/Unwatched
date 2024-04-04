@@ -15,7 +15,7 @@ struct NotificationSettingsView: View {
     @State var notificationsDisabled = false
 
     var body: some View {
-        List {
+        Form {
             Section(footer: notificationsDisabled
                         ? Text("notificationsDisabledHelper")
                         : Text("notificationsHelper")) {

@@ -18,7 +18,7 @@ struct DebugView: View {
     @State var exportShown = false
 
     var body: some View {
-        List {
+        Form {
             Section("videoSettings") {
                 Toggle(isOn: $refreshOnStartup) {
                     Text("refreshOnStartup")

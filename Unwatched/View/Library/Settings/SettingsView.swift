@@ -11,62 +11,60 @@ struct SettingsView: View {
     @State var isExportingAll = false
 
     var body: some View {
-        VStack {
-            List {
-                NavigationLink(value: LibraryDestination.settingsNotifications) {
-                    Label("notifications", systemImage: "app.badge")
-                }
+        Form {
+            NavigationLink(value: LibraryDestination.settingsNotifications) {
+                Label("notifications", systemImage: "app.badge")
+            }
 
-                NavigationLink(value: LibraryDestination.settingsNewVideos) {
-                    Label("videoSettings", systemImage: "film.stack")
-                }
+            NavigationLink(value: LibraryDestination.settingsNewVideos) {
+                Label("videoSettings", systemImage: "film.stack")
+            }
 
-                NavigationLink(value: LibraryDestination.settingsPlayback) {
-                    Label("playback", systemImage: "play.fill")
-                }
+            NavigationLink(value: LibraryDestination.settingsPlayback) {
+                Label("playback", systemImage: "play.fill")
+            }
 
-                NavigationLink(value: LibraryDestination.settingsAppearance) {
-                    Label("appearance", systemImage: "paintbrush.fill")
-                }
+            NavigationLink(value: LibraryDestination.settingsAppearance) {
+                Label("appearance", systemImage: "paintbrush.fill")
+            }
 
-                if let url = UrlService.shareShortcutUrl {
-                    Section {
-                        Link(destination: url) {
-                            LibraryNavListItem(
-                                "setupShareSheetAction",
-                                systemName: "square.and.arrow.up.on.square.fill"
-                            )
-                        }
-                    }
-                }
-
+            if let url = UrlService.shareShortcutUrl {
                 Section {
-                    Link(destination: UrlService.emailUrl) {
-                        LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
+                    Link(destination: url) {
+                        LibraryNavListItem(
+                            "setupShareSheetAction",
+                            systemName: "square.and.arrow.up.on.square.fill"
+                        )
                     }
                 }
+            }
 
-                Section {
-                    NavigationLink(value: LibraryDestination.importSubscriptions) {
-                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
-                    }
-                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
-                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                        if isExportingAll {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
-                        }
-                    }
-                    NavigationLink(value: LibraryDestination.userData) {
-                        Label("userData", systemImage: "opticaldiscdrive.fill")
-                    }
+            Section {
+                Link(destination: UrlService.emailUrl) {
+                    LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                 }
+            }
 
-                NavigationLink(value: LibraryDestination.debug) {
-                    Label("debug", systemImage: "ladybug.fill")
+            Section {
+                NavigationLink(value: LibraryDestination.importSubscriptions) {
+                    Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
                 }
+                let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
+                ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
+                    if isExportingAll {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
+                    }
+                }
+                NavigationLink(value: LibraryDestination.userData) {
+                    Label("userData", systemImage: "opticaldiscdrive.fill")
+                }
+            }
+
+            NavigationLink(value: LibraryDestination.debug) {
+                Label("debug", systemImage: "ladybug.fill")
             }
         }
         .navigationTitle("settings")
