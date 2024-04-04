@@ -13,8 +13,8 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
     @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
-    @Relationship(deleteRule: .cascade) var chapters: [Chapter]? = []
-    @Relationship(deleteRule: .cascade) var cachedImage: CachedImage?
+    @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
+    @Relationship(deleteRule: .cascade, inverse: \CachedImage.video) var cachedImage: CachedImage?
     var youtubeId: String = UUID().uuidString
 
     var title: String = "-"
