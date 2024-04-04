@@ -148,6 +148,7 @@
 		88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */; };
 		88F1EE502B5D31D6009866A0 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */; };
 		88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE522B5D3211009866A0 /* BrowserView.swift */; };
+		88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
 /* End PBXBuildFile section */
 
@@ -306,6 +307,7 @@
 		88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebView.swift; sourceTree = "<group>"; };
 		88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
 		88F1EE522B5D3211009866A0 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
+		88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropUrlArea.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -697,6 +699,7 @@
 			isa = PBXGroup;
 			children = (
 				88F1EE522B5D3211009866A0 /* BrowserView.swift */,
+				88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */,
 				88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */,
 			);
 			path = Browser;
@@ -896,6 +899,7 @@
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
 				88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */,
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
+				88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */,
 				88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */,
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
