@@ -13,15 +13,9 @@ struct BrowserView: View, KeyboardReadable {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
 
-    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
-
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-    @State var isDragOver = false
-    @State var isLoading = false
-    @State var isSuccess: Bool?
-    @State var droppedUrls = [URL]()
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
@@ -38,7 +32,19 @@ struct BrowserView: View, KeyboardReadable {
         GeometryReader { geometry in
             VStack {
                 if showHeader {
-                    headerArea()
+                    DropUrlArea {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.down")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .padding(7)
+                                .frame(maxWidth: .infinity)
+                                .fontWeight(.semibold)
+                        }
+                    }
                 }
 
                 ZStack {
@@ -69,15 +75,6 @@ struct BrowserView: View, KeyboardReadable {
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
         .background(Color.youtubeWebBackground)
-        .task(id: isSuccess) {
-            await handleSuccessChange()
-        }
-        .task(id: droppedUrls) {
-            guard !droppedUrls.isEmpty else {
-                return
-            }
-            await handleUrlDrop(droppedUrls)
-        }
         .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
             await subscribeManager.setIsSubscribed(browserManager.info)
@@ -106,76 +103,6 @@ struct BrowserView: View, KeyboardReadable {
                 }
             }
         }
-    }
-
-    func headerArea() -> some View {
-        let showDropArea = isDragOver || isLoading || isSuccess != nil
-
-        return VStack {
-            if showDropArea {
-                Spacer()
-                    .frame(height: 40)
-            }
-            if showDropArea {
-                dropAreaContent
-                    .frame(maxWidth: .infinity)
-                Spacer()
-                    .frame(height: 40)
-            } else {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.down")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .padding(7)
-                        .frame(maxWidth: .infinity)
-                        .fontWeight(.semibold)
-                }
-            }
-        }
-        .background(showDropArea ? theme.color : .clear)
-        .tint(.neutralAccentColor)
-        .dropDestination(for: URL.self) { items, _ in
-            droppedUrls = items
-            return true
-        } isTargeted: { targeted in
-            withAnimation {
-                isDragOver = targeted
-            }
-        }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: showDropArea)
-    }
-
-    var dropAreaContent: some View {
-        ZStack {
-            let size: CGFloat = 20
-
-            if isLoading {
-                ProgressView()
-            } else if isSuccess == true {
-                Image(systemName: "checkmark")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: size, height: size)
-            } else if isSuccess == false {
-                Image(systemName: "xmark")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: size, height: size)
-            } else {
-                VStack {
-                    Image(systemName: Const.queueTagSF)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                    Text("dropVideoUrlsHere")
-                        .fontWeight(.medium)
-                }
-            }
-        }
-        .foregroundStyle(.white)
     }
 
     func addSubButton(_ text: String) -> some View {
@@ -217,31 +144,6 @@ struct BrowserView: View, KeyboardReadable {
                                              container: container)
     }
 
-    func handleSuccessChange() async {
-        if isSuccess != nil {
-            do {
-                try await Task.sleep(s: 1)
-                withAnimation {
-                    isSuccess = nil
-                }
-            } catch {}
-        }
-    }
-
-    func handleUrlDrop(_ urls: [URL]) async {
-        Logger.log.info("handleUrlDrop inbox \(urls)")
-        withAnimation {
-            isLoading = true
-        }
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
-        let success: ()? = try? await task.value
-        withAnimation {
-            self.isSuccess = success != nil
-            self.isLoading = false
-        }
-    }
-
     func handleAddSubButton() {
         addButtonTip.invalidate(reason: .actionPerformed)
         ytBrowserTip.invalidate(reason: .actionPerformed)
@@ -257,8 +159,6 @@ struct BrowserView: View, KeyboardReadable {
             Logger.log.info("handleAddSubButton without info/isSubscribed")
             return
         }
-        print("isSubscribed: \(isSubscribed), \(subscriptionInfo)")
-        // TODO: Here: unsubscribe should work for playlistId and regular channel
         if isSubscribed {
             await subscribeManager.unsubscribe(subscriptionInfo)
         } else {
@@ -268,7 +168,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(isDragOver: true, startUrl: BrowserUrl.youtubeStartPage)
+    BrowserView(startUrl: BrowserUrl.youtubeStartPage)
         .modelContainer(DataController.previewContainer)
         .environment(RefreshManager())
 }
