@@ -3,7 +3,7 @@ import SwiftData
 import AppIntents
 
 struct AddYoutubeURL: AppIntent {
-    static var title: LocalizedStringResource = "addYoutubeUrl"
+    static var title: LocalizedStringResource { "addYoutubeUrl" }
 
     @Parameter(title: "youtubeUrl")
     var youtubeUrl: URL
