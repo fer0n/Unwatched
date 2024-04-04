@@ -12,7 +12,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
 
     var body: some View {
-        List {
+        Form {
             Section(footer: Text("showFullscreenControlsHelper")) {
                 Toggle(isOn: $showFullscreenControls) {
                     Text("showFullscreenControls")

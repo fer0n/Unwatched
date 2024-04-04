@@ -27,8 +27,7 @@ struct BackupView: View {
     var body: some View {
         let backupType = Const.backupType ?? .json
 
-        List {
-
+        Form {
             Section(header: Text("icloudSync"), footer: Text("icloudSyncHelper")) {
                 Toggle(isOn: $enableIcloudSync) {
                     Text("syncToIcloud")

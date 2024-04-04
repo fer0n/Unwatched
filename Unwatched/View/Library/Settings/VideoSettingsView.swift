@@ -15,7 +15,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
 
     var body: some View {
-        List {
+        Form {
             Section(footer: Text("newVideosHelper")) {
                 Picker("newVideos", selection: $defaultVideoPlacement) {
                     ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {

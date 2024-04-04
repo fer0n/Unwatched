@@ -13,7 +13,7 @@ struct AppearanceSettingsView: View {
 
     var body: some View {
 
-        List {
+        Form {
             Toggle(isOn: $browserAsTab) {
                 Text("browserAsTab")
             }
