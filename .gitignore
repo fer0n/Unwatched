@@ -93,3 +93,5 @@ Unwatched.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 .DS_Store
 Unwatched.xcodeproj/xcshareddata/xcschemes/Unwatched.xcscheme
 Unwatched/apiKey.swift
+
+.sentryclirc

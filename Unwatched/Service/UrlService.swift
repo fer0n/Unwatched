@@ -153,8 +153,7 @@ struct UrlService {
                               channelId: String? = nil,
                               playlistId: String? = nil,
                               mobile: Bool = true) -> String? {
-        print("getYoutubeUrl", getYoutubeUrl)
-        var baseUrl = "https://\(mobile ? "m." : "")youtube.com"
+        let baseUrl = "https://\(mobile ? "m." : "")youtube.com"
         if let playlistId = playlistId {
             return "\(baseUrl)/playlist?list=\(playlistId)"
         }
