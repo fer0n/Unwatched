@@ -92,7 +92,7 @@ struct DropUrlArea<Content: View>: View {
         .foregroundStyle(.white)
     }
 
-    func handleUrlDrop(_ urls: [URL]) async {
+    @MainActor func handleUrlDrop(_ urls: [URL]) async {
         Logger.log.info("handleUrlDrop inbox \(urls)")
         withAnimation {
             isLoading = true
@@ -106,7 +106,7 @@ struct DropUrlArea<Content: View>: View {
         }
     }
 
-    func handleSuccessChange() async {
+    @MainActor func handleSuccessChange() async {
         if isSuccess != nil {
             do {
                 try await Task.sleep(s: 1)

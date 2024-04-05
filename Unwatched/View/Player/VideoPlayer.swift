@@ -12,7 +12,6 @@ struct VideoPlayer: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
@@ -95,12 +94,13 @@ struct VideoPlayer: View {
 
                         HStack {
                             SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                            customSettingsButton
+                            CustomSettingsButton()
                         }
 
                         HStack {
-                            watchedButton
+                            WatchedButton(markVideoWatched: markVideoWatched)
                                 .frame(maxWidth: .infinity)
+
                             PlayButton(size:
                                         (player.embeddingDisabled || compactSize)
                                         ? 70
@@ -109,7 +109,7 @@ struct VideoPlayer: View {
                             NextVideoButton(markVideoWatched: markVideoWatched)
                                 .frame(maxWidth: .infinity)
                             if showFullscreenButton {
-                                fullscreenButton
+                                FullscreenButton(playVideoFullscreen: $playVideoFullscreen)
                                 Spacer()
                             }
 
@@ -173,9 +173,7 @@ struct VideoPlayer: View {
     }
 
     func openBrowserUrl(_ url: BrowserUrl) {
-        print("openBrowserUrl", url)
         let browserAsTab = UserDefaults.standard.bool(forKey: Const.browserAsTab)
-        print("browserAsTab", browserAsTab)
         if browserAsTab {
             sheetPos.setDetentMiniPlayer()
             navManager.openUrlInApp(url)
@@ -191,49 +189,6 @@ struct VideoPlayer: View {
             seconds -= fadeOutSeconds
         }
         player.updateElapsedTime(seconds)
-    }
-
-    var watchedButton: some View {
-        Button {
-            markVideoWatched()
-            hapticToggle.toggle()
-        } label: {
-            Image(systemName: "checkmark")
-        }
-        .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
-        .padding(3)
-        .contextMenu {
-            if player.video != nil {
-                Button {
-                    player.clearVideo()
-                } label: {
-                    Label("clearVideo", systemImage: "xmark")
-                }
-            }
-        }
-    }
-
-    var customSettingsButton: some View {
-        Toggle(isOn: Binding(get: {
-            player.video?.subscription?.customSpeedSetting != nil
-        }, set: { value in
-            player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
-            hapticToggle.toggle()
-        })) {
-            Image(systemName: "lock")
-        }
-        .help("customSpeedSettings")
-        .toggleStyle(OutlineToggleStyle(isSmall: true))
-        .disabled(player.video?.subscription == nil)
-    }
-
-    var fullscreenButton: some View {
-        Toggle(isOn: $playVideoFullscreen) {
-            Image(systemName: playVideoFullscreen
-                    ? "rectangle.inset.filled"
-                    : "rectangle.slash.fill")
-        }
-        .toggleStyle(OutlineToggleStyle())
     }
 
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {

@@ -2063,7 +2063,7 @@
         }
       }
     },
-    "removedDuplicates %lld %lld %lld %lld %lld" : {
+    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
