@@ -36,7 +36,7 @@ struct SetupView: View {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
             .onAppear {
-                setUpAppDelegate()
+                appDelegate.navManager = navManager
 
                 let container = modelContext.container
                 refresher.container = container
@@ -69,10 +69,6 @@ struct SetupView: View {
                     break
                 }
             }
-    }
-
-    func setUpAppDelegate() {
-        appDelegate.navManager = navManager
     }
 
     func restoreNowPlayingVideo() {

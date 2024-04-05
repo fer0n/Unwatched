@@ -42,7 +42,14 @@ struct DebugView: View {
                 .tint(theme.color)
 
                 if let info = cleanupInfo {
-                    Text("removedDuplicates \(info.countVideos) \(info.countQueueEntries) \(info.countInboxEntries) \(info.countSubscriptions) \(info.countImages)")
+                    Text("""
+                        removedDuplicates
+                        \(info.countVideos)
+                        \(info.countQueueEntries)
+                        \(info.countInboxEntries)
+                        \(info.countSubscriptions)
+                        \(info.countImages)
+                        """)
                         .foregroundStyle(.secondary)
                 }
             }
