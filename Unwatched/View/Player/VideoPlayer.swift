@@ -12,6 +12,7 @@ struct VideoPlayer: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
@@ -94,7 +95,7 @@ struct VideoPlayer: View {
 
                         HStack {
                             SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                            CustomSettingsButton()
+                            CustomSettingsButton(playbackSpeed: $playbackSpeed)
                         }
 
                         HStack {

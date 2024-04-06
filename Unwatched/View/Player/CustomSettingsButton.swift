@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct CustomSettingsButton: View {
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+    @Binding var playbackSpeed: Double
 
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
