@@ -5,13 +5,13 @@
 
 import SwiftUI
 import BackgroundTasks
+import SwiftData
 import OSLog
 
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
 
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.modelContext) var modelContext
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 
     @State var sheetPos = SheetPositionReader.load()
@@ -22,9 +22,11 @@ struct SetupView: View {
     @State var navManager = NavigationManager.load()
 
     let appDelegate: AppDelegate
+    let container: ModelContainer
 
     var body: some View {
         ContentView()
+            .modelContainer(container)
             .tint(theme.color)
             .environment(player)
             .environment(imageCacheManager)
@@ -37,8 +39,6 @@ struct SetupView: View {
             }
             .onAppear {
                 appDelegate.navManager = navManager
-
-                let container = modelContext.container
                 refresher.container = container
                 refresher.showError = alerter.showError
                 player.container = container
@@ -81,6 +81,7 @@ struct SetupView: View {
                 // current video is the one stored, all good
                 return
             }
+            let modelContext = ModelContext(container)
             video = modelContext.model(for: videoId) as? Video
         }
 
@@ -94,7 +95,6 @@ struct SetupView: View {
     func saveData() async {
         navManager.save()
         sheetPos.save()
-        let container = modelContext.container
         await imageCacheManager.persistCache(container)
         Logger.log.info("saved state")
     }
@@ -107,5 +107,5 @@ struct SetupView: View {
 }
 
 #Preview {
-    SetupView(appDelegate: AppDelegate())
+    SetupView(appDelegate: AppDelegate(), container: DataController.previewContainer)
 }
