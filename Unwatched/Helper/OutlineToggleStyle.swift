@@ -32,7 +32,7 @@ struct OutlineToggleModifier: ViewModifier {
             .font(.system(size: isSmall ? 15 : 18))
             .frame(width: size, height: size)
             .background(isOn ? Color.neutralAccentColor : Color.myBackgroundGray)
-            .tint(isOn ? .backgroundColor : .myForegroundGray)
+            .foregroundStyle(isOn ? Color.backgroundColor : Color.myForegroundGray)
             .clipShape(Circle())
             .overlay(
                 Circle()
