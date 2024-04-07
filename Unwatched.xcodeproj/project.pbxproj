@@ -154,6 +154,7 @@
 		88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE522B5D3211009866A0 /* BrowserView.swift */; };
 		88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
+		88FEF5812BC3117E00366CE6 /* SF-Compact-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 88FEF5782BC3117E00366CE6 /* SF-Compact-Display-Semibold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -317,6 +318,7 @@
 		88F1EE522B5D3211009866A0 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
 		88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropUrlArea.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
+		88FEF5782BC3117E00366CE6 /* SF-Compact-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Compact-Display-Semibold.otf"; path = "../../../../../../../Library/Fonts/SF-Compact-Display-Semibold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -646,6 +648,7 @@
 			children = (
 				88D438AA2B45C3D700482F29 /* Info.plist */,
 				88D8F03C2BB21135009B54FC /* PrivacyInfo.xcprivacy */,
+				88FEF56F2BC3113500366CE6 /* Font */,
 				88143EB52B4A7FEF00829E13 /* Helper */,
 				8898B6802B48464000348D01 /* Errors */,
 				886E79B82B46FFC700554E1F /* Extensions */,
@@ -731,6 +734,14 @@
 				88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */,
 			);
 			path = Browser;
+			sourceTree = "<group>";
+		};
+		88FEF56F2BC3113500366CE6 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				88FEF5782BC3117E00366CE6 /* SF-Compact-Display-Semibold.otf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -823,6 +834,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88FEF5812BC3117E00366CE6 /* SF-Compact-Display-Semibold.otf in Resources */,
 				88DFC0B92B44843C001895C8 /* Preview Assets.xcassets in Resources */,
 				88DFC0B52B44843C001895C8 /* Assets.xcassets in Resources */,
 				88D8F03D2BB21135009B54FC /* PrivacyInfo.xcprivacy in Resources */,
