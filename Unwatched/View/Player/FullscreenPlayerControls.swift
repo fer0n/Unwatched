@@ -7,12 +7,16 @@ import SwiftUI
 
 struct FullscreenPlayerControls: View {
     @Environment(PlayerManager.self) var player
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+
     @State var showChapters = false
+    @State var showSpeedControl = false
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
+        @Bindable var player = player
 
         VStack {
             ZStack {
@@ -48,18 +52,24 @@ struct FullscreenPlayerControls: View {
             }
             .popover(isPresented: $showChapters) {
                 if let video = player.video {
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            ChapterList(video: video, isCompact: true)
-                                .padding(6)
+                    ZStack {
+                        Color.sheetBackground
+                            .scaleEffect(1.5)
+
+                        ScrollViewReader { proxy in
+                            ScrollView {
+                                ChapterList(video: video, isCompact: true)
+                                    .padding(6)
+                            }
+                            .onAppear {
+                                proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
+                            }
+                            .scrollIndicators(.hidden)
                         }
-                        .onAppear {
-                            proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
-                        }
-                        .scrollIndicators(.hidden)
-                        .presentationCompactAdaptation(.popover)
+                        .frame(maxWidth: 350)
                     }
-                    .frame(maxWidth: 350)
+                    .environment(\.colorScheme, .dark)
+                    .presentationCompactAdaptation(.popover)
                 }
             }
             .frame(maxHeight: .infinity)
@@ -76,6 +86,34 @@ struct FullscreenPlayerControls: View {
             }
             .frame(maxHeight: .infinity)
             .disabled(player.previousChapter == nil)
+
+            let customSetting = player.video?.subscription?.customSpeedSetting != nil
+            ZStack {
+                Button {
+                    showSpeedControl = true
+                } label: {
+                    Text(verbatim: "\(SpeedControlViewModel.formatSpeed(player.playbackSpeed))×")
+                        .fontWeight(.semibold)
+                        .modifier(PlayerControlButtonStyle(isOn: customSetting))
+                        .animation(.default, value: customSetting)
+                }
+            }
+            .popover(isPresented: $showSpeedControl) {
+                ZStack {
+                    Color.sheetBackground
+                        .scaleEffect(1.5)
+
+                    HStack {
+                        SpeedControlView(selectedSpeed: $player.playbackSpeed)
+                        CustomSettingsButton(playbackSpeed: $playbackSpeed)
+                    }
+                    .padding(.horizontal)
+                    .frame(width: 350)
+                }
+                .environment(\.colorScheme, .dark)
+                .presentationCompactAdaptation(.popover)
+            }
+            .frame(maxHeight: .infinity)
 
             CoreNextButton(markVideoWatched: markVideoWatched) { image, isOn in
                 image
@@ -112,6 +150,7 @@ struct FullscreenPlayerControls: View {
     .ignoresSafeArea(.all)
     .modelContainer(DataController.previewContainer)
     .environment(PlayerManager())
+    .environment(NavigationManager())
 }
 
 struct PlayerControlButtonStyle: ViewModifier {

@@ -150,9 +150,11 @@ struct SpeedControlView_Previews: PreviewProvider {
 
 struct SpeedControlViewPreview: View {
     @State var selected: Double = 1.5
+
     var body: some View {
         SpeedControlView(selectedSpeed: $selected)
             .modelContainer(DataController.previewContainer)
+            .environment(NavigationManager())
             .padding()
     }
 }
