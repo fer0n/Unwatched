@@ -92,11 +92,17 @@ struct FullscreenPlayerControls: View {
                 Button {
                     showSpeedControl = true
                 } label: {
-                    Text(verbatim: "\(SpeedControlViewModel.formatSpeed(player.playbackSpeed))×")
-                        .fontWeight(.semibold)
-                        .modifier(PlayerControlButtonStyle(isOn: customSetting))
-                        .animation(.default, value: customSetting)
+                    HStack(spacing: 0) {
+                        Text(verbatim: SpeedControlViewModel.formatSpeed(player.playbackSpeed))
+                            .font(.custom("SFCompactDisplay-Semibold", size: 16))
+                        Text(verbatim: "×")
+                            .font(.custom("SFCompactDisplay-Semibold", size: 12))
+                    }
+                    .fixedSize()
+                    .modifier(PlayerControlButtonStyle(isOn: customSetting))
+                    .animation(.default, value: customSetting)
                 }
+                .frame(width: 35)
             }
             .popover(isPresented: $showSpeedControl) {
                 ZStack {
