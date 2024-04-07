@@ -41,7 +41,8 @@ struct UrlService {
 
         // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
-        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))([^\s\/\?\n]+))"#
+        // https://piped.video/watch?v=VZIm_2MgdeA
+        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\?v=)|(?:shorts\/))([^\s\/\?\n]+))"#
         let res = url.absoluteString.matching(regex: regex)
         return res
     }
