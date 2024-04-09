@@ -117,7 +117,6 @@
 		88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
 		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
 		88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC372BA49D63000202D9 /* ShareView.swift */; };
-		88CAEC3A2BA49D88000202D9 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC392BA49D88000202D9 /* LogManager.swift */; };
 		88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */; };
 		88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
 		88CBE34B2BB7711500B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
@@ -279,7 +278,6 @@
 		88C205292B517732008EC51D /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		88C572322B53C8BD002FF07E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		88CAEC372BA49D63000202D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
-		88CAEC392BA49D88000202D9 /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlViewModelTests.swift; sourceTree = "<group>"; };
 		88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedContolViewModel.swift; sourceTree = "<group>"; };
 		88CEDA1F2B6641C6000E3E98 /* Exportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exportable.swift; sourceTree = "<group>"; };
@@ -490,7 +488,6 @@
 				8804A3F52B8B96EA00D3F4F1 /* PlayerManager */,
 				88BABAC12B630EF8001FA0A4 /* ImageCacheManager.swift */,
 				8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */,
-				88CAEC392BA49D88000202D9 /* LogManager.swift */,
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				88190E3A2B99D30300F048C3 /* RefreshManager */,
 				8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */,
@@ -895,7 +892,6 @@
 				88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */,
 				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
 				88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */,
-				88CAEC3A2BA49D88000202D9 /* LogManager.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
