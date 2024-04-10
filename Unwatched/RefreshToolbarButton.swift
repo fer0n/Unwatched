@@ -28,10 +28,10 @@ struct CoreRefreshButton: View {
             .contextMenu {
                 Button {
                     Task { @MainActor in
-                        await refresh(updateExisting: true)
+                        await refresh(hardRefresh: true)
                     }
                 } label: {
-                    Label("updateRefresh", systemImage: "arrow.up")
+                    Label("hardReload", systemImage: "clock.arrow.2.circlepath")
                 }
             }
             .disabled(refresher.isSyncingIcloud)
@@ -50,12 +50,12 @@ struct CoreRefreshButton: View {
     }
 
     @MainActor
-    private func refresh(updateExisting: Bool = false) async {
+    private func refresh(hardRefresh: Bool = false) async {
         if refresher.isLoading { return }
         if let subId = refreshOnlySubscription {
-            await refresher.refreshSubscription(subscriptionId: subId, updateExisting: updateExisting)
+            await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh)
         } else {
-            await refresher.refreshAll(updateExisting: updateExisting)
+            await refresher.refreshAll(hardRefresh: hardRefresh)
         }
     }
 

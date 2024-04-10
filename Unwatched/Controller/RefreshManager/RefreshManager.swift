@@ -30,31 +30,35 @@ import OSLog
         cancelCloudKitListener()
     }
 
-    func refreshAll(updateExisting: Bool = false) async {
+    func refreshAll(hardRefresh: Bool = false) async {
         cancelCloudKitListener()
-        await refresh(updateExisting: updateExisting)
+        await refresh(hardRefresh: hardRefresh)
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
 
-    func refreshSubscription(subscriptionId: PersistentIdentifier, updateExisting: Bool = false) async {
-        await refresh(subscriptionIds: [subscriptionId], updateExisting: updateExisting)
+    func refreshSubscription(subscriptionId: PersistentIdentifier, hardRefresh: Bool = false) async {
+        await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh)
     }
 
     @MainActor
-    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, updateExisting: Bool = false) async {
+    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         if let container = container {
             if isLoading { return }
             isLoading = true
             do {
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
-                                                          updateExisting: updateExisting,
+                                                          updateExisting: hardRefresh,
                                                           container: container)
                 _ = try await task.value
             } catch {
                 showError?(error)
             }
             isLoading = false
-            quickDuplicateCleanup()
+            if hardRefresh {
+                _ = CleanupService.cleanupDuplicates(container, onlyIfDuplicateEntriesExist: false)
+            } else {
+                quickDuplicateCleanup()
+            }
         }
     }
 
