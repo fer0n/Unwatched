@@ -1027,6 +1027,22 @@
         }
       }
     },
+    "hardReload" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hard Reload"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hard Reload"
+          }
+        }
+      }
+    },
     "hideMenuOnPlay" : {
       "localizations" : {
         "de" : {
@@ -2620,22 +2636,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unsubscribe"
-          }
-        }
-      }
-    },
-    "updateRefresh" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktualisieren & Bestehende Updaten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh & Update Existing"
           }
         }
       }
