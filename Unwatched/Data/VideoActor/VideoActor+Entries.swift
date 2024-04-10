@@ -81,11 +81,9 @@ extension VideoActor {
         video.title = updatedVideo.title
         video.updatedDate = updatedVideo.updatedDate
 
-        if video.thumbnailUrl != updatedVideo.thumbnailUrl {
-            video.thumbnailUrl = updatedVideo.thumbnailUrl
-            if let cachedImage = video.cachedImage {
-                modelContext.delete(cachedImage)
-            }
+        video.thumbnailUrl = updatedVideo.thumbnailUrl
+        if let cachedImage = video.cachedImage {
+            modelContext.delete(cachedImage)
         }
 
         if video.videoDescription != updatedVideo.videoDescription {
