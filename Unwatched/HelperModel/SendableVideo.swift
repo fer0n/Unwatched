@@ -19,6 +19,7 @@ struct SendableVideo: Sendable, Codable {
     var chapters = [SendableChapter]()
 
     var publishedDate: Date?
+    var updatedDate: Date?
     var watched = false
 
     var videoDescription: String?
@@ -51,6 +52,7 @@ struct SendableVideo: Sendable, Codable {
             youtubeId: youtubeId ?? self.youtubeId,
             thumbnailUrl: thumbnailUrl ?? self.thumbnailUrl,
             publishedDate: publishedDate ?? self.publishedDate,
+            updatedDate: self.updatedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
             duration: duration ?? self.duration,
             elapsedSeconds: self.elapsedSeconds,
@@ -76,6 +78,7 @@ struct SendableVideo: Sendable, Codable {
         elapsedSeconds: Double? = nil,
         chapters: [SendableChapter] = [SendableChapter](),
         publishedDate: Date? = nil,
+        updatedDate: Date? = nil,
         watched: Bool = false,
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
@@ -92,6 +95,7 @@ struct SendableVideo: Sendable, Codable {
         self.elapsedSeconds = elapsedSeconds
         self.chapters = chapters
         self.publishedDate = publishedDate
+        self.updatedDate = updatedDate
         self.watched = watched
         self.videoDescription = videoDescription
         self.bookmarkedDate = bookmarkedDate
@@ -110,6 +114,7 @@ struct SendableVideo: Sendable, Codable {
         duration = try container.decodeIfPresent(Double.self, forKey: .duration)
         elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds)
         publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
+        updatedDate = try container.decodeIfPresent(Date.self, forKey: .updatedDate)
         watched = try container.decodeIfPresent(Bool.self, forKey: .watched) ?? false
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
@@ -128,6 +133,7 @@ struct SendableVideo: Sendable, Codable {
         try container.encodeIfPresent(duration, forKey: .duration)
         try container.encodeIfPresent(elapsedSeconds, forKey: .elapsedSeconds)
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
+        try container.encodeIfPresent(updatedDate, forKey: .updatedDate)
         if watched {
             try container.encode(watched, forKey: .watched)
         }
@@ -148,6 +154,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
     case duration
     case elapsedSeconds
     case publishedDate
+    case updatedDate
     case watched
     case videoDescription
     case bookmarkedDate

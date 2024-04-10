@@ -5,7 +5,6 @@ import OSLog
 struct VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
-        updateExisting: Bool = false,
         container: ModelContainer
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
@@ -13,8 +12,7 @@ struct VideoService {
             let repo = VideoActor(modelContainer: container)
             do {
                 return try await repo.loadVideos(
-                    subscriptionIds,
-                    updateExisting: updateExisting
+                    subscriptionIds
                 )
             } catch {
                 Logger.log.error("\(error)")
