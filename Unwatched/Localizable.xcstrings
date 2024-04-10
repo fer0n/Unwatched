@@ -2624,6 +2624,22 @@
         }
       }
     },
+    "updateRefresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisieren & Bestehende Updaten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh & Update Existing"
+          }
+        }
+      }
+    },
     "useDefault" : {
       "localizations" : {
         "de" : {

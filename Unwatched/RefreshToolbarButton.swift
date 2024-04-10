@@ -25,6 +25,15 @@ struct CoreRefreshButton: View {
                 Image(systemName: Const.refreshSF)
                     .rotationEffect(Angle(degrees: rotation))
             }
+            .contextMenu {
+                Button {
+                    Task { @MainActor in
+                        await refresh(updateExisting: true)
+                    }
+                } label: {
+                    Label("updateRefresh", systemImage: "arrow.up")
+                }
+            }
             .disabled(refresher.isSyncingIcloud)
         }
         .font(.system(size: 13))
@@ -41,12 +50,12 @@ struct CoreRefreshButton: View {
     }
 
     @MainActor
-    private func refresh() async {
+    private func refresh(updateExisting: Bool = false) async {
         if refresher.isLoading { return }
         if let subId = refreshOnlySubscription {
-            await refresher.refreshSubscription(subscriptionId: subId)
+            await refresher.refreshSubscription(subscriptionId: subId, updateExisting: updateExisting)
         } else {
-            await refresher.refreshAll()
+            await refresher.refreshAll(updateExisting: updateExisting)
         }
     }
 

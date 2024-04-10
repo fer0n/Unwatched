@@ -52,12 +52,48 @@ extension VideoActor {
         try modelContext.save()
     }
 
-    func getVideosNotAlreadyAdded(sub: Subscription, videos: [Video]) -> [Video] {
-        let videoIds = Set(sub.videos?.map { $0.youtubeId } ?? [])
-        return videos.filter { !videoIds.contains($0.youtubeId) }
+    func getVideosNotAlreadyAdded(sub: Subscription,
+                                  videos: [SendableVideo],
+                                  updateExisting: Bool = false) -> [SendableVideo] {
+        guard let subVideos = sub.videos else {
+            return videos
+        }
+
+        let videoIds = Set(subVideos.map { $0.youtubeId })
+        var newVideos = [SendableVideo]()
+
+        for video in videos {
+            if !videoIds.contains(video.youtubeId) {
+                newVideos.append(video)
+            } else if updateExisting {
+                if let oldVideo = subVideos.first(where: { $0.youtubeId == video.youtubeId }) {
+                    updateExistingVideo(oldVideo, video)
+                }
+            }
+        }
+
+        return newVideos
     }
 
-    func updateRecentVideoDate(subscription: Subscription, videos: [Video]) {
+    func updateExistingVideo(_ video: Video, _ updatedVideo: SendableVideo) {
+        Logger.log.info("updateExistingVideo: \(video.title)")
+        video.videoDescription = updatedVideo.videoDescription
+        video.title = updatedVideo.title
+
+        video.thumbnailUrl = updatedVideo.thumbnailUrl
+        if let cachedImage = video.cachedImage {
+            modelContext.delete(cachedImage)
+        }
+
+        let newChapters = updatedVideo.chapters.map {
+            let chapter = $0.getChapter
+            modelContext.insert(chapter)
+            return chapter
+        }
+        video.chapters = newChapters
+    }
+
+    func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
             Logger.log.info("mostRecentDate \(mostRecentDate)")
