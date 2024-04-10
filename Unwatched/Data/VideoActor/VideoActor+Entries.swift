@@ -53,44 +53,50 @@ extension VideoActor {
     }
 
     func getVideosNotAlreadyAdded(sub: Subscription,
-                                  videos: [SendableVideo],
-                                  updateExisting: Bool = false) -> [SendableVideo] {
+                                  videos: [SendableVideo]) -> [SendableVideo] {
         guard let subVideos = sub.videos else {
             return videos
         }
+        var subVideosDict = [String: Video]()
+        for video in subVideos {
+            subVideosDict[video.youtubeId] = video
+        }
 
-        let videoIds = Set(subVideos.map { $0.youtubeId })
         var newVideos = [SendableVideo]()
 
         for video in videos {
-            if !videoIds.contains(video.youtubeId) {
-                newVideos.append(video)
-            } else if updateExisting {
-                if let oldVideo = subVideos.first(where: { $0.youtubeId == video.youtubeId }) {
+            if let oldVideo = subVideosDict[video.youtubeId] {
+                if oldVideo.updatedDate != video.updatedDate {
                     updateExistingVideo(oldVideo, video)
                 }
+            } else {
+                newVideos.append(video)
             }
         }
-
         return newVideos
     }
 
     func updateExistingVideo(_ video: Video, _ updatedVideo: SendableVideo) {
         Logger.log.info("updateExistingVideo: \(video.title)")
-        video.videoDescription = updatedVideo.videoDescription
         video.title = updatedVideo.title
+        video.updatedDate = updatedVideo.updatedDate
 
-        video.thumbnailUrl = updatedVideo.thumbnailUrl
-        if let cachedImage = video.cachedImage {
-            modelContext.delete(cachedImage)
+        if video.thumbnailUrl != updatedVideo.thumbnailUrl {
+            video.thumbnailUrl = updatedVideo.thumbnailUrl
+            if let cachedImage = video.cachedImage {
+                modelContext.delete(cachedImage)
+            }
         }
 
-        let newChapters = updatedVideo.chapters.map {
-            let chapter = $0.getChapter
-            modelContext.insert(chapter)
-            return chapter
+        if video.videoDescription != updatedVideo.videoDescription {
+            video.videoDescription = updatedVideo.videoDescription
+            let newChapters = updatedVideo.chapters.map {
+                let chapter = $0.getChapter
+                modelContext.insert(chapter)
+                return chapter
+            }
+            video.chapters = newChapters
         }
-        video.chapters = newChapters
     }
 
     func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {

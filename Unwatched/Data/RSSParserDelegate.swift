@@ -10,7 +10,6 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
     var subscriptionInfo: SendableSubscription?
     var limitVideos: Int?
-    var cutoffDate: Date?
 
     var currentElement = ""
     var currentTitle: String = "" {
@@ -38,6 +37,11 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
+    var currentUpdatedDate: String = "" {
+        didSet {
+            currentUpdatedDate = currentUpdatedDate.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
     var currentDescription: String = ""
     var currentUri: String = "" {
         didSet {
@@ -50,9 +54,8 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    init(limitVideos: Int?, cutoffDate: Date?) {
+    init(limitVideos: Int?) {
         self.limitVideos = limitVideos
-        self.cutoffDate = cutoffDate
     }
 
     override init() { }
@@ -82,6 +85,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
+            currentUpdatedDate = ""
             currentUri = ""
             currentAuthor = ""
         }
@@ -92,6 +96,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         case "title": currentTitle += string
         case "yt:videoId": currentYoutubeId += string
         case "published": currentPublishedDate += string
+        case "updated": currentUpdatedDate += string
         case "media:description": currentDescription += string
         case "uri": currentUri += string
         case "name": currentAuthor += string
@@ -110,6 +115,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         if elementName == "entry" {
             let dateFormatter = ISO8601DateFormatter()
             if let publishedDate = dateFormatter.date(from: currentPublishedDate),
+               let updatedDate = dateFormatter.date(from: currentUpdatedDate),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
                 let chapters = VideoCrawler.extractChapters(from: currentDescription, videoDuration: nil)
@@ -120,10 +126,10 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                                           thumbnailUrl: thumbnailUrl,
                                           chapters: chapters,
                                           publishedDate: publishedDate,
+                                          updatedDate: updatedDate,
                                           videoDescription: currentDescription)
 
-                if (limitVideos != nil && videos.count >= limitVideos!) ||
-                    cutoffDate != nil && publishedDate <= cutoffDate! {
+                if limitVideos != nil && videos.count >= limitVideos! {
                     let channelId = getChannelIdFromAuthorUri(currentUri)
                     subscriptionInfo?.youtubeChannelId = channelId
                     parser.abortParsing()
@@ -138,6 +144,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = ""
             currentYoutubeId = ""
             currentPublishedDate = ""
+            currentUpdatedDate = ""
             currentDescription = ""
             currentUri = ""
             currentAuthor = ""

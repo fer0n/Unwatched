@@ -47,7 +47,6 @@ import OSLog
             isLoading = true
             do {
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
-                                                          updateExisting: hardRefresh,
                                                           container: container)
                 _ = try await task.value
             } catch {

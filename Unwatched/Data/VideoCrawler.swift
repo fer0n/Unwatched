@@ -7,7 +7,7 @@ import Foundation
 import OSLog
 
 struct VideoCrawler {
-    static func parseFeedUrl(_ url: URL, limitVideos: Int?, cutoffDate: Date?) async throws -> RSSParserDelegate {
+    static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
         let (data, response) = try await URLSession.shared.data(from: url)
 
         if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
@@ -15,21 +15,21 @@ struct VideoCrawler {
         }
 
         let parser = XMLParser(data: data)
-        let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos, cutoffDate: cutoffDate)
+        let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos)
         parser.delegate = rssParserDelegate
         parser.parse()
         return rssParserDelegate
     }
 
-    static func loadVideosFromRSS(url: URL, cutOffDate: Date?) async throws -> [SendableVideo] {
+    static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
         Logger.log.info("loadVideosFromRSS \(url)")
-        let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil, cutoffDate: cutOffDate)
+        let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
         return rssParserDelegate.videos
     }
 
     static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
         Logger.log.info("loadSubscriptionFromRSS \(feedUrl)")
-        let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0, cutoffDate: nil)
+        let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0)
         if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
             if let playlistId = UrlService.getPlaylistIdFromUrl(feedUrl.absoluteString) {

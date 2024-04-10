@@ -87,10 +87,9 @@ import OSLog
         return videos?.first
     }
 
-    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?,
-                    updateExisting: Bool = false) async throws -> NewVideosNotificationInfo {
+    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
         newVideos = NewVideosNotificationInfo()
-        Logger.log.info("loadVideos, updateExisting: \(updateExisting)")
+        Logger.log.info("loadVideos")
         var subs = [Subscription]()
         if subscriptionIds == nil {
             subs = try getAllActiveSubscriptions()
@@ -110,9 +109,7 @@ import OSLog
                         Logger.log.info("sub has no url: \(sub.title)")
                         return (sub, [])
                     }
-                    let videos = try await VideoCrawler.loadVideosFromRSS(
-                        url: url,
-                        cutOffDate: updateExisting ? nil : sub.mostRecentVideoDate)
+                    let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
                     return (sub, videos)
                 }
             }
@@ -121,8 +118,7 @@ import OSLog
                 if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
                     try await loadVideos(for: modelSub,
                                          videos: videos,
-                                         defaultPlacementInfo: placementInfo,
-                                         updateExisting: updateExisting)
+                                         defaultPlacementInfo: placementInfo)
                 } else {
                     Logger.log.info("missing info when trying to load videos")
                 }
@@ -136,28 +132,25 @@ import OSLog
     private func loadVideos(
         for sub: Subscription,
         videos: [SendableVideo],
-        defaultPlacementInfo: DefaultVideoPlacement,
-        updateExisting: Bool = false
+        defaultPlacementInfo: DefaultVideoPlacement
     ) async throws {
-        let isFirstTimeLoading = updateExisting || sub.mostRecentVideoDate == nil
-        var newVideos = [SendableVideo]()
-        for vid in videos {
-            var video = vid
+        var newVideos = videos.map {
+            var video = $0
             video.youtubeChannelId = sub.youtubeChannelId
-            newVideos.append(video)
+            return video
         }
         updateRecentVideoDate(subscription: sub, videos: newVideos)
-        if isFirstTimeLoading {
-            newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos, updateExisting: updateExisting)
-        }
+        newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
+
         var newVideoModels = [Video]()
         for vid in newVideos {
             let video = vid.createVideo()
             newVideoModels.append(video)
             modelContext.insert(video)
         }
-
         sub.videos?.append(contentsOf: newVideoModels)
+
+        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
 
         triageSubscriptionVideos(sub,

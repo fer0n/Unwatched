@@ -22,6 +22,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
 
     var thumbnailUrl: URL?
     var publishedDate: Date?
+    var updatedDate: Date?
     var duration: Double?
     var elapsedSeconds: Double?
     var videoDescription: String?
@@ -74,6 +75,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
             duration: duration,
             elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
+            updatedDate: updatedDate,
             watched: watched,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
@@ -86,6 +88,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
          youtubeId: String,
          thumbnailUrl: URL? = nil,
          publishedDate: Date? = nil,
+         updatedDate: Date? = nil,
          youtubeChannelId: String? = nil,
          duration: Double? = nil,
          elapsedSeconds: Double? = nil,
@@ -102,6 +105,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         self.youtubeChannelId = youtubeChannelId
         self.thumbnailUrl = thumbnailUrl
         self.publishedDate = publishedDate
+        self.updatedDate = updatedDate
         self.duration = duration
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
