@@ -20,6 +20,7 @@ struct ChapterMiniControlView: View {
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
+        let hasAnyChapters = player.video?.chapters?.isEmpty
 
         VStack(spacing: 20) {
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
@@ -92,6 +93,9 @@ struct ChapterMiniControlView: View {
         .padding(.horizontal)
         .padding(.vertical, 10)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
+        .onChange(of: hasAnyChapters) {
+            player.handleChapterChange()
+        }
         .onAppear {
             subscribeManager.container = modelContext.container
         }

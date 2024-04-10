@@ -30,23 +30,25 @@ import OSLog
         cancelCloudKitListener()
     }
 
-    func refreshAll() async {
+    func refreshAll(updateExisting: Bool = false) async {
         cancelCloudKitListener()
-        await refresh()
+        await refresh(updateExisting: updateExisting)
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
 
-    func refreshSubscription(subscriptionId: PersistentIdentifier) async {
-        await refresh(subscriptionIds: [subscriptionId])
+    func refreshSubscription(subscriptionId: PersistentIdentifier, updateExisting: Bool = false) async {
+        await refresh(subscriptionIds: [subscriptionId], updateExisting: updateExisting)
     }
 
     @MainActor
-    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil) async {
+    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, updateExisting: Bool = false) async {
         if let container = container {
             if isLoading { return }
             isLoading = true
             do {
-                let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds, container: container)
+                let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
+                                                          updateExisting: updateExisting,
+                                                          container: container)
                 _ = try await task.value
             } catch {
                 showError?(error)
