@@ -94,7 +94,9 @@ struct ChapterMiniControlView: View {
         .padding(.vertical, 10)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
         .onChange(of: hasAnyChapters) {
-            player.handleChapterChange()
+            if player.currentChapter == nil {
+                player.handleChapterChange()
+            }
         }
         .onAppear {
             subscribeManager.container = modelContext.container
