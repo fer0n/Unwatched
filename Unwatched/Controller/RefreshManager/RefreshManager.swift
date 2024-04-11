@@ -84,6 +84,11 @@ import OSLog
                 try await task.value
                 UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
                 Logger.log.info("saved backup")
+
+                // Auto delete
+                if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
+                    _ = UserDataService.autoDeleteBackups()
+                }
             }
         }
     }
