@@ -267,6 +267,70 @@
         }
       }
     },
+    "autoDeleteBackups" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups Automatisch Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Delete Backups"
+          }
+        }
+      }
+    },
+    "autoDeleteBackupsNow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups Jetzt Automatisch Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Delete Backups Now"
+          }
+        }
+      }
+    },
+    "autoDeletedCount: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelöschte Backups: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted Backups: %lld"
+          }
+        }
+      }
+    },
+    "autoDeleteHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die automatische Löschung behält:\n- Alle manuellen Backups\n- Alle Backups der letzten Woche\n- Ein Backup pro Woche in den letzten 6 Monaten\n- Ein Backup pro Monat danach"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto delete will keep: - All manual backups - All backups within the last week - One backup per week within the last 6 months - One backup per month after that"
+          }
+        }
+      }
+    },
     "automaticBackups" : {
       "localizations" : {
         "de" : {
@@ -519,6 +583,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear Videos"
+          }
+        }
+      }
+    },
+    "confirmAutoDeleteBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backups Automatisch Löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Delete Backups?"
           }
         }
       }
@@ -1333,6 +1413,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Library"
+          }
+        }
+      }
+    },
+    "manualBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manuell"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual"
           }
         }
       }

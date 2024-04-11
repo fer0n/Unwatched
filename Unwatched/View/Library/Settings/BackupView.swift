@@ -46,17 +46,19 @@ struct BackupView: View {
                 }
             }
 
-            AsyncButton {
-                await saveToIcloud(UIDevice.current.name)
-            } label: {
-                Text("backupNow")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            Section {
+                AsyncButton {
+                    await saveToIcloud(UIDevice.current.name)
+                } label: {
+                    Text("backupNow")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
 
-            Button {
-                showFileImporter = true
-            } label: {
-                Text("importBackup")
+                Button {
+                    showFileImporter = true
+                } label: {
+                    Text("importBackup")
+                }
             }
 
             if !fileNames.isEmpty {
@@ -79,14 +81,21 @@ struct BackupView: View {
                                     if let size = info.fileSizeString {
                                         Text(verbatim: size)
                                     }
+                                    if info.isManual {
+                                        Text(verbatim: " \(Const.dotString) ")
+                                        Text("manualBackup")
+                                    }
                                 }
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             }
                         }
                     }
+                    .onDelete(perform: deleteFile)
                 }
             }
+
+            AutoDeleteBackupView()
 
             Section {
                 Button(role: .destructive, action: {
@@ -162,6 +171,22 @@ struct BackupView: View {
         }
     }
 
+    func deleteFile(at offsets: IndexSet) {
+        guard let index = offsets.first else {
+            Logger.log.error("deleteFile: offsets is empty")
+            return
+        }
+
+        let fileURL = fileNames[index]
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+            fileNames.remove(atOffsets: offsets)
+            getAllIcloudFiles()
+        } catch {
+            Logger.log.error("deleteFile: \(error)")
+        }
+    }
+
     func getFileInfo(_ file: URL) -> FileInfo {
         let fileName = file.lastPathComponent
         let deviceName = fileName.contains("_")
@@ -169,6 +194,7 @@ struct BackupView: View {
             : nil
         var fileSizeString: String?
         var dateString: String?
+        let isManual = fileName.contains("_m")
 
         if let fileAttributes = try? FileManager.default.attributesOfItem(atPath: file.path) {
             if let fileSizeInBytes = fileAttributes[.size] as? Int64 {
@@ -178,12 +204,15 @@ struct BackupView: View {
                 dateString = date.formatted()
             }
         }
-        return FileInfo(deviceName: deviceName, dateString: dateString, fileSizeString: fileSizeString)
+        return FileInfo(deviceName: deviceName,
+                        dateString: dateString,
+                        fileSizeString: fileSizeString,
+                        isManual: isManual)
     }
 
     func saveToIcloud(_ deviceName: String) async {
         let container = modelContext.container
-        saveToIcloudTask = UserDataService.saveToIcloud(deviceName, container)
+        saveToIcloudTask = UserDataService.saveToIcloud(deviceName, container, manual: true)
     }
 
     func restoreBackup(_ file: URL) {
@@ -267,10 +296,4 @@ struct BackupView: View {
         .environment(RefreshManager())
         .environment(ImageCacheManager())
         .environment(Alerter())
-}
-
-struct FileInfo {
-    let deviceName: String?
-    let dateString: String?
-    let fileSizeString: String?
 }

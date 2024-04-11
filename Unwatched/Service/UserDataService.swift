@@ -139,11 +139,13 @@ struct UserDataService {
         }
     }
 
-    static func saveToIcloud(_ deviceName: String, _ container: ModelContainer) -> Task<(), Error> {
-
+    static func saveToIcloud(_ deviceName: String,
+                             _ container: ModelContainer,
+                             manual: Bool = false) -> Task<(), Error> {
         return Task {
             do {
-                let filename = getBackupsDirectory()?.appendingPathComponent(self.getFileName(deviceName))
+                let filename = getBackupsDirectory()?
+                    .appendingPathComponent(self.getFileName(deviceName, manual: manual))
                 guard let filename = filename else {
                     throw UserDataServiceError.directoryError
                 }
@@ -153,6 +155,78 @@ struct UserDataService {
                 Logger.log.error("saveToIcloud: \(error)")
                 throw error
             }
+        }
+    }
+
+    static func autoDeleteBackups() -> Int {
+        let files = getFilesToDelete()
+        for file in files {
+            deleteFile(file)
+        }
+        return files.count
+    }
+
+    static func getFilesToDelete() -> [URL] {
+        guard let directory = getBackupsDirectory() else {
+            return []
+        }
+        do {
+            let fileNames = try FileManager.default.contentsOfDirectory(atPath: directory.path)
+            let files = fileNames.map { directory.appendingPathComponent($0) }
+
+            let toDelete = filterOutKeeperFiles(files)
+            Logger.log.info("deleting: \(toDelete.count) files")
+            return toDelete
+        } catch {
+            Logger.log.error("getFilesToDelete: \(error)")
+            return []
+        }
+    }
+
+    static func filterOutKeeperFiles(_ files: [URL]) -> [URL] {
+        let calendar = Calendar.current
+        let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: -1, to: Date())!
+        let halfYearAgo = calendar.date(byAdding: .month, value: -6, to: Date())!
+
+        var manualFiles = [URL]()
+        var lastWeekFiles = [URL]()
+        var weeklyFiles = [URL]()
+        var monthlyFiles = [URL]()
+
+        for file in files {
+            if file.lastPathComponent.contains("_m") {
+                manualFiles.append(file)
+                continue
+            }
+
+            let attributes = try? FileManager.default.attributesOfItem(atPath: file.path)
+            let creationDate = attributes?[.creationDate] as? Date ?? Date()
+
+            if creationDate >= oneWeekAgo {
+                lastWeekFiles.append(file)
+            } else if creationDate >= halfYearAgo {
+                let weekOfYear = calendar.component(.weekOfYear, from: creationDate)
+                if weeklyFiles.first(where: {
+                    calendar.component(.weekOfYear, from: $0.creationDate) == weekOfYear
+                }) == nil {
+                    weeklyFiles.append(file)
+                }
+            } else {
+                let month = calendar.component(.month, from: creationDate)
+                if monthlyFiles.first(where: { calendar.component(.month, from: $0.creationDate) == month }) == nil {
+                    monthlyFiles.append(file)
+                }
+            }
+        }
+        let keepers = manualFiles + lastWeekFiles + weeklyFiles + monthlyFiles
+        return files.filter { !keepers.contains($0) }
+    }
+
+    static func deleteFile(_ filepath: URL) {
+        do {
+            try FileManager.default.removeItem(at: filepath)
+        } catch {
+            Logger.log.error("deleteFile: \(error)")
         }
     }
 
@@ -177,10 +251,10 @@ struct UserDataService {
         return nil
     }
 
-    static func getFileName(_ deviceName: String) -> String {
+    static func getFileName(_ deviceName: String, manual: Bool = false) -> String {
         let dateFormatter = ISO8601DateFormatter()
         let dateString = dateFormatter.string(from: Date())
-        return "\(deviceName)_\(dateString).unwatchedbackup"
+        return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
 }
 
@@ -190,4 +264,10 @@ struct UnwatchedBackup: Codable {
     var watchEntries = [SendableWatchEntry]()
     var inboxEntries = [SendableInboxEntry]()
     var subscriptions = [SendableSubscription]()
+}
+
+extension URL {
+    var creationDate: Date {
+        return (try? resourceValues(forKeys: [.creationDateKey]).creationDate) ?? Date()
+    }
 }
