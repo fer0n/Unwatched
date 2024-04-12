@@ -80,7 +80,7 @@ struct UrlService {
 
         // https://www.youtube.com/moviepilot
         // some channels forward to this kind of url (non-mobile), but the username is already known by then
-        if let prev = previousUserName, urlString.contains("youtube.com/\(prev)") {
+        if let prev = previousUserName?.lowercased(), urlString.lowercased().contains("youtube.com/\(prev)") {
             return previousUserName
         }
 
