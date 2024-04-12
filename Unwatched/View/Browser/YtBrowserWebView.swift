@@ -200,7 +200,8 @@ struct YtBrowserWebView: UIViewRepresentable {
                 Logger.log.info("no user name found")
                 return false
             }
-            if [parent.browserManager.info?.userName, parent.browserManager.desktopUserName].contains(userName) {
+            if [parent.browserManager.info?.userName?.lowercased(), parent.browserManager.desktopUserName?.lowercased()]
+                .contains(userName.lowercased()) {
                 Logger.log.info("same username as before")
                 return false
             }
