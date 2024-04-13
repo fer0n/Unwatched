@@ -64,13 +64,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abos Hinzufügen"
+            "value" : "YouTube Abos Hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Feeds"
+            "value" : "Add YouTube Channels"
           }
         }
       }
@@ -96,13 +96,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn du diesen Kanal abonnieren möchtest klicke hier"
+            "value" : "Kanal zu Unwatched Hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you want to add this feed to Unwatched tap here"
+            "value" : "Add Channel to Unwatched"
           }
         }
       }
@@ -112,13 +112,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der YouTube \"abonnieren\"-Button betrifft ausschließlich YouTube Webseite/App."
+            "value" : "Verwende diesen Button um den Channel zu Unwatched hinzuzufügen. Der YouTube \"abonnieren\"-Button betrifft ausschließlich die YouTube Webseite/App."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The YouTube \"subscribe\" button only works for the YouTube website/App."
+            "value" : "Always use this button to add a channel to this App. The YouTube \"subscribe\" button only works for the YouTube website/App."
           }
         }
       }
@@ -144,13 +144,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auf allen Kanalseiten erscheint hier eine 'Kanal hinzufügen'-Button. Verwende ihn, um Abos zu Unbeobachtet hinzuzufügen."
+            "value" : "Auf allen Kanalseiten erscheint hier eine 'Kanal hinzufügen'-Button. Verwende ihn, um den Kanal zu Unbeobachtet hinzuzufügen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "On all channel pages, an 'Add Channel'-Button will appear here. Use it to add feeds to Unwatched."
+            "value" : "On all channel pages, an 'Add Channel'-Button will appear here. Use it to add the channel to Unwatched."
           }
         }
       }
@@ -183,6 +183,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add to Queue"
+          }
+        }
+      }
+    },
+    "addVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos Manuell Hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Videos Manually"
+          }
+        }
+      }
+    },
+    "addVideosTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos Manuell Hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Videos Manually"
+          }
+        }
+      }
+    },
+    "addVideosTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib hier eine YouTube-Video-URL ein oder setze das Share Sheet auf (auch über die Einstellungen möglich)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a YouTube video (or channel) URL here directly, or by setting up and using the share sheet action (can also be done in Settings)."
           }
         }
       }
@@ -459,34 +507,18 @@
         }
       }
     },
-    "browseFeeds" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Browser"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Browser"
-          }
-        }
-      }
-    },
     "browser" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Browser"
+            "value" : "YouTube Browser"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Browser"
+            "value" : "Search YouTube"
           }
         }
       }
@@ -496,13 +528,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Browser in Tab Bar Zeigen"
+            "value" : "YouTube Browser in Tab Bar Zeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show Browser in Tab bar"
+            "value" : "Show YouTube Browser in Tab bar"
           }
         }
       }
@@ -881,6 +913,38 @@
         }
       }
     },
+    "dropToAddVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es wird zur Queue hinzugefügt werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It will be added to your Queue"
+          }
+        }
+      }
+    },
+    "dropVideoHere" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Hier Ablegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop Video"
+          }
+        }
+      }
+    },
     "dropVideoUrlsHere" : {
       "localizations" : {
         "de" : {
@@ -1059,6 +1123,22 @@
         }
       }
     },
+    "googleTakeout" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Datenexport Öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Google Takeout"
+          }
+        }
+      }
+    },
     "goToQueueOnPlay" : {
       "localizations" : {
         "de" : {
@@ -1171,18 +1251,82 @@
         }
       }
     },
-    "howToExportYoutubeSubscriptions" : {
+    "howToExport2" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Du musst zuerst deine Abos von YouTube exportieren.\n\nDu kannst deine Abos über YouTube Takeout anfordern. Wenn du nur \"Abos\" für den Export angibst, sollte es schneller gehen."
+            "value" : "• Melde dich auf der **Google Datenexport** Seite an und de-selektiere alles außer **YouTube und YouTube Music**\n• Tippe auf **Alle YouTube-Daten eingeschlossen** und wähle nur **Abos** aus\n• Wähle **Nächster Schritt**, dann unter **Häufigkeit** wähle **Einmal exportieren**\n• Tippe auf **Export erstellen**\n• Du erhältst eine E-Mail mit einem Link zu deinen Daten. Folge dem Link und lade die Datei herunter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You first need to export your subscriptions from YouTube. \n\nYou can request your subscription data via YouTube Takeout. If you only specify \"Subscriptions\" for the export it should be much faster."
+            "value" : "• In **Google Takeout**, login & deselect everything except for **YouTube and YouTube Music**\n• Tap on **All YouTube data included** and only select **subscriptions**\n• Choose **Next step**, then under **Frequency** select **Export once**\n• Tap on **Create export**\n• You will receive an email with a link to your data, follow it and download the file"
+          }
+        }
+      }
+    },
+    "howToExportTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Abos Exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export YouTube Subscriptions"
+          }
+        }
+      }
+    },
+    "howToImport1" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe unten auf **Datei auswählen** und navigiere zu der heruntergeladenen takeout[...].zip Datei:"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap on **Select File** below and navigate to the downloaded **takeout[...].zip** file:"
+          }
+        }
+      }
+    },
+    "howToImport2" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• Tippe auf die Datei, um sie zu extrahieren\n• Navigiere in den **Takeout-Ordner → YouTube und YouTube Music → Abos**\n• Wähle **Abos.csv** aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• Tap the file to extract it\n• Navigate into **Takeout folder → YouTube and YouTube Music → subscriptions**\n• Select **subscriptions.csv**"
+          }
+        }
+      }
+    },
+    "howToImportTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu Unwatched Importieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Into Unwatched"
           }
         }
       }
@@ -1230,22 +1374,6 @@
         }
       }
     },
-    "Import %lld %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import %1$lld %2$@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Import %1$lld %2$@"
-          }
-        }
-      }
-    },
     "importBackup" : {
       "localizations" : {
         "de" : {
@@ -1258,6 +1386,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Backup"
+          }
+        }
+      }
+    },
+    "importFromYoutube" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Abos Importieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import YouTube Subscriptions"
           }
         }
       }
@@ -1284,6 +1428,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Subscriptions"
+          }
+        }
+      }
+    },
+    "importSubscriptions ^[%lld subscription](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Abo](inflect: true) Importieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import ^[%lld subscription](inflect: true)"
           }
         }
       }
@@ -1761,13 +1921,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Füge Videos manuell hinzu oder automatisch mit Abos."
+            "value" : "Füge Videos manuell hinzu oder automatisch durch Abos."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add videos manually or by following feeds."
+            "value" : "Add videos manually or by adding subscriptions."
           }
         }
       }
@@ -1882,22 +2042,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Video found"
-          }
-        }
-      }
-    },
-    "noVideoSelected" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Video Ausgewählt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Video Selected"
           }
         }
       }
@@ -2527,6 +2671,22 @@
         }
       }
     },
+    "showTutorial" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tutorial Anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Tutorial"
+          }
+        }
+      }
+    },
     "sideloads" : {
       "localizations" : {
         "de" : {
@@ -2539,6 +2699,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sideloads"
+          }
+        }
+      }
+    },
+    "skip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überspringen"
           }
         }
       }
@@ -2672,18 +2842,18 @@
         }
       }
     },
-    "swipeUpToSelecte" : {
+    "swipeUpToSelect" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wische nach oben und wähle ein Video aus"
+            "value" : "Swipe nach oben"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Swipe up and choose one"
+            "value" : "Swipe up"
           }
         }
       }
@@ -2732,6 +2902,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unsubscribe"
+          }
+        }
+      }
+    },
+    "Unwatched" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched"
           }
         }
       }
@@ -2860,22 +3040,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yellow"
-          }
-        }
-      }
-    },
-    "youtubeTakeout" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Öffne YouTube Takeout"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open YouTube Takeout"
           }
         }
       }

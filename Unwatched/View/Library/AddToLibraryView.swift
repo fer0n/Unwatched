@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import TipKit
 import OSLog
 
 struct AddToLibraryView: View {
@@ -12,23 +13,25 @@ struct AddToLibraryView: View {
     @Environment(RefreshManager.self) var refresher
 
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
-    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
-    @Binding var subManager: SubscribeManager
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
     @State var isLoadingVideos = false
     @State var videoUrls = [URL]()
-
     @State var addSubscriptionFromText: String?
 
+    var addVideosTip = AddVideosTip()
+
+    @Binding var subManager: SubscribeManager
+    var showBrowser: Bool
+
     var body: some View {
-        if !browserAsTab {
+        if showBrowser {
             Button(action: {
                 navManager.openUrlInApp(.youtubeStartPage)
             }, label: {
                 Label {
-                    Text("browseFeeds")
+                    Text("browser")
                         .foregroundStyle(Color.neutralAccentColor)
                 } icon: {
                     Image(systemName: Const.appBrowserSF)
@@ -50,6 +53,13 @@ struct AddToLibraryView: View {
             }
             pasteButton
         }
+        .popoverTip(addVideosTip, arrowEdge: .top, action: { _ in
+            if let url = UrlService.shareShortcutUrl {
+                UIApplication.shared.open(url)
+                addVideosTip.invalidate(reason: .actionPerformed)
+            }
+        })
+        .tint(theme.color)
         .onSubmit {
             handleTextFieldSubmit()
         }
@@ -84,6 +94,9 @@ struct AddToLibraryView: View {
         .task(id: addSubscriptionFromText) {
             await handleAddSubscriptionFromText()
         }
+        .onDisappear {
+            addVideosTip.invalidate(reason: .displayCountExceeded)
+        }
     }
 
     var pasteButton: some View {
@@ -113,6 +126,7 @@ struct AddToLibraryView: View {
     }
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
+        addVideosTip.invalidate(reason: .actionPerformed)
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
             Logger.log.warning("no url found")
@@ -173,7 +187,7 @@ struct AddToLibraryView: View {
 }
 
 #Preview {
-    AddToLibraryView(subManager: .constant(SubscribeManager()))
+    AddToLibraryView(subManager: .constant(SubscribeManager()), showBrowser: true)
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
         .environment(RefreshManager())
