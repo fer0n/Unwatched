@@ -27,11 +27,18 @@ struct DescriptionDetailView: View {
                 }
             }
             .foregroundStyle(.secondary)
-            if let desc = video.videoDescription {
-                Text(LocalizedStringKey(desc))
+
+            VStack(alignment: .leading, spacing: 0) {
+                if let desc = video.videoDescription {
+                    let texts = desc.split(separator: "\n", omittingEmptySubsequences: false)
+                    ForEach(texts, id: \.self) { text in
+                        Text(LocalizedStringKey(String(text)))
+                    }
+                }
             }
             Spacer()
         }
+        .textSelection(.enabled)
         .tint(theme.color)
         .padding(.horizontal)
     }
