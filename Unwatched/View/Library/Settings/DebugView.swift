@@ -7,16 +7,28 @@ import SwiftUI
 
 struct DebugView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(PlayerManager.self) var player
     @Environment(Alerter.self) var alerter
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.showTutorial) var showTutorial: Bool = true
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
     var body: some View {
         Form {
+            Section {
+                Button {
+                    showTutorial = true
+                    player.video = nil
+                } label: {
+                    Text("showTutorial")
+                }
+                .disabled(showTutorial == true && player.video == nil)
+            }
+
             Section("videoSettings") {
                 Toggle(isOn: $refreshOnStartup) {
                     Text("refreshOnStartup")

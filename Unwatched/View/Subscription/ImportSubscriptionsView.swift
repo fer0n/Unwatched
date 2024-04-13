@@ -9,6 +9,8 @@ import OSLog
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
+    @Environment(NavigationManager.self) var navManager
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State var showFileImporter = false
     @State var sendableSubs = [SendableSubscription]()
@@ -21,27 +23,12 @@ struct ImportSubscriptionsView: View {
     @State var loadSubStatesTask: Task<[SubscriptionState], Error>?
 
     var importButtonPadding = false
+    var onSuccess: (() -> Void)?
 
     var body: some View {
         VStack {
             if sendableSubs.isEmpty {
-                Text("howToExportYoutubeSubscriptions")
-                    .padding(10)
-                if let url = UrlService.youtubeTakeoutUrl {
-                    Link(destination: url) {
-                        Text("youtubeTakeout")
-                    }
-                    .padding()
-                }
-                Spacer()
-                    .frame(height: 50)
-                Button {
-                    showFileImporter = true
-                } label: {
-                    Text("selectFile")
-                }
-                .buttonStyle(.borderedProminent)
-                Spacer()
+                exportImportTutorial
             } else if isLoading {
                 ProgressView {
                     Text("importing \(selection.count) subscriptions")
@@ -81,26 +68,29 @@ struct ImportSubscriptionsView: View {
                                         ? "deselectAll"
                                         : "selectAll")
                             }
+                            .foregroundStyle(theme.color)
                         }
                     }
 
                     VStack {
                         Spacer()
                         Button(action: startImport) {
-                            Text("Import \(selection.count) \(selection.count == 1 ? "subscription" : "subscriptions")")
+                            Text(String(AttributedString(
+                                localized: "importSubscriptions ^[\(selection.count) subscription](inflect: true)"
+                            ).characters))
                         }
                         .padding(importButtonPadding ? 10 : 0)
+                        .foregroundStyle(.white)
                         .buttonStyle(.borderedProminent)
                     }
                 }
             }
         }
-        .navigationTitle("importSubscriptions")
-        .navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [.plainText], onCompletion: handleFileImport)
         .onDisappear {
             if !subStates.isEmpty {
+                onSuccess?()
                 Task {
                     await refresher.refreshAll()
                 }
@@ -116,6 +106,50 @@ struct ImportSubscriptionsView: View {
                 Logger.log.error("error loading subStates: \(error)")
             }
             isLoading = false
+        }
+    }
+
+    var exportImportTutorial: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("howToExportTitle")
+                    .font(.title2)
+                    .bold()
+
+                Link(destination: UrlService.youtubeTakeoutUrl) {
+                    Text("googleTakeout")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .foregroundStyle(.white)
+                .padding(15)
+
+                Text("howToExport2")
+                    .padding(.bottom, 40)
+
+                Text("howToImportTitle")
+                    .font(.title2)
+                    .bold()
+                    .padding(.bottom, 10)
+
+                Text("howToImport1")
+
+                Button {
+                    showFileImporter = true
+                } label: {
+                    Text("selectFile")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .foregroundStyle(.white)
+                .padding(15)
+
+                Text("howToImport2")
+                Spacer()
+            }
+            .fontWeight(.regular)
+            .tint(theme.color)
+            .padding(.horizontal, 20)
         }
     }
 
@@ -216,4 +250,5 @@ struct ImportSubscriptionsView: View {
     )
     .modelContainer(DataController.previewContainer)
     .environment(RefreshManager())
+    .environment(NavigationManager())
 }

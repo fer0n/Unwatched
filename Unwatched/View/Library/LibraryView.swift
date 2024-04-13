@@ -10,6 +10,7 @@ import OSLog
 struct LibraryView: View {
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSortOrder: SubscriptionSorting = .recentlyAdded
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
 
@@ -34,7 +35,7 @@ struct LibraryView: View {
         NavigationStack(path: $navManager.presentedLibrary) {
             List {
                 Section {
-                    AddToLibraryView(subManager: $subManager)
+                    AddToLibraryView(subManager: $subManager, showBrowser: !browserAsTab)
                         .id(topListItemId)
                 }
                 Section("videos") {
@@ -225,17 +226,4 @@ enum LibraryDestination {
         .environment(PlayerManager())
         .environment(RefreshManager())
         .environment(ImageCacheManager())
-}
-
-struct TextFieldClearButton: View {
-    @Binding var text: String
-
-    var body: some View {
-        Button {
-            text = ""
-        } label: {
-            Image(systemName: Const.clearSF)
-        }
-        .foregroundStyle(.secondary)
-    }
 }

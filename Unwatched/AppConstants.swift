@@ -108,4 +108,5 @@ struct Const {
     static let showNotificationBadge = "showNotificationBadge"
 
     static let themeColor = "themeColor"
+    static let showTutorial = "showTutorial"
 }

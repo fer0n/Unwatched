@@ -145,6 +145,20 @@ import OSLog
         }
     }
 
+    func clearNavigationStack(_ tab: NavigationTab) {
+        switch tab {
+        case .inbox:
+            presentedSubscriptionInbox.removeAll()
+        case .queue:
+            presentedSubscriptionQueue.removeAll()
+        case .library:
+            lastLibrarySubscriptionId = nil
+            presentedLibrary = NavigationPath()
+        case .browser:
+            break
+        }
+    }
+
     func openUrlInApp(_ url: BrowserUrl) {
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
             openTabBrowserUrl = url

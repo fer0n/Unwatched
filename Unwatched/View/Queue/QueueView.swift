@@ -9,7 +9,6 @@ import TipKit
 import OSLog
 
 struct QueueView: View {
-    @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
@@ -18,10 +17,7 @@ struct QueueView: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
-    @Query(filter: #Predicate<Subscription> { $0.isArchived == false })
-    var subscriptions: [Subscription]
 
-    @State var showImportSheet = false
     @State var value: Double = 1.5
     var inboxTip = InboxHasVideosTip()
     var inboxHasEntries: Bool = false
@@ -82,21 +78,6 @@ struct QueueView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
-        .sheet(isPresented: $showImportSheet) {
-            NavigationStack {
-                ImportSubscriptionsView()
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button {
-                                showImportSheet = false
-                            } label: {
-                                Image(systemName: Const.clearSF)
-                            }
-                            .tint(.neutralAccentColor)
-                        }
-                    }
-            }
-        }
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
@@ -115,40 +96,11 @@ struct QueueView: View {
         } description: {
             Text("noQueueItemsDescription")
         } actions: {
-            if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
-                Link(destination: url) {
-                    Image(systemName: "square.and.arrow.up.on.square.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                    Text("setupShareSheetAction")
-                }
-                .bold()
+            SetupShareSheetAction()
                 .buttonStyle(.borderedProminent)
-            }
 
-            if subscriptions.isEmpty {
-                Menu {
-                    Button {
-                        showImportSheet = true
-                    } label: {
-                        Image(systemName: "square.and.arrow.down.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                        Text("importSubscriptions")
-                    }
-                    Button {
-                        navManager.openUrlInApp(.youtubeStartPage)
-                    } label: {
-                        Label("browseFeeds", systemImage: Const.appBrowserSF)
-                    }
-                } label: {
-                    Label("addFeeds", systemImage: "plus")
-                        .bold()
-                }
-                .buttonStyle(.borderedProminent)
-            }
+            DisappearingAddFeedsMenu()
+                .bold()
         }
         .contentShape(Rectangle())
         .dropDestination(for: URL.self) { items, _ in
