@@ -56,7 +56,7 @@ struct MenuView: View {
                         safeArea: false
                     )),
                     image: Image(systemName: "globe.desk"),
-                    text: "browser",
+                    text: "browserShort",
                     tag: NavigationTab.browser,
                     show: browserAsTab
                 )

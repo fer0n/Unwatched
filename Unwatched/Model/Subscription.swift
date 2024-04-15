@@ -22,8 +22,6 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
 
     var customSpeedSetting: Double?
     var mostRecentVideoDate: Date?
-    // when importing a backup, load more videos but only triage the ones that are new compared to the old one
-    var onlyTriageAfter: Date?
 
     var youtubeChannelId: String?
     var youtubePlaylistId: String?
