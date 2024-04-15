@@ -110,9 +110,8 @@ extension VideoActor {
                                   defaultPlacementInfo: DefaultVideoPlacement,
                                   limitVideos: Int?) {
         var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
-        if let cutOffDate = sub.onlyTriageAfter {
+        if let cutOffDate = sub.mostRecentVideoDate {
             videosToAdd = videosToAdd.filter { $0.publishedDate ?? .distantPast > cutOffDate }
-            sub.onlyTriageAfter = nil
         }
 
         var placement = sub.placeVideosIn
