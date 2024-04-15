@@ -139,10 +139,7 @@ import OSLog
             video.youtubeChannelId = sub.youtubeChannelId
             return video
         }
-        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        updateRecentVideoDate(subscription: sub, videos: newVideos)
         newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
-
         var newVideoModels = [Video]()
         for vid in newVideos {
             let video = vid.createVideo()
@@ -151,11 +148,14 @@ import OSLog
         }
         sub.videos?.append(contentsOf: newVideoModels)
 
+        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
+
         triageSubscriptionVideos(sub,
                                  videos: newVideoModels,
                                  defaultPlacementInfo: defaultPlacementInfo,
                                  limitVideos: limitVideos)
+        updateRecentVideoDate(subscription: sub, videos: newVideos)
     }
 
     private func getDefaultVideoPlacement() -> DefaultVideoPlacement {
