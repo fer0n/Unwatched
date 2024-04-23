@@ -43,6 +43,38 @@
         }
       }
     },
+    "addAsPlaylist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playliste Abonnieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe to Playlist"
+          }
+        }
+      }
+    },
+    "addAsVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist Videos zur Queue hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Playlist Videos to Queue"
+          }
+        }
+      }
+    },
     "addBookmark" : {
       "localizations" : {
         "de" : {
@@ -2062,6 +2094,38 @@
         }
       }
     },
+    "noVideoInfo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Video Infos gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Video info found"
+          }
+        }
+      }
+    },
+    "noVideosFoundInPlaylist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist enthält keine Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist didn't contain any videos"
+          }
+        }
+      }
+    },
     "noVideosYet" : {
       "localizations" : {
         "de" : {
@@ -2106,6 +2170,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No YouTube video ID found"
+          }
+        }
+      }
+    },
+    "noYoutubePlaylistId" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine YouTube Playlist ID gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No YouTube playlist ID found"
           }
         }
       }
@@ -2902,6 +2982,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Teal"
+          }
+        }
+      }
+    },
+    "textContainsPlaylist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist-URL Entdeckt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist URL detected"
+          }
+        }
+      }
+    },
+    "textContainsPlaylistMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie soll mit der Playlist umgegangen werden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How should the playlist be handled?"
           }
         }
       }
