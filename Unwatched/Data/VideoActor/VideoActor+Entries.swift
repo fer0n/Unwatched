@@ -231,6 +231,8 @@ extension VideoActor {
             let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
+            let queueWasEmpty = queue.isEmpty
+
             for (index, video) in videos.enumerated() {
                 clearEntries(from: video, except: QueueEntry.self)
                 if let queueEntry = video.queueEntry {
@@ -242,10 +244,12 @@ extension VideoActor {
                     video.queueEntry = newQueueEntry
                     return newQueueEntry
                 }()
-                if queue.isEmpty {
+
+                if queueWasEmpty {
                     queue.append(queueEntry)
                 } else {
-                    queue.insert(queueEntry, at: startIndex + index)
+                    let targetIndex = startIndex + index
+                    queue.insert(queueEntry, at: targetIndex)
                 }
             }
             for (index, queueEntry) in queue.enumerated() {

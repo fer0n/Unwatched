@@ -132,7 +132,7 @@ struct VideoService {
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
-            try await repo.addForeignVideos(from: urls, in: videoPlacement, at: index, addImage: addImage)
+            try await repo.addForeignUrls(urls, in: videoPlacement, at: index, addImage: addImage)
         }
         return task
     }

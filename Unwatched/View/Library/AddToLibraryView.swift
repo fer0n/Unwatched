@@ -19,6 +19,7 @@ struct AddToLibraryView: View {
     @State var isLoadingVideos = false
     @State var videoUrls = [URL]()
     @State var addSubscriptionFromText: String?
+    @State var textContainingPlaylist: IdentifiableString?
 
     var addVideosTip = AddVideosTip()
 
@@ -97,6 +98,19 @@ struct AddToLibraryView: View {
         .onDisappear {
             addVideosTip.invalidate(reason: .displayCountExceeded)
         }
+        .actionSheet(item: $textContainingPlaylist) { text in
+            ActionSheet(title: Text("textContainsPlaylist"),
+                        message: Text("textContainsPlaylistMessage"),
+                        buttons: [
+                            .default(Text("addAsPlaylist")) {
+                                addUrlsFromText(text.str)
+                            },
+                            .default(Text("addAsVideos")) {
+                                addUrlsFromText(text.str, playListAsVideos: true)
+                            },
+                            .cancel()
+                        ])
+        }
     }
 
     var pasteButton: some View {
@@ -132,9 +146,30 @@ struct AddToLibraryView: View {
             Logger.log.warning("no url found")
             return
         }
-        let (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
-        videoUrls = videoUrlsLocal
+        if containsPlaylistUrl(text) {
+            textContainingPlaylist = IdentifiableString(str: text)
+        } else {
+            addUrlsFromText(text)
+        }
+    }
+
+    func addUrlsFromText(_ text: String, playListAsVideos: Bool = false) {
+        print("handlePlaylistUrlText", text)
+        var (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
+
+        if playListAsVideos {
+            let (playlistUrls, newRest) = UrlService.extractPlaylistUrls(rest)
+            videoUrlsLocal.append(contentsOf: playlistUrls)
+            rest = newRest
+        }
+
         addSubscriptionFromText = rest
+        videoUrls = videoUrlsLocal
+    }
+
+    func containsPlaylistUrl(_ str: String) -> Bool {
+        let playlistId = UrlService.getPlaylistIdFromUrl(str)
+        return playlistId != nil
     }
 
     func handleAddSubscriptionFromText() async {
