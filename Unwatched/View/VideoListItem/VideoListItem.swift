@@ -230,11 +230,13 @@ struct VideoListItem: View {
 
     func addVideoToTopQueue() {
         Logger.log.info("addVideoTop")
-        _ = VideoService.insertQueueEntries(
+        let order = video.queueEntry?.order
+        let task = VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
             modelContext: modelContext
         )
+        handlePotentialQueueChange(after: task, order: order)
         onChange?()
     }
 
@@ -257,8 +259,9 @@ struct VideoListItem: View {
 
     func addVideoToBottomQueue() {
         Logger.log.info("addVideoBottom")
+        let order = video.queueEntry?.order
         let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
-        handlePotentialQueueChange(after: task)
+        handlePotentialQueueChange(after: task, order: order)
         onChange?()
     }
 
