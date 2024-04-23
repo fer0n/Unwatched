@@ -115,16 +115,16 @@ struct VideoListItem: View {
 
     var videoItem: some View {
         ZStack(alignment: .topLeading) {
-            HStack {
+            HStack(spacing: 8) {
                 CachedImageView(imageHolder: video) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 160, height: 90)
+                        .frame(width: 168, height: 94.5)
                         .clipped()
                 } placeholder: {
                     Color.backgroundColor
-                        .frame(width: 160, height: 90)
+                        .frame(width: 168, height: 94.5)
                 }
                 .clipShape(.rect(cornerRadius: 15.0))
                 .padding(showVideoStatus ? 5 : 0)
