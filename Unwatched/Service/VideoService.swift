@@ -188,4 +188,16 @@ struct VideoService {
     static func requiresFetchingVideoData(_ video: Video?) -> Bool {
         return video?.title.isEmpty == true
     }
+
+    static func clearList(_ list: ClearList,
+                          _ direction: ClearDirection,
+                          index: Int?,
+                          date: Date?,
+                          container: ModelContainer) -> Task<(), Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.clearList(list, direction, index: index, date: date)
+        }
+        return task
+    }
 }

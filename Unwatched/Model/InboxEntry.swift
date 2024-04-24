@@ -15,7 +15,7 @@ final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
             date = video?.publishedDate ?? .now
         }
     }
-    // workaround: sorting via optional relationship "video.publishedDate" lead to crashh
+    // workaround: sorting via optional relationship "video.publishedDate" lead to crash
     var date: Date?
 
     init(_ video: Video?, _ videoDate: Date? = nil) {

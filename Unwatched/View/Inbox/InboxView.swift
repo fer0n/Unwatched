@@ -43,7 +43,8 @@ struct InboxView: View {
                                         video: video,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
-                                        onChange: handleVideoChange
+                                        onChange: handleVideoChange,
+                                        clearAboveBelowList: .inbox
                                     )
                                 }
                             }
