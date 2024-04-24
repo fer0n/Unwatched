@@ -19,6 +19,7 @@ enum VideoActions {
 struct VideoListItem: View {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
+    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -36,6 +37,7 @@ struct VideoListItem: View {
     var clearRole: ButtonRole?
     var queueRole: ButtonRole?
     var onChange: (() -> Void)?
+    var clearAboveBelowList: ClearList?
 
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details]
 
@@ -44,7 +46,8 @@ struct VideoListItem: View {
          videoDuration: Double? = nil,
          clearRole: ButtonRole? = nil,
          queueRole: ButtonRole? = nil,
-         onChange: (() -> Void)? = nil) {
+         onChange: (() -> Void)? = nil,
+         clearAboveBelowList: ClearList? = nil) {
         self.video = video
         if let actions = videoSwipeActions {
             self.videoSwipeActions = actions
@@ -53,6 +56,7 @@ struct VideoListItem: View {
         self.clearRole = clearRole
         self.queueRole = queueRole
         self.onChange = onChange
+        self.clearAboveBelowList = clearAboveBelowList
     }
 
     init(video: Video,
@@ -222,6 +226,50 @@ struct VideoListItem: View {
             if let url = video.url {
                 ShareLink(item: url)
             }
+            if let list = clearAboveBelowList {
+                Divider()
+
+                if requireClearConfirmation {
+                    Menu {
+                        Button(role: .destructive) {
+                            clearList(list, .above)
+                        } label: {
+                            Image(systemName: "checkmark")
+                            Text("confirm")
+                        }
+                        Button { } label: {
+                            Label("cancel", systemImage: "xmark")
+                        }
+                    } label: {
+                        Label("clearAbove", systemImage: "arrowtriangle.up.fill")
+                    }
+
+                    Menu {
+                        Button(role: .destructive) {
+                            clearList(list, .below)
+                        } label: {
+                            Image(systemName: "checkmark")
+                            Text("confirm")
+                        }
+                        Button { } label: {
+                            Label("cancel", systemImage: "xmark")
+                        }
+                    } label: {
+                        Label("clearBelow", systemImage: "arrowtriangle.down.fill")
+                    }
+                } else {
+                    Button(role: .destructive) {
+                        clearList(list, .above)
+                    } label: {
+                        Label("clearAbove", systemImage: "arrowtriangle.up.fill")
+                    }
+                    Button(role: .destructive) {
+                        clearList(list, .below)
+                    } label: {
+                        Label("clearBelow", systemImage: "arrowtriangle.down.fill")
+                    }
+                }
+            }
         } label: {
             Image(systemName: "ellipsis.circle.fill")
         }
@@ -281,6 +329,29 @@ struct VideoListItem: View {
             player.loadTopmostVideoFromQueue(after: task)
         }
     }
+
+    func clearList(_ list: ClearList, _ direction: ClearDirection) {
+        let container = modelContext.container
+        let task = VideoService.clearList(
+            list,
+            direction,
+            index: video.queueEntry?.order,
+            date: video.inboxEntry?.date,
+            container: container)
+        if list == .queue && direction == .above {
+            player.loadTopmostVideoFromQueue(after: task)
+        }
+    }
+}
+
+enum ClearDirection {
+    case above
+    case below
+}
+
+enum ClearList {
+    case queue
+    case inbox
 }
 
 #Preview {

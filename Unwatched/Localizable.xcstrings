@@ -331,22 +331,6 @@
         }
       }
     },
-    "areYouSureClearAll" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bist du sicher dass du alle Videos aus der Liste entfernen möchtest?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Are you sure you want to clear all items from the list?"
-          }
-        }
-      }
-    },
     "autoDeleteBackups" : {
       "localizations" : {
         "de" : {
@@ -587,6 +571,22 @@
         }
       }
     },
+    "cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "chapters" : {
       "localizations" : {
         "de" : {
@@ -603,6 +603,22 @@
         }
       }
     },
+    "clearAbove" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles Darüber Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Above"
+          }
+        }
+      }
+    },
     "clearAll" : {
       "localizations" : {
         "de" : {
@@ -615,6 +631,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear All"
+          }
+        }
+      }
+    },
+    "clearBelow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles Darunter Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Below"
           }
         }
       }
@@ -663,6 +695,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear Videos"
+          }
+        }
+      }
+    },
+    "confirm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestätigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
           }
         }
       }
@@ -2805,6 +2853,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
           }
         }
       }
