@@ -53,7 +53,7 @@ struct VideoListItemDetails: View {
                         .padding(.trailing, 5)
                     if video.hasFinished != true, let remaining = remaining.formattedSeconds {
                         Text(verbatim: "-\(remaining)")
-                            .font(.system(size: 12, weight: .regular))
+                            .font(.system(size: 11, weight: .regular))
                     }
                 }
             }

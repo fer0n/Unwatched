@@ -132,7 +132,7 @@ struct VideoService {
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: container)
-            try await repo.addForeignVideos(from: urls, in: videoPlacement, at: index, addImage: addImage)
+            try await repo.addForeignUrls(urls, in: videoPlacement, at: index, addImage: addImage)
         }
         return task
     }
@@ -187,5 +187,17 @@ struct VideoService {
 
     static func requiresFetchingVideoData(_ video: Video?) -> Bool {
         return video?.title.isEmpty == true
+    }
+
+    static func clearList(_ list: ClearList,
+                          _ direction: ClearDirection,
+                          index: Int?,
+                          date: Date?,
+                          container: ModelContainer) -> Task<(), Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.clearList(list, direction, index: index, date: date)
+        }
+        return task
     }
 }

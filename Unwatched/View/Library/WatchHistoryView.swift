@@ -21,11 +21,15 @@ struct WatchHistoryView: View {
                     ForEach(watchEntries) { entry in
                         ZStack {
                             if let video = entry.video {
-                                VideoListItem(video: video,
-                                              showVideoStatus: true,
-                                              hasInboxEntry: video.inboxEntry != nil,
-                                              hasQueueEntry: video.queueEntry != nil,
-                                              watched: video.watched)
+                                VideoListItem(
+                                    video,
+                                    config: VideoListItemConfig(
+                                        showVideoStatus: true,
+                                        hasInboxEntry: video.inboxEntry != nil,
+                                        hasQueueEntry: video.queueEntry != nil,
+                                        watched: video.watched
+                                    )
+                                )
                             }
                         }
                     }
