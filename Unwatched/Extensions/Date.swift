@@ -4,11 +4,20 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Date {
+    private static let formatter: DateFormatter = {
+        return DateFormatter()
+    }()
+
+    static let iso8601Formatter: ISO8601DateFormatter = {
+        return ISO8601DateFormatter()
+    }()
+
     var formatted: String {
         let calendar = Calendar.current
-        let formatter = DateFormatter()
+        let formatter = Date.formatter
 
         if calendar.isDateInToday(self) {
             formatter.dateFormat = "HH:mm"
@@ -43,5 +52,14 @@ extension Calendar {
         let currentDate = Date()
         let oneYearAgo = self.date(byAdding: .year, value: -1, to: currentDate)!
         return date >= oneYearAgo && date < currentDate
+    }
+}
+
+#Preview {
+    Group {
+        Text(Date.now.formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24).formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 7).formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 365 * 2).formatted)
     }
 }
