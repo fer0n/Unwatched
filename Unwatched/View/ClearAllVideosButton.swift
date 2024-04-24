@@ -6,20 +6,13 @@
 import SwiftUI
 
 struct ClearAllVideosButton: View {
-    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
-    @State private var showingClearAllAlert = false
-    @State private var hapticToggle = false
-
+    @State private var triggerAction = false
     var clearAll: () -> Void
 
     var body: some View {
         Button {
-            if requireClearConfirmation {
-                showingClearAllAlert = true
-            } else {
-                clearAllWithHaptics()
-            }
+            triggerAction = true
         } label: {
             HStack {
                 Spacer()
@@ -29,21 +22,60 @@ struct ClearAllVideosButton: View {
                 Spacer()
             }.padding()
         }
-        .actionSheet(isPresented: $showingClearAllAlert) {
-            ActionSheet(title: Text("confirmClearAll"),
-                        message: Text("areYouSureClearAll"),
-                        buttons: [
-                            .destructive(Text("clearAll")) { clearAllWithHaptics() },
-                            .cancel()
-                        ])
+        .clearConfirmation(clearAll: clearAll, triggerAction: $triggerAction)
+    }
+}
+
+struct ClearConfirmationModifier: ViewModifier {
+    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
+
+    @State private var showingClearAllAlert = false
+    @State private var hapticToggle = false
+    @Binding var triggerAction: Bool
+
+    var clearAll: () -> Void
+    var clearText: LocalizedStringKey = "clearAll"
+
+    func body(content: Content) -> some View {
+        content
+            .confirmationDialog("confirmClearAll",
+                                isPresented: $showingClearAllAlert) {
+                Button(role: .destructive, action: {
+                    clearAllWithHaptics()
+                }, label: {
+                    Text(clearText)
+                })
+                Button("cancel", role: .cancel, action: {
+                    showingClearAllAlert = false
+                })
+            }
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            .onChange(of: triggerAction) {
+                if triggerAction {
+                    onTriggerAction()
+                }
+            }
+    }
+
+    func onTriggerAction() {
+        if requireClearConfirmation {
+            showingClearAllAlert = true
+        } else {
+            clearAllWithHaptics()
         }
-        .foregroundStyle(Color.neutralAccentColor)
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        triggerAction = false
     }
 
     func clearAllWithHaptics() {
         hapticToggle.toggle()
         clearAll()
+    }
+}
+
+extension View {
+    func clearConfirmation(clearAll: @escaping () -> Void, triggerAction: Binding<Bool>) -> some View {
+        self.modifier(ClearConfirmationModifier(triggerAction: triggerAction,
+                                                clearAll: clearAll))
     }
 }
 

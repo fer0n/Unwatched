@@ -231,6 +231,8 @@ extension VideoActor {
             let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
             var queue = try modelContext.fetch(fetch)
+            let queueWasEmpty = queue.isEmpty
+
             for (index, video) in videos.enumerated() {
                 clearEntries(from: video, except: QueueEntry.self)
                 if let queueEntry = video.queueEntry {
@@ -242,10 +244,12 @@ extension VideoActor {
                     video.queueEntry = newQueueEntry
                     return newQueueEntry
                 }()
-                if queue.isEmpty {
+
+                if queueWasEmpty {
                     queue.append(queueEntry)
                 } else {
-                    queue.insert(queueEntry, at: startIndex + index)
+                    let targetIndex = startIndex + index
+                    queue.insert(queueEntry, at: targetIndex)
                 }
             }
             for (index, queueEntry) in queue.enumerated() {
@@ -278,6 +282,46 @@ extension VideoActor {
             }
         } catch {
             Logger.log.error("No queue entry found to delete")
+        }
+    }
+
+    func clearList(_ list: ClearList, _ direction: ClearDirection, index: Int?, date: Date?) throws {
+        switch list {
+        case .inbox:
+            clearInbox(direction, date: date)
+        case .queue:
+            clearQueue(direction, index: index)
+        }
+        try modelContext.save()
+    }
+
+    private func clearInbox(_ direction: ClearDirection, date: Date?) {
+        let past = Date.distantPast
+        let dateL = date ?? past
+        var filter: Predicate<InboxEntry>
+        if direction == .above {
+            filter = #Predicate<InboxEntry> { $0.date ?? past > dateL }
+        } else {
+            filter = #Predicate<InboxEntry> { $0.date ?? past < dateL }
+        }
+        let fetch = FetchDescriptor<InboxEntry>(predicate: filter)
+        let inboxEntries = try? modelContext.fetch(fetch)
+        for entry in inboxEntries ?? [] {
+            VideoActor.deleteInboxEntry(entry, modelContext: modelContext)
+        }
+    }
+
+    private func clearQueue(_ direction: ClearDirection, index: Int?) {
+        var filter: Predicate<QueueEntry>
+        if direction == .above {
+            filter = #Predicate<QueueEntry> { $0.order < index ?? 0 }
+        } else {
+            filter = #Predicate<QueueEntry> { $0.order > index ?? 0 }
+        }
+        let fetch = FetchDescriptor<QueueEntry>(predicate: filter)
+        let queueEntries = try? modelContext.fetch(fetch)
+        for entry in queueEntries ?? [] {
+            VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
 }

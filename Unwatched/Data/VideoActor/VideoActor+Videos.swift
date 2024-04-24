@@ -7,43 +7,92 @@ import OSLog
 @ModelActor actor VideoActor {
     var newVideos = NewVideosNotificationInfo()
 
-    func addForeignVideos(from videoUrls: [URL],
-                          in videoplacement: VideoPlacement,
-                          at index: Int,
-                          addImage: Bool = false) async throws {
-        var videos = [Video]()
-        var containsError = false
-        for url in videoUrls {
-            guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
-                containsError = true
-                Logger.log.info("addForeignVideos continue, containsError (no youtubeId)")
-                continue
-            }
+    func addForeignUrls(_ urls: [URL],
+                        in videoplacement: VideoPlacement,
+                        at index: Int,
+                        addImage: Bool = false) async throws {
+        var videoIds = [String]()
+        var playlistIds = [String]()
 
-            Logger.log.info("videoAlreadyExists?")
+        var containsError = false
+        for url in urls {
+            if let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) {
+                videoIds.append(youtubeId)
+            } else if let playlistId = UrlService.getPlaylistIdFromUrl(url) {
+                playlistIds.append(playlistId)
+            } else {
+                containsError = true
+                Logger.log.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
+            }
+        }
+
+        if !videoIds.isEmpty {
+            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index, addImage: addImage)
+        }
+
+        for playlistId in playlistIds {
+            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index, addImage: addImage)
+        }
+
+        try modelContext.save()
+        if containsError {
+            throw VideoError.noYoutubeId
+        }
+    }
+
+    private func addForeignPlaylist(playlistId: String,
+                                    in videoplacement: VideoPlacement,
+                                    at index: Int,
+                                    addImage: Bool = false) async throws {
+        Logger.log.info("addForeignPlaylist")
+        var videos = [Video]()
+        let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
+        for sendableVideo in playlistVideos {
+            if let video = videoAlreadyExists(sendableVideo.youtubeId) {
+                videos.append(video)
+            } else {
+                if let (video, feedTitle) = try await createVideo(sendableVideo: sendableVideo) {
+                    videos.append(video)
+                    try await handleNewForeignVideo(video, feedTitle: feedTitle, addImage: addImage)
+                } else {
+                    Logger.log.warning("Video couldn't be created")
+                }
+            }
+        }
+        addVideosTo(videos: videos, placement: videoplacement, index: index)
+    }
+
+    private func handleNewForeignVideo(_ video: Video, feedTitle: String? = nil, addImage: Bool = false) async throws {
+        try await addSubscriptionsForForeignVideos(video, feedTitle: feedTitle)
+        if addImage,
+           let url = video.thumbnailUrl,
+           let data = try? await ImageService.loadImageData(url: url) {
+            let img = CachedImage(url, imageData: data)
+            modelContext.insert(img)
+            video.cachedImage = img
+            // Workaround: avoids crash when adding video via shortcut
+            // TODO: still necessary? Might be fixed
+        }
+    }
+
+    private func addForeignVideos(videoIds: [String],
+                                  in videoplacement: VideoPlacement,
+                                  at index: Int,
+                                  addImage: Bool = false) async throws {
+        Logger.log.info("addForeignVideos?")
+        var videos = [Video]()
+        for youtubeId in videoIds {
             if let video = videoAlreadyExists(youtubeId) {
                 videos.append(video)
             } else {
-                let res = try await createVideo(from: youtubeId, url: url)
+                let res = try await createVideo(youtubeId: youtubeId)
                 if let video = res?.video {
-                    try await addSubscriptionsForForeignVideos(video, feedTitle: res?.feedTitle)
-                    if addImage,
-                       let url = video.thumbnailUrl,
-                       let data = try? await ImageService.loadImageData(url: url) {
-                        let img = CachedImage(url, imageData: data)
-                        modelContext.insert(img)
-                        video.cachedImage = img
-                        // Workaround: avoids crash when adding video via shortcut
-                    }
+                    try await handleNewForeignVideo(video, feedTitle: res?.feedTitle, addImage: addImage)
                     videos.append(video)
                 }
             }
         }
         addVideosTo(videos: videos, placement: videoplacement, index: index)
-        try modelContext.save()
-        if containsError {
-            throw VideoError.noYoutubeId
-        }
     }
 
     private func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
@@ -182,14 +231,22 @@ import OSLog
         return info
     }
 
-    private func createVideo(from youtubeId: String, url: URL) async throws -> (video: Video, feedTitle: String?)? {
-        var videoData: SendableVideo?
-        do {
-            videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId)
-        } catch VideoError.faultyYoutubeVideoId(let videoId) {
-            throw VideoError.faultyYoutubeVideoId(videoId)
-        } catch {
-            videoData = SendableVideo(youtubeId: youtubeId, title: "", url: url)
+    private func createVideo(youtubeId: String? = nil,
+                             sendableVideo: SendableVideo? = nil,
+                             url: URL? = nil) async throws -> (video: Video, feedTitle: String?)? {
+        if youtubeId == nil && sendableVideo == nil {
+            throw VideoError.noVideoInfo
+        }
+
+        var videoData = sendableVideo
+        if videoData == nil, let youtubeId = youtubeId {
+            do {
+                videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId)
+            } catch VideoError.faultyYoutubeVideoId(let videoId) {
+                throw VideoError.faultyYoutubeVideoId(videoId)
+            } catch {
+                videoData = SendableVideo(youtubeId: youtubeId, title: "", url: url)
+            }
         }
 
         guard let videoData = videoData else {

@@ -76,24 +76,58 @@ struct YoutubeDataAPI {
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtVideoInfo.self)
         if let item = response.items.first {
-            let dateFormatter = ISO8601DateFormatter()
-            let publishedDate = dateFormatter.date(from: item.snippet.publishedAt)
-            let duration = parseDurationToSeconds(item.contentDetails.duration)
-            return SendableVideo(
-                youtubeId: youtubeVideoId,
-                title: item.snippet.title,
-                url: URL(string: "https://www.youtube.com/watch?v=\(youtubeVideoId)")!,
-                thumbnailUrl: URL(string: item.snippet.thumbnails.medium.url),
-                youtubeChannelId: item.snippet.channelId,
-                feedTitle: item.snippet.channelTitle,
-                duration: duration,
-                publishedDate: publishedDate,
-                videoDescription: item.snippet.description)
+            return YoutubeDataAPI.createVideo(
+                item.snippet,
+                videoId: youtubeVideoId,
+                duration: item.contentDetails.duration
+            )
         } else if response.items.count == 0 {
             // request seems okay, youtubeVideoId was probably the issue
             throw VideoError.faultyYoutubeVideoId(youtubeVideoId)
         }
 
         throw VideoError.noVideoFound
+    }
+
+    static func createVideo(_ snippet: YtVideoSnippet, videoId: String, duration: String? = nil) -> SendableVideo {
+        let dateFormatter = ISO8601DateFormatter()
+        let publishedDate = dateFormatter.date(from: snippet.publishedAt)
+        let parsedDuration = {
+            if let duration = duration {
+                return parseDurationToSeconds(duration)
+            }
+            return nil
+        }()
+        return SendableVideo(
+            youtubeId: videoId,
+            title: snippet.title,
+            url: URL(string: "https://www.youtube.com/watch?v=\(videoId)")!,
+            thumbnailUrl: URL(string: snippet.thumbnails.medium.url),
+            youtubeChannelId: snippet.channelId,
+            feedTitle: snippet.channelTitle,
+            duration: parsedDuration,
+            publishedDate: publishedDate,
+            videoDescription: snippet.description)
+    }
+
+    static func getYtVideoInfoFromPlaylist(_ youtubePlaylistId: String) async throws -> [SendableVideo] {
+        if youtubePlaylistId.isEmpty {
+            throw VideoError.noYoutubePlaylistId
+        }
+        Logger.log.info("getYtVideoInfoFromPlaylist")
+        let apiUrl = "\(baseUrl)playlistItems?key=\(apiKey)&playlistId=\(youtubePlaylistId)"
+            + "&maxResults=50&part=snippet,contentDetails"
+        Logger.log.info("apiUrl \(apiUrl)")
+
+        let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtPlaylistItems.self)
+        if response.items.isEmpty {
+            throw VideoError.noVideosFoundInPlaylist
+        }
+        var result = [SendableVideo]()
+        for item in response.items {
+            let video = YoutubeDataAPI.createVideo(item.snippet, videoId: item.contentDetails.videoId)
+            result.append(video)
+        }
+        return result
     }
 }

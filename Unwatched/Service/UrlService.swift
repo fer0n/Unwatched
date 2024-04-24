@@ -150,6 +150,18 @@ struct UrlService {
         return ([], text)
     }
 
+    static func extractPlaylistUrls(_ text: String) -> (playlistUrls: [URL], rest: String) {
+        // https://www.youtube.com/playlist?list=PL6BHqJ_7o92sPDB2UpgWBYdeyeSs-pc8_
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/playlist\?list\=[^\/\?\s]+))"#
+        let matches = text.matchingMultiple(regex: regex)
+        if let matches = matches {
+            let urls = matches.compactMap { URL(string: $0) }
+            let rest = text.replacingOccurrences(of: regex, with: "", options: .regularExpression)
+            return (urls, rest)
+        }
+        return ([], text)
+    }
+
     static func getYoutubeUrl(userName: String? = nil,
                               channelId: String? = nil,
                               playlistId: String? = nil,
