@@ -21,11 +21,13 @@ struct VideoListView: View {
     var body: some View {
         ForEach(videos) { video in
             VideoListItem(
-                video: video,
-                showVideoStatus: true,
-                hasInboxEntry: video.inboxEntry != nil,
-                hasQueueEntry: video.queueEntry != nil,
-                watched: video.watched
+                video,
+                config: VideoListItemConfig(
+                    showVideoStatus: true,
+                    hasInboxEntry: video.inboxEntry != nil,
+                    hasQueueEntry: video.queueEntry != nil,
+                    watched: video.watched
+                )
             )
         }
     }
