@@ -21,6 +21,7 @@ struct InboxView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
+        let showClear = inboxEntries.count >= Const.minListEntriesToShowClear
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
@@ -55,10 +56,10 @@ struct InboxView: View {
                         .dropDestination(for: URL.self) { items, _ in
                             handleUrlDrop(items)
                         }
-                        if inboxEntries.count >= Const.minListEntriesToShowClear {
-                            ClearAllVideosButton(clearAll: clearAll)
-                                .listRowSeparator(.hidden)
-                        }
+                        ClearAllVideosButton(clearAll: clearAll)
+                            .listRowSeparator(.hidden)
+                            .opacity(showClear ? 1 : 0)
+                            .disabled(!showClear)
                     }
                     .listStyle(.plain)
                 }

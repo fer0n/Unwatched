@@ -18,7 +18,6 @@ struct MenuView: View {
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
-    @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
 
     var showCancelButton: Bool = false
