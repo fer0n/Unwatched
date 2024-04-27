@@ -74,21 +74,8 @@ struct VideoListItem: View {
                     video: video,
                     config: config))
         .sheet(isPresented: $showInfo) {
-            NavigationStack {
-                ScrollView {
-                    DescriptionDetailView(video: video)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button {
-                            showInfo = false
-                        } label: {
-                            Image(systemName: Const.clearSF)
-                        }
-                    }
-                }
-            }
-            .presentationDragIndicator(.visible)
+            ChapterDescriptionView(video: video)
+                .presentationDragIndicator(.visible)
         }
     }
 }

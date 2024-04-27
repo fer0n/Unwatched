@@ -71,12 +71,14 @@ struct ContentView: View {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
             .sheet(isPresented: $navManager.showDescriptionDetail) {
-                ChapterDescriptionView()
-                    .presentationDetents(chapterViewDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.playerControlHeight))
-                    )
-                    .presentationDragIndicator(.visible)
+                if let video = player.video {
+                    ChapterDescriptionView(video: video)
+                        .presentationDetents(chapterViewDetent)
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .height(sheetPos.playerControlHeight))
+                        )
+                        .presentationDragIndicator(.visible)
+                }
             }
             .sheet(isPresented: $navManager.showMenu) {
                 MenuView(showCancelButton: landscapeFullscreen)
