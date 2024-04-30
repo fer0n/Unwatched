@@ -25,7 +25,7 @@ extension Date {
         } else if calendar.isDateInLastWeek(self) {
             formatter.dateFormat = "EEE d"
             return formatter.string(from: self).uppercased()
-        } else if calendar.isDateInLastYear(self) {
+        } else if calendar.isDateInLastSixMonths(self) {
             formatter.dateFormat = "MMM d"
             return formatter.string(from: self).uppercased()
         } else {
@@ -46,6 +46,12 @@ extension Calendar {
         let currentDate = Date()
         let oneWeekAgo = self.date(byAdding: .weekOfYear, value: -1, to: currentDate)!
         return date >= oneWeekAgo && date < currentDate
+    }
+
+    func isDateInLastSixMonths(_ date: Date) -> Bool {
+        let currentDate = Date()
+        let sixMonthsAgo = self.date(byAdding: .month, value: -6, to: currentDate)!
+        return date >= sixMonthsAgo && date < currentDate
     }
 
     func isDateInLastYear(_ date: Date) -> Bool {
