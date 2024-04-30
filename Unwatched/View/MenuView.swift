@@ -28,8 +28,7 @@ struct MenuView: View {
         let tabs: [TabRoute] =
             [
                 TabRoute(
-                    view: AnyView(QueueView(inboxHasEntries: !inbox.isEmpty,
-                                            showCancelButton: showCancelButton)),
+                    view: AnyView(QueueView(showCancelButton: showCancelButton)),
                     image: Image(systemName: Const.queueTagSF),
                     text: "queue",
                     tag: NavigationTab.queue,
