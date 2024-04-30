@@ -72,7 +72,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 if let video = player.video {
-                    ChapterDescriptionView(video: video)
+                    ChapterDescriptionView(video: video, page: $navManager.selectedDetailPage)
                         .presentationDetents(chapterViewDetent)
                         .presentationBackgroundInteraction(
                             .enabled(upThrough: .height(sheetPos.playerControlHeight))

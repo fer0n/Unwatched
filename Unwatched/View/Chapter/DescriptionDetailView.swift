@@ -40,6 +40,7 @@ struct DescriptionDetailView: View {
         }
         .textSelection(.enabled)
         .tint(theme.color)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
     }
 }

@@ -78,13 +78,49 @@ extension Video {
         //            Chapter(title: "Second Chapter", time: 30, duration: 100, endTime: 130)
         //        ]
         return Video(
-            title: "Virtual Reality OasisResident Evil 4 Remake Is 10x BETTER In VR!",
+            title: "Rabbit R1: Barely Reviewable",
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
             publishedDate: Date(),
             duration: 12352,
-            videoDescription: "The Resident Evil 4 Remake VR mode is releasing as a free update to th" // ,
+            videoDescription: """
+            "AI in a Box. But a different box.
+
+            Get a dbrand skin and screen protector at https://dbrand.com/rabbit
+
+            MKBHD Merch: http://shop.MKBHD.com
+
+            Tech I'm using right now: https://www.amazon.com/shop/MKBHD
+
+            Intro Track:
+
+             / 20syl
+            Playlist of MKBHD Intro music: https://goo.gl/B3AWV5
+
+            R1 provided by Rabbit for review.
+
+            ~
+
+
+             / mkbhd
+
+
+             / mkbhd
+
+
+             / mkbhd
+
+            0:00 Intro
+            0:26 AI In A Box
+            3:40 It’s Also Bad
+            7:07 $200
+            9:56 Large Action Model
+            14:06 What Are We Doing Here?
+            16:42 FUTURE
+            """
+
+            //            videoDescription: "The Resident Evil 4 Remake VR mode is releasing as a free update to th" // ,
             //            chapters: chapters
         )
     }

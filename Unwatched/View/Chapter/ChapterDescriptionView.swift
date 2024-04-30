@@ -11,13 +11,12 @@ enum ChapterDescriptionPage {
 }
 
 struct ChapterDescriptionView: View {
-    @Environment(NavigationManager.self) private var navManager
     @Environment(\.dismiss) var dismiss
 
     let video: Video
+    @Binding var page: ChapterDescriptionPage
 
     @State var selectedDetailPageTask: Task<ChapterDescriptionPage, Never>?
-
     @GestureState private var dragState: CGFloat = 0
 
     var body: some View {
@@ -26,7 +25,7 @@ struct ChapterDescriptionView: View {
             let hasDescription = video.videoDescription != nil
 
             ScrollView {
-                if navManager.selectedDetailPage == .chapters {
+                if page == .chapters && hasChapters {
                     ChapterList(video: video)
                         .padding(.horizontal)
                         .transition(.move(edge: .trailing))
@@ -35,12 +34,11 @@ struct ChapterDescriptionView: View {
                         .transition(.move(edge: .leading))
                 }
             }
-            .highPriorityGesture(dragGesture(origin: navManager.selectedDetailPage))
+            .highPriorityGesture(dragGesture(origin: page))
             .toolbar {
                 if hasDescription && hasChapters {
-                    @Bindable var navManager = navManager
                     ToolbarItem(placement: .principal) {
-                        Picker("page", selection: $navManager.selectedDetailPage) {
+                        Picker("page", selection: $page) {
                             Text("description").tag(ChapterDescriptionPage.description)
                             Text("chapters").tag(ChapterDescriptionPage.chapters)
                         }
@@ -65,7 +63,7 @@ struct ChapterDescriptionView: View {
             }
             let direction = await task.value
             withAnimation {
-                navManager.selectedDetailPage = direction
+                page = direction
             }
         }
     }
@@ -91,7 +89,7 @@ struct ChapterDescriptionView: View {
 }
 
 #Preview {
-    ChapterDescriptionView(video: Video.getDummy())
+    ChapterDescriptionView(video: Video.getDummy(), page: .constant(.chapters))
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
         .environment(RefreshManager())
