@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import TipKit
 import OSLog
 
 struct QueueView: View {
@@ -19,7 +18,6 @@ struct QueueView: View {
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
     @State var value: Double = 1.5
-    var inboxTip = InboxHasVideosTip()
     var inboxHasEntries: Bool = false
     var showCancelButton: Bool = false
 
@@ -29,15 +27,7 @@ struct QueueView: View {
             ZStack {
                 if queue.isEmpty {
                     contentUnavailable
-
-                    if inboxHasEntries {
-                        VStack {
-                            Spacer()
-                            TipView(inboxTip, arrowEdge: .bottom)
-                                .fixedSize()
-                        }
-                    }
-
+                    InboxHasEntriesTip()
                 } else {
                     List {
                         ForEach(queue) { entry in
@@ -89,9 +79,6 @@ struct QueueView: View {
         }
         .onDisappear {
             hasNewQueueItems = false
-            if inboxHasEntries {
-                inboxTip.invalidate(reason: .actionPerformed)
-            }
         }
     }
 
