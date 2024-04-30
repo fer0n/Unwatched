@@ -34,6 +34,7 @@ struct ChapterListItem: View {
                         .foregroundStyle(Color.neutralAccentColor)
                 }
             }
+            .animation(nil, value: UUID())
         }
     }
 }
