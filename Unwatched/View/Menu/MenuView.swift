@@ -66,20 +66,7 @@ struct MenuView: View {
             }) {
                 ForEach(tabs, id: \.tag) { tab in
                     if tab.show {
-                        tab.view
-                            .tabItem {
-                                tab.image
-                                    .environment(\.symbolVariants,
-                                                 navManager.tab == tab.tag
-                                                    ? .fill
-                                                    : .none)
-                                if tab.showBadge {
-                                    Text(verbatim: "●")
-                                } else if showTabBarLabels {
-                                    Text(tab.text)
-                                }
-                            }
-                            .tag(tab.tag)
+                        TabItemView(tab: tab)
                     }
                 }
             }
@@ -126,15 +113,6 @@ struct MenuView: View {
             UserDefaults.standard.set(false, forKey: Const.hasNewQueueItems)
         }
     }
-}
-
-struct TabRoute {
-    var view: AnyView
-    var image: Image
-    var text: LocalizedStringKey
-    var tag: NavigationTab
-    var showBadge: Bool = false
-    var show: Bool = true
 }
 
 #Preview {
