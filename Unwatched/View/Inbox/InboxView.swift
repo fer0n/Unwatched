@@ -30,10 +30,7 @@ struct InboxView: View {
                                            systemImage: "tray.fill",
                                            description: Text("noInboxItemsDescription"))
                         .contentShape(Rectangle())
-                        .dropDestination(for: URL.self) { items, _ in
-                            handleUrlDrop(items)
-                            return true
-                        }
+                        .handleVideoUrlDrop(.inbox)
                 } else {
                     List {
                         swipeTipView
@@ -53,9 +50,7 @@ struct InboxView: View {
                             }
                             .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
                         }
-                        .dropDestination(for: URL.self) { items, _ in
-                            handleUrlDrop(items)
-                        }
+                        .handleVideoUrlDrop(.inbox)
                         ClearAllVideosButton(clearAll: clearAll)
                             .listRowSeparator(.hidden)
                             .opacity(showClear ? 1 : 0)
@@ -128,12 +123,6 @@ struct InboxView: View {
 
     func deleteInboxEntry(_ entry: InboxEntry) {
         VideoService.deleteInboxEntry(entry, modelContext: modelContext)
-    }
-
-    func handleUrlDrop(_ items: [URL]) {
-        Logger.log.info("handleUrlDrop inbox \(items)")
-        let container = modelContext.container
-        _ = VideoService.addForeignUrls(items, in: .inbox, container: container)
     }
 
     func clearAll() {
