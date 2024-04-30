@@ -53,7 +53,7 @@ struct VideoPlayer: View {
                             ), startPoint: .top, endPoint: .bottom))
                     } else {
                         PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
-                            .aspectRatio(16/9, contentMode: .fit)
+                            .aspectRatio(Const.videoAspectRatio, contentMode: .fit)
                             .frame(maxHeight: landscapeFullscreen ? .infinity : nil)
                             .frame(maxWidth: !landscapeFullscreen ? .infinity : nil)
                     }
@@ -71,7 +71,7 @@ struct VideoPlayer: View {
             } else {
                 Rectangle()
                     .fill(Color.backgroundColor)
-                    .aspectRatio(16/9, contentMode: .fit)
+                    .aspectRatio(Const.videoAspectRatio, contentMode: .fit)
                     .frame(maxWidth: .infinity)
             }
 
