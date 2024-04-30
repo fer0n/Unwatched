@@ -17,8 +17,6 @@ struct QueueView: View {
     @Environment(PlayerManager.self) private var player
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
-    @State var value: Double = 1.5
-    var inboxHasEntries: Bool = false
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -47,10 +45,7 @@ struct QueueView: View {
                             .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
                         }
                         .onMove(perform: moveQueueEntry)
-                        .dropDestination(for: URL.self) { items, index in
-                            Logger.log.info("drop at index \(index)")
-                            handleUrlDrop(items, at: index)
-                        }
+                        .handleVideoUrlDrop(.queue)
                         if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
                             ClearAllVideosButton(clearAll: clearAll)
                                 .listRowSeparator(.hidden)
@@ -95,10 +90,7 @@ struct QueueView: View {
                 .bold()
         }
         .contentShape(Rectangle())
-        .dropDestination(for: URL.self) { items, _ in
-            handleUrlDrop(items, at: 0)
-            return true
-        }
+        .handleVideoUrlDrop(.queue)
     }
 
     func handleVideoChange() {
@@ -117,15 +109,6 @@ struct QueueView: View {
             player.loadTopmostVideoFromQueue(after: task)
         }
         handleVideoChange()
-    }
-
-    func handleUrlDrop(_ items: [URL], at index: Int) {
-        Logger.log.info("handleUrlDrop \(items)")
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(items, in: .queue, at: index, container: container)
-        if index == 0 {
-            player.loadTopmostVideoFromQueue(after: task)
-        }
     }
 
     func clearAll() {
