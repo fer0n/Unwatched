@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct ChapterList: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
     @State var toggleHaptic = false
@@ -53,10 +54,17 @@ struct ChapterList: View {
     func toggleChapter(_ chapter: Chapter) {
         toggleHaptic.toggle()
         chapter.isActive.toggle()
-        player.handleChapterChange()
+        if video == player.video {
+            player.handleChapterChange()
+        }
     }
 
     func setChapter(_ chapter: Chapter) {
+        if video != player.video {
+            video.elapsedSeconds = chapter.startTime
+            player.playVideo(video)
+            _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+        }
         player.setChapter(chapter)
     }
 

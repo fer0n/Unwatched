@@ -49,8 +49,12 @@
 		883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */; };
 		883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81A2B5BC81600028D52 /* RefreshManager.swift */; };
 		883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */; };
+		883D5DFC2BE0B8B900989313 /* TabRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFB2BE0B8B900989313 /* TabRoute.swift */; };
+		883D5E002BE0B95800989313 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFF2BE0B95800989313 /* TabItemView.swift */; };
 		883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */; };
 		883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */; };
+		883F41052BDECB5C00535952 /* InboxHasEntriesTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */; };
+		883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */; };
 		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
 		8845F0172B5054570086AA98 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0162B5054570086AA98 /* Chapter.swift */; };
 		8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */; };
@@ -219,8 +223,12 @@
 		883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMiniControlView.swift; sourceTree = "<group>"; };
 		883CA81A2B5BC81600028D52 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribeManager.swift; sourceTree = "<group>"; };
+		883D5DFB2BE0B8B900989313 /* TabRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRoute.swift; sourceTree = "<group>"; };
+		883D5DFF2BE0B95800989313 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
 		883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerViewModel.swift; sourceTree = "<group>"; };
 		883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSharableUrl.swift; sourceTree = "<group>"; };
+		883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxHasEntriesTip.swift; sourceTree = "<group>"; };
+		883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleVideoUrlDropModifier.swift; sourceTree = "<group>"; };
 		8845F0142B500E8A0086AA98 /* AllVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVideosView.swift; sourceTree = "<group>"; };
 		8845F0162B5054570086AA98 /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
 		8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterDescriptionView.swift; sourceTree = "<group>"; };
@@ -380,6 +388,7 @@
 			children = (
 				8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */,
 				888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */,
+				883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */,
 				888C49BF2B5EC53C00CDEC76 /* KeyboardReadable.swift */,
 				887E72952B92219C00928946 /* DismissToolbarButton.swift */,
 				888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */,
@@ -422,6 +431,7 @@
 			children = (
 				887AC8D52B49D0BE00512852 /* VideoPlacement.swift */,
 				88D8585A2B55B0E70047E0E6 /* SendableVideo.swift */,
+				883D5DFB2BE0B8B900989313 /* TabRoute.swift */,
 				881E51412B5A6446006384E4 /* ShortsDetection.swift */,
 				8813465F2B88C988005A4790 /* CachedImageHolder.swift */,
 				88CEDA1F2B6641C6000E3E98 /* Exportable.swift */,
@@ -478,6 +488,7 @@
 			isa = PBXGroup;
 			children = (
 				886E79B62B46E0F900554E1F /* QueueView.swift */,
+				883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */,
 			);
 			path = Queue;
 			sourceTree = "<group>";
@@ -518,6 +529,15 @@
 				88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		883D5DFE2BE0B93F00989313 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				883CA8072B5AE47E00028D52 /* MenuView.swift */,
+				883D5DFF2BE0B95800989313 /* TabItemView.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		886E79B82B46FFC700554E1F /* Extensions */ = {
@@ -730,6 +750,7 @@
 			isa = PBXGroup;
 			children = (
 				88BF358F2BC91ECE005FA53E /* Onboarding */,
+				883D5DFE2BE0B93F00989313 /* Menu */,
 				883CA80D2B5AFDBA00028D52 /* Queue */,
 				883CA80E2B5AFDE900028D52 /* Inbox */,
 				883CA80C2B5AFDA200028D52 /* Library */,
@@ -740,7 +761,6 @@
 				883CA8052B5A8FFA00028D52 /* VideoListView.swift */,
 				8804A3F02B8B893300D3F4F1 /* VideoListItem */,
 				88BABABD2B62932C001FA0A4 /* CachedImageView.swift */,
-				883CA8072B5AE47E00028D52 /* MenuView.swift */,
 				887DBB542BB6AC5A0012238A /* ClearAllVideosButton.swift */,
 				88DFC0B02B44843A001895C8 /* ContentView.swift */,
 				88BDC3A22B76A9BF00656D63 /* SetupView.swift */,
@@ -939,6 +959,7 @@
 				887AC8D62B49D0BE00512852 /* VideoPlacement.swift in Sources */,
 				8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */,
 				8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */,
+				883F41052BDECB5C00535952 /* InboxHasEntriesTip.swift in Sources */,
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
 				886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
@@ -981,6 +1002,7 @@
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */,
+				883D5E002BE0B95800989313 /* TabItemView.swift in Sources */,
 				88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */,
 				88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */,
 				887AC8CE2B4988D000512852 /* InboxView.swift in Sources */,
@@ -997,6 +1019,7 @@
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
 				88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */,
+				883D5DFC2BE0B8B900989313 /* TabRoute.swift in Sources */,
 				888C49C52B5FA75700CDEC76 /* UrlService.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */,
@@ -1055,6 +1078,7 @@
 				88D858592B55AC820047E0E6 /* YtErrorResponseBody.swift in Sources */,
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */,
+				883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */,
 				881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */,
 				88F1EE502B5D31D6009866A0 /* BrowserManager.swift in Sources */,
 				883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */,
@@ -1236,7 +1260,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 82;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1281,7 +1305,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 82;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;

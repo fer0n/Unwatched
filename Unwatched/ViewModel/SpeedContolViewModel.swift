@@ -6,7 +6,7 @@
 import Foundation
 
 class SpeedControlViewModel {
-    static let speeds: [Double] = [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
+    static let speeds: [Double] = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     var width: CGFloat = 0
     var itemWidth: CGFloat = 0
 

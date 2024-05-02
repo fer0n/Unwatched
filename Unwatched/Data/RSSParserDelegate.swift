@@ -113,7 +113,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 namespaceURI: String?,
                 qualifiedName qName: String?) {
         if elementName == "entry" {
-            let dateFormatter = ISO8601DateFormatter()
+            let dateFormatter = Date.iso8601Formatter
             if let publishedDate = dateFormatter.date(from: currentPublishedDate),
                let updatedDate = dateFormatter.date(from: currentUpdatedDate),
                let url = URL(string: currentLink),

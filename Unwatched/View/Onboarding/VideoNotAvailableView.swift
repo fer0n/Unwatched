@@ -9,9 +9,7 @@ import OSLog
 
 struct VideoNotAvailableView: View {
     @Environment(NavigationManager.self) private var navManager
-    @Environment(PlayerManager.self) private var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
-    @Environment(\.modelContext) var modelContext
 
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
@@ -96,7 +94,7 @@ struct VideoNotAvailableView: View {
         .overlay {
             dropOverlay
         }
-        .dropDestination(for: URL.self, action: handleUrlDrop, isTargeted: handleIsTargeted)
+        .handleVideoUrlDrop(.queue, isTargeted: handleIsTargeted)
         .ignoresSafeArea(.all)
         .onTapGesture {
             if !showTutorial {
@@ -138,14 +136,6 @@ struct VideoNotAvailableView: View {
         if sizeClass == .compact {
             navManager.showMenu = true
         }
-    }
-
-    func handleUrlDrop(_ items: [URL], at point: CGPoint) -> Bool {
-        Logger.log.info("handleUrlDrop \(items)")
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(items, in: .queue, at: 0, container: container)
-        player.loadTopmostVideoFromQueue(after: task)
-        return true
     }
 
     func handleIsTargeted(_ targeted: Bool) {

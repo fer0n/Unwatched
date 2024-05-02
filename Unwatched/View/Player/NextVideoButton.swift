@@ -45,12 +45,10 @@ struct CoreNextButton<Content>: View where Content: View {
         }
         .padding(3)
         .contextMenu {
-            if !manualNext {
-                Button {
-                    markVideoWatched(false, .userInteraction)
-                } label: {
-                    Label("nextVideo", systemImage: Const.nextVideoSF)
-                }
+            Button {
+                markVideoWatched(false, .userInteraction)
+            } label: {
+                Label("nextVideo", systemImage: Const.nextVideoSF)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
