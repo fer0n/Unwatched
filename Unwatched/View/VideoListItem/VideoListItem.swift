@@ -16,6 +16,7 @@ struct VideoListItem: View {
     @Environment(PlayerManager.self) private var player
 
     @State var showInfo = false
+    @State var page: ChapterDescriptionPage = .description
 
     let video: Video
     var config: VideoListItemConfig
@@ -74,21 +75,8 @@ struct VideoListItem: View {
                     video: video,
                     config: config))
         .sheet(isPresented: $showInfo) {
-            NavigationStack {
-                ScrollView {
-                    DescriptionDetailView(video: video)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button {
-                            showInfo = false
-                        } label: {
-                            Image(systemName: Const.clearSF)
-                        }
-                    }
-                }
-            }
-            .presentationDragIndicator(.visible)
+            ChapterDescriptionView(video: video, page: $page)
+                .presentationDragIndicator(.visible)
         }
     }
 }

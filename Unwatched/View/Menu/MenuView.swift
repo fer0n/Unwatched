@@ -18,7 +18,6 @@ struct MenuView: View {
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
-    @Query var queue: [QueueEntry]
     @Query(animation: .default) var inbox: [InboxEntry]
 
     var showCancelButton: Bool = false
@@ -29,8 +28,7 @@ struct MenuView: View {
         let tabs: [TabRoute] =
             [
                 TabRoute(
-                    view: AnyView(QueueView(inboxHasEntries: !inbox.isEmpty,
-                                            showCancelButton: showCancelButton)),
+                    view: AnyView(QueueView(showCancelButton: showCancelButton)),
                     image: Image(systemName: Const.queueTagSF),
                     text: "queue",
                     tag: NavigationTab.queue,
@@ -68,20 +66,7 @@ struct MenuView: View {
             }) {
                 ForEach(tabs, id: \.tag) { tab in
                     if tab.show {
-                        tab.view
-                            .tabItem {
-                                tab.image
-                                    .environment(\.symbolVariants,
-                                                 navManager.tab == tab.tag
-                                                    ? .fill
-                                                    : .none)
-                                if tab.showBadge {
-                                    Text(verbatim: "●")
-                                } else if showTabBarLabels {
-                                    Text(tab.text)
-                                }
-                            }
-                            .tag(tab.tag)
+                        TabItemView(tab: tab)
                     }
                 }
             }
@@ -128,15 +113,6 @@ struct MenuView: View {
             UserDefaults.standard.set(false, forKey: Const.hasNewQueueItems)
         }
     }
-}
-
-struct TabRoute {
-    var view: AnyView
-    var image: Image
-    var text: LocalizedStringKey
-    var tag: NavigationTab
-    var showBadge: Bool = false
-    var show: Bool = true
 }
 
 #Preview {

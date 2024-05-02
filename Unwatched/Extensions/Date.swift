@@ -4,11 +4,20 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Date {
+    private static let formatter: DateFormatter = {
+        return DateFormatter()
+    }()
+
+    static let iso8601Formatter: ISO8601DateFormatter = {
+        return ISO8601DateFormatter()
+    }()
+
     var formatted: String {
         let calendar = Calendar.current
-        let formatter = DateFormatter()
+        let formatter = Date.formatter
 
         if calendar.isDateInToday(self) {
             formatter.dateFormat = "HH:mm"
@@ -16,7 +25,7 @@ extension Date {
         } else if calendar.isDateInLastWeek(self) {
             formatter.dateFormat = "EEE d"
             return formatter.string(from: self).uppercased()
-        } else if calendar.isDateInLastYear(self) {
+        } else if calendar.isDateInLastSixMonths(self) {
             formatter.dateFormat = "MMM d"
             return formatter.string(from: self).uppercased()
         } else {
@@ -39,9 +48,24 @@ extension Calendar {
         return date >= oneWeekAgo && date < currentDate
     }
 
+    func isDateInLastSixMonths(_ date: Date) -> Bool {
+        let currentDate = Date()
+        let sixMonthsAgo = self.date(byAdding: .month, value: -6, to: currentDate)!
+        return date >= sixMonthsAgo && date < currentDate
+    }
+
     func isDateInLastYear(_ date: Date) -> Bool {
         let currentDate = Date()
         let oneYearAgo = self.date(byAdding: .year, value: -1, to: currentDate)!
         return date >= oneYearAgo && date < currentDate
+    }
+}
+
+#Preview {
+    Group {
+        Text(Date.now.formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24).formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 7).formatted)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 365 * 2).formatted)
     }
 }
