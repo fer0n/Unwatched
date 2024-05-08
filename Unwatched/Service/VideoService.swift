@@ -185,10 +185,6 @@ struct VideoService {
         video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
     }
 
-    static func requiresFetchingVideoData(_ video: Video?) -> Bool {
-        return video?.title.isEmpty == true
-    }
-
     static func clearList(_ list: ClearList,
                           _ direction: ClearDirection,
                           index: Int?,
