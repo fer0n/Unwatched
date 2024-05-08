@@ -38,11 +38,11 @@ enum VideoSource {
         currentChapter = nil
         setVideoEnded(false)
         handleChapterChange()
-        guard video != nil else {
+        guard let video = video else {
             return
         }
 
-        if video != nil && video?.url == oldValue?.url {
+        if video.url == oldValue?.url {
             Logger.log.info("Tapped existing video")
             self.play()
             return
@@ -58,7 +58,7 @@ enum VideoSource {
     }
 
     func requiresFetchingVideoData() -> Bool {
-        VideoService.requiresFetchingVideoData(video)
+        video?.title.isEmpty == true
     }
 
     var isConsideredWatched: Bool {
