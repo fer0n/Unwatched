@@ -7,6 +7,7 @@ enum VideoSource {
     case nextUp
     case userInteraction
     case hotSwap
+    case errorSwap
 }
 
 @Observable class PlayerManager {
@@ -237,7 +238,7 @@ enum VideoSource {
             break
         case .userInteraction:
             play()
-        case .hotSwap:
+        case .hotSwap, .errorSwap:
             if previousIsPlaying {
                 play()
             }

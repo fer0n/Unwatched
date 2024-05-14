@@ -217,6 +217,9 @@ struct PlayerWebView: UIViewRepresentable {
         func handleError(_ payload: String?) {
             if payload == "150" {
                 withAnimation {
+                    parent.player.previousIsPlaying = parent.player.isPlaying
+                    parent.player.videoSource = .errorSwap
+
                     previousState.isPlaying = false
                     parent.player.pause()
                     parent.player.embeddingDisabled = true
