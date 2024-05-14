@@ -145,13 +145,14 @@ struct VideoService {
         video.duration = duration
     }
 
-    static func getTopVideoInQueue(_ modelContext: ModelContext) -> Video? {
+    static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {
         let sort = SortDescriptor<QueueEntry>(\.order)
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
         fetch.fetchLimit = 1
-        let videos = try? modelContext.fetch(fetch)
+        let context = ModelContext(container)
+        let videos = try? context.fetch(fetch)
         if let nextVideo = videos?.first {
-            return nextVideo.video
+            return nextVideo.video?.persistentModelID
         }
         return nil
     }
