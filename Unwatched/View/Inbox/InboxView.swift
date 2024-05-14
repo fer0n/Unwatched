@@ -31,33 +31,34 @@ struct InboxView: View {
                                            description: Text("noInboxItemsDescription"))
                         .contentShape(Rectangle())
                         .handleVideoUrlDrop(.inbox)
-                } else {
-                    List {
-                        swipeTipView
-                        ForEach(inboxEntries) { entry in
-                            ZStack {
-                                if let video = entry.video {
-                                    VideoListItem(
-                                        video,
-                                        config: VideoListItemConfig(
-                                            clearRole: .destructive,
-                                            queueRole: .destructive,
-                                            onChange: handleVideoChange,
-                                            clearAboveBelowList: .inbox
-                                        )
-                                    )
-                                }
-                            }
-                            .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
-                        }
-                        .handleVideoUrlDrop(.inbox)
-                        ClearAllVideosButton(clearAll: clearAll)
-                            .listRowSeparator(.hidden)
-                            .opacity(showClear ? 1 : 0)
-                            .disabled(!showClear)
-                    }
-                    .listStyle(.plain)
                 }
+                // Workaround: always have the list visible, this avoids a crash when adding the last inbox item to the queue and then moving the video on top of the queue
+                List {
+                    swipeTipView
+                    ForEach(inboxEntries) { entry in
+                        ZStack {
+                            if let video = entry.video {
+                                VideoListItem(
+                                    video,
+                                    config: VideoListItemConfig(
+                                        clearRole: .destructive,
+                                        queueRole: .destructive,
+                                        onChange: handleVideoChange,
+                                        clearAboveBelowList: .inbox
+                                    )
+                                )
+                            }
+                        }
+                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
+                    }
+                    .handleVideoUrlDrop(.inbox)
+                    ClearAllVideosButton(clearAll: clearAll)
+                        .listRowSeparator(.hidden)
+                        .opacity(showClear ? 1 : 0)
+                        .disabled(!showClear)
+                }
+                .disabled(inboxEntries.isEmpty)
+                .listStyle(.plain)
             }
             .onAppear {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")

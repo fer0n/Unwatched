@@ -26,32 +26,33 @@ struct QueueView: View {
                 if queue.isEmpty {
                     contentUnavailable
                     InboxHasEntriesTip()
-                } else {
-                    List {
-                        ForEach(queue) { entry in
-                            ZStack {
-                                if let video = entry.video {
-                                    VideoListItem(
-                                        video,
-                                        config: VideoListItemConfig(
-                                            videoDuration: video.duration,
-                                            clearRole: .destructive,
-                                            onChange: handleVideoChange,
-                                            clearAboveBelowList: .queue
-                                        )
+                }
+                // Potential Workaround: always showing the list might avoid a crash
+                List {
+                    ForEach(queue) { entry in
+                        ZStack {
+                            if let video = entry.video {
+                                VideoListItem(
+                                    video,
+                                    config: VideoListItemConfig(
+                                        videoDuration: video.duration,
+                                        clearRole: .destructive,
+                                        onChange: handleVideoChange,
+                                        clearAboveBelowList: .queue
                                     )
-                                }
+                                )
                             }
-                            .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
                         }
-                        .onMove(perform: moveQueueEntry)
-                        .handleVideoUrlDrop(.queue)
-                        if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
-                            ClearAllVideosButton(clearAll: clearAll)
-                                .listRowSeparator(.hidden)
-                        }
+                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
+                    }
+                    .onMove(perform: moveQueueEntry)
+                    .handleVideoUrlDrop(.queue)
+                    if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
+                        ClearAllVideosButton(clearAll: clearAll)
+                            .listRowSeparator(.hidden)
                     }
                 }
+                .disabled(queue.isEmpty)
             }
             .navigationTitle("queue")
             .navigationBarTitleDisplayMode(.inline)
