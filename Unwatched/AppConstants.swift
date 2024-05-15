@@ -92,6 +92,7 @@ struct Const {
 
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     static let allVideosSortOrder = "allVideosSortOrder"
+    static let sideloadingSortOrder = "sideloadingSortOrder"
     static let hasNewInboxItems = "hasNewInboxItems"
     static let hasNewQueueItems = "hasNewQueueItems"
     static let showTabBarBadge = "showTabBarBadge"
