@@ -9,6 +9,7 @@ struct AllVideosView: View {
 
     @Query(animation: .default) var videos: [Video]
     @State var text = DebouncedText(0.5)
+    let sortingOptions: [VideoSorting] = [.publishedDate, .clearedInboxDate]
 
     var body: some View {
         ZStack {
@@ -36,7 +37,7 @@ struct AllVideosView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    ForEach(VideoSorting.allCases, id: \.self) { sort in
+                    ForEach(sortingOptions, id: \.self) { sort in
                         Button {
                             allVideosSortOrder = sort
                         } label: {

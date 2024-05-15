@@ -25,6 +25,7 @@ struct SendableVideo: Sendable, Codable {
     var videoDescription: String?
     var bookmarkedDate: Date?
     var clearedInboxDate: Date?
+    var createdDate: Date?
 
     func createVideo(
         title: String? = nil,
@@ -62,7 +63,8 @@ struct SendableVideo: Sendable, Codable {
             isYtShort: ytShortsInfo.isShort,
             isLikelyYtShort: ytShortsInfo.isLikelyShort,
             bookmarkedDate: self.bookmarkedDate,
-            clearedInboxDate: self.clearedInboxDate
+            clearedInboxDate: self.clearedInboxDate,
+            createdDate: self.createdDate
         )
     }
 
@@ -82,7 +84,8 @@ struct SendableVideo: Sendable, Codable {
         watched: Bool = false,
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
-        clearedInboxDate: Date? = nil
+        clearedInboxDate: Date? = nil,
+        createdDate: Date? = .now
     ) {
         self.persistendId = persistendId
         self.youtubeId = youtubeId
@@ -100,6 +103,7 @@ struct SendableVideo: Sendable, Codable {
         self.videoDescription = videoDescription
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
+        self.createdDate = createdDate
     }
 
     init(from decoder: Decoder) throws {
@@ -119,6 +123,7 @@ struct SendableVideo: Sendable, Codable {
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
         clearedInboxDate = try container.decodeIfPresent(Date.self, forKey: .clearedInboxDate)
+        createdDate = try container.decodeIfPresent(Date.self, forKey: .createdDate)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -140,6 +145,7 @@ struct SendableVideo: Sendable, Codable {
         try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
         try container.encodeIfPresent(bookmarkedDate, forKey: .bookmarkedDate)
         try container.encodeIfPresent(clearedInboxDate, forKey: .clearedInboxDate)
+        try container.encodeIfPresent(createdDate, forKey: .createdDate)
     }
 }
 
@@ -159,4 +165,5 @@ enum SendableVideoCodingKeys: String, CodingKey {
     case videoDescription
     case bookmarkedDate
     case clearedInboxDate
+    case createdDate
 }
