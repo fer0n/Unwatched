@@ -58,8 +58,10 @@ struct VideoListItem: View {
         .padding([.vertical, .leading], config.showVideoStatus ? -5 : 0)
         .contentShape(Rectangle())
         .onTapGesture {
+            Task {
+                _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+            }
             player.playVideo(video)
-            _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
             if hideMenuOnPlay {
                 withAnimation {
                     navManager.showMenu = false
