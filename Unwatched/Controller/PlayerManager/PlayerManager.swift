@@ -26,7 +26,7 @@ enum VideoSource {
     @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
 
-    weak var video: Video? {
+    var video: Video? {
         didSet {
             handleNewVideoSet(oldValue)
         }
