@@ -1,0 +1,12 @@
+//
+//  apiKey.swift
+//  Unwatched
+//
+
+import Foundation
+
+struct Credentials {
+    static var apiKey: String? {
+        return "YouTubeDataApiKeyHere"
+    }
+}
