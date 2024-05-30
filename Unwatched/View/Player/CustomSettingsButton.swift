@@ -20,7 +20,7 @@ struct CustomSettingsButton: View {
         })) {
             Image(systemName: "lock")
         }
-        .help("customSpeedSettings")
+        .help("customSpeedSetting")
         .toggleStyle(OutlineToggleStyle(isSmall: true))
         .disabled(player.video?.subscription == nil)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
