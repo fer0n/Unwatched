@@ -833,18 +833,18 @@
         }
       }
     },
-    "customSpeedSettings" : {
+    "customSpeedSetting" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Benutzerdefinierte Geschwindigkeitseinstellung für dieses Abo"
+            "value" : "Benutzerdefinierte Geschwindigkeit"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Custom speed setting for this subscription"
+            "value" : "Custom Speed"
           }
         }
       }

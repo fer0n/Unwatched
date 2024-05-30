@@ -11,7 +11,6 @@ struct SubscriptionInfoDetails: View {
     @Environment(\.modelContext) var modelContext
 
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1
 
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
@@ -62,7 +61,7 @@ struct SubscriptionInfoDetails: View {
 
                 ScrollView(.horizontal) {
                     HStack {
-                        speedSetting
+                        SubscriptionSpeedSetting(subscription: subscription)
                             .buttonStyle(CapsuleButtonStyle())
 
                         CapsulePicker(selection: $subscription.placeVideosIn, label: {
@@ -160,28 +159,6 @@ struct SubscriptionInfoDetails: View {
                 Text(subscription.isArchived
                         ? String(localized: "subscribe")
                         : String(localized: "subscribed"))
-            }
-            .padding(10)
-        }
-    }
-
-    var speedSetting: some View {
-        Menu {
-            ForEach(Array(SpeedControlViewModel.speeds), id: \.self) { speed in
-                Button {
-                    subscription.customSpeedSetting = speed
-                } label: {
-                    Text(SpeedControlViewModel.formatSpeed(speed))
-                }
-            }
-        } label: {
-            HStack {
-                Image(systemName: "timer")
-                if let custom = subscription.customSpeedSetting {
-                    Text(verbatim: "\(SpeedControlViewModel.formatSpeed(custom))×")
-                } else {
-                    Text("defaultSpeed\(SpeedControlViewModel.formatSpeed(playbackSpeed))")
-                }
             }
             .padding(10)
         }
