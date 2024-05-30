@@ -40,6 +40,13 @@ struct CorePlayButton<Content>: View where Content: View {
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .contextMenu {
+            Button {
+                player.restartVideo()
+            } label: {
+                Label("restartVideo", systemImage: "restart")
+            }
+        }
     }
 }
 
