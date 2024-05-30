@@ -2495,6 +2495,22 @@
         }
       }
     },
+    "restartVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video neu starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Video"
+          }
+        }
+      }
+    },
     "restoreBackup" : {
       "localizations" : {
         "de" : {

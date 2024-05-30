@@ -155,13 +155,17 @@ enum VideoSource {
 
     func handlePlayButton() {
         if videoEnded {
-            seekPosition = 0
-            play()
+            restartVideo()
         } else if isPlaying {
             pause()
         } else {
             play()
         }
+    }
+
+    func restartVideo() {
+        seekPosition = 0
+        play()
     }
 
     func setVideoEnded(_ value: Bool) {
