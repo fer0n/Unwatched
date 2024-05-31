@@ -40,8 +40,14 @@ struct SettingsView: View {
             }
 
             Section {
+                Link(destination: UrlService.writeReviewUrl) {
+                    LibraryNavListItem("rateUnwatched", systemName: "star.fill")
+                }
                 Link(destination: UrlService.emailUrl) {
                     LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
+                }
+                Link(destination: UrlService.githubUrl) {
+                    LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
                 }
             }
 
