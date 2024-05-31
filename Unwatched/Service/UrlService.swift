@@ -15,7 +15,7 @@ struct UrlService {
     static let youtubeTakeoutUrl = URL(string: "https://takeout.google.com/takeout/custom/youtube")!
 
     static func getEmbeddedYoutubeUrl (_ youtubeId: String) -> String {
-        "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&controls=1&color=white&iv_load_policy=3"
+        "https://www.youtube-nocookie.com/embed/\(youtubeId)?enablejsapi=1&controls=1&color=white&iv_load_policy=3"
     }
 
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
