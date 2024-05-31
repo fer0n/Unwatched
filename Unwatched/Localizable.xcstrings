@@ -2399,6 +2399,22 @@
         }
       }
     },
+    "rateUnwatched" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Bewerten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please Rate Unwatched"
+          }
+        }
+      }
+    },
     "recentlyAdded" : {
       "localizations" : {
         "de" : {
@@ -3126,6 +3142,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched"
+          }
+        }
+      }
+    },
+    "unwatchedOnGithub" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched auf GitHub"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched on GitHub"
           }
         }
       }
