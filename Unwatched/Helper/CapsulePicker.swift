@@ -6,22 +6,26 @@
 import Foundation
 import SwiftUI
 
-struct CapsulePicker<T: CaseIterable & Hashable>: View where T.AllCases.Element == T {
+struct CapsulePicker<T: Hashable>: View {
     @Binding var selection: T
+    var options: [T]
     var label: (T) -> (text: String, image: String)
 
     var body: some View {
         Menu {
-            ForEach(Array(T.allCases), id: \.self) { placement in
+            ForEach(options, id: \.self) { option in
                 Button {
-                    selection = placement
+                    withAnimation {
+                        selection = option
+                    }
                 } label: {
-                    let (text, image) = label(placement)
+                    let (text, image) = label(option)
                     HStack {
                         Image(systemName: image)
                         Text(text)
                     }
                 }
+                .disabled(selection == option)
             }
         } label: {
             let (text, image) = label(selection)

@@ -203,6 +203,16 @@
         }
       }
     },
+    "addToInboxShort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox"
+          }
+        }
+      }
+    },
     "addToQueue" : {
       "localizations" : {
         "de" : {
@@ -215,6 +225,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add to Queue"
+          }
+        }
+      }
+    },
+    "addToQueueShort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
           }
         }
       }
@@ -913,6 +933,16 @@
         }
       }
     },
+    "defaultAspectRatio (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@)"
+          }
+        }
+      }
+    },
     "defaultSpeed%@" : {
       "localizations" : {
         "de" : {
@@ -925,6 +955,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Default (%@×)"
+          }
+        }
+      }
+    },
+    "defaultVideoPlacement %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@)"
           }
         }
       }
@@ -1005,6 +1045,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Do Nothing"
+          }
+        }
+      }
+    },
+    "doNothingShort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing"
           }
         }
       }

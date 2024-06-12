@@ -13,9 +13,11 @@ struct PlaybackSettingsView: View {
 
     var body: some View {
         Form {
-            Section(footer: Text("showFullscreenControlsHelper")) {
-                Toggle(isOn: $showFullscreenControls) {
-                    Text("showFullscreenControls")
+            if UIDevice.supportsFullscreenControls {
+                Section(footer: Text("showFullscreenControlsHelper")) {
+                    Toggle(isOn: $showFullscreenControls) {
+                        Text("showFullscreenControls")
+                    }
                 }
             }
 
@@ -34,6 +36,7 @@ struct PlaybackSettingsView: View {
                     Text("startVideosInFullscreen")
                 }
             }
+
         }
         .navigationTitle("playback")
     }

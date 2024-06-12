@@ -21,6 +21,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
     var isArchived: Bool = false
 
     var customSpeedSetting: Double?
+    var customAspectRatio: Double?
     var mostRecentVideoDate: Date?
 
     var youtubeChannelId: String?
@@ -47,6 +48,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
          isArchived: Bool = false,
 
          customSpeedSetting: Double? = nil,
+         customAspectRatio: Double? = nil,
          mostRecentVideoDate: Date? = nil,
          youtubeChannelId: String? = nil,
          youtubePlaylistId: String? = nil,
@@ -100,6 +102,7 @@ struct SendableSubscription: Sendable, Codable, Hashable {
     var isArchived: Bool = false
 
     var customSpeedSetting: Double?
+    var customAspectRatio: Double?
     var mostRecentVideoDate: Date?
     var youtubeChannelId: String?
     var youtubePlaylistId: String?
@@ -128,6 +131,7 @@ struct SendableSubscription: Sendable, Codable, Hashable {
             placeVideosIn: placeVideosIn,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
+            customAspectRatio: customAspectRatio,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
             youtubePlaylistId: youtubePlaylistId,
@@ -145,6 +149,7 @@ struct SendableSubscription: Sendable, Codable, Hashable {
              placeVideosIn,
              isArchived,
              customSpeedSetting,
+             customAspectRatio,
              mostRecentVideoDate,
              youtubeChannelId,
              youtubePlaylistId,

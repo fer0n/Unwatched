@@ -17,7 +17,12 @@ struct Const {
     static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
     static let tapDestination = "tapDestination"
-    static let videoAspectRatio: CGFloat = 16 / 9
+    static let defaultVideoAspectRatio: Double = 16/9
+    static let videoAspectRatios: [Double] = [18/9, 16/9, 4/3]
+    static let consideredWideAspectRatio: Double = 18/9
+
+    static let highlightedPlaybackSpeeds = [1, 1.5, 2]
+    static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
 
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5

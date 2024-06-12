@@ -12,7 +12,14 @@ import OSLog
     // Sheet animation and height detection
     var swipedBelow: Bool = true
     var playerControlHeight: CGFloat = .zero
-    @ObservationIgnored var selectedDetent: PresentationDetent?
+    @ObservationIgnored var debouncedPlayerControlHeight: CGFloat = .zero
+    @ObservationIgnored var selectedDetent: PresentationDetent? {
+        didSet {
+            if isMiniPlayer {
+                updatePlayerControlHeight()
+            }
+        }
+    }
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
     @ObservationIgnored var hadMenuOpen: Bool = false
@@ -26,6 +33,19 @@ import OSLog
             sheetPos.selectedDetent = detent
         }
         return sheetPos
+    }
+
+    func setPlayerControlHeight(_ height: CGFloat) {
+        debouncedPlayerControlHeight = height
+        if playerControlHeight == .zero || !isVideoPlayer {
+            playerControlHeight = height
+        }
+    }
+
+    func updatePlayerControlHeight() {
+        if playerControlHeight != debouncedPlayerControlHeight {
+            playerControlHeight = debouncedPlayerControlHeight
+        }
     }
 
     func save() {

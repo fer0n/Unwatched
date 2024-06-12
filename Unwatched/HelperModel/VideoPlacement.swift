@@ -16,7 +16,7 @@ enum VideoPlacement: Int, Codable, CaseIterable {
         case .inbox: return String(localized: "addToInbox")
         case .queue: return String(localized: "addToQueue")
         case .nothing: return String(localized: "doNothing")
-        case .defaultPlacement: return String(localized: "useDefault") + " (\(defaultPlacement))"
+        case .defaultPlacement: return String(localized: "defaultVideoPlacement \(defaultPlacement)")
         }
     }
 
@@ -25,6 +25,15 @@ enum VideoPlacement: Int, Codable, CaseIterable {
         case .inbox: return String(localized: "addToInbox")
         case .queue: return String(localized: "addToQueue")
         case .nothing: return String(localized: "doNothing")
+        case .defaultPlacement: return String(localized: "useDefault")
+        }
+    }
+
+    var shortDescription: String {
+        switch self {
+        case .inbox: return String(localized: "addToInboxShort")
+        case .queue: return String(localized: "addToQueueShort")
+        case .nothing: return String(localized: "doNothingShort")
         case .defaultPlacement: return String(localized: "useDefault")
         }
     }

@@ -19,7 +19,7 @@ struct SubscriptionInfoDetails: View {
         VStack(alignment: .leading) {
             headerDetails
 
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     subscribeButton
                         .buttonStyle(CapsuleButtonStyle())
@@ -59,19 +59,26 @@ struct SubscriptionInfoDetails: View {
                     .padding(.horizontal)
                     .padding(.leading, 10)
 
-                ScrollView(.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         SubscriptionSpeedSetting(subscription: subscription)
                             .buttonStyle(CapsuleButtonStyle())
 
-                        CapsulePicker(selection: $subscription.placeVideosIn, label: {
-                            let text = $0.description
-                            let img = $0.systemName
-                                ?? defaultVideoPlacement.systemName
-                                ?? "questionmark"
-                            return (text, img)
-                        })
-                        .disabled(subscription.isArchived)
+                        CapsulePicker(
+                            selection: $subscription.placeVideosIn,
+                            options: VideoPlacement.allCases,
+                            label: {
+                                let text = $0.description(defaultPlacement: defaultVideoPlacement.shortDescription)
+                                let img = $0.systemName
+                                    ?? defaultVideoPlacement.systemName
+                                    ?? "questionmark"
+                                return (text, img)
+                            })
+                            .disabled(subscription.isArchived)
+
+                        AspectRatioPicker(subscription: subscription)
+                            .disabled(subscription.isArchived)
+
                         Spacer()
                     }
                     .padding(.horizontal)
