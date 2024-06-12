@@ -6,12 +6,11 @@
 import Foundation
 
 class SpeedControlViewModel {
-    static let speeds: [Double] = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     var width: CGFloat = 0
     var itemWidth: CGFloat = 0
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
-        let itemWidth = width / CGFloat(Self.speeds.count)
+        let itemWidth = width / CGFloat(Const.speeds.count)
         var calculatedIndex: Int {
             let res = round((pos / itemWidth) - 0.5)
             if res.isNaN || res.isInfinite {
@@ -19,13 +18,13 @@ class SpeedControlViewModel {
             }
             return Int(res)
         }
-        let index = max(0, min(calculatedIndex, Self.speeds.count - 1))
-        let speed = Self.speeds[index]
+        let index = max(0, min(calculatedIndex, Const.speeds.count - 1))
+        let speed = Const.speeds[index]
         return speed
     }
 
     func getXPos(_ fullWidth: CGFloat, _ speed: Double) -> CGFloat {
-        let selectedSpeedIndex = Self.speeds.firstIndex(of: speed) ?? 0
+        let selectedSpeedIndex = Const.speeds.firstIndex(of: speed) ?? 0
         return (CGFloat(selectedSpeedIndex) * itemWidth) + (itemWidth / 2)
     }
 

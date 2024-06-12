@@ -28,7 +28,7 @@ struct MiniPlayerView: View {
                     } placeholder: {
                         Color.backgroundColor
                     }
-                    .aspectRatio(Const.videoAspectRatio, contentMode: .fit)
+                    .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
                     .clipShape(.rect(cornerRadius: 10))
 
                     Text(video.title)

@@ -14,7 +14,7 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
+    @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
 
     @GestureState private var dragState: CGFloat = 0
@@ -30,12 +30,16 @@ struct VideoPlayer: View {
     @State var sleepTimerVM = SleepTimerViewModel()
 
     var landscapeFullscreen = true
+    let hasWiderAspectRatio = true
 
     var body: some View {
         @Bindable var player = player
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 25))
             : AnyLayout(VStackLayout(spacing: 25))
+        let videoAspectRatio = player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
+        let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
+        let showFullscreenControls = showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
 
         VStack(spacing: 0) {
             if player.video != nil {
@@ -53,16 +57,22 @@ struct VideoPlayer: View {
                             ), startPoint: .top, endPoint: .bottom))
                     } else {
                         PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
-                            .aspectRatio(Const.videoAspectRatio, contentMode: .fit)
+                            .aspectRatio(videoAspectRatio, contentMode: .fit)
                             .frame(maxHeight: landscapeFullscreen ? .infinity : nil)
                             .frame(maxWidth: !landscapeFullscreen ? .infinity : nil)
                     }
 
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControls(markVideoWatched: markVideoWatched)
+                            .frame(width: wideAspect ? 0 : nil)
+                            .offset(x: wideAspect ? 10 : 0)
+                            .fullscreenSafeArea(enable: wideAspect, onlyOffsetRight: true)
                     }
                 }
-                .frame(maxWidth: !showFullscreenControls ? .infinity : nil)
+                .frame(maxWidth: !showFullscreenControls || wideAspect
+                        ? .infinity
+                        : nil)
+                .fullscreenSafeArea(enable: wideAspect)
                 // force reload if value changed (requires settings update)
                 .id("videoPlayer-\(playVideoFullscreen)")
                 .onChange(of: playVideoFullscreen) {
@@ -71,7 +81,7 @@ struct VideoPlayer: View {
             } else {
                 Rectangle()
                     .fill(Color.backgroundColor)
-                    .aspectRatio(Const.videoAspectRatio, contentMode: .fit)
+                    .aspectRatio(videoAspectRatio, contentMode: .fit)
                     .frame(maxWidth: .infinity)
             }
 
@@ -131,7 +141,7 @@ struct VideoPlayer: View {
                     }
                 }
                 .innerSizeTrackerModifier(onChange: { size in
-                    sheetPos.playerControlHeight = size.height
+                    sheetPos.setPlayerControlHeight(size.height)
                 })
             }
         }
@@ -150,6 +160,11 @@ struct VideoPlayer: View {
         )
         .onChange(of: player.video?.subscription) {
             // workaround to update ui, doesn't work without
+        }
+        .onChange(of: navManager.showMenu) {
+            if navManager.showMenu == false {
+                sheetPos.updatePlayerControlHeight()
+            }
         }
         .onChange(of: player.isPlaying) {
             if hasNewQueueItems == true && navManager.showMenu && player.isPlaying && navManager.tab == .queue {

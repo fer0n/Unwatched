@@ -15,7 +15,7 @@ struct SpeedControlView: View {
 
     @Binding var selectedSpeed: Double
 
-    let highlighted: [Double] = [1, 1.5, 2]
+    let highlighted: [Double] = Const.highlightedPlaybackSpeeds
     static let padding: CGFloat = 0
     static let maxHeight: CGFloat = 40
     static let midY: CGFloat = SpeedControlView.maxHeight / 2
@@ -30,7 +30,7 @@ struct SpeedControlView: View {
                 .frame(maxWidth: .infinity)
 
             HStack(spacing: 0) {
-                ForEach(SpeedControlViewModel.speeds, id: \.self) { speed in
+                ForEach(Const.speeds, id: \.self) { speed in
                     let isHightlighted = highlighted.contains(speed)
                     let frameSize: CGFloat = 5
                     let foregroundColor: Color = .foregroundGray
@@ -67,7 +67,7 @@ struct SpeedControlView: View {
             }
             .onPreferenceChange(SpeedPreferenceKey.self) { minY in
                 viewModel.width = minY.width
-                viewModel.itemWidth = viewModel.width / CGFloat(SpeedControlViewModel.speeds.count)
+                viewModel.itemWidth = viewModel.width / CGFloat(Const.speeds.count)
                 controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
             }
             .padding(.horizontal, SpeedControlView.padding)

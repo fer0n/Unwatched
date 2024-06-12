@@ -138,6 +138,7 @@ struct FullscreenPlayerControls: View {
         .opacity(0.6)
         .padding(.vertical)
         .foregroundStyle(Color.neutralAccentColor)
+        .frame(minWidth: 35)
     }
 
     var currentRemaining: String? {
@@ -173,6 +174,6 @@ struct PlayerControlButtonStyle: ViewModifier {
             }
         }
         .opacity(isEnabled ? 1 : 0.3)
-        .padding(10)
+        .padding(3)
     }
 }
