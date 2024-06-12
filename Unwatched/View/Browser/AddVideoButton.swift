@@ -8,14 +8,24 @@ import SwiftUI
 struct AddVideoButton: View {
     @State var avm = AddVideoViewModel()
     @Environment(\.modelContext) var modelContext
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
-    var videoUrl: URL
+    @State var showHelp = false
+
+    var videoUrl: URL?
     var size: Double = 20
 
     var body: some View {
+        let showDropArea = avm.isDragOver || avm.isLoading || avm.isSuccess != nil
+        let backgroundSize = showDropArea ? 6 * size : 2 * size
+
         Button {
-            Task {
-                await avm.addUrls([videoUrl])
+            if let videoUrl = videoUrl {
+                Task {
+                    await avm.addUrls([videoUrl])
+                }
+            } else {
+                showHelp = true
             }
         } label: {
             ZStack {
@@ -26,7 +36,9 @@ struct AddVideoButton: View {
                             ? "checkmark"
                             : avm.isSuccess == false
                             ? "xmark"
-                            : "text.insert")
+                            : videoUrl != nil || showDropArea
+                            ? "text.insert"
+                            : "circle.circle")
                         .resizable()
                         .scaledToFit()
                         .fontWeight(.semibold)
@@ -37,11 +49,26 @@ struct AddVideoButton: View {
             .frame(width: size, height: size)
             .padding(7)
         }
+        .dropDestination(for: URL.self) { items, _ in
+            Task {
+                await avm.addUrls(items)
+            }
+            return true
+        } isTargeted: { targeted in
+            withAnimation {
+                avm.isDragOver = targeted
+            }
+        }
         .foregroundStyle(Color.backgroundColor)
         .background {
             Circle()
-                .fill(Color.neutralAccentColor)
-                .frame(width: 2 * size, height: 2 * size)
+                .fill(showDropArea ? theme.color : Color.neutralAccentColor)
+                .frame(width: backgroundSize, height: backgroundSize)
+        }
+        .popover(isPresented: $showHelp) {
+            Text("dropVideosTip")
+                .padding()
+                .presentationCompactAdaptation(.popover)
         }
         .onAppear {
             avm.container = modelContext.container

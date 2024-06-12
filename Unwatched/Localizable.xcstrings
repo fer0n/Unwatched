@@ -205,6 +205,12 @@
     },
     "addToInboxShort" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -231,6 +237,12 @@
     },
     "addToQueueShort" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -935,6 +947,12 @@
     },
     "defaultAspectRatio (%@)" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard (%@)"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -948,7 +966,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default (%@×)"
+            "value" : "Standard (%@×)"
           }
         },
         "en" : {
@@ -961,6 +979,12 @@
     },
     "defaultVideoPlacement %@" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard (%@)"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1051,6 +1075,12 @@
     },
     "doNothingShort" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1103,6 +1133,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drop Video"
+          }
+        }
+      }
+    },
+    "dropVideosTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos hier ablegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop videos here"
           }
         }
       }

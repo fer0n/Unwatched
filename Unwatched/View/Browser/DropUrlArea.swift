@@ -44,7 +44,6 @@ struct DropUrlArea<Content: View>: View {
             }
             return true
         } isTargeted: { targeted in
-            print("targeted", targeted)
             withAnimation {
                 avm.isDragOver = targeted
             }

@@ -32,19 +32,18 @@ struct BrowserView: View, KeyboardReadable {
         GeometryReader { geometry in
             VStack {
                 if showHeader {
-                    DropUrlArea {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.down")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .padding(7)
-                                .frame(maxWidth: .infinity)
-                                .fontWeight(.semibold)
-                        }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.down")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .padding(7)
+                            .frame(maxWidth: .infinity)
+                            .fontWeight(.semibold)
                     }
+                    .foregroundStyle(Color.neutralAccentColor)
                 }
 
                 ZStack {
@@ -58,22 +57,27 @@ struct BrowserView: View, KeyboardReadable {
                                 TipView(ytBrowserTip)
                                     .padding(.horizontal)
                             }
-                            if let text = subscriptionText, !isKeyboardVisible {
-                                addSubButton(text)
-                                    .popoverTip(addButtonTip, arrowEdge: .bottom)
-                                    .disabled(subscribeManager.isLoading)
-                                Spacer()
-                                    .frame(height: browserManager.isMobileVersion ? 60 : 0)
-                            } else if let videoUrl = browserManager.videoUrl {
+
+                            ZStack {
+                                if let text = subscriptionText, !isKeyboardVisible {
+                                    addSubButton(text)
+                                        .popoverTip(addButtonTip, arrowEdge: .bottom)
+                                        .disabled(subscribeManager.isLoading)
+                                }
+
                                 HStack {
                                     Spacer()
-                                    AddVideoButton(videoUrl: videoUrl)
+                                    AddVideoButton(videoUrl: browserManager.videoUrl)
                                         .padding(20)
                                 }
-                                .frame(maxWidth: .infinity)
                             }
+                            .frame(maxWidth: .infinity)
+
                             Spacer()
-                                .frame(height: safeArea ? geometry.safeAreaInsets.bottom : 0)
+                                .frame(height:
+                                        (browserManager.isMobileVersion ? 60 : 0)
+                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
+                                )
                         }
                     }
                 }
