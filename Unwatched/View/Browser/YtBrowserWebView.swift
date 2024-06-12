@@ -165,11 +165,7 @@ struct YtBrowserWebView: UIViewRepresentable {
         }
 
         func handleVideoUrl(_ url: URL) {
-            if UrlService.getYoutubeIdFromUrl(url: url) != nil {
-                parent.browserManager.videoUrl = url
-            } else {
-                parent.browserManager.videoUrl = nil
-            }
+            parent.browserManager.videoUrl = url
         }
 
         func getNewPlaylistId(_ url: URL) -> String? {

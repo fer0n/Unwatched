@@ -12,17 +12,18 @@ struct AddVideoButton: View {
 
     @State var showHelp = false
 
-    var videoUrl: URL?
+    var youtubeUrl: URL?
     var size: Double = 20
 
     var body: some View {
-        let showDropArea = avm.isDragOver || avm.isLoading || avm.isSuccess != nil
         let backgroundSize = showDropArea ? 6 * size : 2 * size
 
         Button {
-            if let videoUrl = videoUrl {
+            if isVideoUrl || isPlaylistUrl {
                 Task {
-                    await avm.addUrls([videoUrl])
+                    if let youtubeUrl = youtubeUrl {
+                        await avm.addUrls([youtubeUrl])
+                    }
                 }
             } else {
                 showHelp = true
@@ -36,14 +37,13 @@ struct AddVideoButton: View {
                             ? "checkmark"
                             : avm.isSuccess == false
                             ? "xmark"
-                            : videoUrl != nil || showDropArea
+                            : isVideoUrl || isPlaylistUrl || showDropArea
                             ? "text.insert"
                             : "circle.circle")
                         .resizable()
                         .scaledToFit()
                         .fontWeight(.semibold)
                         .contentTransition(.symbolEffect(.replace))
-
                 }
             }
             .frame(width: size, height: size)
@@ -74,8 +74,26 @@ struct AddVideoButton: View {
             avm.container = modelContext.container
         }
     }
+
+    var showDropArea: Bool {
+        avm.isDragOver || avm.isLoading || avm.isSuccess != nil
+    }
+
+    var isVideoUrl: Bool {
+        if let url = youtubeUrl {
+            return UrlService.getYoutubeIdFromUrl(url: url) != nil
+        }
+        return false
+    }
+
+    var isPlaylistUrl: Bool {
+        if let url = youtubeUrl {
+            return UrlService.getPlaylistIdFromUrl(url) != nil
+        }
+        return false
+    }
 }
 
 #Preview {
-    AddVideoButton(videoUrl: URL(string: "www.google.com")!)
+    AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
 }
