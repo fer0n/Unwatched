@@ -74,10 +74,8 @@ struct SubscriptionInfoDetails: View {
                                     ?? "questionmark"
                                 return (text, img)
                             })
-                            .disabled(subscription.isArchived)
 
                         AspectRatioPicker(subscription: subscription)
-                            .disabled(subscription.isArchived)
 
                         Spacer()
                     }
