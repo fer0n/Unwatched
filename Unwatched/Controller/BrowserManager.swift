@@ -8,6 +8,7 @@ import WebKit
 
 @Observable class BrowserManager {
     var info: SubscriptionInfo?
+    var videoUrl: URL?
 
     var desktopUserName: String?
     var firstPageLoaded = false

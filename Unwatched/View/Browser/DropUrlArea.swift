@@ -6,15 +6,12 @@
 import Foundation
 import SwiftUI
 import OSLog
+import SwiftData
 
 struct DropUrlArea<Content: View>: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @Environment(\.modelContext) var modelContext
-
-    @State var isDragOver = false
-    @State var isLoading = false
-    @State var isSuccess: Bool?
-    @State var droppedUrls = [URL]()
+    @State var avm = AddVideoViewModel()
 
     let content: Content
 
@@ -23,7 +20,7 @@ struct DropUrlArea<Content: View>: View {
     }
 
     var body: some View {
-        let showDropArea = isDragOver || isLoading || isSuccess != nil
+        let showDropArea = avm.isDragOver || avm.isLoading || avm.isSuccess != nil
 
         VStack {
             if showDropArea {
@@ -42,23 +39,22 @@ struct DropUrlArea<Content: View>: View {
         .background(showDropArea ? theme.color : .clear)
         .tint(.neutralAccentColor)
         .dropDestination(for: URL.self) { items, _ in
-            droppedUrls = items
+            Task {
+                await avm.addUrls(items)
+            }
             return true
         } isTargeted: { targeted in
             print("targeted", targeted)
             withAnimation {
-                isDragOver = targeted
+                avm.isDragOver = targeted
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: showDropArea)
-        .task(id: isSuccess) {
-            await handleSuccessChange()
+        .task(id: avm.isSuccess) {
+            await avm.handleSuccessChange()
         }
-        .task(id: droppedUrls) {
-            guard !droppedUrls.isEmpty else {
-                return
-            }
-            await handleUrlDrop(droppedUrls)
+        .onAppear {
+            avm.container = modelContext.container
         }
     }
 
@@ -66,14 +62,14 @@ struct DropUrlArea<Content: View>: View {
         ZStack {
             let size: CGFloat = 20
 
-            if isLoading {
+            if avm.isLoading {
                 ProgressView()
-            } else if isSuccess == true {
+            } else if avm.isSuccess == true {
                 Image(systemName: "checkmark")
                     .resizable()
                     .scaledToFit()
                     .frame(width: size, height: size)
-            } else if isSuccess == false {
+            } else if avm.isSuccess == false {
                 Image(systemName: "xmark")
                     .resizable()
                     .scaledToFit()
@@ -90,30 +86,5 @@ struct DropUrlArea<Content: View>: View {
             }
         }
         .foregroundStyle(.white)
-    }
-
-    @MainActor func handleUrlDrop(_ urls: [URL]) async {
-        Logger.log.info("handleUrlDrop inbox \(urls)")
-        withAnimation {
-            isLoading = true
-        }
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
-        let success: ()? = try? await task.value
-        withAnimation {
-            self.isSuccess = success != nil
-            self.isLoading = false
-        }
-    }
-
-    @MainActor func handleSuccessChange() async {
-        if isSuccess != nil {
-            do {
-                try await Task.sleep(s: 1)
-                withAnimation {
-                    isSuccess = nil
-                }
-            } catch {}
-        }
     }
 }
