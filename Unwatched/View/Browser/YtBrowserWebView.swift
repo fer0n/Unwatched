@@ -140,6 +140,7 @@ struct YtBrowserWebView: UIViewRepresentable {
             }
             Logger.log.info("URL changed: \(url)")
             handleIsMobilePage(url)
+            handleVideoUrl(url)
 
             if isFirstLoad { return }
 
@@ -161,6 +162,14 @@ struct YtBrowserWebView: UIViewRepresentable {
             Logger.log.info("--- forceReloadUrl")
             let request = URLRequest(url: url)
             webView.load(request)
+        }
+
+        func handleVideoUrl(_ url: URL) {
+            if UrlService.getYoutubeIdFromUrl(url: url) != nil {
+                parent.browserManager.videoUrl = url
+            } else {
+                parent.browserManager.videoUrl = nil
+            }
         }
 
         func getNewPlaylistId(_ url: URL) -> String? {

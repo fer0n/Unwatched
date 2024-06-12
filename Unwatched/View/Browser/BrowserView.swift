@@ -62,12 +62,18 @@ struct BrowserView: View, KeyboardReadable {
                                 addSubButton(text)
                                     .popoverTip(addButtonTip, arrowEdge: .bottom)
                                     .disabled(subscribeManager.isLoading)
+                                Spacer()
+                                    .frame(height: browserManager.isMobileVersion ? 60 : 0)
+                            } else if let videoUrl = browserManager.videoUrl {
+                                HStack {
+                                    Spacer()
+                                    AddVideoButton(videoUrl: videoUrl)
+                                        .padding(20)
+                                }
+                                .frame(maxWidth: .infinity)
                             }
                             Spacer()
-                                .frame(height: (
-                                        browserManager.isMobileVersion ? 60 : 0)
-                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
-                                )
+                                .frame(height: safeArea ? geometry.safeAreaInsets.bottom : 0)
                         }
                     }
                 }
