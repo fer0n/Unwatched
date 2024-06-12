@@ -67,7 +67,7 @@ struct BrowserView: View, KeyboardReadable {
 
                                 HStack {
                                     Spacer()
-                                    AddVideoButton(videoUrl: browserManager.videoUrl)
+                                    AddVideoButton(youtubeUrl: browserManager.videoUrl)
                                         .padding(20)
                                 }
                             }
