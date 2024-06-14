@@ -67,8 +67,8 @@ struct VideoCrawler {
     static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
         let input = description
         do {
-            let regexTimeThenTitle = try NSRegularExpression(pattern: #"\n(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)"#)
-            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)(?<!:)[-– :•]+\s?(\d+(?:\:\d+)+)"#)
+            let regexTimeThenTitle = try NSRegularExpression(pattern: #"\n\s*(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)"#)
+            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)"#)
 
             var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
             if chapters?.isEmpty == true || chapters == nil {
@@ -103,7 +103,7 @@ struct VideoCrawler {
                 let titleRange = Range(match.range(at: titleIndex), in: input)!
 
                 let timeString = String(input[timeRange])
-                let title = String(input[titleRange])
+                let title = String(input[titleRange]).trimmingCharacters(in: .whitespacesAndNewlines)
 
                 if let time = timeToSeconds(timeString) {
                     let chapter = SendableChapter(title: title, startTime: time)
