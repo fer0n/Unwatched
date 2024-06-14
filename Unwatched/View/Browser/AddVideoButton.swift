@@ -11,60 +11,73 @@ struct AddVideoButton: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State var showHelp = false
+    @State var showInsert = false
 
     var youtubeUrl: URL?
     var size: Double = 20
 
     var body: some View {
-        let backgroundSize = showDropArea ? 6 * size : 2 * size
+        let backgroundSize = avm.isDragOver ? 6 * size : 2 * size
 
-        Button {
-            if isVideoUrl || isPlaylistUrl {
-                Task {
-                    if let youtubeUrl = youtubeUrl {
-                        await avm.addUrls([youtubeUrl])
+        ZStack {
+            Circle()
+                .fill(.black.opacity(0.000001))
+                .frame(width: backgroundSize, height: backgroundSize)
+            Button {
+                if isVideoUrl || isPlaylistUrl {
+                    Task {
+                        if let youtubeUrl = youtubeUrl {
+                            await avm.addUrls([youtubeUrl])
+                        }
                     }
-                }
-            } else {
-                showHelp = true
-            }
-        } label: {
-            ZStack {
-                if avm.isLoading {
-                    ProgressView()
                 } else {
-                    Image(systemName: avm.isSuccess == true
-                            ? "checkmark"
-                            : avm.isSuccess == false
-                            ? "xmark"
-                            : isVideoUrl || isPlaylistUrl || showDropArea
-                            ? "text.insert"
-                            : "circle.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .fontWeight(.semibold)
-                        .contentTransition(.symbolEffect(.replace))
+                    showHelp = true
                 }
+            } label: {
+                Image(systemName: avm.isSuccess == true
+                        ? "checkmark"
+                        : avm.isSuccess == false
+                        ? "xmark"
+                        : isVideoUrl || isPlaylistUrl || showInsert
+                        ? "text.insert"
+                        : avm.isLoading
+                        ? "ellipsis"
+                        : "circle.circle")
+                    .fontWeight(.semibold)
+                    .contentTransition(.symbolEffect(.replace))
+                    .frame(width: size, height: size)
+                    .padding(7)
             }
-            .frame(width: size, height: size)
-            .padding(7)
         }
+        .background {
+            // Workaround: isDragOver = true get's stuck otherwise
+            Circle()
+                .fill(avm.isDragOver ? theme.color : Color.neutralAccentColor)
+                .frame(width: backgroundSize, height: backgroundSize)
+                .animation(.default, value: avm.isDragOver)
+        }
+        .frame(width: backgroundSize, height: backgroundSize)
         .dropDestination(for: URL.self) { items, _ in
             Task {
                 await avm.addUrls(items)
             }
             return true
         } isTargeted: { targeted in
-            withAnimation {
-                avm.isDragOver = targeted
+            avm.isDragOver = targeted
+
+            if targeted {
+                showInsert = targeted
+            } else {
+                Task {
+                    do {
+                        try await Task.sleep(s: 0.5)
+                        showInsert = targeted
+                    }
+                }
             }
         }
+        .frame(width: size, height: size)
         .foregroundStyle(Color.backgroundColor)
-        .background {
-            Circle()
-                .fill(showDropArea ? theme.color : Color.neutralAccentColor)
-                .frame(width: backgroundSize, height: backgroundSize)
-        }
         .popover(isPresented: $showHelp) {
             Text("dropVideosTip")
                 .padding()
@@ -73,10 +86,7 @@ struct AddVideoButton: View {
         .onAppear {
             avm.container = modelContext.container
         }
-    }
-
-    var showDropArea: Bool {
-        avm.isDragOver || avm.isLoading || avm.isSuccess != nil
+        .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver)
     }
 
     var isVideoUrl: Bool {
@@ -95,5 +105,10 @@ struct AddVideoButton: View {
 }
 
 #Preview {
-    AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
+    HStack {
+        Spacer()
+        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
+            .padding(20)
+    }
+    .modelContainer(DataController.previewContainer)
 }
