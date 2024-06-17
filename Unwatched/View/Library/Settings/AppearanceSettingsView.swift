@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
@@ -31,6 +32,7 @@ struct AppearanceSettingsView: View {
                 ForEach(ThemeColor.allCases, id: \.self) { theme in
                     Button {
                         themeColor = theme
+                        setAppIcon(theme)
                     } label: {
                         HStack {
                             Label {
@@ -53,6 +55,12 @@ struct AppearanceSettingsView: View {
             }
         }
         .navigationTitle("appearance")
+    }
+
+    @MainActor func setAppIcon(_ theme: ThemeColor) {
+        UIApplication.shared.setAlternateIconName(theme.appIconName) { error in
+            Logger.log.error("\(error)")
+        }
     }
 }
 
