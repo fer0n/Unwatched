@@ -66,6 +66,31 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
             return String(localized: "blackWhite")
         }
     }
+
+    var appIconName: String {
+        switch self {
+        case .red:
+            return "RedIcon"
+        case .orange:
+            return "OrangeIcon"
+        case .yellow:
+            return "YellowIcon"
+        case .green:
+            return "GreenIcon"
+        case .darkGreen:
+            return "DarkGreenIcon"
+        case .mint:
+            return "MintIcon"
+        case .teal:
+            return "TealIcon"
+        case .blue:
+            return "BlueIcon"
+        case .purple:
+            return "PurpleIcon"
+        case .blackWhite:
+            return "BlackWhiteIcon"
+        }
+    }
 }
 
 extension Color {
