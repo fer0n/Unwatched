@@ -70,25 +70,25 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
     var appIconName: String {
         switch self {
         case .red:
-            return "RedIcon"
+            return "redIcon"
         case .orange:
-            return "OrangeIcon"
+            return "orangeIcon"
         case .yellow:
-            return "YellowIcon"
+            return "yellowIcon"
         case .green:
-            return "GreenIcon"
+            return "greenIcon"
         case .darkGreen:
-            return "DarkGreenIcon"
+            return "darkGreenIcon"
         case .mint:
-            return "MintIcon"
+            return "mintIcon"
         case .teal:
-            return "TealIcon"
+            return "tealIcon"
         case .blue:
-            return "BlueIcon"
+            return "blueIcon"
         case .purple:
-            return "PurpleIcon"
+            return "purpleIcon"
         case .blackWhite:
-            return "BlackWhiteIcon"
+            return "blackWhiteIcon"
         }
     }
 }
