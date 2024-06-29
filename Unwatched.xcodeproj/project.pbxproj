@@ -23,6 +23,7 @@
 		8811A4A72B540D8100799CB2 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811A4A62B540D8100799CB2 /* DataController.swift */; };
 		8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */; };
 		881346602B88C988005A4790 /* CachedImageHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465F2B88C988005A4790 /* CachedImageHolder.swift */; };
+		8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */; };
 		88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
 		88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3D2B99D97900F048C3 /* CleanupService.swift */; };
 		881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
@@ -204,6 +205,7 @@
 		8811A4A62B540D8100799CB2 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		8813465F2B88C988005A4790 /* CachedImageHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageHolder.swift; sourceTree = "<group>"; };
+		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
 		88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+CloudKit.swift"; sourceTree = "<group>"; };
 		88190E3D2B99D97900F048C3 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
@@ -663,6 +665,7 @@
 				8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */,
 				8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
+				8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */,
 			);
 			path = Chapter;
 			sourceTree = "<group>";
@@ -1014,6 +1017,7 @@
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
 				88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */,
 				88D8584D2B559DCC0047E0E6 /* VideoError.swift in Sources */,
+				8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */,
 				88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */,
 				887AC8D02B498EAE00512852 /* InboxEntry.swift in Sources */,
 				88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */,

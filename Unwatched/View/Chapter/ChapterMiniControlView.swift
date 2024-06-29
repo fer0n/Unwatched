@@ -28,8 +28,9 @@ struct ChapterMiniControlView: View {
                     if hasChapters {
                         Button(action: goToPrevious) {
                             Image(systemName: Const.previousChapterSF)
-                                .font(.system(size: 25))
+                                .font(.system(size: 15))
                         }
+                        .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapter == nil)
                     } else {
                         Color.clear.fixedSize()
@@ -59,8 +60,12 @@ struct ChapterMiniControlView: View {
                     if hasChapters {
                         Button(action: goToNext) {
                             Image(systemName: Const.nextChapterSF)
-                                .font(.system(size: 25))
+                                .font(.system(size: 15))
                         }
+                        .buttonStyle(ChangeChapterButtonStyle(
+                            chapter: player.currentChapter,
+                            remainingTime: player.currentRemaining
+                        ))
                         .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()
