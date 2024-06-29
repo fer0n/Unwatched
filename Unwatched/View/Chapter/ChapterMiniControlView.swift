@@ -140,6 +140,9 @@ struct ChapterMiniControlView: View {
                 }
             }
             .disabled(subscribeManager.isLoading)
+            if let sub = player.video?.subscription {
+                AspectRatioPicker(subscription: sub)
+            }
         }
     }
 
