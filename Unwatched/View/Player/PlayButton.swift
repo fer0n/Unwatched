@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct CorePlayButton<Content>: View where Content: View {
+    @AppStorage(Const.reloadVideoId) var reloadVideoId: String = ""
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
@@ -45,6 +46,12 @@ struct CorePlayButton<Content>: View where Content: View {
                 player.restartVideo()
             } label: {
                 Label("restartVideo", systemImage: "restart")
+            }
+            Button {
+                player.handleHotSwap()
+                reloadVideoId = UUID().uuidString
+            } label: {
+                Label("reloadVideo", systemImage: "arrow.circlepath")
             }
         }
     }

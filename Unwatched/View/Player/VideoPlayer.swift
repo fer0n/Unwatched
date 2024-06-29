@@ -16,6 +16,7 @@ struct VideoPlayer: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
+    @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
 
     @GestureState private var dragState: CGFloat = 0
     @State var isSubscribedSuccess: Bool?
@@ -74,7 +75,7 @@ struct VideoPlayer: View {
                         : nil)
                 .fullscreenSafeArea(enable: wideAspect)
                 // force reload if value changed (requires settings update)
-                .id("videoPlayer-\(playVideoFullscreen)")
+                .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
                 .onChange(of: playVideoFullscreen) {
                     player.handleHotSwap()
                 }
