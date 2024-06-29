@@ -116,4 +116,6 @@ struct Const {
 
     static let themeColor = "themeColor"
     static let showTutorial = "showTutorial"
+
+    static let reloadVideoId = "reloadVideoId"
 }

@@ -2559,6 +2559,22 @@
         }
       }
     },
+    "reloadVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video neu laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reload Video"
+          }
+        }
+      }
+    },
     "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
