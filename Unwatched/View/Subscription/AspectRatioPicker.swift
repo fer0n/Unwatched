@@ -24,7 +24,8 @@ struct AspectRatioPicker: View {
                             img = "aspectratio"
                         }
                         return (text, img)
-                      })
+                      },
+                      menuLabel: "videoAspectRatio")
     }
 
     func getAspectRatioName(_ value: Double) -> String {

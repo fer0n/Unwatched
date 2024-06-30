@@ -134,9 +134,7 @@ struct BrowserView: View, KeyboardReadable {
                 }
                 .padding(10)
             }
-            .buttonStyle(CapsuleButtonStyle(
-                            background: Color.neutralAccentColor,
-                            foreground: Color.backgroundColor))
+            .buttonStyle(CapsuleButtonStyle())
             .bold()
         }
     }

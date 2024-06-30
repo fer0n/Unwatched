@@ -34,7 +34,7 @@ struct SubscriptionInfoDetails: View {
                             Image(systemName: Const.appBrowserSF)
                                 .padding(10)
                         }
-                        .buttonStyle(CapsuleButtonStyle())
+                        .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                     if let url = UrlService.getYoutubeUrl(
                         userName: subscription.youtubeUserName,
@@ -45,7 +45,7 @@ struct SubscriptionInfoDetails: View {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)
                         }
-                        .buttonStyle(CapsuleButtonStyle())
+                        .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                 }
                 .padding(.horizontal)
@@ -62,7 +62,7 @@ struct SubscriptionInfoDetails: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         SubscriptionSpeedSetting(subscription: subscription)
-                            .buttonStyle(CapsuleButtonStyle())
+                            .buttonStyle(CapsuleButtonStyle(primary: false))
 
                         CapsulePicker(
                             selection: $subscription.placeVideosIn,
@@ -73,7 +73,8 @@ struct SubscriptionInfoDetails: View {
                                     ?? defaultVideoPlacement.systemName
                                     ?? "questionmark"
                                 return (text, img)
-                            })
+                            },
+                            menuLabel: "videoPlacement")
 
                         AspectRatioPicker(subscription: subscription)
 

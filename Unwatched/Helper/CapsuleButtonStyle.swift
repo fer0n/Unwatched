@@ -5,14 +5,20 @@
 
 import SwiftUI
 
-struct CapsuleButtonStyle<S: ShapeStyle>: ButtonStyle {
+struct CapsuleButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
-    var background: S
+    var background: Color
     var foreground: Color
 
-    init(background: S = Material.thin, foreground: Color = .neutralAccentColor) {
-        self.background = background
-        self.foreground = foreground
+    init(primary: Bool = true) {
+        if primary {
+            background = Color.neutralAccentColor
+            foreground = Color.backgroundColor
+        } else {
+            background = Color.backgroundColor
+            foreground = Color.neutralAccentColor
+        }
+
     }
 
     func makeBody(configuration: Configuration) -> some View {

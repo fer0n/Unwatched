@@ -17,15 +17,13 @@ struct SubscriptionSpeedSetting: View {
         Button {
             showSpeedControl = true
         } label: {
-            HStack {
-                Image(systemName: "timer")
-                if let custom = subscription.customSpeedSetting {
-                    Text(verbatim: "\(SpeedControlViewModel.formatSpeed(custom))×")
-                } else {
-                    Text("defaultSpeed\(SpeedControlViewModel.formatSpeed(playbackSpeed))")
-                }
+            var text: String = ""
+            if let custom = subscription.customSpeedSetting {
+                text = "\(SpeedControlViewModel.formatSpeed(custom))×"
+            } else {
+                text = String(localized: "defaultSpeed\(SpeedControlViewModel.formatSpeed(playbackSpeed))")
             }
-            .padding(10)
+            return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
         }
         .popover(isPresented: $showSpeedControl) {
             ZStack {

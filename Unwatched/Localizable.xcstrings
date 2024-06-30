@@ -3055,6 +3055,22 @@
         }
       }
     },
+    "speedSetting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed"
+          }
+        }
+      }
+    },
     "startVideosInFullscreen" : {
       "localizations" : {
         "de" : {
@@ -3334,6 +3350,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos Added to Queue"
+          }
+        }
+      }
+    },
+    "videoAspectRatio" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seitenverhältnis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aspect Ratio"
+          }
+        }
+      }
+    },
+    "videoPlacement" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Placement"
           }
         }
       }
