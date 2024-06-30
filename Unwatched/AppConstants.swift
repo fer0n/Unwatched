@@ -18,7 +18,7 @@ struct Const {
 
     static let tapDestination = "tapDestination"
     static let defaultVideoAspectRatio: Double = 16/9
-    static let videoAspectRatios: [Double] = [18/9, 16/9, 4/3]
+    static let videoAspectRatios: [Double] = [18/9, 4/3]
     static let consideredWideAspectRatio: Double = 18/9
 
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
