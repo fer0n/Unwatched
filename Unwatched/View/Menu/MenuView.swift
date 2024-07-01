@@ -49,6 +49,8 @@ struct MenuView: View {
                 ),
                 TabRoute(
                     view: AnyView(BrowserView(
+                        container: modelContext.container,
+                        refresher: refresher,
                         url: $navManager.openTabBrowserUrl,
                         showHeader: false,
                         safeArea: false
@@ -72,7 +74,9 @@ struct MenuView: View {
             }
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
-            BrowserView(startUrl: browserUrl)
+            BrowserView(container: modelContext.container,
+                        refresher: refresher,
+                        startUrl: browserUrl)
         }
     }
 

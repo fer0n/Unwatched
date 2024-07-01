@@ -4,15 +4,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddVideoButton: View {
     @State var avm = AddVideoViewModel()
-    @Environment(\.modelContext) var modelContext
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State var showHelp = false
     @State var showInsert = false
 
+    var container: ModelContainer
     var youtubeUrl: URL?
     var size: Double = 20
 
@@ -84,7 +85,7 @@ struct AddVideoButton: View {
                 .presentationCompactAdaptation(.popover)
         }
         .onAppear {
-            avm.container = modelContext.container
+            avm.container = container
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver)
     }
@@ -107,8 +108,8 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
+        AddVideoButton(container: DataController.previewContainer,
+                       youtubeUrl: URL(string: "www.google.com")!)
             .padding(20)
     }
-    .modelContainer(DataController.previewContainer)
 }
