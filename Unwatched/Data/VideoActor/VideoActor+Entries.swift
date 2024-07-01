@@ -249,7 +249,11 @@ extension VideoActor {
                     queue.append(queueEntry)
                 } else {
                     let targetIndex = startIndex + index
-                    queue.insert(queueEntry, at: targetIndex)
+                    if targetIndex >= queue.count {
+                        queue.append(queueEntry)
+                    } else {
+                        queue.insert(queueEntry, at: targetIndex)
+                    }
                 }
             }
             for (index, queueEntry) in queue.enumerated() {
