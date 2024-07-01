@@ -264,9 +264,10 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(showMenu: .constant(false))
+    VideoPlayer(showMenu: .constant(false), landscapeFullscreen: false)
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())
+        .environment(RefreshManager())
 }

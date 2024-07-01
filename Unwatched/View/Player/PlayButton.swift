@@ -40,6 +40,7 @@ struct CorePlayButton<Content>: View where Content: View {
             .foregroundStyle(Color.neutralAccentColor)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
+        .fontWeight(.black)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .contextMenu {
             Button {
