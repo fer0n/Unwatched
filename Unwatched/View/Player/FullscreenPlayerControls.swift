@@ -135,7 +135,7 @@ struct FullscreenPlayerControls: View {
             .frame(maxHeight: .infinity)
         }
         .font(.system(size: 16))
-        .opacity(0.6)
+        .opacity(0.5)
         .padding(.vertical)
         .foregroundStyle(Color.neutralAccentColor)
         .frame(minWidth: 35)

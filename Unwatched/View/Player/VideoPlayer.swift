@@ -119,6 +119,7 @@ struct VideoPlayer: View {
                                         ? 70
                                         : 90
                             )
+                            .fontWeight(.black)
                             NextVideoButton(markVideoWatched: markVideoWatched)
                                 .frame(maxWidth: .infinity)
                             if showFullscreenButton {
@@ -264,9 +265,10 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(showMenu: .constant(false))
+    VideoPlayer(showMenu: .constant(false), landscapeFullscreen: false)
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())
+        .environment(RefreshManager())
 }

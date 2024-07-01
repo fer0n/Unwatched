@@ -34,6 +34,7 @@ struct MiniPlayerView: View {
                     Text(video.title)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     PlayButton(size: 30)
+                        .fontWeight(.black)
                 }
             }
             .onTapGesture {
