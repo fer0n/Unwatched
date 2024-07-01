@@ -11,6 +11,7 @@ struct VideoPlayer: View {
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
+    @Environment(RefreshManager.self) var refresher
 
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
@@ -173,7 +174,9 @@ struct VideoPlayer: View {
             }
         }
         .sheet(item: $browserUrl) { browserUrl in
-            BrowserView(startUrl: browserUrl)
+            BrowserView(container: modelContext.container,
+                        refresher: refresher,
+                        startUrl: browserUrl)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])

@@ -4,18 +4,22 @@
 //
 
 import SwiftUI
+import SwiftData
 import WebKit
 import TipKit
 import OSLog
 
 struct BrowserView: View, KeyboardReadable {
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
-    @Environment(RefreshManager.self) var refresher
 
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
+
+    var container: ModelContainer
+    var refresher: RefreshManager
+    // workaround: ^ when using @Environment with either of these
+    // + this view inside a sheet, the app crashes on "My Mac (Designed for iPad)"
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
@@ -67,7 +71,8 @@ struct BrowserView: View, KeyboardReadable {
 
                                 HStack {
                                     Spacer()
-                                    AddVideoButton(youtubeUrl: browserManager.videoUrl)
+                                    AddVideoButton(container: container,
+                                                   youtubeUrl: browserManager.videoUrl)
                                         .padding(20)
                                 }
                             }
@@ -101,7 +106,7 @@ struct BrowserView: View, KeyboardReadable {
             isKeyboardVisible = newIsKeyboardVisible
         }
         .onAppear {
-            subscribeManager.container = modelContext.container
+            subscribeManager.container = container
             Task {
                 await subscribeManager.setIsSubscribed(browserManager.info)
             }
@@ -145,7 +150,7 @@ struct BrowserView: View, KeyboardReadable {
             Logger.log.info("no subscriptionInfo after change")
             return
         }
-        let container = modelContext.container
+        let container = container
         _ = SubscriptionService.isSubscribed(channelId: info.channelId,
                                              playlistId: info.playlistId,
                                              updateSubscriptionInfo: info,
@@ -176,7 +181,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(startUrl: BrowserUrl.youtubeStartPage)
-        .modelContainer(DataController.previewContainer)
-        .environment(RefreshManager())
+    BrowserView(container: DataController.previewContainer,
+                refresher: RefreshManager(),
+                startUrl: BrowserUrl.youtubeStartPage)
 }
