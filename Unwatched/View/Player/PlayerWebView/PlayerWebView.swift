@@ -17,14 +17,16 @@ struct PlayerWebView: UIViewRepresentable {
     let onVideoEnded: () -> Void
 
     func makeUIView(context: Context) -> WKWebView {
+        player.isLoading = true
+
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
         webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
 
         let coordinator = context.coordinator
-        coordinator.previousState.videoId = player.video?.youtubeId
-        coordinator.previousState.playbackSpeed = player.playbackSpeed
+        player.previousState.videoId = player.video?.youtubeId
+        player.previousState.playbackSpeed = player.playbackSpeed
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.navigationDelegate = coordinator
@@ -38,12 +40,12 @@ struct PlayerWebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        let prev = context.coordinator.previousState
+        let prev = player.previousState
 
         if prev.playbackSpeed != player.playbackSpeed {
             Logger.log.info("SPEED")
             uiView.evaluateJavaScript(getSetPlaybackRateScript())
-            context.coordinator.previousState.playbackSpeed = player.playbackSpeed
+            player.previousState.playbackSpeed = player.playbackSpeed
         }
 
         if prev.isPlaying != player.isPlaying {
@@ -54,14 +56,14 @@ struct PlayerWebView: UIViewRepresentable {
                 Logger.log.info("PAUSE")
                 uiView.evaluateJavaScript(getPauseScript())
             }
-            context.coordinator.previousState.isPlaying = player.isPlaying
+            player.previousState.isPlaying = player.isPlaying
         }
 
         let seekPosition = player.seekPosition
         if prev.seekPosition != seekPosition, let seekTo = seekPosition {
             Logger.log.info("SEEK")
             uiView.evaluateJavaScript(getSeekToScript(seekTo))
-            context.coordinator.previousState.seekPosition = seekPosition
+            player.previousState.seekPosition = seekPosition
         }
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
@@ -75,7 +77,7 @@ struct PlayerWebView: UIViewRepresentable {
                 let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
                 uiView.evaluateJavaScript(script)
             }
-            context.coordinator.previousState.videoId = player.video?.youtubeId
+            player.previousState.videoId = player.video?.youtubeId
         }
     }
 
@@ -127,7 +129,6 @@ struct PlayerWebView: UIViewRepresentable {
 
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         let parent: PlayerWebView
-        var previousState = PreviousState()
 
         init(_ parent: PlayerWebView) {
             self.parent = parent
@@ -148,7 +149,7 @@ struct PlayerWebView: UIViewRepresentable {
                 let payload = body[safe: 1]
                 let payloadString = payload.map { String($0) }
                 if topic != "currentTime" {
-                    Logger.log.info("\(messageBody)")
+                    Logger.log.info(">\(messageBody)")
                 }
                 handleJsMessages(String(topic), payloadString)
             }
@@ -159,10 +160,10 @@ struct PlayerWebView: UIViewRepresentable {
             case "pause":
                 handlePause(payload)
             case "play":
-                previousState.isPlaying = true
+                parent.player.previousState.isPlaying = true
                 parent.player.play()
             case "ended":
-                previousState.isPlaying = false
+                parent.player.previousState.isPlaying = false
                 parent.onVideoEnded()
             case "unstarted":
                 parent.player.handleAutoStart()
@@ -184,7 +185,7 @@ struct PlayerWebView: UIViewRepresentable {
         func handlePause(_ payload: String?) {
             if !parent.player.isInBackground {
                 // workaround: hard pause when entering background (resumes playing otherwise when coming back)
-                previousState.isPlaying = false
+                parent.player.previousState.isPlaying = false
             }
             parent.player.pause()
             handleTimeUpdate(payload, persist: true)
@@ -215,15 +216,25 @@ struct PlayerWebView: UIViewRepresentable {
         }
 
         func handleError(_ payload: String?) {
-            if payload == "150" {
+            guard let error = YtIframeError(rawValue: payload ?? "") else {
+                Logger.log.error("Unknown YtIframeError")
+                return
+            }
+
+            switch error {
+            case .ownerForbidsEmbedding, .ownerForbidsEmbedding2:
+                parent.player.isLoading = true
+
                 withAnimation {
                     parent.player.previousIsPlaying = parent.player.isPlaying
                     parent.player.videoSource = .errorSwap
 
-                    previousState.isPlaying = false
+                    parent.player.previousState.isPlaying = false
                     parent.player.pause()
                     parent.player.embeddingDisabled = true
                 }
+            default:
+                Logger.log.error("Unhandled YtIframeError")
             }
         }
 
