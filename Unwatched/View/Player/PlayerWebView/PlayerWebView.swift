@@ -68,13 +68,14 @@ struct PlayerWebView: UIViewRepresentable {
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
             Logger.log.info("CUE VIDEO")
+            let startAt = player.getStartPosition()
             if playerType == .youtube {
-                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, player.getStartPosition())) {
+                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, startAt)) {
                     let request = URLRequest(url: url)
                     uiView.load(request)
                 }
             } else {
-                let script = "player.cueVideoById('\(videoId)', \(player.video?.elapsedSeconds ?? 0));"
+                let script = "player.cueVideoById('\(videoId)', \(startAt));"
                 uiView.evaluateJavaScript(script)
             }
             player.previousState.videoId = player.video?.youtubeId
