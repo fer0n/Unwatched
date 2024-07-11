@@ -8,6 +8,7 @@ enum VideoSource {
     case userInteraction
     case hotSwap
     case errorSwap
+    case playWhenReady
 }
 
 @Observable class PlayerManager {
@@ -25,6 +26,9 @@ enum VideoSource {
 
     @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
+    @ObservationIgnored var isLoading: Bool = true
+
+    @ObservationIgnored var previousState = PreviousState()
 
     var video: Video? {
         didSet {
@@ -140,6 +144,9 @@ enum VideoSource {
     }
 
     func play() {
+        if self.isLoading {
+            self.videoSource = .playWhenReady
+        }
         if !self.isPlaying {
             self.isPlaying = true
         }
@@ -227,6 +234,7 @@ enum VideoSource {
 
     func handleAutoStart() {
         Logger.log.info("handleAutoStart")
+        isLoading = false
         guard let source = videoSource else {
             Logger.log.info("no source, stopping")
             return
@@ -241,6 +249,9 @@ enum VideoSource {
         case .nextUp:
             break
         case .userInteraction:
+            play()
+        case .playWhenReady:
+            previousState.isPlaying = false
             play()
         case .hotSwap, .errorSwap:
             if previousIsPlaying {
@@ -260,6 +271,7 @@ enum VideoSource {
 
     func handleHotSwap() {
         Logger.log.info("handleHotSwap")
+        isLoading = true
         previousIsPlaying = isPlaying
         pause()
         self.videoSource = .hotSwap

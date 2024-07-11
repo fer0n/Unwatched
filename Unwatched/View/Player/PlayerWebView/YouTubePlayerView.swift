@@ -69,3 +69,11 @@ extension PlayerWebView {
      """
     }
 }
+
+enum YtIframeError: String {
+    case invalidParamterValue = "2"
+    case html5PlayerError = "5"
+    case videoNotFound = "100"
+    case ownerForbidsEmbedding = "101"
+    case ownerForbidsEmbedding2 = "150"
+}

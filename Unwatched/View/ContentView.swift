@@ -88,9 +88,10 @@ struct ContentView: View {
                     )
                     .presentationContentInteraction(.scrolls)
                     .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                    .presentationDragIndicator(navManager.searchFocused
-                                                ? .hidden
-                                                : .visible)
+                    .presentationDragIndicator(
+                        navManager.searchFocused
+                            ? .hidden
+                            : .visible)
             }
         }
         .ignoresSafeArea(bigScreen ? .keyboard : [])
