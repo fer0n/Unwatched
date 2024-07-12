@@ -15,10 +15,8 @@ struct TabItemView: View {
         tab.view
             .tabItem {
                 tab.image
-                    .environment(\.symbolVariants,
-                                 navManager.tab == tab.tag
-                                    ? .fill
-                                    : .none)
+                    .environment(\.symbolVariants, .fill)
+                    .fontWeight(.black)
                 if tab.showBadge {
                     Text(verbatim: "●")
                 } else if showTabBarLabels {

@@ -10,6 +10,8 @@ struct BookmarkedVideosView: View {
 
     var body: some View {
         ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
             if videos.isEmpty {
                 ContentUnavailableView("noBookmarkedVideosYet",
                                        systemImage: "bookmark.slash.fill",
@@ -27,12 +29,12 @@ struct BookmarkedVideosView: View {
                             )
                         )
                     }
+                    .listRowBackground(Color.backgroundColor)
                 }
                 .listStyle(.plain)
             }
         }
-        .navigationTitle("bookmarkedVideos")
-        .navigationBarTitleDisplayMode(.inline)
+        .myNavigationTitle("bookmarkedVideos")
     }
 }
 

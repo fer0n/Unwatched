@@ -23,6 +23,8 @@ struct ClearAllVideosButton: View {
             }.padding()
         }
         .clearConfirmation(clearAll: clearAll, triggerAction: $triggerAction)
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.backgroundColor)
     }
 }
 

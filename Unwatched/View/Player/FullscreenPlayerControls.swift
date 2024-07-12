@@ -35,6 +35,7 @@ struct FullscreenPlayerControls: View {
                         }
                         .modifier(PlayerControlButtonStyle())
                     }
+                    .fontWeight(.bold)
                 }
             }
             .frame(maxHeight: .infinity)
@@ -48,6 +49,7 @@ struct FullscreenPlayerControls: View {
                         Image(systemName: Const.chaptersSF)
                             .modifier(PlayerControlButtonStyle())
                     }
+                    .fontWeight(.bold)
                 }
             }
             .popover(isPresented: $showChapters) {
@@ -82,6 +84,7 @@ struct FullscreenPlayerControls: View {
                         Image(systemName: Const.previousChapterSF)
                             .modifier(PlayerControlButtonStyle())
                     }
+                    .fontWeight(.bold)
                 }
             }
             .frame(maxHeight: .infinity)
@@ -103,6 +106,7 @@ struct FullscreenPlayerControls: View {
                     .animation(.default, value: customSetting)
                 }
                 .frame(width: 35)
+                .fontWeight(.bold)
             }
             .popover(isPresented: $showSpeedControl) {
                 ZStack {
@@ -125,6 +129,7 @@ struct FullscreenPlayerControls: View {
                 image
                     .modifier(PlayerControlButtonStyle(isOn: isOn))
             }
+            .fontWeight(.bold)
             .frame(maxHeight: .infinity)
 
             CorePlayButton(circleVariant: false) { image in
@@ -132,6 +137,7 @@ struct FullscreenPlayerControls: View {
                     .modifier(PlayerControlButtonStyle())
                     .font(.system(size: 25))
             }
+            .fontWeight(.bold)
             .frame(maxHeight: .infinity)
         }
         .font(.system(size: 16))

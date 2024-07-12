@@ -30,6 +30,7 @@ struct VideoListView: View {
                 )
             )
         }
+        .listRowBackground(Color.backgroundColor)
     }
 
     static func getVideoSorting(_ sort: VideoSorting?) -> [SortDescriptor<Video>] {

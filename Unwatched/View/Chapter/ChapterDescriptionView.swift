@@ -24,14 +24,18 @@ struct ChapterDescriptionView: View {
             let hasChapters = video.chapters?.isEmpty == false
             let hasDescription = video.videoDescription != nil
 
-            ScrollView {
-                if page == .chapters && hasChapters {
-                    ChapterList(video: video)
-                        .padding(.horizontal)
-                        .transition(.move(edge: .trailing))
-                } else {
-                    DescriptionDetailView(video: video)
-                        .transition(.move(edge: .leading))
+            ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
+                ScrollView {
+                    if page == .chapters && hasChapters {
+                        ChapterList(video: video)
+                            .padding(.horizontal)
+                            .transition(.move(edge: .trailing))
+                    } else {
+                        DescriptionDetailView(video: video)
+                            .transition(.move(edge: .leading))
+                    }
                 }
             }
             .highPriorityGesture(dragGesture(origin: page))
@@ -55,7 +59,7 @@ struct ChapterDescriptionView: View {
                 }
             }
             .tint(.neutralAccentColor)
-            .toolbarTitleDisplayMode(.inline)
+            .myNavigationTitle()
         }
         .task(id: selectedDetailPageTask) {
             guard let task = selectedDetailPageTask else {

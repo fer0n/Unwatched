@@ -17,6 +17,12 @@ struct SubscriptionInfoDetails: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            Text(subscription.title)
+                .font(.system(size: 34))
+                .fontWeight(.heavy)
+                .padding(.horizontal)
+                .padding(.top, 40)
+
             headerDetails
 
             ScrollView(.horizontal, showsIndicators: false) {

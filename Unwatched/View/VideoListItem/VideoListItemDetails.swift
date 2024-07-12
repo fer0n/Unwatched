@@ -16,7 +16,7 @@ struct VideoListItemDetails: View {
             let videoTitle = !video.title.isEmpty ? video.title : video.youtubeId
             Text(videoTitle)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.system(size: 15, weight: .medium))
+                .font(.system(size: 15, weight: .semibold))
                 .lineLimit(2)
                 .foregroundStyle(.primary)
             if video.publishedDate != nil || video.isYtShort || video.isLikelyYtShort {

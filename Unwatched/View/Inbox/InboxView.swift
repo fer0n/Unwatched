@@ -25,6 +25,8 @@ struct InboxView: View {
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
                 if inboxEntries.isEmpty {
                     ContentUnavailableView("noInboxItems",
                                            systemImage: "tray.fill",
@@ -35,6 +37,8 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last inbox item to the queue and then moving the video on top of the queue
                 List {
                     swipeTipView
+                        .listRowBackground(Color.backgroundColor)
+
                     ForEach(inboxEntries) { entry in
                         ZStack {
                             if let video = entry.video {
@@ -52,8 +56,9 @@ struct InboxView: View {
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
                     }
                     .handleVideoUrlDrop(.inbox)
+                    .listRowBackground(Color.backgroundColor)
+
                     ClearAllVideosButton(clearAll: clearAll)
-                        .listRowSeparator(.hidden)
                         .opacity(showClear ? 1 : 0)
                         .disabled(!showClear)
                 }
@@ -72,8 +77,7 @@ struct InboxView: View {
                 }
                 RefreshToolbarButton()
             }
-            .navigationTitle("inbox")
-            .navigationBarTitleDisplayMode(.inline)
+            .myNavigationTitle("inbox", showBack: false)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
             }

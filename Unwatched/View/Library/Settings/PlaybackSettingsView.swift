@@ -12,33 +12,37 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
 
     var body: some View {
-        Form {
-            if UIDevice.supportsFullscreenControls {
-                Section(footer: Text("showFullscreenControlsHelper")) {
-                    Toggle(isOn: $showFullscreenControls) {
-                        Text("showFullscreenControls")
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
+            MyForm {
+                if UIDevice.supportsFullscreenControls {
+                    MySection(footer: "showFullscreenControlsHelper") {
+                        Toggle(isOn: $showFullscreenControls) {
+                            Text("showFullscreenControls")
+                        }
                     }
                 }
-            }
 
-            Section {
-                Toggle(isOn: $hideMenuOnPlay) {
-                    Text("hideMenuOnPlay")
+                MySection {
+                    Toggle(isOn: $hideMenuOnPlay) {
+                        Text("hideMenuOnPlay")
+                    }
+
+                    Toggle(isOn: $goToQueueOnPlay) {
+                        Text("goToQueueOnPlay")
+                    }
                 }
 
-                Toggle(isOn: $goToQueueOnPlay) {
-                    Text("goToQueueOnPlay")
+                MySection(footer: "playbackHelper") {
+                    Toggle(isOn: $playVideoFullscreen) {
+                        Text("startVideosInFullscreen")
+                    }
                 }
-            }
 
-            Section(footer: Text("playbackHelper")) {
-                Toggle(isOn: $playVideoFullscreen) {
-                    Text("startVideosInFullscreen")
-                }
             }
-
+            .myNavigationTitle("playback")
         }
-        .navigationTitle("playback")
     }
 }
 

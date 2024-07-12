@@ -12,6 +12,8 @@ struct SideloadingView: View {
     var body: some View {
 
         ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
             if subs.isEmpty {
                 ContentUnavailableView("noSideloadedSubscriptions",
                                        systemImage: "arrow.right.circle",
@@ -29,10 +31,10 @@ struct SideloadingView: View {
                             )
                         )
                     }
+                    .listRowBackground(Color.backgroundColor)
                 }
                 .listStyle(.plain)
-                .navigationTitle("sideloads")
-                .navigationBarTitleDisplayMode(.inline)
+                .myNavigationTitle("sideloads")
             }
         }
         .toolbar {

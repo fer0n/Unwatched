@@ -12,7 +12,7 @@ struct AutoDeleteBackupView: View {
     @State var showDeleteConfirmation: Bool = false
 
     var body: some View {
-        Section(footer: Text("autoDeleteHelper")) {
+        MySection(footer: "autoDeleteHelper") {
             Toggle(isOn: $autoDeleteBackups) {
                 Text("autoDeleteBackups")
             }

@@ -18,41 +18,44 @@ struct DebugView: View {
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
     var body: some View {
-        Form {
-            Section {
-                Button {
-                    showTutorial = true
-                    player.video = nil
-                } label: {
-                    Text("showTutorial")
-                }
-                .disabled(showTutorial == true && player.video == nil)
-            }
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
 
-            Section("videoSettings") {
-                Toggle(isOn: $refreshOnStartup) {
-                    Text("refreshOnStartup")
+            MyForm {
+                MySection {
+                    Button {
+                        showTutorial = true
+                        player.video = nil
+                    } label: {
+                        Text("showTutorial")
+                    }
+                    .disabled(showTutorial == true && player.video == nil)
                 }
-            }
 
-            Section("notifications") {
-                Toggle(isOn: $monitorBackgroundFetches) {
-                    Text("monitorBackgroundFetches")
+                MySection("videoSettings") {
+                    Toggle(isOn: $refreshOnStartup) {
+                        Text("refreshOnStartup")
+                    }
                 }
-            }
 
-            Section("icloudSync") {
-                AsyncButton {
-                    let container = modelContext.container
-                    let task = CleanupService.cleanupDuplicates(container)
-                    cleanupInfo = await task.value
-                } label: {
-                    Text("removeDuplicates")
+                MySection("notifications") {
+                    Toggle(isOn: $monitorBackgroundFetches) {
+                        Text("monitorBackgroundFetches")
+                    }
                 }
-                .tint(theme.color)
 
-                if let info = cleanupInfo {
-                    Text("""
+                MySection("icloudSync") {
+                    AsyncButton {
+                        let container = modelContext.container
+                        let task = CleanupService.cleanupDuplicates(container)
+                        cleanupInfo = await task.value
+                    } label: {
+                        Text("removeDuplicates")
+                    }
+                    .tint(theme.color)
+
+                    if let info = cleanupInfo {
+                        Text("""
                         removedDuplicates
                         \(info.countVideos)
                         \(info.countQueueEntries)
@@ -60,7 +63,8 @@ struct DebugView: View {
                         \(info.countSubscriptions)
                         \(info.countImages)
                         """)
-                        .foregroundStyle(.secondary)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
@@ -73,8 +77,7 @@ struct DebugView: View {
                 }
             }
         }
-        .navigationTitle("debug")
-        .navigationBarTitleDisplayMode(.inline)
+        .myNavigationTitle("debug")
     }
 }
 
