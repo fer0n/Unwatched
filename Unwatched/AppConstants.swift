@@ -14,6 +14,7 @@ struct Const {
     static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     static let playerAboveSheetHeight: CGFloat = 60
+    static let playerControlPadding: CGFloat = 2
     static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
     static let tapDestination = "tapDestination"
