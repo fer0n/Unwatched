@@ -46,7 +46,7 @@ struct MiniPlayerView: View {
             .frame(height: Const.playerAboveSheetHeight)
             Spacer()
         }
-        .background(Color.backgroundColor)
+        .background(Color.black)
         .opacity(hideMiniPlayer ? 0 : 1)
         .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
     }

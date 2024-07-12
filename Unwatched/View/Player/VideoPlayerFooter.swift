@@ -25,7 +25,7 @@ struct VideoPlayerFooter: View {
                 Button(action: toggleBookmark) {
                     Image(systemName: video.bookmarkedDate != nil
                             ? "bookmark.fill"
-                            : "bookmark")
+                            : "bookmark.slash")
                         .contentTransition(.symbolEffect(.replace))
                 }
                 .frame(maxWidth: .infinity)
@@ -43,6 +43,7 @@ struct VideoPlayerFooter: View {
                             .textCase(.uppercase)
                             .padding(.bottom, 3)
                             .fixedSize()
+                            .fontWeight(.bold)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -64,7 +65,8 @@ struct VideoPlayerFooter: View {
                 }
             }
         }
-        .font(.system(size: 20))
+        .font(.system(size: 20, weight: .bold))
+        .environment(\.symbolVariants, .fill)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 
@@ -79,6 +81,10 @@ struct VideoPlayerFooter: View {
 #Preview {
     VideoPlayerFooter(
         openBrowserUrl: { _ in },
+        setShowMenu: { },
         sleepTimerVM: SleepTimerViewModel(),
         onSleepTimerEnded: { _ in })
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager.getDummy())
+        .environment(PlayerManager.getDummy())
 }

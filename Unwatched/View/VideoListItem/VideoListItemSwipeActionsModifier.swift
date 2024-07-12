@@ -9,6 +9,7 @@ import OSLog
 
 struct VideoListItemSwipeActionsModifier: ViewModifier {
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
+    @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
@@ -37,7 +38,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                        label: {
                         Image(systemName: "text.insert")
                        })
-                    .tint(.teal)
+                    .tint(theme.color.mix(with: Color.black, by: 0.1))
             }
             if config.videoSwipeActions.contains(.queueBottom) {
                 Button(role: config.queueRole,
@@ -45,7 +46,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                        label: {
                         Image(systemName: "text.append")
                        })
-                    .tint(.mint)
+                    .tint(theme.color.mix(with: Color.black, by: 0.3))
             }
         }
     }
@@ -62,10 +63,11 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                        label: {
                         Image(systemName: Const.clearSF)
                        })
-                    .tint(.black)
+                    .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
             if config.videoSwipeActions.contains(.more) {
                 moreMenu
+                    .tint(theme.color.mix(with: Color.black, by: 0.7))
             }
             if config.videoSwipeActions.contains(.details) {
                 Button {
@@ -73,7 +75,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 } label: {
                     Image(systemName: Const.videoDescriptionSF)
                 }
-                .tint(Color(UIColor.lightGray))
+                .tint(theme.color.mix(with: Color.black, by: 0.5))
             }
         }
     }
@@ -114,7 +116,6 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         } label: {
             Image(systemName: "ellipsis.circle.fill")
         }
-        .tint(.gray)
     }
 
     func clearButtons(_ list: ClearList) -> some View {
@@ -240,4 +241,31 @@ enum ClearDirection {
 enum ClearList {
     case queue
     case inbox
+}
+
+#Preview {
+    let container = DataController.previewContainer
+    let context = ModelContext(container)
+    let fetch = FetchDescriptor<Video>()
+    let videos = try? context.fetch(fetch)
+    guard let video = videos?.first else {
+        return Text("noVideoFound")
+    }
+
+    return List {
+        VideoListItem(
+            video,
+            config: VideoListItemConfig(
+                showVideoStatus: true,
+                hasInboxEntry: false,
+                hasQueueEntry: true,
+                watched: true
+            )
+        )
+    }
+    .listStyle(.plain)
+    .modelContainer(container)
+    .environment(NavigationManager())
+    .environment(PlayerManager())
+    .environment(ImageCacheManager())
 }

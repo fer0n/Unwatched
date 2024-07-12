@@ -15,26 +15,31 @@ struct NotificationSettingsView: View {
     @State var notificationsDisabled = false
 
     var body: some View {
-        Form {
-            Section(footer: notificationsDisabled
-                        ? Text("notificationsDisabledHelper")
-                        : Text("notificationsHelper")) {
-                Toggle(isOn: $videoAddedToInbox) {
-                    Text("videoAddedToInbox")
+
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
+            MyForm {
+                MySection(footer: notificationsDisabled
+                            ? "notificationsDisabledHelper"
+                            : "notificationsHelper") {
+                    Toggle(isOn: $videoAddedToInbox) {
+                        Text("videoAddedToInbox")
+                    }
+
+                    Toggle(isOn: $videoAddedToQueue) {
+                        Text("videoAddedToQueue")
+                    }
                 }
 
-                Toggle(isOn: $videoAddedToQueue) {
-                    Text("videoAddedToQueue")
+                MySection {
+                    Toggle(isOn: $showNotificationBadge) {
+                        Text("showNotificationBadge")
+                    }
                 }
             }
-
-            Section {
-                Toggle(isOn: $showNotificationBadge) {
-                    Text("showNotificationBadge")
-                }
-            }
+            .disabled(notificationsDisabled)
         }
-        .disabled(notificationsDisabled)
         .onAppear {
             Task {
                 notificationsDisabled = await NotificationManager.areNotificationsDisabled()
@@ -55,7 +60,7 @@ struct NotificationSettingsView: View {
                 handleNotificationPermission()
             }
         }
-        .navigationTitle("notifications")
+        .myNavigationTitle("notifications")
     }
 
     func handleNotificationPermission() {

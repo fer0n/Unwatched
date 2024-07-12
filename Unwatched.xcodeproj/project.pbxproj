@@ -111,6 +111,8 @@
 		8898B6842B4846D000348D01 /* SubscriptionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6832B4846D000348D01 /* SubscriptionError.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
 		88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AEB5D62B98A69300A2FF0D /* Logger.swift */; };
+		88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */; };
+		88B0C15E2C4165BC006D2423 /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C15D2C4165BC006D2423 /* UIWindow.swift */; };
 		88BABABC2B6290AC001FA0A4 /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABABB2B6290AC001FA0A4 /* CachedImage.swift */; };
 		88BABABE2B62932C001FA0A4 /* CachedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABABD2B62932C001FA0A4 /* CachedImageView.swift */; };
 		88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BABABF2B629505001FA0A4 /* ImageService.swift */; };
@@ -293,6 +295,8 @@
 		8898B6832B4846D000348D01 /* SubscriptionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionError.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavigationTitle.swift; sourceTree = "<group>"; };
+		88B0C15D2C4165BC006D2423 /* UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWindow.swift; sourceTree = "<group>"; };
 		88BABABB2B6290AC001FA0A4 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
 		88BABABD2B62932C001FA0A4 /* CachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageView.swift; sourceTree = "<group>"; };
 		88BABABF2B629505001FA0A4 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
@@ -431,6 +435,7 @@
 				88BF35962BC96BCD005FA53E /* AddVideosTip.swift */,
 				88EEFDE72B72E12500A1F441 /* InboxTip.swift */,
 				8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */,
+				88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -572,6 +577,7 @@
 				8891F0B92B4F54940098A3FB /* Double.swift */,
 				888C49C12B5F288F00CDEC76 /* Binding.swift */,
 				88FEBFC32C19927E007FC1A5 /* UIDevice.swift */,
+				88B0C15D2C4165BC006D2423 /* UIWindow.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1032,6 +1038,7 @@
 				88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */,
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
+				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */,
 				883D5E002BE0B95800989313 /* TabItemView.swift in Sources */,
@@ -1086,6 +1093,7 @@
 				8891F0AD2B4E7E170098A3FB /* VideoActor+Videos.swift in Sources */,
 				881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
+				88B0C15E2C4165BC006D2423 /* UIWindow.swift in Sources */,
 				883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */,
 				88D858532B55ABD50047E0E6 /* YtVideoInfo.swift in Sources */,
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,

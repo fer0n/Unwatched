@@ -70,6 +70,8 @@ struct Const {
     static let previousChapterSF = "backward.end.fill"
     static let nextVideoSF = "forward.end.alt.fill"
 
+    static let sheetOpacityValue = 0.6
+
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
@@ -118,4 +120,5 @@ struct Const {
     static let showTutorial = "showTutorial"
 
     static let reloadVideoId = "reloadVideoId"
+    static let sheetOpacity = "sheetOpacity"
 }

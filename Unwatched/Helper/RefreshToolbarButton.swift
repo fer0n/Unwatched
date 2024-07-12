@@ -37,6 +37,7 @@ struct CoreRefreshButton: View {
             .disabled(refresher.isSyncingIcloud)
         }
         .font(.system(size: 13))
+        .fontWeight(.bold)
         .modifier(AnimationCompletionCallback(animatedValue: rotation) {
             if refresher.isLoading {
                 nextTurn()

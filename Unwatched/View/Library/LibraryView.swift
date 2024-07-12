@@ -32,104 +32,111 @@ struct LibraryView: View {
     var body: some View {
         let topListItemId = NavigationManager.getScrollId("library")
         @Bindable var navManager = navManager
+
         NavigationStack(path: $navManager.presentedLibrary) {
-            List {
-                Section {
-                    AddToLibraryView(subManager: $subManager, showBrowser: !browserAsTab)
-                        .id(topListItemId)
-                }
-                Section("videos") {
-                    NavigationLink(value: LibraryDestination.allVideos) {
-                        LibraryNavListItem("allVideos",
-                                           systemName: "play.rectangle.on.rectangle.fill")
+            ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
+                List {
+                    MySection {
+                        AddToLibraryView(subManager: $subManager, showBrowser: !browserAsTab)
+                            .id(topListItemId)
                     }
-                    NavigationLink(value: LibraryDestination.watchHistory) {
-                        LibraryNavListItem("watched",
-                                           systemName: "checkmark")
-                    }
-                    NavigationLink(value: LibraryDestination.bookmarkedVideos) {
-                        LibraryNavListItem("bookmarkedVideos",
-                                           systemName: "bookmark.fill")
-                    }
-                    if hasSideloads {
-                        NavigationLink(value: LibraryDestination.sideloading) {
-                            LibraryNavListItem("sideloads",
-                                               systemName: "arrow.forward.circle.fill")
+
+                    MySection("videos") {
+                        NavigationLink(value: LibraryDestination.allVideos) {
+                            LibraryNavListItem("allVideos",
+                                               systemName: "play.rectangle.on.rectangle.fill")
                         }
-                    }
-                }
-
-                Section("subscriptions") {
-                    if subscriptions.isEmpty {
-                        dropArea
-                            .listRowInsets(EdgeInsets())
-                    } else {
-                        searchBar
-
-                        SubscriptionListView(
-                            sort: subscriptionSortOrder,
-                            manualFilter: {
-                                text.debounced.isEmpty
-                                    || $0.displayTitle.localizedStandardContains(text.debounced)
+                        NavigationLink(value: LibraryDestination.watchHistory) {
+                            LibraryNavListItem("watched",
+                                               systemName: "checkmark")
+                        }
+                        NavigationLink(value: LibraryDestination.bookmarkedVideos) {
+                            LibraryNavListItem("bookmarkedVideos",
+                                               systemName: "bookmark.fill")
+                        }
+                        if hasSideloads {
+                            NavigationLink(value: LibraryDestination.sideloading) {
+                                LibraryNavListItem("sideloads",
+                                                   systemName: "arrow.forward.circle.fill")
                             }
-                        )
-                        .dropDestination(for: URL.self) { items, _ in
-                            handleUrlDrop(items)
-                            return true
+                        }
+                    }
+
+                    MySection("subscriptions") {
+                        if subscriptions.isEmpty {
+                            dropArea
+                                .listRowInsets(EdgeInsets())
+                        } else {
+                            searchBar
+
+                            SubscriptionListView(
+                                sort: subscriptionSortOrder,
+                                manualFilter: {
+                                    text.debounced.isEmpty
+                                        || $0.displayTitle.localizedStandardContains(text.debounced)
+                                }
+                            )
+                            .dropDestination(for: URL.self) { items, _ in
+                                handleUrlDrop(items)
+                                return true
+                            }
                         }
                     }
                 }
-            }
-            .onAppear {
-                navManager.topListItemId = topListItemId
-            }
-            .navigationTitle("library")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: Subscription.self) { sub in
-                SubscriptionDetailView(subscription: sub)
-            }
-            .navigationDestination(for: LibraryDestination.self) { value in
-                switch value {
-                case .allVideos:
-                    AllVideosView()
-                case .watchHistory:
-                    WatchHistoryView()
-                case .sideloading:
-                    SideloadingView()
-                case .settings:
-                    SettingsView()
-                case .userData:
-                    BackupView()
-                case .bookmarkedVideos:
-                    BookmarkedVideosView()
-                case .importSubscriptions:
-                    ImportSubscriptionsView(importButtonPadding: true)
-                case .debug:
-                    DebugView()
-                case .settingsNotifications:
-                    NotificationSettingsView()
-                case .settingsNewVideos:
-                    VideoSettingsView()
-                case .settingsAppearance:
-                    AppearanceSettingsView()
-                case .settingsPlayback:
-                    PlaybackSettingsView()
+                .scrollContentBackground(.hidden)
+                .onAppear {
+                    navManager.topListItemId = topListItemId
                 }
-            }
-            .toolbar {
-                if showCancelButton {
-                    DismissToolbarButton()
+                .myNavigationTitle("library", showBack: false)
+                .navigationDestination(for: Subscription.self) { sub in
+                    SubscriptionDetailView(subscription: sub)
                 }
-                ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink(value: LibraryDestination.settings) {
-                        Image(systemName: Const.settingsViewSF)
+                .navigationDestination(for: LibraryDestination.self) { value in
+                    switch value {
+                    case .allVideos:
+                        AllVideosView()
+                    case .watchHistory:
+                        WatchHistoryView()
+                    case .sideloading:
+                        SideloadingView()
+                    case .settings:
+                        SettingsView()
+                    case .userData:
+                        BackupView()
+                    case .bookmarkedVideos:
+                        BookmarkedVideosView()
+                    case .importSubscriptions:
+                        ImportSubscriptionsView(importButtonPadding: true)
+                    case .debug:
+                        DebugView()
+                    case .settingsNotifications:
+                        NotificationSettingsView()
+                    case .settingsNewVideos:
+                        VideoSettingsView()
+                    case .settingsAppearance:
+                        AppearanceSettingsView()
+                    case .settingsPlayback:
+                        PlaybackSettingsView()
                     }
                 }
-                RefreshToolbarButton()
+                .toolbar {
+                    if showCancelButton {
+                        DismissToolbarButton()
+                    }
+                    ToolbarItem(placement: .topBarLeading) {
+                        NavigationLink(value: LibraryDestination.settings) {
+                            Image(systemName: Const.settingsViewSF)
+                                .fontWeight(.bold)
+                        }
+                    }
+                    RefreshToolbarButton()
+                }
+                .tint(theme.color)
             }
-            .tint(theme.color)
+            .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
         }
-        .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
         .task(id: text.val) {
             await text.handleDidSet()
         }
@@ -226,4 +233,60 @@ enum LibraryDestination {
         .environment(PlayerManager())
         .environment(RefreshManager())
         .environment(ImageCacheManager())
+}
+
+struct MySection<Content: View>: View {
+    let content: Content
+    var title: LocalizedStringKey = ""
+    var footer: LocalizedStringKey?
+
+    // For content with a ViewBuilder
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    // For content with a String
+    init(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.content = content()
+        self.title = title
+    }
+
+    init(_ title: LocalizedStringKey = "",
+         footer: LocalizedStringKey?,
+         @ViewBuilder content: () -> Content) {
+        self.content = content()
+        self.footer = footer
+        self.title = title
+    }
+
+    var body: some View {
+        if let footer = footer {
+            Section(footer: Text(footer)) {
+                content
+            }
+            .listRowBackground(Color.insetBackgroundColor)
+        } else {
+            Section(title) {
+                content
+            }
+            .listRowBackground(Color.insetBackgroundColor)
+        }
+
+    }
+}
+
+struct MyForm<Content: View>: View {
+    let content: Content
+
+    // For content with a ViewBuilder
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        Form {
+            content
+        }
+        .scrollContentBackground(.hidden)
+    }
 }

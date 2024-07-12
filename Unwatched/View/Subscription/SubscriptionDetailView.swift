@@ -17,6 +17,7 @@ struct SubscriptionDetailView: View {
     @State var subscribeManager = SubscribeManager()
     @State var requiresUnsubscribe = false
     @State var loadNewVideosTask: Task<(), Never>?
+    @State var showTitle: Bool = false
 
     @Bindable var subscription: Subscription
 
@@ -26,6 +27,11 @@ struct SubscriptionDetailView: View {
                 VStack {
                     SubscriptionInfoDetails(subscription: subscription,
                                             requiresUnsubscribe: $requiresUnsubscribe)
+                        .onAppear {
+                            showTitle = false
+                        }.onDisappear {
+                            showTitle = true
+                        }
                 }
                 .padding(.top, 200)
                 .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
@@ -57,8 +63,7 @@ struct SubscriptionDetailView: View {
             }
         }
         .listStyle(.plain)
-        .navigationTitle(subscription.title)
-        .navigationBarTitleDisplayMode(.large)
+        .myNavigationTitle(showTitle ? LocalizedStringKey(subscription.title) : nil)
         .toolbar {
             if !subscription.isArchived {
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)

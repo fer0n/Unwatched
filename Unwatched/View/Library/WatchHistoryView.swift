@@ -12,6 +12,8 @@ struct WatchHistoryView: View {
     var body: some View {
 
         ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
             if watchEntries.isEmpty {
                 ContentUnavailableView("noHistoryItems",
                                        systemImage: Const.watchedSF,
@@ -33,15 +35,17 @@ struct WatchHistoryView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color.backgroundColor)
                 }
                 .listStyle(.plain)
             }
         }
-        .navigationTitle("watched")
-        .navigationBarTitleDisplayMode(.inline)
+        .myNavigationTitle("watched")
     }
 }
 
-// #Preview {
-//    WatchHistoryView()
-// }
+#Preview {
+    WatchHistoryView()
+        .modelContainer(DataController.previewContainer)
+        .environment(ImageCacheManager())
+}

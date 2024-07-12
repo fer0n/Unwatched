@@ -65,7 +65,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .background(Color.backgroundColor)
+            .background(Color.black)
             .environment(\.colorScheme, .dark)
             .onAppear {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
@@ -81,17 +81,20 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $navManager.showMenu) {
-                MenuView(showCancelButton: landscapeFullscreen)
-                    .presentationDetents(detents, selection: selectedDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                    )
-                    .presentationContentInteraction(.scrolls)
-                    .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                    .presentationDragIndicator(
-                        navManager.searchFocused
-                            ? .hidden
-                            : .visible)
+                ZStack {
+                    Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                    MenuView(showCancelButton: landscapeFullscreen)
+                        .presentationDetents(detents, selection: selectedDetent)
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                        )
+                        .presentationContentInteraction(.scrolls)
+                        .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                        .presentationDragIndicator(
+                            navManager.searchFocused
+                                ? .hidden
+                                : .visible)
+                }
             }
         }
         .ignoresSafeArea(bigScreen ? .keyboard : [])

@@ -11,70 +11,79 @@ struct SettingsView: View {
     @State var isExportingAll = false
 
     var body: some View {
-        Form {
-            NavigationLink(value: LibraryDestination.settingsNotifications) {
-                Label("notifications", systemImage: "app.badge")
-            }
 
-            NavigationLink(value: LibraryDestination.settingsNewVideos) {
-                Label("videoSettings", systemImage: "film.stack")
-            }
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
 
-            NavigationLink(value: LibraryDestination.settingsPlayback) {
-                Label("playback", systemImage: "play.fill")
-            }
+            MyForm {
+                NavigationLink(value: LibraryDestination.settingsNotifications) {
+                    Label("notifications", systemImage: "app.badge")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
 
-            NavigationLink(value: LibraryDestination.settingsAppearance) {
-                Label("appearance", systemImage: "paintbrush.fill")
-            }
+                NavigationLink(value: LibraryDestination.settingsNewVideos) {
+                    Label("videoSettings", systemImage: "film.stack")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
 
-            if let url = UrlService.shareShortcutUrl {
-                Section {
-                    Link(destination: url) {
-                        LibraryNavListItem(
-                            "setupShareSheetAction",
-                            systemName: "square.and.arrow.up.on.square.fill"
-                        )
+                NavigationLink(value: LibraryDestination.settingsPlayback) {
+                    Label("playback", systemImage: "play.fill")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
+
+                NavigationLink(value: LibraryDestination.settingsAppearance) {
+                    Label("appearance", systemImage: "paintbrush.fill")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
+
+                if let url = UrlService.shareShortcutUrl {
+                    MySection {
+                        Link(destination: url) {
+                            LibraryNavListItem(
+                                "setupShareSheetAction",
+                                systemName: "square.and.arrow.up.on.square.fill"
+                            )
+                        }
                     }
                 }
-            }
 
-            Section {
-                Link(destination: UrlService.writeReviewUrl) {
-                    LibraryNavListItem("rateUnwatched", systemName: "star.fill")
-                }
-                Link(destination: UrlService.emailUrl) {
-                    LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
-                }
-                Link(destination: UrlService.githubUrl) {
-                    LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
-                }
-            }
-
-            Section {
-                NavigationLink(value: LibraryDestination.importSubscriptions) {
-                    Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
-                }
-                let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
-                ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                    if isExportingAll {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
-                        LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
+                MySection {
+                    Link(destination: UrlService.writeReviewUrl) {
+                        LibraryNavListItem("rateUnwatched", systemName: "star.fill")
+                    }
+                    Link(destination: UrlService.emailUrl) {
+                        LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
+                    }
+                    Link(destination: UrlService.githubUrl) {
+                        LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
                     }
                 }
-                NavigationLink(value: LibraryDestination.userData) {
-                    Label("userData", systemImage: "opticaldiscdrive.fill")
-                }
-            }
 
-            NavigationLink(value: LibraryDestination.debug) {
-                Label("debug", systemImage: "ladybug.fill")
+                MySection {
+                    NavigationLink(value: LibraryDestination.importSubscriptions) {
+                        Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
+                    }
+                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
+                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
+                        if isExportingAll {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
+                        }
+                    }
+                    NavigationLink(value: LibraryDestination.userData) {
+                        Label("userData", systemImage: "opticaldiscdrive.fill")
+                    }
+                }
+
+                NavigationLink(value: LibraryDestination.debug) {
+                    Label("debug", systemImage: "ladybug.fill")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
             }
+            .myNavigationTitle("settings")
         }
-        .navigationTitle("settings")
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL?)] {

@@ -13,6 +13,8 @@ struct AllVideosView: View {
 
     var body: some View {
         ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
             SearchableVideos(text: $text)
             if videos.isEmpty {
                 ContentUnavailableView("noVideosYet",
@@ -32,7 +34,7 @@ struct AllVideosView: View {
         .task(id: text.val) {
             await text.handleDidSet()
         }
-        .navigationTitle("allVideos")
+        .myNavigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

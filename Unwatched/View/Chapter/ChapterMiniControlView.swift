@@ -52,7 +52,7 @@ struct ChapterMiniControlView: View {
                         }
                         .padding(.vertical, 2)
                         .font(.system(.title2))
-                        .fontWeight(.bold)
+                        .fontWeight(.black)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity)
                     }

@@ -82,7 +82,7 @@ struct VideoPlayer: View {
                 }
             } else {
                 Rectangle()
-                    .fill(Color.backgroundColor)
+                    .fill(Color.black)
                     .aspectRatio(videoAspectRatio, contentMode: .fit)
                     .frame(maxWidth: .infinity)
             }

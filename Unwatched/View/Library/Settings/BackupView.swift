@@ -27,105 +27,109 @@ struct BackupView: View {
     var body: some View {
         let backupType = Const.backupType ?? .json
 
-        Form {
-            Section(header: Text("icloudSync"), footer: Text("icloudSyncHelper")) {
-                Toggle(isOn: $enableIcloudSync) {
-                    Text("syncToIcloud")
-                }
-            }
+        ZStack {
+            Color.backgroundColor.edgesIgnoringSafeArea(.all)
 
-            Section(header: Text("automaticBackups"), footer: Text("automaticBackupsHelper")) {
-                Toggle(isOn: $automaticBackups) {
-                    Text("backupToIcloud")
-                }
-            }
-
-            Section(footer: Text("minimalBackupsHelper")) {
-                Toggle(isOn: $minimalBackups) {
-                    Text("minimalBackups")
-                }
-            }
-
-            Section {
-                AsyncButton {
-                    await saveToIcloud(UIDevice.current.name)
-                } label: {
-                    Text("backupNow")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+            MyForm {
+                MySection("icloudSync", footer: "icloudSyncHelper") {
+                    Toggle(isOn: $enableIcloudSync) {
+                        Text("syncToIcloud")
+                    }
                 }
 
-                Button {
-                    showFileImporter = true
-                } label: {
-                    Text("importBackup")
+                MySection("automaticBackups", footer: "automaticBackupsHelper") {
+                    Toggle(isOn: $automaticBackups) {
+                        Text("backupToIcloud")
+                    }
                 }
-            }
 
-            if !fileNames.isEmpty {
-                Section("latestUnwatchedBackups") {
-                    ForEach(fileNames, id: \.self) { file in
-                        let info = getFileInfo(file)
-                        Button {
-                            fileToBeRestored = IdentifiableURL(url: file)
-                        } label: {
-                            VStack(alignment: .leading) {
-                                Text(info.dateString ?? "unknown date")
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                HStack(spacing: 0) {
-                                    if let device = info.deviceName {
-                                        Text(device)
+                MySection(footer: "minimalBackupsHelper") {
+                    Toggle(isOn: $minimalBackups) {
+                        Text("minimalBackups")
+                    }
+                }
+
+                MySection {
+                    AsyncButton {
+                        await saveToIcloud(UIDevice.current.name)
+                    } label: {
+                        Text("backupNow")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    Button {
+                        showFileImporter = true
+                    } label: {
+                        Text("importBackup")
+                    }
+                }
+
+                if !fileNames.isEmpty {
+                    MySection("latestUnwatchedBackups") {
+                        ForEach(fileNames, id: \.self) { file in
+                            let info = getFileInfo(file)
+                            Button {
+                                fileToBeRestored = IdentifiableURL(url: file)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(info.dateString ?? "unknown date")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    HStack(spacing: 0) {
+                                        if let device = info.deviceName {
+                                            Text(device)
+                                        }
+                                        if info.deviceName != nil && info.fileSizeString != nil {
+                                            Text(verbatim: " \(Const.dotString) ")
+                                        }
+                                        if let size = info.fileSizeString {
+                                            Text(verbatim: size)
+                                        }
+                                        if info.isManual {
+                                            Text(verbatim: " \(Const.dotString) ")
+                                            Text("manualBackup")
+                                        }
                                     }
-                                    if info.deviceName != nil && info.fileSizeString != nil {
-                                        Text(verbatim: " \(Const.dotString) ")
-                                    }
-                                    if let size = info.fileSizeString {
-                                        Text(verbatim: size)
-                                    }
-                                    if info.isManual {
-                                        Text(verbatim: " \(Const.dotString) ")
-                                        Text("manualBackup")
-                                    }
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
                             }
                         }
+                        .onDelete(perform: deleteFile)
                     }
-                    .onDelete(perform: deleteFile)
                 }
-            }
 
-            AutoDeleteBackupView()
+                AutoDeleteBackupView()
 
-            Section {
-                Button(role: .destructive, action: {
-                    deleteImageCache()
-                }, label: {
-                    if isDeletingTask != nil {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
-                        Text("deleteImageCache")
+                MySection {
+                    Button(role: .destructive, action: {
+                        deleteImageCache()
+                    }, label: {
+                        if isDeletingTask != nil {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Text("deleteImageCache")
+                        }
+                    })
+
+                    Button(role: .destructive, action: {
+                        showDeleteConfirmation = true
+                    }, label: {
+                        if isDeletingEverythingTask != nil {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Text("deleteEverything")
+                        }
+                    })
+                    .actionSheet(isPresented: $showDeleteConfirmation) {
+                        ActionSheet(title: Text("confirmDeleteEverything"),
+                                    message: Text("confirmDeleteEverythingMessage"),
+                                    buttons: [
+                                        .destructive(Text("deleteEverything")) { _ = deleteEverything() },
+                                        .cancel()
+                                    ])
                     }
-                })
-
-                Button(role: .destructive, action: {
-                    showDeleteConfirmation = true
-                }, label: {
-                    if isDeletingEverythingTask != nil {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    } else {
-                        Text("deleteEverything")
-                    }
-                })
-                .actionSheet(isPresented: $showDeleteConfirmation) {
-                    ActionSheet(title: Text("confirmDeleteEverything"),
-                                message: Text("confirmDeleteEverythingMessage"),
-                                buttons: [
-                                    .destructive(Text("deleteEverything")) { _ = deleteEverything() },
-                                    .cancel()
-                                ])
                 }
             }
         }
@@ -137,7 +141,7 @@ struct BackupView: View {
                             .cancel()
                         ])
         }
-        .navigationTitle("userData")
+        .myNavigationTitle("userData")
         .navigationBarTitleDisplayMode(.inline)
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [backupType]) { result in

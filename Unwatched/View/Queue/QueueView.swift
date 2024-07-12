@@ -21,8 +21,11 @@ struct QueueView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
+
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
+                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+
                 if queue.isEmpty {
                     contentUnavailable
                     InboxHasEntriesTip()
@@ -46,16 +49,16 @@ struct QueueView: View {
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
                     }
                     .onMove(perform: moveQueueEntry)
+                    .listRowBackground(Color.backgroundColor)
                     .handleVideoUrlDrop(.queue)
+
                     if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
                         ClearAllVideosButton(clearAll: clearAll)
-                            .listRowSeparator(.hidden)
                     }
                 }
                 .disabled(queue.isEmpty)
             }
-            .navigationTitle("queue")
-            .navigationBarTitleDisplayMode(.inline)
+            .myNavigationTitle("queue", showBack: false)
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
                     .foregroundStyle(Color.neutralAccentColor)
