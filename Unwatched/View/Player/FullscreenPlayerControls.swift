@@ -96,10 +96,13 @@ struct FullscreenPlayerControls: View {
                     showSpeedControl = true
                 } label: {
                     HStack(spacing: 0) {
-                        Text(verbatim: SpeedControlViewModel.formatSpeed(player.playbackSpeed))
-                            .font(.custom("SFCompactDisplay-Semibold", size: 16))
-                        Text(verbatim: "×")
-                            .font(.custom("SFCompactDisplay-Semibold", size: 12))
+                        let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
+                        Text(verbatim: speedText)
+                            .font(.custom("SFCompactDisplay-Bold", size: 16))
+                        if speedText.count <= 1 {
+                            Text(verbatim: "×")
+                                .font(.custom("SFCompactDisplay-Semibold", size: 14))
+                        }
                     }
                     .fixedSize()
                     .modifier(PlayerControlButtonStyle(isOn: customSetting))
@@ -135,7 +138,7 @@ struct FullscreenPlayerControls: View {
             CorePlayButton(circleVariant: false) { image in
                 image
                     .modifier(PlayerControlButtonStyle())
-                    .font(.system(size: 25))
+                    .font(.system(size: 22))
             }
             .fontWeight(.bold)
             .frame(maxHeight: .infinity)

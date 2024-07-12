@@ -60,6 +60,7 @@ struct VideoPlayer: View {
                     } else {
                         PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
                             .aspectRatio(videoAspectRatio, contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
                             .frame(maxHeight: landscapeFullscreen ? .infinity : nil)
                             .frame(maxWidth: !landscapeFullscreen ? .infinity : nil)
                     }
@@ -144,7 +145,7 @@ struct VideoPlayer: View {
                     }
                 }
                 .innerSizeTrackerModifier(onChange: { size in
-                    sheetPos.setPlayerControlHeight(size.height)
+                    sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
                 })
             }
         }
