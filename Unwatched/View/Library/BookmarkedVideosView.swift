@@ -10,7 +10,7 @@ struct BookmarkedVideosView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+            Color.backgroundColor.ignoresSafeArea(.all)
 
             if videos.isEmpty {
                 ContentUnavailableView("noBookmarkedVideosYet",

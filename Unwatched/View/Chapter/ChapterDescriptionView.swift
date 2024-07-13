@@ -25,7 +25,7 @@ struct ChapterDescriptionView: View {
             let hasDescription = video.videoDescription != nil
 
             ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.backgroundColor.ignoresSafeArea(.all)
 
                 ScrollView {
                     if page == .chapters && hasChapters {

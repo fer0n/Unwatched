@@ -25,7 +25,7 @@ struct InboxView: View {
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.backgroundColor.ignoresSafeArea(.all)
 
                 if inboxEntries.isEmpty {
                     ContentUnavailableView("noInboxItems",

@@ -16,7 +16,7 @@ struct AppearanceSettingsView: View {
     var body: some View {
 
         ZStack {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+            Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
                 MySection {

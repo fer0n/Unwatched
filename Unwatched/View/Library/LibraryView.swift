@@ -35,7 +35,7 @@ struct LibraryView: View {
 
         NavigationStack(path: $navManager.presentedLibrary) {
             ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.backgroundColor.ignoresSafeArea(.all)
 
                 List {
                     MySection {

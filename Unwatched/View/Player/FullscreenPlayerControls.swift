@@ -69,6 +69,7 @@ struct FullscreenPlayerControls: View {
                             .scrollIndicators(.hidden)
                         }
                         .frame(maxWidth: 350)
+                        .ignoresSafeArea(.container)
                     }
                     .environment(\.colorScheme, .dark)
                     .presentationCompactAdaptation(.popover)
