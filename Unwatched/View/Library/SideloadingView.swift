@@ -12,7 +12,7 @@ struct SideloadingView: View {
     var body: some View {
 
         ZStack {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+            Color.backgroundColor.ignoresSafeArea(.all)
 
             if subs.isEmpty {
                 ContentUnavailableView("noSideloadedSubscriptions",

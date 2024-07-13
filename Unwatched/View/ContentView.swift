@@ -82,7 +82,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $navManager.showMenu) {
                 ZStack {
-                    Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                    Color.backgroundColor.ignoresSafeArea(.all)
                     MenuView(showCancelButton: landscapeFullscreen)
                         .presentationDetents(detents, selection: selectedDetent)
                         .presentationBackgroundInteraction(

@@ -28,7 +28,7 @@ struct BackupView: View {
         let backupType = Const.backupType ?? .json
 
         ZStack {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+            Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
                 MySection("icloudSync", footer: "icloudSyncHelper") {

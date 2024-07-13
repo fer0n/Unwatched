@@ -86,7 +86,7 @@ struct MenuView: View {
                         startUrl: browserUrl)
         }
         .background {
-            Color.backgroundColor.edgesIgnoringSafeArea(.all)
+            Color.backgroundColor.ignoresSafeArea(.all)
         }
         .onChange(of: sheetOpacity) {
             customizeTabBarAppearance(reload: true)

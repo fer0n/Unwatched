@@ -24,7 +24,7 @@ struct QueueView: View {
 
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
-                Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Color.backgroundColor.ignoresSafeArea(.all)
 
                 if queue.isEmpty {
                     contentUnavailable
