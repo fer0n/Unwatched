@@ -131,6 +131,17 @@ enum VideoSource {
             UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
     }
 
+    func autoSetNextVideo(_ source: VideoSource) {
+        if let container = container {
+            let modelContext = ModelContext(container)
+            let next = VideoService.getNextVideoInQueue(modelContext)
+            Logger.log.info("setNextVideo \(next?.title ?? "no video found")")
+            withAnimation {
+                setNextVideo(next, source)
+            }
+        }
+    }
+
     func setNextVideo(_ video: Video?, _ source: VideoSource) {
         if video != nil {
             self.videoSource = source

@@ -13,11 +13,9 @@ struct VideoPlayer: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(RefreshManager.self) var refresher
 
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
-    @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
 
     @GestureState private var dragState: CGFloat = 0
     @State var isSubscribedSuccess: Bool?
@@ -39,54 +37,10 @@ struct VideoPlayer: View {
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 25))
             : AnyLayout(VStackLayout(spacing: 25))
-        let videoAspectRatio = player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
-        let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
-        let showFullscreenControls = showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
 
         VStack(spacing: 0) {
-            if player.video != nil {
-                HStack {
-                    if player.embeddingDisabled {
-                        PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
-                            .frame(maxHeight: .infinity)
-                            .frame(maxWidth: .infinity)
-                            .mask(LinearGradient(gradient: Gradient(
-                                stops: [
-                                    .init(color: .black, location: 0),
-                                    .init(color: .black, location: 0.9),
-                                    .init(color: .clear, location: 1)
-                                ]
-                            ), startPoint: .top, endPoint: .bottom))
-                    } else {
-                        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
-                            .aspectRatio(videoAspectRatio, contentMode: .fit)
-                            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-                            .frame(maxHeight: landscapeFullscreen ? .infinity : nil)
-                            .frame(maxWidth: !landscapeFullscreen ? .infinity : nil)
-                    }
-
-                    if landscapeFullscreen && showFullscreenControls {
-                        FullscreenPlayerControls(markVideoWatched: markVideoWatched)
-                            .frame(width: wideAspect ? 0 : nil)
-                            .offset(x: wideAspect ? 10 : 0)
-                            .fullscreenSafeArea(enable: wideAspect, onlyOffsetRight: true)
-                    }
-                }
-                .frame(maxWidth: !showFullscreenControls || wideAspect
-                        ? .infinity
-                        : nil)
-                .fullscreenSafeArea(enable: wideAspect)
-                // force reload if value changed (requires settings update)
-                .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
-                .onChange(of: playVideoFullscreen) {
-                    player.handleHotSwap()
-                }
-            } else {
-                Rectangle()
-                    .fill(Color.black)
-                    .aspectRatio(videoAspectRatio, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
-            }
+            PlayerView(landscapeFullscreen: landscapeFullscreen,
+                       markVideoWatched: markVideoWatched)
 
             if !landscapeFullscreen {
                 VStack(spacing: 10) {
@@ -219,28 +173,10 @@ struct VideoPlayer: View {
             if showMenu {
                 setShowMenu()
             }
-            setNextVideo(source)
+            player.autoSetNextVideo(source)
             _ = VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
-        }
-    }
-
-    func handleVideoEnded() {
-        let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
-        Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
-
-        if continuousPlay {
-            if let video = player.video {
-                _ = VideoService.markVideoWatched(
-                    video, modelContext: modelContext
-                )
-            }
-            setNextVideo(.continuousPlay)
-        } else {
-            player.pause()
-            player.seekPosition = nil
-            player.setVideoEnded(true)
         }
     }
 
@@ -256,13 +192,6 @@ struct VideoPlayer: View {
         showMenu = true
     }
 
-    func setNextVideo(_ source: VideoSource) {
-        let next = VideoService.getNextVideoInQueue(modelContext)
-        Logger.log.info("setNextVideo \(next?.title ?? "no video found")")
-        withAnimation {
-            player.setNextVideo(next, source)
-        }
-    }
 }
 
 #Preview {
