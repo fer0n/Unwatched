@@ -110,6 +110,14 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             if let url = video.url {
                 ShareLink(item: url)
             }
+            if let url = video.url {
+                Button {
+                    navManager.openUrlInApp(.url(url.absoluteString))
+                } label: {
+                    Image(systemName: Const.appBrowserSF)
+                    Text("openInApp")
+                }
+            }
             if let list = config.clearAboveBelowList {
                 clearButtons(list)
             }

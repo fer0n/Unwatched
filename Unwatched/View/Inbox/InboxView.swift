@@ -88,22 +88,23 @@ struct InboxView: View {
 
     var swipeTipView: some View {
         TipView(swipeTip)
+            .tipBackground(Color.insetBackgroundColor)
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: invalidateTip) {
                     Image(systemName: "text.insert")
                 }
-                .tint(.teal)
+                .tint(theme.color.mix(with: Color.black, by: 0.1))
 
                 Button(action: invalidateTip) {
                     Image(systemName: "text.append")
                 }
-                .tint(.mint)
+                .tint(theme.color.mix(with: Color.black, by: 0.3))
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: invalidateTip) {
                     Image(systemName: Const.clearSF)
                 }
-                .tint(.black)
+                .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
     }
 
