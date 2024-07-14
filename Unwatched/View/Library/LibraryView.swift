@@ -266,12 +266,11 @@ struct MySection<Content: View>: View {
             }
             .listRowBackground(Color.insetBackgroundColor)
         } else {
-            Section(title) {
+            Section(header: Text(title).fontWeight(.semibold)) {
                 content
             }
             .listRowBackground(Color.insetBackgroundColor)
         }
-
     }
 }
 
