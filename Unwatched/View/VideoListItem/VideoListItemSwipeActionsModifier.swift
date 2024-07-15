@@ -107,10 +107,10 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     Text("moveToInbox")
                 }
             }
+            Divider()
             if let url = video.url {
                 ShareLink(item: url)
-            }
-            if let url = video.url {
+
                 Button {
                     navManager.openUrlInApp(.url(url.absoluteString))
                 } label: {
