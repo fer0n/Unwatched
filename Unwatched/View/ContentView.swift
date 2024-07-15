@@ -58,11 +58,8 @@ struct ContentView: View {
                                     : nil)
                     }
                 }
-                if !bigScreen {
-                    MiniPlayerView()
-                    if !videoExists {
-                        VideoNotAvailableView()
-                    }
+                if !bigScreen && !videoExists {
+                    VideoNotAvailableView()
                 }
             }
             .background(Color.black)
