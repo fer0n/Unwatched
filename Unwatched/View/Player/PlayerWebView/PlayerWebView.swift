@@ -226,11 +226,14 @@ struct PlayerWebView: UIViewRepresentable {
             case .ownerForbidsEmbedding, .ownerForbidsEmbedding2:
                 parent.player.isLoading = true
 
-                withAnimation {
-                    parent.player.previousIsPlaying = parent.player.isPlaying
-                    parent.player.videoSource = .errorSwap
+                parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
+                    ? true
+                    : parent.player.isPlaying
 
-                    parent.player.previousState.isPlaying = false
+                parent.player.videoSource = .errorSwap
+                parent.player.previousState.isPlaying = false
+
+                withAnimation {
                     parent.player.pause()
                     parent.player.embeddingDisabled = true
                 }
@@ -262,7 +265,9 @@ struct PlayerWebView: UIViewRepresentable {
         }
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-            if parent.playerType != .youtube {
+            if parent.playerType != .youtube || !parent.player.embeddingDisabled {
+                // workaround: without "!parent.player.embeddingDisabled", the video doesn't start switching from a non-embedding
+                // to an embedded video, probably a race condition
                 return
             }
             parent.player.handleAutoStart()
