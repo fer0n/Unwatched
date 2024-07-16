@@ -100,7 +100,7 @@ struct PlayerView: View {
                                 miniPlayerPlayButton
                             }
                         }
-                        .animation(.bouncy(duration: 0.5), value: hideMiniPlayer)
+                        .animation(.bouncy(duration: 0.3), value: hideMiniPlayer)
                         .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
                     }
 
