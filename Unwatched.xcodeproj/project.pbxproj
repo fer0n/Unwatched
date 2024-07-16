@@ -49,7 +49,6 @@
 		883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */; };
 		883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81A2B5BC81600028D52 /* RefreshManager.swift */; };
 		883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */; };
-		883D5DFC2BE0B8B900989313 /* TabRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFB2BE0B8B900989313 /* TabRoute.swift */; };
 		883D5E002BE0B95800989313 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFF2BE0B95800989313 /* TabItemView.swift */; };
 		883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */; };
 		883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */; };
@@ -233,7 +232,6 @@
 		883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMiniControlView.swift; sourceTree = "<group>"; };
 		883CA81A2B5BC81600028D52 /* RefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshManager.swift; sourceTree = "<group>"; };
 		883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscribeManager.swift; sourceTree = "<group>"; };
-		883D5DFB2BE0B8B900989313 /* TabRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRoute.swift; sourceTree = "<group>"; };
 		883D5DFF2BE0B95800989313 /* TabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabItemView.swift; sourceTree = "<group>"; };
 		883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerViewModel.swift; sourceTree = "<group>"; };
 		883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSharableUrl.swift; sourceTree = "<group>"; };
@@ -454,7 +452,6 @@
 			children = (
 				887AC8D52B49D0BE00512852 /* VideoPlacement.swift */,
 				88D8585A2B55B0E70047E0E6 /* SendableVideo.swift */,
-				883D5DFB2BE0B8B900989313 /* TabRoute.swift */,
 				881E51412B5A6446006384E4 /* ShortsDetection.swift */,
 				8813465F2B88C988005A4790 /* CachedImageHolder.swift */,
 				88CEDA1F2B6641C6000E3E98 /* Exportable.swift */,
@@ -1058,7 +1055,6 @@
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
 				88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */,
-				883D5DFC2BE0B8B900989313 /* TabRoute.swift in Sources */,
 				888C49C52B5FA75700CDEC76 /* UrlService.swift in Sources */,
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */,

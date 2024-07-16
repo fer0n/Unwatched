@@ -5,24 +5,46 @@
 
 import SwiftUI
 
-struct TabItemView: View {
+struct TabItemView<Content: View>: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @Environment(NavigationManager.self) var navManager
 
-    var tab: TabRoute
+    var content: Content
+
+    var image: Image
+    var text: LocalizedStringKey
+    var tag: NavigationTab
+    var showBadge: Bool = false
+    var show: Bool = true
+
+    init(image: Image,
+         text: LocalizedStringKey,
+         tag: NavigationTab,
+         showBadge: Bool = false,
+         show: Bool = true,
+         @ViewBuilder content: () -> Content) {
+        self.image = image
+        self.text = text
+        self.tag = tag
+        self.showBadge = showBadge
+        self.show = show
+        self.content = content()
+    }
 
     var body: some View {
-        tab.view
-            .tabItem {
-                tab.image
-                    .environment(\.symbolVariants, .fill)
-                    .fontWeight(.black)
-                if tab.showBadge {
-                    Text(verbatim: "●")
-                } else if showTabBarLabels {
-                    Text(tab.text)
+        if show {
+            content
+                .tabItem {
+                    image
+                        .environment(\.symbolVariants, .fill)
+                        .fontWeight(.black)
+                    if showBadge {
+                        Text(verbatim: "●")
+                    } else if showTabBarLabels {
+                        Text(text)
+                    }
                 }
-            }
-            .tag(tab.tag)
+                .tag(tag)
+        }
     }
 }
