@@ -32,52 +32,43 @@ struct MenuView: View {
     var body: some View {
         @Bindable var navManager = navManager
 
-        let tabs: [TabRoute] =
-            [
-                TabRoute(
-                    view: AnyView(QueueView(showCancelButton: showCancelButton)),
-                    image: Image(systemName: Const.queueTagSF),
-                    text: "queue",
-                    tag: NavigationTab.queue,
-                    showBadge: showTabBarBadge && hasNewQueueItems
-                ),
-                TabRoute(
-                    view: AnyView(InboxView(showCancelButton: showCancelButton)),
-                    image: getInboxSymbol,
-                    text: "inbox",
-                    tag: NavigationTab.inbox,
-                    showBadge: showTabBarBadge && hasNewInboxItems
-                ),
-                TabRoute(
-                    view: AnyView(LibraryView(showCancelButton: showCancelButton)),
-                    image: Image(systemName: "books.vertical"),
-                    text: "library",
-                    tag: NavigationTab.library
-                ),
-                TabRoute(
-                    view: AnyView(BrowserView(
+        ScrollViewReader { proxy in
+            TabView(selection: $navManager.tab.onUpdate { newValue in
+                handleTabChanged(newValue, proxy)
+            }) {
+                TabItemView(image: Image(systemName: Const.queueTagSF),
+                            text: "queue",
+                            tag: NavigationTab.queue,
+                            showBadge: showTabBarBadge && hasNewQueueItems) {
+                    QueueView(showCancelButton: showCancelButton)
+                }
+
+                TabItemView(image: getInboxSymbol,
+                            text: "inbox",
+                            tag: NavigationTab.inbox,
+                            showBadge: showTabBarBadge && hasNewInboxItems) {
+                    InboxView(showCancelButton: showCancelButton)
+                }
+
+                TabItemView(image: Image(systemName: "books.vertical"),
+                            text: "library",
+                            tag: NavigationTab.library) {
+                    LibraryView(showCancelButton: showCancelButton)
+                }
+
+                TabItemView(image: Image(systemName: "globe.desk"),
+                            text: "browserShort",
+                            tag: NavigationTab.browser,
+                            show: browserAsTab) {
+                    BrowserView(
                         container: modelContext.container,
                         refresher: refresher,
                         url: $navManager.openTabBrowserUrl,
                         showHeader: false,
                         safeArea: false
-                    )),
-                    image: Image(systemName: "globe.desk"),
-                    text: "browserShort",
-                    tag: NavigationTab.browser,
-                    show: browserAsTab
-                )
-            ]
-
-        ScrollViewReader { proxy in
-            TabView(selection: $navManager.tab.onUpdate { newValue in
-                handleTabChanged(newValue, proxy)
-            }) {
-                ForEach(tabs, id: \.tag) { tab in
-                    if tab.show {
-                        TabItemView(tab: tab)
-                    }
+                    )
                 }
+
             }
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
