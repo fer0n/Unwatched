@@ -94,63 +94,61 @@ struct SubscriptionInfoDetails: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    var headerDetails: some View {
-        ZStack {
-            let count = subscription.videos?.count ?? 0
-            let availableVideos = String(
-                AttributedString(localized: "^[\(count) video](inflect: true) available").characters
-            )
-            let hasImage = subscription.thumbnailUrl != nil
+    @ViewBuilder var headerDetails: some View {
+        let count = subscription.videos?.count ?? 0
+        let availableVideos = String(
+            AttributedString(localized: "^[\(count) video](inflect: true) available").characters
+        )
+        let hasImage = subscription.thumbnailUrl != nil
 
-            HStack {
-                if hasImage {
-                    ZStack {
-                        CachedImageView(imageHolder: subscription) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
+        HStack {
+            if hasImage {
+                ZStack {
+                    CachedImageView(imageHolder: subscription) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
 
-                        } placeholder: {
-                            Color.clear
-                        }
+                    } placeholder: {
+                        Color.clear
                     }
-                    .frame(width: 80, height: 80)
-                    .clipShape(Circle())
                 }
-
-                VStack(alignment: .leading, spacing: hasImage ? 5 : 0) {
-                    if let userName = subscription.youtubeUserName {
-                        Text(verbatim: "@\(userName)")
-                            .font(.title2)
-                            .foregroundStyle(.primary)
-                    }
-                    if let author = subscription.author {
-                        Text(verbatim: author)
-                            .font(.title2)
-                            .foregroundStyle(.primary)
-                            .onTapGesture {
-                                let container = modelContext.container
-                                if let channelId = subscription.youtubeChannelId,
-                                   let regularChannel = SubscriptionService.getRegularChannel(
-                                    channelId,
-                                    container: container) {
-                                    navManager.pushSubscription(regularChannel)
-                                }
-                            }
-                    }
-
-                    let hasOtherInfos = subscription.youtubeUserName != nil || hasImage || subscription.author != nil
-
-                    Text(availableVideos)
-                        .font(.system(size: 14))
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .padding(.leading, hasOtherInfos ? 0 : 10)
-                }
+                .frame(width: 80, height: 80)
+                .clipShape(Circle())
             }
-            .padding(.bottom, 10)
-            .padding(.horizontal)
+
+            VStack(alignment: .leading, spacing: hasImage ? 5 : 0) {
+                if let userName = subscription.youtubeUserName {
+                    Text(verbatim: "@\(userName)")
+                        .font(.title2)
+                        .foregroundStyle(.primary)
+                }
+                if let author = subscription.author {
+                    Text(verbatim: author)
+                        .font(.title2)
+                        .foregroundStyle(.primary)
+                        .onTapGesture {
+                            let container = modelContext.container
+                            if let channelId = subscription.youtubeChannelId,
+                               let regularChannel = SubscriptionService.getRegularChannel(
+                                channelId,
+                                container: container) {
+                                navManager.pushSubscription(regularChannel)
+                            }
+                        }
+                }
+
+                let hasOtherInfos = subscription.youtubeUserName != nil || hasImage || subscription.author != nil
+
+                Text(availableVideos)
+                    .font(.system(size: 14))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .padding(.leading, hasOtherInfos ? 0 : 10)
+            }
         }
+        .padding(.bottom, 10)
+        .padding(.horizontal)
     }
 
     var subscribeButton: some View {

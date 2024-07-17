@@ -11,19 +11,17 @@ struct CorePlayButton<Content>: View where Content: View {
     @State var hapticToggle: Bool = false
 
     private let contentImage: ((Image) -> Content)
-    var circleVariant = true
+    private let circle: String
 
     init(
         circleVariant: Bool,
         @ViewBuilder content: @escaping (Image) -> Content = { $0 }
     ) {
-        self.circleVariant = circleVariant
+        self.circle = circleVariant ? ".circle" : ""
         self.contentImage = content
     }
 
     var body: some View {
-        let circle = circleVariant ? ".circle" : ""
-
         Button {
             player.handlePlayButton()
             hapticToggle.toggle()
@@ -58,9 +56,6 @@ struct CorePlayButton<Content>: View where Content: View {
 }
 
 struct PlayButton: View {
-    @Environment(PlayerManager.self) var player
-    @State var hapticToggle: Bool = false
-
     var size: Double
 
     var body: some View {

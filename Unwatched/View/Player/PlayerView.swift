@@ -21,14 +21,16 @@ struct PlayerView: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var hideMiniPlayer: Bool {
-        (
-            (navManager.showMenu || navManager.showDescriptionDetail)
-                && sheetPos.swipedBelow
-        ) || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
+        ((navManager.showMenu || navManager.showDescriptionDetail)
+            && sheetPos.swipedBelow)
+            || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
+    }
+
+    var videoAspectRatio: Double {
+        player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
     }
 
     var body: some View {
-        let videoAspectRatio = player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
         let showFullscreenControls = showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
         let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
 
@@ -41,67 +43,9 @@ struct PlayerView: View {
             if player.video != nil {
                 HStack {
                     if player.embeddingDisabled {
-                        ZStack {
-                            PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
-                                .frame(maxHeight: .infinity)
-                                .frame(maxWidth: .infinity)
-                                .mask(LinearGradient(gradient: Gradient(
-                                    stops: [
-                                        .init(color: .black, location: 0),
-                                        .init(color: .black, location: 0.9),
-                                        .init(color: .clear, location: 1)
-                                    ]
-                                ), startPoint: .top, endPoint: .bottom))
-
-                            Color.black
-                                .opacity(!hideMiniPlayer ? 1 : 0)
-
-                            HStack {
-                                if  !hideMiniPlayer {
-                                    thumbnailPlaceholder
-
-                                    if let video = player.video {
-                                        miniPlayerText(video)
-                                        miniPlayerPlayButton
-                                    }
-                                }
-                            }
-                            .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
-                            .frame(maxHeight: .infinity, alignment: .top)
-                            .opacity(!hideMiniPlayer ? 1 : 0)
-                        }
-                        .animation(.easeInOut(duration: 0.4), value: !hideMiniPlayer)
-
+                        playerWebsite
                     } else {
-                        HStack {
-                            PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
-                                .aspectRatio(videoAspectRatio, contentMode: .fit)
-                                .overlay {
-                                    if !player.isPlaying && !hideMiniPlayer {
-                                        thumbnailPlaceholder
-                                    }
-                                }
-                                .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
-                                            .delay(player.isPlaying ? 0.3 : 0),
-                                           value: player.isPlaying)
-                                .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-                                .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-                                .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-                                .frame(width: !hideMiniPlayer ? 89 : nil,
-                                       height: !hideMiniPlayer ? 50 : nil)
-                                .onTapGesture {
-                                    if !hideMiniPlayer {
-                                        handleMiniPlayerTap()
-                                    }
-                                }
-
-                            if let video = player.video, !hideMiniPlayer {
-                                miniPlayerText(video)
-                                miniPlayerPlayButton
-                            }
-                        }
-                        .animation(.bouncy(duration: 0.3), value: hideMiniPlayer)
-                        .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
+                        playerEmbedded
                     }
 
                     if landscapeFullscreen && showFullscreenControls {
@@ -124,16 +68,76 @@ struct PlayerView: View {
         }
     }
 
-    func miniPlayerText(_ video: Video) -> some View {
-        Text(video.title)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contentShape(Rectangle())
-            .onTapGesture(perform: handleMiniPlayerTap)
+    var playerEmbedded: some View {
+        HStack {
+            PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
+                .aspectRatio(videoAspectRatio, contentMode: .fit)
+                .overlay {
+                    if !player.isPlaying && !hideMiniPlayer {
+                        thumbnailPlaceholder
+                    }
+                }
+                .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
+                            .delay(player.isPlaying ? 0.3 : 0),
+                           value: player.isPlaying)
+                .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+                .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
+                .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
+                .frame(width: !hideMiniPlayer ? 89 : nil,
+                       height: !hideMiniPlayer ? 50 : nil)
+                .onTapGesture {
+                    if !hideMiniPlayer {
+                        handleMiniPlayerTap()
+                    }
+                }
+
+            if !hideMiniPlayer {
+                miniPlayerContent
+            }
+        }
+        .animation(.bouncy(duration: 0.3), value: hideMiniPlayer)
+        .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
     }
 
-    var miniPlayerPlayButton: some View {
-        PlayButton(size: 30)
-            .fontWeight(.black)
+    var playerWebsite: some View {
+        ZStack {
+            PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
+                .frame(maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
+                .mask(LinearGradient(gradient: Gradient(
+                    stops: [
+                        .init(color: .black, location: 0),
+                        .init(color: .black, location: 0.9),
+                        .init(color: .clear, location: 1)
+                    ]
+                ), startPoint: .top, endPoint: .bottom))
+
+            Color.black
+                .opacity(!hideMiniPlayer ? 1 : 0)
+
+            HStack {
+                if !hideMiniPlayer {
+                    thumbnailPlaceholder
+                    miniPlayerContent
+                }
+            }
+            .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .opacity(!hideMiniPlayer ? 1 : 0)
+        }
+        .animation(.easeInOut(duration: 0.4), value: !hideMiniPlayer)
+    }
+
+    @ViewBuilder var miniPlayerContent: some View {
+        if let video = player.video {
+            Text(video.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .onTapGesture(perform: handleMiniPlayerTap)
+
+            PlayButton(size: 30)
+                .fontWeight(.black)
+        }
     }
 
     var thumbnailPlaceholder: some View {

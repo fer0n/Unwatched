@@ -58,15 +58,8 @@ struct ChapterMiniControlView: View {
                     }
 
                     if hasChapters {
-                        Button(action: goToNext) {
-                            Image(systemName: Const.nextChapterSF)
-                                .font(.system(size: 15))
-                        }
-                        .buttonStyle(ChangeChapterButtonStyle(
-                            chapter: player.currentChapter,
-                            remainingTime: player.currentRemaining
-                        ))
-                        .disabled(player.nextChapter == nil)
+                        ChapterMiniControlGoToNext(goToNext: goToNext)
+                            .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()
                     }
@@ -79,11 +72,8 @@ struct ChapterMiniControlView: View {
                         subscriptionTitle(sub: sub)
                     }
 
-                    if hasChapters, let remaining = player.currentRemainingText {
-                        Text(remaining)
-                            .foregroundStyle(Color.foregroundGray)
-                            .font(.system(size: 14))
-                            .lineLimit(1)
+                    if hasChapters {
+                        ChapterMiniControlRemainingText()
                     } else {
                         EmptyView()
                     }
@@ -151,25 +141,23 @@ struct ChapterMiniControlView: View {
         }
     }
 
-    var title: some View {
-        ZStack {
-            if let chapter = player.currentChapter {
-                Text(chapter.title)
-            } else {
-                Text(player.video?.title ?? "")
-                    .font(.system(size: 20, weight: .heavy))
-                    .multilineTextAlignment(.center)
-                    .contextMenu(menuItems: {
-                        if let url = player.video?.url {
-                            ShareLink(item: url) {
-                                HStack {
-                                    Image(systemName: "square.and.arrow.up.fill")
-                                    Text("share")
-                                }
+    @ViewBuilder var title: some View {
+        if let chapter = player.currentChapter {
+            Text(chapter.title)
+        } else {
+            Text(player.video?.title ?? "")
+                .font(.system(size: 20, weight: .heavy))
+                .multilineTextAlignment(.center)
+                .contextMenu(menuItems: {
+                    if let url = player.video?.url {
+                        ShareLink(item: url) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.up.fill")
+                                Text("share")
                             }
                         }
-                    })
-            }
+                    }
+                })
         }
     }
 
@@ -204,6 +192,36 @@ struct ChapterMiniControlView: View {
     func goToNext() {
         triggerFeedback.toggle()
         player.goToNextChapter()
+    }
+}
+
+struct ChapterMiniControlRemainingText: View {
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        if let remaining = player.currentRemainingText {
+            Text(remaining)
+                .foregroundStyle(Color.foregroundGray)
+                .font(.system(size: 14))
+                .lineLimit(1)
+        }
+    }
+}
+
+struct ChapterMiniControlGoToNext: View {
+    @Environment(PlayerManager.self) var player
+
+    var goToNext: () -> Void
+
+    var body: some View {
+        Button(action: goToNext) {
+            Image(systemName: Const.nextChapterSF)
+                .font(.system(size: 15))
+        }
+        .buttonStyle(ChangeChapterButtonStyle(
+            chapter: player.currentChapter,
+            remainingTime: player.currentRemaining
+        ))
     }
 }
 
