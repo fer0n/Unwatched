@@ -7,8 +7,8 @@ import SwiftUI
 
 struct CustomSettingsButton: View {
     @Binding var playbackSpeed: Double
+    @Bindable var player: PlayerManager
 
-    @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
     var body: some View {

@@ -59,7 +59,7 @@ struct ChapterDescriptionView: View {
                 }
             }
             .tint(.neutralAccentColor)
-            .myNavigationTitle()
+            .myNavigationTitle(showBack: false)
         }
         .task(id: selectedDetailPageTask) {
             guard let task = selectedDetailPageTask else {

@@ -8,14 +8,10 @@ import SwiftData
 import OSLog
 
 struct VideoListItemSwipeActionsModifier: ViewModifier {
-    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
-    @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
     @Environment(\.modelContext) var modelContext
-
-    @Binding var showInfo: Bool
 
     let video: Video
     var config: VideoListItemConfig
@@ -23,140 +19,25 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                getLeadingSwipeActions()
+                LeadingSwipeActionsView(
+                    theme: theme,
+                    config: config,
+                    addVideoToTopQueue: addVideoToTopQueue,
+                    addVideoToBottomQueue: addVideoToBottomQueue
+                )
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                getTrailingSwipeActions()
+                TrailingSwipeActionsView(
+                    video: video,
+                    theme: theme,
+                    config: config,
+                    clearVideoEverywhere: clearVideoEverywhere,
+                    markWatched: markWatched,
+                    toggleBookmark: toggleBookmark,
+                    moveToInbox: moveToInbox,
+                    clearList: clearList
+                )
             }
-    }
-
-    func getLeadingSwipeActions() -> some View {
-        Group {
-            if config.videoSwipeActions.contains(.queueTop) {
-                Button(role: config.queueRole,
-                       action: addVideoToTopQueue,
-                       label: {
-                        Image(systemName: "text.insert")
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.1))
-            }
-            if config.videoSwipeActions.contains(.queueBottom) {
-                Button(role: config.queueRole,
-                       action: addVideoToBottomQueue,
-                       label: {
-                        Image(systemName: "text.append")
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.3))
-            }
-        }
-    }
-
-    func getTrailingSwipeActions() -> some View {
-        return Group {
-            if config.videoSwipeActions.contains(.clear) &&
-                (config.hasInboxEntry == true
-                    || config.hasQueueEntry == true
-                    || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
-                ) {
-                Button(role: config.clearRole,
-                       action: clearVideoEverywhere,
-                       label: {
-                        Image(systemName: Const.clearSF)
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.9))
-            }
-            if config.videoSwipeActions.contains(.more) {
-                moreMenu
-                    .tint(theme.color.mix(with: Color.black, by: 0.7))
-            }
-            if config.videoSwipeActions.contains(.details) {
-                Button {
-                    showInfo = true
-                } label: {
-                    Image(systemName: Const.videoDescriptionSF)
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.5))
-            }
-        }
-    }
-
-    var moreMenu: some View {
-        Menu {
-            Button(action: markWatched) {
-                Image(systemName: Const.watchedSF)
-                Text("markWatched")
-            }
-            Button(action: toggleBookmark) {
-                let isBookmarked = video.bookmarkedDate != nil
-
-                Image(systemName: "bookmark")
-                    .environment(\.symbolVariants,
-                                 isBookmarked
-                                    ? .fill
-                                    : .none)
-                if isBookmarked {
-                    Text("bookmarked")
-                } else {
-
-                    Text("addBookmark")
-                }
-            }
-            if video.inboxEntry == nil {
-                Button(action: moveToInbox) {
-                    Image(systemName: "tray.and.arrow.down.fill")
-                    Text("moveToInbox")
-                }
-            }
-            Divider()
-            if let url = video.url {
-                ShareLink(item: url)
-
-                Button {
-                    navManager.openUrlInApp(.url(url.absoluteString))
-                } label: {
-                    Image(systemName: Const.appBrowserSF)
-                    Text("openInApp")
-                }
-            }
-            if let list = config.clearAboveBelowList {
-                clearButtons(list)
-            }
-        } label: {
-            Image(systemName: "ellipsis.circle.fill")
-        }
-    }
-
-    func clearButtons(_ list: ClearList) -> some View {
-        Group {
-            Divider()
-
-            if requireClearConfirmation {
-
-                ConfirmableMenuButton {
-                    clearList(list, .above)
-                } label: {
-                    Label("clearAbove", systemImage: "arrowtriangle.up.fill")
-                }
-
-                ConfirmableMenuButton {
-                    clearList(list, .below)
-                } label: {
-                    Label("clearBelow", systemImage: "arrowtriangle.down.fill")
-                }
-
-            } else {
-                Button(role: .destructive) {
-                    clearList(list, .above)
-                } label: {
-                    Label("clearAbove", systemImage: "arrowtriangle.up.fill")
-                }
-                Button(role: .destructive) {
-                    clearList(list, .below)
-                } label: {
-                    Label("clearBelow", systemImage: "arrowtriangle.down.fill")
-                }
-            }
-        }
     }
 
     func addVideoToTopQueue() {
@@ -167,6 +48,14 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             videos: [video],
             modelContext: modelContext
         )
+        handlePotentialQueueChange(after: task, order: order)
+        config.onChange?()
+    }
+
+    func addVideoToBottomQueue() {
+        Logger.log.info("addVideoBottom")
+        let order = video.queueEntry?.order
+        let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
         handlePotentialQueueChange(after: task, order: order)
         config.onChange?()
     }
@@ -185,14 +74,6 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func markWatched() {
         let task = VideoService.markVideoWatched(video, modelContext: modelContext)
         handlePotentialQueueChange(after: task)
-        config.onChange?()
-    }
-
-    func addVideoToBottomQueue() {
-        Logger.log.info("addVideoBottom")
-        let order = video.queueEntry?.order
-        let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
-        handlePotentialQueueChange(after: task, order: order)
         config.onChange?()
     }
 
@@ -223,6 +104,83 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             container: container)
         if list == .queue && direction == .above {
             player.loadTopmostVideoFromQueue(after: task)
+        }
+    }
+}
+
+struct LeadingSwipeActionsView: View {
+    var theme: ThemeColor
+    var config: VideoListItemConfig
+    var addVideoToTopQueue: () -> Void
+    var addVideoToBottomQueue: () -> Void
+
+    var body: some View {
+        Group {
+            if config.videoSwipeActions.contains(.queueTop) {
+                Button(action: addVideoToTopQueue) {
+                    Image(systemName: "text.insert")
+                }
+                .tint(theme.color.mix(with: Color.black, by: 0.1))
+            }
+            if config.videoSwipeActions.contains(.queueBottom) {
+                Button(action: addVideoToBottomQueue) {
+                    Image(systemName: "text.append")
+                }
+                .tint(theme.color.mix(with: Color.black, by: 0.3))
+            }
+        }
+    }
+}
+
+struct TrailingSwipeActionsView: View {
+    @Environment(NavigationManager.self) private var navManager
+
+    var video: Video
+    var theme: ThemeColor
+    var config: VideoListItemConfig
+    var clearVideoEverywhere: () -> Void
+    var markWatched: () -> Void
+    var toggleBookmark: () -> Void
+    var moveToInbox: () -> Void
+    var clearList: (ClearList, ClearDirection) -> Void
+
+    var body: some View {
+        Group {
+            if config.videoSwipeActions.contains(.clear) &&
+                (config.hasInboxEntry == true
+                    || config.hasQueueEntry == true
+                    || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
+                ) {
+                Button(role: config.clearRole,
+                       action: clearVideoEverywhere,
+                       label: {
+                        Image(systemName: Const.clearSF)
+                       })
+                    .tint(theme.color.mix(with: Color.black, by: 0.9))
+            }
+            if config.videoSwipeActions.contains(.more) {
+                VideoListItemMoreMenuView(
+                    video: video,
+                    theme: theme,
+                    config: config,
+                    markWatched: markWatched,
+                    toggleBookmark: toggleBookmark,
+                    moveToInbox: moveToInbox,
+                    openUrlInApp: { urlString in
+                        navManager.openUrlInApp(.url(urlString))
+                    },
+                    clearList: clearList
+                )
+                .tint(theme.color.mix(with: Color.black, by: 0.7))
+            }
+            if config.videoSwipeActions.contains(.details) {
+                Button {
+                    navManager.videoDetail = video
+                } label: {
+                    Image(systemName: Const.videoDescriptionSF)
+                }
+                .tint(theme.color.mix(with: Color.black, by: 0.5))
+            }
         }
     }
 }
