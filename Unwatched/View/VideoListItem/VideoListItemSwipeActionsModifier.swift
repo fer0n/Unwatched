@@ -131,33 +131,19 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Divider()
 
             if requireClearConfirmation {
-                Menu {
-                    Button(role: .destructive) {
-                        clearList(list, .above)
-                    } label: {
-                        Image(systemName: "checkmark")
-                        Text("confirm")
-                    }
-                    Button { } label: {
-                        Label("cancel", systemImage: "xmark")
-                    }
+
+                ConfirmableMenuButton {
+                    clearList(list, .above)
                 } label: {
                     Label("clearAbove", systemImage: "arrowtriangle.up.fill")
                 }
 
-                Menu {
-                    Button(role: .destructive) {
-                        clearList(list, .below)
-                    } label: {
-                        Image(systemName: "checkmark")
-                        Text("confirm")
-                    }
-                    Button { } label: {
-                        Label("cancel", systemImage: "xmark")
-                    }
+                ConfirmableMenuButton {
+                    clearList(list, .below)
                 } label: {
                     Label("clearBelow", systemImage: "arrowtriangle.down.fill")
                 }
+
             } else {
                 Button(role: .destructive) {
                     clearList(list, .above)

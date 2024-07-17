@@ -113,29 +113,27 @@ struct AddToLibraryView: View {
         }
     }
 
-    var pasteButton: some View {
-        ZStack {
-            let isLoading = subManager.isLoading || isLoadingVideos
-            let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
-            let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
+    @ViewBuilder var pasteButton: some View {
+        let isLoading = subManager.isLoading || isLoadingVideos
+        let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
+        let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
-            if isLoading {
-                ProgressView()
-            } else if failed {
-                Image(systemName: "xmark")
-            } else if isSuccess {
-                Image(systemName: "checkmark")
-            } else if addText.isEmpty {
-                Button("paste") {
-                    let text = UIPasteboard.general.string ?? ""
-                    if !text.isEmpty {
-                        handleTextFieldSubmit(text)
-                    }
+        if isLoading {
+            ProgressView()
+        } else if failed {
+            Image(systemName: "xmark")
+        } else if isSuccess {
+            Image(systemName: "checkmark")
+        } else if addText.isEmpty {
+            Button("paste") {
+                let text = UIPasteboard.general.string ?? ""
+                if !text.isEmpty {
+                    handleTextFieldSubmit(text)
                 }
-                .buttonStyle(CapsuleButtonStyle())
-                .tint(.neutralAccentColor)
-                .disabled(subManager.isLoading)
             }
+            .buttonStyle(CapsuleButtonStyle())
+            .tint(.neutralAccentColor)
+            .disabled(subManager.isLoading)
         }
     }
 

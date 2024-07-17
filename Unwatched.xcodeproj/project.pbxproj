@@ -101,6 +101,7 @@
 		8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B52B4F03B30098A3FB /* YoutubeDataAPI.swift */; };
 		8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B72B4F3E080098A3FB /* Collection.swift */; };
 		8891F0BA2B4F54940098A3FB /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B92B4F54940098A3FB /* Double.swift */; };
+		88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
 		8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionActor.swift */; };
 		8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67A2B481F5D00348D01 /* Subscription.swift */; };
@@ -283,6 +284,7 @@
 		8891F0B52B4F03B30098A3FB /* YoutubeDataAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeDataAPI.swift; sourceTree = "<group>"; };
 		8891F0B72B4F3E080098A3FB /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		8891F0B92B4F54940098A3FB /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmableMenuButton.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
 		8898B67A2B481F5D00348D01 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 				88EEFDE72B72E12500A1F441 /* InboxTip.swift */,
 				8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */,
 				88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */,
+				88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1036,6 +1039,7 @@
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
+				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,
 				88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */,
 				883D5E002BE0B95800989313 /* TabItemView.swift in Sources */,
 				88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */,

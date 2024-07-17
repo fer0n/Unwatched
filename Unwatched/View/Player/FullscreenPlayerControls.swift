@@ -26,12 +26,7 @@ struct FullscreenPlayerControls: View {
                     } label: {
                         VStack(spacing: 5) {
                             Image(systemName: Const.nextChapterSF)
-                            if let remaining = currentRemaining {
-                                Text(remaining)
-                                    .font(.system(size: 12))
-                                    .lineLimit(1)
-                                    .opacity(0.8)
-                            }
+                            ChapterTimeRemaining()
                         }
                         .modifier(PlayerControlButtonStyle())
                     }
@@ -149,24 +144,6 @@ struct FullscreenPlayerControls: View {
         .foregroundStyle(Color.neutralAccentColor)
         .frame(minWidth: 35)
     }
-
-    var currentRemaining: String? {
-        player.currentRemaining?.formatTimeMinimal
-
-    }
-}
-
-#Preview {
-    HStack {
-        Rectangle()
-            .fill(.gray)
-        FullscreenPlayerControls(markVideoWatched: { _, _ in })
-            .padding()
-    }
-    .ignoresSafeArea(.all)
-    .modelContainer(DataController.previewContainer)
-    .environment(PlayerManager())
-    .environment(NavigationManager())
 }
 
 struct PlayerControlButtonStyle: ViewModifier {
@@ -185,4 +162,34 @@ struct PlayerControlButtonStyle: ViewModifier {
         .opacity(isEnabled ? 1 : 0.3)
         .padding(3)
     }
+}
+
+struct ChapterTimeRemaining: View {
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        if let remaining = currentRemaining {
+            Text(remaining)
+                .font(.system(size: 12))
+                .lineLimit(1)
+                .opacity(0.8)
+        }
+    }
+
+    var currentRemaining: String? {
+        player.currentRemaining?.formatTimeMinimal
+    }
+}
+
+#Preview {
+    HStack {
+        Rectangle()
+            .fill(.gray)
+        FullscreenPlayerControls(markVideoWatched: { _, _ in })
+            .padding()
+    }
+    .ignoresSafeArea(.all)
+    .modelContainer(DataController.previewContainer)
+    .environment(PlayerManager())
+    .environment(NavigationManager())
 }

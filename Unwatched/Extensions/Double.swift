@@ -23,24 +23,32 @@ extension Double {
         return formatter.string(from: TimeInterval(self))
     }
 
-    func getFormattedSeconds(for allowedUnits: NSCalendar.Unit) -> String? {
+    static private let formattedSecondsFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = self < 60 ? [.second] : allowedUnits
         formatter.unitsStyle = .abbreviated
         formatter.zeroFormattingBehavior = .dropAll
-        return formatter.string(from: TimeInterval(self))
+        return formatter
+    }()
+
+    func getFormattedSeconds(for allowedUnits: NSCalendar.Unit) -> String? {
+        Double.formattedSecondsFormatter.allowedUnits = self < 60 ? [.second] : allowedUnits
+        return Double.formattedSecondsFormatter.string(from: TimeInterval(self))
     }
 
-    var formatTimeMinimal: String? {
-        if 10 < self && self < 60 {
-            return "<1m"
-        }
+    static private let timeMinimalFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
         formatter.zeroFormattingBehavior = .dropAll
         formatter.maximumUnitCount = 1
         formatter.calendar?.locale = Locale(identifier: "en_US_POSIX")
-        return formatter.string(from: TimeInterval(self))
+        return formatter
+    }()
+
+    var formatTimeMinimal: String? {
+        if 10 < self && self < 60 {
+            return "<1m"
+        }
+        return Double.timeMinimalFormatter.string(from: TimeInterval(self))
     }
 }
