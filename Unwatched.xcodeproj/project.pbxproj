@@ -118,6 +118,12 @@
 		889924752C484752001185A6 /* FullscreenSpeedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924742C484752001185A6 /* FullscreenSpeedControl.swift */; };
 		889924782C4847C0001185A6 /* PlayerControlButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */; };
 		8899247A2C4847DD001185A6 /* ChapterTimeRemaining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */; };
+		8899247C2C48552D001185A6 /* MySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899247B2C48552D001185A6 /* MySection.swift */; };
+		8899247E2C48553F001185A6 /* MyForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899247D2C48553F001185A6 /* MyForm.swift */; };
+		889924802C485913001185A6 /* SubscriptionListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899247F2C485913001185A6 /* SubscriptionListSection.swift */; };
+		889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924812C485949001185A6 /* SubscriptionSearchBar.swift */; };
+		889924842C485989001185A6 /* LibraryDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924832C485989001185A6 /* LibraryDestination.swift */; };
+		889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924852C485E3B001185A6 /* LibraryVideoSection.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
 		88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AEB5D62B98A69300A2FF0D /* Logger.swift */; };
 		88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */; };
@@ -311,6 +317,12 @@
 		889924742C484752001185A6 /* FullscreenSpeedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenSpeedControl.swift; sourceTree = "<group>"; };
 		889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlButtonStyle.swift; sourceTree = "<group>"; };
 		889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterTimeRemaining.swift; sourceTree = "<group>"; };
+		8899247B2C48552D001185A6 /* MySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySection.swift; sourceTree = "<group>"; };
+		8899247D2C48553F001185A6 /* MyForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyForm.swift; sourceTree = "<group>"; };
+		8899247F2C485913001185A6 /* SubscriptionListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListSection.swift; sourceTree = "<group>"; };
+		889924812C485949001185A6 /* SubscriptionSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSearchBar.swift; sourceTree = "<group>"; };
+		889924832C485989001185A6 /* LibraryDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryDestination.swift; sourceTree = "<group>"; };
+		889924852C485E3B001185A6 /* LibraryVideoSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryVideoSection.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavigationTitle.swift; sourceTree = "<group>"; };
@@ -433,6 +445,8 @@
 				888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */,
 				88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */,
 				883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */,
+				8899247B2C48552D001185A6 /* MySection.swift */,
+				8899247D2C48553F001185A6 /* MyForm.swift */,
 				888C49BF2B5EC53C00CDEC76 /* KeyboardReadable.swift */,
 				887E72952B92219C00928946 /* DismissToolbarButton.swift */,
 				888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */,
@@ -520,7 +534,11 @@
 			isa = PBXGroup;
 			children = (
 				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
+				889924812C485949001185A6 /* SubscriptionSearchBar.swift */,
+				8899247F2C485913001185A6 /* SubscriptionListSection.swift */,
+				889924852C485E3B001185A6 /* LibraryVideoSection.swift */,
 				88AD06662B74ADE900151B07 /* AddToLibraryView.swift */,
+				889924832C485989001185A6 /* LibraryDestination.swift */,
 				881E51382B59D555006384E4 /* LibraryNavListItem.swift */,
 				888E1DFF2B7000DA00608F99 /* BookmarkedVideosView.swift */,
 				888F74A52BA1FA6B00B94822 /* Settings */,
@@ -1015,6 +1033,7 @@
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
+				8899247C2C48552D001185A6 /* MySection.swift in Sources */,
 				88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */,
 				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
 				88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */,
@@ -1072,6 +1091,7 @@
 				883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */,
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
 				889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
+				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */,
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
 				88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */,
@@ -1099,6 +1119,7 @@
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,
 				88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */,
+				889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
@@ -1107,6 +1128,7 @@
 				88DFC0C22B4489F3001895C8 /* Video.swift in Sources */,
 				88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */,
 				881346602B88C988005A4790 /* CachedImageHolder.swift in Sources */,
+				889924802C485913001185A6 /* SubscriptionListSection.swift in Sources */,
 				88BF35932BC91F45005FA53E /* SetupShareSheetAction.swift in Sources */,
 				88C1947B2BBFD4210073E2E1 /* FullscreenButton.swift in Sources */,
 				88D858502B55AB4D0047E0E6 /* DateTimeConversion.swift in Sources */,
@@ -1136,9 +1158,11 @@
 				888F74AD2BA2009C00B94822 /* AppearanceSettingsView.swift in Sources */,
 				8891F0AD2B4E7E170098A3FB /* VideoActor+Videos.swift in Sources */,
 				881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */,
+				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
 				88B0C15E2C4165BC006D2423 /* UIWindow.swift in Sources */,
 				883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */,
+				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				88D858532B55ABD50047E0E6 /* YtVideoInfo.swift in Sources */,
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,
 				883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */,
