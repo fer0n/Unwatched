@@ -8,6 +8,7 @@ struct AllVideosView: View {
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
 
     @Query(animation: .default) var videos: [Video]
+
     @State var text = DebouncedText(0.5)
     let sortingOptions: [VideoSorting] = [.publishedDate, .clearedInboxDate]
 
