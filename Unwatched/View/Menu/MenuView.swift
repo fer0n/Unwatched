@@ -13,13 +13,10 @@ struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems: Bool = false
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
-
-    @Query(animation: .default) var inbox: [InboxEntry]
 
     var showCancelButton: Bool = false
 
@@ -43,12 +40,8 @@ struct MenuView: View {
                     QueueView(showCancelButton: showCancelButton)
                 }
 
-                TabItemView(image: getInboxSymbol,
-                            text: "inbox",
-                            tag: NavigationTab.inbox,
-                            showBadge: showTabBarBadge && hasNewInboxItems) {
-                    InboxView(showCancelButton: showCancelButton)
-                }
+                InboxTabItemView(showCancelButton: showCancelButton,
+                                 showBadge: showTabBarBadge)
 
                 TabItemView(image: Image(systemName: "books.vertical"),
                             text: "library",
@@ -69,6 +62,10 @@ struct MenuView: View {
                     )
                 }
 
+            }
+            .sheet(item: $navManager.videoDetail) { video in
+                ChapterDescriptionView(video: video, page: $navManager.videoDetailPage)
+                    .presentationDragIndicator(.visible)
             }
         }
         .sheet(item: $navManager.openBrowserUrl) { browserUrl in
@@ -107,27 +104,6 @@ struct MenuView: View {
                 .compactMap { ($0 as? UIWindowScene)?.keyWindow }
                 .reload()
         }
-    }
-
-    @MainActor
-    var getInboxSymbol: Image {
-        let isLoading = refresher.isLoading
-        let isEmpty = inbox.isEmpty
-        let currentTab = navManager.tab == .inbox
-
-        let full = isEmpty ? "" : ".full"
-        if !isLoading {
-            return Image(systemName: "tray\(full)")
-        }
-
-        let fill = currentTab ? ".fill" : ""
-        return Image("custom.tray.loading\(fill)")
-    }
-
-    func markVideoWatched(video: Video) {
-        _ = VideoService.markVideoWatched(
-            video, modelContext: modelContext
-        )
     }
 
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {

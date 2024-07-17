@@ -7,13 +7,9 @@ import SwiftUI
 import SwiftData
 
 struct ChapterMiniControlView: View {
-    @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-    @State var subscribeManager = SubscribeManager()
     @State var triggerFeedback = false
-
-    @State var videoIdToSubscribeTo: PersistentIdentifier?
 
     var setShowMenu: () -> Void
     var showInfo: Bool = true
@@ -68,9 +64,9 @@ struct ChapterMiniControlView: View {
                 GridRow {
                     Color.clear.fixedSize()
 
-                    if let sub = player.video?.subscription {
-                        subscriptionTitle(sub: sub)
-                    }
+                    InteractiveSubscriptionTitle(video: player.video,
+                                                 subscription: player.video?.subscription,
+                                                 openSubscription: openSubscription)
 
                     if hasChapters {
                         ChapterMiniControlRemainingText()
@@ -93,52 +89,11 @@ struct ChapterMiniControlView: View {
                 player.handleChapterChange()
             }
         }
-        .onAppear {
-            subscribeManager.container = modelContext.container
-        }
-        .task(id: videoIdToSubscribeTo) {
-            if let videoId = videoIdToSubscribeTo {
-                await subscribeManager.handleSubscription(videoId)
-            }
-        }
     }
 
-    func subscriptionTitle(sub: Subscription) -> some View {
-        Button {
-            navManager.pushSubscription(sub)
-            setShowMenu()
-        } label: {
-            HStack {
-                Text(sub.displayTitle)
-                if let icon = subscribeManager.getSubscriptionSystemName(video: player.video) {
-                    Image(systemName: icon)
-                        .contentTransition(.symbolEffect(.replace))
-                        .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
-                }
-            }
-            .padding(5)
-            .foregroundStyle(.secondary)
-        }
-        .contextMenu {
-            let isSubscribed = subscribeManager.isSubscribed(video: player.video)
-            Button {
-                videoIdToSubscribeTo = player.video?.persistentModelID
-            } label: {
-                HStack {
-                    if isSubscribed {
-                        Image(systemName: "xmark")
-                        Text("unsubscribe")
-                    } else {
-                        Image(systemName: "plus")
-                        Text("subscribe")
-                    }
-                }
-            }
-            .disabled(subscribeManager.isLoading)
-            if let sub = player.video?.subscription {
-                AspectRatioPicker(subscription: sub)
-            }
-        }
+    func openSubscription(_ sub: Subscription) {
+        navManager.pushSubscription(sub)
+        setShowMenu()
     }
 
     @ViewBuilder var title: some View {

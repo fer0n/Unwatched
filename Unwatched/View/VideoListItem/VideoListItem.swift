@@ -8,15 +8,7 @@ import SwiftData
 import OSLog
 
 struct VideoListItem: View {
-    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
-    @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
-
-    @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
-
-    @State var showInfo = false
-    @State var page: ChapterDescriptionPage = .description
 
     let video: Video
     var config: VideoListItemConfig
@@ -45,41 +37,20 @@ struct VideoListItem: View {
 
                 VideoListItemDetails(video: video, videoDuration: config.videoDuration)
             }
-            if config.showVideoStatus {
-                VideoListItemStatus(
-                    video: video,
-                    playingVideoId: player.video?.youtubeId,
-                    hasInboxEntry: config.hasInboxEntry,
-                    hasQueueEntry: config.hasQueueEntry,
-                    watched: config.watched
-                )
-            }
+            VideoListItemStatus(
+                video: video,
+                playingVideoId: player.video?.youtubeId,
+                hasInboxEntry: config.hasInboxEntry,
+                hasQueueEntry: config.hasQueueEntry,
+                watched: config.watched
+            )
+            .opacity(config.showVideoStatus ? 1 : 0)
         }
         .padding([.vertical, .leading], config.showVideoStatus ? -5 : 0)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            Task {
-                _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
-            }
-            player.playVideo(video)
-            if hideMenuOnPlay {
-                withAnimation {
-                    navManager.showMenu = false
-                }
-            }
-
-            if goToQueueOnPlay {
-                navManager.navigateToQueue()
-            }
-        }
+        .handleVideoListItemTap(video)
         .modifier(VideoListItemSwipeActionsModifier(
-                    showInfo: $showInfo,
                     video: video,
                     config: config))
-        .sheet(isPresented: $showInfo) {
-            ChapterDescriptionView(video: video, page: $page)
-                .presentationDragIndicator(.visible)
-        }
     }
 }
 

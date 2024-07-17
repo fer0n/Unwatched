@@ -34,7 +34,8 @@ struct InboxView: View {
                         .contentShape(Rectangle())
                         .handleVideoUrlDrop(.inbox)
                 }
-                // Workaround: always have the list visible, this avoids a crash when adding the last inbox item to the queue and then moving the video on top of the queue
+                // Workaround: always have the list visible, this avoids a crash when adding the last
+                // inbox item to the queue and then moving the video on top of the queue
                 List {
                     swipeTipView
                         .listRowBackground(Color.backgroundColor)

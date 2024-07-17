@@ -13,6 +13,9 @@ import OSLog
     var openBrowserUrl: BrowserUrl?
     var openTabBrowserUrl: BrowserUrl?
 
+    var videoDetail: Video?
+    var videoDetailPage: ChapterDescriptionPage = .description
+
     var tab = NavigationTab.queue
     var showDescriptionDetail = false
     var selectedDetailPage: ChapterDescriptionPage = .description

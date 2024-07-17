@@ -7,16 +7,12 @@ import SwiftUI
 
 struct FullscreenPlayerControls: View {
     @Environment(PlayerManager.self) var player
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
-
     @State var showChapters = false
-    @State var showSpeedControl = false
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
-        @Bindable var player = player
 
         VStack {
             ZStack {
@@ -85,41 +81,8 @@ struct FullscreenPlayerControls: View {
             .frame(maxHeight: .infinity)
             .disabled(player.previousChapter == nil)
 
-            let customSetting = player.video?.subscription?.customSpeedSetting != nil
             ZStack {
-                Button {
-                    showSpeedControl = true
-                } label: {
-                    HStack(spacing: 0) {
-                        let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
-                        Text(verbatim: speedText)
-                            .font(.custom("SFCompactDisplay-Bold", size: 16))
-                        if speedText.count <= 1 {
-                            Text(verbatim: "×")
-                                .font(.custom("SFCompactDisplay-Semibold", size: 14))
-                        }
-                    }
-                    .fixedSize()
-                    .modifier(PlayerControlButtonStyle(isOn: customSetting))
-                    .animation(.default, value: customSetting)
-                }
-                .frame(width: 35)
-                .fontWeight(.bold)
-            }
-            .popover(isPresented: $showSpeedControl) {
-                ZStack {
-                    Color.sheetBackground
-                        .scaleEffect(1.5)
-
-                    HStack {
-                        SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                        CustomSettingsButton(playbackSpeed: $playbackSpeed)
-                    }
-                    .padding(.horizontal)
-                    .frame(width: 350)
-                }
-                .environment(\.colorScheme, .dark)
-                .presentationCompactAdaptation(.popover)
+                FullscreenSpeedControl()
             }
             .frame(maxHeight: .infinity)
 
@@ -143,41 +106,6 @@ struct FullscreenPlayerControls: View {
         .padding(.vertical)
         .foregroundStyle(Color.neutralAccentColor)
         .frame(minWidth: 35)
-    }
-}
-
-struct PlayerControlButtonStyle: ViewModifier {
-    @Environment(\.isEnabled) var isEnabled
-    var isOn: Bool = false
-
-    func body(content: Content) -> some View {
-
-        VStack(spacing: 5) {
-            content
-            if isOn {
-                Circle()
-                    .frame(width: 5, height: 5)
-            }
-        }
-        .opacity(isEnabled ? 1 : 0.3)
-        .padding(3)
-    }
-}
-
-struct ChapterTimeRemaining: View {
-    @Environment(PlayerManager.self) var player
-
-    var body: some View {
-        if let remaining = currentRemaining {
-            Text(remaining)
-                .font(.system(size: 12))
-                .lineLimit(1)
-                .opacity(0.8)
-        }
-    }
-
-    var currentRemaining: String? {
-        player.currentRemaining?.formatTimeMinimal
     }
 }
 
