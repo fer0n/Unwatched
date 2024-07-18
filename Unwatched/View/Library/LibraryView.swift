@@ -52,10 +52,10 @@ struct LibraryView: View {
                     }
                     RefreshToolbarButton()
                 }
-                .tint(theme.color)
             }
-            .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
+            .tint(theme.color)
         }
+        .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
     }
 }
 
