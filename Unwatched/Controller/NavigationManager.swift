@@ -21,6 +21,8 @@ import OSLog
     var selectedDetailPage: ChapterDescriptionPage = .description
     var searchFocused = false
 
+    var askForReviewPoints = 0
+
     var presentedSubscriptionQueue = [Subscription]()
     var presentedSubscriptionInbox = [Subscription]()
     var presentedLibrary = NavigationPath() {
@@ -59,6 +61,7 @@ import OSLog
 
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
         tab = try container.decode(NavigationTab.self, forKey: .tab)
+        askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -66,6 +69,7 @@ import OSLog
 
         try container.encode(showMenu, forKey: .showMenu)
         try container.encode(tab, forKey: .tab)
+        try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
     }
 
     func pushSubscription(_ subscription: Subscription) {
@@ -179,7 +183,7 @@ import OSLog
 }
 
 enum NavManagerCodingKeys: CodingKey {
-    case showMenu, tab
+    case showMenu, tab, askForReviewPoints
 
 }
 
