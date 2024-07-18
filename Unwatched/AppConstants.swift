@@ -33,6 +33,8 @@ struct Const {
     static let earliestBackgroundBeginSeconds: Double = 30 * 60
     static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
+    static let askForReviewPointThreashold = 30
+
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"

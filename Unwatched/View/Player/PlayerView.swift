@@ -5,6 +5,7 @@
 
 import SwiftUI
 import OSLog
+import StoreKit
 
 struct PlayerView: View {
     @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
@@ -16,6 +17,7 @@ struct PlayerView: View {
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
+    @Environment(\.requestReview) var requestReview
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -160,9 +162,20 @@ struct PlayerView: View {
         .onTapGesture(perform: handleMiniPlayerTap)
     }
 
+    @MainActor
+    func handleRequestReview() {
+        navManager.askForReviewPoints += 1
+        if navManager.askForReviewPoints >= Const.askForReviewPointThreashold {
+            navManager.askForReviewPoints = -10
+            requestReview()
+        }
+    }
+
+    @MainActor
     func handleVideoEnded() {
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
+        handleRequestReview()
 
         if continuousPlay {
             if let video = player.video {
