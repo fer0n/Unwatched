@@ -72,6 +72,11 @@ struct SetupView: View {
     }
 
     func restoreNowPlayingVideo() {
+        #if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            return
+        }
+        #endif
         Logger.log.info("restoreVideo")
         var video: Video?
 
