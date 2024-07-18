@@ -14,31 +14,17 @@ struct ContentView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
-
         let videoExists = player.video != nil
-        let detents: Set<PresentationDetent> = videoExists && !navManager.searchFocused
-            ? Set([.height(sheetPos.maxSheetHeight)]).union(
-                player.embeddingDisabled
-                    ? []
-                    : [.height(sheetPos.playerControlHeight)]
-            )
-            : [.large]
-
-        let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
-            ? [.medium]
-            : [.height(sheetPos.playerControlHeight)]
-
-        let selectedDetent = Binding(
-            get: { sheetPos.selectedDetent ?? detents.first ?? .large },
-            set: { sheetPos.selectedDetent = $0 }
-        )
-
         let bigScreen = sizeClass == .regular
 
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
             let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
             let landscapeFullscreen = !bigScreen && isLandscape
+
+            let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
+                ? [.medium]
+                : [.height(sheetPos.playerControlHeight)]
 
             ZStack {
                 layout {
@@ -77,22 +63,9 @@ struct ContentView: View {
                         .presentationDragIndicator(.visible)
                 }
             }
-            .sheet(isPresented: $navManager.showMenu) {
-                ZStack {
-                    Color.backgroundColor.ignoresSafeArea(.all)
-                    MenuView(showCancelButton: landscapeFullscreen)
-                        .presentationDetents(detents, selection: selectedDetent)
-                        .presentationBackgroundInteraction(
-                            .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                        )
-                        .presentationContentInteraction(.scrolls)
-                        .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                        .presentationDragIndicator(
-                            navManager.searchFocused
-                                ? .hidden
-                                : .visible)
-                }
-            }
+            .menuViewSheet(allowMaxSheetHeight: videoExists && !navManager.searchFocused,
+                           embeddingDisabled: player.embeddingDisabled,
+                           showCancelButton: landscapeFullscreen)
         }
         .ignoresSafeArea(bigScreen ? .keyboard : [])
         .innerSizeTrackerModifier(onChange: { newSize in

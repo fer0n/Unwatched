@@ -124,6 +124,7 @@
 		889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924812C485949001185A6 /* SubscriptionSearchBar.swift */; };
 		889924842C485989001185A6 /* LibraryDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924832C485989001185A6 /* LibraryDestination.swift */; };
 		889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924852C485E3B001185A6 /* LibraryVideoSection.swift */; };
+		889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924872C48E75F001185A6 /* MenuViewSheet.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
 		88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AEB5D62B98A69300A2FF0D /* Logger.swift */; };
 		88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */; };
@@ -323,6 +324,7 @@
 		889924812C485949001185A6 /* SubscriptionSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSearchBar.swift; sourceTree = "<group>"; };
 		889924832C485989001185A6 /* LibraryDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryDestination.swift; sourceTree = "<group>"; };
 		889924852C485E3B001185A6 /* LibraryVideoSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryVideoSection.swift; sourceTree = "<group>"; };
+		889924872C48E75F001185A6 /* MenuViewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewSheet.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavigationTitle.swift; sourceTree = "<group>"; };
@@ -603,6 +605,7 @@
 		883D5DFE2BE0B93F00989313 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				889924872C48E75F001185A6 /* MenuViewSheet.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
 				883D5DFF2BE0B95800989313 /* TabItemView.swift */,
 				8899246A2C47FAE3001185A6 /* InboxTabItemView.swift */,
@@ -1078,6 +1081,7 @@
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
 				881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */,
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
+				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
 				8891F0B02B4E9F330098A3FB /* String.swift in Sources */,
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,

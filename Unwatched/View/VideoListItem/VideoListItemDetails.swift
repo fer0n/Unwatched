@@ -43,6 +43,18 @@ struct VideoListItemDetails: View {
                         }
                     }
             }
+            VideoListItemProgress(video: video, videoDuration: videoDuration)
+        }
+        .foregroundStyle(.secondary)
+    }
+}
+
+struct VideoListItemProgress: View {
+    let video: Video
+    let videoDuration: Double?
+
+    var body: some View {
+        ZStack {
             if let duration = videoDuration ?? video.duration,
                let remaining = video.remainingTime,
                duration > 0 && remaining > 0 {
@@ -58,7 +70,6 @@ struct VideoListItemDetails: View {
                 }
             }
         }
-        .foregroundStyle(.secondary)
     }
 }
 

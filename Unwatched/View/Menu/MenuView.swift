@@ -20,12 +20,6 @@ struct MenuView: View {
 
     var showCancelButton: Bool = false
 
-    @MainActor
-    init(showCancelButton: Bool = false) {
-        self.showCancelButton = showCancelButton
-        customizeTabBarAppearance()
-    }
-
     var body: some View {
         @Bindable var navManager = navManager
 
@@ -75,6 +69,9 @@ struct MenuView: View {
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
+        }
+        .onAppear {
+            customizeTabBarAppearance()
         }
         .onChange(of: sheetOpacity) {
             customizeTabBarAppearance(reload: true)
