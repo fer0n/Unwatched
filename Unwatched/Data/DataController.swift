@@ -45,9 +45,14 @@ class DataController {
         }()
         let video = Video.getDummy()
         sharedModelContainer.mainContext.insert(video)
+
         let sub = Subscription.getDummy()
         sub.videos?.append(video)
         sharedModelContainer.mainContext.insert(sub)
+
+        let jsonData = TestData.backup.data(using: .utf8)!
+        UserDataService.importBackup(jsonData, container: sharedModelContainer)
+
         try? sharedModelContainer.mainContext.save()
         return sharedModelContainer
     }()

@@ -17,7 +17,7 @@ struct UnwatchedApp: App {
 
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
-            inMemory = true
+            return DataController.previewContainer
         }
         #endif
 

@@ -36,6 +36,27 @@ final class UnwatchedUITestsLaunchTests: XCTestCase {
         }
     }
 
+    func testScrollPerformance() {
+        app.launch()
+        let messageList = app.collectionViews.firstMatch
+
+        messageList.cells.firstMatch.tap()
+        sleep(4)
+        app.buttons["Pause"].firstMatch.tap()
+        sleep(1)
+        app.buttons["Menu"].tap()
+
+        let measureOptions = XCTMeasureOptions()
+        measureOptions.invocationOptions = [.manuallyStop]
+
+        measure(metrics: [XCTOSSignpostMetric.scrollDecelerationMetric],
+                options: measureOptions) {
+            messageList.swipeUp(velocity: .fast)
+            stopMeasuring()
+            messageList.swipeDown(velocity: .fast)
+        }
+    }
+
     func test_AddToLibraryView_shouldAddSubscription() {
         app.tabBars["Tab Bar"].buttons["Library"].tap()
 
