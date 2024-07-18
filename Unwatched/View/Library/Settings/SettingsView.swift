@@ -57,6 +57,9 @@ struct SettingsView: View {
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
                     }
+                    Link(destination: UrlService.mastodonUrl) {
+                        LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
+                    }
                 }
 
                 MySection {

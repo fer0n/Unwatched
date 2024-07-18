@@ -819,13 +819,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kontakt"
+            "value" : "Email"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Contact Us"
+            "value" : "Email"
           }
         }
       }
@@ -3314,13 +3314,29 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched auf GitHub"
+            "value" : "GitHub"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched on GitHub"
+            "value" : "GitHub"
+          }
+        }
+      }
+    },
+    "unwatchedOnMastodon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mastodon"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mastodon"
           }
         }
       }
