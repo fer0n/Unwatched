@@ -334,6 +334,22 @@
         }
       }
     },
+    "app" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        }
+      }
+    },
     "appColor" : {
       "localizations" : {
         "de" : {
@@ -2525,7 +2541,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please Rate Unwatched"
+            "value" : "Rate Unwatched"
           }
         }
       }
@@ -2750,6 +2766,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select File"
+          }
+        }
+      }
+    },
+    "sendFeedback" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feedback Senden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Feedback"
           }
         }
       }
