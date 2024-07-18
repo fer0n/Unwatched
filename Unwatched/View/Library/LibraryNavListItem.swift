@@ -31,6 +31,7 @@ struct LibraryNavListItem: View {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
+                    .padding(1)
             }
         }
     }

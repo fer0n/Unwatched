@@ -16,25 +16,23 @@ struct SettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                NavigationLink(value: LibraryDestination.settingsNotifications) {
-                    Label("notifications", systemImage: "app.badge")
-                }
-                .listRowBackground(Color.insetBackgroundColor)
+                MySection("app") {
+                    NavigationLink(value: LibraryDestination.settingsNotifications) {
+                        Label("notifications", systemImage: "app.badge")
+                    }
 
-                NavigationLink(value: LibraryDestination.settingsNewVideos) {
-                    Label("videoSettings", systemImage: "film.stack")
-                }
-                .listRowBackground(Color.insetBackgroundColor)
+                    NavigationLink(value: LibraryDestination.settingsNewVideos) {
+                        Label("videoSettings", systemImage: "film.stack")
+                    }
 
-                NavigationLink(value: LibraryDestination.settingsPlayback) {
-                    Label("playback", systemImage: "play.fill")
-                }
-                .listRowBackground(Color.insetBackgroundColor)
+                    NavigationLink(value: LibraryDestination.settingsPlayback) {
+                        Label("playback", systemImage: "play.fill")
+                    }
 
-                NavigationLink(value: LibraryDestination.settingsAppearance) {
-                    Label("appearance", systemImage: "paintbrush.fill")
+                    NavigationLink(value: LibraryDestination.settingsAppearance) {
+                        Label("appearance", systemImage: "paintbrush.fill")
+                    }
                 }
-                .listRowBackground(Color.insetBackgroundColor)
 
                 if let url = UrlService.shareShortcutUrl {
                     MySection {
@@ -47,7 +45,7 @@ struct SettingsView: View {
                     }
                 }
 
-                MySection {
+                MySection("sendFeedback") {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
@@ -62,7 +60,7 @@ struct SettingsView: View {
                     }
                 }
 
-                MySection {
+                MySection("userData") {
                     NavigationLink(value: LibraryDestination.importSubscriptions) {
                         Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
                     }
