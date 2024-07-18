@@ -117,16 +117,20 @@ struct LeadingSwipeActionsView: View {
     var body: some View {
         Group {
             if config.videoSwipeActions.contains(.queueTop) {
-                Button(action: addVideoToTopQueue) {
-                    Image(systemName: "text.insert")
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.1))
+                Button(role: config.queueRole,
+                       action: addVideoToTopQueue,
+                       label: {
+                        Image(systemName: "text.insert")
+                       })
+                    .tint(theme.color.mix(with: Color.black, by: 0.1))
             }
             if config.videoSwipeActions.contains(.queueBottom) {
-                Button(action: addVideoToBottomQueue) {
-                    Image(systemName: "text.append")
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.3))
+                Button(role: config.queueRole,
+                       action: addVideoToBottomQueue,
+                       label: {
+                        Image(systemName: "text.append")
+                       })
+                    .tint(theme.color.mix(with: Color.black, by: 0.3))
             }
         }
     }
