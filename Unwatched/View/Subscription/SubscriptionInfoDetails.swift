@@ -21,7 +21,6 @@ struct SubscriptionInfoDetails: View {
                 .font(.system(size: 34))
                 .fontWeight(.heavy)
                 .padding(.horizontal)
-                .padding(.top, 35)
 
             headerDetails
 
