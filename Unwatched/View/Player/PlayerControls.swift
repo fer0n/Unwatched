@@ -46,7 +46,9 @@ struct PlayerControls: View {
                 }
 
                 HStack {
-                    RotateOrientationButton()
+                    if !showFullscreenButton {
+                        RotateOrientationButton()
+                    }
                     CombinedPlaybackSpeedSetting()
                 }
                 .environment(\.symbolVariants, .fill)
