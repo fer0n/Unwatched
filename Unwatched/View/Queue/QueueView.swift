@@ -49,8 +49,8 @@ struct QueueView: View {
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
                     }
                     .onMove(perform: moveQueueEntry)
+                    .handleDynamicVideoURLDrop(.queue)
                     .listRowBackground(Color.backgroundColor)
-                    .handleVideoUrlDrop(.queue)
 
                     if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
                         ClearAllVideosButton(clearAll: clearAll)
