@@ -42,7 +42,7 @@ extension View {
 
 // MARK: DynamicViewContent
 
-struct HandleVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
+struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
     @Environment(PlayerManager.self) private var player
     @Environment(\.modelContext) var modelContext
 
@@ -63,7 +63,7 @@ struct HandleVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
     func handleUrlDrop(_ items: [URL], _ index: Int) {
         Logger.log.info("handleUrlDrop \(items)")
         let container = modelContext.container
-        let task = VideoService.addForeignUrls(items, in: placement, at: 0, container: container)
+        let task = VideoService.addForeignUrls(items, in: placement, at: index, container: container)
         if placement == .queue && index == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }
@@ -74,8 +74,8 @@ struct HandleVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
 }
 
 extension DynamicViewContent {
-    func handleVideoURLDrop(_ placement: VideoPlacement) -> some DynamicViewContent {
-        HandleVideoURLDropView(placement: placement) {
+    func handleDynamicVideoURLDrop(_ placement: VideoPlacement) -> some DynamicViewContent {
+        HandleDynamicVideoURLDropView(placement: placement) {
             self
         }
     }
