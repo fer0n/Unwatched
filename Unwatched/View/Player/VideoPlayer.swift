@@ -92,4 +92,5 @@ struct VideoPlayer: View {
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())
         .environment(RefreshManager())
+        .tint(Color.neutralAccentColor)
 }

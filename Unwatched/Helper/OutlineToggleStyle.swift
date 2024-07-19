@@ -14,9 +14,9 @@ struct OutlineToggleStyle: ToggleStyle {
             configuration.isOn.toggle()
         }, label: {
             configuration.label
-                .modifier(OutlineToggleModifier(isOn: configuration.isOn,
-                                                isSmall: isSmall,
-                                                stroke: stroke))
+                .outlineToggleModifier(isOn: configuration.isOn,
+                                       isSmall: isSmall,
+                                       stroke: stroke)
         })
     }
 }
@@ -38,6 +38,16 @@ struct OutlineToggleModifier: ViewModifier {
                 Circle()
                     .stroke(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
             )
+    }
+}
+
+extension View {
+    func outlineToggleModifier(isOn: Bool,
+                               isSmall: Bool = false,
+                               stroke: Bool = true) -> some View {
+        self.modifier(OutlineToggleModifier(isOn: isOn,
+                                            isSmall: isSmall,
+                                            stroke: stroke))
     }
 }
 

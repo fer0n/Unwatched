@@ -13,7 +13,7 @@ struct BrowserViewSheet: ViewModifier {
 
     func body(content: Content) -> some View {
         let bigScreen = sizeClass == .regular
-        
+
         if bigScreen {
             content
                 .fullScreenCover(item: navManager.openBrowserUrl) { browserUrl in

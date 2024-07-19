@@ -82,6 +82,18 @@ struct FullscreenPlayerControls: View {
             .disabled(player.previousChapter == nil)
 
             ZStack {
+                Button {
+                    OrientationManager.changeOrientation(to: .portrait)
+                } label: {
+                    Image(systemName: "rotate.left.fill")
+                        .modifier(PlayerControlButtonStyle())
+                }
+            }
+            .font(.system(size: 18))
+            .fontWeight(.bold)
+            .frame(maxHeight: .infinity)
+
+            ZStack {
                 FullscreenSpeedControl()
             }
             .frame(maxHeight: .infinity)
