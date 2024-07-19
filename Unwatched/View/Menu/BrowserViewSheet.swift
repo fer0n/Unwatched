@@ -1,0 +1,42 @@
+//
+//  BrowserViewSheet.swift
+//  Unwatched
+//
+
+import SwiftUI
+
+struct BrowserViewSheet: ViewModifier {
+    var navManager: Bindable<NavigationManager>
+    @Environment(\.modelContext) var modelContext
+    @Environment(RefreshManager.self) var refresher
+    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+
+    func body(content: Content) -> some View {
+        let bigScreen = sizeClass == .regular
+        
+        if bigScreen {
+            content
+                .fullScreenCover(item: navManager.openBrowserUrl) { browserUrl in
+                    BrowserView(container: modelContext.container,
+                                refresher: refresher,
+                                startUrl: browserUrl)
+                }
+            // workaround: at a certain width, the YouTube search bar doesn't work (can't be tapped)
+            // on iPad, this is the regular ".sheet" width. It still happens with the fullScreenCover
+            // but only when the app is not run in fullscreen
+        } else {
+            content
+                .sheet(item: navManager.openBrowserUrl) { browserUrl in
+                    BrowserView(container: modelContext.container,
+                                refresher: refresher,
+                                startUrl: browserUrl)
+                }
+        }
+    }
+}
+
+extension View {
+    func browserViewSheet(navManager: Bindable<NavigationManager>) -> some View {
+        self.modifier(BrowserViewSheet(navManager: navManager))
+    }
+}

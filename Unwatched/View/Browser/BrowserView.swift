@@ -10,8 +10,6 @@ import TipKit
 import OSLog
 
 struct BrowserView: View, KeyboardReadable {
-    @Environment(\.dismiss) var dismiss
-
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
@@ -36,18 +34,7 @@ struct BrowserView: View, KeyboardReadable {
         GeometryReader { geometry in
             VStack {
                 if showHeader {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.down")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .padding(7)
-                            .frame(maxWidth: .infinity)
-                            .fontWeight(.semibold)
-                    }
-                    .foregroundStyle(Color.neutralAccentColor)
+                    BrowserViewHeader()
                 }
 
                 ZStack {

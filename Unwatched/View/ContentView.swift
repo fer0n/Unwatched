@@ -29,9 +29,6 @@ struct ContentView: View {
             ZStack {
                 layout {
                     VideoPlayer(
-                        showMenu: bigScreen
-                            ? .constant(false)
-                            : $navManager.showMenu,
                         compactSize: bigScreen,
                         showInfo: !bigScreen || (isLandscape && bigScreen),
                         showFullscreenButton: bigScreen,
@@ -65,7 +62,9 @@ struct ContentView: View {
             }
             .menuViewSheet(allowMaxSheetHeight: videoExists && !navManager.searchFocused,
                            embeddingDisabled: player.embeddingDisabled,
-                           showCancelButton: landscapeFullscreen)
+                           showCancelButton: landscapeFullscreen,
+                           disableSheet: bigScreen
+            )
         }
         .ignoresSafeArea(bigScreen ? .keyboard : [])
         .innerSizeTrackerModifier(onChange: { newSize in

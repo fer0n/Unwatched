@@ -62,11 +62,7 @@ struct MenuView: View {
                     .presentationDragIndicator(.visible)
             }
         }
-        .sheet(item: $navManager.openBrowserUrl) { browserUrl in
-            BrowserView(container: modelContext.container,
-                        refresher: refresher,
-                        startUrl: browserUrl)
-        }
+        .browserViewSheet(navManager: $navManager)
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
