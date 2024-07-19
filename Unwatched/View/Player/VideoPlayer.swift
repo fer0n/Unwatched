@@ -14,8 +14,6 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
 
-    @Binding var showMenu: Bool
-
     var compactSize = false
     var showInfo = true
     var showFullscreenButton = false
@@ -83,13 +81,12 @@ struct VideoPlayer: View {
                 sheetPos.setDetentVideoPlayer()
             }
         }
-        showMenu = true
+        navManager.showMenu = true
     }
-
 }
 
 #Preview {
-    VideoPlayer(showMenu: .constant(false), landscapeFullscreen: false)
+    VideoPlayer(landscapeFullscreen: false)
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())

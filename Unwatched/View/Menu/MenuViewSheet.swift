@@ -12,8 +12,10 @@ struct MenuViewSheet: ViewModifier {
     var allowMaxSheetHeight: Bool
     var embeddingDisabled: Bool
     var showCancelButton: Bool
+    var disableSheet: Bool
 
     func body(content: Content) -> some View {
+
         let detents: Set<PresentationDetent> = allowMaxSheetHeight
             ? Set([.height(sheetPos.maxSheetHeight)]).union(
                 embeddingDisabled
@@ -29,32 +31,38 @@ struct MenuViewSheet: ViewModifier {
 
         @Bindable var navManager = navManager
 
-        content
-            .sheet(isPresented: $navManager.showMenu) {
-                ZStack {
-                    Color.backgroundColor.ignoresSafeArea(.all)
-                    MenuView(showCancelButton: showCancelButton)
-                        .presentationDetents(detents, selection: selectedDetent)
-                        .presentationBackgroundInteraction(
-                            .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                        )
-                        .presentationContentInteraction(.scrolls)
-                        .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                        .presentationDragIndicator(
-                            navManager.searchFocused
-                                ? .hidden
-                                : .visible)
+        if disableSheet {
+            content
+        } else {
+            content
+                .sheet(isPresented: $navManager.showMenu) {
+                    ZStack {
+                        Color.backgroundColor.ignoresSafeArea(.all)
+                        MenuView(showCancelButton: showCancelButton)
+                            .presentationDetents(detents, selection: selectedDetent)
+                            .presentationBackgroundInteraction(
+                                .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                            )
+                            .presentationContentInteraction(.scrolls)
+                            .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                            .presentationDragIndicator(
+                                navManager.searchFocused
+                                    ? .hidden
+                                    : .visible)
+                    }
                 }
-            }
+        }
     }
 }
 
 extension View {
     func menuViewSheet(allowMaxSheetHeight: Bool,
                        embeddingDisabled: Bool,
-                       showCancelButton: Bool) -> some View {
+                       showCancelButton: Bool,
+                       disableSheet: Bool) -> some View {
         self.modifier(MenuViewSheet(allowMaxSheetHeight: allowMaxSheetHeight,
                                     embeddingDisabled: embeddingDisabled,
-                                    showCancelButton: showCancelButton))
+                                    showCancelButton: showCancelButton,
+                                    disableSheet: disableSheet))
     }
 }

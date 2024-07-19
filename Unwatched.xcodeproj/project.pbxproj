@@ -34,6 +34,8 @@
 		881E513F2B59D9A8006384E4 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513E2B59D9A8006384E4 /* Task.swift */; };
 		881E51422B5A6446006384E4 /* ShortsDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51412B5A6446006384E4 /* ShortsDetection.swift */; };
 		881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51432B5A75AD006384E4 /* SubscriptionListView.swift */; };
+		881F573F2C4A5D3300559BF9 /* BrowserViewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */; };
+		881F57412C4A5DD900559BF9 /* BrowserViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */; };
 		8823EB762B54FB510010A12F /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB752B54FB510010A12F /* apiKey.swift */; };
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
@@ -235,6 +237,8 @@
 		881E513E2B59D9A8006384E4 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		881E51412B5A6446006384E4 /* ShortsDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsDetection.swift; sourceTree = "<group>"; };
 		881E51432B5A75AD006384E4 /* SubscriptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListView.swift; sourceTree = "<group>"; };
+		881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewSheet.swift; sourceTree = "<group>"; };
+		881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewHeader.swift; sourceTree = "<group>"; };
 		8823EB752B54FB510010A12F /* apiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiKey.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -608,6 +612,7 @@
 			isa = PBXGroup;
 			children = (
 				889924872C48E75F001185A6 /* MenuViewSheet.swift */,
+				881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
 				883D5DFF2BE0B95800989313 /* TabItemView.swift */,
 				8899246A2C47FAE3001185A6 /* InboxTabItemView.swift */,
@@ -877,6 +882,7 @@
 				88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */,
 				88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */,
 				88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */,
+				881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -1126,6 +1132,7 @@
 				8899246D2C480112001185A6 /* HandleVideoListItemTap.swift in Sources */,
 				887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */,
 				88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */,
+				881F573F2C4A5D3300559BF9 /* BrowserViewSheet.swift in Sources */,
 				88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */,
 				889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
@@ -1165,6 +1172,7 @@
 				887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */,
 				888F74AD2BA2009C00B94822 /* AppearanceSettingsView.swift in Sources */,
 				8891F0AD2B4E7E170098A3FB /* VideoActor+Videos.swift in Sources */,
+				881F57412C4A5DD900559BF9 /* BrowserViewHeader.swift in Sources */,
 				881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */,
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
@@ -1386,7 +1394,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 91;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1431,7 +1439,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 91;
+				CURRENT_PROJECT_VERSION = 92;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
