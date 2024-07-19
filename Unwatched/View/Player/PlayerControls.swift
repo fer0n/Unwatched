@@ -45,7 +45,11 @@ struct PlayerControls: View {
                     SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
                 }
 
-                CombinedPlaybackSpeedSetting()
+                HStack {
+                    RotateOrientationButton()
+                    CombinedPlaybackSpeedSetting()
+                }
+                .environment(\.symbolVariants, .fill)
 
                 HStack {
                     WatchedButton(markVideoWatched: markVideoWatched)
@@ -63,7 +67,6 @@ struct PlayerControls: View {
                         FullscreenButton(playVideoFullscreen: $playVideoFullscreen)
                         Spacer()
                     }
-
                 }
                 .padding(.horizontal, 10)
             }
@@ -108,4 +111,18 @@ struct PlayerControls: View {
             browserUrl = url
         }
     }
+}
+
+#Preview {
+    PlayerControls(compactSize: false,
+                   setShowMenu: { },
+                   showInfo: true,
+                   markVideoWatched: { _, _ in },
+                   showFullscreenButton: false)
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager.getDummy())
+        .environment(PlayerManager.getDummy())
+        .environment(SheetPositionReader())
+        .environment(RefreshManager())
+        .tint(Color.neutralAccentColor)
 }

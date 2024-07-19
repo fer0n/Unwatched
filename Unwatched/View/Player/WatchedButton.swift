@@ -20,7 +20,7 @@ struct WatchedButton: View {
         } label: {
             Image(systemName: "checkmark")
         }
-        .modifier(OutlineToggleModifier(isOn: player.isConsideredWatched))
+        .outlineToggleModifier(isOn: player.isConsideredWatched)
         .padding(3)
         .contextMenu {
             if player.video != nil {

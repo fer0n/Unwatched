@@ -63,9 +63,9 @@ struct NextVideoButton: View {
     var body: some View {
         CoreNextButton(markVideoWatched: markVideoWatched) { image, isOn in
             image
-                .modifier(OutlineToggleModifier(isOn: isOn,
-                                                isSmall: isSmall,
-                                                stroke: stroke))
+                .outlineToggleModifier(isOn: isOn,
+                                       isSmall: isSmall,
+                                       stroke: stroke)
         }
     }
 }
