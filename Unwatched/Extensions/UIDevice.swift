@@ -11,6 +11,10 @@ public extension UIDevice {
         !UIDevice.modelName.contains("iPhone SE")
     }()
 
+    static let requiresFullscreenWebWorkaround: Bool = {
+        UIDevice.modelName.contains("iPhone")
+    }()
+
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)

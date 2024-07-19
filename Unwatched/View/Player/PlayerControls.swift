@@ -7,6 +7,7 @@ import SwiftUI
 
 struct PlayerControls: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = false
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
@@ -21,7 +22,6 @@ struct PlayerControls: View {
     let setShowMenu: () -> Void
     let showInfo: Bool
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
-    let showFullscreenButton: Bool
 
     var body: some View {
         let layout = compactSize
@@ -46,7 +46,7 @@ struct PlayerControls: View {
                 }
 
                 HStack {
-                    if !showFullscreenButton {
+                    if showFullscreenControls && UIDevice.supportsFullscreenControls {
                         RotateOrientationButton()
                     }
                     CombinedPlaybackSpeedSetting()
@@ -65,10 +65,6 @@ struct PlayerControls: View {
                     .fontWeight(.black)
                     NextVideoButton(markVideoWatched: markVideoWatched)
                         .frame(maxWidth: .infinity)
-                    if showFullscreenButton {
-                        FullscreenButton(playVideoFullscreen: $playVideoFullscreen)
-                        Spacer()
-                    }
                 }
                 .padding(.horizontal, 10)
             }
@@ -119,8 +115,7 @@ struct PlayerControls: View {
     PlayerControls(compactSize: false,
                    setShowMenu: { },
                    showInfo: true,
-                   markVideoWatched: { _, _ in },
-                   showFullscreenButton: false)
+                   markVideoWatched: { _, _ in })
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())

@@ -31,7 +31,6 @@ struct ContentView: View {
                     VideoPlayer(
                         compactSize: bigScreen,
                         showInfo: !bigScreen || (isLandscape && bigScreen),
-                        showFullscreenButton: bigScreen,
                         landscapeFullscreen: landscapeFullscreen
                     )
                     if bigScreen {

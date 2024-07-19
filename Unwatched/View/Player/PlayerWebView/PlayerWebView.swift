@@ -35,6 +35,16 @@ struct PlayerWebView: UIViewRepresentable {
         webView.isOpaque = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
 
+        if !UIDevice.requiresFullscreenWebWorkaround {
+            webView.evaluateJavaScript("navigator.userAgent") { result, _ in
+                if let userAgent = result as? String {
+                    let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
+                    webView.customUserAgent = modifiedUserAgent
+                    // workaround: fix "fullscreen" button being blocked on the iPad
+                }
+            }
+        }
+
         loadWebContent(webView)
         return webView
     }

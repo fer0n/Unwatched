@@ -16,7 +16,6 @@ struct VideoPlayer: View {
 
     var compactSize = false
     var showInfo = true
-    var showFullscreenButton = false
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -30,8 +29,7 @@ struct VideoPlayer: View {
                 PlayerControls(compactSize: compactSize,
                                setShowMenu: setShowMenu,
                                showInfo: showInfo,
-                               markVideoWatched: markVideoWatched,
-                               showFullscreenButton: showFullscreenButton)
+                               markVideoWatched: markVideoWatched)
             }
         }
         .tint(.neutralAccentColor)
