@@ -20,9 +20,6 @@ struct ShowMenuGesture: ViewModifier {
                         state = value.translation.height
                         if state < -30 {
                             setShowMenu()
-                        } else if state > 30, UIDevice.supportsFullscreenControls {
-                            let current = OrientationManager.currentOrientation()
-                            OrientationManager.changeOrientation(to: current == .portrait ? .landscapeRight : .portrait)
                         }
                     }
             )
