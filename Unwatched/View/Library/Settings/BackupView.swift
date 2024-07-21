@@ -11,16 +11,11 @@ struct BackupView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(Alerter.self) private var alerter
 
-    @AppStorage(Const.automaticBackups) var automaticBackups = true
-    @AppStorage(Const.minimalBackups) var minimalBackups = true
-    @AppStorage(Const.enableIcloudSync) var enableIcloudSync = false
-
     @State var showFileImporter = false
     @State var showDeleteConfirmation = false
     @State var fileNames = [URL]()
     @State var fileToBeRestored: IdentifiableURL?
 
-    @State var isDeletingTask: Task<(), Never>?
     @State var isDeletingEverythingTask: Task<(), Never>?
     @State var saveToIcloudTask: Task<(), any Error>?
 
@@ -31,23 +26,7 @@ struct BackupView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection("icloudSync", footer: "icloudSyncHelper") {
-                    Toggle(isOn: $enableIcloudSync) {
-                        Text("syncToIcloud")
-                    }
-                }
-
-                MySection("automaticBackups", footer: "automaticBackupsHelper") {
-                    Toggle(isOn: $automaticBackups) {
-                        Text("backupToIcloud")
-                    }
-                }
-
-                MySection(footer: "minimalBackupsHelper") {
-                    Toggle(isOn: $minimalBackups) {
-                        Text("minimalBackups")
-                    }
-                }
+                BackupSettings()
 
                 MySection {
                     AsyncButton {
@@ -101,16 +80,7 @@ struct BackupView: View {
                 AutoDeleteBackupView()
 
                 MySection {
-                    Button(role: .destructive, action: {
-                        deleteImageCache()
-                    }, label: {
-                        if isDeletingTask != nil {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            Text("deleteImageCache")
-                        }
-                    })
+                    DeleteImageCacheButton()
 
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
@@ -151,11 +121,6 @@ struct BackupView: View {
             case .failure(let error):
                 Logger.log.error("\(error.localizedDescription)")
             }
-        }
-        .task(id: isDeletingTask) {
-            guard isDeletingTask != nil else { return }
-            await isDeletingTask?.value
-            isDeletingTask = nil
         }
         .task(id: isDeletingEverythingTask) {
             guard isDeletingEverythingTask != nil else { return }
@@ -259,15 +224,6 @@ struct BackupView: View {
         UserDefaults.standard.set(false, forKey: Const.hasNewQueueItems)
         UserDefaults.standard.set(false, forKey: Const.hasNewInboxItems)
         return task
-    }
-
-    func deleteImageCache() {
-        if isDeletingTask != nil { return }
-        let container = modelContext.container
-        isDeletingTask = Task {
-            let task = ImageService.deleteAllImages(container)
-            try? await task.value
-        }
     }
 
     func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {

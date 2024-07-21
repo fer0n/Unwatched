@@ -7,6 +7,7 @@ import SwiftUI
 
 struct LibraryDestinationModifier: ViewModifier {
 
+    // swiftlint:disable cyclomatic_complexity
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: Subscription.self) { sub in
@@ -41,6 +42,7 @@ struct LibraryDestinationModifier: ViewModifier {
                 }
             }
     }
+    // swiftlint:enable cyclomatic_complexity
 }
 
 extension View {

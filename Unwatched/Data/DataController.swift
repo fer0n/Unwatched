@@ -78,10 +78,10 @@ extension Subscription {
 extension Video {
     // Preview data
     static func getDummy() -> Video {
-        //        let chapters = [
-        //            Chapter(title: "First Chapter", time: 0, duration: 30, endTime: 30),
-        //            Chapter(title: "Second Chapter", time: 30, duration: 100, endTime: 130)
-        //        ]
+        // let chapters = [
+        //     Chapter(title: "First Chapter", time: 0, duration: 30, endTime: 30),
+        //     Chapter(title: "Second Chapter", time: 30, duration: 100, endTime: 130)
+        // ]
         return Video(
             title: "Rabbit R1: Barely Reviewable",
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
@@ -125,8 +125,8 @@ extension Video {
             16:42 FUTURE
             """
 
-            //            videoDescription: "The Resident Evil 4 Remake VR mode is releasing as a free update to th" // ,
-            //            chapters: chapters
+            // videoDescription: "The Resident Evil 4 Remake VR mode...
+            // chapters: chapters
         )
     }
 }

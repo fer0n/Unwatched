@@ -75,6 +75,7 @@ struct PlayerView: View {
         .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)
     }
 
+    @MainActor
     var playerEmbedded: some View {
         HStack {
             PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
@@ -106,6 +107,7 @@ struct PlayerView: View {
         .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
     }
 
+    @MainActor
     var playerWebsite: some View {
         ZStack {
             PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
