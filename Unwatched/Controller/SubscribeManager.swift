@@ -40,7 +40,7 @@ import OSLog
             return
         }
         isLoading = true
-        var task = SubscriptionService.isSubscribed(channelId: subscriptionInfo?.channelId,
+        let task = SubscriptionService.isSubscribed(channelId: subscriptionInfo?.channelId,
                                                     playlistId: subscriptionInfo?.playlistId,
                                                     container: container)
         let isSubscribed = await task.value

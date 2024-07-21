@@ -275,8 +275,8 @@ struct PlayerWebView: UIViewRepresentable {
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
             if parent.playerType != .youtube || !parent.player.embeddingDisabled {
-                // workaround: without "!parent.player.embeddingDisabled", the video doesn't start switching from a non-embedding
-                // to an embedded video, probably a race condition
+                // workaround: without "!parent.player.embeddingDisabled", the video doesn't start
+                // switching from a non-embedding to an embedded video, probably a race condition
                 return
             }
             parent.player.handleAutoStart()
