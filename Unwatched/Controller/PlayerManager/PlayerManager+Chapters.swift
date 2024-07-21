@@ -77,6 +77,13 @@ extension PlayerManager {
     }
 
     func goToPreviousChapter() {
+        if let current = currentChapter,
+           let currentTime = currentTime,
+           (currentTime - current.startTime) >= Const.previousChapterDelaySeconds * playbackSpeed {
+            setChapter(current)
+            return
+        }
+
         if let previous = previousChapter {
             setChapter(previous)
         }
