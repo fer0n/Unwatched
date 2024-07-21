@@ -9,8 +9,7 @@ import OSLog
 
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacement,
-                        at index: Int,
-                        addImage: Bool = false) async throws {
+                        at index: Int) async throws {
         var videoIds = [String]()
         var playlistIds = [String]()
 
@@ -27,11 +26,11 @@ import OSLog
         }
 
         if !videoIds.isEmpty {
-            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index, addImage: addImage)
+            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index)
         }
 
         for playlistId in playlistIds {
-            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index, addImage: addImage)
+            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index)
         }
 
         try modelContext.save()
@@ -42,8 +41,7 @@ import OSLog
 
     private func addForeignPlaylist(playlistId: String,
                                     in videoplacement: VideoPlacement,
-                                    at index: Int,
-                                    addImage: Bool = false) async throws {
+                                    at index: Int) async throws {
         Logger.log.info("addForeignPlaylist")
         var videos = [Video]()
         let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
@@ -53,7 +51,7 @@ import OSLog
             } else {
                 if let (video, feedTitle) = try await createVideo(sendableVideo: sendableVideo) {
                     videos.append(video)
-                    try await handleNewForeignVideo(video, feedTitle: feedTitle, addImage: addImage)
+                    try await handleNewForeignVideo(video, feedTitle: feedTitle)
                 } else {
                     Logger.log.warning("Video couldn't be created")
                 }
@@ -62,23 +60,13 @@ import OSLog
         addVideosTo(videos: videos, placement: videoplacement, index: index)
     }
 
-    private func handleNewForeignVideo(_ video: Video, feedTitle: String? = nil, addImage: Bool = false) async throws {
+    private func handleNewForeignVideo(_ video: Video, feedTitle: String? = nil) async throws {
         try await addSubscriptionsForForeignVideos(video, feedTitle: feedTitle)
-        if addImage,
-           let url = video.thumbnailUrl,
-           let data = try? await ImageService.loadImageData(url: url) {
-            let img = CachedImage(url, imageData: data)
-            modelContext.insert(img)
-            video.cachedImage = img
-            // Workaround: avoids crash when adding video via shortcut
-            // TODO: still necessary? Might be fixed
-        }
     }
 
     private func addForeignVideos(videoIds: [String],
                                   in videoplacement: VideoPlacement,
-                                  at index: Int,
-                                  addImage: Bool = false) async throws {
+                                  at index: Int) async throws {
         Logger.log.info("addForeignVideos?")
         var videos = [Video]()
         for youtubeId in videoIds {
@@ -87,7 +75,7 @@ import OSLog
             } else {
                 let res = try await createVideo(youtubeId: youtubeId)
                 if let video = res?.video {
-                    try await handleNewForeignVideo(video, feedTitle: res?.feedTitle, addImage: addImage)
+                    try await handleNewForeignVideo(video, feedTitle: res?.feedTitle)
                     videos.append(video)
                 }
             }
