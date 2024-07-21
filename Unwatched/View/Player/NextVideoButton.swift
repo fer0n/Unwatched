@@ -12,12 +12,15 @@ struct CoreNextButton<Content>: View where Content: View {
 
     private let contentImage: ((Image, _ isOn: Bool) -> Content)
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    let extendedContextMenu: Bool
 
     init(
         markVideoWatched: @escaping (_ showMenu: Bool, _ source: VideoSource) -> Void,
+        extendedContextMenu: Bool = false,
         @ViewBuilder content: @escaping (Image, _ isOn: Bool) -> Content
     ) {
         self.markVideoWatched = markVideoWatched
+        self.extendedContextMenu = extendedContextMenu
         self.contentImage = content
     }
 
@@ -49,6 +52,19 @@ struct CoreNextButton<Content>: View where Content: View {
                 markVideoWatched(false, .userInteraction)
             } label: {
                 Label("nextVideo", systemImage: Const.nextVideoSF)
+            }
+            if extendedContextMenu {
+                Divider()
+                Button {
+                    markVideoWatched(true, .nextUp)
+                } label: {
+                    Label("markWatched", systemImage: "checkmark.circle.fill")
+                }
+                Button {
+                    player.clearVideo()
+                } label: {
+                    Label("clearVideo", systemImage: "xmark.circle.fill")
+                }
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
