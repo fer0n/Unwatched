@@ -69,11 +69,10 @@ struct PlayerWebView: UIViewRepresentable {
             player.previousState.isPlaying = player.isPlaying
         }
 
-        let seekPosition = player.seekPosition
-        if prev.seekPosition != seekPosition, let seekTo = seekPosition {
+        if let seekTo = player.seekPosition {
             Logger.log.info("SEEK")
             uiView.evaluateJavaScript(getSeekToScript(seekTo))
-            player.previousState.seekPosition = seekPosition
+            player.seekPosition = nil
         }
 
         if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
@@ -299,6 +298,5 @@ struct PlayerWebView: UIViewRepresentable {
 struct PreviousState {
     var videoId: String?
     var playbackSpeed: Double?
-    var seekPosition: Double?
     var isPlaying: Bool = false
 }
