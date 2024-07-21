@@ -7,7 +7,7 @@ import SwiftUI
 
 struct PlayerControls: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
+    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = false
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos

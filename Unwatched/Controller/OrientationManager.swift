@@ -11,10 +11,4 @@ struct OrientationManager {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
         windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
     }
-
-    @MainActor
-    static func currentOrientation() -> UIInterfaceOrientation? {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return nil }
-        return windowScene.interfaceOrientation
-    }
 }
