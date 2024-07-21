@@ -98,7 +98,8 @@ struct FullscreenPlayerControls: View {
             }
             .frame(maxHeight: .infinity)
 
-            CoreNextButton(markVideoWatched: markVideoWatched) { image, isOn in
+            CoreNextButton(markVideoWatched: markVideoWatched,
+                           extendedContextMenu: true) { image, isOn in
                 image
                     .modifier(PlayerControlButtonStyle(isOn: isOn))
             }
