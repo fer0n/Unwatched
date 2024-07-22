@@ -1421,22 +1421,6 @@
         }
       }
     },
-    "handleShortsDifferently" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shorts Anders Behandeln"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom Shorts Behaviour"
-          }
-        }
-      }
-    },
     "hardReload" : {
       "localizations" : {
         "de" : {
@@ -1474,13 +1458,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shorts in Abos Ausblenden"
+            "value" : "#Shorts nicht anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide Shorts in Subscriptions"
+            "value" : "Hide #Shorts"
           }
         }
       }
@@ -1490,13 +1474,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shorts sind weiterhin in der Inbox, Queue und Gesehen-Ansicht sichtbar. Sie werden nicht länger unter \"Alle Videos\" und bei Abos angezeigt."
+            "value" : "Neue #Shorts landen nicht länger in der Inbox und sind in anderen Listen nicht mehr sichtbar. Queue und Inbox bleiben unberührt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shorts will still be visible in the Inbox, Queue, and Watch History. But they will be hidden from \"All Videos\" and under subscriptions."
+            "value" : "New #Shorts won't show up in your inbox and will be hidden everywhere. Queue and current Inbox remains unchanged."
           }
         }
       }
@@ -1951,22 +1935,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Move to Inbox"
-          }
-        }
-      }
-    },
-    "newShorts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue Shorts"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Shorts"
           }
         }
       }

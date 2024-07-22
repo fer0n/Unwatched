@@ -10,7 +10,6 @@ struct SubscriptionDetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @State var isLoading = false
@@ -91,7 +90,7 @@ struct SubscriptionDetailView: View {
     }
 
     var shortsFilter: ShortsDetection? {
-        (handleShortsDifferently && hideShortsEverywhere) ? shortsDetection : nil
+        (hideShortsEverywhere) ? shortsDetection : nil
     }
 
     func handleOnAppear() {

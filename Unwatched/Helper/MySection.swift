@@ -24,14 +24,14 @@ struct MySection<Content: View>: View {
     init(_ title: LocalizedStringKey = "",
          footer: LocalizedStringKey?,
          @ViewBuilder content: () -> Content) {
-        self.content = content()
-        self.footer = footer
         self.title = title
+        self.footer = footer
+        self.content = content()
     }
 
     var body: some View {
         if let footer = footer {
-            Section(footer: Text(footer)) {
+            Section(header: Text(title).fontWeight(.semibold), footer: Text(footer)) {
                 content
             }
             .listRowBackground(Color.insetBackgroundColor)

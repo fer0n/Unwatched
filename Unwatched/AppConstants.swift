@@ -85,8 +85,6 @@ struct Const {
     static let continuousPlay = "continuousPlay"
     static let refreshOnStartup = "refreshOnStartup"
 
-    static let defaultShortsPlacement = "defaultShortsPlacement"
-    static let handleShortsDifferently = "handleShortsDifferently"
     static let hideShortsEverywhere = "hideShortsEverywhere"
     static let shortsDetection = "shortsDetection"
     static let navigationManager = "NavigationManager"
