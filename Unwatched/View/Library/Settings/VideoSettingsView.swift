@@ -7,8 +7,6 @@ import SwiftUI
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
-    @AppStorage(Const.defaultShortsPlacement) var defaultShortsPlacement: VideoPlacement = .inbox
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
@@ -37,24 +35,10 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                MySection("shortsSettings") {
-                    Toggle(isOn: $handleShortsDifferently) {
-                        Text("handleShortsDifferently")
-                    }
-                    Picker("newShorts", selection: $defaultShortsPlacement) {
-                        ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
-                            Text($0.description(defaultPlacement: ""))
-                        }
-                    }
-                    .disabled(!handleShortsDifferently)
-                    .pickerStyle(.menu)
-                }
-
-                MySection(footer: "hideShortsEverywhereHelper") {
+                MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
                     }
-                    .disabled(!handleShortsDifferently)
                 }
 
                 MySection(footer: "shortsSettingsHelper") {
@@ -63,7 +47,6 @@ struct VideoSettingsView: View {
                             Text($0.description)
                         }
                     }
-                    .disabled(!handleShortsDifferently)
                 }
             }
             .myNavigationTitle("videoSettings")

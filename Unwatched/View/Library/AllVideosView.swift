@@ -2,7 +2,6 @@ import SwiftUI
 import SwiftData
 
 struct AllVideosView: View {
-    @AppStorage(Const.handleShortsDifferently) var handleShortsDifferently: Bool = false
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
@@ -61,7 +60,7 @@ struct AllVideosView: View {
     }
 
     var shortsFilter: ShortsDetection? {
-        (handleShortsDifferently && hideShortsEverywhere) ? shortsDetection : nil
+        (hideShortsEverywhere) ? shortsDetection : nil
     }
 }
 

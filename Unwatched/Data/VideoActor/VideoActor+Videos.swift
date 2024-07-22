@@ -199,12 +199,9 @@ import OSLog
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        var shortsPlacement: VideoPlacement?
         var shortsDetection: ShortsDetection = .safe
-
-        if UserDefaults.standard.bool(forKey: Const.handleShortsDifferently) {
-            let shortsPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsPlacement)
-            shortsPlacement = VideoPlacement(rawValue: shortsPlacementRaw)
+        var hideShortsEverywhere = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
+        if hideShortsEverywhere {
             let shortsDetectionRaw = UserDefaults.standard.integer(forKey: Const.shortsDetection)
             if let sPlace = ShortsDetection(rawValue: shortsDetectionRaw) {
                 shortsDetection = sPlace
@@ -213,7 +210,7 @@ import OSLog
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            shortsPlacement: shortsPlacement,
+            hideShortsEverywhere: hideShortsEverywhere,
             shortsDetection: shortsDetection
         )
         return info
