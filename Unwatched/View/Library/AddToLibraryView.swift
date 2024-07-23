@@ -49,9 +49,7 @@ struct AddToLibraryView: View {
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.send)
-            if !addText.isEmpty {
-                TextFieldClearButton(text: $addText)
-            }
+            TextFieldClearButton(text: $addText)
             pasteButton
         }
         .popoverTip(addVideosTip, arrowEdge: .top, action: { _ in

@@ -11,10 +11,17 @@ struct SearchableVideos: View {
     @Environment(NavigationManager.self) var navManager
 
     var body: some View {
-        @Bindable var navManager = navManager
         EmptyView()
             .searchable(text: $text.val,
-                        isPresented: $navManager.searchFocused,
+                        isPresented: Binding(
+                            get: {
+                                navManager.searchFocused
+                            },
+                            set: {  newValue in
+                                if navManager.searchFocused != newValue {
+                                    navManager.searchFocused = newValue
+                                }
+                            }),
                         placement: .navigationBarDrawer(displayMode: .always))
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
