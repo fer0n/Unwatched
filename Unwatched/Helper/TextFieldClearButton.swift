@@ -15,5 +15,6 @@ struct TextFieldClearButton: View {
             Image(systemName: Const.clearSF)
         }
         .foregroundStyle(.secondary)
+        .opacity(text.isEmpty ? 0 : 1)
     }
 }

@@ -16,23 +16,19 @@ struct AllVideosView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             SearchableVideos(text: $text)
-            if videos.isEmpty {
-                ContentUnavailableView("noVideosYet",
-                                       systemImage: "play.rectangle.on.rectangle",
-                                       description: Text("noVideosYetDescription"))
-            } else {
-                List {
-                    VideoListView(
-                        ytShortsFilter: shortsFilter,
-                        sort: allVideosSortOrder,
-                        searchText: text.debounced
-                    )
-                }
-                .listStyle(.plain)
+            ContentUnavailableView("noVideosYet",
+                                   systemImage: "play.rectangle.on.rectangle",
+                                   description: Text("noVideosYetDescription"))
+                .opacity(videos.isEmpty ? 1 : 0)
+            List {
+                VideoListView(
+                    ytShortsFilter: shortsFilter,
+                    sort: allVideosSortOrder,
+                    searchText: text.debounced
+                )
             }
-        }
-        .task(id: text.val) {
-            await text.handleDidSet()
+            .listStyle(.plain)
+            .opacity(videos.isEmpty ? 0 : 1)
         }
         .myNavigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)

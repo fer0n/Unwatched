@@ -8,15 +8,14 @@ import SwiftData
 import OSLog
 
 struct SubscriptionListSection: View {
-    @AppStorage(Const.subscriptionSortOrder) var subscriptionSorting: SubscriptionSorting = .recentlyAdded
     @Query var subscriptions: [Subscription]
 
     @Binding var subManager: SubscribeManager
     var theme: ThemeColor
 
-    @State var text = DebouncedText(0.1)
     @State var droppedUrls: [URL]?
     @State var isDragOver: Bool = false
+    @State var text = DebouncedText(0.3)
 
     var body: some View {
         MySection("subscriptions") {
@@ -24,28 +23,22 @@ struct SubscriptionListSection: View {
                 dropArea
                     .listRowInsets(EdgeInsets())
             } else {
-                SubscriptionSearchBar(text: $text,
-                                      subscriptionSorting: $subscriptionSorting)
-
-                SubscriptionListView(
-                    sort: subscriptionSorting,
-                    manualFilter: {
-                        text.debounced.isEmpty
-                            || $0.displayTitle.localizedStandardContains(text.debounced)
+                SearchableSubscriptions(text: $text)
+                    .dropDestination(for: URL.self) { items, _ in
+                        handleUrlDrop(items)
+                        return true
                     }
-                )
-                .dropDestination(for: URL.self) { items, _ in
-                    handleUrlDrop(items)
-                    return true
-                }
             }
         }
         .task(id: droppedUrls) {
             await addDroppedUrls()
         }
-        .task(id: text.val) {
-            await text.handleDidSet()
+
+        Section {
+            Spacer()
+                .frame(height: text.debounced.isEmpty ? 0 : 300)
         }
+        .listRowBackground(Color.backgroundColor)
     }
 
     var dropArea: some View {
@@ -79,5 +72,23 @@ struct SubscriptionListSection: View {
 
     func handleUrlDrop(_ urls: [URL]) {
         droppedUrls = urls
+    }
+}
+
+struct SearchableSubscriptions: View {
+    @AppStorage(Const.subscriptionSortOrder) var subscriptionSorting: SubscriptionSorting = .recentlyAdded
+    @Binding var text: DebouncedText
+
+    var body: some View {
+        SubscriptionSearchBar(text: $text,
+                              subscriptionSorting: $subscriptionSorting)
+
+        SubscriptionListView(
+            sort: subscriptionSorting,
+            manualFilter: {
+                text.debounced.isEmpty
+                    || $0.displayTitle.localizedStandardContains(text.debounced)
+            }
+        )
     }
 }

@@ -19,10 +19,8 @@ struct SubscriptionSearchBar: View {
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.done)
-            if !text.val.isEmpty {
-                TextFieldClearButton(text: $text.val)
-                    .padding(.trailing, 10)
-            }
+            TextFieldClearButton(text: $text.val)
+                .padding(.trailing, 10)
             Menu {
                 ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
                     Button {
@@ -39,6 +37,5 @@ struct SubscriptionSearchBar: View {
                 Image(systemName: Const.filterSF)
             }
         }
-
     }
 }

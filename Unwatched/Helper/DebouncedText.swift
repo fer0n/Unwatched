@@ -15,22 +15,29 @@ class DebouncedText {
     }
 
     var debounced = ""
-    var val = ""
-
-    func handleDidSet() async {
-        let newValue = val
-        let delay = self.delay
-        task?.cancel()
-        task = Task.detached {
-            do {
-                try await Task.sleep(nanoseconds: delay)
-                return newValue
-            } catch {
-                return nil
-            }
+    var val = "" {
+        didSet {
+            handleDidSet()
         }
-        if let newValue = await task?.value {
-            self.debounced = newValue
+    }
+
+    func handleDidSet() {
+        let value = val
+        let delay = self.delay
+        Task { @MainActor in
+            let newValue = value
+            task?.cancel()
+            task = Task.detached {
+                do {
+                    try await Task.sleep(nanoseconds: delay)
+                    return newValue
+                } catch {
+                    return nil
+                }
+            }
+            if let newValue = await task?.value {
+                self.debounced = newValue
+            }
         }
     }
 }
