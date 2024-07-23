@@ -119,7 +119,7 @@ extension VideoActor {
             placement = defaultPlacementInfo.videoPlacement
         }
 
-        if !defaultPlacementInfo.hideShortsEverywhere {
+        if defaultPlacementInfo.hideShortsEverywhere {
             addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
