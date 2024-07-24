@@ -31,27 +31,24 @@ struct MenuViewSheet: ViewModifier {
 
         @Bindable var navManager = navManager
 
-        if disableSheet {
-            content
-        } else {
-            content
-                .sheet(isPresented: $navManager.showMenu) {
-                    ZStack {
-                        Color.backgroundColor.ignoresSafeArea(.all)
-                        MenuView(showCancelButton: showCancelButton)
-                            .presentationDetents(detents, selection: selectedDetent)
-                            .presentationBackgroundInteraction(
-                                .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                            )
-                            .presentationContentInteraction(.scrolls)
-                            .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
-                            .presentationDragIndicator(
-                                navManager.searchFocused
-                                    ? .hidden
-                                    : .visible)
-                    }
+        content
+            .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
+                ZStack {
+                    Color.backgroundColor.ignoresSafeArea(.all)
+                    MenuView(showCancelButton: showCancelButton)
+                        .presentationDetents(detents, selection: selectedDetent)
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                        )
+                        .presentationContentInteraction(.scrolls)
+                        .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                        .presentationDragIndicator(
+                            navManager.searchFocused
+                                ? .hidden
+                                : .visible)
                 }
-        }
+
+            }
     }
 }
 
