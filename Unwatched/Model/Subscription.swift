@@ -63,6 +63,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
         self.isArchived = isArchived
 
         self.customSpeedSetting = customSpeedSetting
+        self.customAspectRatio = customAspectRatio
         self.mostRecentVideoDate = mostRecentVideoDate
         self.youtubeChannelId = youtubeChannelId
         self.youtubePlaylistId = youtubePlaylistId
@@ -81,6 +82,7 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
             placeVideosIn: placeVideosIn,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
+            customAspectRatio: customAspectRatio,
             mostRecentVideoDate: mostRecentVideoDate,
             youtubeChannelId: youtubeChannelId,
             youtubePlaylistId: youtubePlaylistId,

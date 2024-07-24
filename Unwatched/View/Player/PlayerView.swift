@@ -81,9 +81,8 @@ struct PlayerView: View {
             PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .overlay {
-                    if !player.isPlaying && !hideMiniPlayer {
-                        thumbnailPlaceholder
-                    }
+                    thumbnailPlaceholder
+                        .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
                 }
                 .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
                             .delay(player.isPlaying ? 0.3 : 0),
