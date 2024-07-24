@@ -279,13 +279,13 @@ struct PlayerWebView: UIViewRepresentable {
                 // switching from a non-embedding to an embedded video, probably a race condition
                 return
             }
-            parent.player.handleAutoStart()
             let script = PlayerWebView.nonEmbeddedInitScript(
                 parent.player.playbackSpeed,
                 parent.player.getStartPosition(),
                 parent.player.requiresFetchingVideoData()
             )
             webView.evaluateJavaScript(script)
+            parent.player.handleAutoStart()
         }
     }
 
