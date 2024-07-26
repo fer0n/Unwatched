@@ -12,7 +12,7 @@ public extension UIDevice {
     }()
 
     static let requiresFullscreenWebWorkaround: Bool = {
-        UIDevice.modelName.contains("iPhone")
+        !UIDevice.modelName.contains("iPhone")
     }()
 
     static let modelName: String = {

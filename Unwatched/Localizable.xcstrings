@@ -1373,6 +1373,22 @@
         }
       }
     },
+    "fullscreenLeft" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild links"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fullscreen left"
+          }
+        }
+      }
+    },
     "googleTakeout" : {
       "localizations" : {
         "de" : {

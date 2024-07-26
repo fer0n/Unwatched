@@ -40,7 +40,7 @@ struct PlayerWebView: UIViewRepresentable {
             // workaround: enables higher quality on "Mac (Designed for iPad)",
             // but breaks fullscreen
             webView.customUserAgent = createCustomMacOsUserAgent(userAgent)
-        } else if !UIDevice.requiresFullscreenWebWorkaround {
+        } else if UIDevice.requiresFullscreenWebWorkaround {
             if let userAgent = userAgent {
                 // workaround: fix "fullscreen" button being blocked on the iPad
                 let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
