@@ -13,8 +13,8 @@ struct CombinedPlaybackSpeedSetting: View {
         @Bindable var player = player
 
         HStack {
-            SpeedControlView(selectedSpeed: $player.playbackSpeed)
             CustomSettingsButton(playbackSpeed: $playbackSpeed, player: player)
+            SpeedControlView(selectedSpeed: $player.playbackSpeed)
         }
         .onChange(of: player.video?.subscription) {
             // workaround

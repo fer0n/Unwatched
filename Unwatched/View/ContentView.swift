@@ -7,6 +7,8 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
@@ -19,7 +21,9 @@ struct ContentView: View {
 
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
-            let layout = isLandscape ? AnyLayout(HStackLayout()) : AnyLayout(VStackLayout())
+            let layout = isLandscape
+                ? AnyLayout(HStackLayout())
+                : AnyLayout(VStackLayout())
             let landscapeFullscreen = !bigScreen && isLandscape
 
             let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
@@ -30,10 +34,13 @@ struct ContentView: View {
                 layout {
                     VideoPlayer(
                         compactSize: bigScreen,
-                        showInfo: !bigScreen || (isLandscape && bigScreen),
+                        showInfo: !bigScreen || (isLandscape && bigScreen) && !hideControlsFullscreen,
+                        horizontalLayout: hideControlsFullscreen,
                         landscapeFullscreen: landscapeFullscreen
                     )
-                    if bigScreen {
+                    .frame(maxHeight: .infinity)
+
+                    if bigScreen && !hideControlsFullscreen {
                         MenuView()
                             .frame(maxWidth: isLandscape
                                     ? min(proxy.size.width * 0.4, 400)
@@ -44,6 +51,7 @@ struct ContentView: View {
                     VideoNotAvailableView()
                 }
             }
+            .animation(.default, value: hideControlsFullscreen)
             .background(Color.black)
             .environment(\.colorScheme, .dark)
             .onAppear {
@@ -75,12 +83,13 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView()
+        ContentView(hideControlsFullscreen: true)
             .modelContainer(DataController.previewContainer)
             .environment(NavigationManager.getDummy())
             .environment(Alerter())
             .environment(PlayerManager())
             .environment(ImageCacheManager())
             .environment(RefreshManager())
+            .environment(SheetPositionReader())
     }
 }

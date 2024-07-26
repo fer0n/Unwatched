@@ -85,7 +85,7 @@ struct FullscreenPlayerControls: View {
                 Button {
                     OrientationManager.changeOrientation(to: .portrait)
                 } label: {
-                    Image(systemName: "rotate.left.fill")
+                    Image(systemName: Const.disableFullscreenSF)
                         .modifier(PlayerControlButtonStyle())
                 }
             }

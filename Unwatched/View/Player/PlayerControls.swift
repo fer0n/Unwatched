@@ -19,8 +19,10 @@ struct PlayerControls: View {
     @State var browserUrl: BrowserUrl?
 
     let compactSize: Bool
-    let setShowMenu: () -> Void
     let showInfo: Bool
+    let horizontalLayout: Bool
+
+    let setShowMenu: () -> Void
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var body: some View {
@@ -28,7 +30,11 @@ struct PlayerControls: View {
             ? AnyLayout(HStackLayout(spacing: 25))
             : AnyLayout(VStackLayout(spacing: 25))
 
-        VStack(spacing: 10) {
+        let outerLayout = horizontalLayout
+            ? AnyLayout(HStackLayout(spacing: 10))
+            : AnyLayout(VStackLayout(spacing: 10))
+
+        outerLayout {
             if !player.embeddingDisabled && !compactSize {
                 Spacer()
             }
@@ -46,10 +52,10 @@ struct PlayerControls: View {
                 }
 
                 HStack {
-                    if showFullscreenControls && UIDevice.supportsFullscreenControls {
+                    CombinedPlaybackSpeedSetting()
+                    if showFullscreenControls && !UIDevice.requiresFullscreenWebWorkaround {
                         RotateOrientationButton()
                     }
-                    CombinedPlaybackSpeedSetting()
                 }
                 .environment(\.symbolVariants, .fill)
 
@@ -63,8 +69,13 @@ struct PlayerControls: View {
                                 : 90
                     )
                     .fontWeight(.black)
+
                     NextVideoButton(markVideoWatched: markVideoWatched)
                         .frame(maxWidth: .infinity)
+
+                    if UIDevice.requiresFullscreenWebWorkaround && compactSize {
+                        HideControlsButton()
+                    }
                 }
                 .padding(.horizontal, 10)
             }
@@ -113,9 +124,10 @@ struct PlayerControls: View {
 }
 
 #Preview {
-    PlayerControls(compactSize: false,
+    PlayerControls(compactSize: true,
+                   showInfo: false,
+                   horizontalLayout: true,
                    setShowMenu: { },
-                   showInfo: true,
                    markVideoWatched: { _, _ in })
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())

@@ -16,6 +16,7 @@ struct VideoPlayer: View {
 
     var compactSize = false
     var showInfo = true
+    var horizontalLayout = false
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -27,9 +28,11 @@ struct VideoPlayer: View {
 
             if !landscapeFullscreen {
                 PlayerControls(compactSize: compactSize,
-                               setShowMenu: setShowMenu,
                                showInfo: showInfo,
+                               horizontalLayout: horizontalLayout,
+                               setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched)
+                    .padding(.vertical, compactSize ? 5 : 0)
             }
         }
         .tint(.neutralAccentColor)
@@ -84,11 +87,15 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(landscapeFullscreen: false)
+    VideoPlayer(compactSize: true,
+                showInfo: false,
+                horizontalLayout: true,
+                landscapeFullscreen: false)
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())
         .environment(RefreshManager())
+        .environment(ImageCacheManager())
         .tint(Color.neutralAccentColor)
 }

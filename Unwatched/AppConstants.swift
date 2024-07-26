@@ -35,6 +35,7 @@ struct Const {
     static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
     static let askForReviewPointThreashold = 30
+    static let sheetOpacityValue = 0.6
 
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
@@ -74,11 +75,13 @@ struct Const {
     static let previousChapterSF = "backward.end.fill"
     static let nextVideoSF = "forward.end.alt.fill"
 
-    static let sheetOpacityValue = 0.6
+    static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
+    static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
 
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
+    static let hideControlsFullscreen = "hideControlsFullscreen"
     static let goToQueueOnPlay = "goToQueueOnPlay"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
