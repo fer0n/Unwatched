@@ -20,6 +20,7 @@ struct WatchedButton: View {
         } label: {
             Image(systemName: "checkmark")
         }
+        .keyboardShortcut("d")
         .outlineToggleModifier(isOn: player.isConsideredWatched)
         .padding(3)
         .contextMenu {

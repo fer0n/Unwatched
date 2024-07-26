@@ -26,6 +26,7 @@ struct ChapterMiniControlView: View {
                             Image(systemName: Const.previousChapterSF)
                                 .font(.system(size: 15))
                         }
+                        .keyboardShortcut(.leftArrow)
                         .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapter == nil)
                     } else {
@@ -55,6 +56,7 @@ struct ChapterMiniControlView: View {
 
                     if hasChapters {
                         ChapterMiniControlGoToNext(goToNext: goToNext)
+                            .keyboardShortcut(.rightArrow)
                             .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()
@@ -75,6 +77,8 @@ struct ChapterMiniControlView: View {
                     }
                 }
             }
+            .frame(maxWidth: 600)
+
             if showInfo, let video = player.video, !player.embeddingDisabled {
                 videoDescription(video, hasChapters)
             }

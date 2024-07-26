@@ -52,6 +52,7 @@ struct CorePlayButton<Content>: View where Content: View {
                 Label("reloadVideo", systemImage: "arrow.circlepath")
             }
         }
+        .keyboardShortcut(.space, modifiers: [])
     }
 }
 

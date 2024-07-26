@@ -29,14 +29,26 @@ struct HideControlsButton: View {
 
     var body: some View {
         Button {
-            withAnimation {
-                hideControlsFullscreen.toggle()
-            }
+            handlePress()
         } label: {
             Image(systemName: hideControlsFullscreen
                     ? Const.disableFullscreenSF
                     : Const.enableFullscreenSF)
                 .outlineToggleModifier(isOn: hideControlsFullscreen)
+        }
+        .keyboardShortcut("f", modifiers: [])
+        .background {
+            // workaround: enable esc press to exit video
+            Button {
+                handlePress()
+            } label: { }
+            .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
+        }
+    }
+
+    func handlePress() {
+        withAnimation {
+            hideControlsFullscreen.toggle()
         }
     }
 }
