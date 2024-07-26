@@ -35,13 +35,16 @@ struct PlayerWebView: UIViewRepresentable {
         webView.isOpaque = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
 
-        if !UIDevice.requiresFullscreenWebWorkaround {
-            webView.evaluateJavaScript("navigator.userAgent") { result, _ in
-                if let userAgent = result as? String {
-                    let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
-                    webView.customUserAgent = modifiedUserAgent
-                    // workaround: fix "fullscreen" button being blocked on the iPad
-                }
+        let userAgent = webView.value(forKey: "userAgent") as? String
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            // workaround: enables higher quality on "Mac (Designed for iPad)",
+            // but breaks fullscreen
+            webView.customUserAgent = createCustomMacOsUserAgent(userAgent)
+        } else if !UIDevice.requiresFullscreenWebWorkaround {
+            if let userAgent = userAgent {
+                // workaround: fix "fullscreen" button being blocked on the iPad
+                let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
+                webView.customUserAgent = modifiedUserAgent
             }
         }
 
@@ -133,170 +136,52 @@ struct PlayerWebView: UIViewRepresentable {
         }
     }
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+    func makeCoordinator() -> PlayerWebViewCoordinator {
+        PlayerWebViewCoordinator(self)
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
-        let parent: PlayerWebView
+    func createCustomMacOsUserAgent(_ userAgent: String?) -> String {
+        var osVersion = "17_5"
+        var webKitVersion = "605.1.15"
 
-        init(_ parent: PlayerWebView) {
-            self.parent = parent
-        }
-
-        @MainActor
-        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            parent.loadWebContent(webView)
-        }
-
-        func userContentController(_ userContentController: WKUserContentController,
-                                   didReceive message: WKScriptMessage) {
-            if message.name == "iosListener", let messageBody = message.body as? String {
-                let body = messageBody.split(separator: ";")
-                guard let topic = body[safe: 0] else {
-                    return
+        if let userAgent = userAgent {
+            if let range = userAgent.range(of: "AppleWebKit/") {
+                let webKitVersionStart = userAgent[range.upperBound...]
+                if let endRange = webKitVersionStart.range(of: " ") {
+                    webKitVersion = String(webKitVersionStart[..<endRange.lowerBound])
                 }
-                let payload = body[safe: 1]
-                let payloadString = payload.map { String($0) }
-                if topic != "currentTime" {
-                    Logger.log.info(">\(messageBody)")
+            }
+            if let range = userAgent.range(of: "CPU OS ") {
+                let osVersionStart = userAgent[range.upperBound...]
+                if let endRange = osVersionStart.range(of: " ") {
+                    osVersion = String(osVersionStart[..<endRange.lowerBound]).replacingOccurrences(of: "_", with: ".")
+                    print("osVersion", osVersion)
                 }
-                handleJsMessages(String(topic), payloadString)
             }
         }
 
-        func handleJsMessages(_ topic: String, _ payload: String?) {
-            switch topic {
-            case "pause":
-                handlePause(payload)
-            case "play":
-                parent.player.previousState.isPlaying = true
-                parent.player.play()
-            case "ended":
-                parent.player.previousState.isPlaying = false
-                parent.onVideoEnded()
-            case "unstarted":
-                parent.player.handleAutoStart()
-            case "currentTime":
-                handleTimeUpdate(payload)
-            case "updateTitle":
-                handleTitleUpdate(payload)
-            case "duration":
-                handleDuration(payload)
-            case "playbackRate":
-                handlePlaybackSpeed(payload)
-            case "error":
-                handleError(payload)
-            default:
-                break
-            }
-        }
-
-        func handlePause(_ payload: String?) {
-            if !parent.player.isInBackground {
-                // workaround: hard pause when entering background (resumes playing otherwise when coming back)
-                parent.player.previousState.isPlaying = false
-            }
-            parent.player.pause()
-            handleTimeUpdate(payload, persist: true)
-        }
-
-        func handlePlaybackSpeed(_ payload: String?) {
-            guard let payload = payload,
-                  let playbackRate = Double(payload),
-                  parent.player.playbackSpeed != playbackRate else {
-                return
-            }
-            parent.player.playbackSpeed = playbackRate
-        }
-
-        func handleTitleUpdate(_ title: String?) {
-            if let title = UrlService.getCleanTitle(title) {
-                self.parent.player.video?.title = title
-            }
-        }
-
-        func handleDuration(_ payload: String?) {
-            guard let payload = payload, let duration = Double(payload), duration > 0 else {
-                return
-            }
-            if let video = parent.player.video {
-                VideoService.updateDuration(video, duration: duration)
-            }
-        }
-
-        func handleError(_ payload: String?) {
-            guard let error = YtIframeError(rawValue: payload ?? "") else {
-                Logger.log.error("Unknown YtIframeError")
-                return
-            }
-
-            switch error {
-            case .ownerForbidsEmbedding, .ownerForbidsEmbedding2:
-                parent.player.isLoading = true
-
-                parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
-                    ? true
-                    : parent.player.isPlaying
-
-                parent.player.videoSource = .errorSwap
-                parent.player.previousState.isPlaying = false
-
-                withAnimation {
-                    parent.player.pause()
-                    parent.player.embeddingDisabled = true
-                }
-            default:
-                Logger.log.error("Unhandled YtIframeError")
-            }
-        }
-
-        func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
-            guard let payload = payload else {
-                return
-            }
-            // "paused:2161.00033421,https://www.youtube.com/watch?t=2161&v=dKbT0iFia0I"
-            let payloadArray = payload.split(separator: ",")
-            let timeString = payloadArray[safe: 0]
-            let urlString = payloadArray[safe: 1]
-            guard let time = timeString.flatMap({ Double($0) }) else {
-                return
-            }
-            if parent.player.isPlaying {
-                parent.player.monitorChapters(time: time)
-            }
-            if let urlString = urlString,
-               let url = URL(string: String(urlString)),
-               let videoId = UrlService.getYoutubeIdFromUrl(url: url),
-               persist {
-                parent.player.updateElapsedTime(time, videoId: videoId)
-            }
-        }
-
-        @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-            if parent.playerType != .youtube || !parent.player.embeddingDisabled {
-                // workaround: without "!parent.player.embeddingDisabled", the video doesn't start
-                // switching from a non-embedding to an embedded video, probably a race condition
-                return
-            }
-            let script = PlayerWebView.nonEmbeddedInitScript(
-                parent.player.playbackSpeed,
-                parent.player.getStartPosition(),
-                parent.player.requiresFetchingVideoData()
-            )
-            webView.evaluateJavaScript(script)
-            parent.player.handleAutoStart()
-        }
+        return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion)"
+            + " (KHTML, like Gecko) Version/\(osVersion) Safari/\(webKitVersion)"
     }
+}
 
-    enum PlayerType {
-        case youtubeEmbedded
-        case youtube
-    }
+enum PlayerType {
+    case youtubeEmbedded
+    case youtube
 }
 
 struct PreviousState {
     var videoId: String?
     var playbackSpeed: Double?
     var isPlaying: Bool = false
+}
+
+#Preview {
+    let video = Video.getDummy()
+    let player = PlayerManager()
+    player.video = video
+    return (
+        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: { })
+            .environment(player)
+    )
 }

@@ -69,6 +69,7 @@ struct PlayerControls: View {
                 .padding(.horizontal, 10)
             }
             .padding(.horizontal, compactSize ? 20 : 5)
+            .frame(maxWidth: 1000)
 
             if !player.embeddingDisabled && !compactSize {
                 Spacer()
