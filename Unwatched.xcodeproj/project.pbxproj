@@ -88,6 +88,7 @@
 		886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */; };
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886E79BA2B46FFD300554E1F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B92B46FFD300554E1F /* Color.swift */; };
+		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C52B49368F00512852 /* QueueEntry.swift */; };
 		887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C92B4955B200512852 /* WatchEntry.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
@@ -458,6 +459,7 @@
 		886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtPlaylistItems.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886E79B92B46FFD300554E1F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887AC8C52B49368F00512852 /* QueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueEntry.swift; sourceTree = "<group>"; };
 		887AC8C92B4955B200512852 /* WatchEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEntry.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
@@ -896,6 +898,7 @@
 			isa = PBXGroup;
 			children = (
 				88BE6C302B723B9900456777 /* PlayerWebView.swift */,
+				887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */,
 				88BE6C2E2B72089000456777 /* YouTubePlayerView.swift */,
 				88D438A42B45ACD800482F29 /* EmbeddedPlayerView.swift */,
 			);
@@ -1442,6 +1445,7 @@
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
 				886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
+				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
 				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,

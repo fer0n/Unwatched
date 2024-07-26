@@ -6,6 +6,7 @@
 import SwiftUI
 import OSLog
 import StoreKit
+import SwiftData
 
 struct PlayerView: View {
     @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
@@ -196,4 +197,22 @@ struct PlayerView: View {
         navManager.showMenu = false
         navManager.showDescriptionDetail = false
     }
+}
+
+#Preview {
+    let container = DataController.previewContainer
+    let context = ModelContext(container)
+    let video = Video.getDummy()
+    context.insert(video)
+    try? context.save()
+
+    let player = PlayerManager()
+    // player.video = video
+
+    return PlayerView(landscapeFullscreen: false,
+                      markVideoWatched: { _, _ in })
+        .environment(player)
+        .environment(NavigationManager())
+        .environment(SheetPositionReader())
+        .modelContainer(container)
 }
