@@ -5,6 +5,7 @@
 
 import SwiftUI
 import OSLog
+import SwiftData
 
 struct VideoPlayer: View {
     @Environment(\.modelContext) var modelContext
@@ -87,13 +88,31 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(compactSize: true,
-                showInfo: false,
-                horizontalLayout: true,
-                landscapeFullscreen: false)
-        .modelContainer(DataController.previewContainer)
+    let container = DataController.previewContainer
+    let context = ModelContext(container)
+    let player = PlayerManager()
+    let video = Video.getDummy()
+
+    let ch1 = Chapter(title: "hi", time: 1)
+    context.insert(ch1)
+    video.chapters = [ch1]
+
+    context.insert(video)
+    player.video = video
+
+    let sub = Subscription.getDummy()
+    context.insert(sub)
+    sub.videos = [video]
+
+    try? context.save()
+
+    return VideoPlayer(compactSize: false,
+                       showInfo: true,
+                       horizontalLayout: false,
+                       landscapeFullscreen: false)
+        .modelContainer(container)
         .environment(NavigationManager.getDummy())
-        .environment(PlayerManager.getDummy())
+        .environment(player)
         .environment(SheetPositionReader())
         .environment(RefreshManager())
         .environment(ImageCacheManager())

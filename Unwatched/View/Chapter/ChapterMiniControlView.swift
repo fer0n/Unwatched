@@ -86,7 +86,6 @@ struct ChapterMiniControlView: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: triggerFeedback)
         .frame(maxWidth: .infinity)
         .padding(.horizontal)
-        .padding(.vertical, 10)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
         .onChange(of: hasAnyChapters) {
             if player.currentChapter == nil {
