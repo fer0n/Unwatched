@@ -168,7 +168,7 @@ struct PlayerView: View {
     func handleRequestReview() {
         navManager.askForReviewPoints += 1
         if navManager.askForReviewPoints >= Const.askForReviewPointThreashold {
-            navManager.askForReviewPoints = -10
+            navManager.askForReviewPoints = -40
             requestReview()
         }
     }

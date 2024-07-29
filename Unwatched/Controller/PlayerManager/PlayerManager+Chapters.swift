@@ -9,6 +9,10 @@ import OSLog
 
 extension PlayerManager {
 
+    var previousChapterDisabled: Bool {
+        previousChapter == nil && currentChapter == nil
+    }
+
     func monitorChapters(time: Double) {
         currentTime = time
         if let endTime = currentEndTime, time >= endTime {
@@ -77,9 +81,16 @@ extension PlayerManager {
     }
 
     func goToPreviousChapter() {
-        if let current = currentChapter,
-           let currentTime = currentTime,
+        guard let current = currentChapter else {
+            Logger.log.warning("goToPreviousChapter: No current chapter found")
+            return
+        }
+
+        if let currentTime = currentTime,
            (currentTime - current.startTime) >= Const.previousChapterDelaySeconds * playbackSpeed {
+            setChapter(current)
+            return
+        } else if previousChapter == nil {
             setChapter(current)
             return
         }
