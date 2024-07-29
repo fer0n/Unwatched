@@ -101,6 +101,8 @@ struct VideoPlayer: View {
     player.video = video
 
     let sub = Subscription.getDummy()
+    // sub.customAspectRatio = 18/9
+
     context.insert(sub)
     sub.videos = [video]
 
@@ -109,7 +111,7 @@ struct VideoPlayer: View {
     return VideoPlayer(compactSize: false,
                        showInfo: true,
                        horizontalLayout: false,
-                       landscapeFullscreen: false)
+                       landscapeFullscreen: true)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)
