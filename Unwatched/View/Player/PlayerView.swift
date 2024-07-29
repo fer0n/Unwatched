@@ -35,7 +35,7 @@ struct PlayerView: View {
     }
 
     var body: some View {
-        let showFullscreenControls = showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
+        let showFullscreenControls =  showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
         let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
 
         ZStack(alignment: .top) {
@@ -45,7 +45,7 @@ struct PlayerView: View {
                 .frame(maxWidth: .infinity)
 
             if player.video != nil {
-                HStack {
+                HStack(spacing: 3) {
                     if player.embeddingDisabled {
                         playerWebsite
                     } else {
@@ -59,6 +59,7 @@ struct PlayerView: View {
                             .fullscreenSafeArea(enable: wideAspect, onlyOffsetRight: true)
                     }
                 }
+                .offset(x: landscapeFullscreen && showFullscreenControls && !wideAspect ? 8 : 0)
                 .frame(maxWidth: !showFullscreenControls || wideAspect
                         ? .infinity
                         : nil)
@@ -202,17 +203,29 @@ struct PlayerView: View {
 #Preview {
     let container = DataController.previewContainer
     let context = ModelContext(container)
-    let video = Video.getDummy()
-    context.insert(video)
-    try? context.save()
-
     let player = PlayerManager()
-    // player.video = video
+    let video = Video.getDummy()
+
+    let ch1 = Chapter(title: "hi", time: 1)
+    context.insert(ch1)
+    video.chapters = [ch1]
+
+    context.insert(video)
+    player.video = video
+
+    let sub = Subscription.getDummy()
+    context.insert(sub)
+    sub.videos = [video]
+
+    try? context.save()
 
     return PlayerView(landscapeFullscreen: false,
                       markVideoWatched: { _, _ in })
-        .environment(player)
-        .environment(NavigationManager())
-        .environment(SheetPositionReader())
         .modelContainer(container)
+        .environment(NavigationManager.getDummy())
+        .environment(player)
+        .environment(SheetPositionReader())
+        .environment(RefreshManager())
+        .environment(ImageCacheManager())
+        .tint(Color.neutralAccentColor)
 }
