@@ -28,7 +28,7 @@ struct ChapterMiniControlView: View {
                         }
                         .keyboardShortcut(.leftArrow)
                         .buttonStyle(ChangeChapterButtonStyle())
-                        .disabled(player.previousChapter == nil)
+                        .disabled(player.previousChapterDisabled)
                     } else {
                         Color.clear.fixedSize()
                     }

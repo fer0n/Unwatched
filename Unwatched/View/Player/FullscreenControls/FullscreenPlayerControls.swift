@@ -79,7 +79,7 @@ struct FullscreenPlayerControls: View {
                 }
             }
             .frame(maxHeight: .infinity)
-            .disabled(player.previousChapter == nil)
+            .disabled(player.previousChapterDisabled)
 
             ZStack {
                 Button {
