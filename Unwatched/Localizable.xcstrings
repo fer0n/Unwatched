@@ -1373,6 +1373,70 @@
         }
       }
     },
+    "fullscreenControls" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild Controls"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fullscreen controls"
+          }
+        }
+      }
+    },
+    "fullscreenControlsAutoHide" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto hide"
+          }
+        }
+      }
+    },
+    "fullscreenControlsOff" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "fullscreenControlsOn" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
     "fullscreenLeft" : {
       "localizations" : {
         "de" : {
@@ -2949,22 +3013,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Clear Queue Button"
-          }
-        }
-      }
-    },
-    "showFullscreenControls" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Querformat Vollbild-Steuerelemente anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Landscape Fullscreen Controls"
           }
         }
       }

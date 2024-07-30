@@ -20,5 +20,6 @@ struct PlayerControlButtonStyle: ViewModifier {
         }
         .opacity(isEnabled ? 1 : 0.3)
         .padding(3)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

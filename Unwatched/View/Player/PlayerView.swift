@@ -9,7 +9,7 @@ import StoreKit
 import SwiftData
 
 struct PlayerView: View {
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControlsEnabled: Bool = true
+    @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
@@ -19,6 +19,8 @@ struct PlayerView: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(\.requestReview) var requestReview
+
+    @State var controlsVM = FullscreenPlayerControlsVM()
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -34,8 +36,11 @@ struct PlayerView: View {
         player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
     }
 
+    var showFullscreenControls: Bool {
+        fullscreenControlsSetting != .off && UIDevice.supportsFullscreenControls
+    }
+
     var body: some View {
-        let showFullscreenControls =  showFullscreenControlsEnabled && UIDevice.supportsFullscreenControls
         let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
 
         ZStack(alignment: .top) {
@@ -43,23 +48,29 @@ struct PlayerView: View {
                 .fill(Color.black)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .frame(maxWidth: .infinity)
+                .background(
+                    Color.black
+                        .onTapGesture {
+                            controlsVM.setShowControls()
+                        }
+                )
 
             if player.video != nil {
-                HStack(spacing: 3) {
+                HStack(spacing: 0) {
                     if player.embeddingDisabled {
                         playerWebsite
+                            .zIndex(1)
                     } else {
                         playerEmbedded
+                            .zIndex(1)
                     }
 
                     if landscapeFullscreen && showFullscreenControls {
-                        FullscreenPlayerControls(markVideoWatched: markVideoWatched)
-                            .frame(width: wideAspect ? 0 : nil)
-                            .offset(x: wideAspect ? 10 : 0)
-                            .fullscreenSafeArea(enable: wideAspect, onlyOffsetRight: true)
+                        FullscreenPlayerControlsWrapper(
+                            markVideoWatched: markVideoWatched,
+                            controlsVM: controlsVM)
                     }
                 }
-                .offset(x: landscapeFullscreen && showFullscreenControls && !wideAspect ? 8 : 0)
                 .frame(maxWidth: !showFullscreenControls || wideAspect
                         ? .infinity
                         : nil)
@@ -83,6 +94,8 @@ struct PlayerView: View {
             PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .overlay {
+                    overlayFullscreenButton(enabled: showFullscreenControls)
+
                     thumbnailPlaceholder
                         .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
                 }
@@ -106,6 +119,29 @@ struct PlayerView: View {
         }
         .animation(.bouncy(duration: 0.4), value: hideMiniPlayer)
         .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
+    }
+
+    func overlayFullscreenButton(enabled: Bool) -> some View {
+        let isInvisible = player.isPlaying || (enabled && !landscapeFullscreen)
+
+        return Color.white
+            .opacity(isInvisible ? .leastNonzeroMagnitude : 1)
+            .contentShape(Circle())
+            .frame(width: 90, height: 90)
+            .onTapGesture {
+                player.handlePlayButton()
+            }
+            .clipShape(Circle())
+            .overlay {
+                // workaround: when using the button directly, it can't be
+                // pressed while being "invisible", only seems to work with
+                // Color.white, even an sf symbol doesn't work
+                PlayButton(size: 90, enableHaptics: false)
+                    .allowsHitTesting(!player.isPlaying)
+                    .opacity(isInvisible ? .leastNonzeroMagnitude : 1)
+            }
+            .animation(.easeInOut(duration: 0.2), value: player.isPlaying)
+            .opacity(enabled ? 1 : 0)
     }
 
     @MainActor

@@ -14,7 +14,7 @@ struct ChapterListItem: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(timeText)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14).monospacedDigit())
                     .foregroundStyle(Color.gray)
             }
         }

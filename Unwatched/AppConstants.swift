@@ -126,4 +126,5 @@ struct Const {
 
     static let reloadVideoId = "reloadVideoId"
     static let sheetOpacity = "sheetOpacity"
+    static let fullscreenControlsSetting = "fullscreenControlsSetting"
 }
