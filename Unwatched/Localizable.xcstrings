@@ -1437,22 +1437,6 @@
         }
       }
     },
-    "fullscreenLeft" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vollbild links"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fullscreen left"
-          }
-        }
-      }
-    },
     "googleTakeout" : {
       "localizations" : {
         "de" : {
@@ -2520,22 +2504,6 @@
         }
       }
     },
-    "playbackHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Limitiert die Wiedergabe eines Videos auf den Vollbildmodus. Am iPad ist \"Vollbild\" notwendig um Picture-in-picture zu starten, am iPhone funktioniert es mit oder ohne."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Will only allow playing a video in fullscreen. On iPad, this is required to play videos Picture-in-picture. On iPhone, PiP works regardless."
-          }
-        }
-      }
-    },
     "potentiallyFaultyYoutubeId" : {
       "comment" : "(youtubeId)",
       "localizations" : {
@@ -2789,6 +2757,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All your current data will be deleted and the selected backup will be restored."
+          }
+        }
+      }
+    },
+    "rotateLeft" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach links drehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate left"
           }
         }
       }
@@ -3198,13 +3182,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos im Vollbild Starten"
+            "value" : "Immer im Vollbild abspielen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Start Videos in Fullscreen"
+            "value" : "Always Play in Fullscreen"
           }
         }
       }

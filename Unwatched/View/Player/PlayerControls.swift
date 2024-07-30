@@ -7,7 +7,7 @@ import SwiftUI
 
 struct PlayerControls: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = false
+    @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
@@ -53,7 +53,7 @@ struct PlayerControls: View {
 
                 HStack {
                     CombinedPlaybackSpeedSetting()
-                    if showFullscreenControls && !UIDevice.requiresFullscreenWebWorkaround {
+                    if fullscreenControlsSetting != .off && !UIDevice.requiresFullscreenWebWorkaround {
                         RotateOrientationButton()
                     }
                 }

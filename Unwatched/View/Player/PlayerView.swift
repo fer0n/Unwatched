@@ -94,7 +94,10 @@ struct PlayerView: View {
             PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .overlay {
-                    overlayFullscreenButton(enabled: showFullscreenControls)
+                    OverlayFullscreenButton(
+                        enabled: showFullscreenControls,
+                        invisible: !landscapeFullscreen
+                    )
 
                     thumbnailPlaceholder
                         .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
@@ -119,29 +122,6 @@ struct PlayerView: View {
         }
         .animation(.bouncy(duration: 0.4), value: hideMiniPlayer)
         .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
-    }
-
-    func overlayFullscreenButton(enabled: Bool) -> some View {
-        let isInvisible = player.isPlaying || (enabled && !landscapeFullscreen)
-
-        return Color.white
-            .opacity(isInvisible ? .leastNonzeroMagnitude : 1)
-            .contentShape(Circle())
-            .frame(width: 90, height: 90)
-            .onTapGesture {
-                player.handlePlayButton()
-            }
-            .clipShape(Circle())
-            .overlay {
-                // workaround: when using the button directly, it can't be
-                // pressed while being "invisible", only seems to work with
-                // Color.white, even an sf symbol doesn't work
-                PlayButton(size: 90, enableHaptics: false)
-                    .allowsHitTesting(!player.isPlaying)
-                    .opacity(isInvisible ? .leastNonzeroMagnitude : 1)
-            }
-            .animation(.easeInOut(duration: 0.2), value: player.isPlaying)
-            .opacity(enabled ? 1 : 0)
     }
 
     @MainActor

@@ -37,7 +37,7 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection(footer: "playbackHelper") {
+                MySection {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }

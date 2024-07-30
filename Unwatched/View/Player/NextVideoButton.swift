@@ -48,13 +48,7 @@ struct CoreNextButton<Content>: View where Content: View {
         }
         .padding(3)
         .contextMenu {
-            Button {
-                markVideoWatched(false, .userInteraction)
-            } label: {
-                Label("nextVideo", systemImage: Const.nextVideoSF)
-            }
             if extendedContextMenu {
-                Divider()
                 Button {
                     markVideoWatched(true, .nextUp)
                 } label: {
@@ -65,6 +59,18 @@ struct CoreNextButton<Content>: View where Content: View {
                 } label: {
                     Label("clearVideo", systemImage: "xmark.circle.fill")
                 }
+                Divider()
+            }
+
+            Button {
+                markVideoWatched(false, .userInteraction)
+            } label: {
+                Label("nextVideo", systemImage: Const.nextVideoSF)
+            }
+
+            if extendedContextMenu {
+                Divider()
+                PlayButtonContextMenu()
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
