@@ -110,8 +110,8 @@ struct VideoPlayer: View {
 
     return VideoPlayer(compactSize: false,
                        showInfo: true,
-                       horizontalLayout: true,
-                       landscapeFullscreen: true)
+                       horizontalLayout: false,
+                       landscapeFullscreen: false)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

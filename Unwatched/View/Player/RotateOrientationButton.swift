@@ -10,7 +10,7 @@ struct RotateOrientationButton: View {
         Button {
             OrientationManager.changeOrientation(to: .landscapeRight)
         } label: {
-            Image(systemName: Const.enableFullscreenSF)
+            Image(systemName: "arrowshape.turn.up.right.fill")
                 .outlineToggleModifier(isOn: false, isSmall: true)
         }
         .padding(2)
@@ -18,7 +18,7 @@ struct RotateOrientationButton: View {
             Button {
                 OrientationManager.changeOrientation(to: .landscapeLeft)
             } label: {
-                Label("fullscreenLeft", systemImage: "rectangle.landscape.rotate")
+                Label("rotateLeft", systemImage: "arrowshape.turn.up.left.fill")
             }
         }
     }

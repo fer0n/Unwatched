@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct CorePlayButton<Content>: View where Content: View {
-    @AppStorage(Const.reloadVideoId) var reloadVideoId: String = ""
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
@@ -45,19 +44,28 @@ struct CorePlayButton<Content>: View where Content: View {
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .contextMenu {
-            Button {
-                player.restartVideo()
-            } label: {
-                Label("restartVideo", systemImage: "restart")
-            }
-            Button {
-                player.handleHotSwap()
-                reloadVideoId = UUID().uuidString
-            } label: {
-                Label("reloadVideo", systemImage: "arrow.circlepath")
-            }
+            PlayButtonContextMenu()
         }
         .keyboardShortcut(.space, modifiers: [])
+    }
+}
+
+struct PlayButtonContextMenu: View {
+    @AppStorage(Const.reloadVideoId) var reloadVideoId: String = ""
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        Button {
+            player.restartVideo()
+        } label: {
+            Label("restartVideo", systemImage: "restart")
+        }
+        Button {
+            player.handleHotSwap()
+            reloadVideoId = UUID().uuidString
+        } label: {
+            Label("reloadVideo", systemImage: "arrow.circlepath")
+        }
     }
 }
 
