@@ -12,19 +12,24 @@ struct CorePlayButton<Content>: View where Content: View {
 
     private let contentImage: ((Image) -> Content)
     private let circle: String
+    let enableHaptics: Bool
 
     init(
         circleVariant: Bool,
+        enableHaptics: Bool = false,
         @ViewBuilder content: @escaping (Image) -> Content = { $0 }
     ) {
         self.circle = circleVariant ? ".circle" : ""
+        self.enableHaptics = enableHaptics
         self.contentImage = content
     }
 
     var body: some View {
         Button {
             player.handlePlayButton()
-            hapticToggle.toggle()
+            if enableHaptics {
+                hapticToggle.toggle()
+            }
         } label: {
             contentImage(
                 Image(systemName: player.isPlaying && !player.videoEnded
@@ -58,12 +63,16 @@ struct CorePlayButton<Content>: View where Content: View {
 
 struct PlayButton: View {
     var size: Double
+    var enableHaptics: Bool = true
 
     var body: some View {
-        CorePlayButton(circleVariant: true) { image in
+        CorePlayButton(circleVariant: true, enableHaptics: enableHaptics) { image in
             image
                 .resizable()
                 .frame(width: size, height: size)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.black, .white)
+                .fontWeight(.black)
         }
 
     }

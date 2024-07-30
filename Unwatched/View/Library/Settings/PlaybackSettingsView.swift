@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct PlaybackSettingsView: View {
-    @AppStorage(Const.showFullscreenControls) var showFullscreenControls: Bool = true
+    @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
@@ -18,9 +18,12 @@ struct PlaybackSettingsView: View {
             MyForm {
                 if UIDevice.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {
-                        Toggle(isOn: $showFullscreenControls) {
-                            Text("showFullscreenControls")
+                        Picker("fullscreenControls", selection: $fullscreenControlsSetting) {
+                            ForEach(FullscreenControls.allCases, id: \.self) {
+                                Text($0.description)
+                            }
                         }
+                        .pickerStyle(.menu)
                     }
                 }
 

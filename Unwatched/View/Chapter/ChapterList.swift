@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ChapterList: View {
     @Environment(\.modelContext) var modelContext
@@ -22,7 +23,7 @@ struct ChapterList: View {
                 ForEach(sorted) { chapter in
                     let isCurrent = chapter == player.currentChapter
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
-                    let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.myBackgroundGray
+                    let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
                     Button {
                         if !chapter.isActive {
@@ -80,7 +81,36 @@ struct ChapterList: View {
 }
 
 #Preview {
-    ChapterList(video: Video.getDummy())
-        .modelContainer(DataController.previewContainer)
-        .environment(PlayerManager())
+    let container = DataController.previewContainer
+    let context = ModelContext(container)
+    let player = PlayerManager()
+
+    let video = Video.getDummy()
+    context.insert(video)
+
+    let ch1 = Chapter(title: "Chapter 1", time: 0, duration: 20, endTime: 20)
+    let ch2 = Chapter(title: "Chapter 2", time: 20, duration: 20, endTime: 40)
+    let ch3 = Chapter(title: "Chapter 3", time: 40, duration: 20, endTime: 60)
+    let ch4 = Chapter(title: "Chapter 4", time: 60, duration: 20, endTime: 80)
+    let ch5 = Chapter(title: "Chapter 5", time: 80, duration: 20, endTime: 100)
+    let ch6 = Chapter(title: "Chapter 6", time: 100, duration: 20, endTime: 120)
+    let ch7 = Chapter(title: "Chapter 7", time: 120, duration: 20, endTime: 140)
+
+    context.insert(ch1)
+    context.insert(ch2)
+    context.insert(ch3)
+    context.insert(ch4)
+    context.insert(ch5)
+    context.insert(ch6)
+    context.insert(ch7)
+
+    video.chapters = [ch1, ch2, ch3, ch4, ch5, ch6, ch7]
+    player.video = video
+    player.currentChapter = ch3
+
+    try? context.save()
+
+    return ChapterList(video: video)
+        .modelContainer(container)
+        .environment(player)
 }

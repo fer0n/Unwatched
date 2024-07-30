@@ -8,6 +8,7 @@ import SwiftUI
 struct FullscreenPlayerControls: View {
     @Environment(PlayerManager.self) var player
     @State var showChapters = false
+    @Binding var menuOpen: Bool
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
@@ -35,7 +36,10 @@ struct FullscreenPlayerControls: View {
             ZStack {
                 if hasChapters {
                     Button {
-                        showChapters = true
+                        if !showChapters {
+                            showChapters = true
+                            menuOpen = true
+                        }
                     } label: {
                         Image(systemName: Const.chaptersSF)
                             .modifier(PlayerControlButtonStyle())
@@ -63,6 +67,9 @@ struct FullscreenPlayerControls: View {
                     }
                     .environment(\.colorScheme, .dark)
                     .presentationCompactAdaptation(.popover)
+                    .onDisappear {
+                        menuOpen = false
+                    }
                 }
             }
             .frame(maxHeight: .infinity)
@@ -82,19 +89,7 @@ struct FullscreenPlayerControls: View {
             .disabled(player.previousChapterDisabled)
 
             ZStack {
-                Button {
-                    OrientationManager.changeOrientation(to: .portrait)
-                } label: {
-                    Image(systemName: Const.disableFullscreenSF)
-                        .modifier(PlayerControlButtonStyle())
-                }
-            }
-            .font(.system(size: 18))
-            .fontWeight(.bold)
-            .frame(maxHeight: .infinity)
-
-            ZStack {
-                FullscreenSpeedControl()
+                FullscreenSpeedControl(menuOpen: $menuOpen)
             }
             .frame(maxHeight: .infinity)
 
@@ -106,11 +101,15 @@ struct FullscreenPlayerControls: View {
             .fontWeight(.bold)
             .frame(maxHeight: .infinity)
 
-            CorePlayButton(circleVariant: false) { image in
-                image
-                    .modifier(PlayerControlButtonStyle())
-                    .font(.system(size: 22))
+            ZStack {
+                Button {
+                    OrientationManager.changeOrientation(to: .portrait)
+                } label: {
+                    Image(systemName: Const.disableFullscreenSF)
+                        .modifier(PlayerControlButtonStyle())
+                }
             }
+            .font(.system(size: 18))
             .fontWeight(.bold)
             .frame(maxHeight: .infinity)
         }
@@ -126,7 +125,9 @@ struct FullscreenPlayerControls: View {
     HStack {
         Rectangle()
             .fill(.gray)
-        FullscreenPlayerControls(markVideoWatched: { _, _ in })
+        FullscreenPlayerControls(
+            menuOpen: .constant(false),
+            markVideoWatched: { _, _ in })
             .padding()
     }
     .ignoresSafeArea(.all)

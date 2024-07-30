@@ -6,15 +6,19 @@
 import SwiftUI
 
 struct FullscreenSpeedControl: View {
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+    @Binding var menuOpen: Bool
 
     var body: some View {
         let customSetting = player.video?.subscription?.customSpeedSetting != nil
 
         Button {
-            showSpeedControl = true
+            if !showSpeedControl {
+                showSpeedControl = true
+                menuOpen = true
+            }
         } label: {
             HStack(spacing: 0) {
                 let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
@@ -42,6 +46,9 @@ struct FullscreenSpeedControl: View {
             }
             .environment(\.colorScheme, .dark)
             .presentationCompactAdaptation(.popover)
+            .onDisappear {
+                menuOpen = false
+            }
         }
         .onChange(of: playbackSpeed) {
             // workaround: refresh speed
