@@ -11,6 +11,7 @@ enum VideoSource {
     case playWhenReady
 }
 
+/// Manages the current video, queuing, and chapters
 @Observable class PlayerManager {
     var isPlaying: Bool = false
     var currentTime: Double?
@@ -171,6 +172,7 @@ enum VideoSource {
         updateVideoEnded()
     }
 
+    /// Restarts, pauses or plays the current video
     func handlePlayButton() {
         if videoEnded {
             restartVideo()

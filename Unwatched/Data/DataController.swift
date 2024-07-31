@@ -76,6 +76,20 @@ extension Subscription {
 }
 
 extension Video {
+    static func getDummyNonEmbedding() -> Video {
+        return Video(
+            title: "Rabbit R1: Barely Reviewable",
+            url: URL(string: "https://www.youtube.com/watch?v=jli0_oKMG-0")!,
+            youtubeId: "jli0_oKMG-0",
+            thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
+            publishedDate: Date(),
+            duration: 12352,
+            videoDescription: """
+                asdfas
+            """
+        )
+    }
+
     // Preview data
     static func getDummy() -> Video {
         // let chapters = [
