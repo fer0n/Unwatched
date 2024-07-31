@@ -14,10 +14,12 @@ struct FullscreenPlayerControlsWrapper: View {
     @State var controlsVM: FullscreenPlayerControlsVM
 
     var body: some View {
+        let nonEmbedding = player.embeddingDisabled
+
         if fullscreenControlsSetting != .off {
             FullscreenPlayerControls(menuOpen: $controlsVM.menuOpen,
                                      markVideoWatched: markVideoWatched)
-                .offset(x: 20)
+                .offset(x: nonEmbedding ? -5 : 20)
                 .frame(width: 60)
                 .fixedSize(horizontal: true, vertical: false)
                 .simultaneousGesture(TapGesture().onEnded {
@@ -25,7 +27,7 @@ struct FullscreenPlayerControlsWrapper: View {
                         controlsVM.setShowControls()
                     }
                 })
-                .frame(width: 0)
+                .frame(width: nonEmbedding ? 60 : 0)
                 .opacity(fullscreenControlsSetting == .on || !player.isPlaying || controlsVM.showControls ? 1 : 0)
         }
     }

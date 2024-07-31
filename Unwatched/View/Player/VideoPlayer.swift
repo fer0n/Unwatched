@@ -91,7 +91,7 @@ struct VideoPlayer: View {
     let container = DataController.previewContainer
     let context = ModelContext(container)
     let player = PlayerManager()
-    let video = Video.getDummy()
+    let video = Video.getDummyNonEmbedding()
 
     let ch1 = Chapter(title: "hi", time: 1)
     context.insert(ch1)
@@ -111,7 +111,7 @@ struct VideoPlayer: View {
     return VideoPlayer(compactSize: false,
                        showInfo: true,
                        horizontalLayout: false,
-                       landscapeFullscreen: false)
+                       landscapeFullscreen: true)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

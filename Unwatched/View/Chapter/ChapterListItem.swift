@@ -27,10 +27,11 @@ struct ChapterListItem: View {
             ZStack {
                 Image(systemName: Const.circleBackgroundSF)
                     .resizable()
-                    .frame(width: 25, height: 25)
+                    .frame(width: 30, height: 30)
                     .foregroundStyle(Color.backgroundColor)
                 if chapter.isActive {
                     Image(systemName: Const.checkmarkSF)
+                        .fontWeight(.bold)
                         .foregroundStyle(Color.neutralAccentColor)
                 }
             }

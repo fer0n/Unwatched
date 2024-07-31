@@ -8,6 +8,9 @@ import SwiftUI
 import SwiftData
 import OSLog
 
+/// Holds images in memory until `persistCache()` is called.
+///
+/// This avoids performance issues when saving data.
 @Observable class ImageCacheManager {
     private var cache: [PersistentIdentifier: ImageCacheInfo] = [:]
     subscript(id: PersistentIdentifier?) -> ImageCacheInfo? {
