@@ -50,13 +50,7 @@ struct ChapterDescriptionView: View {
                         .frame(maxWidth: .infinity)
                     }
                 }
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: Const.clearSF)
-                    }
-                }
+                DismissToolbarButton()
             }
             .tint(.neutralAccentColor)
             .myNavigationTitle(showBack: false)

@@ -9,10 +9,16 @@ import SwiftUI
 struct DismissToolbarButton: ToolbarContent {
     @Environment(\.dismiss) var dismiss
 
+    var action: (() -> Void)?
+
     var body: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
-                dismiss()
+                if let action = action {
+                    action()
+                } else {
+                    dismiss()
+                }
             } label: {
                 Image(systemName: Const.clearSF)
             }

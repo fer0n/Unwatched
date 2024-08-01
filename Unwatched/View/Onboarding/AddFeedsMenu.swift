@@ -53,13 +53,8 @@ struct AddFeedsMenu: View {
                     onSuccess?()
                 })
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button {
-                            showImportSheet = false
-                        } label: {
-                            Image(systemName: Const.clearSF)
-                        }
-
+                    DismissToolbarButton {
+                        showImportSheet = false
                     }
                 }
                 .tint(theme.color)
