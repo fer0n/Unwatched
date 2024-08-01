@@ -11,6 +11,7 @@ import OSLog
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
 
+    @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
 
@@ -22,11 +23,9 @@ struct SetupView: View {
     @State var navManager = NavigationManager.load()
 
     let appDelegate: AppDelegate
-    let container: ModelContainer
 
     var body: some View {
         ContentView()
-            .modelContainer(container)
             .tint(theme.color)
             .environment(player)
             .environment(imageCacheManager)
@@ -38,6 +37,7 @@ struct SetupView: View {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
             .onAppear {
+                let container = modelContext.container
                 appDelegate.navManager = navManager
                 refresher.container = container
                 refresher.showError = alerter.showError
@@ -86,7 +86,6 @@ struct SetupView: View {
                 // current video is the one stored, all good
                 return
             }
-            let modelContext = ModelContext(container)
             video = modelContext.model(for: videoId) as? Video
         }
 
@@ -100,7 +99,7 @@ struct SetupView: View {
     func saveData() async {
         navManager.save()
         sheetPos.save()
-        await imageCacheManager.persistCache(container)
+        await imageCacheManager.persistCache(modelContext.container)
         Logger.log.info("saved state")
     }
 
@@ -112,5 +111,6 @@ struct SetupView: View {
 }
 
 #Preview {
-    SetupView(appDelegate: AppDelegate(), container: DataController.previewContainer)
+    SetupView(appDelegate: AppDelegate())
+        .modelContainer(DataController.previewContainer)
 }
