@@ -39,13 +39,14 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SetupView(appDelegate: appDelegate, container: sharedModelContainer)
+            SetupView(appDelegate: appDelegate)
                 .task {
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)
                     ])
                 }
+                .modelContainer(sharedModelContainer)
         }
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
             let container = await sharedModelContainer
