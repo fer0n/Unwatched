@@ -11,10 +11,6 @@ extension Date {
         return DateFormatter()
     }()
 
-    static let iso8601Formatter: ISO8601DateFormatter = {
-        return ISO8601DateFormatter()
-    }()
-
     var formatted: String {
         let calendar = Calendar.current
         let formatter = Date.formatter
