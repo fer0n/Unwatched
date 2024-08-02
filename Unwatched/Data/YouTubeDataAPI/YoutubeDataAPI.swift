@@ -90,8 +90,7 @@ struct YoutubeDataAPI {
     }
 
     static func createVideo(_ snippet: YtVideoSnippet, videoId: String, duration: String? = nil) -> SendableVideo {
-        let dateFormatter = Date.iso8601Formatter
-        let publishedDate = dateFormatter.date(from: snippet.publishedAt)
+        let publishedDate = try? Date(snippet.publishedAt, strategy: .iso8601)
         let parsedDuration = {
             if let duration = duration {
                 return parseDurationToSeconds(duration)

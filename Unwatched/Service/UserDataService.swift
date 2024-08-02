@@ -249,8 +249,7 @@ struct UserDataService {
     }
 
     static func getFileName(_ deviceName: String, manual: Bool = false) -> String {
-        let dateFormatter = Date.iso8601Formatter
-        let dateString = dateFormatter.string(from: Date())
+        let dateString = Date().formatted(.iso8601)
         return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
 }

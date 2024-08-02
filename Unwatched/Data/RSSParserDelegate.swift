@@ -113,9 +113,9 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 namespaceURI: String?,
                 qualifiedName qName: String?) {
         if elementName == "entry" {
-            let dateFormatter = Date.iso8601Formatter
-            if let publishedDate = dateFormatter.date(from: currentPublishedDate),
-               let updatedDate = dateFormatter.date(from: currentUpdatedDate),
+
+            if let publishedDate = try? Date(currentPublishedDate, strategy: .iso8601),
+               let updatedDate =  try? Date(currentUpdatedDate, strategy: .iso8601),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
                 let chapters = VideoCrawler.extractChapters(from: currentDescription, videoDuration: nil)
