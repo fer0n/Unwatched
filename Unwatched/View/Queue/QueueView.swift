@@ -127,4 +127,5 @@ struct QueueView: View {
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())
+        .environment(ImageCacheManager())
 }
