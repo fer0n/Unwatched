@@ -85,7 +85,10 @@ struct VideoNotAvailableView: View {
                 Color.backgroundColor
                 Rectangle()
                     .fill(
-                        LinearGradient(colors: [.black, theme.color], startPoint: .top, endPoint: .bottom)
+                        LinearGradient(colors: [theme.color.mix(with: .black, by: 0.9),
+                                                theme.color],
+                                       startPoint: .top,
+                                       endPoint: .bottom)
                     )
                     .opacity(isDropTarget ? 0.6 : 0.4)
                     .animation(.bouncy(duration: 1.5), value: navManager.showMenu)
