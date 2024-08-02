@@ -93,9 +93,9 @@ struct PlayerControls: View {
                                   onSleepTimerEnded: onSleepTimerEnded)
             }
         }
-        .innerSizeTrackerModifier(onChange: { size in
+        .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
-        })
+        }
         .sheet(item: $browserUrl) { browserUrl in
             BrowserView(container: modelContext.container,
                         refresher: refresher,

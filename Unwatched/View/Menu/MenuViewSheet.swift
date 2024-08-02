@@ -41,7 +41,7 @@ struct MenuViewSheet: ViewModifier {
                             .enabled(upThrough: .height(sheetPos.maxSheetHeight))
                         )
                         .presentationContentInteraction(.scrolls)
-                        .globalMinYTrackerModifier(onChange: sheetPos.handleSheetMinYUpdate)
+                        .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
                         .presentationDragIndicator(
                             navManager.searchFocused
                                 ? .hidden

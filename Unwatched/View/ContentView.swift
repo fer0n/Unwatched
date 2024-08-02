@@ -74,9 +74,9 @@ struct ContentView: View {
             )
         }
         .ignoresSafeArea(bigScreen ? .keyboard : [])
-        .innerSizeTrackerModifier(onChange: { newSize in
+        .onSizeChange { newSize in
             sheetPos.sheetHeight = newSize.height
-        })
+        }
     }
 }
 
