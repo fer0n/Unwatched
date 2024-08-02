@@ -200,7 +200,7 @@ import OSLog
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
         var shortsDetection: ShortsDetection = .safe
-        var hideShortsEverywhere = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
+        let hideShortsEverywhere = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
         if hideShortsEverywhere {
             let shortsDetectionRaw = UserDefaults.standard.integer(forKey: Const.shortsDetection)
             if let sPlace = ShortsDetection(rawValue: shortsDetectionRaw) {

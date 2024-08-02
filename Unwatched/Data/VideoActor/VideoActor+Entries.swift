@@ -19,7 +19,7 @@ extension VideoActor {
     }
 
     private func markVideoWatched(_ video: Video) throws {
-        clearEntries(from: video)
+        clearEntries(from: video, updateCleared: false)
         video.watched = true
         let watchEntry = WatchEntry(video: video)
         modelContext.insert(watchEntry)
@@ -43,9 +43,9 @@ extension VideoActor {
             return
         }
         if video.inboxEntry != nil {
-            clearEntries(from: video, except: InboxEntry.self)
+            clearEntries(from: video, except: InboxEntry.self, updateCleared: false)
         } else {
-            clearEntries(from: video)
+            clearEntries(from: video, updateCleared: false)
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
         }
@@ -126,7 +126,7 @@ extension VideoActor {
                 defaultPlacement: defaultPlacementInfo
             )
         } else {
-            addVideosTo(videos: videosToAdd, placement: placement)
+            addVideosTo(videos: videosToAdd, placement: placement, index: 1)
         }
     }
 
@@ -141,7 +141,7 @@ extension VideoActor {
             let placement: VideoPlacement = (isShorts && defaultPlacement.hideShortsEverywhere)
                 ? VideoPlacement.nothing
                 : videoPlacement
-            addVideosTo(videos: [video], placement: placement)
+            addVideosTo(videos: [video], placement: placement, index: 1)
         }
     }
 
@@ -173,7 +173,7 @@ extension VideoActor {
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
             video.inboxEntry = inboxEntry
-            clearEntries(from: video, except: InboxEntry.self)
+            clearEntries(from: video, except: InboxEntry.self, updateCleared: false)
         }
     }
 
@@ -186,7 +186,7 @@ extension VideoActor {
 
     private func clearEntries(from video: Video,
                               except model: (any PersistentModel.Type)? = nil,
-                              updateCleared: Bool = false) {
+                              updateCleared: Bool) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
             VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
         }
@@ -236,16 +236,20 @@ extension VideoActor {
             let queueWasEmpty = queue.isEmpty
 
             for (index, video) in videos.enumerated() {
-                clearEntries(from: video, except: QueueEntry.self)
+                clearEntries(from: video, except: QueueEntry.self, updateCleared: false)
                 if let queueEntry = video.queueEntry {
                     queue.removeAll { $0 == queueEntry }
                 }
-                let queueEntry = video.queueEntry ?? {
+
+                let queueEntry: QueueEntry
+                if let existingQueueEntry = video.queueEntry {
+                    queueEntry = existingQueueEntry
+                } else {
                     let newQueueEntry = QueueEntry(video: video, order: 0)
                     modelContext.insert(newQueueEntry)
                     video.queueEntry = newQueueEntry
-                    return newQueueEntry
-                }()
+                    queueEntry = newQueueEntry
+                }
 
                 if queueWasEmpty {
                     queue.append(queueEntry)
