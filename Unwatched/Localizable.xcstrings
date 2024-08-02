@@ -54,7 +54,14 @@
       }
     },
     "Add video from ${youtubeUrl}" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video von ${youtubeUrl} hinzufügen"
+          }
+        }
+      }
     },
     "addAsPlaylist" : {
       "localizations" : {
@@ -872,30 +879,6 @@
         }
       }
     },
-    "Could not subscribe: (message)" : {
-      "comment" : "Could not subscribe",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abonnieren fehlgeschlagen: (message)"
-          }
-        }
-      }
-    },
-    "Couldn't convert to URL: (noUrl)" : {
-      "comment" : "Couldn't convert to URL",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Konnte keine URL erstellen: (noUrl)"
-          }
-        }
-      }
-    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -1630,18 +1613,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Into Unwatched"
-          }
-        }
-      }
-    },
-    "HTTP request failed: (message)" : {
-      "comment" : "Failed Getting Video Info Error",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HTTP request fehlgeschlagen (message)"
           }
         }
       }

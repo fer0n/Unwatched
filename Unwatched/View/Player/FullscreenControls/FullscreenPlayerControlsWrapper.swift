@@ -16,7 +16,7 @@ struct FullscreenPlayerControlsWrapper: View {
     var body: some View {
         let nonEmbedding = player.embeddingDisabled
 
-        if fullscreenControlsSetting != .off {
+        if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(menuOpen: $controlsVM.menuOpen,
                                      markVideoWatched: markVideoWatched)
                 .offset(x: nonEmbedding ? -5 : 20)
@@ -28,7 +28,7 @@ struct FullscreenPlayerControlsWrapper: View {
                     }
                 })
                 .frame(width: nonEmbedding ? 60 : 0)
-                .opacity(fullscreenControlsSetting == .on || !player.isPlaying || controlsVM.showControls ? 1 : 0)
+                .opacity(fullscreenControlsSetting == .enabled || !player.isPlaying || controlsVM.showControls ? 1 : 0)
         }
     }
 }

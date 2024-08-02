@@ -37,7 +37,7 @@ struct PlayerView: View {
     }
 
     var showFullscreenControls: Bool {
-        fullscreenControlsSetting != .off && UIDevice.supportsFullscreenControls
+        fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
     }
 
     var body: some View {

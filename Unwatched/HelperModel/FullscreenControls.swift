@@ -6,15 +6,15 @@
 import Foundation
 
 enum FullscreenControls: Int, Codable, CaseIterable {
-    case on
+    case enabled
     case autoHide
-    case off
+    case disabled
 
     var description: String {
         switch self {
-        case .on: return String(localized: "fullscreenControlsOn")
+        case .enabled: return String(localized: "fullscreenControlsOn")
         case .autoHide: return String(localized: "fullscreenControlsAutoHide")
-        case .off: return String(localized: "fullscreenControlsOff")
+        case .disabled: return String(localized: "fullscreenControlsOff")
         }
     }
 }
