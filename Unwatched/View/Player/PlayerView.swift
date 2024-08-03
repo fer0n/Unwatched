@@ -96,7 +96,7 @@ struct PlayerView: View {
                 .overlay {
                     OverlayFullscreenButton(
                         enabled: showFullscreenControls,
-                        invisible: !landscapeFullscreen
+                        landscapeFullscreen: landscapeFullscreen
                     )
 
                     thumbnailPlaceholder
