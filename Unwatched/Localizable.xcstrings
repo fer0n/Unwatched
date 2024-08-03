@@ -53,16 +53,6 @@
         }
       }
     },
-    "Add video from ${youtubeUrl}" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video von ${youtubeUrl} hinzufügen"
-          }
-        }
-      }
-    },
     "addAsPlaylist" : {
       "localizations" : {
         "de" : {
@@ -879,6 +869,12 @@
         }
       }
     },
+    "Could not subscribe: (message)" : {
+      "comment" : "Could not subscribe"
+    },
+    "Couldn't convert to URL: (noUrl)" : {
+      "comment" : "Couldn't convert to URL"
+    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -1616,6 +1612,9 @@
           }
         }
       }
+    },
+    "HTTP request failed: (message)" : {
+      "comment" : "Failed Getting Video Info Error"
     },
     "icloudSync" : {
       "localizations" : {
@@ -2482,7 +2481,7 @@
       }
     },
     "potentiallyFaultyYoutubeId" : {
-      "comment" : "(value)",
+      "comment" : "(youtubeId)",
       "localizations" : {
         "de" : {
           "stringUnit" : {

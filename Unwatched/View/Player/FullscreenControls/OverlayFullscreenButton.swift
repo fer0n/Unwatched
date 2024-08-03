@@ -11,13 +11,15 @@ struct OverlayFullscreenButton: View {
     @State private var show = false
 
     var enabled: Bool
-    var invisible: Bool
+    var landscapeFullscreen: Bool
 
     var body: some View {
+        let touchSize: CGFloat = landscapeFullscreen ? 125 : 90
+
         Color.white
             .opacity(.leastNonzeroMagnitude)
-            .contentShape(Circle())
-            .frame(width: 90, height: 90)
+            .contentShape(Rectangle())
+            .frame(width: touchSize, height: touchSize)
             .onTapGesture {
                 showPause = player.isPlaying
                 show = true
@@ -32,19 +34,19 @@ struct OverlayFullscreenButton: View {
                     .fontWeight(.black)
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(.black, .white)
-                    .opacity(show && !invisible ? 1 : 0)
+                    .opacity(show && landscapeFullscreen ? 1 : 0)
                     .task(id: show) {
                         if show {
                             try? await Task.sleep(s: 0.2)
                             show = false
                         }
                     }
-                    .scaleEffect(show && !invisible ? 1 : 0.7)
+                    .scaleEffect(show && landscapeFullscreen ? 1 : 0.7)
                     .animation(.bouncy, value: show)
 
                 if player.videoEnded {
                     PlayButton(size: 90)
-                        .opacity(enabled && !invisible ? 1 : 0)
+                        .opacity(enabled && landscapeFullscreen ? 1 : 0)
                 }
             }
     }
