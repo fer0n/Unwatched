@@ -57,6 +57,7 @@ struct SetupView: View {
                 case .background:
                     Logger.log.info("background")
                     player.isInBackground = true
+                    NotificationManager.clearNotifications()
                     Task {
                         await saveData()
                     }
