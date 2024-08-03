@@ -24,9 +24,9 @@ final class DataSpeedTests: XCTestCase {
             print("Videos: \(videos.count)")
         }
     }
-    
+
     // MARK: Helpers
-    
+
     func getModelContext() async -> ModelContext {
         let container = await DataController.previewContainer
         let data = (try? loadFileData(for: "backup-file.json"))!
