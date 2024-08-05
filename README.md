@@ -16,6 +16,8 @@
 
 Add Videos to watch them later or follow YouTube channels!
 
+Available on the App Store for free: [Download](https://apps.apple.com/app/id6477287463).
+
 ## KEY FEATURES
 
 ### The Queue
@@ -32,7 +34,7 @@ Choose where new videos of from each channel should end up. Directly on top of t
 
 ### Sick of #shorts?
 
-Hide them all or sort through them separately.
+Hide them all.
 
 ### Custom Playback Speed Per Channel
 
