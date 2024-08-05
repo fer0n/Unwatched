@@ -388,6 +388,8 @@
 		88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC32C19927E007FC1A5 /* UIDevice.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
 		88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
+		CDA07A362C601F250009BFEC /* backup-file.json in Resources */ = {isa = PBXBuildFile; fileRef = CDA07A352C601F250009BFEC /* backup-file.json */; };
+		CDA07A392C601F590009BFEC /* DataSpeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA07A382C601F510009BFEC /* DataSpeedTests.swift */; };
 		CDEB17722C5CCB5800E6FE66 /* VideoCrawlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEB17712C5CCB4B00E6FE66 /* VideoCrawlerTests.swift */; };
 		CDEB17732C5CCFD100E6FE66 /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882EA1572C48FBE800CEE2E4 /* TestData.swift */; };
 /* End PBXBuildFile section */
@@ -605,6 +607,8 @@
 		88FEBFC32C19927E007FC1A5 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
+		CDA07A352C601F250009BFEC /* backup-file.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "backup-file.json"; sourceTree = "<group>"; };
+		CDA07A382C601F510009BFEC /* DataSpeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSpeedTests.swift; sourceTree = "<group>"; };
 		CDEB17712C5CCB4B00E6FE66 /* VideoCrawlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawlerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -713,6 +717,8 @@
 		882FBA7E2B905F2500213CEF /* UnwatchedUITests */ = {
 			isa = PBXGroup;
 			children = (
+				CDA07A372C601F350009BFEC /* TestData */,
+				CDA07A382C601F510009BFEC /* DataSpeedTests.swift */,
 				CDEB17712C5CCB4B00E6FE66 /* VideoCrawlerTests.swift */,
 				882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */,
 				882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */,
@@ -1107,6 +1113,14 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		CDA07A372C601F350009BFEC /* TestData */ = {
+			isa = PBXGroup;
+			children = (
+				CDA07A352C601F250009BFEC /* backup-file.json */,
+			);
+			path = TestData;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1190,6 +1204,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDA07A362C601F250009BFEC /* backup-file.json in Resources */,
 				889AF9692C50ED33001CEDE6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1268,6 +1283,7 @@
 				889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */,
 				889AF93A2C50ECF5001CEDE6 /* SubStateOverview.swift in Sources */,
 				889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */,
+				CDA07A392C601F590009BFEC /* DataSpeedTests.swift in Sources */,
 				889AF93C2C50ECF5001CEDE6 /* InteractiveSubscriptionTitle.swift in Sources */,
 				889AF93D2C50ECF5001CEDE6 /* BrowserView.swift in Sources */,
 				889AF93E2C50ECF5001CEDE6 /* DropUrlArea.swift in Sources */,
