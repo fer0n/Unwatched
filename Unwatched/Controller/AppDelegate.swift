@@ -39,6 +39,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                             didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
+        handleNotificationActions(response)
+        handleTabDestination(response)
+        completionHandler()
+    }
+
+    nonisolated func handleTabDestination(_ response: UNNotificationResponse) {
         let userInfo = response.notification.request.content.userInfo
         if let destination = userInfo[Const.tapDestination] as? NavigationTab.RawValue,
            let tab = NavigationTab(rawValue: destination) {
@@ -49,9 +55,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         } else {
             Logger.log.info("Tap on notification without destination")
         }
-
-        handleNotificationActions(response)
-        completionHandler()
     }
 
     nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {

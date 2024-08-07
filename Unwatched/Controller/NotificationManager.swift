@@ -113,6 +113,7 @@ struct NotificationManager {
         UserDefaults.standard.set(newValue, forKey: Const.badgeCount)
 
         guard number < 0 else {
+            Logger.log.info("changeBadgeNumer: number is not negative.")
             // inbox/queue count is set while refreshing the videos
             return
         }
@@ -120,10 +121,12 @@ struct NotificationManager {
         if placement == .queue {
             let queueCount = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
             let newQueueCount = queueCount + number
+            Logger.log.info("oldQueueCount: \(queueCount), newQueueCount: \(newQueueCount)")
             UserDefaults.standard.set(max(0, newQueueCount), forKey: Const.newQueueItemsCount)
         } else if placement == .inbox {
             let inboxCount = UserDefaults.standard.integer(forKey: Const.newInboxItemsCount)
             let newInboxCount = inboxCount + number
+            Logger.log.info("oldInboxCount: \(inboxCount), newInboxCount: \(newInboxCount)")
             UserDefaults.standard.set(max(0, newInboxCount), forKey: Const.newInboxItemsCount)
         }
     }
