@@ -31,15 +31,51 @@ struct NewVideosNotificationInfo {
         }
     }
 
+    func flattenDicts(_ dict: [String: [SendableVideo]]) -> [[String: [SendableVideo]]] {
+        // only one key & one value per dict
+        var result = [[String: [SendableVideo]]]()
+        for (key, value) in dict {
+            for val in value {
+                result.append([key: [val]])
+            }
+        }
+        return result
+    }
+
     func getNewVideoText(includeInbox: Bool, includeQueue: Bool) -> [NotificationInfo] {
         if !includeInbox && !includeQueue {
             return []
         }
-        let result: [NotificationInfo] = [
+        let countInbox = inbox.values.flatMap { $0 }.count
+        let countQueue = queue.values.flatMap { $0 }.count
+        let count = countInbox + countQueue
+
+        if count <= Const.simultaneousNotificationsLimit {
+            return sendOneNotificationPerVideo()
+        } else {
+            return sendOneQueueOneInboxNotification()
+        }
+    }
+
+    private func sendOneQueueOneInboxNotification() -> [NotificationInfo] {
+        [
             getText(from: inbox, placement: .inbox),
             getText(from: queue, placement: .queue)
         ].compactMap { $0 }
+    }
 
+    private func sendOneNotificationPerVideo() -> [NotificationInfo] {
+        var result = [NotificationInfo]()
+        for flat in flattenDicts(inbox) {
+            if let info = getText(from: flat, placement: .inbox) {
+                result.append(info)
+            }
+        }
+        for flat in flattenDicts(queue) {
+            if let info = getText(from: flat, placement: .queue) {
+                result.append(info)
+            }
+        }
         return result
     }
 
