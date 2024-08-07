@@ -11,7 +11,9 @@ struct ChapterTimeRemaining: View {
     var body: some View {
         if let remaining = currentRemaining {
             Text(remaining)
-                .font(.system(size: 12))
+                .animation(.default, value: remaining)
+                .contentTransition(.numericText(countsDown: true))
+                .font(.system(size: 12).monospacedDigit())
                 .lineLimit(1)
                 .opacity(0.8)
         }
