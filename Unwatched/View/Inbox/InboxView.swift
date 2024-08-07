@@ -37,8 +37,11 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last
                 // inbox item to the queue and then moving the video on top of the queue
                 List {
-                    swipeTipView
-                        .listRowBackground(Color.backgroundColor)
+
+                    if !inboxEntries.isEmpty {
+                        swipeTipView
+                            .listRowBackground(Color.backgroundColor)
+                    }
 
                     ForEach(inboxEntries) { entry in
                         ZStack {
