@@ -39,6 +39,7 @@ struct SetupView: View {
             .onAppear {
                 let container = modelContext.container
                 appDelegate.navManager = navManager
+                appDelegate.container = container
                 refresher.container = container
                 refresher.showError = alerter.showError
                 player.container = container

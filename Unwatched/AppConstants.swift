@@ -37,6 +37,12 @@ struct Const {
     static let askForReviewPointThreashold = 30
     static let sheetOpacityValue = 0.6
 
+    static let notificationActionQueue = "notificationActionQueue"
+    static let notificationActionClear = "notificationActionClear"
+    static let notificationVideoId = "notificationVideoId"
+    static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
+    static let queueVideoAddedCategory = "queueVideoAddedCategory"
+
     // MARK: - SF Symbols
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"
@@ -105,8 +111,8 @@ struct Const {
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     static let allVideosSortOrder = "allVideosSortOrder"
     static let sideloadingSortOrder = "sideloadingSortOrder"
-    static let hasNewInboxItems = "hasNewInboxItems"
-    static let hasNewQueueItems = "hasNewQueueItems"
+    static let newInboxItemsCount = "newInboxItemsCount"
+    static let newQueueItemsCount = "newQueueItemsCount"
     static let showTabBarBadge = "showTabBarBadge"
     static let enableIcloudSync = "enableIcloudSync"
     static let browserAsTab = "browserAsTab"
