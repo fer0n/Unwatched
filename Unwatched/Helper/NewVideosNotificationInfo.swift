@@ -31,33 +31,32 @@ struct NewVideosNotificationInfo {
         }
     }
 
-    func getNewVideoText(includeInbox: Bool, includeQueue: Bool) -> (title: String, subtitle: String)? {
+    func getNewVideoText(includeInbox: Bool, includeQueue: Bool) -> [NotificationInfo] {
         if !includeInbox && !includeQueue {
-            return nil
+            return []
         }
-        var dict = [String: [SendableVideo]]()
+        let result: [NotificationInfo] = [
+            getText(from: inbox, placement: .inbox),
+            getText(from: queue, placement: .queue)
+        ].compactMap { $0 }
 
-        if includeInbox {
-            dict.merge(inbox) { _, new in new }
-        }
-        if includeQueue {
-            dict.merge(queue) { _, new in new }
-        }
-        return getText(from: dict)
+        return result
     }
 
-    private func getText(from dict: [String: [SendableVideo]]) -> (title: String, subtitle: String)? {
+    private func getText(from dict: [String: [SendableVideo]], placement: VideoPlacement) -> NotificationInfo? {
         let newVideosCount = dict.values.flatMap { $0 }.count
+        let prefix = placement == .inbox ? "" : "→ "
         if newVideosCount == 0 {
             return nil
         }
         if newVideosCount == 1,
            let subscriptionTitle = dict.keys.first,
-           let videoTitle = dict.values.flatMap({ $0 }).first?.title {
-            return (subscriptionTitle, videoTitle)
+           let video = dict.values.flatMap({ $0 }).first {
+            return NotificationInfo(subscriptionTitle, "\(prefix)\(video.title)", video: video, placement: placement)
         }
         if dict.keys.count == 1, let first = dict.first {
-            return (first.key, String(localized: "\(newVideosCount) New Videos"))
+            return NotificationInfo(first.key,
+                                    String(localized: "\(prefix)\(newVideosCount) New Videos"))
         }
 
         // <SubscriptionTitle> (<videoCount>), <SubscriptionTitle> (<videoCount>)
@@ -66,6 +65,32 @@ struct NewVideosNotificationInfo {
         }
         let title = String(localized: "\(newVideosCount) New Videos")
         let subtitle = subTitleVideoCounts.joined(separator: ", ")
-        return (title, subtitle)
+        return NotificationInfo(title, "\(prefix)\(subtitle)")
+    }
+}
+
+struct NotificationInfo {
+    let title: String
+    let subtitle: String
+
+    let categoryIdentifier: String?
+    let video: SendableVideo?
+
+    init(_ title: String, _ subtitle: String, video: SendableVideo? = nil, placement: VideoPlacement? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+
+        self.video = video
+
+        var categoryIdentifier: String?
+        if video != nil {
+            // find out if the video is in the inbox or queue
+            categoryIdentifier = placement == .queue
+                ? Const.queueVideoAddedCategory
+                : placement == .inbox
+                ? Const.inboxVideoAddedCategory
+                : nil
+        }
+        self.categoryIdentifier = categoryIdentifier
     }
 }

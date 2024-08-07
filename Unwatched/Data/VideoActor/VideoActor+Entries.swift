@@ -151,7 +151,8 @@ extension VideoActor {
         } else if placement == .queue {
             insertQueueEntries(at: index, videos: videos)
             if !videos.isEmpty {
-                UserDefaults.standard.setValue(true, forKey: Const.hasNewQueueItems)
+                let count = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
+                UserDefaults.standard.setValue(count + videos.count, forKey: Const.newQueueItemsCount)
             }
         } else {
             return
@@ -167,7 +168,8 @@ extension VideoActor {
 
     private func addVideosToInbox(_ videos: [Video]) {
         if !videos.isEmpty {
-            UserDefaults.standard.setValue(true, forKey: Const.hasNewInboxItems)
+            let count = UserDefaults.standard.integer(forKey: Const.newInboxItemsCount)
+            UserDefaults.standard.setValue(count + videos.count, forKey: Const.newInboxItemsCount)
         }
         for video in videos {
             let inboxEntry = InboxEntry(video)
@@ -181,6 +183,8 @@ extension VideoActor {
         if let video = modelContext.model(for: videoId) as? Video {
             clearEntries(from: video, updateCleared: updateCleared)
             try modelContext.save()
+        } else {
+            Logger.log.info("clearEntries: model not found")
         }
     }
 

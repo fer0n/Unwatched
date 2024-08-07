@@ -13,7 +13,7 @@ struct VideoPlayer: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
+    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
 
     var compactSize = false
     var showInfo = true
@@ -45,8 +45,8 @@ struct VideoPlayer: View {
             }
         }
         .onChange(of: player.isPlaying) {
-            if hasNewQueueItems == true && navManager.showMenu && player.isPlaying && navManager.tab == .queue {
-                hasNewQueueItems = false
+            if newQueueItemsCount > 0 && navManager.showMenu && player.isPlaying && navManager.tab == .queue {
+                newQueueItemsCount = 0
             }
         }
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])

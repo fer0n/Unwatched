@@ -96,11 +96,45 @@ struct VideoService {
         return task
     }
 
+    static func clearFromEverywhere(_ youtubeId: String, container: ModelContainer) {
+        let task = Task {
+            let videoId = getModelId(for: youtubeId, container: container)
+
+            if let videoId = videoId {
+                let repo = VideoActor(modelContainer: container)
+                try await repo.clearEntries(from: videoId, updateCleared: true)
+            } else {
+                Logger.log.info("Video not found")
+            }
+        }
+    }
+
+    static func getModelId(for youtubeId: String, container: ModelContainer) -> PersistentIdentifier? {
+        let context = ModelContext(container)
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
+        let videos = try? context.fetch(fetch)
+        return videos?.first?.persistentModelID
+    }
+
+    static func insertQueueEntries(at index: Int = 0,
+                                   youtubeId: String,
+                                   container: ModelContainer) {
+        if let videoId = getModelId(for: youtubeId, container: container) {
+            insertQueueEntries(at: index, videoIds: [videoId], container: container)
+        }
+    }
+
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
                                    modelContext: ModelContext) -> Task<(), Error> {
         let container = modelContext.container
         let videoIds = videos.map { $0.id }
+        return insertQueueEntries(at: index, videoIds: videoIds, container: container)
+    }
+
+    static func insertQueueEntries(at index: Int = 0,
+                                   videoIds: [PersistentIdentifier],
+                                   container: ModelContainer) -> Task<(), Error> {
         let task = Task {
             let repo = VideoActor(modelContainer: container)
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)

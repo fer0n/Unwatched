@@ -11,6 +11,22 @@
         }
       }
     },
+    "%@%lld New Videos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@%2$lld Neue Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$lld New Videos"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "de" : {
@@ -677,6 +693,38 @@
         }
       }
     },
+    "clearAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Inbox entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear from Inbox"
+          }
+        }
+      }
+    },
+    "clearActionQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Queue entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear from Queue"
+          }
+        }
+      }
+    },
     "clearAll" : {
       "localizations" : {
         "de" : {
@@ -870,10 +918,26 @@
       }
     },
     "Could not subscribe: (message)" : {
-      "comment" : "Could not subscribe"
+      "comment" : "Could not subscribe",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnieren fehlgeschlagen: (message)"
+          }
+        }
+      }
     },
     "Couldn't convert to URL: (noUrl)" : {
-      "comment" : "Couldn't convert to URL"
+      "comment" : "Couldn't convert to URL",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konnte nicht in URL umwandeln: (noUrl)"
+          }
+        }
+      }
     },
     "createdDate" : {
       "localizations" : {
@@ -1614,7 +1678,15 @@
       }
     },
     "HTTP request failed: (message)" : {
-      "comment" : "Failed Getting Video Info Error"
+      "comment" : "Failed Getting Video Info Error",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP request fehlgeschlagen: (message)"
+          }
+        }
+      }
     },
     "icloudSync" : {
       "localizations" : {
@@ -2541,6 +2613,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queue"
+          }
+        }
+      }
+    },
+    "queueAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zur Queue hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Queue"
           }
         }
       }

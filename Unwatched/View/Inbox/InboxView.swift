@@ -9,7 +9,7 @@ import TipKit
 import OSLog
 
 struct InboxView: View {
-    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
+    @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @Environment(\.modelContext) var modelContext
@@ -70,7 +70,7 @@ struct InboxView: View {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
             }
             .onDisappear {
-                hasNewInboxItems = false
+                newInboxItemsCount = 0
             }
             .toolbar {
                 if showCancelButton {
@@ -114,9 +114,9 @@ struct InboxView: View {
     }
 
     func handleVideoChange() {
-        if hasNewInboxItems {
+        if newInboxItemsCount > 0 {
             withAnimation {
-                hasNewInboxItems = false
+                newInboxItemsCount = 0
             }
         }
     }
