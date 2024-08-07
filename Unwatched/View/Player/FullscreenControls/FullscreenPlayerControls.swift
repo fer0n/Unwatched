@@ -47,7 +47,7 @@ struct FullscreenPlayerControls: View {
                     .fontWeight(.bold)
                 }
             }
-            .popover(isPresented: $showChapters) {
+            .popover(isPresented: $showChapters, arrowEdge: .trailing) {
                 if let video = player.video {
                     ZStack {
                         Color.sheetBackground

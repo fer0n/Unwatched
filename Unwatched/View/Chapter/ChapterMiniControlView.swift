@@ -159,8 +159,10 @@ struct ChapterMiniControlRemainingText: View {
     var body: some View {
         if let remaining = player.currentRemainingText {
             Text(remaining)
+                .font(.system(size: 14).monospacedDigit())
+                .animation(.default, value: player.currentRemainingText)
+                .contentTransition(.numericText(countsDown: true))
                 .foregroundStyle(Color.foregroundGray)
-                .font(.system(size: 14))
                 .lineLimit(1)
         }
     }
