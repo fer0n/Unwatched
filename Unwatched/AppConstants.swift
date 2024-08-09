@@ -38,6 +38,7 @@ struct Const {
     static let sheetOpacityValue = 0.6
 
     static let simultaneousNotificationsLimit = 3
+    static let notificationImageUrl = "notificationImageUrl"
     static let notificationActionQueue = "notificationActionQueue"
     static let notificationActionClear = "notificationActionClear"
     static let notificationVideoId = "notificationVideoId"
@@ -45,6 +46,8 @@ struct Const {
     static let queueVideoAddedCategory = "queueVideoAddedCategory"
 
     // MARK: - SF Symbols
+    static let queueTopSF = "text.insert"
+
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"
     static let inboxTabEmptySF = "tray"
@@ -63,6 +66,7 @@ struct Const {
 
     static let watchedSF = "checkmark.circle.fill"
     static let clearSF = "xmark.circle.fill"
+    static let clearNoFillSF = "xmark"
 
     static let alreadyInLibrarySF = "books.vertical.circle.fill"
 
@@ -133,4 +137,5 @@ struct Const {
     static let reloadVideoId = "reloadVideoId"
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
+    static let refreshOnClose = "refreshOnClose"
 }

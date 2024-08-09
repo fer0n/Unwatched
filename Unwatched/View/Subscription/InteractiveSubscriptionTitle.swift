@@ -39,7 +39,7 @@ struct InteractiveSubscriptionTitle: View {
                 } label: {
                     HStack {
                         if subscribeManager.isSubscribed(video: video) {
-                            Image(systemName: "xmark")
+                            Image(systemName: Const.clearNoFillSF)
                             Text("unsubscribe")
                         } else {
                             Image(systemName: "plus")
