@@ -119,7 +119,7 @@ struct AddToLibraryView: View {
         if isLoading {
             ProgressView()
         } else if failed {
-            Image(systemName: "xmark")
+            Image(systemName: Const.clearNoFillSF)
         } else if isSuccess {
             Image(systemName: "checkmark")
         } else if addText.isEmpty {

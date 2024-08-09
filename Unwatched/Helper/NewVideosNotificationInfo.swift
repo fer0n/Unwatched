@@ -4,6 +4,9 @@
 //
 
 import Foundation
+import UIKit
+import SwiftData
+import OSLog
 
 struct NewVideosNotificationInfo {
     var inbox = [String: [SendableVideo]]()
@@ -42,7 +45,9 @@ struct NewVideosNotificationInfo {
         return result
     }
 
-    func getNewVideoText(includeInbox: Bool, includeQueue: Bool) -> [NotificationInfo] {
+    func getNewVideoNotificationContent(includeInbox: Bool,
+                                        includeQueue: Bool,
+                                        container: ModelContainer) async -> [NotificationInfo] {
         if !includeInbox && !includeQueue {
             return []
         }
@@ -50,11 +55,47 @@ struct NewVideosNotificationInfo {
         let countQueue = queue.values.flatMap { $0 }.count
         let count = countInbox + countQueue
 
-        if count <= Const.simultaneousNotificationsLimit {
-            return sendOneNotificationPerVideo()
+        if count <= Const.simultaneousNotificationsLimit || UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
+            let info = sendOneNotificationPerVideo()
+            let infoWithImages = await getImageData(info, container: container)
+            return infoWithImages
+
         } else {
             return sendOneQueueOneInboxNotification()
         }
+    }
+
+    private func getImageData(_ infos: [NotificationInfo], container: ModelContainer) async -> [NotificationInfo] {
+        var infoWithImageData = infos
+
+        await withTaskGroup(of: (Int, Data?).self) { group in
+            for (index, info) in infos.enumerated() {
+                guard let video = info.video,
+                      let imageUrl = video.thumbnailUrl else {
+                    Logger.log.info("No video/imageUrl when trying to load image data")
+                    continue
+                }
+
+                group.addTask {
+                    do {
+                        let data = try await ImageService.loadImageData(url: imageUrl)
+                        return (index, data)
+                    } catch {
+                        Logger.log.info("Failed to load image data for \(info.title): \(error)")
+                        return (index, nil)
+                    }
+                }
+            }
+
+            for await (index, data) in group {
+                if let data = data {
+                    infoWithImageData[index].imageData = data
+                }
+            }
+        }
+
+        VideoService.storeImages(for: infoWithImageData, container: container)
+        return infoWithImageData
     }
 
     private func sendOneQueueOneInboxNotification() -> [NotificationInfo] {
@@ -111,6 +152,7 @@ struct NotificationInfo {
 
     let categoryIdentifier: String?
     let video: SendableVideo?
+    var imageData: Data?
 
     init(_ title: String, _ subtitle: String, video: SendableVideo? = nil, placement: VideoPlacement? = nil) {
         self.title = title

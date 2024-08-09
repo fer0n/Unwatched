@@ -23,7 +23,7 @@ struct ConfirmableMenuButton<Content: View>: View {
                 Text("confirm")
             }
             Button { } label: {
-                Label("cancel", systemImage: "xmark")
+                Label("cancel", systemImage: Const.clearNoFillSF)
             }
         } label: {
             label

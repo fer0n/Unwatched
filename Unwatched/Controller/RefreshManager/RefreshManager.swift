@@ -173,7 +173,7 @@ extension RefreshManager {
             } else {
                 print("notifyNewVideos")
                 NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
-                NotificationManager.notifyNewVideos(newVideos)
+                await NotificationManager.notifyNewVideos(newVideos, container: container)
             }
         } catch {
             print("Error during background refresh: \(error)")

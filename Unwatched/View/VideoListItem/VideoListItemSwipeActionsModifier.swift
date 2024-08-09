@@ -120,7 +120,7 @@ struct LeadingSwipeActionsView: View {
                 Button(role: config.queueRole,
                        action: addVideoToTopQueue,
                        label: {
-                        Image(systemName: "text.insert")
+                        Image(systemName: Const.queueTopSF)
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.1))
             }

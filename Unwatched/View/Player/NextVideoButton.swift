@@ -52,12 +52,12 @@ struct CoreNextButton<Content>: View where Content: View {
                 Button {
                     markVideoWatched(true, .nextUp)
                 } label: {
-                    Label("markWatched", systemImage: "checkmark.circle.fill")
+                    Label("markWatched", systemImage: "checkmark")
                 }
                 Button {
                     player.clearVideo()
                 } label: {
-                    Label("clearVideo", systemImage: "xmark.circle.fill")
+                    Label("clearVideo", systemImage: Const.clearNoFillSF)
                 }
                 Divider()
             }
@@ -65,7 +65,7 @@ struct CoreNextButton<Content>: View where Content: View {
             Button {
                 markVideoWatched(false, .userInteraction)
             } label: {
-                Label("nextVideo", systemImage: Const.nextVideoSF)
+                Label("nextVideo", systemImage: "forward.end.alt")
             }
 
             if extendedContextMenu {

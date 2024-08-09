@@ -69,7 +69,7 @@ struct DropUrlArea<Content: View>: View {
                     .scaledToFit()
                     .frame(width: size, height: size)
             } else if avm.isSuccess == false {
-                Image(systemName: "xmark")
+                Image(systemName: Const.clearNoFillSF)
                     .resizable()
                     .scaledToFit()
                     .frame(width: size, height: size)

@@ -109,11 +109,15 @@ struct VideoService {
         }
     }
 
-    static func getModelId(for youtubeId: String, container: ModelContainer) -> PersistentIdentifier? {
+    static func getVideo(for youtubeId: String, container: ModelContainer) -> Video? {
         let context = ModelContext(container)
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
         let videos = try? context.fetch(fetch)
-        return videos?.first?.persistentModelID
+        return videos?.first
+    }
+
+    static func getModelId(for youtubeId: String, container: ModelContainer) -> PersistentIdentifier? {
+        getVideo(for: youtubeId, container: container)?.persistentModelID
     }
 
     static func insertQueueEntries(at index: Int = 0,
@@ -229,5 +233,27 @@ struct VideoService {
             try await repo.clearList(list, direction, index: index, date: date)
         }
         return task
+    }
+
+    static func storeImages(for infos: [NotificationInfo], container: ModelContainer) {
+        Task.detached {
+            let context = ModelContext(container)
+            for info in infos {
+                if let sendableVideo = info.video,
+                   let video = getVideo(for: sendableVideo.youtubeId, container: container),
+                   let url = sendableVideo.thumbnailUrl,
+                   let imageData = info.imageData {
+                    if video.cachedImage != nil {
+                        Logger.log.info("video !has image")
+                        continue
+                    }
+
+                    let imageCache = CachedImage(url, imageData: imageData)
+                    context.insert(imageCache)
+                    video.cachedImage = imageCache
+                }
+            }
+            try context.save()
+        }
     }
 }

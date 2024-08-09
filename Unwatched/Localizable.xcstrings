@@ -778,13 +778,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video aus Queue entfernen"
+            "value" : "Aus Queue entfernen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear Video from Queue"
+            "value" : "Clear from Queue"
           }
         }
       }
@@ -2095,7 +2095,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next Video"
+            "value" : "Next"
           }
         }
       }
@@ -2681,6 +2681,22 @@
         }
       }
     },
+    "refreshOnClose" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim schließen im Hintergrund neu laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background Refresh on Close"
+          }
+        }
+      }
+    },
     "refreshOnStartup" : {
       "localizations" : {
         "de" : {
@@ -2702,13 +2718,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video neu laden"
+            "value" : "Player neu laden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reload Video"
+            "value" : "Reload Player"
           }
         }
       }
@@ -2766,13 +2782,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video neu starten"
+            "value" : "Neu starten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restart Video"
+            "value" : "Restart"
           }
         }
       }

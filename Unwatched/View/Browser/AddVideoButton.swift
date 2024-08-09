@@ -38,9 +38,9 @@ struct AddVideoButton: View {
                 Image(systemName: avm.isSuccess == true
                         ? "checkmark"
                         : avm.isSuccess == false
-                        ? "xmark"
+                        ? Const.clearNoFillSF
                         : isVideoUrl || isPlaylistUrl || showInsert
-                        ? "text.insert"
+                        ? Const.queueTopSF
                         : avm.isLoading
                         ? "ellipsis"
                         : "circle.circle")
