@@ -9,7 +9,6 @@ import SwiftUI
 import OSLog
 
 struct ImageService {
-
     static func persistImages(
         cache: [PersistentIdentifier: ImageCacheInfo],
         container: ModelContainer) -> Task<(), Error> {

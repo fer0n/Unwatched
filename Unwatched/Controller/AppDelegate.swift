@@ -88,12 +88,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
     nonisolated func setupNotificationCategories(_ center: UNUserNotificationCenter) {
         // Inbox videos: queue and clear
+        let queueIcon = UNNotificationActionIcon(systemImageName: Const.queueTopSF)
+        let clearIcon = UNNotificationActionIcon(systemImageName: Const.clearNoFillSF)
+
         let queueAction = UNNotificationAction(identifier: Const.notificationActionQueue,
                                                title: String(localized: "queueAction"),
-                                               options: [])
+                                               options: [],
+                                               icon: queueIcon)
         let clearAction = UNNotificationAction(identifier: Const.notificationActionClear,
                                                title: String(localized: "clearAction"),
-                                               options: [])
+                                               options: [],
+                                               icon: clearIcon)
         let category = UNNotificationCategory(identifier: Const.inboxVideoAddedCategory,
                                               actions: [queueAction, clearAction],
                                               intentIdentifiers: [],
@@ -102,7 +107,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         // Queued videos: clear only
         let clearActionQueue = UNNotificationAction(identifier: Const.notificationActionClear,
                                                     title: String(localized: "clearActionQueue"),
-                                                    options: [])
+                                                    options: [],
+                                                    icon: clearIcon)
         let clearCategory = UNNotificationCategory(identifier: Const.queueVideoAddedCategory,
                                                    actions: [clearActionQueue],
                                                    intentIdentifiers: [],

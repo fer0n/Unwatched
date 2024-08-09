@@ -44,6 +44,10 @@
 		882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */; };
 		882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */; };
 		883327FF2B8DB286001B3895 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883327FE2B8DB286001B3895 /* AsyncButton.swift */; };
+		88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */; };
+		88358A7B2C64EBAC00AF71F8 /* UNNotificationAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */; };
+		88358A7D2C65561B00AF71F8 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88358A7C2C65561B00AF71F8 /* UIImage.swift */; };
+		88358A7E2C65596D00AF71F8 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88358A7C2C65561B00AF71F8 /* UIImage.swift */; };
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
@@ -444,6 +448,8 @@
 		882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITests.swift; sourceTree = "<group>"; };
 		882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		883327FE2B8DB286001B3895 /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
+		88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationAttachment.swift; sourceTree = "<group>"; };
+		88358A7C2C65561B00AF71F8 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
@@ -844,6 +850,8 @@
 				888C49C12B5F288F00CDEC76 /* Binding.swift */,
 				88FEBFC32C19927E007FC1A5 /* UIDevice.swift */,
 				88B0C15D2C4165BC006D2423 /* UIWindow.swift */,
+				88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */,
+				88358A7C2C65561B00AF71F8 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1256,6 +1264,7 @@
 				889AF8EC2C50ECAE001CEDE6 /* VideoCrawlerError.swift in Sources */,
 				889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */,
 				889AF8FC2C50ECCD001CEDE6 /* NotificationManager.swift in Sources */,
+				88358A7E2C65596D00AF71F8 /* UIImage.swift in Sources */,
 				889AF94E2C50ED05001CEDE6 /* SubscriptionService.swift in Sources */,
 				8884ECFC2C58B7490085BD52 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				889AF94F2C50ED05001CEDE6 /* VideoListItemDetails.swift in Sources */,
@@ -1325,6 +1334,7 @@
 				889AF92E2C50ECEE001CEDE6 /* YouTubePlayerView.swift in Sources */,
 				889AF92F2C50ECEE001CEDE6 /* CustomSettingsButton.swift in Sources */,
 				889AF9302C50ECEE001CEDE6 /* ChapterTimeRemaining.swift in Sources */,
+				88358A7B2C64EBAC00AF71F8 /* UNNotificationAttachment.swift in Sources */,
 				889AF9312C50ECEE001CEDE6 /* VideoPlayer.swift in Sources */,
 				889AF9322C50ECEE001CEDE6 /* VideoPlayerFooter.swift in Sources */,
 				889AF9332C50ECEE001CEDE6 /* EmbeddedPlayerView.swift in Sources */,
@@ -1453,6 +1463,7 @@
 				8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */,
 				883327FF2B8DB286001B3895 /* AsyncButton.swift in Sources */,
 				88BDC3A32B76A9BF00656D63 /* SetupView.swift in Sources */,
+				88358A7D2C65561B00AF71F8 /* UIImage.swift in Sources */,
 				887DBB552BB6AC5A0012238A /* ClearAllVideosButton.swift in Sources */,
 				88BDC3AB2B79F0DE00656D63 /* SleepTimer.swift in Sources */,
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
@@ -1619,6 +1630,7 @@
 				8899246B2C47FAE3001185A6 /* InboxTabItemView.swift in Sources */,
 				888C49C72B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift in Sources */,
 				88BABAC22B630EF8001FA0A4 /* ImageCacheManager.swift in Sources */,
+				88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */,
 				889924782C4847C0001185A6 /* PlayerControlButtonStyle.swift in Sources */,
 				8867F5452BC7AC4D008EC182 /* FileInfo.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
@@ -1814,7 +1826,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 99;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1838,7 +1850,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1859,7 +1871,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 99;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1883,7 +1895,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

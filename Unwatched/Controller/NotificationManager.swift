@@ -5,21 +5,50 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 import OSLog
 
 struct NotificationManager {
 
-    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) {
+    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo, container: ModelContainer) async {
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
-        let notificationInfos = newVideoInfo.getNewVideoText(
+        let notificationInfos = await newVideoInfo.getNewVideoNotificationContent(
             includeInbox: notifyAboutInbox,
-            includeQueue: notifyAboutQueue)
+            includeQueue: notifyAboutQueue,
+            container: container)
+
         for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)
             let userInfo = getUserInfo(tab: tabDestination, notificationInfo: notificationInfo)
             sendNotification(notificationInfo, userInfo: userInfo)
+        }
+    }
+
+    private static func sendNotification(_ notificationInfo: NotificationInfo,
+                                         userInfo: [AnyHashable: Any]? = nil) {
+        let content = UNMutableNotificationContent()
+        content.title = notificationInfo.title
+        content.body = notificationInfo.subtitle
+        content.sound = UNNotificationSound.default
+        if let userInfo = userInfo {
+            content.userInfo = userInfo
+        }
+
+        if let attachement = getNotificationAttachments(notificationInfo) {
+            content.attachments = [attachement]
+        }
+
+        if let categoryIdentifier = notificationInfo.categoryIdentifier {
+            content.categoryIdentifier = categoryIdentifier
+        }
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                Logger.log.error("Error scheduling notification: \(error)")
+            }
         }
     }
 
@@ -37,25 +66,12 @@ struct NotificationManager {
         }
     }
 
-    private static func sendNotification(_ notificationInfo: NotificationInfo,
-                                         userInfo: [AnyHashable: Any]? = nil) {
-        let content = UNMutableNotificationContent()
-        content.title = notificationInfo.title
-        content.body = notificationInfo.subtitle
-        content.sound = UNNotificationSound.default
-        if let userInfo = userInfo {
-            content.userInfo = userInfo
+    private static func getNotificationAttachments(_ info: NotificationInfo) -> UNNotificationAttachment? {
+        if let imageData = info.imageData {
+            let attachement = UNNotificationAttachment.create(identifier: "key", imageData: imageData)
+            return attachement
         }
-        if let categoryIdentifier = notificationInfo.categoryIdentifier {
-            content.categoryIdentifier = categoryIdentifier
-        }
-
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request) { (error) in
-            if let error = error {
-                Logger.log.error("Error scheduling notification: \(error)")
-            }
-        }
+        return nil
     }
 
     static func notifyHasRun() {
