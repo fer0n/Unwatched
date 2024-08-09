@@ -28,10 +28,12 @@ struct UnwatchedApp: App {
         )
 
         do {
-            return try ModelContainer(
+            let container = try ModelContainer(
                 for: DataController.schema,
                 configurations: [config]
             )
+            container.mainContext.undoManager = UndoManager()
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

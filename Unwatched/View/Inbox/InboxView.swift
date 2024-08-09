@@ -12,6 +12,8 @@ struct InboxView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
+    @Environment(\.undoManager) var undoManager
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
@@ -37,6 +39,12 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last
                 // inbox item to the queue and then moving the video on top of the queue
                 List {
+                    Button {
+                        undoManager?.undo()
+                    } label: {
+                        Text("Undo")
+                    }
+                    .disabled(!(undoManager?.canUndo == true))
 
                     if !inboxEntries.isEmpty {
                         swipeTipView

@@ -77,18 +77,31 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         config.onChange?()
     }
 
+    func clearEntries(from video: Video,
+                      except model: (any PersistentModel.Type)? = nil,
+                      updateCleared: Bool) {
+        if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
+            VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
+        }
+        if model != QueueEntry.self, let queueEntry = video.queueEntry {
+            VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
+        }
+        try? modelContext.save()
+    }
+
     func clearVideoEverywhere() {
         let order = video.queueEntry?.order
-        let task = VideoService.clearFromEverywhere(
-            video,
-            updateCleared: true,
-            modelContext: modelContext
-        )
-        handlePotentialQueueChange(after: task, order: order)
+        //        let task = VideoService.clearFromEverywhere(
+        //            video,
+        //            updateCleared: true,
+        //            modelContext: modelContext
+        //        )
+        clearEntries(from: video, updateCleared: true)
+        handlePotentialQueueChange(order: order)
         config.onChange?()
     }
 
-    func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
+    func handlePotentialQueueChange(after task: (Task<(), Error>)? = nil, order: Int? = nil) {
         if order == 0 || video.queueEntry?.order == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }
