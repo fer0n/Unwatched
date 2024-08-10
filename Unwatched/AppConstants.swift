@@ -37,7 +37,7 @@ struct Const {
     static let askForReviewPointThreashold = 30
     static let sheetOpacityValue = 0.6
 
-    static let simultaneousNotificationsLimit = 3
+    static let simultaneousNotificationsLimit = 1
     static let notificationImageUrl = "notificationImageUrl"
     static let notificationActionQueue = "notificationActionQueue"
     static let notificationActionClear = "notificationActionClear"
