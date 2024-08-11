@@ -124,23 +124,6 @@ import OSLog
         return videos?.first
     }
 
-    func addShortsDetectionAndImageData(to videos: [SendableVideo]) async -> [SendableVideo] {
-        var videosWithImage = videos
-        for (index, video) in videos.enumerated() {
-            var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
-            if isYtShort == false,
-               let url = video.thumbnailUrl,
-               let imageData = try? await ImageService.loadImageData(url: url) {
-                videosWithImage[index].thumbnailData = imageData
-                if let isShort = ImageService.isYtShort(imageData) {
-                    isYtShort = isShort
-                }
-            }
-            videosWithImage[index].isYtShort = isYtShort
-        }
-        return videosWithImage
-    }
-
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
         newVideos = NewVideosNotificationInfo()
         Logger.log.info("loadVideos")
@@ -164,7 +147,6 @@ import OSLog
                         return (sub, [])
                     }
                     var videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-                    videos = await self.addShortsDetectionAndImageData(to: videos)
                     return (sub, videos)
                 }
             }
@@ -196,6 +178,8 @@ import OSLog
         }
         let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
         newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
+        newVideos = await self.addShortsDetectionAndImageData(to: newVideos)
+
         var newVideoModels = [Video]()
         for vid in newVideos {
             let video = vid.createVideo()
@@ -223,6 +207,35 @@ import OSLog
                                  defaultPlacementInfo: defaultPlacementInfo,
                                  limitVideos: limitVideos)
         updateRecentVideoDate(subscription: sub, videos: newVideos)
+    }
+
+    func addShortsDetectionAndImageData(to videos: [SendableVideo]) async -> [SendableVideo] {
+        var videosWithImage = videos
+
+        await withTaskGroup(of: (Int, SendableVideo).self) { group in
+            for (index, video) in videos.enumerated() {
+                group.addTask {
+                    var updatedVideo = video
+                    var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
+                    if isYtShort == false,
+                       let url = video.thumbnailUrl,
+                       let imageData = try? await ImageService.loadImageData(url: url) {
+                        updatedVideo.thumbnailData = imageData
+                        if let isShort = ImageService.isYtShort(imageData) {
+                            isYtShort = isShort
+                        }
+                    }
+                    updatedVideo.isYtShort = isYtShort
+                    return (index, updatedVideo)
+                }
+            }
+
+            for await (index, updatedVideo) in group {
+                videosWithImage[index] = updatedVideo
+            }
+        }
+
+        return videosWithImage
     }
 
     private func getDefaultVideoPlacement() -> DefaultVideoPlacement {
