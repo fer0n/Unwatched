@@ -15,11 +15,12 @@ struct FullscreenPlayerControlsWrapper: View {
 
     var body: some View {
         let nonEmbedding = player.embeddingDisabled
+        let left = controlsVM.positionLeft
 
         if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(menuOpen: $controlsVM.menuOpen,
                                      markVideoWatched: markVideoWatched)
-                .offset(x: nonEmbedding ? -5 : 20)
+                .offset(x: nonEmbedding ? -5 : left ? -20 : 20)
                 .frame(width: 60)
                 .fixedSize(horizontal: true, vertical: false)
                 .simultaneousGesture(TapGesture().onEnded {
@@ -37,6 +38,7 @@ struct FullscreenPlayerControlsWrapper: View {
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
     var menuOpen = false
+    var positionLeft = false
 
     private var showControlsLocal = false {
         didSet {
@@ -60,7 +62,15 @@ struct FullscreenPlayerControlsWrapper: View {
         showControlsLocal || menuOpen
     }
 
-    func setShowControls() {
-        showControlsLocal = true
+    func setShowControls(positionLeft: Bool? = nil) {
+        withAnimation(.default.speed(3)) {
+            if let positionLeft = positionLeft {
+                self.positionLeft = positionLeft
+            } else {
+                // default right
+                self.positionLeft = false
+            }
+            showControlsLocal = true
+        }
     }
 }
