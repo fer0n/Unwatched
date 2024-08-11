@@ -11,6 +11,7 @@ import OSLog
 struct InboxView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -18,6 +19,7 @@ struct InboxView: View {
 
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
+    var hideShortsTip = HideShortsTip()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -41,6 +43,10 @@ struct InboxView: View {
                     if !inboxEntries.isEmpty {
                         swipeTipView
                             .listRowBackground(Color.backgroundColor)
+                    }
+
+                    if !hideShortsEverywhere {
+                        hideShortsTipView
                     }
 
                     ForEach(inboxEntries) { entry in
@@ -88,6 +94,15 @@ struct InboxView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
+    }
+
+    var hideShortsTipView: some View {
+        TipView(hideShortsTip) { _ in
+            hideShortsEverywhere = true
+            hideShortsTip.invalidate(reason: .actionPerformed)
+            VideoService.clearAllYtShortsFromInbox(modelContext)
+        }
+        .tipBackground(Color.insetBackgroundColor)
     }
 
     var swipeTipView: some View {

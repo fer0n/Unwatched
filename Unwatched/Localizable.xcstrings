@@ -1597,6 +1597,54 @@
         }
       }
     },
+    "HideShortsTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genug von #shorts?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sick of #shorts?"
+          }
+        }
+      }
+    },
+    "HideShortsTipAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide them all"
+          }
+        }
+      }
+    },
+    "HideShortsTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du willst, kannst du ab sofort alle #shorts ausblenden. Unter \"Bibliothek → Einstellungen → Videos\" gibt es die Option es zurückgängig zu machen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you wish, you can hide all #shorts from now on. You can change this at any time under \"Library → Settings → Videos\""
+          }
+        }
+      }
+    },
     "howToExport2" : {
       "localizations" : {
         "de" : {

@@ -86,6 +86,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         )
         handlePotentialQueueChange(after: task, order: order)
         config.onChange?()
+        if video.isYtShort {
+            HideShortsTip.clearedShorts += 1
+        }
     }
 
     func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
