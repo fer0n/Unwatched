@@ -8,7 +8,6 @@ import SwiftUI
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
-    @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
 
@@ -38,14 +37,6 @@ struct VideoSettingsView: View {
                 MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
-                    }
-                }
-
-                MySection(footer: "shortsSettingsHelper") {
-                    Picker("shortsDetection", selection: $shortsDetection) {
-                        ForEach(ShortsDetection.allCases, id: \.self) {
-                            Text($0.description)
-                        }
                     }
                 }
             }

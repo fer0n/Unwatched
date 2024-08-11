@@ -19,15 +19,15 @@ struct VideoListItemDetails: View {
                 .font(.system(size: 15, weight: .semibold))
                 .lineLimit(2)
                 .foregroundStyle(.primary)
-            if video.publishedDate != nil || video.isYtShort || video.isLikelyYtShort {
+            if video.publishedDate != nil || video.isYtShort {
                 HStack {
                     if let published = video.publishedDate {
                         Text(published.formatted)
                             .font(.system(size: 14, weight: .light))
                             .font(.body)
                     }
-                    if video.isYtShort || video.isLikelyYtShort {
-                        Text(verbatim: "#s\(video.isYtShort == true ? "." : "")")
+                    if video.isYtShort {
+                        Text(verbatim: "#s")
                             .font(.system(size: 14, weight: .regular))
                     }
                 }
