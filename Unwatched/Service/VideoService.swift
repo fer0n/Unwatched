@@ -256,4 +256,14 @@ struct VideoService {
             try context.save()
         }
     }
+
+    static func clearAllYtShortsFromInbox(_ modelContext: ModelContext) {
+        let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.isYtShort == true })
+        if let entries = try? modelContext.fetch(fetch) {
+            for entry in entries {
+                modelContext.delete(entry)
+            }
+            try? modelContext.save()
+        }
+    }
 }
