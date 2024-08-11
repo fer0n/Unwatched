@@ -39,8 +39,12 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
                           let holderId = imageHolder?.persistentModelID else {
                         return
                     }
-                    if let imageInfo = try? await imageTask?.value {
-                        cacheManager[holderId] = imageInfo
+                    do {
+                        if let imageInfo = try await imageTask?.value {
+                            cacheManager[holderId] = imageInfo
+                        }
+                    } catch {
+                        print("error loading image: \(error)")
                     }
                 }
         }

@@ -29,10 +29,18 @@ import OSLog
         let task = ImageService.persistImages(cache: cache, container: container)
         do {
             try await task.value
-            self.cache = [:]
+            clearCacheAll()
         } catch {
             Logger.log.error("error while trying to persist cache: \(error)")
         }
+    }
+
+    func clearCacheAll() {
+        self.cache = [:]
+    }
+
+    func clearCache(holderId: PersistentIdentifier) {
+        cache[holderId] = nil
     }
 }
 

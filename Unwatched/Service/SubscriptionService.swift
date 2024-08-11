@@ -71,4 +71,14 @@ struct SubscriptionService {
         let subs = try? modelContext.fetch(fetch)
         return subs?.first
     }
+
+    static func getRegularChannel(userName: String, container: ModelContainer) -> Subscription? {
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubePlaylistId == nil && $0.youtubeUserName == userName
+        })
+        fetch.fetchLimit = 1
+        let modelContext = ModelContext(container)
+        let subs = try? modelContext.fetch(fetch)
+        return subs?.first
+    }
 }
