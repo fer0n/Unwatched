@@ -137,8 +137,7 @@ extension VideoActor {
     ) {
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let isShorts = video.isConsideredShorts(defaultPlacement.shortsDetection)
-            let placement: VideoPlacement = (isShorts && defaultPlacement.hideShortsEverywhere)
+            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.hideShortsEverywhere)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)

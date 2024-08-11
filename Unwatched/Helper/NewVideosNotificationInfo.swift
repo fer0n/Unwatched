@@ -71,6 +71,7 @@ struct NewVideosNotificationInfo {
         await withTaskGroup(of: (Int, Data?).self) { group in
             for (index, info) in infos.enumerated() {
                 guard let video = info.video,
+                      video.thumbnailData == nil,
                       let imageUrl = video.thumbnailUrl else {
                     Logger.log.info("No video/imageUrl when trying to load image data")
                     continue
@@ -88,8 +89,10 @@ struct NewVideosNotificationInfo {
             }
 
             for await (index, data) in group {
-                if let data = data {
-                    infoWithImageData[index].imageData = data
+                if let data = data, let video = infoWithImageData[index].video {
+                    var videoWithImageData = video
+                    videoWithImageData.thumbnailData = data
+                    infoWithImageData[index].video = videoWithImageData
                 }
             }
         }
@@ -151,8 +154,7 @@ struct NotificationInfo {
     let subtitle: String
 
     let categoryIdentifier: String?
-    let video: SendableVideo?
-    var imageData: Data?
+    var video: SendableVideo?
 
     init(_ title: String, _ subtitle: String, video: SendableVideo? = nil, placement: VideoPlacement? = nil) {
         self.title = title

@@ -10,8 +10,6 @@ struct SubscriptionDetailView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
-    @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @State var isLoading = false
     @State var subscribeManager = SubscribeManager()
     @State var requiresUnsubscribe = false
@@ -55,10 +53,7 @@ struct SubscriptionDetailView: View {
                     ), startPoint: .top, endPoint: .bottom))
                 )
 
-                VideoListView(
-                    subscriptionId: subscription.persistentModelID,
-                    ytShortsFilter: shortsFilter
-                )
+                VideoListView(subscriptionId: subscription.persistentModelID)
             }
         }
         .listStyle(.plain)
@@ -86,11 +81,7 @@ struct SubscriptionDetailView: View {
         if subscription.thumbnailUrl != nil {
             return subscription
         }
-        return subscription.videos?.first(where: { !$0.isYtShort && !$0.isLikelyYtShort })
-    }
-
-    var shortsFilter: ShortsDetection? {
-        (hideShortsEverywhere) ? shortsDetection : nil
+        return subscription.videos?.first(where: { !$0.isYtShort })
     }
 
     func handleOnAppear() {

@@ -67,7 +67,7 @@ struct NotificationManager {
     }
 
     private static func getNotificationAttachments(_ info: NotificationInfo) -> UNNotificationAttachment? {
-        if let imageData = info.imageData {
+        if let imageData = info.video?.thumbnailData {
             let attachement = UNNotificationAttachment.create(identifier: "key", imageData: imageData)
             return attachement
         }

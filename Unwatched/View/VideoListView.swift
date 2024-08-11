@@ -7,13 +7,13 @@ import SwiftUI
 import SwiftData
 
 struct VideoListView: View {
+    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @Query var videos: [Video]
 
     init(subscriptionId: PersistentIdentifier? = nil,
-         ytShortsFilter: ShortsDetection? = nil,
          sort: VideoSorting? = nil,
          searchText: String = "") {
-        let filter = VideoListView.getVideoFilter(subscriptionId, ytShortsFilter, searchText)
+        let filter = VideoListView.getVideoFilter(showShorts: !hideShortsEverywhere, subscriptionId, searchText)
         let sorting = VideoListView.getVideoSorting(sort)
         _videos = Query(filter: filter, sort: sorting, animation: .default)
     }
@@ -45,45 +45,22 @@ struct VideoListView: View {
         }
     }
 
-    static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,
-                               _ ytShortsFilter: ShortsDetection? = nil,
+    static func getVideoFilter(showShorts: Bool,
+                               _ subscriptionId: PersistentIdentifier? = nil,
                                _ searchText: String = "") -> Predicate<Video>? {
         var filter: Predicate<Video>?
         let allSubscriptions = subscriptionId == nil
+
         if allSubscriptions {
-            switch ytShortsFilter {
-            case .safe:
-                filter = #Predicate<Video> { video in
-                    video.isYtShort == false
-                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
-                }
-            case .moderate:
-                filter = #Predicate<Video> { video in
-                    (video.isYtShort == false && video.isLikelyYtShort == false)
-                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
-                }
-            case .none:
-                break
+            filter = #Predicate<Video> { video in
+                (showShorts || video.isYtShort == false)
+                    && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         } else {
-            switch ytShortsFilter {
-            case .safe:
-                filter = #Predicate<Video> { video in
-                    video.subscription?.persistentModelID == subscriptionId &&
-                        video.isYtShort == false
-                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
-                }
-            case .moderate:
-                filter = #Predicate<Video> { video in
-                    video.subscription?.persistentModelID == subscriptionId &&
-                        (video.isYtShort == false && video.isLikelyYtShort == false)
-                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
-                }
-            case .none:
-                filter = #Predicate<Video> { video in
-                    video.subscription?.persistentModelID == subscriptionId
-                        && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
-                }
+            filter = #Predicate<Video> { video in
+                video.subscription?.persistentModelID == subscriptionId &&
+                    (showShorts || video.isYtShort == false)
+                    && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         }
         return filter

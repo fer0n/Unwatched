@@ -242,7 +242,7 @@ struct VideoService {
                 if let sendableVideo = info.video,
                    let video = getVideo(for: sendableVideo.youtubeId, container: container),
                    let url = sendableVideo.thumbnailUrl,
-                   let imageData = info.imageData {
+                   let imageData = info.video?.thumbnailData {
                     if video.cachedImage != nil {
                         Logger.log.info("video !has image")
                         continue

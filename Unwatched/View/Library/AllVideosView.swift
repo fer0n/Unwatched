@@ -3,7 +3,6 @@ import SwiftData
 
 struct AllVideosView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
-    @AppStorage(Const.shortsDetection) var shortsDetection: ShortsDetection = .safe
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
 
     @Query(animation: .default) var videos: [Video]
@@ -22,7 +21,6 @@ struct AllVideosView: View {
                 .opacity(videos.isEmpty ? 1 : 0)
             List {
                 VideoListView(
-                    ytShortsFilter: shortsFilter,
                     sort: allVideosSortOrder,
                     searchText: text.debounced
                 )
@@ -53,10 +51,6 @@ struct AllVideosView: View {
                 }
             }
         }
-    }
-
-    var shortsFilter: ShortsDetection? {
-        (hideShortsEverywhere) ? shortsDetection : nil
     }
 }
 

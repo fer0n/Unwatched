@@ -2985,54 +2985,6 @@
         }
       }
     },
-    "shortsDetection" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shorts Erkennung"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shorts Detection"
-          }
-        }
-      }
-    },
-    "shortsDetectionModerate" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moderat"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moderate"
-          }
-        }
-      }
-    },
-    "shortsDetectionSafe" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sicher"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Safe"
-          }
-        }
-      }
-    },
     "shortsSettings" : {
       "localizations" : {
         "de" : {
@@ -3045,22 +2997,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
-          }
-        }
-      }
-    },
-    "shortsSettingsHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Sicher\": Videos mit \"#Shorts\" im Video Titel oder der Beschreibung \"Moderat\": Videos mit Hashtags im Titel \nVideos die als \"Sicher\" identifiziert werden sind mit \"#s.\" markiert, \"Moderate\" mit \"#s\"."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Safe\": Videos with \"#Shorts\" in the title/description \"Moderate\": Videos with hashtags inside the title  Videos detected as \"Safe\" are marked with \"#s.\", \"Moderate\" videos are marked with \"#s\"."
           }
         }
       }
