@@ -66,9 +66,6 @@ struct FullscreenPlayerControlsWrapper: View {
         withAnimation(.default.speed(3)) {
             if let positionLeft = positionLeft {
                 self.positionLeft = positionLeft
-            } else {
-                // default right
-                self.positionLeft = false
             }
             showControlsLocal = true
         }
