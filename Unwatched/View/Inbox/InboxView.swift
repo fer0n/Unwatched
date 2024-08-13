@@ -9,8 +9,9 @@ import TipKit
 import OSLog
 
 struct InboxView: View {
-    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems = false
+    @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
+    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -18,6 +19,7 @@ struct InboxView: View {
 
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
+    var hideShortsTip = HideShortsTip()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -37,8 +39,15 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last
                 // inbox item to the queue and then moving the video on top of the queue
                 List {
-                    swipeTipView
-                        .listRowBackground(Color.backgroundColor)
+
+                    if !inboxEntries.isEmpty {
+                        swipeTipView
+                            .listRowBackground(Color.backgroundColor)
+                    }
+
+                    if !hideShortsEverywhere {
+                        hideShortsTipView
+                    }
 
                     ForEach(inboxEntries) { entry in
                         ZStack {
@@ -70,7 +79,7 @@ struct InboxView: View {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
             }
             .onDisappear {
-                hasNewInboxItems = false
+                newInboxItemsCount = 0
             }
             .toolbar {
                 if showCancelButton {
@@ -85,6 +94,15 @@ struct InboxView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
+    }
+
+    var hideShortsTipView: some View {
+        TipView(hideShortsTip) { _ in
+            hideShortsEverywhere = true
+            hideShortsTip.invalidate(reason: .actionPerformed)
+            VideoService.clearAllYtShortsFromInbox(modelContext)
+        }
+        .tipBackground(Color.insetBackgroundColor)
     }
 
     var swipeTipView: some View {
@@ -114,9 +132,9 @@ struct InboxView: View {
     }
 
     func handleVideoChange() {
-        if hasNewInboxItems {
+        if newInboxItemsCount > 0 {
             withAnimation {
-                hasNewInboxItems = false
+                newInboxItemsCount = 0
             }
         }
     }

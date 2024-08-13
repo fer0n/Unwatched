@@ -37,7 +37,17 @@ struct Const {
     static let askForReviewPointThreashold = 30
     static let sheetOpacityValue = 0.6
 
+    static let simultaneousNotificationsLimit = 1
+    static let notificationImageUrl = "notificationImageUrl"
+    static let notificationActionQueue = "notificationActionQueue"
+    static let notificationActionClear = "notificationActionClear"
+    static let notificationVideoId = "notificationVideoId"
+    static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
+    static let queueVideoAddedCategory = "queueVideoAddedCategory"
+
     // MARK: - SF Symbols
+    static let queueTopSF = "text.insert"
+
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"
     static let inboxTabEmptySF = "tray"
@@ -56,6 +66,7 @@ struct Const {
 
     static let watchedSF = "checkmark.circle.fill"
     static let clearSF = "xmark.circle.fill"
+    static let clearNoFillSF = "xmark"
 
     static let alreadyInLibrarySF = "books.vertical.circle.fill"
 
@@ -105,8 +116,8 @@ struct Const {
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     static let allVideosSortOrder = "allVideosSortOrder"
     static let sideloadingSortOrder = "sideloadingSortOrder"
-    static let hasNewInboxItems = "hasNewInboxItems"
-    static let hasNewQueueItems = "hasNewQueueItems"
+    static let newInboxItemsCount = "newInboxItemsCount"
+    static let newQueueItemsCount = "newQueueItemsCount"
     static let showTabBarBadge = "showTabBarBadge"
     static let enableIcloudSync = "enableIcloudSync"
     static let browserAsTab = "browserAsTab"
@@ -126,4 +137,5 @@ struct Const {
     static let reloadVideoId = "reloadVideoId"
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
+    static let refreshOnClose = "refreshOnClose"
 }

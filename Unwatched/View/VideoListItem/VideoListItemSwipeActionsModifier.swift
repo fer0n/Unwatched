@@ -86,6 +86,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         )
         handlePotentialQueueChange(after: task, order: order)
         config.onChange?()
+        if video.isYtShort {
+            HideShortsTip.clearedShorts += 1
+        }
     }
 
     func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
@@ -120,7 +123,7 @@ struct LeadingSwipeActionsView: View {
                 Button(role: config.queueRole,
                        action: addVideoToTopQueue,
                        label: {
-                        Image(systemName: "text.insert")
+                        Image(systemName: Const.queueTopSF)
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.1))
             }

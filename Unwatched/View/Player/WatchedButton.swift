@@ -28,7 +28,7 @@ struct WatchedButton: View {
                 Button {
                     player.clearVideo()
                 } label: {
-                    Label("clearVideo", systemImage: "xmark")
+                    Label("clearVideo", systemImage: Const.clearNoFillSF)
                 }
             }
         }
