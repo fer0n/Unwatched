@@ -30,7 +30,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     var subscription: Subscription?
     var youtubeChannelId: String?
     var isYtShort: Bool = false
-    var isLikelyYtShort: Bool = false
     var bookmarkedDate: Date?
     var clearedInboxDate: Date?
     var createdDate: Date?
@@ -54,15 +53,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
 
     var description: String {
         return "Video: \(title) (\(url?.absoluteString ?? ""))"
-    }
-
-    func isConsideredShorts(_ shortsDetection: ShortsDetection) -> Bool {
-        switch shortsDetection {
-        case .safe:
-            return isYtShort
-        case .moderate:
-            return isYtShort || isLikelyYtShort
-        }
     }
 
     var toExport: SendableVideo? {
@@ -98,7 +88,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
          chapters: [Chapter] = [],
          watched: Bool = false,
          isYtShort: Bool = false,
-         isLikelyYtShort: Bool = false,
          bookmarkedDate: Date? = nil,
          clearedInboxDate: Date? = nil,
          createdDate: Date? = .now) {
@@ -115,7 +104,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         self.chapters = chapters
         self.watched = watched
         self.isYtShort = isYtShort
-        self.isLikelyYtShort = isLikelyYtShort
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate

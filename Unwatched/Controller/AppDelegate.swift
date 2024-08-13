@@ -5,10 +5,12 @@
 
 import Foundation
 import WebKit
+import SwiftData
 import OSLog
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     weak var navManager: NavigationManager?
+    var container: ModelContainer?
     let notificationCenter = UNUserNotificationCenter.current()
 
     func woraroundInitialWebViewDelay() {
@@ -22,6 +24,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     ) -> Bool {
         woraroundInitialWebViewDelay()
         notificationCenter.delegate = self
+        setupNotificationCategories(notificationCenter)
         return true
     }
 
@@ -36,6 +39,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                             didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
+        handleNotificationActions(response)
+        handleTabDestination(response)
+        completionHandler()
+    }
+
+    nonisolated func handleTabDestination(_ response: UNNotificationResponse) {
         let userInfo = response.notification.request.content.userInfo
         if let destination = userInfo[Const.tapDestination] as? NavigationTab.RawValue,
            let tab = NavigationTab(rawValue: destination) {
@@ -46,6 +55,64 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         } else {
             Logger.log.info("Tap on notification without destination")
         }
-        completionHandler()
+    }
+
+    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {
+        let userInfo = response.notification.request.content.userInfo
+
+        let tab: NavigationTab? = {
+            if let destination = userInfo[Const.tapDestination] as? NavigationTab.RawValue {
+                return NavigationTab(rawValue: destination)
+            }
+            return nil
+        }()
+        let placement: VideoPlacement? = tab == .queue ? .queue : tab == .inbox ? .inbox : nil
+
+        guard let youtubeId = userInfo[Const.notificationVideoId] as? String,
+              let container = self.container else {
+            Logger.log.warning("Notification action cannot function")
+            return
+        }
+
+        switch response.actionIdentifier {
+        case Const.notificationActionQueue:
+            VideoService.insertQueueEntries(at: 1, youtubeId: youtubeId, container: container)
+            NotificationManager.changeBadgeNumer(by: -1, placement)
+        case Const.notificationActionClear:
+            VideoService.clearFromEverywhere(youtubeId, container: container)
+            NotificationManager.changeBadgeNumer(by: -1, placement)
+        default:
+            break
+        }
+    }
+
+    nonisolated func setupNotificationCategories(_ center: UNUserNotificationCenter) {
+        // Inbox videos: queue and clear
+        let queueIcon = UNNotificationActionIcon(systemImageName: Const.queueTopSF)
+        let clearIcon = UNNotificationActionIcon(systemImageName: Const.clearNoFillSF)
+
+        let queueAction = UNNotificationAction(identifier: Const.notificationActionQueue,
+                                               title: String(localized: "queueAction"),
+                                               options: [],
+                                               icon: queueIcon)
+        let clearAction = UNNotificationAction(identifier: Const.notificationActionClear,
+                                               title: String(localized: "clearAction"),
+                                               options: [],
+                                               icon: clearIcon)
+        let category = UNNotificationCategory(identifier: Const.inboxVideoAddedCategory,
+                                              actions: [queueAction, clearAction],
+                                              intentIdentifiers: [],
+                                              options: [])
+
+        // Queued videos: clear only
+        let clearActionQueue = UNNotificationAction(identifier: Const.notificationActionClear,
+                                                    title: String(localized: "clearActionQueue"),
+                                                    options: [],
+                                                    icon: clearIcon)
+        let clearCategory = UNNotificationCategory(identifier: Const.queueVideoAddedCategory,
+                                                   actions: [clearActionQueue],
+                                                   intentIdentifiers: [],
+                                                   options: [])
+        center.setNotificationCategories([category, clearCategory])
     }
 }

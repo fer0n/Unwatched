@@ -9,7 +9,7 @@ import OSLog
 
 struct QueueView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
-    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems = false
+    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount = 0
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
 
     @Environment(\.modelContext) var modelContext
@@ -77,7 +77,7 @@ struct QueueView: View {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
         }
         .onDisappear {
-            hasNewQueueItems = false
+            newQueueItemsCount = 0
         }
     }
 
@@ -98,9 +98,9 @@ struct QueueView: View {
     }
 
     func handleVideoChange() {
-        if hasNewQueueItems {
+        if newQueueItemsCount > 0 {
             withAnimation {
-                hasNewQueueItems = false
+                newQueueItemsCount = 0
             }
         }
     }

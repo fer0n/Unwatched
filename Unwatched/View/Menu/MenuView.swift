@@ -13,7 +13,7 @@ struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @AppStorage(Const.hasNewQueueItems) var hasNewQueueItems: Bool = false
+    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
@@ -30,7 +30,7 @@ struct MenuView: View {
                 TabItemView(image: Image(systemName: Const.queueTagSF),
                             text: "queue",
                             tag: NavigationTab.queue,
-                            showBadge: showTabBarBadge && hasNewQueueItems) {
+                            showBadge: showTabBarBadge && newQueueItemsCount > 0) {
                     QueueView(showCancelButton: showCancelButton)
                 }
 
@@ -110,9 +110,9 @@ struct MenuView: View {
             }
         }
         if newTab == .inbox {
-            UserDefaults.standard.set(false, forKey: Const.hasNewInboxItems)
+            UserDefaults.standard.set(0, forKey: Const.newInboxItemsCount)
         } else if newTab == .queue {
-            UserDefaults.standard.set(false, forKey: Const.hasNewQueueItems)
+            UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
         }
     }
 }

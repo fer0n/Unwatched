@@ -5,20 +5,50 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 import OSLog
 
 struct NotificationManager {
 
-    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) {
+    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo, container: ModelContainer) async {
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
-        if let (title, body) = newVideoInfo.getNewVideoText(
+        let notificationInfos = await newVideoInfo.getNewVideoNotificationContent(
             includeInbox: notifyAboutInbox,
-            includeQueue: notifyAboutQueue) {
+            includeQueue: notifyAboutQueue,
+            container: container)
+
+        for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)
-            let userInfo = getUserInfo(tab: tabDestination)
-            sendNotification(title, body: body, userInfo: userInfo)
+            let userInfo = getUserInfo(tab: tabDestination, notificationInfo: notificationInfo)
+            sendNotification(notificationInfo, userInfo: userInfo)
+        }
+    }
+
+    private static func sendNotification(_ notificationInfo: NotificationInfo,
+                                         userInfo: [AnyHashable: Any]? = nil) {
+        let content = UNMutableNotificationContent()
+        content.title = notificationInfo.title
+        content.body = notificationInfo.subtitle
+        content.sound = UNNotificationSound.default
+        if let userInfo = userInfo {
+            content.userInfo = userInfo
+        }
+
+        if let attachement = getNotificationAttachments(notificationInfo) {
+            content.attachments = [attachement]
+        }
+
+        if let categoryIdentifier = notificationInfo.categoryIdentifier {
+            content.categoryIdentifier = categoryIdentifier
+        }
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                Logger.log.error("Error scheduling notification: \(error)")
+            }
         }
     }
 
@@ -36,43 +66,34 @@ struct NotificationManager {
         }
     }
 
-    private static func sendNotification(_ title: String,
-                                         _ subtitle: String? = nil,
-                                         body: String? = nil,
-                                         userInfo: [AnyHashable: Any]? = nil) {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        if let subtitle = subtitle {
-            content.subtitle = subtitle
+    private static func getNotificationAttachments(_ info: NotificationInfo) -> UNNotificationAttachment? {
+        if let imageData = info.video?.thumbnailData {
+            let attachement = UNNotificationAttachment.create(identifier: "key", imageData: imageData)
+            return attachement
         }
-        if let body = body {
-            content.body = body
-        }
-        content.sound = UNNotificationSound.default
-        if let userInfo = userInfo {
-            content.userInfo = userInfo
-        }
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request) { (error) in
-            if let error = error {
-                Logger.log.error("Error scheduling notification: \(error)")
-            }
-        }
+        return nil
     }
 
     static func notifyHasRun() {
         if UserDefaults.standard.bool(forKey: Const.monitorBackgroundFetchesNotification) {
             let title = String(localized: "debugNoNewVideos")
             let body = String(localized: "debugNoNewVideosSubtitle")
-            sendNotification(title, body: body)
+            let info = NotificationInfo(title, body)
+            sendNotification(info)
         }
     }
 
-    static func getUserInfo(tab: NavigationTab?) -> [AnyHashable: Any]? {
+    static func getUserInfo(tab: NavigationTab?, notificationInfo: NotificationInfo?) -> [AnyHashable: Any]? {
         guard let tab = tab else {
             return nil
         }
-        return [Const.tapDestination: tab.rawValue]
+        var result = [Const.tapDestination: tab.rawValue]
+        if let youtubeId = notificationInfo?.video?.youtubeId {
+            result[Const.notificationVideoId] = youtubeId
+        } else {
+            Logger.log.info("ModelId not present in notificationInfo")
+        }
+        return result
     }
 
     static func askNotificationPermission() async throws {
@@ -97,7 +118,7 @@ struct NotificationManager {
         }
     }
 
-    static func increaseBadgeNumer(by number: Int) {
+    static func changeBadgeNumer(by number: Int, _ placement: VideoPlacement? = nil) {
         let oldCount = UserDefaults.standard.integer(forKey: Const.badgeCount)
         let newValue = oldCount + number
 
@@ -106,6 +127,24 @@ struct NotificationManager {
             center.setBadgeCount(newValue)
         }
         UserDefaults.standard.set(newValue, forKey: Const.badgeCount)
+
+        guard number < 0 else {
+            Logger.log.info("changeBadgeNumer: number is not negative.")
+            // inbox/queue count is set while refreshing the videos
+            return
+        }
+
+        if placement == .queue {
+            let queueCount = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
+            let newQueueCount = queueCount + number
+            Logger.log.info("oldQueueCount: \(queueCount), newQueueCount: \(newQueueCount)")
+            UserDefaults.standard.set(max(0, newQueueCount), forKey: Const.newQueueItemsCount)
+        } else if placement == .inbox {
+            let inboxCount = UserDefaults.standard.integer(forKey: Const.newInboxItemsCount)
+            let newInboxCount = inboxCount + number
+            Logger.log.info("oldInboxCount: \(inboxCount), newInboxCount: \(newInboxCount)")
+            UserDefaults.standard.set(max(0, newInboxCount), forKey: Const.newInboxItemsCount)
+        }
     }
 
     static func clearNotifications() {

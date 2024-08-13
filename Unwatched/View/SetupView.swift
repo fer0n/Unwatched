@@ -39,6 +39,7 @@ struct SetupView: View {
             .onAppear {
                 let container = modelContext.container
                 appDelegate.navManager = navManager
+                appDelegate.container = container
                 refresher.container = container
                 refresher.showError = alerter.showError
                 player.container = container
@@ -57,11 +58,14 @@ struct SetupView: View {
                 case .background:
                     Logger.log.info("background")
                     player.isInBackground = true
+                    NotificationManager.clearNotifications()
                     Task {
                         await saveData()
                     }
                     refresher.handleBecameInactive()
                     RefreshManager.scheduleVideoRefresh()
+
+                    handleDebugRefresh()
                 case .inactive:
                     Logger.log.info("inactive")
                     saveCurrentVideo()
@@ -69,6 +73,16 @@ struct SetupView: View {
                     break
                 }
             }
+    }
+
+    func handleDebugRefresh() {
+        if UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
+            let container = modelContext.container
+            Task {
+                try? await Task.sleep(s: 1)
+                await RefreshManager.handleBackgroundVideoRefresh(container)
+            }
+        }
     }
 
     func restoreNowPlayingVideo() {

@@ -49,23 +49,16 @@ struct VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
-    static func isYtShort(_ title: String, description: String?) -> (isShort: Bool, isLikelyShort: Bool) {
+    static func isYtShort(_ title: String, description: String?) -> Bool {
         // search title and desc for #short -> definitly short
         let regexYtShort = #"#[sS]horts"#
         if title.matching(regex: regexYtShort) != nil {
-            return (true, false)
+            return true
         }
         if description?.matching(regex: regexYtShort) != nil {
-            return (true, false)
+            return true
         }
-
-        // shorts seem to have hashtags in the title and a shorter description
-        let regexHashtag = #"#[[:alpha:]]{2,}"#
-        let titleHasHashtags = title.matching(regex: regexHashtag) != nil
-        if titleHasHashtags {
-            return (false, true)
-        }
-        return (false, false)
+        return false
     }
 
     static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {

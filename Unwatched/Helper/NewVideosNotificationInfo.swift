@@ -4,6 +4,9 @@
 //
 
 import Foundation
+import UIKit
+import SwiftData
+import OSLog
 
 struct NewVideosNotificationInfo {
     var inbox = [String: [SendableVideo]]()
@@ -31,33 +34,109 @@ struct NewVideosNotificationInfo {
         }
     }
 
-    func getNewVideoText(includeInbox: Bool, includeQueue: Bool) -> (title: String, subtitle: String)? {
-        if !includeInbox && !includeQueue {
-            return nil
+    func flattenDicts(_ dict: [String: [SendableVideo]]) -> [[String: [SendableVideo]]] {
+        // only one key & one value per dict
+        var result = [[String: [SendableVideo]]]()
+        for (key, value) in dict {
+            for val in value {
+                result.append([key: [val]])
+            }
         }
-        var dict = [String: [SendableVideo]]()
-
-        if includeInbox {
-            dict.merge(inbox) { _, new in new }
-        }
-        if includeQueue {
-            dict.merge(queue) { _, new in new }
-        }
-        return getText(from: dict)
+        return result
     }
 
-    private func getText(from dict: [String: [SendableVideo]]) -> (title: String, subtitle: String)? {
+    func getNewVideoNotificationContent(includeInbox: Bool,
+                                        includeQueue: Bool,
+                                        container: ModelContainer) async -> [NotificationInfo] {
+        if !includeInbox && !includeQueue {
+            return []
+        }
+        let countInbox = inbox.values.flatMap { $0 }.count
+        let countQueue = queue.values.flatMap { $0 }.count
+        let count = countInbox + countQueue
+
+        if count <= Const.simultaneousNotificationsLimit || UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
+            let info = sendOneNotificationPerVideo()
+            let infoWithImages = await getImageData(info, container: container)
+            return infoWithImages
+
+        } else {
+            return sendOneQueueOneInboxNotification()
+        }
+    }
+
+    private func getImageData(_ infos: [NotificationInfo], container: ModelContainer) async -> [NotificationInfo] {
+        var infoWithImageData = infos
+
+        await withTaskGroup(of: (Int, Data?).self) { group in
+            for (index, info) in infos.enumerated() {
+                guard let video = info.video,
+                      video.thumbnailData == nil,
+                      let imageUrl = video.thumbnailUrl else {
+                    Logger.log.info("No video/imageUrl when trying to load image data")
+                    continue
+                }
+
+                group.addTask {
+                    do {
+                        let data = try await ImageService.loadImageData(url: imageUrl)
+                        return (index, data)
+                    } catch {
+                        Logger.log.info("Failed to load image data for \(info.title): \(error)")
+                        return (index, nil)
+                    }
+                }
+            }
+
+            for await (index, data) in group {
+                if let data = data, let video = infoWithImageData[index].video {
+                    var videoWithImageData = video
+                    videoWithImageData.thumbnailData = data
+                    infoWithImageData[index].video = videoWithImageData
+                }
+            }
+        }
+
+        VideoService.storeImages(for: infoWithImageData, container: container)
+        return infoWithImageData
+    }
+
+    private func sendOneQueueOneInboxNotification() -> [NotificationInfo] {
+        [
+            getText(from: inbox, placement: .inbox),
+            getText(from: queue, placement: .queue)
+        ].compactMap { $0 }
+    }
+
+    private func sendOneNotificationPerVideo() -> [NotificationInfo] {
+        var result = [NotificationInfo]()
+        for flat in flattenDicts(inbox) {
+            if let info = getText(from: flat, placement: .inbox) {
+                result.append(info)
+            }
+        }
+        for flat in flattenDicts(queue) {
+            if let info = getText(from: flat, placement: .queue) {
+                result.append(info)
+            }
+        }
+        return result
+    }
+
+    private func getText(from dict: [String: [SendableVideo]], placement: VideoPlacement) -> NotificationInfo? {
         let newVideosCount = dict.values.flatMap { $0 }.count
+        let prefix = placement == .inbox ? "" : "→ "
         if newVideosCount == 0 {
             return nil
         }
         if newVideosCount == 1,
            let subscriptionTitle = dict.keys.first,
-           let videoTitle = dict.values.flatMap({ $0 }).first?.title {
-            return (subscriptionTitle, videoTitle)
+           let video = dict.values.flatMap({ $0 }).first {
+            return NotificationInfo(subscriptionTitle, "\(prefix)\(video.title)", video: video, placement: placement)
         }
         if dict.keys.count == 1, let first = dict.first {
-            return (first.key, String(localized: "\(newVideosCount) New Videos"))
+            return NotificationInfo(first.key,
+                                    String(localized: "\(prefix)\(newVideosCount) New Videos"))
         }
 
         // <SubscriptionTitle> (<videoCount>), <SubscriptionTitle> (<videoCount>)
@@ -66,6 +145,32 @@ struct NewVideosNotificationInfo {
         }
         let title = String(localized: "\(newVideosCount) New Videos")
         let subtitle = subTitleVideoCounts.joined(separator: ", ")
-        return (title, subtitle)
+        return NotificationInfo(title, "\(prefix)\(subtitle)")
+    }
+}
+
+struct NotificationInfo {
+    let title: String
+    let subtitle: String
+
+    let categoryIdentifier: String?
+    var video: SendableVideo?
+
+    init(_ title: String, _ subtitle: String, video: SendableVideo? = nil, placement: VideoPlacement? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+
+        self.video = video
+
+        var categoryIdentifier: String?
+        if video != nil {
+            // find out if the video is in the inbox or queue
+            categoryIdentifier = placement == .queue
+                ? Const.queueVideoAddedCategory
+                : placement == .inbox
+                ? Const.inboxVideoAddedCategory
+                : nil
+        }
+        self.categoryIdentifier = categoryIdentifier
     }
 }

@@ -7,7 +7,7 @@ import SwiftUI
 import SwiftData
 
 struct InboxTabItemView: View {
-    @AppStorage(Const.hasNewInboxItems) var hasNewInboxItems: Bool = false
+    @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount: Int = 0
     @Environment(RefreshManager.self) var refresher
     @Environment(NavigationManager.self) var navManager
     @Query(animation: .default) var inbox: [InboxEntry]
@@ -19,7 +19,7 @@ struct InboxTabItemView: View {
         TabItemView(image: getInboxSymbol,
                     text: "inbox",
                     tag: NavigationTab.inbox,
-                    showBadge: showBadge && hasNewInboxItems) {
+                    showBadge: showBadge && newInboxItemsCount > 0) {
             InboxView(showCancelButton: showCancelButton)
         }
     }

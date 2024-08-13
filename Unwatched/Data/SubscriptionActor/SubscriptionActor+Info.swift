@@ -122,9 +122,18 @@ extension SubscriptionActor {
             Logger.log.info("no info to update subscription with")
             return
         }
-        sub.youtubeUserName = sub.youtubeUserName ?? info.userName
-        sub.thumbnailUrl = sub.thumbnailUrl ?? info.imageUrl
-        if sub.title.isEmpty, let title = info.title {
+        sub.youtubeUserName = info.userName ?? sub.youtubeUserName
+        if let imageUrl = info.imageUrl,
+           sub.thumbnailUrl != imageUrl {
+            Logger.log.info("Updating thumbnail url")
+            sub.thumbnailUrl = imageUrl
+            if let cachedImage = sub.cachedImage {
+                modelContext.delete(cachedImage)
+            }
+        }
+
+        if sub.title.isEmpty || info.title != sub.title,
+           let title = info.title {
             sub.title = title
         }
         try? modelContext.save()

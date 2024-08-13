@@ -12,6 +12,7 @@ struct SendableVideo: Sendable, Codable {
     var title: String
     var url: URL?
     var thumbnailUrl: URL?
+    var thumbnailData: Data?
     var youtubeChannelId: String?
     var feedTitle: String?
     var duration: Double?
@@ -26,6 +27,8 @@ struct SendableVideo: Sendable, Codable {
     var bookmarkedDate: Date?
     var clearedInboxDate: Date?
     var createdDate: Date?
+
+    var isYtShort: Bool = false
 
     func createVideo(
         title: String? = nil,
@@ -45,8 +48,6 @@ struct SendableVideo: Sendable, Codable {
         if chapters.isEmpty, let desc = self.videoDescription {
             newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
         }
-        let ytShortsInfo = VideoCrawler.isYtShort(title, description: description)
-
         return Video(
             title: title,
             url: url ?? self.url,
@@ -60,8 +61,7 @@ struct SendableVideo: Sendable, Codable {
             videoDescription: description,
             chapters: newChapters.map { $0.getChapter },
             watched: self.watched,
-            isYtShort: ytShortsInfo.isShort,
-            isLikelyYtShort: ytShortsInfo.isLikelyShort,
+            isYtShort: self.isYtShort,
             bookmarkedDate: self.bookmarkedDate,
             clearedInboxDate: self.clearedInboxDate,
             createdDate: self.createdDate

@@ -42,35 +42,35 @@ struct PlayerView: View {
 
     var body: some View {
         let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
-
         ZStack(alignment: .top) {
             Rectangle()
                 .fill(Color.black)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .frame(maxWidth: .infinity)
-                .background(
-                    Color.black
-                        .onTapGesture {
-                            controlsVM.setShowControls()
-                        }
-                )
+                .background(backgroundTapRecognizer)
 
             if player.video != nil {
                 HStack(spacing: 0) {
                     if player.embeddingDisabled {
                         playerWebsite
+                            .environment(\.layoutDirection, .leftToRight)
                             .zIndex(1)
                     } else {
                         playerEmbedded
                             .zIndex(1)
+                            .environment(\.layoutDirection, .leftToRight)
                     }
 
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControlsWrapper(
                             markVideoWatched: markVideoWatched,
                             controlsVM: controlsVM)
+                            .environment(\.layoutDirection, .leftToRight)
                     }
                 }
+                .environment(\.layoutDirection, controlsVM.positionLeft
+                                ? .rightToLeft
+                                : .leftToRight)
                 .frame(maxWidth: !showFullscreenControls || wideAspect
                         ? .infinity
                         : nil)
@@ -96,7 +96,7 @@ struct PlayerView: View {
                 .overlay {
                     OverlayFullscreenButton(
                         enabled: showFullscreenControls,
-                        invisible: !landscapeFullscreen
+                        landscapeFullscreen: landscapeFullscreen
                     )
 
                     thumbnailPlaceholder
@@ -164,6 +164,20 @@ struct PlayerView: View {
             PlayButton(size: 30)
                 .fontWeight(.black)
         }
+    }
+
+    var backgroundTapRecognizer: some View {
+        HStack {
+            Color.black
+                .onTapGesture {
+                    controlsVM.setShowControls(positionLeft: true)
+                }
+            Color.black
+                .onTapGesture {
+                    controlsVM.setShowControls(positionLeft: false)
+                }
+        }
+        .disabled(fullscreenControlsSetting != .autoHide)
     }
 
     var thumbnailPlaceholder: some View {

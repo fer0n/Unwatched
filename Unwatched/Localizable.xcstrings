@@ -11,6 +11,22 @@
         }
       }
     },
+    "%@%lld New Videos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@%2$lld Neue Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$lld New Videos"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "de" : {
@@ -49,16 +65,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "^[%lld Video](inflect: true) Available"
-          }
-        }
-      }
-    },
-    "Add video from ${youtubeUrl}" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video von ${youtubeUrl} hinzufügen"
           }
         }
       }
@@ -687,6 +693,38 @@
         }
       }
     },
+    "clearAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Inbox entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear from Inbox"
+          }
+        }
+      }
+    },
+    "clearActionQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Queue entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear from Queue"
+          }
+        }
+      }
+    },
     "clearAll" : {
       "localizations" : {
         "de" : {
@@ -740,13 +778,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video aus Queue entfernen"
+            "value" : "Aus Queue entfernen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear Video from Queue"
+            "value" : "Clear from Queue"
           }
         }
       }
@@ -875,6 +913,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Email"
+          }
+        }
+      }
+    },
+    "Could not subscribe: (message)" : {
+      "comment" : "Could not subscribe",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnieren fehlgeschlagen: (message)"
+          }
+        }
+      }
+    },
+    "Couldn't convert to URL: (noUrl)" : {
+      "comment" : "Couldn't convert to URL",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konnte nicht in URL umwandeln: (noUrl)"
           }
         }
       }
@@ -1537,6 +1597,54 @@
         }
       }
     },
+    "HideShortsTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genug von #shorts?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sick of #shorts?"
+          }
+        }
+      }
+    },
+    "HideShortsTipAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide them all"
+          }
+        }
+      }
+    },
+    "HideShortsTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du willst, kannst du ab sofort alle #shorts ausblenden. Unter \"Bibliothek → Einstellungen → Videos\" gibt es die Option es zurückgängig zu machen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you wish, you can hide all #shorts from now on. You can change this at any time under \"Library → Settings → Videos\""
+          }
+        }
+      }
+    },
     "howToExport2" : {
       "localizations" : {
         "de" : {
@@ -1613,6 +1721,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Into Unwatched"
+          }
+        }
+      }
+    },
+    "HTTP request failed: (message)" : {
+      "comment" : "Failed Getting Video Info Error",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP request fehlgeschlagen: (message)"
           }
         }
       }
@@ -2024,7 +2143,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next Video"
+            "value" : "Next"
           }
         }
       }
@@ -2482,7 +2601,7 @@
       }
     },
     "potentiallyFaultyYoutubeId" : {
-      "comment" : "(value)",
+      "comment" : "(youtubeId)",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2546,6 +2665,22 @@
         }
       }
     },
+    "queueAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zur Queue hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Queue"
+          }
+        }
+      }
+    },
     "rateUnwatched" : {
       "localizations" : {
         "de" : {
@@ -2594,6 +2729,22 @@
         }
       }
     },
+    "refreshOnClose" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim schließen im Hintergrund neu laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background Refresh on Close"
+          }
+        }
+      }
+    },
     "refreshOnStartup" : {
       "localizations" : {
         "de" : {
@@ -2615,13 +2766,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video neu laden"
+            "value" : "Player neu laden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reload Video"
+            "value" : "Reload Player"
           }
         }
       }
@@ -2679,13 +2830,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video neu starten"
+            "value" : "Neu starten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restart Video"
+            "value" : "Restart"
           }
         }
       }
@@ -2882,54 +3033,6 @@
         }
       }
     },
-    "shortsDetection" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shorts Erkennung"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shorts Detection"
-          }
-        }
-      }
-    },
-    "shortsDetectionModerate" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moderat"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moderate"
-          }
-        }
-      }
-    },
-    "shortsDetectionSafe" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sicher"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Safe"
-          }
-        }
-      }
-    },
     "shortsSettings" : {
       "localizations" : {
         "de" : {
@@ -2942,22 +3045,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
-          }
-        }
-      }
-    },
-    "shortsSettingsHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Sicher\": Videos mit \"#Shorts\" im Video Titel oder der Beschreibung \"Moderat\": Videos mit Hashtags im Titel \nVideos die als \"Sicher\" identifiziert werden sind mit \"#s.\" markiert, \"Moderate\" mit \"#s\"."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Safe\": Videos with \"#Shorts\" in the title/description \"Moderate\": Videos with hashtags inside the title  Videos detected as \"Safe\" are marked with \"#s.\", \"Moderate\" videos are marked with \"#s\"."
           }
         }
       }
