@@ -84,6 +84,18 @@ struct VideoService {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }
 
+    static func clearEntries(from video: Video,
+                             except model: (any PersistentModel.Type)? = nil,
+                             updateCleared: Bool,
+                             modelContext: ModelContext) {
+        if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
+            VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
+        }
+        if model != QueueEntry.self, let queueEntry = video.queueEntry {
+            VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
+        }
+    }
+
     static func clearFromEverywhere(_ video: Video,
                                     updateCleared: Bool = false,
                                     modelContext: ModelContext) -> Task<(), Error> {
