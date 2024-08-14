@@ -79,19 +79,17 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func clearVideoEverywhere() {
         let order = video.queueEntry?.order
-        let task = VideoService.clearFromEverywhere(
-            video,
-            updateCleared: true,
-            modelContext: modelContext
-        )
-        handlePotentialQueueChange(after: task, order: order)
+        VideoService.clearEntries(from: video,
+                                  updateCleared: true,
+                                  modelContext: modelContext)
+        handlePotentialQueueChange(order: order)
         config.onChange?()
         if video.isYtShort {
             HideShortsTip.clearedShorts += 1
         }
     }
 
-    func handlePotentialQueueChange(after task: Task<(), Error>, order: Int? = nil) {
+    func handlePotentialQueueChange(after task: (Task<(), Error>)? = nil, order: Int? = nil) {
         if order == 0 || video.queueEntry?.order == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }
