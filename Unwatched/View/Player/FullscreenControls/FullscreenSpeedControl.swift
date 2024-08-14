@@ -11,6 +11,8 @@ struct FullscreenSpeedControl: View {
     @State var showSpeedControl = false
     @Binding var menuOpen: Bool
 
+    var arrowEdge: Edge = .trailing
+
     var body: some View {
         let customSetting = player.video?.subscription?.customSpeedSetting != nil
 
@@ -35,7 +37,7 @@ struct FullscreenSpeedControl: View {
         }
         .frame(width: 35)
         .fontWeight(.bold)
-        .popover(isPresented: $showSpeedControl) {
+        .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             ZStack {
                 Color.sheetBackground
                     .scaleEffect(1.5)

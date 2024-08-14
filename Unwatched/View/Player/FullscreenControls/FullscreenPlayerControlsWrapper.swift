@@ -16,10 +16,12 @@ struct FullscreenPlayerControlsWrapper: View {
     var body: some View {
         let nonEmbedding = player.embeddingDisabled
         let left = controlsVM.positionLeft
+        let arrowEdge: Edge = left ? .leading : .trailing
 
         if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(menuOpen: $controlsVM.menuOpen,
-                                     markVideoWatched: markVideoWatched)
+                                     markVideoWatched: markVideoWatched,
+                                     arrowEdge: arrowEdge)
                 .offset(x: nonEmbedding ? -5 : left ? -20 : 20)
                 .frame(width: 60)
                 .fixedSize(horizontal: true, vertical: false)
