@@ -44,6 +44,8 @@ struct QueueView: View {
                                         clearAboveBelowList: .queue
                                     )
                                 )
+                            } else {
+                                EmptyEntry(entry)
                             }
                         }
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))

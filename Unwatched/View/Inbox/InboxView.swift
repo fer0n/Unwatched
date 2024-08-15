@@ -61,6 +61,8 @@ struct InboxView: View {
                                         clearAboveBelowList: .inbox
                                     )
                                 )
+                            } else {
+                                EmptyEntry(entry)
                             }
                         }
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
