@@ -44,7 +44,7 @@ struct PlayerView: View {
         let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
         ZStack(alignment: .top) {
             Rectangle()
-                .fill(Color.black)
+                .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .background(backgroundTapRecognizer)
@@ -115,6 +115,7 @@ struct PlayerView: View {
                         handleMiniPlayerTap()
                     }
                 }
+                .padding(.leading, !hideMiniPlayer ? 2 : 0)
 
             if !hideMiniPlayer {
                 miniPlayerContent
@@ -158,11 +159,13 @@ struct PlayerView: View {
         if let video = player.video {
             Text(video.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .fontWeight(.medium)
                 .contentShape(Rectangle())
                 .onTapGesture(perform: handleMiniPlayerTap)
 
             PlayButton(size: 30)
                 .fontWeight(.black)
+                .padding(.trailing, !hideMiniPlayer ? 1 : 0)
         }
     }
 

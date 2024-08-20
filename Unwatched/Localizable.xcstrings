@@ -1971,6 +1971,22 @@
         }
       }
     },
+    "lightPlayer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heller Player im hellen Modus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light Player in Light Mode"
+          }
+        }
+      }
+    },
     "manualBackup" : {
       "localizations" : {
         "de" : {

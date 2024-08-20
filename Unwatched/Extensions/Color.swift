@@ -119,6 +119,9 @@ extension Color {
     static var insetBackgroundColor: Color {
         Color("insetBackgroundColor")
     }
+    static var playerBackgroundColor: Color {
+        Color("playerBackgroundColor")
+    }
 }
 
 extension Color {
