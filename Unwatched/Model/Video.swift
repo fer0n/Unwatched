@@ -14,6 +14,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
     @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
     @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
+    @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
     @Relationship(deleteRule: .cascade, inverse: \CachedImage.video) var cachedImage: CachedImage?
     var youtubeId: String = UUID().uuidString
 
@@ -34,9 +35,17 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     var clearedInboxDate: Date?
     var createdDate: Date?
 
+    var sponserBlockUpdateDate: Date?
+
     // MARK: Computed Properties
     var sortedChapters: [Chapter] {
-        chapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
+        var result = [Chapter]()
+        if mergedChapters?.isEmpty != true {
+            result = mergedChapters ?? []
+        } else {
+            result = chapters ?? []
+        }
+        return result.sorted(by: { $0.startTime < $1.startTime })
     }
 
     var remainingTime: Double? {

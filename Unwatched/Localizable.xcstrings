@@ -3257,6 +3257,22 @@
         }
       }
     },
+    "sponsorChapter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Sponsor]"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Sponsor]"
+          }
+        }
+      }
+    },
     "startVideosInFullscreen" : {
       "localizations" : {
         "de" : {

@@ -146,7 +146,7 @@ import OSLog
                         Logger.log.info("sub has no url: \(sub.title)")
                         return (sub, [])
                     }
-                    var videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+                    let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
                     return (sub, videos)
                 }
             }

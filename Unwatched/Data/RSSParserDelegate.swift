@@ -118,7 +118,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                let updatedDate =  try? Date(currentUpdatedDate, strategy: .iso8601),
                let url = URL(string: currentLink),
                let thumbnailUrl = URL(string: thumbnailUrl) {
-                let chapters = VideoCrawler.extractChapters(from: currentDescription, videoDuration: nil)
+                let chapters = ChapterService.extractChapters(from: currentDescription, videoDuration: nil)
 
                 let video = SendableVideo(youtubeId: currentYoutubeId,
                                           title: currentTitle,

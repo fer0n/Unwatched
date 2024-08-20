@@ -10,7 +10,7 @@ struct ChapterListItem: View {
             toggleChapterButton
 
             VStack(alignment: .leading) {
-                Text(chapter.title)
+                Text(chapter.titleText)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(timeText)
