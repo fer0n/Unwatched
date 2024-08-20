@@ -49,55 +49,71 @@ extension ChapterService {
     static func cleanupMergedChapters(_ chapters: [SendableChapter]) -> [SendableChapter] {
         let tolerance = Const.chapterTimeTolerance
         var newChapters = [SendableChapter]()
-        var index = 0
 
-        while index < chapters.count {
-            let chapter = chapters[index]
+        var index = -1
 
-            // If it's the last chapter, just add it and break
-            if index == chapters.count - 1 {
-                newChapters.append(contentsOf: handleLastChapter(chapter))
-                break
+        for chapter in chapters {
+            if let last = newChapters.last {
+                var chapter = chapter
+                guard let lastEndTime = last.endTime, let chapterEndTime = chapter.endTime else {
+                    let result = handleMissingEndTime(chapter)
+                    newChapters.append(contentsOf: result)
+                    index += 1
+                    continue
+                }
+
+                // similar start, different end
+                if abs(chapter.startTime - last.startTime) <= tolerance
+                    && abs(chapterEndTime - lastEndTime) > tolerance {
+
+                    if lastEndTime < chapterEndTime {
+                        chapter.startTime = lastEndTime
+                        newChapters.append(chapter)
+                    } else {
+                        newChapters[index].startTime = chapterEndTime
+                        newChapters.insert(chapter, at: index)
+                    }
+                    index += 1
+                    continue
+                }
+
+                // similar end, different start
+                if abs(chapterEndTime - lastEndTime) <= tolerance
+                    && chapter.startTime - last.startTime > tolerance {
+                    newChapters[index].endTime = chapter.startTime
+                    newChapters.append(chapter)
+                    index += 1
+                    continue
+                }
+
+                // one nested inside the other
+                if chapter.startTime - last.startTime > tolerance
+                    && lastEndTime - chapterEndTime > tolerance {
+
+                    var firstPart = last
+                    firstPart.endTime = chapter.startTime
+
+                    var secondPart = last
+                    secondPart.startTime = chapterEndTime
+
+                    newChapters[index] = firstPart
+                    newChapters.append(chapter)
+                    newChapters.append(secondPart)
+
+                    index += 2
+                    continue
+                }
+
+                // start of second before the end of the first
+                if lastEndTime != chapter.startTime {
+                    let timeBorder = last.category == .sponsor ? lastEndTime : chapter.startTime
+                    newChapters[index].endTime = timeBorder
+                    chapter.startTime = timeBorder
+                    newChapters.append(chapter)
+                    index += 1
+                    continue
+                }
             }
-
-            let nextChapter = chapters[index + 1]
-
-            guard let chapterEndTime = chapter.endTime, let nextChapterEndTime = nextChapter.endTime else {
-                let result = handleMissingEndTime(chapter)
-                newChapters.append(contentsOf: result)
-                index += result.count
-                continue
-            }
-
-            if abs(nextChapter.startTime - chapter.startTime) <= tolerance
-                && abs(nextChapterEndTime - chapterEndTime) > tolerance {
-                let result = handleSimilarStartDifferentEndTimes(
-                    chapter,
-                    nextChapter,
-                    chapterEndTime,
-                    nextChapterEndTime
-                )
-                newChapters.append(contentsOf: result)
-                index += result.count
-                continue
-            }
-
-            if abs(nextChapterEndTime - chapterEndTime) <= tolerance
-                && nextChapter.startTime - chapter.startTime > tolerance {
-                let result = handleSimilarEndDifferentStartTimes(chapter, nextChapter)
-                newChapters.append(contentsOf: result.chapters)
-                index += result.increment
-                continue
-            }
-
-            if nextChapter.startTime - chapter.startTime > tolerance
-                && chapterEndTime - nextChapterEndTime > tolerance {
-                let result = handleChapterNestedWithin(chapter, nextChapter, chapterEndTime)
-                newChapters.append(contentsOf: result)
-                index += result.count
-                continue
-            }
-
             // If no special conditions were met, add the chapter and move to the next
             newChapters.append(chapter)
             index += 1
@@ -106,56 +122,9 @@ extension ChapterService {
         return newChapters
     }
 
-    private static func handleLastChapter(_ chapter: SendableChapter) -> [SendableChapter] {
-        return [chapter]
-    }
-
     private static func handleMissingEndTime(_ chapter: SendableChapter) -> [SendableChapter] {
         Logger.log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
         return [chapter]
-    }
-
-    private static func handleSimilarStartDifferentEndTimes(
-        _ chapter: SendableChapter,
-        _ nextChapter: SendableChapter,
-        _ chapterEndTime: Double,
-        _ nextChapterEndTime: Double
-    ) -> [SendableChapter] {
-        var first: SendableChapter
-        var second: SendableChapter
-        if chapterEndTime < nextChapterEndTime {
-            first = chapter
-            second = nextChapter
-        } else {
-            first = nextChapter
-            second = chapter
-        }
-        second.startTime = first.endTime ?? -1
-        return [first, second]
-    }
-
-    private static func handleSimilarEndDifferentStartTimes(
-        _ chapter: SendableChapter,
-        _ nextChapter: SendableChapter
-    ) -> (chapters: [SendableChapter], increment: Int) {
-        var modifiedChapter = chapter
-        modifiedChapter.endTime = nextChapter.startTime
-        return ([modifiedChapter, nextChapter], 2)
-    }
-
-    private static func handleChapterNestedWithin(
-        _ chapter: SendableChapter,
-        _ nextChapter: SendableChapter,
-        _ chapterEndTime: Double
-    ) -> [SendableChapter] {
-        var firstPart = chapter
-        firstPart.endTime = nextChapter.startTime
-
-        var secondPart = chapter
-        secondPart.startTime = nextChapter.endTime ?? -1
-        secondPart.endTime = chapterEndTime
-
-        return [firstPart, nextChapter, secondPart]
     }
 
     static func generateChapters(from chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
