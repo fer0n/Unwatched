@@ -42,7 +42,7 @@ struct ChapterMiniControlView: View {
                     } label: {
                         ZStack {
                             if let chapt = player.currentChapter {
-                                Text(chapt.title)
+                                Text(chapt.titleText)
                             } else {
                                 title
                             }
@@ -101,7 +101,7 @@ struct ChapterMiniControlView: View {
 
     @ViewBuilder var title: some View {
         if let chapter = player.currentChapter {
-            Text(chapter.title)
+            Text(chapter.titleText)
         } else {
             Text(player.video?.title ?? "")
                 .font(.system(size: 20, weight: .heavy))
