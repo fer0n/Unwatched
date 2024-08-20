@@ -59,3 +59,7 @@ Jump to any chapter or pick and choose a few to watch while skipping the rest.
 ## Setup
 
 In order to build this project, you need to add a `apiKey.swift` file that contains a [YouTube Data API Key](https://developers.google.com/youtube/registering_an_application). An `apiKey.swift.example` file is already in this project.
+
+## Attribution
+
+- Using [SponsorBlock](https://sponsor.ajay.app/) to enhance chapters

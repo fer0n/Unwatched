@@ -79,7 +79,7 @@ struct PlayButton: View {
                 .resizable()
                 .frame(width: size, height: size)
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(.black, .white)
+                .foregroundStyle(.automaticWhite, .automaticBlack)
                 .fontWeight(.black)
         }
 

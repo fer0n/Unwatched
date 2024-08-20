@@ -21,7 +21,7 @@ struct ChapterDescriptionView: View {
 
     var body: some View {
         NavigationStack {
-            let hasChapters = video.chapters?.isEmpty == false
+            let hasChapters = video.sortedChapters.isEmpty == false
             let hasDescription = video.videoDescription != nil
 
             ZStack {

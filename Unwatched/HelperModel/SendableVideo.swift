@@ -46,7 +46,7 @@ struct SendableVideo: Sendable, Codable {
 
         var newChapters = chapters
         if chapters.isEmpty, let desc = self.videoDescription {
-            newChapters = VideoCrawler.extractChapters(from: desc, videoDuration: duration)
+            newChapters = ChapterService.extractChapters(from: desc, videoDuration: duration)
         }
         return Video(
             title: title,

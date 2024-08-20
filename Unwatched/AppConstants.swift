@@ -37,6 +37,8 @@ struct Const {
     static let askForReviewPointThreashold = 30
     static let sheetOpacityValue = 0.6
 
+    static let chapterTimeTolerance: Double = 2.0
+
     static let simultaneousNotificationsLimit = 1
     static let notificationImageUrl = "notificationImageUrl"
     static let notificationActionQueue = "notificationActionQueue"
@@ -138,4 +140,6 @@ struct Const {
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
     static let refreshOnClose = "refreshOnClose"
+
+    static let lightPlayer = "lightPlayer"
 }

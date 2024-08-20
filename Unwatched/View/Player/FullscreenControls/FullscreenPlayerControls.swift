@@ -114,6 +114,7 @@ struct FullscreenPlayerControls: View {
             .fontWeight(.bold)
             .frame(maxHeight: .infinity)
         }
+        .environment(\.colorScheme, .dark)
         .font(.system(size: 16))
         .opacity(0.5)
         .padding(.vertical)

@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 import OSLog
+import SwiftData
 
 extension PlayerManager {
 
@@ -54,7 +55,7 @@ extension PlayerManager {
             if let nextActive = chapters.first(where: { chapter in
                 chapter.startTime > current.startTime && chapter.isActive
             }) {
-                Logger.log.info("skip to next chapter: \(nextActive.title)")
+                Logger.log.info("skip to next chapter: \(nextActive.titleText)")
                 seekPosition = nextActive.startTime
             } else if let duration = video.duration {
                 seekPosition = duration
@@ -97,6 +98,53 @@ extension PlayerManager {
 
         if let previous = previousChapter {
             setChapter(previous)
+        }
+    }
+
+    func handleChapterRefresh() {
+        Logger.log.info("handleChapterRefresh")
+        guard let videoId = video?.persistentModelID,
+              let youtubeId = video?.youtubeId,
+              let modelId = video?.persistentModelID,
+              let container = container else {
+            Logger.log.warning("Not enough info to enrich chapters")
+            return
+        }
+        let chapters = (video?.chapters ?? []).sorted(by: { $0.startTime < $1.startTime })
+        let sendableChapters = chapters.map(\.toExport)
+        let duration = video?.duration
+
+        Task {
+            do {
+                guard let newChapters = try await ChapterService
+                        .mergeSponsorSegments(
+                            youtubeId: youtubeId,
+                            videoId: videoId,
+                            videoChapters: sendableChapters,
+                            duration: duration,
+                            container: container
+                        ) else {
+                    Logger.log.info("SponsorBlock: Not updating merged chapters")
+                    return
+                }
+                Logger.log.info("SponsorBlock: Refreshed")
+                let modelChapters = newChapters.map(\.getChapter)
+                let modelContext = ModelContext(container)
+                for chapter in modelChapters {
+                    modelContext.insert(chapter)
+                }
+                let video = modelContext.model(for: modelId) as? Video
+
+                for chapter in video?.mergedChapters ?? [] {
+                    modelContext.delete(chapter)
+                }
+
+                video?.mergedChapters = modelChapters
+                try modelContext.save()
+            } catch {
+                Logger.log.error("Error while merging chapters: \(error)")
+            }
+            self.handleChapterChange()
         }
     }
 }
