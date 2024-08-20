@@ -59,7 +59,30 @@ final class ChapterServiceTests: XCTestCase {
                 startTime: 45,
                 endTime: 55,
                 isActive: false
+            ),
+            SendableChapter(
+                title: "6",
+                startTime: 60,
+                endTime: 626,
+                isActive: false
+            ),
+            SendableChapter(
+                title: "7",
+                startTime: 600.348,
+                endTime: 628.252,
+                isActive: false,
+                category: .sponsor
+            ),
+            SendableChapter(
+                title: "8",
+                startTime: 626.0,
+                endTime: 638,
+                isActive: false
             )
+
+            // 536.0-626.0: The use Cases,
+            // 600.348-628.252: .sponsor,
+            // 626.0-638: Outro
         ]
         let newChapters = ChapterService.cleanupMergedChapters(chapters)
         print("newChapters: \(newChapters)")
@@ -74,7 +97,10 @@ final class ChapterServiceTests: XCTestCase {
         XCTAssertEqual(newChapters[6].title, "5")
         XCTAssertEqual(newChapters[7].title, "sponsor mid 5")
         XCTAssertEqual(newChapters[8].title, "5")
-        XCTAssertEqual(newChapters.count, 9)
+        XCTAssertEqual(newChapters[9].title, "6")
+        XCTAssertEqual(newChapters[10].title, "7")
+        XCTAssertEqual(newChapters[11].title, "8")
+        XCTAssertEqual(newChapters.count, 12)
 
         // start/end time of neighbors has to be within 2s tolerance
         let tolerance = Const.chapterTimeTolerance
@@ -95,7 +121,7 @@ final class ChapterServiceTests: XCTestCase {
                 timeDifference,
                 tolerance,
                 "Time difference between \(currentChapter.description) and \(nextChapter.description)"
-                    + "exceeds \(tolerance) seconds: \(timeDifference)"
+                    + " exceeds \(tolerance) seconds: \(timeDifference)"
             )
         }
 
