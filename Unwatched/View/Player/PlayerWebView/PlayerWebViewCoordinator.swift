@@ -91,7 +91,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             return
         }
         if let video = parent.player.video {
-            VideoService.updateDuration(video, duration: duration)
+            ChapterService.updateDuration(
+                video,
+                duration: duration,
+                parent.player.container
+            )
         }
     }
 

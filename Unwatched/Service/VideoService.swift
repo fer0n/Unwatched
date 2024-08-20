@@ -109,7 +109,7 @@ struct VideoService {
     }
 
     static func clearFromEverywhere(_ youtubeId: String, container: ModelContainer) {
-        let task = Task {
+        _ = Task {
             let videoId = getModelId(for: youtubeId, container: container)
 
             if let videoId = videoId {
@@ -136,7 +136,7 @@ struct VideoService {
                                    youtubeId: String,
                                    container: ModelContainer) {
         if let videoId = getModelId(for: youtubeId, container: container) {
-            insertQueueEntries(at: index, videoIds: [videoId], container: container)
+            _ = insertQueueEntries(at: index, videoIds: [videoId], container: container)
         }
     }
 
@@ -184,14 +184,6 @@ struct VideoService {
             try await repo.addForeignUrls(urls, in: videoPlacement, at: index)
         }
         return task
-    }
-
-    static func updateDuration(_ video: Video, duration: Double) {
-        if let last = video.sortedChapters.last {
-            last.endTime = duration
-            last.duration = duration - last.startTime
-        }
-        video.duration = duration
     }
 
     static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {

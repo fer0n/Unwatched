@@ -96,10 +96,8 @@ struct ImageService {
         ]
 
         let colors = image.pixelColors(at: points)
-        for color in colors {
-            if !color.isBlack() {
-                return true
-            }
+        for color in colors where !color.isBlack() {
+            return true
         }
         return false
     }

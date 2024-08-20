@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import SwiftData
 
 class VideoCrawlerTests: XCTestCase {
 
@@ -22,12 +23,12 @@ class VideoCrawlerTests: XCTestCase {
         let updatedDate = dateFormatter.date(from: "2024-08-01T17:16:10+00:00")
         XCTAssertEqual(firstVideo.publishedDate, publishedDate)
         XCTAssertEqual(firstVideo.updatedDate, updatedDate)
-
     }
 }
 
 // swiftlint:disable all
 struct VideoCrawlerTestData {
+
     static let rssFeedContent = """
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
@@ -111,6 +112,5 @@ VR Gaming,Virtual Reality Gaming,VR Games,Virtual Reality Games,Meta Quest,Meta 
  </entry>
 </feed>
 """
-
 }
 // swiftlint:enable all

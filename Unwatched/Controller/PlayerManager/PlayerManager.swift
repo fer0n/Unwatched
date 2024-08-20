@@ -54,6 +54,7 @@ enum VideoSource {
             return
         }
 
+        handleChapterRefresh()
         withAnimation {
             if requiresFetchingVideoData() {
                 embeddingDisabled = true
