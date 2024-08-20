@@ -78,7 +78,7 @@ struct SpeedControlView: View {
                         .fill()
                         .frame(width: SpeedControlView.maxHeight, height: SpeedControlView.maxHeight)
                     Text(getFloatingText())
-                        .foregroundStyle(.black)
+                        .foregroundStyle(.automaticWhite)
                         .bold()
                         .font(.system(size: 16))
                 }

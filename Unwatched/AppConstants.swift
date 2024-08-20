@@ -138,4 +138,6 @@ struct Const {
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
     static let refreshOnClose = "refreshOnClose"
+
+    static let lightPlayer = "lightPlayer"
 }

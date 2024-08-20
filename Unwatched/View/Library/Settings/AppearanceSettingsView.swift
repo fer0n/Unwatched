@@ -12,6 +12,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
+    @AppStorage(Const.lightPlayer) var lightPlayer: Bool = false
 
     var body: some View {
 
@@ -34,6 +35,12 @@ struct AppearanceSettingsView: View {
                     }
                     Toggle(isOn: $sheetOpacity) {
                         Text("sheetOpacity")
+                    }
+                }
+
+                MySection {
+                    Toggle(isOn: $lightPlayer) {
+                        Text("lightPlayer")
                     }
                 }
 

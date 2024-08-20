@@ -178,6 +178,7 @@ import OSLog
 
     static func getDummy() -> NavigationManager {
         let navManager = NavigationManager()
+        navManager.showMenu = true
         return navManager
     }
 }

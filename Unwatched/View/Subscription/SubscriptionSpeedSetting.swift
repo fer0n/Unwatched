@@ -55,7 +55,6 @@ struct SubscriptionSpeedSetting: View {
                 }
                 .padding()
             }
-            .environment(\.colorScheme, .dark)
             .presentationCompactAdaptation(.popover)
             .frame(minWidth: 300, maxWidth: .infinity)
         }

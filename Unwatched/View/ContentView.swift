@@ -8,11 +8,13 @@ import SwiftData
 
 struct ContentView: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+    @AppStorage(Const.lightPlayer) var lightPlayer: Bool = false
 
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -52,8 +54,8 @@ struct ContentView: View {
                 }
             }
             .animation(.default, value: hideControlsFullscreen)
-            .background(Color.black)
-            .environment(\.colorScheme, .dark)
+            .background(Color.playerBackgroundColor)
+            .environment(\.colorScheme, lightPlayer ? colorScheme : .dark)
             .onAppear {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
@@ -83,11 +85,14 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
-        ContentView(hideControlsFullscreen: true)
+        let player = PlayerManager()
+        player.video = Video.getDummy()
+
+        return ContentView(hideControlsFullscreen: false, lightPlayer: true)
             .modelContainer(DataController.previewContainer)
             .environment(NavigationManager.getDummy())
             .environment(Alerter())
-            .environment(PlayerManager())
+            .environment(player)
             .environment(ImageCacheManager())
             .environment(RefreshManager())
             .environment(SheetPositionReader())
