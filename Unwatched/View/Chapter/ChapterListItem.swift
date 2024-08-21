@@ -10,15 +10,17 @@ struct ChapterListItem: View {
             toggleChapterButton
 
             VStack(alignment: .leading) {
-                Text(chapter.titleText)
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if let title = chapter.titleText {
+                    Text(title)
+                        .lineLimit(1)
+                }
                 Text(timeText)
                     .animation(.default, value: timeText)
                     .contentTransition(.numericText(countsDown: true))
                     .font(.system(size: 14).monospacedDigit())
                     .foregroundStyle(Color.gray)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -43,13 +45,19 @@ struct ChapterListItem: View {
 }
 
 #Preview {
-    HStack {
+    VStack {
         ChapterListItem(chapter: Chapter(
             title: "Hello there",
             time: 102
         ), toggleChapter: { _ in },
         timeText: "0 remaining")
         .background(Color.gray)
+
+        ChapterListItem(chapter: Chapter(
+            title: nil,
+            time: 102
+        ), toggleChapter: { _ in },
+        timeText: "0 remaining")
+        .background(Color.gray)
     }
-    .fixedSize()
 }

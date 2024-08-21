@@ -47,6 +47,8 @@
 		8823EB762B54FB510010A12F /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB752B54FB510010A12F /* apiKey.swift */; };
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		8829C7CA2C762A940074078A /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8829C7C92C762A940074078A /* ChapterCategory.swift */; };
+		8829C7CB2C762A9B0074078A /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8829C7C92C762A940074078A /* ChapterCategory.swift */; };
 		882A750A2C74A6A40051BBF0 /* ChapterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A75092C74A6A40051BBF0 /* ChapterService.swift */; };
 		882A750B2C74A6A40051BBF0 /* ChapterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A75092C74A6A40051BBF0 /* ChapterService.swift */; };
 		882A75102C74A7070051BBF0 /* ChapterServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */; };
@@ -458,6 +460,7 @@
 		8823EB752B54FB510010A12F /* apiKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = apiKey.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		8829C7C92C762A940074078A /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
 		882A75092C74A6A40051BBF0 /* ChapterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterService.swift; sourceTree = "<group>"; };
 		882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterServiceTests.swift; sourceTree = "<group>"; };
 		882EA1572C48FBE800CEE2E4 /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
@@ -751,6 +754,7 @@
 				88CEDA1F2B6641C6000E3E98 /* Exportable.swift */,
 				8867F5442BC7AC4D008EC182 /* FileInfo.swift */,
 				887512592C5936AC000E2C6D /* FullscreenControls.swift */,
+				8829C7C92C762A940074078A /* ChapterCategory.swift */,
 			);
 			path = HelperModel;
 			sourceTree = "<group>";
@@ -1457,6 +1461,7 @@
 				88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */,
 				88415BF32C50EA7A0072778F /* WatchEntry.swift in Sources */,
 				88415BED2C50E7110072778F /* DataController.swift in Sources */,
+				8829C7CB2C762A9B0074078A /* ChapterCategory.swift in Sources */,
 				88415BEB2C50E2440072778F /* Subscription.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
@@ -1616,6 +1621,7 @@
 				889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */,
 				8898B67B2B481F5D00348D01 /* Subscription.swift in Sources */,
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
+				8829C7CA2C762A940074078A /* ChapterCategory.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
 				88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */,
 				888C49C52B5FA75700CDEC76 /* UrlService.swift in Sources */,

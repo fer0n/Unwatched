@@ -34,7 +34,7 @@ struct ChapterMiniControlView: View {
                     }
 
                     Button {
-                        let val: ChapterDescriptionPage = (player.video?.chapters ?? []).isEmpty
+                        let val: ChapterDescriptionPage = (player.video?.sortedChapters ?? []).isEmpty
                             ? .description
                             : .chapters
                         navManager.selectedDetailPage = val
@@ -42,7 +42,7 @@ struct ChapterMiniControlView: View {
                     } label: {
                         ZStack {
                             if let chapt = player.currentChapter {
-                                Text(chapt.titleText)
+                                Text(chapt.titleTextForced)
                             } else {
                                 title
                             }
@@ -101,7 +101,7 @@ struct ChapterMiniControlView: View {
 
     @ViewBuilder var title: some View {
         if let chapter = player.currentChapter {
-            Text(chapter.titleText)
+            Text(chapter.titleTextForced)
         } else {
             Text(player.video?.title ?? "")
                 .font(.system(size: 20, weight: .heavy))

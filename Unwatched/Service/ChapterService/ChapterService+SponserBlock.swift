@@ -13,27 +13,32 @@ extension ChapterService {
         videoId: PersistentIdentifier,
         videoChapters: [SendableChapter],
         duration: Double? = nil,
-        container: ModelContainer
+        container: ModelContainer,
+        forceRefresh: Bool = false
     ) async throws -> [SendableChapter]? {
-        if !shouldRefreshSponserBlock(videoId, container) {
+        if !shouldRefreshSponserBlock(videoId, container, forceRefresh) {
             Logger.log.info("SponsorBlock: not refreshing")
             return nil
         }
+
         Logger.log.info("SponsorBlock, old: \(videoChapters)")
 
-        let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId)
-        let sponsorChapters = SponsorBlockAPI.getChapters(from: segments)
+        let loadAllSegments = videoChapters.isEmpty
+
+        let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, allSegments: loadAllSegments)
+        print("segments", segments)
+        let externalChapters = SponsorBlockAPI.getChapters(from: segments)
         let newChapters: [SendableChapter]
 
         // only sponser chapters available: fill up the rest
-        if videoChapters.isEmpty && !sponsorChapters.isEmpty {
-            newChapters = generateChapters(from: sponsorChapters, videoDuration: duration)
+        if videoChapters.isEmpty && !externalChapters.isEmpty {
+            newChapters = generateChapters(from: externalChapters, videoDuration: duration)
         }
 
         // regular chapters available: combine both
         else {
             var chapters = ChapterService.updateDurationAndEndTime(in: videoChapters, videoDuration: duration)
-            chapters.append(contentsOf: sponsorChapters)
+            chapters.append(contentsOf: externalChapters)
             chapters.sort(by: { $0.startTime < $1.startTime})
 
             // update end time/duration correctly
@@ -106,7 +111,7 @@ extension ChapterService {
 
                 // start of second before the end of the first
                 if lastEndTime != chapter.startTime {
-                    let timeBorder = last.category == .sponsor ? lastEndTime : chapter.startTime
+                    let timeBorder = (last.category?.isExternal ?? false) ? lastEndTime : chapter.startTime
                     newChapters[index].endTime = timeBorder
                     chapter.startTime = timeBorder
                     newChapters.append(chapter)
@@ -145,7 +150,7 @@ extension ChapterService {
                     title: nil,
                     startTime: previousEndTime,
                     endTime: chapter.startTime,
-                    category: .filler
+                    category: .generated
                 )
                 newChapters.append(filler)
             }
@@ -174,7 +179,7 @@ extension ChapterService {
                 startTime: previousEndTime,
                 endTime: videoDuration,
                 duration: videoDuration - previousEndTime,
-                category: .filler
+                category: .generated
             )
         }
         return nil
@@ -182,15 +187,23 @@ extension ChapterService {
 
     static func shouldRefreshSponserBlock(
         _ videoId: PersistentIdentifier,
-        _ container: ModelContainer
+        _ container: ModelContainer,
+        _ forceRefresh: Bool
     ) -> Bool {
+
+        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        if !settingOn {
+            Logger.log.info("SponsorBlock: Turned off in settings")
+            return false
+        }
+
         let context = ModelContext(container)
         guard let video = context.model(for: videoId) as? Video else {
             Logger.log.info("SponsorBlock: No video model, not loading")
             return false
         }
 
-        var shouldRefresh = false
+        var shouldRefresh = forceRefresh
 
         if let publishedDate = video.publishedDate {
             let oneDay: TimeInterval = 60 * 60 * 24

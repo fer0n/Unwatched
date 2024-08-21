@@ -13,12 +13,12 @@ final class Chapter {
     var isActive = true
     var category: ChapterCategory?
 
-    var titleText: String {
-        title ?? (
-            category == .sponsor ? String(
-                localized: "sponsorChapter"
-            ) : video?.title ?? mergedChapterVideo?.title
-        ) ?? "-"
+    var titleText: String? {
+        title ?? category?.translated
+    }
+
+    var titleTextForced: String {
+        titleText ?? video?.title ?? mergedChapterVideo?.title ?? "-"
     }
 
     init(
@@ -65,19 +65,5 @@ struct SendableChapter: Sendable, CustomStringConvertible {
 
     var getChapter: Chapter {
         Chapter(title: title, time: startTime, duration: duration, endTime: endTime, category: category)
-    }
-}
-
-enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible {
-    case sponsor
-    case filler
-
-    var description: String {
-        switch self {
-        case .sponsor:
-            return ".sponsor"
-        case .filler:
-            return ".filler"
-        }
     }
 }

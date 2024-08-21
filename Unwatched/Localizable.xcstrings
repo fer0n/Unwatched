@@ -677,6 +677,134 @@
         }
       }
     },
+    "categoryFiller" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filler"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filler"
+          }
+        }
+      }
+    },
+    "categoryInteraction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interaktion"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interaction"
+          }
+        }
+      }
+    },
+    "categoryIntro" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intro"
+          }
+        }
+      }
+    },
+    "categoryMusicOfftopic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Musik offtopic"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music offtopic"
+          }
+        }
+      }
+    },
+    "categoryOutro" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outro"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outro"
+          }
+        }
+      }
+    },
+    "categoryPreview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        }
+      }
+    },
+    "categorySelfpromo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Eigen Werbung]"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Self promotion]"
+          }
+        }
+      }
+    },
+    "categorySponsor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Sponsor]"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Sponsor]"
+          }
+        }
+      }
+    },
     "chapters" : {
       "localizations" : {
         "de" : {
@@ -3240,18 +3368,50 @@
         }
       }
     },
-    "sponsorChapter" : {
+    "sponsorBlockChapters" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "[Sponsor]"
+            "value" : "SponsorBlock Kapitel einbeziehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "[Sponsor]"
+            "value" : "Include SponsorBlock Chapters"
+          }
+        }
+      }
+    },
+    "sponsorBlockSettings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SponsorBlock"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SponsorBlock"
+          }
+        }
+      }
+    },
+    "sponsorBlockSettingsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falls verfügbar, werden SponsorBlock-Kapitel angezeigt. Wenn ein Video bereits Kapitel enthält, werden nur die Sponsoren-Segmente zusammengeführt. Hat ein Video keine Kapitel, werden alle verfügbaren Segmente (wie Intro, Outro, etc.) als Kapitel erstellt, mit leeren Kapiteln dazwischen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, only sponsor segments will be merged. If a video has no chapters, all available segments (like intro, outro, etc.) will be created as chapters, with empty chapters in between."
           }
         }
       }
