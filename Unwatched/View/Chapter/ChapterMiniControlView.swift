@@ -34,7 +34,7 @@ struct ChapterMiniControlView: View {
                     }
 
                     Button {
-                        let val: ChapterDescriptionPage = (player.video?.chapters ?? []).isEmpty
+                        let val: ChapterDescriptionPage = (player.video?.sortedChapters ?? []).isEmpty
                             ? .description
                             : .chapters
                         navManager.selectedDetailPage = val
