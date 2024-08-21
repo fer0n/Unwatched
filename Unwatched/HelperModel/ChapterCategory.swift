@@ -63,6 +63,10 @@ enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible {
         }
     }
 
+    var isExternal: Bool {
+        self != .generated
+    }
+
     static func parse(_ sponsorBlockCategory: String) -> ChapterCategory? {
         switch sponsorBlockCategory {
         case "sponsor":

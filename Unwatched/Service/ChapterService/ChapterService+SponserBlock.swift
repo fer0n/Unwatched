@@ -13,12 +13,14 @@ extension ChapterService {
         videoId: PersistentIdentifier,
         videoChapters: [SendableChapter],
         duration: Double? = nil,
-        container: ModelContainer
+        container: ModelContainer,
+        forceRefresh: Bool = false
     ) async throws -> [SendableChapter]? {
-        if !shouldRefreshSponserBlock(videoId, container) {
+        if !shouldRefreshSponserBlock(videoId, container, forceRefresh) {
             Logger.log.info("SponsorBlock: not refreshing")
             return nil
         }
+
         Logger.log.info("SponsorBlock, old: \(videoChapters)")
 
         let loadAllSegments = videoChapters.isEmpty
@@ -109,7 +111,7 @@ extension ChapterService {
 
                 // start of second before the end of the first
                 if lastEndTime != chapter.startTime {
-                    let timeBorder = last.category == .sponsor ? lastEndTime : chapter.startTime
+                    let timeBorder = (last.category?.isExternal ?? false) ? lastEndTime : chapter.startTime
                     newChapters[index].endTime = timeBorder
                     chapter.startTime = timeBorder
                     newChapters.append(chapter)
@@ -185,15 +187,23 @@ extension ChapterService {
 
     static func shouldRefreshSponserBlock(
         _ videoId: PersistentIdentifier,
-        _ container: ModelContainer
+        _ container: ModelContainer,
+        _ forceRefresh: Bool
     ) -> Bool {
+
+        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        if !settingOn {
+            Logger.log.info("SponsorBlock: Turned off in settings")
+            return false
+        }
+
         let context = ModelContext(container)
         guard let video = context.model(for: videoId) as? Video else {
             Logger.log.info("SponsorBlock: No video model, not loading")
             return false
         }
 
-        var shouldRefresh = false
+        var shouldRefresh = forceRefresh
 
         if let publishedDate = video.publishedDate {
             let oneDay: TimeInterval = 60 * 60 * 24

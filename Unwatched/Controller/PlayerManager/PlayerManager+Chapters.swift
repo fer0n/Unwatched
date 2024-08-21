@@ -101,8 +101,14 @@ extension PlayerManager {
         }
     }
 
-    func handleChapterRefresh() {
+    func handleChapterRefresh(forceRefresh: Bool = false) {
+        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        if !settingOn {
+            return
+        }
+
         Logger.log.info("handleChapterRefresh")
+
         guard let videoId = video?.persistentModelID,
               let youtubeId = video?.youtubeId,
               let modelId = video?.persistentModelID,
@@ -122,7 +128,8 @@ extension PlayerManager {
                             videoId: videoId,
                             videoChapters: sendableChapters,
                             duration: duration,
-                            container: container
+                            container: container,
+                            forceRefresh: forceRefresh
                         ) else {
                     Logger.log.info("SponsorBlock: Not updating merged chapters")
                     return
@@ -144,7 +151,9 @@ extension PlayerManager {
             } catch {
                 Logger.log.error("Error while merging chapters: \(error)")
             }
-            self.handleChapterChange()
+            await MainActor.run {
+                self.handleChapterChange()
+            }
         }
     }
 }
