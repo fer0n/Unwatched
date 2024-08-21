@@ -55,7 +55,7 @@ extension PlayerManager {
             if let nextActive = chapters.first(where: { chapter in
                 chapter.startTime > current.startTime && chapter.isActive
             }) {
-                Logger.log.info("skip to next chapter: \(nextActive.titleText)")
+                Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
                 seekPosition = nextActive.startTime
             } else if let duration = video.duration {
                 seekPosition = duration
