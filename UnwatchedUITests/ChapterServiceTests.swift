@@ -163,6 +163,26 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
+    func testSponsorBlockChapters() async {
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+
+        let video = ChapterServiceTestData.getSponsoredVideo()
+        modelContext.insert(video)
+
+        do {
+            let chapters = try await ChapterService.mergeSponsorSegments(
+                youtubeId: "Fbphhg9ArXw", // video.youtubeId,
+                videoId: video.persistentModelID,
+                videoChapters: [],
+                container: container
+            )
+            print("chapters with duration: \(String(describing: chapters))")
+        } catch {
+            print("error: \(error)")
+        }
+    }
+
     func testNoRegularChapters() {
         let chapters = [
             SendableChapter(
@@ -186,7 +206,7 @@ final class ChapterServiceTests: XCTestCase {
 
         XCTAssertEqual(newChapters[0].startTime, 0)
         XCTAssertEqual(newChapters[0].endTime, 10)
-        XCTAssertEqual(newChapters[0].category, .filler)
+        XCTAssertEqual(newChapters[0].category, .generated)
 
         XCTAssertEqual(newChapters[1].startTime, 10)
         XCTAssertEqual(newChapters[1].endTime, 20)
@@ -194,7 +214,7 @@ final class ChapterServiceTests: XCTestCase {
 
         XCTAssertEqual(newChapters[2].startTime, 20)
         XCTAssertEqual(newChapters[2].endTime, 40)
-        XCTAssertEqual(newChapters[2].category, .filler)
+        XCTAssertEqual(newChapters[2].category, .generated)
 
         XCTAssertEqual(newChapters[3].startTime, 40)
         XCTAssertEqual(newChapters[3].endTime, 50)
@@ -202,7 +222,7 @@ final class ChapterServiceTests: XCTestCase {
 
         XCTAssertEqual(newChapters[4].startTime, 50)
         XCTAssertEqual(newChapters[4].endTime, 60)
-        XCTAssertEqual(newChapters[4].category, .filler)
+        XCTAssertEqual(newChapters[4].category, .generated)
     }
 }
 

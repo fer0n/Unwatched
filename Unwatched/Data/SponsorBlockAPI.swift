@@ -9,8 +9,11 @@ import OSLog
 struct SponsorBlockAPI {
     static let baseUrl = "https://sponsor.ajay.app/api/"
 
-    static func skipSegments(for videoID: String) async throws -> [SponsorBlockSegmentModel] {
-        let urlString = baseUrl + "skipSegments?videoID=\(videoID)"
+    static func skipSegments(for videoID: String, allSegments: Bool) async throws -> [SponsorBlockSegmentModel] {
+        let segmentsQuery = allSegments
+            ? #"&categories=["sponsor","intro","selfpromo","interaction","outro","preview","music_offtopic","filler"]"#
+            : ""
+        let urlString = baseUrl + "skipSegments?videoID=\(videoID)" + segmentsQuery
         guard let url = URL(string: urlString) else {
             throw SponsorBlockError.noValidUrl
         }
@@ -36,11 +39,13 @@ struct SponsorBlockAPI {
             }
             let endTime = segment.segment.last
 
+            let category = ChapterCategory.parse(segment.category)
+
             let chapter = SendableChapter(
                 title: nil,
                 startTime: startTime,
                 endTime: endTime,
-                category: .sponsor
+                category: category
             )
             result.append(chapter)
         }

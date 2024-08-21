@@ -63,6 +63,7 @@ struct PlayButtonContextMenu: View {
         Button {
             player.handleHotSwap()
             reloadVideoId = UUID().uuidString
+            player.handleChapterRefresh(forceRefresh: true)
         } label: {
             Label("reloadVideo", systemImage: "arrow.circlepath")
         }
