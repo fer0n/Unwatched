@@ -40,7 +40,9 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     // MARK: Computed Properties
     var sortedChapters: [Chapter] {
         var result = [Chapter]()
-        if mergedChapters?.isEmpty != true {
+
+        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        if mergedChapters?.isEmpty != true && settingOn {
             result = mergedChapters ?? []
         } else {
             result = chapters ?? []
