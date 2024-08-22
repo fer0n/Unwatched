@@ -82,6 +82,11 @@ struct UrlService {
             return userName
         }
 
+        // https://www.youtube.com/user/JPRPokeTrainer98
+        if let userName = urlString.matching(regex: #"\/user\/([^\/#\?\s]*)"#) {
+            return userName
+        }
+
         // https://www.youtube.com/moviepilot
         // some channels forward to this kind of url (non-mobile), but the username is already known by then
         if let prev = previousUserName?.lowercased(), urlString.lowercased().contains("youtube.com/\(prev)") {
