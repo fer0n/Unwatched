@@ -3214,13 +3214,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Während ein Video spielt, halte dein iPhone horizontal, um das Video im Vollbildmodus abzuspielen. Das ist hilfreich, wenn du Videos kontinuierlich abspielen möchtest, ohne wiederholt in den Vollbildmodus wechseln zu müssen. Steuerelemente, z.B. für Kapitel, können am rechten Rand des Videos angezeigt werden."
+            "value" : "Beim Abspielen von Videos halte dein iPhone horizontal, um in den Vollbildmodus zu wechseln, in dem Steuerelemente links oder rechts vom Video angezeigt werden und das nächste Video automatisch abgespielt werden kann.\n\nFür Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "While playing a video, hold your iPhone horizontal to play the video fullscreen. This is helpful if you want to keep playing videos continuously without having to enter fullscreen repeatedly. Controls, such as for chapters, can be shown on the right edge of the video."
+            "value" : "While playing a video, hold your iPhone horizontal to enter a fullscreen that can show controls on the left or right of the video and continuously play the next video.\n\nIf you wish to enter Picture-in-picture, tap the maximise button inside the video."
           }
         }
       }
@@ -3438,13 +3438,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Immer im Vollbild abspielen"
+            "value" : "iOS Vollbildmodus erzwingen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Always Play in Fullscreen"
+            "value" : "Force native fullscreen player"
           }
         }
       }

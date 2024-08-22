@@ -82,7 +82,7 @@ struct Const {
     static let videoDescriptionSF = "quote.bubble.fill"
     static let chaptersSF = "checklist.checked"
 
-    static let appBrowserSF = "globe.desk.fill"
+    static let appBrowserSF = "play.rectangle.fill"
 
     static let nextChapterSF = "forward.end.fill"
     static let previousChapterSF = "backward.end.fill"
