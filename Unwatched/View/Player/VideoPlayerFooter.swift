@@ -59,7 +59,7 @@ struct VideoPlayerFooter: View {
                     Button {
                         openBrowserUrl(.url(url.absoluteString))
                     } label: {
-                        Image(systemName: "globe.desk")
+                        Image(systemName: Const.appBrowserSF)
                     }
                     .frame(maxWidth: .infinity)
                 }

@@ -43,7 +43,7 @@ struct MenuView: View {
                     LibraryView(showCancelButton: showCancelButton)
                 }
 
-                TabItemView(image: Image(systemName: "globe.desk"),
+                TabItemView(image: Image(systemName: Const.appBrowserSF),
                             text: "browserShort",
                             tag: NavigationTab.browser,
                             show: browserAsTab) {
