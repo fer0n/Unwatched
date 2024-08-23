@@ -8,6 +8,7 @@ import MediaPlayer
 
 struct SleepTimer: View {
     @Environment(PlayerManager.self) var player
+    @Environment(\.colorScheme) var colorScheme
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     @State private var showPopover = false
@@ -83,29 +84,36 @@ struct SleepTimer: View {
         } label: {
             Label("\(minutes)", systemImage: "plus")
                 .frame(maxWidth: .infinity)
+                .foregroundStyle(theme.contrastColor)
         }
     }
 
     var sleepControl: some View {
-        VStack {
-            Label(viewModel.titleText, systemImage: "moon.zzz.fill")
-                .font(.system(.body).monospacedDigit())
+        ZStack {
+            Color.sheetBackground
+                .scaleEffect(1.5)
 
-            HStack {
-                addTimeButton(5)
-                addTimeButton(30)
+            VStack {
+                Label(viewModel.titleText, systemImage: "moon.zzz.fill")
+                    .font(.system(.body).monospacedDigit())
+
+                HStack {
+                    addTimeButton(5)
+                    addTimeButton(30)
+                }
+                .buttonStyle(.borderedProminent)
+                Button {
+                    viewModel.stopTimer()
+                    hapticToggle.toggle()
+                } label: {
+                    Text("sleepTimerOff")
+                }
+                .disabled(viewModel.remainingSeconds <= 0)
+                .padding()
             }
-            .buttonStyle(.borderedProminent)
-            Button {
-                viewModel.stopTimer()
-                hapticToggle.toggle()
-            } label: {
-                Text("sleepTimerOff")
-            }
-            .disabled(viewModel.remainingSeconds <= 0)
-            .padding()
+            .tint(theme.color)
         }
-        .tint(theme.color)
+        .environment(\.colorScheme, colorScheme)
     }
 
 }

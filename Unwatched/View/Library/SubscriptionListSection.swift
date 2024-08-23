@@ -92,3 +92,7 @@ struct SearchableSubscriptions: View {
         )
     }
 }
+
+#Preview {
+    SubscriptionListSection(subManager: .constant(SubscribeManager()), theme: .blackWhite)
+}

@@ -166,7 +166,6 @@ struct TrailingSwipeActionsView: View {
             if config.videoSwipeActions.contains(.more) {
                 VideoListItemMoreMenuView(
                     video: video,
-                    theme: theme,
                     config: config,
                     markWatched: markWatched,
                     toggleBookmark: toggleBookmark,

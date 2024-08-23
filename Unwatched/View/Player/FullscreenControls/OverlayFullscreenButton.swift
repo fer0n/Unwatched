@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct OverlayFullscreenButton: View {
+    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory = false
     @Environment(PlayerManager.self) var player
     @State private var showPause = false
     @State private var show = false
@@ -15,6 +16,7 @@ struct OverlayFullscreenButton: View {
 
     var body: some View {
         let touchSize: CGFloat = landscapeFullscreen ? 125 : 90
+        let enabled = enabled && !(forceYtWatchHistory && player.unstarted)
 
         Color.white
             .opacity(.leastNonzeroMagnitude)

@@ -7,6 +7,10 @@ import UIKit
 
 public extension UIDevice {
 
+    static let isIphone: Bool = {
+        UIDevice.modelName.contains("iPhone")
+    }()
+
     static let supportsFullscreenControls: Bool = {
         !UIDevice.modelName.contains("iPhone SE")
     }()

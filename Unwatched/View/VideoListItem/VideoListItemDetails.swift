@@ -22,7 +22,7 @@ struct VideoListItemDetails: View {
             if video.publishedDate != nil || video.isYtShort {
                 HStack {
                     if let published = video.publishedDate {
-                        Text(published.formatted)
+                        Text(published.formattedRelative)
                             .font(.system(size: 14, weight: .light))
                             .font(.body)
                     }
@@ -78,4 +78,5 @@ struct VideoListItemProgress: View {
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(ImageCacheManager())
+        .padding()
 }

@@ -61,3 +61,7 @@ struct SubscriptionSpeedSetting: View {
         .tint(theme.color)
     }
 }
+
+#Preview {
+    SubscriptionSpeedSetting(subscription: Subscription.getDummy())
+}
