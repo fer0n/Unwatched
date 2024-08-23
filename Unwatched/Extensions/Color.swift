@@ -42,6 +42,27 @@ enum ThemeColor: Int, CustomStringConvertible, CaseIterable {
         }
     }
 
+    var contrastColor: Color {
+        if self == .blackWhite {
+            return .automaticWhite
+        }
+        return .white
+    }
+
+    var darkColor: Color {
+        if self == .blackWhite {
+            return .automaticWhite
+        }
+        return color
+    }
+
+    var darkContrastColor: Color {
+        if self == .blackWhite {
+            return .automaticBlack
+        }
+        return .white
+    }
+
     var description: String {
         switch self {
         case .red:

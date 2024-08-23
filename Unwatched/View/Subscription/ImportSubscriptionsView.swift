@@ -80,7 +80,7 @@ struct ImportSubscriptionsView: View {
                             ).characters))
                         }
                         .padding(importButtonPadding ? 10 : 0)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(theme.contrastColor)
                         .buttonStyle(.borderedProminent)
                     }
                 }
@@ -121,7 +121,7 @@ struct ImportSubscriptionsView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .foregroundStyle(.white)
+                .foregroundStyle(theme.contrastColor)
                 .padding(15)
 
                 Text("howToExport2")
@@ -141,7 +141,7 @@ struct ImportSubscriptionsView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .foregroundStyle(.white)
+                .foregroundStyle(theme.contrastColor)
                 .padding(15)
 
                 Text("howToImport2")

@@ -22,6 +22,7 @@ enum VideoSource {
     var embeddingDisabled: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
+    var unstarted: Bool = true
 
     weak var container: ModelContainer?
 
@@ -39,6 +40,7 @@ enum VideoSource {
 
     private func handleNewVideoSet(_ oldValue: Video?) {
         currentEndTime = 0
+        unstarted = true
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
@@ -248,6 +250,11 @@ enum VideoSource {
 
     func handleAutoStart() {
         Logger.log.info("handleAutoStart")
+        if UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory) {
+            Logger.log.info("forceYtWatchHistory is enabled")
+            return
+        }
+
         isLoading = false
         guard let source = videoSource else {
             Logger.log.info("no source, stopping")

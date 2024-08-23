@@ -41,6 +41,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handlePause(payload)
         case "play":
             parent.player.previousState.isPlaying = true
+            updateUnstarted()
             parent.player.play()
         case "ended":
             parent.player.previousState.isPlaying = false
@@ -59,6 +60,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func updateUnstarted() {
+        if parent.player.unstarted {
+            parent.player.unstarted = false
         }
     }
 
@@ -87,10 +94,15 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleDuration(_ payload: String?) {
+        print("handleDuration")
         guard let payload = payload, let duration = Double(payload), duration > 0 else {
+            Logger.log.info("handleDuration: not updating")
             return
         }
+
         if let video = parent.player.video {
+            VideoService.updateDuration(video, duration: duration)
+
             ChapterService.updateDuration(
                 video,
                 duration: duration,

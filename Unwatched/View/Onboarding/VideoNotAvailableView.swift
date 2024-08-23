@@ -47,7 +47,8 @@ struct VideoNotAvailableView: View {
                     .foregroundStyle(Color.backgroundColor)
 
                     AddVideosButton()
-                        .tint(Color.neutralAccentColor)
+                        .tint(theme.color)
+                        .foregroundStyle(theme.contrastColor)
                 }
                 .fontWeight(.medium)
                 .frame(maxWidth: 300)
@@ -85,10 +86,17 @@ struct VideoNotAvailableView: View {
                 Color.backgroundColor
                 Rectangle()
                     .fill(
-                        LinearGradient(colors: [theme.color.mix(with: .black, by: 0.9),
-                                                theme.color],
-                                       startPoint: .top,
-                                       endPoint: .bottom)
+                        LinearGradient(
+                            colors: [
+                                .black.mix(
+                                    with: theme.darkColor,
+                                    by: 0.2
+                                ),
+                                theme.darkColor
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
                     )
                     .opacity(isDropTarget ? 0.6 : 0.4)
                     .animation(.bouncy(duration: 1.5), value: navManager.showMenu)
@@ -113,6 +121,7 @@ struct VideoNotAvailableView: View {
                     }
                 }
         )
+        .environment(\.colorScheme, .dark)
     }
 
     var dropOverlay: some View {
