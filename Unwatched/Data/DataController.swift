@@ -101,7 +101,7 @@ extension Video {
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
-            publishedDate: Date(),
+            publishedDate: try? Date("2024-08-20T20:15:00Z", strategy: .iso8601),
             duration: 12352,
             videoDescription: """
             "AI in a Box. But a different box.
