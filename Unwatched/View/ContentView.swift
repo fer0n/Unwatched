@@ -19,7 +19,7 @@ struct ContentView: View {
     var body: some View {
         @Bindable var navManager = navManager
         let videoExists = player.video != nil
-        let bigScreen = sizeClass == .regular
+        let bigScreen = sizeClass == .regular && !UIDevice.isIphone
 
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
