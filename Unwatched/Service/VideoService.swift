@@ -96,6 +96,14 @@ struct VideoService {
         return task
     }
 
+    static func updateDuration(_ video: Video, duration: Double) {
+        if let last = video.sortedChapters.last {
+            last.endTime = duration
+            last.duration = duration - last.startTime
+        }
+        video.duration = duration
+    }
+
     static func clearFromEverywhere(_ youtubeId: String, container: ModelContainer) {
         _ = Task {
             let videoId = getModelId(for: youtubeId, container: container)
