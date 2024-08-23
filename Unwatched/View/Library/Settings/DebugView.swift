@@ -90,4 +90,5 @@ struct DebugView: View {
     DebugView()
         .modelContainer(DataController.previewContainer)
         .environment(Alerter())
+        .environment(PlayerManager())
 }

@@ -89,9 +89,13 @@ struct QueueView: View {
         } actions: {
             SetupShareSheetAction()
                 .buttonStyle(.borderedProminent)
+                .foregroundStyle(theme.contrastColor)
+                .tint(theme.color)
 
             DisappearingAddFeedsMenu()
                 .bold()
+                .foregroundStyle(theme.contrastColor)
+                .tint(theme.color)
         }
         .contentShape(Rectangle())
         .handleVideoUrlDrop(.queue)
@@ -127,4 +131,5 @@ struct QueueView: View {
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())
+        .environment(ImageCacheManager())
 }

@@ -9,7 +9,6 @@ struct VideoListItemMoreMenuView: View {
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
     var video: Video
-    var theme: ThemeColor
     var config: VideoListItemConfig
     var markWatched: () -> Void
     var toggleBookmark: () -> Void

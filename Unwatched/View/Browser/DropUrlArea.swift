@@ -36,7 +36,7 @@ struct DropUrlArea<Content: View>: View {
                 content
             }
         }
-        .background(showDropArea ? theme.color : .clear)
+        .background(showDropArea ? theme.darkColor : .clear)
         .tint(.neutralAccentColor)
         .dropDestination(for: URL.self) { items, _ in
             Task {
@@ -86,4 +86,11 @@ struct DropUrlArea<Content: View>: View {
         }
         .foregroundStyle(.white)
     }
+}
+
+#Preview {
+    DropUrlArea {
+        Text(verbatim: "hello")
+    }
+    .modelContainer(DataController.previewContainer)
 }

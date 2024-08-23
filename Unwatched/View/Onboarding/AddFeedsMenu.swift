@@ -57,9 +57,14 @@ struct AddFeedsMenu: View {
                         showImportSheet = false
                     }
                 }
-                .tint(theme.color)
+                .tint(theme.darkColor)
                 .foregroundStyle(Color.neutralAccentColor)
             }
         }
     }
+}
+
+#Preview {
+    AddFeedsMenu()
+        .environment(NavigationManager())
 }
