@@ -1549,6 +1549,38 @@
         }
       }
     },
+    "forceYtWatchHistory" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Wiedergabeverlauf Erzwingen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force YouTube Watch History"
+          }
+        }
+      }
+    },
+    "forceYtWatchHistoryHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit Videos im Verlauf erscheinen, muss jedes Video über den YouTube-Player gestartet werden. Automatische Wiedergabe ist deaktiviert, und das nächste Video muss manuell gestartet werden. Der Play-Button von Unwatched bleibt deaktiviert, bis das Video gestartet wurde."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To have your videos appear in your YouTube watch history, you need to start each video directly via the YouTube player. This will disable continuous play, requiring you to manually start the next video. Unwatched's play button will be disabled until the video is started."
+          }
+        }
+      }
+    },
     "fullscreenControls" : {
       "localizations" : {
         "de" : {
@@ -2744,6 +2776,22 @@
         }
       }
     },
+    "playButtonDisabledDueToForceHistory" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-Wiedergabeverlauf erzwingen“ erfordert das manuelle Starten des Videos. Diese Option kann unter Mediathek → Einstellungen → Videos deaktiviert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Force YouTube Watch History\" requires starting the video manually. This can be disabled under Library → Settings → Videos."
+          }
+        }
+      }
+    },
     "potentiallyFaultyYoutubeId" : {
       "comment" : "(youtubeId)",
       "localizations" : {
@@ -3444,7 +3492,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Force native fullscreen player"
+            "value" : "Force Native Fullscreen Player"
           }
         }
       }
@@ -3824,6 +3872,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yellow"
+          }
+        }
+      }
+    },
+    "youtube" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube"
           }
         }
       }
