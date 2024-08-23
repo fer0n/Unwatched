@@ -53,7 +53,7 @@ struct AddVideoButton: View {
         .background {
             // Workaround: isDragOver = true get's stuck otherwise
             Circle()
-                .fill(avm.isDragOver ? theme.color : Color.neutralAccentColor)
+                .fill(avm.isDragOver ? theme.darkColor : Color.neutralAccentColor)
                 .frame(width: backgroundSize, height: backgroundSize)
                 .animation(.default, value: avm.isDragOver)
         }
