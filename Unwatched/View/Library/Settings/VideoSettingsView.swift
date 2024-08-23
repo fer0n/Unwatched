@@ -11,6 +11,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = true
+    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
 
     var body: some View {
         ZStack {
@@ -38,6 +39,12 @@ struct VideoSettingsView: View {
                 MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
+                    }
+                }
+
+                MySection("youtube", footer: "forceYtWatchHistoryHelper") {
+                    Toggle(isOn: $forceYtWatchHistory) {
+                        Text("forceYtWatchHistory")
                     }
                 }
 

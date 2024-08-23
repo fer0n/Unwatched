@@ -110,6 +110,7 @@ struct Const {
     static let requireClearConfirmation = "requireClearConfirmation"
     static let showClearQueueButton = "showClearQueueButton"
     static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
+    static let forceYtWatchHistory = "forceYtWatchHistory"
 
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"

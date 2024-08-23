@@ -6,17 +6,20 @@
 import SwiftUI
 
 struct CorePlayButton<Content>: View where Content: View {
+    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory = false
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
-    private let contentImage: ((Image) -> Content)
+    @State var showHelperPopop = false
+
+    private let contentImage: ((Image, Bool) -> Content)
     private let circle: String
     let enableHaptics: Bool
 
     init(
         circleVariant: Bool,
         enableHaptics: Bool = false,
-        @ViewBuilder content: @escaping (Image) -> Content = { $0 }
+        @ViewBuilder content: @escaping (Image, Bool) -> Content = { image, _ in image }
     ) {
         self.circle = circleVariant ? ".circle" : ""
         self.enableHaptics = enableHaptics
@@ -24,7 +27,13 @@ struct CorePlayButton<Content>: View where Content: View {
     }
 
     var body: some View {
+        let disabled = forceYtWatchHistory && player.unstarted
+
         Button {
+            if disabled {
+                showHelperPopop = true
+                return
+            }
             player.handlePlayButton()
             if enableHaptics {
                 hapticToggle.toggle()
@@ -33,7 +42,8 @@ struct CorePlayButton<Content>: View where Content: View {
             contentImage(
                 Image(systemName: player.isPlaying && !player.videoEnded
                         ? "pause\(circle).fill"
-                        : "play\(circle).fill")
+                        : "play\(circle).fill"),
+                disabled
             )
             .rotationEffect(.degrees(player.videoEnded
                                         ? 180
@@ -47,6 +57,20 @@ struct CorePlayButton<Content>: View where Content: View {
             PlayButtonContextMenu()
         }
         .keyboardShortcut(.space, modifiers: [])
+        .popover(isPresented: $showHelperPopop) {
+            VStack {
+                Spacer()
+                    .frame(height: 25)
+                Text("playButtonDisabledDueToForceHistory")
+                    .padding()
+                Spacer()
+                    .frame(height: 25)
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            .font(.body)
+            .fontWeight(.regular)
+            .presentationCompactAdaptation(.popover)
+        }
     }
 }
 
@@ -75,15 +99,18 @@ struct PlayButton: View {
     var enableHaptics: Bool = true
 
     var body: some View {
-        CorePlayButton(circleVariant: true, enableHaptics: enableHaptics) { image in
+        CorePlayButton(
+            circleVariant: true,
+            enableHaptics: enableHaptics
+        ) { image, disabled in
             image
                 .resizable()
                 .frame(width: size, height: size)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.automaticWhite, .automaticBlack)
                 .fontWeight(.black)
+                .opacity(disabled ? 0.5 : 1)
         }
-
     }
 }
 

@@ -41,6 +41,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handlePause(payload)
         case "play":
             parent.player.previousState.isPlaying = true
+            if parent.player.unstarted {
+                parent.player.unstarted = false
+            }
             parent.player.play()
         case "ended":
             parent.player.previousState.isPlaying = false
