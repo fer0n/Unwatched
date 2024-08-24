@@ -99,7 +99,7 @@ struct Const {
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
-    static let refreshOnStartup = "refreshOnStartup"
+    static let autoRefresh = "refreshOnStartup"
 
     static let hideShortsEverywhere = "hideShortsEverywhere"
     static let shortsDetection = "shortsDetection"
