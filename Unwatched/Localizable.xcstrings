@@ -11,6 +11,22 @@
         }
       }
     },
+    "%@ ago" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vor %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ago"
+          }
+        }
+      }
+    },
     "%@%lld New Videos" : {
       "localizations" : {
         "de" : {

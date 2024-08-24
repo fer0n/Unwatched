@@ -9,6 +9,19 @@ extension Double {
 }
 
 extension Double {
+    var formattedSecondsColon: String? {
+        // e.g. 4:20 or 1:02:03
+        let formatter = DateComponentsFormatter()
+        if self >= 3600 {
+            formatter.allowedUnits = [.hour, .minute, .second]
+        } else {
+            formatter.allowedUnits = [.minute, .second]
+        }
+        formatter.unitsStyle = .positional
+        formatter.zeroFormattingBehavior = .pad
+        return formatter.string(from: TimeInterval(self))
+    }
+
     var formattedSeconds: String? {
         let formatter = DateComponentsFormatter()
         if self >= 3600 { // If self is greater than or equal to 3600 seconds (1 hour)
