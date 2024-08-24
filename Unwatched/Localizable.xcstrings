@@ -533,6 +533,22 @@
         }
       }
     },
+    "autoRefresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically Refresh"
+          }
+        }
+      }
+    },
     "backupNow" : {
       "localizations" : {
         "de" : {
@@ -2291,22 +2307,6 @@
         }
       }
     },
-    "newVideosHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wo neue Videos hinzugefügt werden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Where new videos will be added to"
-          }
-        }
-      }
-    },
     "nextVideo" : {
       "localizations" : {
         "de" : {
@@ -2932,22 +2932,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Background Refresh on Close"
-          }
-        }
-      }
-    },
-    "refreshOnStartup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beim App-Start Aktualisieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh on App Start"
           }
         }
       }

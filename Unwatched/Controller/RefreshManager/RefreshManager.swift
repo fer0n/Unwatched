@@ -121,7 +121,7 @@ import OSLog
 
     func executeRefreshOnStartup() async {
         Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
-        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.refreshOnStartup) as? Bool ?? true
+        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
 
         if refreshOnStartup {
             let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
@@ -131,8 +131,23 @@ import OSLog
             if shouldRefresh {
                 Logger.log.info("refreshing now")
                 await self.refreshAll()
+
+                scheduleRepeatingRefresh()
             }
+
             cancelCloudKitListener()
+        }
+    }
+
+    func scheduleRepeatingRefresh() {
+        Task {
+            do {
+                try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
+                print("scheduleRepeatingRefresh NOW")
+                await self.executeRefreshOnStartup()
+            } catch {
+                Logger.log.warning("Error refreshing: \(error)")
+            }
         }
     }
 }
