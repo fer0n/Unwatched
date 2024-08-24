@@ -12,19 +12,24 @@ struct VideoSettingsView: View {
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = true
     @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
+    @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
 
     var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection(footer: "newVideosHelper") {
+                MySection {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
                             Text($0.description(defaultPlacement: ""))
                         }
                     }
                     .pickerStyle(.menu)
+
+                    Toggle(isOn: $autoRefresh) {
+                        Text("autoRefresh")
+                    }
                 }
 
                 MySection("clearVideos") {

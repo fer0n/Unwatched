@@ -13,7 +13,6 @@ struct DebugView: View {
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.refreshOnClose) var refreshOnClose: Bool = false
 
-    @AppStorage(Const.refreshOnStartup) var refreshOnStartup: Bool = true
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
 
@@ -32,12 +31,6 @@ struct DebugView: View {
                         Text("showTutorial")
                     }
                     .disabled(showTutorial == true && player.video == nil)
-                }
-
-                MySection("videoSettings") {
-                    Toggle(isOn: $refreshOnStartup) {
-                        Text("refreshOnStartup")
-                    }
                 }
 
                 MySection("notifications") {
