@@ -85,6 +85,9 @@
         }
       }
     },
+    "Add video from ${youtubeUrl}" : {
+
+    },
     "addAsPlaylist" : {
       "localizations" : {
         "de" : {
@@ -513,6 +516,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched will automatically store a daily snapshot of your user data to iCloud Drive every day you open the app."
+          }
+        }
+      }
+    },
+    "autoRefresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch aktualisieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically Refresh"
           }
         }
       }
@@ -1063,6 +1082,7 @@
     },
     "Could not subscribe: (message)" : {
       "comment" : "Could not subscribe",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1074,6 +1094,7 @@
     },
     "Couldn't convert to URL: (noUrl)" : {
       "comment" : "Couldn't convert to URL",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1903,6 +1924,7 @@
     },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2304,22 +2326,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Videos"
-          }
-        }
-      }
-    },
-    "newVideosHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wo neue Videos hinzugefügt werden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Where new videos will be added to"
           }
         }
       }
@@ -2809,7 +2815,7 @@
       }
     },
     "potentiallyFaultyYoutubeId" : {
-      "comment" : "(youtubeId)",
+      "comment" : "(value)",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2949,22 +2955,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Background Refresh on Close"
-          }
-        }
-      }
-    },
-    "refreshOnStartup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beim App-Start Aktualisieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh on App Start"
           }
         }
       }
