@@ -137,7 +137,8 @@ extension Video {
             9:56 Large Action Model
             14:06 What Are We Doing Here?
             16:42 FUTURE
-            """
+            """,
+            isYtShort: true
 
             // videoDescription: "The Resident Evil 4 Remake VR mode...
             // chapters: chapters
