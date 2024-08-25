@@ -29,7 +29,7 @@ struct VideoListItem: View {
                         .frame(width: 168, height: 94.5)
                         .clipped()
                 } placeholder: {
-                    Color.backgroundColor
+                    Color.insetBackgroundColor
                         .frame(width: 168, height: 94.5)
                 }
                 .overlay {
