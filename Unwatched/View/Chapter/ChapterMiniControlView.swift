@@ -125,19 +125,26 @@ struct ChapterMiniControlView: View {
             navManager.showDescriptionDetail = true
         } label: {
             HStack {
+                Image(systemName: Const.videoDescriptionSF)
                 if let published = video.publishedDate {
-                    Text(verbatim: "\(published.formatted)")
                     Text(Const.dotString)
+                    Text(verbatim: "\(published.formatted)")
                 }
                 if let duration = video.duration?.formattedSeconds {
-                    Text(verbatim: "\(duration)")
                     Text(Const.dotString)
+                    Text(verbatim: "\(duration)")
                 }
-                Image(systemName: Const.videoDescriptionSF)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(Color.backgroundGray)
+            .overlay {
+                VideoListItemThumbnailOverlay(
+                    video: video,
+                    color: .automaticBlack,
+                    showDuration: false
+                )
+            }
             .clipShape(.rect(cornerRadius: 10))
         }
     }
