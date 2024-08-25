@@ -25,7 +25,7 @@ struct YtVideoSnippet: Codable {
     }
 
     struct Thumbnails: Codable {
-        let medium: Medium
+        let medium: Medium?
     }
 
     let title: String
