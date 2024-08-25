@@ -4,9 +4,9 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct CorePlayButton<Content>: View where Content: View {
-    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory = false
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
@@ -30,13 +30,14 @@ struct CorePlayButton<Content>: View where Content: View {
     }
 
     var body: some View {
-        let disabled = forceYtWatchHistory && player.unstarted
+        let disabled = player.playDisabled
 
         Button {
             if disabled {
                 if enableHelperPopup {
                     showHelperPopop = true
                 }
+                Logger.log.info("Play button is disabled (forceYtWatchHistory)")
                 return
             }
             player.handlePlayButton()
