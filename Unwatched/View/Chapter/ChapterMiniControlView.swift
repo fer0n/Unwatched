@@ -137,13 +137,8 @@ struct ChapterMiniControlView: View {
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
-            .background(Color.backgroundGray)
-            .overlay {
-                VideoListItemThumbnailOverlay(
-                    video: video,
-                    color: .automaticBlack,
-                    showDuration: false
-                )
+            .background {
+                BackgroundProgressBar()
             }
             .clipShape(.rect(cornerRadius: 10))
         }
@@ -157,6 +152,31 @@ struct ChapterMiniControlView: View {
     func goToNext() {
         triggerFeedback.toggle()
         player.goToNextChapter()
+    }
+}
+
+struct BackgroundProgressBar: View {
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color.backgroundGray
+
+                if let elapsed = player.currentTime,
+                   let total = player.video?.duration {
+                    let width = (elapsed / total) * geometry.size.width
+
+                    HStack(spacing: 0) {
+                        Color.foregroundGray
+                            .opacity(0.1)
+                            .frame(width: width)
+                            .animation(.default, value: width)
+                        Color.clear
+                    }
+                }
+            }
+        }
     }
 }
 
