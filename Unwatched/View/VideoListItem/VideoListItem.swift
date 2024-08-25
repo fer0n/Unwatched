@@ -29,7 +29,7 @@ struct VideoListItem: View {
                         .frame(width: 168, height: 94.5)
                         .clipped()
                 } placeholder: {
-                    Color.backgroundColor
+                    Color.insetBackgroundColor
                         .frame(width: 168, height: 94.5)
                 }
                 .overlay {
@@ -64,8 +64,11 @@ struct VideoListItemThumbnailOverlay: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
     let video: Video
-    let videoDuration: Double?
+    var videoDuration: Double?
     // workaround: doesn't update instantly otherwise
+
+    var color: Color?
+    var showDuration = true
 
     var body: some View {
         let elapsed = video.elapsedSeconds
@@ -89,7 +92,7 @@ struct VideoListItemThumbnailOverlay: View {
                                 ]
                             ), startPoint: .bottom, endPoint: .top))
                         HStack(spacing: 0) {
-                            theme.color
+                            (color ?? theme.color)
                                 .frame(width: progressWidth)
                             Color.clear.background(.thinMaterial)
                         }
@@ -98,7 +101,7 @@ struct VideoListItemThumbnailOverlay: View {
                 }
             }
 
-            if total != nil || video.isYtShort {
+            if showDuration && (total != nil || video.isYtShort) {
                 ZStack {
                     if video.isYtShort {
                         Text(verbatim: "#s")

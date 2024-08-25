@@ -125,19 +125,21 @@ struct ChapterMiniControlView: View {
             navManager.showDescriptionDetail = true
         } label: {
             HStack {
+                Image(systemName: Const.videoDescriptionSF)
                 if let published = video.publishedDate {
-                    Text(verbatim: "\(published.formatted)")
                     Text(Const.dotString)
+                    Text(verbatim: "\(published.formatted)")
                 }
                 if let duration = video.duration?.formattedSeconds {
-                    Text(verbatim: "\(duration)")
                     Text(Const.dotString)
+                    Text(verbatim: "\(duration)")
                 }
-                Image(systemName: Const.videoDescriptionSF)
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
-            .background(Color.backgroundGray)
+            .background {
+                BackgroundProgressBar()
+            }
             .clipShape(.rect(cornerRadius: 10))
         }
     }
@@ -150,6 +152,31 @@ struct ChapterMiniControlView: View {
     func goToNext() {
         triggerFeedback.toggle()
         player.goToNextChapter()
+    }
+}
+
+struct BackgroundProgressBar: View {
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color.backgroundGray
+
+                if let elapsed = player.currentTime,
+                   let total = player.video?.duration {
+                    let width = (elapsed / total) * geometry.size.width
+
+                    HStack(spacing: 0) {
+                        Color.foregroundGray
+                            .opacity(0.1)
+                            .frame(width: width)
+                            .animation(.default, value: width)
+                        Color.clear
+                    }
+                }
+            }
+        }
     }
 }
 
