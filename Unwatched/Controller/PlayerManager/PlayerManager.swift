@@ -38,6 +38,11 @@ enum VideoSource {
         }
     }
 
+    var playDisabled: Bool {
+        let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
+        return forceYtWatchHistory && unstarted && !embeddingDisabled
+    }
+
     private func handleNewVideoSet(_ oldValue: Video?) {
         currentEndTime = 0
         unstarted = true
@@ -53,8 +58,7 @@ enum VideoSource {
         if video.url == oldValue?.url {
             Logger.log.info("Tapped existing video")
 
-            let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
-            if !(forceYtWatchHistory && unstarted) {
+            if !playDisabled {
                 self.play()
             }
             return
