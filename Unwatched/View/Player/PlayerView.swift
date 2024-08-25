@@ -163,7 +163,7 @@ struct PlayerView: View {
                 .contentShape(Rectangle())
                 .onTapGesture(perform: handleMiniPlayerTap)
 
-            PlayButton(size: 30)
+            PlayButton(size: 30, enableHelper: false)
                 .fontWeight(.black)
                 .padding(.trailing, !hideMiniPlayer ? 1 : 0)
         }

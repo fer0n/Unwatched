@@ -51,6 +51,9 @@ struct VideoSettingsView: View {
                     Toggle(isOn: $forceYtWatchHistory) {
                         Text("forceYtWatchHistory")
                     }
+                    .onChange(of: forceYtWatchHistory) { _, _ in
+                        PlayerManager.reloadPlayer()
+                    }
                 }
 
                 MySection("sponsorBlockSettings", footer: "sponsorBlockSettingsHelper") {

@@ -299,6 +299,11 @@ enum VideoSource {
         updateElapsedTime()
     }
 
+    static func reloadPlayer() {
+        let reloadVideoId = UUID().uuidString
+        UserDefaults.standard.set(reloadVideoId, forKey: Const.reloadVideoId)
+    }
+
     static func getDummy() -> PlayerManager {
         let player = PlayerManager()
         player.video = Video.getDummy()

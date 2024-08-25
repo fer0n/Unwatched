@@ -15,14 +15,17 @@ struct CorePlayButton<Content>: View where Content: View {
     private let contentImage: ((Image) -> Content)
     private let circle: String
     let enableHaptics: Bool
+    let enableHelperPopup: Bool
 
     init(
         circleVariant: Bool,
         enableHaptics: Bool = false,
+        enableHelperPopup: Bool = true,
         @ViewBuilder content: @escaping (Image) -> Content = { $0 }
     ) {
         self.circle = circleVariant ? ".circle" : ""
         self.enableHaptics = enableHaptics
+        self.enableHelperPopup = enableHelperPopup
         self.contentImage = content
     }
 
@@ -31,7 +34,9 @@ struct CorePlayButton<Content>: View where Content: View {
 
         Button {
             if disabled {
-                showHelperPopop = true
+                if enableHelperPopup {
+                    showHelperPopop = true
+                }
                 return
             }
             player.handlePlayButton()
@@ -76,7 +81,6 @@ struct CorePlayButton<Content>: View where Content: View {
 }
 
 struct PlayButtonContextMenu: View {
-    @AppStorage(Const.reloadVideoId) var reloadVideoId: String = ""
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -87,7 +91,7 @@ struct PlayButtonContextMenu: View {
         }
         Button {
             player.handleHotSwap()
-            reloadVideoId = UUID().uuidString
+            PlayerManager.reloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
         } label: {
             Label("reloadVideo", systemImage: "arrow.circlepath")
@@ -98,11 +102,13 @@ struct PlayButtonContextMenu: View {
 struct PlayButton: View {
     var size: Double
     var enableHaptics: Bool = true
+    var enableHelper: Bool = true
 
     var body: some View {
         CorePlayButton(
             circleVariant: true,
-            enableHaptics: enableHaptics
+            enableHaptics: enableHaptics,
+            enableHelperPopup: enableHelper
         ) { image in
             image
                 .resizable()
