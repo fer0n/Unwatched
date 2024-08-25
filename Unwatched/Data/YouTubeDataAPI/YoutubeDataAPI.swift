@@ -58,12 +58,16 @@ struct YoutubeDataAPI {
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoder = JSONDecoder()
 
-        if let result = try? decoder.decode(T.self, from: data) {
+        do {
+            let result = try decoder.decode(T.self, from: data)
             return result
-        } else {
-            let response = try decoder.decode(YtErrorResponseBody.self, from: data)
-            throw SubscriptionError.httpRequestFailed(response.error.message)
+        } catch {
+            Logger.log.info("couldn't decode result: \(error)")
         }
+
+        let response = try decoder.decode(YtErrorResponseBody.self, from: data)
+        throw SubscriptionError.httpRequestFailed(response.error.message)
+
     }
 
     static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
@@ -97,11 +101,18 @@ struct YoutubeDataAPI {
             }
             return nil
         }()
+        let url: URL? = {
+            if let stringUrl = snippet.thumbnails.medium?.url {
+                return URL(string: stringUrl)
+            }
+            return nil
+        }()
+
         return SendableVideo(
             youtubeId: videoId,
             title: snippet.title,
             url: URL(string: "https://www.youtube.com/watch?v=\(videoId)")!,
-            thumbnailUrl: URL(string: snippet.thumbnails.medium.url),
+            thumbnailUrl: url,
             youtubeChannelId: snippet.channelId,
             feedTitle: snippet.channelTitle,
             duration: parsedDuration,
