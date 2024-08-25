@@ -30,6 +30,7 @@ struct BrowserViewHeader: View {
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity)
         }
+        .keyboardShortcut(.escape, modifiers: [])
         .foregroundStyle(Color.neutralAccentColor)
     }
 }
