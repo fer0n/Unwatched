@@ -12,7 +12,10 @@ struct ChangeChapterButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
-            ProgressCircle(remaining: remainingTime, total: chapter?.duration)
+            Circle()
+                .foregroundStyle(Color.foregroundGray)
+                .opacity(0.3)
+                .progressCircleModifier(remaining: remainingTime, total: chapter?.duration)
             configuration.label
         }
         .opacity(isEnabled ? 1 : 0.5)
@@ -20,28 +23,39 @@ struct ChangeChapterButtonStyle: ButtonStyle {
     }
 }
 
-struct ProgressCircle: View {
+struct ProgressCircleModifier: ViewModifier {
     var remaining: Double?
     var total: Double?
 
-    let lineWidth: Double = 2
+    var lineWidth: Double
+    var color: Color
 
-    var body: some View {
-        ZStack {
-            Circle()
-                .foregroundStyle(Color.foregroundGray)
-                .opacity(0.3)
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                if let remaining = remaining, let total = total {
+                    let from = (total - remaining) / total
 
-            if let remaining = remaining, let total = total {
-                let from = (total - remaining) / total
-
-                Circle()
-                    .trim(from: from, to: 1)
-                    .stroke(Color.foregroundGray, lineWidth: lineWidth)
-                    .rotationEffect(Angle(degrees: 270.0))
-                    .padding(lineWidth / 2)
-                    .animation(.default, value: from)
+                    Circle()
+                        .trim(from: from, to: 1)
+                        .stroke(color, lineWidth: lineWidth)
+                        .rotationEffect(Angle(degrees: 270.0))
+                        .padding(lineWidth / 2)
+                        .animation(.default, value: from)
+                }
             }
-        }
+    }
+}
+
+extension View {
+    func progressCircleModifier(remaining: Double?,
+                                total: Double?,
+                                lineWidth: Double = 2,
+                                color: Color = Color.foregroundGray
+    ) -> some View {
+        self.modifier(ProgressCircleModifier(remaining: remaining,
+                                             total: total,
+                                             lineWidth: lineWidth,
+                                             color: color))
     }
 }

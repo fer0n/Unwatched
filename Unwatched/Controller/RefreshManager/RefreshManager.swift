@@ -9,6 +9,7 @@ import Combine
 import CoreData
 import BackgroundTasks
 import OSLog
+import UIKit
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
@@ -105,7 +106,9 @@ import OSLog
                 do {
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
-                    await executeRefreshOnStartup()
+                    if await UIApplication.shared.applicationState == .active {
+                        await executeRefreshOnStartup()
+                    }
                 } catch {
                     Logger.log.info("error: \(error)")
                 }

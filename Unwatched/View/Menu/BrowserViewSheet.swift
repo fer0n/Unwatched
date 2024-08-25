@@ -10,6 +10,7 @@ struct BrowserViewSheet: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(ImageCacheManager.self) var imageCacheManager
 
     func body(content: Content) -> some View {
         let bigScreen = sizeClass == .regular
@@ -20,6 +21,7 @@ struct BrowserViewSheet: ViewModifier {
                     BrowserView(container: modelContext.container,
                                 refresher: refresher,
                                 startUrl: browserUrl)
+                        .environment(imageCacheManager)
                 }
             // workaround: at a certain width, the YouTube search bar doesn't work (can't be tapped)
             // on iPad, this is the regular ".sheet" width. It still happens with the fullScreenCover
@@ -30,6 +32,7 @@ struct BrowserViewSheet: ViewModifier {
                     BrowserView(container: modelContext.container,
                                 refresher: refresher,
                                 startUrl: browserUrl)
+                        .environment(imageCacheManager)
                 }
         }
     }

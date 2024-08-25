@@ -8,7 +8,6 @@ import SwiftUI
 struct CoreNextButton<Content>: View where Content: View {
     @Environment(PlayerManager.self) var player
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
-    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory = false
     @State var hapticToggle: Bool = false
 
     private let contentImage: ((Image, _ isOn: Bool) -> Content)
@@ -29,7 +28,6 @@ struct CoreNextButton<Content>: View where Content: View {
         let manualNext = (!continuousPlay
                             && player.videoEnded
                             && !player.isPlaying)
-            || forceYtWatchHistory
 
         Button {
             if manualNext {
