@@ -15,7 +15,6 @@ struct PlayerControls: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
 
-    @State var sleepTimerVM = SleepTimerViewModel()
     @State var browserUrl: BrowserUrl?
 
     let compactSize: Bool
@@ -24,6 +23,7 @@ struct PlayerControls: View {
 
     let setShowMenu: () -> Void
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    var sleepTimerVM: SleepTimerViewModel
 
     var body: some View {
         let layout = compactSize
@@ -128,7 +128,8 @@ struct PlayerControls: View {
                    showInfo: false,
                    horizontalLayout: true,
                    setShowMenu: { },
-                   markVideoWatched: { _, _ in })
+                   markVideoWatched: { _, _ in },
+                   sleepTimerVM: SleepTimerViewModel())
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())

@@ -52,7 +52,7 @@ enum VideoSource {
 
         if video.url == oldValue?.url {
             Logger.log.info("Tapped existing video")
-            
+
             let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
             if !(forceYtWatchHistory && unstarted) {
                 self.play()

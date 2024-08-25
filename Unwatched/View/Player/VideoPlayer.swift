@@ -15,6 +15,8 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
 
+    @State var sleepTimerVM = SleepTimerViewModel()
+
     var compactSize = false
     var showInfo = true
     var horizontalLayout = false
@@ -32,7 +34,8 @@ struct VideoPlayer: View {
                                showInfo: showInfo,
                                horizontalLayout: horizontalLayout,
                                setShowMenu: setShowMenu,
-                               markVideoWatched: markVideoWatched)
+                               markVideoWatched: markVideoWatched,
+                               sleepTimerVM: sleepTimerVM)
                     .padding(.vertical, compactSize ? 5 : 0)
             }
         }
