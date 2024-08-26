@@ -24,24 +24,28 @@ struct ChapterList: View {
                     let isCurrent = chapter == player.currentChapter
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
+                    let jumpDisabled = player.playDisabled
 
                     Button {
                         if !chapter.isActive {
                             toggleChapter(chapter)
-                        } else {
+                        } else if !jumpDisabled {
                             setChapter(chapter)
                         }
                     } label: {
                         ChapterListItem(chapter: chapter,
                                         toggleChapter: toggleChapter,
-                                        timeText: getTimeText(chapter, isCurrent: isCurrent))
+                                        timeText: getTimeText(
+                                            chapter, isCurrent: isCurrent
+                                        ),
+                                        jumpDisabled: jumpDisabled)
                             .padding(isCompact ? 4 : 10)
                             .padding(.trailing, 4)
                             .background(
                                 backgroundColor
                                     .clipShape(.rect(cornerRadius: 15.0))
+                                    .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)
                             )
-                            .opacity(chapter.isActive ? 1 : 0.6)
                             .id(chapter.persistentModelID)
                     }
                     .foregroundStyle(foregroundColor)
@@ -53,6 +57,10 @@ struct ChapterList: View {
     }
 
     func toggleChapter(_ chapter: Chapter) {
+        if chapter == player.currentChapter && player.playDisabled {
+            return
+        }
+
         toggleHaptic.toggle()
         chapter.isActive.toggle()
         if video == player.video {
