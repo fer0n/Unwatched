@@ -117,18 +117,18 @@
         }
       }
     },
-    "addAsVideos" : {
+    "addAsVideos %lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlist Videos zur Queue hinzufügen"
+            "value" : "Playlist Videos zur Queue hinzufügen (max. %lld)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Playlist Videos to Queue"
+            "value" : "Add Playlist Videos to Queue (max %lld)"
           }
         }
       }

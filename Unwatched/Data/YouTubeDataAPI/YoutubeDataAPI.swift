@@ -58,12 +58,16 @@ struct YoutubeDataAPI {
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoder = JSONDecoder()
 
-        if let result = try? decoder.decode(T.self, from: data) {
+        do {
+            let result = try decoder.decode(T.self, from: data)
             return result
-        } else {
-            let response = try decoder.decode(YtErrorResponseBody.self, from: data)
-            throw SubscriptionError.httpRequestFailed(response.error.message)
+        } catch {
+            Logger.log.info("couldn't decode result: \(error)")
         }
+
+        let response = try decoder.decode(YtErrorResponseBody.self, from: data)
+        throw SubscriptionError.httpRequestFailed(response.error.message)
+
     }
 
     static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
@@ -97,11 +101,18 @@ struct YoutubeDataAPI {
             }
             return nil
         }()
+        let url: URL? = {
+            if let stringUrl = snippet.thumbnails.medium?.url {
+                return URL(string: stringUrl)
+            }
+            return nil
+        }()
+
         return SendableVideo(
             youtubeId: videoId,
             title: snippet.title,
             url: URL(string: "https://www.youtube.com/watch?v=\(videoId)")!,
-            thumbnailUrl: URL(string: snippet.thumbnails.medium.url),
+            thumbnailUrl: url,
             youtubeChannelId: snippet.channelId,
             feedTitle: snippet.channelTitle,
             duration: parsedDuration,
@@ -109,24 +120,40 @@ struct YoutubeDataAPI {
             videoDescription: snippet.description)
     }
 
+    static func getYtPlaylistUrl(_ youtubePlaylistId: String, _ pageToken: String?) -> String {
+        let pageTokenString = pageToken?.isEmpty == false ? "&pageToken=\(pageToken!)" : ""
+
+        return "\(baseUrl)playlistItems?key=\(apiKey)&playlistId=\(youtubePlaylistId)"
+            + "&maxResults=50&part=snippet,contentDetails\(pageTokenString)"
+    }
+
     static func getYtVideoInfoFromPlaylist(_ youtubePlaylistId: String) async throws -> [SendableVideo] {
         if youtubePlaylistId.isEmpty {
             throw VideoError.noYoutubePlaylistId
         }
         Logger.log.info("getYtVideoInfoFromPlaylist")
-        let apiUrl = "\(baseUrl)playlistItems?key=\(apiKey)&playlistId=\(youtubePlaylistId)"
-            + "&maxResults=50&part=snippet,contentDetails"
-        Logger.log.info("apiUrl \(apiUrl)")
 
-        let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtPlaylistItems.self)
-        if response.items.isEmpty {
-            throw VideoError.noVideosFoundInPlaylist
-        }
         var result = [SendableVideo]()
-        for item in response.items {
-            let video = YoutubeDataAPI.createVideo(item.snippet, videoId: item.contentDetails.videoId)
-            result.append(video)
-        }
+        var nextPageToken: String?
+        var counter = 0
+
+        repeat {
+            let apiUrl = getYtPlaylistUrl(youtubePlaylistId, nextPageToken)
+            Logger.log.info("apiUrl \(apiUrl)")
+            counter += 1
+            let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtPlaylistItems.self)
+            if response.items.isEmpty {
+                throw VideoError.noVideosFoundInPlaylist
+            }
+            for item in response.items {
+                let video = YoutubeDataAPI.createVideo(item.snippet, videoId: item.contentDetails.videoId)
+                result.append(video)
+            }
+            print(result.count, response.pageInfo.resultsPerPage, response.pageInfo.totalResults)
+            nextPageToken = response.nextPageToken
+        } while nextPageToken != nil && counter < Const.playlistPageRequestLimit
+
+        Logger.log.info("Amount of imported videos: \(result.count)")
         return result
     }
 }
