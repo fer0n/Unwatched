@@ -10,7 +10,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
-    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = true
+    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
 
