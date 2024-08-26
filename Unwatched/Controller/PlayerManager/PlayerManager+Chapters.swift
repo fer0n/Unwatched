@@ -102,7 +102,7 @@ extension PlayerManager {
     }
 
     func handleChapterRefresh(forceRefresh: Bool = false) {
-        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
         }

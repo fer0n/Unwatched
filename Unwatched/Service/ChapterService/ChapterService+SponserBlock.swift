@@ -191,7 +191,7 @@ extension ChapterService {
         _ forceRefresh: Bool
     ) -> Bool {
 
-        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             Logger.log.info("SponsorBlock: Turned off in settings")
             return false
