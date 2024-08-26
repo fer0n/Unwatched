@@ -224,6 +224,30 @@ final class ChapterServiceTests: XCTestCase {
         XCTAssertEqual(newChapters[4].endTime, 60)
         XCTAssertEqual(newChapters[4].category, .generated)
     }
+
+    func testUpdateDuration() async {
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+        
+        let ch1 = Chapter(title: "0", time: 0, endTime: 10, category: nil)
+        let ch2 = Chapter(title: "1", time: 10, endTime: nil, category: nil)
+        let ch3 = Chapter(title: "2", time: 20, endTime: 30, category: nil)
+        let ch4 = Chapter(title: "3", time: 30, endTime: nil, category: nil)
+        let ch5 = Chapter(title: "4", time: 40, endTime: 50, category: nil)
+        
+        var chapters = [ch1, ch2, ch3, ch4, ch5]
+        modelContext.insert(ch1)
+        modelContext.insert(ch2)
+        modelContext.insert(ch3)
+        modelContext.insert(ch4)
+        modelContext.insert(ch5)
+        
+        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 70, container: container)
+        
+        XCTAssertEqual(chapters[1].endTime, 20)
+        XCTAssertEqual(chapters[3].endTime, 40)
+        XCTAssertEqual(chapters[5].endTime, 70)
+    }
 }
 
 struct ChapterServiceTestData {
