@@ -230,4 +230,39 @@ extension ChapterService {
         }
         return shouldRefresh
     }
+
+    static func fillOutEmptyEndTimes(chapters: inout [Chapter], duration: Double, container: ModelContainer?) {
+        // Go through, set missing end-dates to the start date of the following chapter.
+        // Add a "filler" chapter at the end if the duration doesn't match the length.
+
+        if chapters.isEmpty {
+            return
+        }
+
+        for index in 0..<(chapters.count - 1) {
+            if chapters[index].endTime != nil {
+                continue
+            }
+
+            let endTime = chapters[index + 1].startTime
+            chapters[index].endTime = endTime
+            chapters[index].duration = endTime - chapters[index].startTime
+        }
+
+        // Handle the last chapter
+        if let lastChapter = chapters.last {
+            if let endTime = lastChapter.endTime,
+               let finalChapterSendable = getFillerForEnd(duration, endTime),
+               let container = container {
+                let finalChapter = finalChapterSendable.getChapter
+                let modelContext = ModelContext(container)
+                modelContext.insert(finalChapter)
+                chapters.append(finalChapter)
+                try? modelContext.save()
+            } else if lastChapter.endTime == nil {
+                lastChapter.endTime = duration
+                lastChapter.duration = duration - lastChapter.startTime
+            }
+        }
+    }
 }
