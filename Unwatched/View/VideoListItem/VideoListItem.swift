@@ -83,8 +83,8 @@ struct VideoListItemThumbnailOverlay: View {
                     VStack(spacing: 0) {
                         Spacer()
                         Color.black
-                            .frame(height: 2)
-                            .opacity(0.2)
+                            .frame(height: 4)
+                            .opacity(0.1)
                             .mask(LinearGradient(gradient: Gradient(
                                 stops: [
                                     .init(color: .black, location: 0),

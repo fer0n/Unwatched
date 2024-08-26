@@ -169,7 +169,7 @@ struct BackgroundProgressBar: View {
 
                     HStack(spacing: 0) {
                         Color.foregroundGray
-                            .opacity(0.1)
+                            .opacity(0.2)
                             .frame(width: width)
                             .animation(.default, value: width)
                         Color.clear

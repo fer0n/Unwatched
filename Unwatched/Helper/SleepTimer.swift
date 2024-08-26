@@ -14,7 +14,7 @@ struct SleepTimer: View {
     @State private var showPopover = false
     @State var slider: UISlider?
     @State var hapticToggle: Bool = false
-    @State var viewModel: SleepTimerViewModel
+    var viewModel: SleepTimerViewModel
 
     init(viewModel: SleepTimerViewModel, onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
         viewModel.onEnded = onEnded

@@ -15,7 +15,7 @@ struct OverlayFullscreenButton: View {
 
     var body: some View {
         let touchSize: CGFloat = landscapeFullscreen ? 125 : 90
-        let enabled = enabled && !player.unstarted
+        let enabled = enabled && !player.playDisabled
 
         Color.white
             .opacity(.leastNonzeroMagnitude)

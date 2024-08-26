@@ -19,7 +19,10 @@ struct UrlService {
     static let mastodonUrl = URL(string: "https://indieapps.space/@unwatched")!
 
     static func getEmbeddedYoutubeUrl (_ youtubeId: String) -> String {
-        "https://www.youtube.com/embed/\(youtubeId)?enablejsapi=1&color=white&controls=1"
+        let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
+        let cookieUrl = forceYtWatchHistory ? "" : "-nocookie"
+        return "https://www.youtube\(cookieUrl).com/embed/\(youtubeId)"
+            + "?enablejsapi=1&color=white&controls=1&iv_load_policy=3"
     }
 
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {

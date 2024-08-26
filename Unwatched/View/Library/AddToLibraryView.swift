@@ -103,7 +103,7 @@ struct AddToLibraryView: View {
                             .default(Text("addAsPlaylist")) {
                                 addUrlsFromText(text.str)
                             },
-                            .default(Text("addAsVideos")) {
+                            .default(Text("addAsVideos \(Const.playlistPageRequestLimit * 50)")) {
                                 addUrlsFromText(text.str, playListAsVideos: true)
                             },
                             .cancel()
