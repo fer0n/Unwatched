@@ -23,12 +23,12 @@ enum VideoSource {
     var videoSource: VideoSource?
     var videoEnded: Bool = false
     var unstarted: Bool = true
+    var isLoading: Bool = true
 
     weak var container: ModelContainer?
 
     @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
-    @ObservationIgnored var isLoading: Bool = true
 
     @ObservationIgnored var previousState = PreviousState()
 
@@ -319,6 +319,36 @@ enum VideoSource {
     static func reloadPlayer() {
         let reloadVideoId = UUID().uuidString
         UserDefaults.standard.set(reloadVideoId, forKey: Const.reloadVideoId)
+    }
+
+    func restoreNowPlayingVideo() {
+        #if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            return
+        }
+        #endif
+        Logger.log.info("restoreVideo")
+        var video: Video?
+
+        if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
+           let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) {
+            if video?.persistentModelID == videoId {
+                // current video is the one stored, all good
+                Logger.log.info("current video seems correct")
+                return
+            }
+            if let container = container {
+                let modelContext = ModelContext(container)
+                video = modelContext.model(for: videoId) as? Video
+            } else {
+                Logger.log.warning("No container loaded for PlayerManager")
+            }
+        }
+
+        if let video = video {
+            setNextVideo(video, .nextUp)
+        }
+        loadTopmostVideoFromQueue()
     }
 
     static func getDummy() -> PlayerManager {

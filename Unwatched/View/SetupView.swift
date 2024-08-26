@@ -14,9 +14,9 @@ struct SetupView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    @Environment(PlayerManager.self) var player
 
     @State var sheetPos = SheetPositionReader.load()
-    @State var player = PlayerManager()
     @State var refresher = RefreshManager()
     @State var imageCacheManager = ImageCacheManager()
     @State var alerter: Alerter = Alerter()
@@ -27,7 +27,6 @@ struct SetupView: View {
     var body: some View {
         ContentView()
             .tint(theme.color)
-            .environment(player)
             .environment(imageCacheManager)
             .environment(refresher)
             .environment(sheetPos)
@@ -42,8 +41,6 @@ struct SetupView: View {
                 appDelegate.container = container
                 refresher.container = container
                 refresher.showError = alerter.showError
-                player.container = container
-                restoreNowPlayingVideo()
             }
             .onChange(of: scenePhase) {
                 switch scenePhase {
@@ -82,31 +79,6 @@ struct SetupView: View {
                 try? await Task.sleep(s: 1)
                 await RefreshManager.handleBackgroundVideoRefresh(container)
             }
-        }
-    }
-
-    func restoreNowPlayingVideo() {
-        #if DEBUG
-        if CommandLine.arguments.contains("enable-testing") {
-            return
-        }
-        #endif
-        Logger.log.info("restoreVideo")
-        var video: Video?
-
-        if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
-           let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) {
-            if player.video?.persistentModelID == videoId {
-                // current video is the one stored, all good
-                return
-            }
-            video = modelContext.model(for: videoId) as? Video
-        }
-
-        if let video = video {
-            player.setNextVideo(video, .nextUp)
-        } else {
-            player.loadTopmostVideoFromQueue()
         }
     }
 
