@@ -23,4 +23,5 @@ struct YtPlaylistItems: Codable {
 
     let items: [Item]
     let pageInfo: PageInfo
+    let nextPageToken: String?
 }
