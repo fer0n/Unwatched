@@ -57,7 +57,7 @@ struct ChapterMiniControlView: View {
                     if hasChapters {
                         ChapterMiniControlGoToNext(goToNext: goToNext)
                             .keyboardShortcut(.rightArrow)
-                            .disabled(player.nextChapter == nil)
+                            .disabled(player.nextChapter == nil || player.playDisabled)
                     } else {
                         Color.clear.fixedSize()
                     }
