@@ -10,6 +10,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
+    @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
 
     var body: some View {
         ZStack {
@@ -34,6 +35,10 @@ struct PlaybackSettingsView: View {
 
                     Toggle(isOn: $goToQueueOnPlay) {
                         Text("goToQueueOnPlay")
+                    }
+
+                    Toggle(isOn: $rotateOnPlay) {
+                        Text("rotateOnPlay")
                     }
                 }
 
