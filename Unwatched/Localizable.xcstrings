@@ -3097,6 +3097,22 @@
         }
       }
     },
+    "rotateOnPlay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Querformat-Vollbildmodus beim Abspielen Starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Horizontal Fullscreen on Play"
+          }
+        }
+      }
+    },
     "searchLibrary" : {
       "localizations" : {
         "de" : {

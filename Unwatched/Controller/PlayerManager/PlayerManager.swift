@@ -45,7 +45,6 @@ enum VideoSource {
 
     private func handleNewVideoSet(_ oldValue: Video?) {
         currentEndTime = 0
-        unstarted = true
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
@@ -63,6 +62,7 @@ enum VideoSource {
             }
             return
         }
+        unstarted = true
 
         handleChapterRefresh()
         withAnimation {
@@ -174,6 +174,7 @@ enum VideoSource {
             self.isPlaying = true
         }
         updateVideoEnded()
+        handleRotateOnPlay()
     }
 
     func pause() {
@@ -210,6 +211,14 @@ enum VideoSource {
     private func updateVideoEnded() {
         if videoEnded {
             setVideoEnded(false)
+        }
+    }
+
+    private func handleRotateOnPlay() {
+        Task {
+            if UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
+                await OrientationManager.changeOrientation(to: .landscapeRight)
+            }
         }
     }
 

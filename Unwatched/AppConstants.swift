@@ -98,6 +98,7 @@ struct Const {
     static let playVideoFullscreen = "playVideoFullscreen"
     static let hideControlsFullscreen = "hideControlsFullscreen"
     static let goToQueueOnPlay = "goToQueueOnPlay"
+    static let rotateOnPlay = "rotateOnPlay"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
