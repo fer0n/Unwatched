@@ -267,12 +267,13 @@ enum VideoSource {
 
     func handleAutoStart() {
         Logger.log.info("handleAutoStart")
+        isLoading = false
+
         if UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory) {
             Logger.log.info("forceYtWatchHistory is enabled")
             return
         }
 
-        isLoading = false
         guard let source = videoSource else {
             Logger.log.info("no source, stopping")
             return
