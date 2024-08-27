@@ -346,7 +346,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anfang der Queue"
+            "value" : "Ende der Queue"
           }
         },
         "en" : {
@@ -362,13 +362,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ende der Queue"
+            "value" : "Anfang der Queue"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Queue First"
+            "value" : "Queue Next"
           }
         }
       }
@@ -2038,7 +2038,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Bestehende Abos ersetzen"
           }
         },
@@ -3316,7 +3316,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show “Queue First”-Button on Inbox Entries"
+            "value" : "Show “Queue Next”-Button on Inbox Entries"
           }
         }
       }
