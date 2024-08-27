@@ -7,7 +7,7 @@ import SwiftUI
 
 struct HandleVideoListItemTap: ViewModifier {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
-    @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
+    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) var modelContext
@@ -29,7 +29,7 @@ struct HandleVideoListItemTap: ViewModifier {
                     }
                 }
 
-                if goToQueueOnPlay {
+                if returnToQueue {
                     navManager.navigateToQueue()
                 }
             }
