@@ -2813,7 +2813,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-Wiedergabeverlauf erzwingen“ erfordert das manuelle Starten des Videos. Diese Option kann unter Mediathek → Einstellungen → Videos deaktiviert werden."
+            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Dies kann unter Mediathek → Einstellungen → Videos deaktiviert werden."
           }
         },
         "en" : {
