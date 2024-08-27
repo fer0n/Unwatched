@@ -116,6 +116,7 @@ struct Const {
     static let showAddToQueueButton = "showAddToQueueButton"
     static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     static let forceYtWatchHistory = "forceYtWatchHistory"
+    static let enableQueueContextMenu = "enableQueueContextMenu"
 
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"

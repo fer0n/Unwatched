@@ -1451,6 +1451,22 @@
         }
       }
     },
+    "enableQueueContextMenu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontextmenü in Queue aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Context Menu in Queue"
+          }
+        }
+      }
+    },
     "enterUrls" : {
       "localizations" : {
         "de" : {
