@@ -1440,13 +1440,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kanal oder Video URL"
+            "value" : "Feed, Video oder Playlist URL"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Feed or video URL"
+            "value" : "Feed, Video, or Playlist URL"
           }
         }
       }
