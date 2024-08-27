@@ -98,7 +98,7 @@ struct Const {
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
     static let hideControlsFullscreen = "hideControlsFullscreen"
-    static let goToQueueOnPlay = "goToQueueOnPlay"
+    static let returnToQueue = "returnToQueue"
     static let rotateOnPlay = "rotateOnPlay"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"

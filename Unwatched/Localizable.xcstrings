@@ -1725,22 +1725,6 @@
         }
       }
     },
-    "goToQueueOnPlay" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue beim Abspielen Öffnen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Go to Queue on Play"
-          }
-        }
-      }
-    },
     "green" : {
       "localizations" : {
         "de" : {
@@ -3141,6 +3125,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All your current data will be deleted and the selected backup will be restored."
+          }
+        }
+      }
+    },
+    "returnToQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue beim Abspielen/Gesehen Markieren Öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return to Queue on Play/Watched"
           }
         }
       }

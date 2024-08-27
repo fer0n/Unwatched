@@ -9,7 +9,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.goToQueueOnPlay) var goToQueueOnPlay: Bool = false
+    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
 
     var body: some View {
@@ -33,8 +33,8 @@ struct PlaybackSettingsView: View {
                         Text("hideMenuOnPlay")
                     }
 
-                    Toggle(isOn: $goToQueueOnPlay) {
-                        Text("goToQueueOnPlay")
+                    Toggle(isOn: $returnToQueue) {
+                        Text("returnToQueue")
                     }
 
                     Toggle(isOn: $rotateOnPlay) {
