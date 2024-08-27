@@ -14,6 +14,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
+    @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
     var body: some View {
         ZStack {
@@ -42,6 +43,9 @@ struct VideoSettingsView: View {
                     }
                     Toggle(isOn: $showAddToQueueButton) {
                         Text("showAddToQueueButton")
+                    }
+                    Toggle(isOn: $enableQueueContextMenu) {
+                        Text("enableQueueContextMenu")
                     }
                 }
 
