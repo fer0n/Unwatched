@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import OSLog
 
 struct SubscriptionService {
     static func addSubscriptions(
@@ -43,6 +44,27 @@ struct SubscriptionService {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
             return try await repo.unsubscribe(info.channelId, playlistId: info.playlistId)
+        }
+    }
+
+    static func softUnsubscribeAll(_ modelContext: ModelContext) {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.isArchived == false
+        })
+        guard let subs = try? modelContext.fetch(fetch) else {
+            Logger.log.info("softUnsubscribeAll: no subscriptions found")
+            return
+        }
+        for sub in subs {
+            sub.isArchived = true
+        }
+        try? modelContext.save()
+    }
+
+    static func cleanupArchivedSubscriptions(_ container: ModelContainer) {
+        Task {
+            let repo = SubscriptionActor(modelContainer: container)
+            return try await repo.cleanupArchivedSubscriptions()
         }
     }
 

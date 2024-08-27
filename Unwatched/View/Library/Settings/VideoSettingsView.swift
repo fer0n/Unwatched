@@ -10,9 +10,11 @@ struct VideoSettingsView: View {
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
-    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = true
+    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
+    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
+    @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
     var body: some View {
         ZStack {
@@ -32,12 +34,18 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                MySection("clearVideos") {
+                MySection("videoTriage") {
                     Toggle(isOn: $requireClearConfirmation) {
                         Text("requireClearConfirmation")
                     }
                     Toggle(isOn: $showClearQueueButton) {
                         Text("showClearQueueButton")
+                    }
+                    Toggle(isOn: $showAddToQueueButton) {
+                        Text("showAddToQueueButton")
+                    }
+                    Toggle(isOn: $enableQueueContextMenu) {
+                        Text("enableQueueContextMenu")
                     }
                 }
 

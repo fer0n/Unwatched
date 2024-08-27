@@ -127,37 +127,8 @@ struct ChapterService {
             }
         }
 
-        if let lastMergedChapter = (video.mergedChapters ?? []).max(by: { $0.startTime < $1.startTime }) {
-
-            // no actual chapters, just sponsor block generated
-            if video.chapters?.isEmpty != false,
-               let endTime = lastMergedChapter.endTime,
-               endTime != duration,
-               let filler = ChapterService.getFillerForEnd(duration, endTime) {
-
-                let videoId = video.persistentModelID
-
-                Task.detached {
-                    guard let container = container else {
-                        Logger.log.info("No container when trying to add a last filler chapter")
-                        return
-                    }
-
-                    let context = ModelContext(container)
-                    let chapter = filler.getChapter
-                    let video = context.model(for: videoId) as? Video
-
-                    context.insert(chapter)
-                    video?.mergedChapters?.append(chapter)
-                    try? context.save()
-                }
-                return
-            }
-
-            if lastMergedChapter.endTime == nil {
-                lastMergedChapter.endTime = duration
-                lastMergedChapter.duration = duration - lastMergedChapter.startTime
-            }
+        if var chapters = video.mergedChapters {
+            fillOutEmptyEndTimes(chapters: &chapters, duration: duration, container: container)
         }
     }
 }

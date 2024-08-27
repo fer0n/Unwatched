@@ -16,5 +16,6 @@ struct TextFieldClearButton: View {
         }
         .foregroundStyle(.secondary)
         .opacity(text.isEmpty ? 0 : 1)
+        .frame(width: text.isEmpty ? 0 : nil)
     }
 }

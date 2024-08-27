@@ -13,6 +13,7 @@ struct VideoPlayer: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
+    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
 
     @State var sleepTimerVM = SleepTimerViewModel()
@@ -69,6 +70,9 @@ struct VideoPlayer: View {
         if let video = player.video {
             if showMenu {
                 setShowMenu()
+                if returnToQueue {
+                    navManager.navigateToQueue()
+                }
             }
             player.autoSetNextVideo(source)
             _ = VideoService.markVideoWatched(

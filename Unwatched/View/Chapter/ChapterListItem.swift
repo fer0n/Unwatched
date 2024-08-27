@@ -4,10 +4,12 @@ struct ChapterListItem: View {
     var chapter: Chapter
     var toggleChapter: (_ chapter: Chapter) -> Void
     var timeText: String
+    var jumpDisabled: Bool = false
 
     var body: some View {
         HStack {
             toggleChapterButton
+                .opacity(chapter.isActive ? 1 : 0.6)
 
             VStack(alignment: .leading) {
                 if let title = chapter.titleText {
@@ -21,6 +23,7 @@ struct ChapterListItem: View {
                     .foregroundStyle(Color.gray)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)
         }
     }
 

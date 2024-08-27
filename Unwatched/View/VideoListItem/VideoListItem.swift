@@ -41,7 +41,10 @@ struct VideoListItem: View {
                 .clipShape(.rect(cornerRadius: 15.0))
                 .padding([.vertical, .leading], config.showVideoStatus ? 5 : 0)
 
-                VideoListItemDetails(video: video)
+                VideoListItemDetails(
+                    video: video,
+                    showQueueButton: config.showQueueButton
+                )
             }
             VideoListItemStatus(
                 video: video,
@@ -51,6 +54,13 @@ struct VideoListItem: View {
                 watched: config.watched
             )
             .opacity(config.showVideoStatus ? 1 : 0)
+        }
+        .overlay {
+            if config.showQueueButton {
+                QueueVideoButton(video)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            }
         }
         .padding([.vertical, .leading], config.showVideoStatus ? -5 : 0)
         .handleVideoListItemTap(video)
@@ -151,6 +161,8 @@ struct VideoListItemConfig {
     var onChange: (() -> Void)?
     var clearAboveBelowList: ClearList?
     var videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details]
+    var showQueueButton: Bool = false
+    var showContextMenu: Bool = true
 }
 
 #Preview {
@@ -172,7 +184,8 @@ struct VideoListItemConfig {
                 showVideoStatus: true,
                 hasInboxEntry: false,
                 hasQueueEntry: true,
-                watched: true
+                watched: true,
+                showQueueButton: true
             )
         )
     }

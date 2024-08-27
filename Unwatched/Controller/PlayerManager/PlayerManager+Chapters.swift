@@ -11,7 +11,7 @@ import SwiftData
 extension PlayerManager {
 
     var previousChapterDisabled: Bool {
-        previousChapter == nil && currentChapter == nil
+        previousChapter == nil && currentChapter == nil || playDisabled
     }
 
     func monitorChapters(time: Double) {
@@ -102,7 +102,7 @@ extension PlayerManager {
     }
 
     func handleChapterRefresh(forceRefresh: Bool = false) {
-        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
         }
