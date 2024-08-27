@@ -64,7 +64,10 @@ struct SettingsView: View {
                     NavigationLink(value: LibraryDestination.importSubscriptions) {
                         Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
                     }
-                    let feedUrls = AsyncSharableUrls(getUrls: exportAllSubscriptions, isLoading: $isExportingAll)
+                    let feedUrls = AsyncSharableUrls(
+                        getUrls: exportAllSubscriptions,
+                        isLoading: $isExportingAll
+                    )
                     ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
                         if isExportingAll {
                             ProgressView()

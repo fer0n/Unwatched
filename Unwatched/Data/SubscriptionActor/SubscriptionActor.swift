@@ -169,12 +169,26 @@ actor SubscriptionActor {
     }
 
     func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier]) throws {
-        for subscriptionId in subscriptionIds {
-            guard let sub = modelContext.model(for: subscriptionId) as? Subscription else {
-                continue
-            }
+        let subs = subscriptionIds.compactMap { modelContext.model(for: $0) as? Subscription }
+        try deleteSubscriptions(subs)
+        try modelContext.save()
+    }
 
-            for video in sub.videos ?? [] {
+    func cleanupArchivedSubscriptions() throws {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.isArchived == true
+        })
+        guard let subs = try? modelContext.fetch(fetch) else {
+            Logger.log.info("cleanupArchivedSubscriptions: no subscriptions found")
+            return
+        }
+        try deleteSubscriptions(subs)
+        try modelContext.save()
+    }
+
+    private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
+        for subscription in subscriptions {
+            for video in subscription.videos ?? [] {
                 if video.queueEntry == nil && !video.watched {
                     if let inboxEntry = video.inboxEntry {
                         modelContext.delete(inboxEntry)
@@ -182,9 +196,8 @@ actor SubscriptionActor {
                     modelContext.delete(video)
                 }
             }
-            sub.mostRecentVideoDate = nil
-            sub.isArchived = true
+            subscription.mostRecentVideoDate = nil
+            subscription.isArchived = true
         }
-        try modelContext.save()
     }
 }

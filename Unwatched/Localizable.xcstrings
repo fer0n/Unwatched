@@ -1976,6 +1976,22 @@
         }
       }
     },
+    "importAddSubscriptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abos hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Subscriptions"
+          }
+        }
+      }
+    },
     "importBackup" : {
       "localizations" : {
         "de" : {
@@ -2014,6 +2030,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "importiere %lld Abos"
+          }
+        }
+      }
+    },
+    "importReplaceSubscriptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bestehende Abos ersetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace Existing Subscriptions"
           }
         }
       }
