@@ -6,8 +6,6 @@
 import SwiftUI
 
 struct VideoListItemMoreMenuView: View {
-    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
-
     var video: Video
     var config: VideoListItemConfig
     var markWatched: () -> Void
@@ -54,42 +52,51 @@ struct VideoListItemMoreMenuView: View {
                     Text("openInApp")
                 }
             }
-            if let list = config.clearAboveBelowList {
-                clearButtons(list)
-            }
+            ClearAboveBelowButtons(clearList: clearList, config: config)
+
         } label: {
             Image(systemName: "ellipsis.circle.fill")
         }
     }
 
-    func clearButtons(_ list: ClearList) -> some View {
-        Group {
-            Divider()
+}
 
-            if requireClearConfirmation {
+struct ClearAboveBelowButtons: View {
+    @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
-                ConfirmableMenuButton {
-                    clearList(list, .above)
-                } label: {
-                    Label("clearAbove", systemImage: "arrowtriangle.up.fill")
-                }
+    var clearList: (ClearList, ClearDirection) -> Void
+    var config: VideoListItemConfig
 
-                ConfirmableMenuButton {
-                    clearList(list, .below)
-                } label: {
-                    Label("clearBelow", systemImage: "arrowtriangle.down.fill")
-                }
+    var body: some View {
+        if let list = config.clearAboveBelowList {
+            Group {
+                Divider()
 
-            } else {
-                Button(role: .destructive) {
-                    clearList(list, .above)
-                } label: {
-                    Label("clearAbove", systemImage: "arrowtriangle.up.fill")
-                }
-                Button(role: .destructive) {
-                    clearList(list, .below)
-                } label: {
-                    Label("clearBelow", systemImage: "arrowtriangle.down.fill")
+                if requireClearConfirmation {
+
+                    ConfirmableMenuButton {
+                        clearList(list, .above)
+                    } label: {
+                        Label("clearAbove", systemImage: "arrowtriangle.up.fill")
+                    }
+
+                    ConfirmableMenuButton {
+                        clearList(list, .below)
+                    } label: {
+                        Label("clearBelow", systemImage: "arrowtriangle.down.fill")
+                    }
+
+                } else {
+                    Button(role: .destructive) {
+                        clearList(list, .above)
+                    } label: {
+                        Label("clearAbove", systemImage: "arrowtriangle.up.fill")
+                    }
+                    Button(role: .destructive) {
+                        clearList(list, .below)
+                    } label: {
+                        Label("clearBelow", systemImage: "arrowtriangle.down.fill")
+                    }
                 }
             }
         }

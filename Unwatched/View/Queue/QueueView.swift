@@ -41,7 +41,8 @@ struct QueueView: View {
                                         videoDuration: video.duration,
                                         clearRole: .destructive,
                                         onChange: handleVideoChange,
-                                        clearAboveBelowList: .queue
+                                        clearAboveBelowList: .queue,
+                                        showContextMenu: false
                                     )
                                 )
                             }
