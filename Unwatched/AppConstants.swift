@@ -29,7 +29,7 @@ struct Const {
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
     static let minListEntriesToShowClear = 2
-    static let autoRefreshIntervalSeconds: Double = 8 * 60
+    static let autoRefreshIntervalSeconds: Double = 10 * 60
 
     static let earliestBackgroundBeginSeconds: Double = 30 * 60
     static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"

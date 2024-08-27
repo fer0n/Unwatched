@@ -49,8 +49,8 @@ struct SetupView: View {
                     NotificationManager.clearNotifications()
                     Logger.log.info("active")
                     Task {
-                        await refresher.handleBecameActive()
                         refresher.handleAutoBackup(UIDevice.current.name)
+                        await refresher.handleBecameActive()
                     }
                 case .background:
                     Logger.log.info("background")
