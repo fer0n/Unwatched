@@ -9,7 +9,6 @@ import Combine
 import CoreData
 import BackgroundTasks
 import OSLog
-import UIKit
 
 @Observable class RefreshManager {
     weak var container: ModelContainer?
@@ -20,6 +19,8 @@ import UIKit
 
     @ObservationIgnored var cancellables: Set<AnyCancellable> = []
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
+
+    @ObservationIgnored var autoRefreshTask: Task<(), Never>?
 
     var showError: ((_ error: any Error) -> Void)?
 
@@ -106,7 +107,7 @@ import UIKit
                 do {
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
-                    if await UIApplication.shared.applicationState == .active {
+                    autoRefreshTask = Task {
                         await executeRefreshOnStartup()
                     }
                 } catch {
@@ -114,43 +115,43 @@ import UIKit
                 }
             }
         } else {
-            await executeRefreshOnStartup()
+            autoRefreshTask = Task {
+                await executeRefreshOnStartup()
+            }
         }
     }
 
     func handleBecameInactive() {
         cancelCloudKitListener()
+        autoRefreshTask?.cancel()
     }
 
     func executeRefreshOnStartup() async {
         Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
-        let refreshOnStartup = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
+        let autoRefresh = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
 
-        if refreshOnStartup {
+        if autoRefresh {
             let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
             let shouldRefresh = lastAutoRefreshDate == nil ||
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
 
+            cancelCloudKitListener()
+
             if shouldRefresh {
                 Logger.log.info("refreshing now")
                 await self.refreshAll()
-
-                scheduleRepeatingRefresh()
             }
-
-            cancelCloudKitListener()
+            await scheduleRepeatingRefresh()
         }
     }
 
-    func scheduleRepeatingRefresh() {
-        Task {
-            do {
-                try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
-                print("scheduleRepeatingRefresh NOW")
-                await self.executeRefreshOnStartup()
-            } catch {
-                Logger.log.warning("Error refreshing: \(error)")
-            }
+    func scheduleRepeatingRefresh() async {
+        do {
+            try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
+            Logger.log.info("scheduleRepeatingRefresh now")
+            await self.executeRefreshOnStartup()
+        } catch {
+            Logger.log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
         }
     }
 }

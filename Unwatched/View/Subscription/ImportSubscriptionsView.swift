@@ -74,11 +74,19 @@ struct ImportSubscriptionsView: View {
 
                     VStack {
                         Spacer()
-                        Button(action: startImport) {
+                        Menu {
+                            Button(action: startReplacingImport) {
+                                Text("importReplaceSubscriptions")
+                            }
+                            Button(action: startAddImport) {
+                                Text("importAddSubscriptions")
+                            }
+                        } label: {
                             Text(String(AttributedString(
                                 localized: "importSubscriptions ^[\(selection.count) subscription](inflect: true)"
                             ).characters))
                         }
+
                         .padding(importButtonPadding ? 10 : 0)
                         .foregroundStyle(theme.contrastColor)
                         .buttonStyle(.borderedProminent)
@@ -153,8 +161,20 @@ struct ImportSubscriptionsView: View {
         }
     }
 
-    func startImport() {
-        Logger.log.info("startImport")
+    func startReplacingImport() {
+        Logger.log.info("startReplacingImport")
+        withAnimation {
+            isLoading = true
+        }
+
+        SubscriptionService.softUnsubscribeAll(modelContext)
+        startAddImport()
+        let container = modelContext.container
+        SubscriptionService.cleanupArchivedSubscriptions(container)
+    }
+
+    func startAddImport() {
+        Logger.log.info("startAddImport")
         withAnimation {
             isLoading = true
         }

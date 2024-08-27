@@ -145,9 +145,9 @@ extension SubscriptionActor {
                                       _ unarchiveSubIfAvailable: Bool = false) -> String? {
         if channelId == nil && userName == nil && playlistId == nil { return nil }
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            (playlistId != nil && playlistId == $0.youtubePlaylistId) &&
-                (channelId != nil && channelId == $0.youtubeChannelId) ||
-                (userName != nil && $0.youtubeUserName == userName)
+            (playlistId == nil || playlistId == $0.youtubePlaylistId) &&
+                ((channelId != nil && channelId == $0.youtubeChannelId) ||
+                    (userName != nil && $0.youtubeUserName == userName))
         })
         fetch.fetchLimit = 1
         let subs = try? modelContext.fetch(fetch)

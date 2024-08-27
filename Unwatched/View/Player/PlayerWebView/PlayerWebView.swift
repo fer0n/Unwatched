@@ -53,6 +53,12 @@ struct PlayerWebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
+        if player.isLoading {
+            // avoid setting anything before the player is ready
+            Logger.log.info("video not loaded yet – cancelling updateUIView")
+            return
+        }
+
         let prev = player.previousState
 
         if prev.playbackSpeed != player.playbackSpeed {
@@ -78,8 +84,10 @@ struct PlayerWebView: UIViewRepresentable {
             player.seekPosition = nil
         }
 
-        if prev.videoId != player.video?.youtubeId, let videoId = player.video?.youtubeId {
-            Logger.log.info("CUE VIDEO")
+        if prev.videoId != player.video?.youtubeId,
+           let videoId = player.video?.youtubeId {
+            Logger.log.info("CUE VIDEO: \(player.video?.title ?? "-")")
+            print("\(playerType)")
             let startAt = player.getStartPosition()
             if playerType == .youtube {
                 if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, startAt)) {

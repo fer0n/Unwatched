@@ -29,7 +29,7 @@ struct Const {
     // videos of new subscriptions being triaged
     static let triageNewSubs = 5
     static let minListEntriesToShowClear = 2
-    static let autoRefreshIntervalSeconds: Double = 8 * 60
+    static let autoRefreshIntervalSeconds: Double = 10 * 60
 
     static let earliestBackgroundBeginSeconds: Double = 30 * 60
     static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
@@ -51,6 +51,7 @@ struct Const {
 
     // MARK: - SF Symbols
     static let queueTopSF = "text.insert"
+    static let queueBottomSF = "text.append"
 
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"
@@ -97,7 +98,8 @@ struct Const {
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"
     static let hideControlsFullscreen = "hideControlsFullscreen"
-    static let goToQueueOnPlay = "goToQueueOnPlay"
+    static let returnToQueue = "returnToQueue"
+    static let rotateOnPlay = "rotateOnPlay"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
@@ -111,8 +113,10 @@ struct Const {
     static let showTabBarLabels = "showTabBarLabels"
     static let requireClearConfirmation = "requireClearConfirmation"
     static let showClearQueueButton = "showClearQueueButton"
+    static let showAddToQueueButton = "showAddToQueueButton"
     static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     static let forceYtWatchHistory = "forceYtWatchHistory"
+    static let enableQueueContextMenu = "enableQueueContextMenu"
 
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"

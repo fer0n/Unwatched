@@ -12,6 +12,7 @@ struct InboxView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
+    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -58,7 +59,8 @@ struct InboxView: View {
                                         clearRole: .destructive,
                                         queueRole: .destructive,
                                         onChange: handleVideoChange,
-                                        clearAboveBelowList: .inbox
+                                        clearAboveBelowList: .inbox,
+                                        showQueueButton: showAddToQueueButton
                                     )
                                 )
                             } else {
@@ -117,7 +119,7 @@ struct InboxView: View {
                 .tint(theme.color.mix(with: Color.black, by: 0.1))
 
                 Button(action: invalidateTip) {
-                    Image(systemName: "text.append")
+                    Image(systemName: Const.queueBottomSF)
                 }
                 .tint(theme.color.mix(with: Color.black, by: 0.3))
             }

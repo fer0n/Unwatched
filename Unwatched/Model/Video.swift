@@ -41,7 +41,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     var sortedChapters: [Chapter] {
         var result = [Chapter]()
 
-        let settingOn = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool ?? true
+        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if mergedChapters?.isEmpty != true && settingOn {
             result = mergedChapters ?? []
         } else {
