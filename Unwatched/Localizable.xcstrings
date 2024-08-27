@@ -341,6 +341,38 @@
         }
       }
     },
+    "addVideoToBottomQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfang der Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue Last"
+          }
+        }
+      }
+    },
+    "addVideoToTopQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ende der Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue First"
+          }
+        }
+      }
+    },
     "addYoutubeUrl" : {
       "localizations" : {
         "de" : {
@@ -938,29 +970,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aus Queue entfernen"
+            "value" : "Entfernen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear from Queue"
-          }
-        }
-      }
-    },
-    "clearVideos" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Videos Entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear Videos"
+            "value" : "Clear"
           }
         }
       }
@@ -1602,13 +1618,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Damit Videos im Verlauf erscheinen, muss jedes Video über den YouTube-Player gestartet werden. Automatische Wiedergabe ist deaktiviert, und das nächste Video muss manuell gestartet werden. Der Play-Button von Unwatched bleibt deaktiviert, bis das Video gestartet wurde."
+            "value" : "Um Videos zur YouTube-Wiedergabeverlauf hinzuzufügen, erfordert YouTube, dass der Benutzer jedes Video über den YouTube-Player startet. Alle anderen Methoden zum Starten des Videos werden bis dahin deaktiviert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To have your videos appear in your YouTube watch history, you need to start each video directly via the YouTube player. This will disable continuous play, requiring you to manually start the next video. Unwatched's play button will be disabled until the video is started."
+            "value" : "To add videos to the YouTube watch history, YouTube requires the user to start each video via the YouTube player. All other methods of starting the video will be disabled until then."
           }
         }
       }
@@ -3257,6 +3273,22 @@
         }
       }
     },
+    "showAddToQueueButton" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Video-Hinzufügen” Button bei Inbox Einträgen anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show “Queue First”-Button on Inbox Entries"
+          }
+        }
+      }
+    },
     "showClearQueueButton" : {
       "localizations" : {
         "de" : {
@@ -3856,6 +3888,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos"
+          }
+        }
+      }
+    },
+    "videoTriage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Triage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Triage"
           }
         }
       }

@@ -12,6 +12,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     @Environment(PlayerManager.self) private var player
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationManager.self) private var navManager
 
     let video: Video
     var config: VideoListItemConfig
@@ -35,9 +36,31 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     markWatched: markWatched,
                     toggleBookmark: toggleBookmark,
                     moveToInbox: moveToInbox,
-                    clearList: clearList
+                    clearList: clearList,
+                    canBeCleared: canBeCleared
                 )
             }
+            .contextMenu(config.showContextMenu
+                            ? ContextMenu(menuItems: {
+                                VideoListItemContextMenu(
+                                    config: config,
+                                    addVideoToTopQueue: addVideoToTopQueue,
+                                    addVideoToBottomQueue: addVideoToBottomQueue,
+                                    clearVideoEverywhere: clearVideoEverywhere,
+                                    clearList: clearList,
+                                    canBeCleared: canBeCleared
+                                )
+                            })
+                            : nil
+            )
+    }
+
+    var canBeCleared: Bool {
+        config.videoSwipeActions.contains(.clear) &&
+            (config.hasInboxEntry == true
+                || config.hasQueueEntry == true
+                || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
+            )
     }
 
     func addVideoToTopQueue() {
@@ -131,7 +154,7 @@ struct LeadingSwipeActionsView: View {
                 Button(role: config.queueRole,
                        action: addVideoToBottomQueue,
                        label: {
-                        Image(systemName: "text.append")
+                        Image(systemName: Const.queueBottomSF)
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.3))
             }
@@ -150,20 +173,19 @@ struct TrailingSwipeActionsView: View {
     var toggleBookmark: () -> Void
     var moveToInbox: () -> Void
     var clearList: (ClearList, ClearDirection) -> Void
+    var canBeCleared: Bool
 
     var body: some View {
         Group {
-            if config.videoSwipeActions.contains(.clear) &&
-                (config.hasInboxEntry == true
-                    || config.hasQueueEntry == true
-                    || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
-                ) {
-                Button(role: config.clearRole,
-                       action: clearVideoEverywhere,
-                       label: {
-                        Image(systemName: Const.clearSF)
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.9))
+            if canBeCleared {
+                Button(
+                    "clearVideo",
+                    systemImage: Const.clearSF,
+                    role: config.clearRole,
+                    action: clearVideoEverywhere
+                )
+                .labelStyle(.iconOnly)
+                .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
             if config.videoSwipeActions.contains(.more) {
                 VideoListItemMoreMenuView(
@@ -188,6 +210,40 @@ struct TrailingSwipeActionsView: View {
                 .tint(theme.color.mix(with: Color.black, by: 0.5))
             }
         }
+    }
+}
+
+struct VideoListItemContextMenu: View {
+    var config: VideoListItemConfig
+    var addVideoToTopQueue: () -> Void
+    var addVideoToBottomQueue: () -> Void
+    var clearVideoEverywhere: () -> Void
+    var clearList: (ClearList, ClearDirection) -> Void
+
+    var canBeCleared: Bool
+
+    var body: some View {
+        if !config.showQueueButton {
+            // queue button is already shown, no need to have it here as well
+            Button("addVideoToTopQueue",
+                   systemImage: Const.queueTopSF,
+                   action: addVideoToTopQueue
+            )
+        }
+        Button("addVideoToBottomQueue",
+               systemImage: Const.queueBottomSF,
+               action: addVideoToBottomQueue
+        )
+        Divider()
+        if canBeCleared {
+            Button(
+                "clearVideo",
+                systemImage: Const.clearSF,
+                action: clearVideoEverywhere
+            )
+        }
+        Divider()
+        ClearAboveBelowButtons(clearList: clearList, config: config)
     }
 }
 

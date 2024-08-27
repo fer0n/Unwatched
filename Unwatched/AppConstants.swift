@@ -51,6 +51,7 @@ struct Const {
 
     // MARK: - SF Symbols
     static let queueTopSF = "text.insert"
+    static let queueBottomSF = "text.append"
 
     static let refreshSF = "arrow.triangle.2.circlepath"
     static let queueTagSF = "rectangle.stack"
@@ -112,6 +113,7 @@ struct Const {
     static let showTabBarLabels = "showTabBarLabels"
     static let requireClearConfirmation = "requireClearConfirmation"
     static let showClearQueueButton = "showClearQueueButton"
+    static let showAddToQueueButton = "showAddToQueueButton"
     static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     static let forceYtWatchHistory = "forceYtWatchHistory"
 
