@@ -41,9 +41,7 @@ struct AddToLibraryView: View {
             })
         }
 
-        HStack {
-            Image(systemName: "link")
-                .foregroundStyle(.secondary)
+        HStack(spacing: 0) {
             TextField("enterUrls", text: $addText)
                 .keyboardType(.alphabet)
                 .autocorrectionDisabled(true)
@@ -51,6 +49,7 @@ struct AddToLibraryView: View {
                 .submitLabel(.send)
             TextFieldClearButton(text: $addText)
             pasteButton
+                .padding(.leading, 5)
         }
         .popoverTip(addVideosTip, arrowEdge: .top, action: { _ in
             if let url = UrlService.shareShortcutUrl {
