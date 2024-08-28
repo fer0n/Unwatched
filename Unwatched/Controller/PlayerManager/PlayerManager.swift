@@ -24,6 +24,7 @@ enum VideoSource {
     var videoEnded: Bool = false
     var unstarted: Bool = true
     var isLoading: Bool = true
+    var temporaryPlaybackSpeed: Double?
 
     weak var container: ModelContainer?
 
@@ -89,7 +90,7 @@ enum VideoSource {
 
     var playbackSpeed: Double {
         get {
-            getPlaybackSpeed()
+            temporaryPlaybackSpeed ?? getPlaybackSpeed()
         }
         set {
             setPlaybackSpeed(newValue)
