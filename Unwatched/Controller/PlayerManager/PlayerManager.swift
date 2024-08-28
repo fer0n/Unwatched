@@ -215,8 +215,9 @@ enum VideoSource {
     }
 
     private func handleRotateOnPlay() {
+        let isShort = video?.isYtShort ?? false
         Task {
-            if UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
+            if !isShort && UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
                 await OrientationManager.changeOrientation(to: .landscapeRight)
             }
         }
