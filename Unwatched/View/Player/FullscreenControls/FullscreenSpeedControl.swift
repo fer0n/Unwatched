@@ -24,7 +24,6 @@ struct FullscreenSpeedControl: View {
         .highPriorityGesture(
             TapGesture()
                 .onEnded { _ in
-                    print("Tap")
                     if !showSpeedControl {
                         showSpeedControl = true
                         menuOpen = true
