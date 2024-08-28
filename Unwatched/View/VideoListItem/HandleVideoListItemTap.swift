@@ -7,6 +7,7 @@ import SwiftUI
 
 struct HandleVideoListItemTap: ViewModifier {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
+    @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
@@ -23,7 +24,7 @@ struct HandleVideoListItemTap: ViewModifier {
                     _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
                 }
                 player.playVideo(video)
-                if hideMenuOnPlay {
+                if hideMenuOnPlay || rotateOnPlay {
                     withAnimation {
                         navManager.showMenu = false
                     }
