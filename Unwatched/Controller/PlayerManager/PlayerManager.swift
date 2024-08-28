@@ -24,6 +24,7 @@ enum VideoSource {
     var videoEnded: Bool = false
     var unstarted: Bool = true
     var isLoading: Bool = true
+    var temporaryPlaybackSpeed: Double?
 
     weak var container: ModelContainer?
 
@@ -89,7 +90,7 @@ enum VideoSource {
 
     var playbackSpeed: Double {
         get {
-            getPlaybackSpeed()
+            temporaryPlaybackSpeed ?? getPlaybackSpeed()
         }
         set {
             setPlaybackSpeed(newValue)
@@ -215,8 +216,9 @@ enum VideoSource {
     }
 
     private func handleRotateOnPlay() {
+        let isShort = video?.isYtShort ?? false
         Task {
-            if UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
+            if !isShort && UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
                 await OrientationManager.changeOrientation(to: .landscapeRight)
             }
         }
@@ -250,17 +252,15 @@ enum VideoSource {
         Task {
             try? await task?.value
             let videoId = VideoService.getTopVideoInQueue(container)
-            await MainActor.run {
-                if let videoId = videoId {
-                    if currentVideoId != videoId {
-                        let context = ModelContext(container)
-                        if let newVideo = context.model(for: videoId) as? Video {
-                            self.setNextVideo(newVideo, .nextUp)
-                        }
+            if let videoId = videoId {
+                if currentVideoId != videoId {
+                    let context = ModelContext(container)
+                    if let newVideo = context.model(for: videoId) as? Video {
+                        self.setNextVideo(newVideo, .nextUp)
                     }
-                } else {
-                    hardClearVideo()
                 }
+            } else {
+                hardClearVideo()
             }
         }
     }
