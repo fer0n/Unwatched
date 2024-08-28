@@ -59,10 +59,11 @@ struct UserDataService {
             guard let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) else {
                 return nil
             }
+            let includeWatched = !UserDefaults.standard.bool(forKey: Const.exludeWatchHistoryInBackup)
             Logger.log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
-                    || $0.watched == true
+                    || $0.watched == includeWatched
                     || $0.queueEntry != nil
                     || $0.inboxEntry != nil
                     || ($0.publishedDate ?? lastWeek) > lastWeek
