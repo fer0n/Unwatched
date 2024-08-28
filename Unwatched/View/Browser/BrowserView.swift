@@ -11,6 +11,7 @@ import OSLog
 
 struct BrowserView: View, KeyboardReadable {
     @Environment(ImageCacheManager.self) var cacheManager
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
@@ -63,6 +64,7 @@ struct BrowserView: View, KeyboardReadable {
                                     AddVideoButton(container: container,
                                                    youtubeUrl: browserManager.videoUrl)
                                         .padding(20)
+                                        .padding(.trailing, supportsSplitView ? 110 : 0)
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -188,6 +190,10 @@ struct BrowserView: View, KeyboardReadable {
         } else {
             await subscribeManager.addSubscription(subscriptionInfo)
         }
+    }
+
+    var supportsSplitView: Bool {
+        return horizontalSizeClass == .regular
     }
 }
 
