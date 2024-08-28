@@ -252,17 +252,15 @@ enum VideoSource {
         Task {
             try? await task?.value
             let videoId = VideoService.getTopVideoInQueue(container)
-            await MainActor.run {
-                if let videoId = videoId {
-                    if currentVideoId != videoId {
-                        let context = ModelContext(container)
-                        if let newVideo = context.model(for: videoId) as? Video {
-                            self.setNextVideo(newVideo, .nextUp)
-                        }
+            if let videoId = videoId {
+                if currentVideoId != videoId {
+                    let context = ModelContext(container)
+                    if let newVideo = context.model(for: videoId) as? Video {
+                        self.setNextVideo(newVideo, .nextUp)
                     }
-                } else {
-                    hardClearVideo()
                 }
+            } else {
+                hardClearVideo()
             }
         }
     }
