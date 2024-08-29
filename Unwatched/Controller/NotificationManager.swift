@@ -155,4 +155,26 @@ struct NotificationManager {
         center.setBadgeCount(0)
         UserDefaults.standard.setValue(0, forKey: Const.badgeCount)
     }
+
+    static func ensurePermissionsAreGivenForSettings() {
+        let inboxNotification = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
+        let queueNotification = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
+        let badgeNotification = UserDefaults.standard.bool(forKey: Const.showNotificationBadge)
+
+        if inboxNotification || queueNotification || badgeNotification {
+            Task {
+                do {
+                    try await NotificationManager.askNotificationPermission()
+                } catch {
+                    Logger.log.warning("Notification permission error: \(error)")
+                }
+                let disalbed = await areNotificationsDisabled()
+                if disalbed {
+                    UserDefaults.standard.setValue(false, forKey: Const.videoAddedToInboxNotification)
+                    UserDefaults.standard.setValue(false, forKey: Const.videoAddedToQueueNotification)
+                    UserDefaults.standard.setValue(false, forKey: Const.showNotificationBadge)
+                }
+            }
+        }
+    }
 }

@@ -39,12 +39,13 @@ struct UserDataService {
             // Bug: otherwise subscription fails (maybe because it doesn't have the videos ready otherwise?)
             // also happens if subscriptions is called before fetching videos
         }
+        backup.settings         = getSettings()
         backup.subscriptions    = fetchMapExportable(Subscription.self)
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
         backup.watchEntries     = fetchMapExportable(WatchEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
 
-        if checkIfBackupEmpty(backup) {
+        if backup.isEmpty {
             Logger.log.info("checkIfBackupEmpty")
             throw UserDataServiceError.noDataToBackupFound
         }
@@ -63,21 +64,13 @@ struct UserDataService {
             Logger.log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
-                    || $0.watched == includeWatched
+                    || (includeWatched && $0.watched == true)
                     || $0.queueEntry != nil
                     || $0.inboxEntry != nil
                     || ($0.publishedDate ?? lastWeek) > lastWeek
             })
         }
         return nil
-    }
-
-    static func checkIfBackupEmpty(_ backup: UnwatchedBackup) -> Bool {
-        return backup.videos.isEmpty
-            && backup.queueEntries.isEmpty
-            && backup.watchEntries.isEmpty
-            && backup.inboxEntries.isEmpty
-            && backup.subscriptions.isEmpty
     }
 
     // loads user data from .unwatchedbackup files
@@ -89,6 +82,8 @@ struct UserDataService {
         let decoder = JSONDecoder()
         do {
             let backup = try decoder.decode(UnwatchedBackup.self, from: data)
+
+            restoreSettings(backup.settings)
 
             // Videos, get id mapping
             for video in backup.videos {
@@ -253,18 +248,91 @@ struct UserDataService {
         let dateString = Date().formatted(.iso8601)
         return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
+
+    static func getSettings() -> [String: AnyCodable] {
+        var result = [String: AnyCodable]()
+        for (key, _) in Const.settingsDefaults {
+            if let value = UserDefaults.standard.object(forKey: key) {
+                result[key] = AnyCodable(value)
+            } else {
+                Logger.log.warning("Encoding settings key not set/found: \(key)")
+            }
+        }
+        return result
+    }
+
+    static func restoreSettings(_ settings: [String: AnyCodable]) {
+        for (key, value) in settings {
+            UserDefaults.standard.setValue(value.value, forKey: key)
+        }
+        NotificationManager.ensurePermissionsAreGivenForSettings()
+    }
 }
 
 struct UnwatchedBackup: Codable {
-    var videos = [SendableVideo]()
-    var queueEntries = [SendableQueueEntry]()
-    var watchEntries = [SendableWatchEntry]()
-    var inboxEntries = [SendableInboxEntry]()
-    var subscriptions = [SendableSubscription]()
+    var settings: [String: AnyCodable] = [:]
+    var subscriptions   = [SendableSubscription]()
+    var videos          = [SendableVideo]()
+    var queueEntries    = [SendableQueueEntry]()
+    var inboxEntries    = [SendableInboxEntry]()
+    var watchEntries    = [SendableWatchEntry]()
+
+    var isEmpty: Bool {
+        videos.isEmpty
+            && queueEntries.isEmpty
+            && watchEntries.isEmpty
+            && inboxEntries.isEmpty
+            && subscriptions.isEmpty
+            && settings.isEmpty
+    }
 }
 
 extension URL {
     var creationDate: Date {
         return (try? resourceValues(forKeys: [.creationDateKey]).creationDate) ?? Date()
+    }
+}
+
+struct AnyCodable: Codable {
+    let value: Any
+
+    init(_ value: Any) {
+        self.value = value
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let intValue = try? container.decode(Int.self) {
+            value = intValue
+        } else if let doubleValue = try? container.decode(Double.self) {
+            value = doubleValue
+        } else if let stringValue = try? container.decode(String.self) {
+            value = stringValue
+        } else if let boolValue = try? container.decode(Bool.self) {
+            value = boolValue
+        } else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        if let intValue = value as? Int {
+            try container.encode(intValue)
+        } else if let doubleValue = value as? Double {
+            try container.encode(doubleValue)
+        } else if let stringValue = value as? String {
+            try container.encode(stringValue)
+        } else if let boolValue = value as? Bool {
+            try container.encode(boolValue)
+        } else {
+            throw EncodingError.invalidValue(
+                value,
+                EncodingError.Context(
+                    codingPath: container.codingPath,
+                    debugDescription: "Unsupported type"
+                )
+            )
+        }
     }
 }

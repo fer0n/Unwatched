@@ -79,6 +79,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
             publishedDate: publishedDate,
             updatedDate: updatedDate,
             watched: watched,
+            isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
             clearedInboxDate: clearedInboxDate,
@@ -114,9 +115,9 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         self.videoDescription = videoDescription
         self.chapters = chapters
         self.watched = watched
-        self.isYtShort = isYtShort
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate
+        self.isYtShort = isYtShort
     }
 }

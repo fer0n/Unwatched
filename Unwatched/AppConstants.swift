@@ -152,3 +152,44 @@ struct Const {
 
     static let lightPlayer = "lightPlayer"
 }
+
+extension Const {
+    static let settingsDefaults: [String: Any] = [
+        // Notifications
+        Const.videoAddedToInboxNotification: false,
+        Const.videoAddedToQueueNotification: false,
+        Const.showNotificationBadge: false,
+
+        // Videos
+        Const.defaultVideoPlacement: VideoPlacement.inbox,
+        Const.hideShortsEverywhere: false,
+        Const.requireClearConfirmation: true,
+        Const.showClearQueueButton: true,
+        Const.showAddToQueueButton: false,
+        Const.mergeSponsorBlockChapters: false,
+        Const.forceYtWatchHistory: false,
+        Const.autoRefresh: true,
+        Const.enableQueueContextMenu: false,
+
+        // Playback
+        Const.fullscreenControlsSetting: FullscreenControls.autoHide,
+        Const.hideMenuOnPlay: true,
+        Const.playVideoFullscreen: false,
+        Const.returnToQueue: false,
+        Const.rotateOnPlay: false,
+
+        // Appearance
+        Const.showTabBarLabels: true,
+        Const.showTabBarBadge: true,
+        Const.themeColor: ThemeColor.teal,
+        Const.browserAsTab: false,
+        Const.sheetOpacity: false,
+        Const.lightPlayer: false,
+
+        // User Data
+        Const.automaticBackups: true,
+        Const.minimalBackups: true,
+        Const.enableIcloudSync: false,
+        Const.exludeWatchHistoryInBackup: false
+    ]
+}
