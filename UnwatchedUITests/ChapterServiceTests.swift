@@ -248,6 +248,17 @@ final class ChapterServiceTests: XCTestCase {
         XCTAssertEqual(chapters[3].endTime, 40)
         XCTAssertEqual(chapters[5].endTime, 70)
     }
+
+    func testUpdateDurationOneChapter() async {
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+
+        var chapters = [Chapter(title: "0", time: 0, endTime: 10, category: nil)]
+        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, container: container)
+
+        XCTAssertEqual(chapters[0].endTime, 10)
+        XCTAssertEqual(chapters[1].endTime, 40)
+    }
 }
 
 struct ChapterServiceTestData {

@@ -42,9 +42,9 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         var result = [Chapter]()
 
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
-        if mergedChapters?.isEmpty != true && settingOn {
+        if (mergedChapters?.count ?? 0) > 1 && settingOn {
             result = mergedChapters ?? []
-        } else {
+        } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []
         }
         return result.sorted(by: { $0.startTime < $1.startTime })
