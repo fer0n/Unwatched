@@ -85,6 +85,11 @@ struct SettingsView: View {
                     Label("debug", systemImage: "ladybug.fill")
                 }
                 .listRowBackground(Color.insetBackgroundColor)
+
+                Section {
+                    VersionAndBuildNumber()
+                }
+                .listRowBackground(Color.backgroundColor)
             }
             .myNavigationTitle("settings")
         }

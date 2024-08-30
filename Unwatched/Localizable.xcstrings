@@ -1794,7 +1794,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "#Shorts nicht anzeigen"
+            "value" : "#Shorts ausblenden"
           }
         },
         "en" : {
@@ -2861,7 +2861,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Dies kann unter Mediathek → Einstellungen → Videos deaktiviert werden."
+            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Kann unter Einstellungen → Videos deaktiviert werden."
           }
         },
         "en" : {
