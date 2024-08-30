@@ -68,11 +68,13 @@ struct DropUrlArea<Content: View>: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: size, height: size)
+                    .accessibilityLabel("success")
             } else if avm.isSuccess == false {
                 Image(systemName: Const.clearNoFillSF)
                     .resizable()
                     .scaledToFit()
                     .frame(width: size, height: size)
+                    .accessibilityLabel("failed")
             } else {
                 VStack {
                     Image(systemName: Const.queueTagSF)

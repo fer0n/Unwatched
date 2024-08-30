@@ -49,6 +49,7 @@ struct AddVideoButton: View {
                     .frame(width: size, height: size)
                     .padding(7)
             }
+            .accessibilityLabel("dropVideoToQueue")
         }
         .background {
             // Workaround: isDragOver = true get's stuck otherwise
@@ -112,4 +113,5 @@ struct AddVideoButton: View {
                        youtubeUrl: URL(string: "www.google.com")!)
             .padding(20)
     }
+    .environment(RefreshManager())
 }

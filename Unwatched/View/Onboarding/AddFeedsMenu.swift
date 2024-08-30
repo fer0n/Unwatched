@@ -35,11 +35,11 @@ struct AddFeedsMenu: View {
                     .frame(width: 20, height: 20)
                 Text("importFromYoutube")
             }
-            Button {
+            .accessibilityLabel("importFromYoutube")
+
+            Button("browser", systemImage: Const.appBrowserSF) {
                 navManager.showMenu = true
                 navManager.openUrlInApp(.youtubeStartPage)
-            } label: {
-                Label("browser", systemImage: Const.appBrowserSF)
             }
         } label: {
             Label("addFeeds", systemImage: "plus")

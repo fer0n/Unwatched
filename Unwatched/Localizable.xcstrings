@@ -50,6 +50,12 @@
             "state" : "translated",
             "value" : "%lld"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
         }
       }
     },
@@ -853,6 +859,38 @@
         }
       }
     },
+    "chapterOff" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel Aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Off"
+          }
+        }
+      }
+    },
+    "chapterOn" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel An"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter On"
+          }
+        }
+      }
+    },
     "chapters" : {
       "localizations" : {
         "de" : {
@@ -865,6 +903,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapters"
+          }
+        }
+      }
+    },
+    "clear" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
           }
         }
       }
@@ -933,6 +987,22 @@
         }
       }
     },
+    "clearAllVideos" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Videos entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear all Videos"
+          }
+        }
+      }
+    },
     "clearBelow" : {
       "localizations" : {
         "de" : {
@@ -961,6 +1031,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last Cleared from Inbox"
+          }
+        }
+      }
+    },
+    "clearText" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Text"
           }
         }
       }
@@ -1323,6 +1409,22 @@
         }
       }
     },
+    "dismiss" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dismiss"
+          }
+        }
+      }
+    },
     "doNothing" : {
       "localizations" : {
         "de" : {
@@ -1419,6 +1521,22 @@
         }
       }
     },
+    "dropVideoToQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video ablegen zur Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop Video to Queue"
+          }
+        }
+      }
+    },
     "dropVideoUrlsHere" : {
       "localizations" : {
         "de" : {
@@ -1463,6 +1581,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Context Menu in Queue"
+          }
+        }
+      }
+    },
+    "enterFullscreen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild an"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Fullscreen"
           }
         }
       }
@@ -1563,6 +1697,22 @@
         }
       }
     },
+    "exitFullscreen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit Fullscreen"
+          }
+        }
+      }
+    },
     "exludeWatchHistoryInBackup" : {
       "localizations" : {
         "de" : {
@@ -1591,6 +1741,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Export Subscription RSS Feeds"
+          }
+        }
+      }
+    },
+    "failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed"
           }
         }
       }
@@ -2388,6 +2554,22 @@
         }
       }
     },
+    "nextChapter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächstes Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Chapter"
+          }
+        }
+      }
+    },
     "nextVideo" : {
       "localizations" : {
         "de" : {
@@ -2792,6 +2974,22 @@
         }
       }
     },
+    "openInAppBrowser" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im in-App Browser öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in in-App Browser"
+          }
+        }
+      }
+    },
     "orange" : {
       "localizations" : {
         "de" : {
@@ -2840,6 +3038,38 @@
         }
       }
     },
+    "pause" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        }
+      }
+    },
+    "play" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        }
+      }
+    },
     "playback" : {
       "localizations" : {
         "de" : {
@@ -2872,6 +3102,22 @@
         }
       }
     },
+    "playPause" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play/Pause"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play/Pause"
+          }
+        }
+      }
+    },
     "potentiallyFaultyYoutubeId" : {
       "comment" : "(youtubeId)",
       "localizations" : {
@@ -2885,6 +3131,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube ID may be faulty"
+          }
+        }
+      }
+    },
+    "previousChapter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriges Chapter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous Chapter"
           }
         }
       }
@@ -2937,18 +3199,34 @@
         }
       }
     },
-    "queueAction" : {
+    "queueLast" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zur Queue hinzufügen"
+            "value" : "Als letztes abspielen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add to Queue"
+            "value" : "Queue Last"
+          }
+        }
+      }
+    },
+    "queueNext" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als nächstes abspielen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue Next"
           }
         }
       }
@@ -2997,6 +3275,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Red"
+          }
+        }
+      }
+    },
+    "refresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neu laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
           }
         }
       }
@@ -3193,6 +3487,22 @@
         }
       }
     },
+    "rotateRight" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts rotieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate Right"
+          }
+        }
+      }
+    },
     "searchLibrary" : {
       "localizations" : {
         "de" : {
@@ -3289,18 +3599,18 @@
         }
       }
     },
-    "share" : {
+    "shareVideo" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilen"
+            "value" : "Video teilen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share"
+            "value" : "Share Video"
           }
         }
       }
@@ -3513,6 +3823,22 @@
         }
       }
     },
+    "sleepTimer%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep Timer %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleep Timer %@"
+          }
+        }
+      }
+    },
     "sleepTimerOff" : {
       "localizations" : {
         "de" : {
@@ -3690,6 +4016,22 @@
         }
       }
     },
+    "success" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfolgreich"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success"
+          }
+        }
+      }
+    },
     "swipeUpToSelect" : {
       "localizations" : {
         "de" : {
@@ -3702,6 +4044,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swipe up"
+          }
+        }
+      }
+    },
+    "syncing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisiert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syncing"
           }
         }
       }
@@ -3792,6 +4150,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched"
+          }
+        }
+      }
+    },
+    "unwatchedLogo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Logo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Logo"
           }
         }
       }
@@ -3908,6 +4288,22 @@
         }
       }
     },
+    "videoDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Beschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Description"
+          }
+        }
+      }
+    },
     "videoPlacement" : {
       "localizations" : {
         "de" : {
@@ -3952,6 +4348,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos"
+          }
+        }
+      }
+    },
+    "videoSorting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortierung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorting"
+          }
+        }
+      }
+    },
+    "videoStatus" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Status"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Status"
           }
         }
       }

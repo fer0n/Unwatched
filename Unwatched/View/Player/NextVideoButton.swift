@@ -28,6 +28,7 @@ struct CoreNextButton<Content>: View where Content: View {
         let manualNext = (!continuousPlay
                             && player.videoEnded
                             && !player.isPlaying)
+        let label = manualNext ? "nextVideo" : "continuousPlay"
 
         Button {
             if manualNext {
@@ -46,26 +47,22 @@ struct CoreNextButton<Content>: View where Content: View {
             )
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
+        .accessibilityLabel(label)
+        .help(label)
         .padding(3)
         .contextMenu {
             if extendedContextMenu {
-                Button {
+                Button("markWatched", systemImage: "checkmark") {
                     markVideoWatched(true, .nextUp)
-                } label: {
-                    Label("markWatched", systemImage: "checkmark")
                 }
-                Button {
+                Button("clearVideo", systemImage: Const.clearNoFillSF) {
                     player.clearVideo()
-                } label: {
-                    Label("clearVideo", systemImage: Const.clearNoFillSF)
                 }
                 Divider()
             }
 
-            Button {
+            Button("nextVideo", systemImage: "forward.end.alt") {
                 markVideoWatched(false, .userInteraction)
-            } label: {
-                Label("nextVideo", systemImage: "forward.end.alt")
             }
 
             if extendedContextMenu {

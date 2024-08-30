@@ -66,6 +66,7 @@ struct QueueVideoButton: View {
                 .foregroundStyle(.secondary)
         })
         .onTapGesture(perform: addToTopQueue)
+        .accessibilityLabel("queueNext")
         // button for accessibility, tapGesture to override parent
     }
 

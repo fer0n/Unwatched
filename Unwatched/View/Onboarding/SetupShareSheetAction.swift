@@ -23,6 +23,7 @@ struct SetupShareSheetAction: View {
                     Text("setupShareSheetAction")
                 }
             }
+            .accessibilityLabel("setupShareSheetAction")
             .bold()
         }
     }
@@ -41,4 +42,9 @@ struct ShareSheetTip: View {
                 }
         }
     }
+}
+
+#Preview {
+    SetupShareSheetAction()
+        .modelContainer(DataController.previewContainer)
 }

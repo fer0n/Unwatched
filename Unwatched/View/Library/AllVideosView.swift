@@ -49,6 +49,7 @@ struct AllVideosView: View {
                             ? Const.filterEmptySF
                             : Const.filterSF)
                 }
+                .accessibilityLabel("videoSorting")
             }
         }
     }

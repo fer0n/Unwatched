@@ -92,7 +92,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let clearIcon = UNNotificationActionIcon(systemImageName: Const.clearNoFillSF)
 
         let queueAction = UNNotificationAction(identifier: Const.notificationActionQueue,
-                                               title: String(localized: "queueAction"),
+                                               title: String(localized: "queueNext"),
                                                options: [],
                                                icon: queueIcon)
         let clearAction = UNNotificationAction(identifier: Const.notificationActionClear,

@@ -45,6 +45,7 @@ struct FullscreenPlayerControls: View {
                             .modifier(PlayerControlButtonStyle())
                     }
                     .fontWeight(.bold)
+                    .accessibilityLabel("chapters")
                 }
             }
             .popover(isPresented: $showChapters) {
@@ -83,6 +84,7 @@ struct FullscreenPlayerControls: View {
                             .modifier(PlayerControlButtonStyle())
                     }
                     .fontWeight(.bold)
+                    .accessibilityLabel("previousChapter")
                 }
             }
             .frame(maxHeight: .infinity)
@@ -108,6 +110,7 @@ struct FullscreenPlayerControls: View {
                     Image(systemName: Const.disableFullscreenSF)
                         .modifier(PlayerControlButtonStyle())
                 }
+                .accessibilityLabel("exitFullscreen")
             }
             .font(.system(size: 18))
             .fontWeight(.bold)

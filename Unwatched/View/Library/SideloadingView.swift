@@ -41,13 +41,8 @@ struct SideloadingView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     ForEach(sortingOptions, id: \.self) { sort in
-                        Button {
+                        Button(sort.description, systemImage: sort.systemName) {
                             sideloadingSortOrder = sort
-                        } label: {
-                            HStack {
-                                Image(systemName: sort.systemName)
-                                Text(sort.description)
-                            }
                         }
                         .disabled(sideloadingSortOrder == sort)
                     }
@@ -56,6 +51,7 @@ struct SideloadingView: View {
                             ? Const.filterEmptySF
                             : Const.filterSF)
                 }
+                .accessibilityLabel("videoSorting")
             }
         }
     }
