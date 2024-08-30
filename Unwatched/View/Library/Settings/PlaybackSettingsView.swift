@@ -37,8 +37,10 @@ struct PlaybackSettingsView: View {
                         Text("returnToQueue")
                     }
 
-                    Toggle(isOn: $rotateOnPlay) {
-                        Text("rotateOnPlay")
+                    if UIDevice.isIphone {
+                        Toggle(isOn: $rotateOnPlay) {
+                            Text("rotateOnPlay")
+                        }
                     }
                 }
 
