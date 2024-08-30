@@ -90,7 +90,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playliste Abonnieren"
+            "value" : "Playlist abonnieren"
           }
         },
         "en" : {
@@ -138,7 +138,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube Abos Hinzufügen"
+            "value" : "YouTube Abos hinzufügen"
           }
         },
         "en" : {
@@ -170,7 +170,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kanal zu Unwatched Hinzufügen"
+            "value" : "Kanal zu Unwatched hinzufügen"
           }
         },
         "en" : {
@@ -298,7 +298,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos Manuell Hinzufügen"
+            "value" : "Videos manuell hinzufügen"
           }
         },
         "en" : {
@@ -314,7 +314,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos Manuell Hinzufügen"
+            "value" : "Videos manuell hinzufügen"
           }
         },
         "en" : {
@@ -458,7 +458,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backups Automatisch Löschen"
+            "value" : "Backups automatisch löschen"
           }
         },
         "en" : {
@@ -474,7 +474,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backups Jetzt Automatisch Löschen"
+            "value" : "Backups jetzt automatisch löschen"
           }
         },
         "en" : {
@@ -570,7 +570,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backup Jetzt Erstellen"
+            "value" : "Backup jetzt erstellen"
           }
         },
         "en" : {
@@ -682,7 +682,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube Browser in Tab Bar Zeigen"
+            "value" : "YouTube Browser in Tab Bar zeigen"
           }
         },
         "en" : {
@@ -874,7 +874,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Darüber Entfernen"
+            "value" : "Alles darüber entfernen"
           }
         },
         "en" : {
@@ -922,7 +922,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Entfernen"
+            "value" : "Alles entfernen"
           }
         },
         "en" : {
@@ -938,7 +938,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Darunter Entfernen"
+            "value" : "Alles darunter entfernen"
           }
         },
         "en" : {
@@ -1018,7 +1018,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backups Automatisch Löschen?"
+            "value" : "Backups automatisch löschen?"
           }
         },
         "en" : {
@@ -1034,7 +1034,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Entfernen Bestätigen"
+            "value" : "Alles entfernen Bestätigen"
           }
         },
         "en" : {
@@ -1050,7 +1050,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wirklich Alles Löschen?"
+            "value" : "Wirklich alles löschen?"
           }
         },
         "en" : {
@@ -1120,7 +1120,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datum Hinzugefügt"
+            "value" : "Datum hinzugefügt"
           }
         },
         "en" : {
@@ -1312,7 +1312,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Abwählen"
+            "value" : "Alles abwählen"
           }
         },
         "en" : {
@@ -1392,7 +1392,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Hier Ablegen"
+            "value" : "Video hier ablegen"
           }
         },
         "en" : {
@@ -1634,7 +1634,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube Wiedergabeverlauf Erzwingen"
+            "value" : "YouTube Wiedergabeverlauf erzwingen"
           }
         },
         "en" : {
@@ -1730,7 +1730,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Google Datenexport Öffnen"
+            "value" : "Google Datenexport öffnen"
           }
         },
         "en" : {
@@ -1762,7 +1762,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hard Reload"
+            "value" : "Hard reload"
           }
         },
         "en" : {
@@ -1778,7 +1778,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Menü beim Abspielen Minimieren"
+            "value" : "Menü beim Abspielen minimieren"
           }
         },
         "en" : {
@@ -1938,7 +1938,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zu Unwatched Importieren"
+            "value" : "Zu Unwatched importieren"
           }
         },
         "en" : {
@@ -2013,7 +2013,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backup Importieren"
+            "value" : "Backup importieren"
           }
         },
         "en" : {
@@ -2029,7 +2029,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube Abos Importieren"
+            "value" : "YouTube Abos importieren"
           }
         },
         "en" : {
@@ -2071,7 +2071,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abos Importieren"
+            "value" : "Abos importieren"
           }
         },
         "en" : {
@@ -2264,7 +2264,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als Gesehen Markieren"
+            "value" : "Als gesehen markieren"
           }
         },
         "en" : {
@@ -2409,7 +2409,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Gespeicherten Videos"
+            "value" : "Keine gespeicherten Videos"
           }
         },
         "en" : {
@@ -2473,7 +2473,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inbox Leer"
+            "value" : "Inbox leer"
           }
         },
         "en" : {
@@ -2958,7 +2958,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched Bewerten"
+            "value" : "Unwatched bewerten"
           }
         },
         "en" : {
@@ -2974,7 +2974,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zuletzt Hinzugefügt"
+            "value" : "Zuletzt hinzugefügt"
           }
         },
         "en" : {
@@ -3054,7 +3054,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplikate Löschen"
+            "value" : "Duplikate löschen"
           }
         },
         "en" : {
@@ -3102,7 +3102,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backup Wiederherstellen"
+            "value" : "Backup wiederherstellen"
           }
         },
         "en" : {
@@ -3118,7 +3118,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aus Diesem Backup Wiederherstellen?"
+            "value" : "Aus diesem Backup wiederherstellen?"
           }
         },
         "en" : {
@@ -3150,7 +3150,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Queue beim Abspielen/Gesehen Markieren Öffnen"
+            "value" : "Queue beim Abspielen/Gesehen Markieren öffnen"
           }
         },
         "en" : {
@@ -3182,7 +3182,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Querformat-Vollbildmodus beim Abspielen Starten"
+            "value" : "Querformat-Vollbildmodus beim Abspielen starten"
           }
         },
         "en" : {
@@ -3214,7 +3214,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles Auswählen"
+            "value" : "Alles auswählen"
           }
         },
         "en" : {
@@ -3230,7 +3230,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datei Auswählen"
+            "value" : "Datei auswählen"
           }
         },
         "en" : {
@@ -3246,7 +3246,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Feedback Senden"
+            "value" : "Feedback senden"
           }
         },
         "en" : {
@@ -3454,7 +3454,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutorial Anzeigen"
+            "value" : "Tutorial anzeigen"
           }
         },
         "en" : {
