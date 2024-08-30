@@ -23,6 +23,7 @@ struct DismissToolbarButton: ToolbarContent {
                 Image(systemName: Const.clearSF)
             }
             .fontWeight(.bold)
+            .accessibilityLabel("dismiss")
         }
     }
 }

@@ -39,6 +39,7 @@ struct SubscriptionInfoDetails: View {
                             Image(systemName: Const.appBrowserSF)
                                 .padding(10)
                         }
+                        .accessibilityLabel("browser")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                     if let url = UrlService.getYoutubeUrl(
@@ -50,6 +51,7 @@ struct SubscriptionInfoDetails: View {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)
                         }
+                        .accessibilityLabel("shareVideo")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                 }

@@ -42,6 +42,7 @@ struct ChapterListItem: View {
             }
             .animation(nil, value: UUID())
         }
+        .accessibilityLabel(chapter.isActive ? "chapterOn" : "chapterOff")
     }
 }
 

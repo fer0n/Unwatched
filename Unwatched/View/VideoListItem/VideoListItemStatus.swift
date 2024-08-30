@@ -21,6 +21,7 @@ struct VideoListItemStatus: View {
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.white, statusInfo.color)
                 .frame(width: 23, height: 23)
+                .accessibilityLabel("videoStatus")
         }
     }
 

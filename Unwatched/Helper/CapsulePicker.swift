@@ -21,10 +21,7 @@ struct CapsulePicker<T: Hashable>: View {
                     }
                 } label: {
                     let (text, image) = label(option)
-                    HStack {
-                        Image(systemName: image)
-                        Text(text)
-                    }
+                    Label(text, systemImage: image)
                 }
                 .disabled(selection == option)
             }
@@ -45,15 +42,10 @@ struct CapsuleMenuLabel: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Image(systemName: systemImage)
-                Text(menuLabel)
-            }
-            .font(.system(size: 13))
-            .opacity(0.7)
-            HStack {
-                Text(text)
-            }
+            Label(menuLabel, systemImage: systemImage)
+                .font(.system(size: 13))
+                .opacity(0.7)
+            Text(text)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)

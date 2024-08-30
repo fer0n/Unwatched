@@ -28,6 +28,7 @@ struct VideoPlayerFooter: View {
                             : "bookmark.slash")
                         .contentTransition(.symbolEffect(.replace))
                 }
+
                 .frame(maxWidth: .infinity)
             }
 
@@ -55,12 +56,14 @@ struct VideoPlayerFooter: View {
                         Image(systemName: "square.and.arrow.up")
                     }
                     .frame(maxWidth: .infinity)
+                    .accessibilityLabel("shareVideo")
 
                     Button {
                         openBrowserUrl(.url(url.absoluteString))
                     } label: {
                         Image(systemName: Const.appBrowserSF)
                     }
+                    .accessibilityLabel("openInAppBrowser")
                     .frame(maxWidth: .infinity)
                 }
             }
