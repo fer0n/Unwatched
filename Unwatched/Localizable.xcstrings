@@ -619,6 +619,38 @@
         }
       }
     },
+    "blockingAdsFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werbungen tauchen aus technischen Gründen nicht auf; Unwatched unternimmt nichts sie zu blockieren.   Um die Kanäle zu unterstützen, kann Patreon oder YouTube Premium genutzt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ads aren’t showing up due to technical reasons; Unwatched isn’t actively blocking them.  If you’d like to support your channels, consider using Patreon or YouTube Premium."
+          }
+        }
+      }
+    },
+    "blockingAdsFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird YouTube-Werbung blockiert? Ich möchte Creator unterstützen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are YouTube ads being blocked? I want to support creators."
+          }
+        }
+      }
+    },
     "blue" : {
       "localizations" : {
         "de" : {
@@ -1617,6 +1649,38 @@
         }
       }
     },
+    "durationMissingFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \">\"-Zeit angezeigt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \">\" time."
+          }
+        }
+      }
+    },
+    "durationMissingFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum fehlt die Dauer bei einigen Videos? Was bedeutet \">\"?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why is the duration missing on some videos? What does \">\" mean?"
+          }
+        }
+      }
+    },
     "emptyYoutubeId" : {
       "localizations" : {
         "de" : {
@@ -1871,6 +1935,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to parse the data"
+          }
+        }
+      }
+    },
+    "faq" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        }
+      }
+    },
+    "fasterSpeedsFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube bietet diese Option derzeit nicht an. Eine Anfrage kann auf [YouTube's Hilfe-Seite](https://www.youtube.com/t/contact_us) gestellt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube doesn't currently offer this option. You can visit [YouTube's help page](https://www.youtube.com/t/contact_us) to request it."
+          }
+        }
+      }
+    },
+    "fasterSpeedsFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kann das Video schneller als 2x abgespielt werden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can I speed up the video beyond 2x?"
           }
         }
       }
@@ -2489,6 +2601,38 @@
         }
       }
     },
+    "likeSubscribeVideoFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Player den YouTube-Symbol unten rechts antippen, um das Video auf YouTube zu öffnen. Von dort aus kann angemeldet, geliked und abonniert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the player, tap the YouTube symbol at the bottom right to open the video on YouTube. From there, you can sign in and like/subscribe."
+          }
+        }
+      }
+    },
+    "likeSubscribeVideoFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie kann ich Videos liken oder Kanälen auf YouTube folgen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How can I like videos or subscribe to channels on YouTube?"
+          }
+        }
+      }
+    },
     "manualBackup" : {
       "localizations" : {
         "de" : {
@@ -2581,6 +2725,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monitor Background Fetches"
+          }
+        }
+      }
+    },
+    "morePlatformsFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched ist ein Nebenprojekt an dem ich in meiner freien Zeit arbeite. Für den Moment fokussiere ich mich auf die bestehenden Plattformen. Ich werde weitere Plattformen in der Zukunft in Betracht ziehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I'm a one-person team, and this app is a side project I work on during my free time. I want to focus on the platforms I'm currently supporting before exploring new ones, but I am considering it."
+          }
+        }
+      }
+    },
+    "morePlatformsFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird Unwatched auf tvOS oder macOS verfügbar sein?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will Unwatched come to tvOS or macOS?"
+          }
+        }
+      }
+    },
+    "morePlaylistsFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched ist als einzelne Warteschlange mit einem Player konzipiert. Für eine umfassendere Organisation ist [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190) die bessere Wahl. Diese App erfüllt wahrscheinlich alle gewünschten Funktionen und mehr!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched is designed as a single queue with a player. For a more comprehensive organizer, consider using [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). It'll most like do everything you want and more!"
+          }
+        }
+      }
+    },
+    "morePlaylistsFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird es mehrere Playlists oder ein Tagging-System geben?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will there be multiple playlists or a tagging system?"
           }
         }
       }
@@ -3134,6 +3342,38 @@
         }
       }
     },
+    "pictureInPictureFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Video den Vollbild-Button unten rechts antippen, um den nativen iOS-Vollbildplayer zu starten. Von dort aus den \"Pip\"-Button antippen oder zum Homescreen zurück gehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inside the video, tap the fullscreen button at the bottom right to start the native iOS fullscreen player. From there, tap the \"Pip\" button or leave the app to keep the video playing."
+          }
+        }
+      }
+    },
+    "pictureInPictureFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie kann die Wiedergabe im Hintergrund via. Picture-in-Picture fortgesetzt werden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How can I continue playing in the background using Picture-in-Picture mode?"
+          }
+        }
+      }
+    },
     "play" : {
       "localizations" : {
         "de" : {
@@ -3178,6 +3418,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Force YouTube Watch History\" requires starting the video manually. This can be disabled under Library → Settings → Videos."
+          }
+        }
+      }
+    },
+    "playerShowsWebsiteFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normalerweise wird YouTubes eingebetteten Player verwendet. Wenn Kanäle diese Funktion deaktivieren, wird stattdessen die YouTube-Website angezeigt.  Alle Steuerungen bleiben funktionsfähig. Der Vollbildmodus unterstützt ebenfalls Picture-in-Picture."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The player usually uses YouTube's embedded player, but if channels disable this feature, the YouTube website will be shown instead.   All controls remain functional, and you can use YouTube's fullscreen button to watch the video in fullscreen."
+          }
+        }
+      }
+    },
+    "playerShowsWebsiteFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum zeigt der Videoplayer die YouTube-Website an?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why does the video player show the YouTube website?"
           }
         }
       }
@@ -4176,6 +4448,38 @@
         }
       }
     },
+    "syncNotWorkingFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter \"Einstellungen → Benutzerdaten\" kann iCloud-Synchronisierung aktiviert werden. Diese Funktion ist experimentell und synchronisiert nicht alles vollständig.  Entschuldigung für die Unannehmlichkeiten; ich hoffe es in Zukunft beheben zu können."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable iCloud sync in \"Settings → User Data.\" This feature is experimental and isn't fully syncing everything.  Apologies for any inconvenience; I'll work on improving it in the future."
+          }
+        }
+      }
+    },
+    "syncNotWorkingFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie funktioniert die Synchronisierung über Geräte hinweg? Es klappt nicht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How can I sync across devices? It’s not working."
+          }
+        }
+      }
+    },
     "syncToIcloud" : {
       "localizations" : {
         "de" : {
@@ -4540,6 +4844,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        }
+      }
+    },
+    "watchHistoryNotShowingFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unter \"Einstellungen → Wiedergabe\" kann \"YouTube Verlauf erzwingen\" aktiviert werden, was sicherstellt, dass angesehene Videos auf YouTube auftauchen. YouTube erfordert, dass Videos manuell gestartet werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable the setting under \"Settings → Playback\" to ensure watched videos appear in YouTube. This also makes sure you start each video manually, since YouTube requires this."
+          }
+        }
+      }
+    },
+    "watchHistoryNotShowingFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum erscheinen meine angesehenen Videos nicht in meinem YouTube-Wiedergabeverlauf?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why don't my watched videos appear in my YouTube watch history?"
           }
         }
       }

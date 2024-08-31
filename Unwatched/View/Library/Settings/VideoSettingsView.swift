@@ -12,7 +12,6 @@ struct VideoSettingsView: View {
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
-    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
@@ -52,15 +51,6 @@ struct VideoSettingsView: View {
                 MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
                     Toggle(isOn: $hideShortsEverywhere) {
                         Text("hideShortsEverywhere")
-                    }
-                }
-
-                MySection("youtube", footer: "forceYtWatchHistoryHelper") {
-                    Toggle(isOn: $forceYtWatchHistory) {
-                        Text("forceYtWatchHistory")
-                    }
-                    .onChange(of: forceYtWatchHistory) { _, _ in
-                        PlayerManager.reloadPlayer()
                     }
                 }
 
