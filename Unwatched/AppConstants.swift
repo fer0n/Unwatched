@@ -61,7 +61,7 @@ struct Const {
     static let libraryTabSF = "books.vertical"
 
     static let settingsViewSF = "gearshape.fill"
-    static let allVideosViewSF = "play.rectangle.on.rectangle"
+    static let allVideosViewSF = "square.stack.3d.down.forward.fill"
     static let watchHistoryViewSF = "checkmark.circle"
 
     static let sideloadSF = "arrow.right.circle"

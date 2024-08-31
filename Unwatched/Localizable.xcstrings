@@ -2753,13 +2753,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Sideloads"
+            "value" : "Keine Videos ohne Abo"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Sideloads"
+            "value" : "No Unsubscribed Videos"
           }
         }
       }
@@ -3780,13 +3780,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sideloads"
+            "value" : "Videos ohne Abo"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sideloads"
+            "value" : "Unsubscribed Videos"
           }
         }
       }
