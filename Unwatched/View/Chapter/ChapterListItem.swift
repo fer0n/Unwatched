@@ -6,6 +6,8 @@ struct ChapterListItem: View {
     var timeText: String
     var jumpDisabled: Bool = false
 
+    @ScaledMetric var frameSize = 30
+
     var body: some View {
         HStack {
             toggleChapterButton
@@ -17,7 +19,7 @@ struct ChapterListItem: View {
                         .lineLimit(1)
                 }
                 Text(timeText)
-                    .font(.system(size: 14).monospacedDigit())
+                    .font(.subheadline.monospacedDigit())
                     .foregroundStyle(Color.gray)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -32,7 +34,7 @@ struct ChapterListItem: View {
             ZStack {
                 Image(systemName: Const.circleBackgroundSF)
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: frameSize, height: frameSize)
                     .foregroundStyle(Color.backgroundColor)
                 if chapter.isActive {
                     Image(systemName: Const.checkmarkSF)

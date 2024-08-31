@@ -97,7 +97,7 @@ extension Video {
         //     Chapter(title: "Second Chapter", time: 30, duration: 100, endTime: 130)
         // ]
         return Video(
-            title: "Rabbit R1: Barely Reviewable",
+            title: "Why Democracy Is Mathematically Impossible",
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,

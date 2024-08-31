@@ -39,6 +39,7 @@ struct VideoPlayerFooter: View {
                     VStack {
                         Image(systemName: "chevron.up")
                             .font(.system(size: 30))
+                            .fontWeight(.regular)
                         Text("showMenu")
                             .font(.caption)
                             .textCase(.uppercase)
@@ -68,7 +69,9 @@ struct VideoPlayerFooter: View {
                 }
             }
         }
-        .font(.system(size: 20, weight: .bold))
+        .font(.title2)
+        .fontWeight(.bold)
+        // .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .environment(\.symbolVariants, .fill)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }

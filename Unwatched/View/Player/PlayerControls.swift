@@ -17,6 +17,8 @@ struct PlayerControls: View {
 
     @State var browserUrl: BrowserUrl?
 
+    @ScaledMetric var speedSpacing = 10
+
     let compactSize: Bool
     let showInfo: Bool
     let horizontalLayout: Bool
@@ -51,8 +53,8 @@ struct PlayerControls: View {
                     SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
                 }
 
-                HStack {
-                    CombinedPlaybackSpeedSetting()
+                HStack(spacing: speedSpacing) {
+                    CombinedPlaybackSpeedSetting(spacing: speedSpacing)
                     if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
                         RotateOrientationButton()
                     }
@@ -93,6 +95,7 @@ struct PlayerControls: View {
                                   onSleepTimerEnded: onSleepTimerEnded)
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .innerSizeTrackerModifier(onChange: { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
         })

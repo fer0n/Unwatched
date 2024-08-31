@@ -105,7 +105,7 @@ struct ChapterMiniControlView: View {
             Text(chapter.titleTextForced)
         } else {
             Text(player.video?.title ?? "")
-                .font(.system(size: 20, weight: .heavy))
+                .font(.title3)
                 .multilineTextAlignment(.center)
                 .contextMenu(menuItems: {
                     if let url = player.video?.url {

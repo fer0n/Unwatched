@@ -129,4 +129,5 @@ struct LinkItemView<Content: View>: View {
     SettingsView()
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
+        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

@@ -13,6 +13,8 @@ struct VideoListItemStatus: View {
     var hasQueueEntry: Bool?
     var watched: Bool?
 
+    @ScaledMetric var size = 23
+
     var body: some View {
         if let statusInfo = videoStatusSystemName,
            let status = statusInfo.status {
@@ -20,7 +22,7 @@ struct VideoListItemStatus: View {
                 .resizable()
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.white, statusInfo.color)
-                .frame(width: 23, height: 23)
+                .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
         }
     }
