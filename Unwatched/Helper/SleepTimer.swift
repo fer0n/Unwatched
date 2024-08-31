@@ -21,6 +21,14 @@ struct SleepTimer: View {
         self.viewModel = viewModel
     }
 
+    var accessibilityLabel: String {
+        if let remainingText = viewModel.remainingText {
+            return String(localized: "sleepTimer\(remainingText)")
+        } else {
+            return String(localized: "sleepTimer")
+        }
+    }
+
     var body: some View {
         Button {
             showPopover.toggle()
@@ -28,13 +36,13 @@ struct SleepTimer: View {
             HStack(alignment: .center, spacing: 2) {
                 Image(systemName: viewModel.remainingSeconds <= 0 ? "moon.zzz" : "moon.zzz.fill")
                     .contentTransition(.symbolEffect(.replace))
-
                 if let text = viewModel.remainingText {
                     Text(text)
                         .font(.system(.body).monospacedDigit())
                 }
             }
         }
+        .accessibilityLabel(accessibilityLabel)
         .onAppear {
             slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
         }

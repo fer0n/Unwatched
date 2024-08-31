@@ -23,13 +23,8 @@ struct SubscriptionSearchBar: View {
                 .padding(.trailing, 10)
             Menu {
                 ForEach(SubscriptionSorting.allCases, id: \.self) { sort in
-                    Button {
+                    Button(sort.description, systemImage: sort.systemName) {
                         subscriptionSorting = sort
-                    } label: {
-                        HStack {
-                            Image(systemName: sort.systemName)
-                            Text(sort.description)
-                        }
                     }
                     .disabled(subscriptionSorting == sort)
                 }

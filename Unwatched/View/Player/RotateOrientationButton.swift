@@ -13,6 +13,8 @@ struct RotateOrientationButton: View {
             Image(systemName: "arrowshape.turn.up.right.fill")
                 .outlineToggleModifier(isOn: false, isSmall: true)
         }
+        .help("rotateRight")
+        .accessibilityLabel("rotateRight")
         .padding(2)
         .contextMenu {
             Button {
@@ -36,6 +38,7 @@ struct HideControlsButton: View {
                     : Const.enableFullscreenSF)
                 .outlineToggleModifier(isOn: hideControlsFullscreen)
         }
+        .accessibilityLabel("enterFullscreen")
         .keyboardShortcut("f", modifiers: [])
         .background {
             // workaround: enable esc press to exit video

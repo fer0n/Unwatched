@@ -28,6 +28,7 @@ struct VideoPlayerFooter: View {
                             : "bookmark.slash")
                         .contentTransition(.symbolEffect(.replace))
                 }
+
                 .frame(maxWidth: .infinity)
             }
 
@@ -38,6 +39,7 @@ struct VideoPlayerFooter: View {
                     VStack {
                         Image(systemName: "chevron.up")
                             .font(.system(size: 30))
+                            .fontWeight(.regular)
                         Text("showMenu")
                             .font(.caption)
                             .textCase(.uppercase)
@@ -55,17 +57,21 @@ struct VideoPlayerFooter: View {
                         Image(systemName: "square.and.arrow.up")
                     }
                     .frame(maxWidth: .infinity)
+                    .accessibilityLabel("shareVideo")
 
                     Button {
                         openBrowserUrl(.url(url.absoluteString))
                     } label: {
                         Image(systemName: Const.appBrowserSF)
                     }
+                    .accessibilityLabel("openInAppBrowser")
                     .frame(maxWidth: .infinity)
                 }
             }
         }
-        .font(.system(size: 20, weight: .bold))
+        .font(.title2)
+        .fontWeight(.bold)
+        // .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .environment(\.symbolVariants, .fill)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }

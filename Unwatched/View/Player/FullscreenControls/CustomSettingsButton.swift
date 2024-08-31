@@ -21,6 +21,7 @@ struct CustomSettingsButton: View {
             Image(systemName: "lock")
         }
         .help("customSpeedSetting")
+        .accessibilityLabel("customSpeedSetting")
         .padding(2)
         .toggleStyle(OutlineToggleStyle(isSmall: true))
         .disabled(player.video?.subscription == nil)

@@ -42,9 +42,9 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         var result = [Chapter]()
 
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
-        if mergedChapters?.isEmpty != true && settingOn {
+        if (mergedChapters?.count ?? 0) > 1 && settingOn {
             result = mergedChapters ?? []
-        } else {
+        } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []
         }
         return result.sorted(by: { $0.startTime < $1.startTime })
@@ -79,6 +79,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
             publishedDate: publishedDate,
             updatedDate: updatedDate,
             watched: watched,
+            isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
             clearedInboxDate: clearedInboxDate,
@@ -114,9 +115,9 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         self.videoDescription = videoDescription
         self.chapters = chapters
         self.watched = watched
-        self.isYtShort = isYtShort
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate
+        self.isYtShort = isYtShort
     }
 }

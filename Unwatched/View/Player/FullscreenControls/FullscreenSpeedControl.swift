@@ -5,12 +5,17 @@
 
 import SwiftUI
 
+@Observable class FullscreenSpeedControlVM {
+    var debounceTask: Task<Void, Never>?
+}
+
 struct FullscreenSpeedControl: View {
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
     @Binding var menuOpen: Bool
 
+    @State var viewModel = FullscreenSpeedControlVM()
     var arrowEdge: Edge = .trailing
     @GestureState private var isDetectingLongPress = false
 
@@ -76,11 +81,30 @@ struct FullscreenSpeedControl: View {
     var longPress: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($isDetectingLongPress) { _, _, _ in
-                speedUp()
+                startDebouncedSpeedUp()
             }
             .onEnded { _ in
-                reset()
+                cancelSpeedUp()
             }
+    }
+
+    func startDebouncedSpeedUp() {
+        viewModel.debounceTask?.cancel()
+        viewModel.debounceTask = Task {
+            do {
+                try await Task.sleep(s: 0.3)
+                if !Task.isCancelled {
+                    speedUp()
+                }
+            } catch {
+                // canceled
+            }
+        }
+    }
+
+    func cancelSpeedUp() {
+        viewModel.debounceTask?.cancel()
+        reset()
     }
 
     func speedUp() {

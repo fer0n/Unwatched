@@ -147,6 +147,7 @@ struct LeadingSwipeActionsView: View {
                         Image(systemName: Const.queueTopSF)
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.1))
+                    .accessibilityLabel("queueNext")
             }
             if config.videoSwipeActions.contains(.queueBottom) {
                 Button(role: config.queueRole,
@@ -155,6 +156,7 @@ struct LeadingSwipeActionsView: View {
                         Image(systemName: Const.queueBottomSF)
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.3))
+                    .accessibilityLabel("queueLast")
             }
         }
     }
@@ -206,6 +208,7 @@ struct TrailingSwipeActionsView: View {
                     Image(systemName: Const.videoDescriptionSF)
                 }
                 .tint(theme.color.mix(with: Color.black, by: 0.5))
+                .accessibilityLabel("videoDescription")
             }
         }
     }

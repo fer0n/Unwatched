@@ -249,7 +249,7 @@ enum VideoSource {
             return
         }
         let currentVideoId = video?.persistentModelID
-        Task {
+        Task { @MainActor in
             try? await task?.value
             let videoId = VideoService.getTopVideoInQueue(container)
             if let videoId = videoId {

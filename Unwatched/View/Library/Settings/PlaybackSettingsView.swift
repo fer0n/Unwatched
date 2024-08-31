@@ -11,6 +11,8 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
+    @AppStorage(Const.swapNextAndContinuous) var swapNextAndContinuous: Bool = false
+    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
 
     var body: some View {
         ZStack {
@@ -37,8 +39,25 @@ struct PlaybackSettingsView: View {
                         Text("returnToQueue")
                     }
 
-                    Toggle(isOn: $rotateOnPlay) {
-                        Text("rotateOnPlay")
+                    if UIDevice.isIphone {
+                        Toggle(isOn: $rotateOnPlay) {
+                            Text("rotateOnPlay")
+                        }
+                    }
+                }
+
+                MySection(footer: "swapNextAndContinuousHelper") {
+                    Toggle(isOn: $swapNextAndContinuous) {
+                        Text("swapNextAndContinuous")
+                    }
+                }
+
+                MySection("youtube", footer: "forceYtWatchHistoryHelper") {
+                    Toggle(isOn: $forceYtWatchHistory) {
+                        Text("forceYtWatchHistory")
+                    }
+                    .onChange(of: forceYtWatchHistory) { _, _ in
+                        PlayerManager.reloadPlayer()
                     }
                 }
 

@@ -49,6 +49,9 @@ struct SettingsView: View {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
+                    NavigationLink(value: LibraryDestination.faq) {
+                        Label("faq", systemImage: "questionmark")
+                    }
                     Link(destination: UrlService.emailUrl) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
@@ -85,6 +88,11 @@ struct SettingsView: View {
                     Label("debug", systemImage: "ladybug.fill")
                 }
                 .listRowBackground(Color.insetBackgroundColor)
+
+                Section {
+                    VersionAndBuildNumber()
+                }
+                .listRowBackground(Color.backgroundColor)
             }
             .myNavigationTitle("settings")
         }
@@ -104,7 +112,6 @@ struct LinkItemView<Content: View>: View {
 
     var body: some View {
         Link(destination: destination) {
-
             HStack(spacing: 20) {
                 content()
                     .frame(width: 24, height: 24)
@@ -117,6 +124,7 @@ struct LinkItemView<Content: View>: View {
                     .tint(.neutralAccentColor)
             }
         }
+        .accessibilityLabel(label)
     }
 }
 
@@ -124,4 +132,5 @@ struct LinkItemView<Content: View>: View {
     SettingsView()
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
+        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

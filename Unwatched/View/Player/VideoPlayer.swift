@@ -126,4 +126,5 @@ struct VideoPlayer: View {
         .environment(RefreshManager())
         .environment(ImageCacheManager())
         .tint(Color.neutralAccentColor)
+    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

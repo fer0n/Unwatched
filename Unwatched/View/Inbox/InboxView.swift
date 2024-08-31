@@ -115,18 +115,21 @@ struct InboxView: View {
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                 Button(action: invalidateTip) {
                     Image(systemName: "text.insert")
+                        .accessibilityLabel("queueNext")
                 }
                 .tint(theme.color.mix(with: Color.black, by: 0.1))
 
                 Button(action: invalidateTip) {
                     Image(systemName: Const.queueBottomSF)
                 }
+                .accessibilityLabel("queueLast")
                 .tint(theme.color.mix(with: Color.black, by: 0.3))
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button(action: invalidateTip) {
                     Image(systemName: Const.clearSF)
                 }
+                .accessibilityLabel("clear")
                 .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
     }

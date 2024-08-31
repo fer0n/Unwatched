@@ -15,15 +15,19 @@ struct SpeedControlView: View {
 
     @Binding var selectedSpeed: Double
 
-    let highlighted: [Double] = Const.highlightedPlaybackSpeeds
     static let padding: CGFloat = 0
-    static let maxHeight: CGFloat = 40
-    static let midY: CGFloat = SpeedControlView.maxHeight / 2
+    @ScaledMetric var maxHeight: CGFloat = 40
     let frameHeight: CGFloat = 30
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
 
     var body: some View {
+        let highlighted: [Double] = viewModel.showDecimalHighlights
+            ? Const.highlightedPlaybackSpeeds
+            : Const.highlightedSpeedsInt
+
         ZStack {
+            let midY: CGFloat = maxHeight / 2
+
             Capsule()
                 .fill(Color.backgroundGray)
                 .frame(height: frameHeight)
@@ -41,7 +45,7 @@ struct SpeedControlView: View {
                             .stroke(isHightlighted ? .clear : foregroundColor, lineWidth: 1.5)
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
-                            .frame(maxWidth: .infinity, maxHeight: SpeedControlView.maxHeight)
+                            .frame(maxWidth: .infinity, maxHeight: maxHeight)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
@@ -76,14 +80,14 @@ struct SpeedControlView: View {
                 ZStack {
                     Circle()
                         .fill()
-                        .frame(width: SpeedControlView.maxHeight, height: SpeedControlView.maxHeight)
+                        .frame(width: maxHeight, height: maxHeight)
                     Text(getFloatingText())
                         .foregroundStyle(.automaticWhite)
                         .bold()
-                        .font(.system(size: 16))
+                        .font(.subheadline)
                 }
-                .position(x: dragState ?? controlMinX, y: SpeedControlView.midY)
-                .frame(maxHeight: SpeedControlView.maxHeight)
+                .position(x: dragState ?? controlMinX, y: midY)
+                .frame(maxHeight: maxHeight)
                 .animation(.bouncy(duration: 0.4), value: controlMinX)
                 .transition(.identity)
             }
@@ -145,11 +149,12 @@ struct SpeedControlView_Previews: PreviewProvider {
 
     static var previews: some View {
         SpeedControlView(selectedSpeed: $speed)
+            .environment(NavigationManager())
     }
 }
 
 struct SpeedControlViewPreview: View {
-    @State var selected: Double = 1.5
+    @State var selected: Double = 1.3
 
     var body: some View {
         SpeedControlView(selectedSpeed: $selected)
@@ -161,4 +166,6 @@ struct SpeedControlViewPreview: View {
 
 #Preview {
     SpeedControlViewPreview()
+        .frame(width: 250)
+    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

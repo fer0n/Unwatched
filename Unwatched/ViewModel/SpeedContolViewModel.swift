@@ -8,6 +8,7 @@ import Foundation
 class SpeedControlViewModel {
     var width: CGFloat = 0
     var itemWidth: CGFloat = 0
+    var fullWidth: CGFloat = 0
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
         let itemWidth = width / CGFloat(Const.speeds.count)
@@ -26,6 +27,11 @@ class SpeedControlViewModel {
     func getXPos(_ fullWidth: CGFloat, _ speed: Double) -> CGFloat {
         let selectedSpeedIndex = Const.speeds.firstIndex(of: speed) ?? 0
         return (CGFloat(selectedSpeedIndex) * itemWidth) + (itemWidth / 2)
+    }
+
+    /// Only true when there's enough space
+    var showDecimalHighlights: Bool {
+        itemWidth > 18
     }
 
     static func formatSpeed(_ speed: Double) -> String {

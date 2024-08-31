@@ -119,8 +119,10 @@ struct AddToLibraryView: View {
             ProgressView()
         } else if failed {
             Image(systemName: Const.clearNoFillSF)
+                .accessibilityLabel("failed")
         } else if isSuccess {
             Image(systemName: "checkmark")
+                .accessibilityLabel("success")
         } else if addText.isEmpty {
             Button("paste") {
                 let text = UIPasteboard.general.string ?? ""

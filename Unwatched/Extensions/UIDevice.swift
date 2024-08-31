@@ -12,7 +12,7 @@ public extension UIDevice {
     }()
 
     static let supportsFullscreenControls: Bool = {
-        !UIDevice.modelName.contains("iPhone SE")
+        !UIDevice.modelName.contains("iPhone SE") && isIphone
     }()
 
     static let requiresFullscreenWebWorkaround: Bool = {

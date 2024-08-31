@@ -278,4 +278,28 @@ struct VideoService {
             try? modelContext.save()
         }
     }
+
+    static func getDurationText(for video: Video, duration: Double? = nil) -> (total: Double?, text: String?) {
+        let duration = duration ?? video.duration
+
+        if let durationText = duration?.formattedSecondsColon {
+            return (duration, durationText)
+        }
+
+        if let lastChapter = video.sortedChapters.last {
+            let time = lastChapter.endTime ?? lastChapter.startTime
+            if let timeText = time.formattedSecondsColon {
+                return (duration, ">\(timeText)")
+            }
+        }
+
+        return (duration, nil)
+    }
+
+    static func getDurationFromChapters(_ video: Video) -> Double? {
+        if let lastChapter = video.sortedChapters.last {
+            return lastChapter.endTime ?? lastChapter.startTime
+        }
+        return nil
+    }
 }
