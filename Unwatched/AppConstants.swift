@@ -90,7 +90,8 @@ struct Const {
 
     static let nextChapterSF = "forward.end.fill"
     static let previousChapterSF = "backward.end.fill"
-    static let nextVideoSF = "forward.end.alt.fill"
+    static let nextVideoSF = "forward.fill"
+    static let continuousPlaySF = "text.line.first.and.arrowtriangle.forward"
 
     static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
     static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
@@ -101,6 +102,7 @@ struct Const {
     static let hideControlsFullscreen = "hideControlsFullscreen"
     static let returnToQueue = "returnToQueue"
     static let rotateOnPlay = "rotateOnPlay"
+    static let swapNextAndContinuous = "swapNextAndContinuous"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
@@ -178,6 +180,7 @@ extension Const {
         Const.playVideoFullscreen: false,
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,
+        Const.swapNextAndContinuous: false,
 
         // Appearance
         Const.showTabBarLabels: true,
