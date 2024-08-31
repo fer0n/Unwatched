@@ -1654,13 +1654,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \">\"-Zeit angezeigt."
+            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \"+\"-Zeit angezeigt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \">\" time."
+            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time."
           }
         }
       }
@@ -1670,13 +1670,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Warum fehlt die Dauer bei einigen Videos? Was bedeutet \">\"?"
+            "value" : "Warum fehlt die Dauer bei einigen Videos? Was bedeutet \"+\"?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Why is the duration missing on some videos? What does \">\" mean?"
+            "value" : "Why is the duration missing on some videos? What does \"+\" mean?"
           }
         }
       }

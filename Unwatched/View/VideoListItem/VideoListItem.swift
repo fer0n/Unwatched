@@ -87,9 +87,9 @@ enum VideoActions {
     guard let video = videos?.first else {
         return Text("noVideoFound")
     }
-    video.duration = 130
+    video.duration = nil // 130
     video.elapsedSeconds = 20
-    // video.isYtShort = true
+    video.isYtShort = false
 
     return List {
         VideoListItem(
@@ -108,5 +108,5 @@ enum VideoActions {
     .environment(NavigationManager())
     .environment(PlayerManager())
     .environment(ImageCacheManager())
-    .environment(\.sizeCategory, .extraExtraExtraLarge)
+    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }
