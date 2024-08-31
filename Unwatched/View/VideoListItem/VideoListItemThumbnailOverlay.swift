@@ -15,6 +15,8 @@ struct VideoListItemThumbnailOverlay: View {
     var color: Color?
     var showDuration = true
     @ScaledMetric var progressbarHeight: CGFloat = 3
+    @ScaledMetric var padding: CGFloat = 4
+    @ScaledMetric var radius: CGFloat = 6
 
     var body: some View {
         let elapsed = video.elapsedSeconds
@@ -25,61 +27,42 @@ struct VideoListItemThumbnailOverlay: View {
             }
             return nil
         }()
+        let hasDuration = showDuration
+            && (roughDuration != nil || total != nil || video.isYtShort)
 
         ZStack {
             if let elapsed = elapsed, let total = total {
                 let progress = elapsed / total
                 GeometryReader { geo in
                     let progressWidth = geo.size.width * progress
-
-                    VStack(spacing: 0) {
-                        Spacer()
-                        Color.black
-                            .frame(height: 4)
-                            .opacity(0.1)
-                            .mask(LinearGradient(gradient: Gradient(
-                                stops: [
-                                    .init(color: .black, location: 0),
-                                    .init(color: .clear, location: 1)
-                                ]
-                            ), startPoint: .bottom, endPoint: .top))
-                        HStack(spacing: 0) {
-                            (color ?? theme.color)
-                                .frame(width: progressWidth)
-                            Color.clear.background(.thinMaterial)
-                        }
-                        .frame(height: progressbarHeight)
-                    }
+                    progressBar(progressWidth)
                 }
+            } else if hasDuration {
+                progressBar()
             }
 
-            if showDuration && (roughDuration != nil || total != nil || video.isYtShort) {
+            if hasDuration {
                 ZStack {
                     if video.isYtShort {
                         Text(verbatim: "#s")
                     } else if let text = total?.formattedSecondsColon {
                         Text(text)
                     } else if let duration = roughDuration?.formattedSecondsColon {
-                        Text(formatRoughDuration(duration))
+                        formatRoughDuration(duration)
                     }
                 }
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 3)
+                .foregroundStyle(.primary).opacity(0.9)
+                .padding(.horizontal, padding)
                 .background(.thinMaterial)
                 .clipShape(
                     RoundedRectangle(
-                        cornerRadius: progressbarHeight,
+                        cornerRadius: radius,
                         style: .continuous
                     )
                 )
-                .padding(
-                    .bottom,
-                    (total == nil || elapsed == nil)
-                        ? progressbarHeight
-                        : progressbarHeight * 2
-                )
-                .padding(.trailing, progressbarHeight)
+                .padding(.bottom, padding + progressbarHeight)
+                .padding(.trailing, padding)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -89,11 +72,36 @@ struct VideoListItemThumbnailOverlay: View {
         }
     }
 
-    func formatRoughDuration(_ duration: String) -> AttributedString {
-        let duration = AttributedString(duration)
-        var min = AttributedString(">")
-        min.font = .footnote
-        min.foregroundColor = .secondary.opacity(0.9)
-        return min + duration
+    func formatRoughDuration(_ duration: String) -> some View {
+        HStack(alignment: .center, spacing: 0) {
+            Text(duration)
+                .foregroundStyle(.primary)
+            Image(systemName: "plus")
+                .fontWeight(.semibold)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.trailing, -2)
+    }
+
+    func progressBar(_ width: Double? = nil) -> some View {
+        VStack(spacing: 0) {
+            Spacer()
+            Color.black
+                .frame(height: 4)
+                .opacity(0.1)
+                .mask(LinearGradient(gradient: Gradient(
+                    stops: [
+                        .init(color: .black, location: 0),
+                        .init(color: .clear, location: 1)
+                    ]
+                ), startPoint: .bottom, endPoint: .top))
+            HStack(spacing: 0) {
+                (color ?? theme.color)
+                    .frame(width: width ?? 0)
+                Color.clear.background(.thinMaterial)
+            }
+            .frame(height: progressbarHeight)
+        }
     }
 }

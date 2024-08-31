@@ -12,6 +12,8 @@ struct VideoListItemDetails: View {
     var queueButtonSize: CGFloat?
 
     @ScaledMetric var titleSize = 15
+    @ScaledMetric var subSize   = 14
+    @ScaledMetric var timeSize  = 12
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -26,7 +28,7 @@ struct VideoListItemDetails: View {
             VStack(alignment: .leading, spacing: 3) {
                 if let subTitle = video.subscription?.displayTitle {
                     Text(subTitle)
-                        .font(.headline)
+                        .font(.system(size: subSize))
                         .fontWeight(.regular)
                         .lineLimit(1)
                         .textCase(.uppercase)
@@ -40,7 +42,7 @@ struct VideoListItemDetails: View {
                 if let published = video.publishedDate {
                     Text("\(published.formattedRelative) ago")
                         .fontWeight(.regular)
-                        .font(.subheadline)
+                        .font(.system(size: timeSize))
                 }
             }
             .padding(.trailing, queueButtonSize)
