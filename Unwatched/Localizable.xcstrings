@@ -1179,6 +1179,54 @@
         }
       }
     },
+    "continuousPlay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortlaufende Wiedergabe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Play"
+          }
+        }
+      }
+    },
+    "continuousPlayOff" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortlaufende Wiedergabe aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Continuous Play"
+          }
+        }
+      }
+    },
+    "continuousPlayOn" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortlaufende Wiedergabe aktiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Play Enabled"
+          }
+        }
+      }
+    },
     "Could not subscribe: (message)" : {
       "comment" : "Could not subscribe",
       "localizations" : {
@@ -4028,6 +4076,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
+          }
+        }
+      }
+    },
+    "swapNextAndContinuous" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Fortlaufende Wiedergabe\" mit \"Nächstes Video\" ersetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace \"Next\" With \"Continuous Play\""
+          }
+        }
+      }
+    },
+    "swapNextAndContinuousHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die andere Option ist jeweils über das Kontextmenü zugänglich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can always access the other option by long pressing on the button."
           }
         }
       }
