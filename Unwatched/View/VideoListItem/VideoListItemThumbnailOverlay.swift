@@ -19,6 +19,12 @@ struct VideoListItemThumbnailOverlay: View {
     var body: some View {
         let elapsed = video.elapsedSeconds
         let total = videoDuration ?? video.duration
+        let roughDuration: Double? = {
+            if total == nil {
+                return VideoService.getDurationFromChapters(video)
+            }
+            return nil
+        }()
 
         ZStack {
             if let elapsed = elapsed, let total = total {
@@ -47,12 +53,14 @@ struct VideoListItemThumbnailOverlay: View {
                 }
             }
 
-            if showDuration && (total != nil || video.isYtShort) {
+            if showDuration && (roughDuration != nil || total != nil || video.isYtShort) {
                 ZStack {
                     if video.isYtShort {
                         Text(verbatim: "#s")
-                    } else if let time = total?.formattedSecondsColon {
-                        Text(time)
+                    } else if let text = total?.formattedSecondsColon {
+                        Text(text)
+                    } else if let duration = roughDuration?.formattedSecondsColon {
+                        Text(formatRoughDuration(duration))
                     }
                 }
                 .font(.subheadline)
@@ -79,5 +87,13 @@ struct VideoListItemThumbnailOverlay: View {
                 )
             }
         }
+    }
+
+    func formatRoughDuration(_ duration: String) -> AttributedString {
+        let duration = AttributedString(duration)
+        var min = AttributedString(">")
+        min.font = .footnote
+        min.foregroundColor = .secondary.opacity(0.9)
+        return min + duration
     }
 }
