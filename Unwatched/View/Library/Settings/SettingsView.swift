@@ -49,6 +49,9 @@ struct SettingsView: View {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
+                    NavigationLink(value: LibraryDestination.faq) {
+                        Label("faq", systemImage: "questionmark")
+                    }
                     Link(destination: UrlService.emailUrl) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
