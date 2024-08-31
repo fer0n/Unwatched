@@ -16,7 +16,7 @@ struct AllVideosView: View {
 
             SearchableVideos(text: $text)
             ContentUnavailableView("noVideosYet",
-                                   systemImage: "play.rectangle.on.rectangle",
+                                   systemImage: Const.allVideosViewSF,
                                    description: Text("noVideosYetDescription"))
                 .opacity(videos.isEmpty ? 1 : 0)
             List {
