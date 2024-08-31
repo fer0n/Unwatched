@@ -11,7 +11,8 @@ struct VersionAndBuildNumber: View {
         if let version = version {
             Text(verbatim: "v\(version)\(buildNumber)")
                 .frame(maxWidth: .infinity, alignment: .center)
-                .font(.system(size: 15, weight: .medium))
+                .font(.subheadline)
+                .fontWeight(.medium)
                 .foregroundStyle(.secondary)
         }
     }

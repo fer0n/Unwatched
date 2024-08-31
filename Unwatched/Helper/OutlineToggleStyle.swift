@@ -26,10 +26,20 @@ struct OutlineToggleModifier: ViewModifier {
     var isSmall: Bool = false
     var stroke: Bool = true
 
+    @ScaledMetric var smallSize: CGFloat = 35
+    @ScaledMetric var normalSize: CGFloat = 45
+
+    init(isOn: Bool, isSmall: Bool = false, stroke: Bool = true) {
+        self.isOn = isOn
+        self.isSmall = isSmall
+        self.stroke = stroke
+    }
+
     func body(content: Content) -> some View {
-        let size: CGFloat = isSmall ? 35 : 45
+        let size = isSmall ? smallSize : normalSize
         content
-            .font(.system(size: isSmall ? 15 : 18))
+            .font(isSmall ? .subheadline : .headline)
+            .fontWeight(.regular)
             .frame(width: size, height: size)
             .background(isOn ? Color.neutralAccentColor : Color.myBackgroundGray)
             .foregroundStyle(isOn ? Color.backgroundColor : Color.myForegroundGray)
