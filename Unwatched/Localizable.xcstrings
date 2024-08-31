@@ -1083,6 +1083,22 @@
         }
       }
     },
+    "compactList" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kompakt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compact"
+          }
+        }
+      }
+    },
     "confirm" : {
       "localizations" : {
         "de" : {
@@ -1773,6 +1789,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Don't Backup all Watched Videos"
+          }
+        }
+      }
+    },
+    "expansiveList" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erweitert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expansive"
           }
         }
       }
@@ -4380,6 +4412,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video Description"
+          }
+        }
+      }
+    },
+    "videoListFormat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Listen Darstellung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video List Format"
           }
         }
       }
