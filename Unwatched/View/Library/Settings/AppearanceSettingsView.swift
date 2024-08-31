@@ -13,6 +13,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
     @AppStorage(Const.lightPlayer) var lightPlayer: Bool = false
+    @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
 
     var body: some View {
 
@@ -36,6 +37,15 @@ struct AppearanceSettingsView: View {
                     Toggle(isOn: $sheetOpacity) {
                         Text("sheetOpacity")
                     }
+                }
+
+                MySection {
+                    Picker("videoListFormat", selection: $videoListFormat) {
+                        ForEach(VideoListFormat.allCases, id: \.self) {
+                            Text($0.description)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 }
 
                 MySection {

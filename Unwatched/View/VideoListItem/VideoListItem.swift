@@ -8,6 +8,8 @@ import SwiftData
 import OSLog
 
 struct VideoListItem: View {
+    @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
+
     @Environment(PlayerManager.self) private var player
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
@@ -24,8 +26,8 @@ struct VideoListItem: View {
 
     var body: some View {
         let normalSize = dynamicTypeSize <= .large
-        let largeSize = dynamicTypeSize <= .xxxLarge
-        let layout = largeSize
+        let compactFormat = dynamicTypeSize <= .xxxLarge && videoListFormat == .compact
+        let layout = compactFormat
             ? AnyLayout(HStackLayout(alignment: normalSize ? .center : .top, spacing: 8))
             : AnyLayout(VStackLayout(spacing: 8))
 
@@ -33,7 +35,7 @@ struct VideoListItem: View {
             VideoListItemThumbnail(
                 video,
                 config: config,
-                size: largeSize ? CGSize(width: 168, height: 94.5) : nil
+                size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
             )
             .padding([.vertical, .leading], config.showVideoStatus ? 5 : 0)
             .overlay(alignment: .topLeading) {

@@ -154,6 +154,7 @@ struct Const {
     static let refreshOnClose = "refreshOnClose"
 
     static let lightPlayer = "lightPlayer"
+    static let videoListFormat = "videoListFormat"
 }
 
 extension Const {
@@ -189,6 +190,7 @@ extension Const {
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
         Const.lightPlayer: false,
+        Const.videoListFormat: VideoListFormat.compact,
 
         // User Data
         Const.automaticBackups: true,
