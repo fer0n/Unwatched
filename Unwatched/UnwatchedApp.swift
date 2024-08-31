@@ -52,7 +52,7 @@ struct UnwatchedApp: App {
         let config = ModelConfiguration(
             schema: DataController.schema,
             isStoredInMemoryOnly: inMemory,
-            cloudKitDatabase: enableIcloudSync ? .automatic : .none
+            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
 
         do {

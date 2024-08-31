@@ -16,15 +16,14 @@ struct ConfirmableMenuButton<Content: View>: View {
 
     var body: some View {
         Menu {
-            Button(role: .destructive) {
-                action()
-            } label: {
-                Image(systemName: "checkmark")
-                Text("confirm")
-            }
-            Button { } label: {
-                Label("cancel", systemImage: Const.clearNoFillSF)
-            }
+            Button(
+                "confirm",
+                systemImage: "checkmark",
+                role: .destructive,
+                action: action
+            )
+
+            Button("cancel", systemImage: Const.clearNoFillSF, action: { })
         } label: {
             label
         }

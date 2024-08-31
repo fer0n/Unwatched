@@ -26,6 +26,7 @@ struct ChapterMiniControlView: View {
                             Image(systemName: Const.previousChapterSF)
                                 .font(.system(size: 15))
                         }
+                        .accessibilityLabel("previousChapter")
                         .keyboardShortcut(.leftArrow)
                         .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapterDisabled)
@@ -104,15 +105,12 @@ struct ChapterMiniControlView: View {
             Text(chapter.titleTextForced)
         } else {
             Text(player.video?.title ?? "")
-                .font(.system(size: 20, weight: .heavy))
+                .font(.title3)
                 .multilineTextAlignment(.center)
                 .contextMenu(menuItems: {
                     if let url = player.video?.url {
                         ShareLink(item: url) {
-                            HStack {
-                                Image(systemName: "square.and.arrow.up.fill")
-                                Text("share")
-                            }
+                            Label("shareVideo", systemImage: "square.and.arrow.up.fill")
                         }
                     }
                 })
@@ -205,6 +203,7 @@ struct ChapterMiniControlGoToNext: View {
             Image(systemName: Const.nextChapterSF)
                 .font(.system(size: 15))
         }
+        .accessibilityLabel("nextChapter")
         .buttonStyle(ChangeChapterButtonStyle(
             chapter: player.currentChapter,
             remainingTime: player.currentRemaining

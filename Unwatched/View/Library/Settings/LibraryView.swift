@@ -48,6 +48,7 @@ struct LibraryView: View {
                         NavigationLink(value: LibraryDestination.settings) {
                             Image(systemName: Const.settingsViewSF)
                                 .fontWeight(.bold)
+                                .accessibilityLabel("settings")
                         }
                     }
                     RefreshToolbarButton()

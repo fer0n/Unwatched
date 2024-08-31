@@ -16,10 +16,8 @@ struct VideoListItemMoreMenuView: View {
 
     var body: some View {
         Menu {
-            Button(action: markWatched) {
-                Image(systemName: Const.watchedSF)
-                Text("markWatched")
-            }
+            Button("markWatched", systemImage: Const.watchedSF, action: markWatched)
+
             Button(action: toggleBookmark) {
                 let isBookmarked = video.bookmarkedDate != nil
 
@@ -36,20 +34,14 @@ struct VideoListItemMoreMenuView: View {
                 }
             }
             if video.inboxEntry == nil {
-                Button(action: moveToInbox) {
-                    Image(systemName: "tray.and.arrow.down.fill")
-                    Text("moveToInbox")
-                }
+                Button("moveToInbox", systemImage: "tray.and.arrow.down.fill", action: moveToInbox)
             }
             Divider()
             if let url = video.url {
                 ShareLink(item: url)
 
-                Button {
+                Button("openInApp", systemImage: Const.appBrowserSF) {
                     openUrlInApp(url.absoluteString)
-                } label: {
-                    Image(systemName: Const.appBrowserSF)
-                    Text("openInApp")
                 }
             }
             ClearAboveBelowButtons(clearList: clearList, config: config)

@@ -29,6 +29,7 @@ struct VideoNotAvailableView: View {
                     .scaledToFit()
                     .frame(width: 70, height: 70)
                     .foregroundStyle(theme.color)
+                    .accessibilityLabel("unwatchedLogo")
                 Spacer()
                     .frame(height: 30)
                 Text("Unwatched")

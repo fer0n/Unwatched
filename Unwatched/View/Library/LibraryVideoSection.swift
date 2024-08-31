@@ -18,7 +18,7 @@ struct LibraryVideoSection: View {
         MySection("videos") {
             NavigationLink(value: LibraryDestination.allVideos) {
                 LibraryNavListItem("allVideos",
-                                   systemName: "play.rectangle.on.rectangle.fill")
+                                   systemName: Const.allVideosViewSF)
             }
             NavigationLink(value: LibraryDestination.watchHistory) {
                 LibraryNavListItem("watched",
@@ -35,5 +35,6 @@ struct LibraryVideoSection: View {
                 }
             }
         }
+        .symbolVariant(.fill)
     }
 }

@@ -27,6 +27,7 @@ struct SubscriptionInfoDetails: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     subscribeButton
+                        .frame(maxHeight: .infinity)
                         .buttonStyle(CapsuleButtonStyle())
 
                     if let url = UrlService.getYoutubeUrl(
@@ -38,7 +39,9 @@ struct SubscriptionInfoDetails: View {
                         } label: {
                             Image(systemName: Const.appBrowserSF)
                                 .padding(10)
+                                .frame(maxHeight: .infinity)
                         }
+                        .accessibilityLabel("browser")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                     if let url = UrlService.getYoutubeUrl(
@@ -49,10 +52,13 @@ struct SubscriptionInfoDetails: View {
                         ShareLink(item: url) {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)
+                                .frame(maxHeight: .infinity)
                         }
+                        .accessibilityLabel("shareVideo")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                 }
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
             }
             Spacer()
@@ -188,6 +194,7 @@ struct SubscriptionInfoDetails: View {
                 .environment(RefreshManager())
                 .environment(PlayerManager())
                 .environment(ImageCacheManager())
+                .background(.gray)
             Color.blue
             Spacer()
         }

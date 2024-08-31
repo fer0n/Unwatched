@@ -23,6 +23,7 @@ struct Const {
     static let consideredWideAspectRatio: Double = 18/9
 
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
+    static let highlightedSpeedsInt = [1.0, 2.0]
     static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
     static let previousChapterDelaySeconds: Double = 4
 
@@ -60,7 +61,7 @@ struct Const {
     static let libraryTabSF = "books.vertical"
 
     static let settingsViewSF = "gearshape.fill"
-    static let allVideosViewSF = "play.rectangle.on.rectangle"
+    static let allVideosViewSF = "square.stack.3d.down.forward.fill"
     static let watchHistoryViewSF = "checkmark.circle"
 
     static let sideloadSF = "arrow.right.circle"
@@ -89,7 +90,8 @@ struct Const {
 
     static let nextChapterSF = "forward.end.fill"
     static let previousChapterSF = "backward.end.fill"
-    static let nextVideoSF = "forward.end.alt.fill"
+    static let nextVideoSF = "forward.fill"
+    static let continuousPlaySF = "text.line.first.and.arrowtriangle.forward"
 
     static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
     static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
@@ -100,6 +102,7 @@ struct Const {
     static let hideControlsFullscreen = "hideControlsFullscreen"
     static let returnToQueue = "returnToQueue"
     static let rotateOnPlay = "rotateOnPlay"
+    static let swapNextAndContinuous = "swapNextAndContinuous"
     static let defaultVideoPlacement = "defaultVideoPlacement"
     static let playbackSpeed = "playbackSpeed"
     static let continuousPlay = "continuousPlay"
@@ -121,6 +124,7 @@ struct Const {
     static let automaticBackups = "automaticBackups"
     static let lastAutoBackupDate = "lastAutoBackupDate"
     static let minimalBackups = "minimalBackups"
+    static let exludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     static let autoDeleteBackups = "autoDeleteBackups"
 
     static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
@@ -150,4 +154,48 @@ struct Const {
     static let refreshOnClose = "refreshOnClose"
 
     static let lightPlayer = "lightPlayer"
+    static let videoListFormat = "videoListFormat"
+}
+
+extension Const {
+    static let settingsDefaults: [String: Any] = [
+        // Notifications
+        Const.videoAddedToInboxNotification: false,
+        Const.videoAddedToQueueNotification: false,
+        Const.showNotificationBadge: false,
+
+        // Videos
+        Const.defaultVideoPlacement: VideoPlacement.inbox,
+        Const.hideShortsEverywhere: false,
+        Const.requireClearConfirmation: true,
+        Const.showClearQueueButton: true,
+        Const.showAddToQueueButton: false,
+        Const.mergeSponsorBlockChapters: false,
+        Const.forceYtWatchHistory: false,
+        Const.autoRefresh: true,
+        Const.enableQueueContextMenu: false,
+
+        // Playback
+        Const.fullscreenControlsSetting: FullscreenControls.autoHide,
+        Const.hideMenuOnPlay: true,
+        Const.playVideoFullscreen: false,
+        Const.returnToQueue: false,
+        Const.rotateOnPlay: false,
+        Const.swapNextAndContinuous: false,
+
+        // Appearance
+        Const.showTabBarLabels: true,
+        Const.showTabBarBadge: true,
+        Const.themeColor: ThemeColor.teal,
+        Const.browserAsTab: false,
+        Const.sheetOpacity: false,
+        Const.lightPlayer: false,
+        Const.videoListFormat: VideoListFormat.compact,
+
+        // User Data
+        Const.automaticBackups: true,
+        Const.minimalBackups: true,
+        Const.enableIcloudSync: false,
+        Const.exludeWatchHistoryInBackup: false
+    ]
 }

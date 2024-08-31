@@ -26,7 +26,7 @@ struct CapsuleButtonStyle: ButtonStyle {
             .opacity(isEnabled ? 1 : 0.2)
             .padding(.vertical, 5)
             .padding(.horizontal, 10)
-            .background(background, in: Capsule())
+            .background(background, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
             .foregroundStyle(foreground)
     }
 }

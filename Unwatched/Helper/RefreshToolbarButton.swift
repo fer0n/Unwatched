@@ -16,6 +16,7 @@ struct CoreRefreshButton: View {
             if refresher.isSyncingIcloud {
                 Image(systemName: "icloud.fill")
                     .opacity(0.5)
+                    .accessibilityLabel("syncing")
             }
             Button {
                 Task { @MainActor in
@@ -32,6 +33,7 @@ struct CoreRefreshButton: View {
                         .rotationEffect(Angle(degrees: rotation))
                 }
             }
+            .accessibilityLabel("refresh")
             .contextMenu {
                 Button {
                     Task { @MainActor in
@@ -43,7 +45,7 @@ struct CoreRefreshButton: View {
             }
             .disabled(refresher.isSyncingIcloud)
         }
-        .font(.system(size: 13))
+        .font(.footnote)
         .fontWeight(.bold)
         .modifier(AnimationCompletionCallback(animatedValue: rotation) {
             if refresher.isLoading {
