@@ -20,7 +20,7 @@ struct DescriptionDetailView: View {
                     Text(verbatim: subTitle)
                 }
                 if let published = video.publishedDate {
-                    Text(verbatim: "\(published.formatted)")
+                    Text(verbatim: "\(published.formattedExtensive)")
                 }
                 if let timeString = video.duration?.formattedSeconds {
                     Text(verbatim: timeString)

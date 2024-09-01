@@ -126,8 +126,9 @@ struct ChapterMiniControlView: View {
                 Image(systemName: Const.videoDescriptionSF)
                 if let published = video.publishedDate {
                     Text(Const.dotString)
-                    Text(verbatim: "\(published.formatted)")
+                    Text(verbatim: "\(published.formattedToday)")
                 }
+
                 if let duration = video.duration?.formattedSeconds {
                     Text(Const.dotString)
                     Text(verbatim: "\(duration)")
