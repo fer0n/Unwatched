@@ -14,8 +14,7 @@ class DataController {
         QueueEntry.self,
         WatchEntry.self,
         InboxEntry.self,
-        Chapter.self,
-        CachedImage.self
+        Chapter.self
     ]
 
     static let schema = Schema(DataController.dbEntries)
@@ -27,6 +26,53 @@ class DataController {
             cloudKitDatabase: .none
         )
     }
+
+    static var getCachedImageContainer: ModelContainer = {
+        let schema = Schema([CachedImage.self])
+        let storeURL = URL.documentsDirectory.appending(path: "imageCache.sqlite")
+
+        let config = ModelConfiguration(
+            schema: schema,
+            url: storeURL,
+            cloudKitDatabase: .none
+        )
+
+        do {
+            return try ModelContainer(
+                for: schema,
+                configurations: [config]
+            )
+        } catch {
+            fatalError("Could not create CachedImage ModelContainer: \(error)")
+        }
+    }()
+
+    static var getModelContainer: ModelContainer = {
+        var inMemory = false
+        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+
+        #if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            return DataController.previewContainer
+        }
+        #endif
+
+        let config = ModelConfiguration(
+            schema: DataController.schema,
+            isStoredInMemoryOnly: inMemory,
+            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
+        )
+
+        do {
+            return try ModelContainer(
+                for: DataController.schema,
+                // migrationPlan: UsersMigrationPlan.self,
+                configurations: [config]
+            )
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
 
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {

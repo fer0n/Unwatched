@@ -9,6 +9,8 @@ import OSLog
 
 @ModelActor
 actor SubscriptionActor {
+    var imageUrlsToBeDeleted = [URL]()
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now

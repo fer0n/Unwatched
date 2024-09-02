@@ -33,8 +33,6 @@ struct CleanupService {
         removeVideoDuplicates()
         removeEmptyQueueEntries()
         removeEmptyInboxEntries()
-        cleanUpCachedImages()
-        removeEmptyImages()
         try? modelContext.save()
 
         return duplicateInfo
@@ -189,54 +187,6 @@ struct CleanupService {
         }
         modelContext.delete(video)
     }
-
-    // MARK: ImageCache
-    func cleanUpCachedImages() {
-        let fetch = FetchDescriptor<CachedImage>()
-        guard let images = try? modelContext.fetch(fetch) else {
-            return
-        }
-        let toBeRemoved = getDuplicates(from: images, keySelector: { $0.imageUrl }, sort: sortImages)
-        duplicateInfo.countImages += toBeRemoved.count
-        for items in toBeRemoved {
-            modelContext.delete(items)
-        }
-    }
-
-    func sortImages(_ images: [CachedImage]) -> [CachedImage] {
-        images.sorted { (img0: CachedImage, img1: CachedImage) -> Bool in
-            let vid0 = img0.video != nil
-            let vid1 = img1.video != nil
-            if vid0 != vid1 {
-                return vid1
-            }
-
-            let sub0 = img0.subscription != nil
-            let sub1 = img1.subscription != nil
-            if sub0 != sub1 {
-                return sub1
-            }
-
-            let now = Date.now
-            let date0 = img0.createdOn ?? now
-            let date1 = img1.createdOn ?? now
-            return date0 > date1
-        }
-    }
-
-    // Empty images
-    func removeEmptyImages() {
-        let fetch = FetchDescriptor<CachedImage>(predicate: #Predicate<CachedImage> {
-            $0.video == nil && $0.subscription == nil
-        })
-        guard let images = try? modelContext.fetch(fetch) else {
-            return
-        }
-        duplicateInfo.countImages += images.count
-        for img in images {
-            modelContext.delete(img)
-        }
-    }
 }
 
 struct RemovedDuplicatesInfo {
@@ -244,5 +194,4 @@ struct RemovedDuplicatesInfo {
     var countQueueEntries: Int = 0
     var countInboxEntries: Int = 0
     var countSubscriptions: Int = 0
-    var countImages: Int = 0
 }

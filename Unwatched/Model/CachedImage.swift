@@ -9,14 +9,11 @@ import SwiftData
 @Model final class CachedImage {
     var imageUrl: URL?
     @Attribute(.externalStorage) var imageData: Data?
-    var video: Video?
-    var subscription: Subscription?
     var createdOn: Date?
 
-    init(_ imageUrl: URL, imageData: Data, video: Video? = nil) {
+    init(_ imageUrl: URL, imageData: Data) {
         self.imageUrl = imageUrl
         self.imageData = imageData
-        self.video = video
         self.createdOn = .now
     }
 }

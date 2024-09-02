@@ -12,41 +12,54 @@ import OSLog
 ///
 /// This avoids performance issues when saving data.
 @Observable class ImageCacheManager {
-    private var cache: [PersistentIdentifier: ImageCacheInfo] = [:]
-    subscript(id: PersistentIdentifier?) -> ImageCacheInfo? {
+    weak var container: ModelContainer?
+
+    private var cacheKeys = Set<String>()
+
+    private var cache = NSCache<NSString, ImageCacheInfo>()
+    subscript(id: String?) -> ImageCacheInfo? {
         get {
             guard let id else { return nil }
-            return cache[id]
+            return cache.object(forKey: (id as NSString))
         }
         set {
             guard let id else { return }
-            cache[id] = newValue
+            if let value = newValue {
+                cacheKeys.insert(id)
+                cache.setObject(value, forKey: (id as NSString))
+            }
         }
     }
 
-    func persistCache(_ container: ModelContainer) async {
+    func persistCache() async {
         let cache = cache
-        let task = ImageService.persistImages(cache: cache, container: container)
-        do {
-            try await task.value
-            clearCacheAll()
-        } catch {
-            Logger.log.error("error while trying to persist cache: \(error)")
+        guard let container = container else {
+            Logger.log.warning("No container to persist images")
+            return
         }
+        ImageService.persistImages(
+            cache: cache,
+            cacheKeys: cacheKeys,
+            imageContainer: container
+        )
+        clearCacheAll()
     }
 
     func clearCacheAll() {
-        self.cache = [:]
+        cache.removeAllObjects()
     }
 
-    func clearCache(holderId: PersistentIdentifier) {
-        cache[holderId] = nil
+    func clearCache(_ imageUrl: String) {
+        cache.removeObject(forKey: imageUrl as NSString)
     }
 }
 
-struct ImageCacheInfo {
+class ImageCacheInfo {
     var url: URL
     var data: Data
-    var holderId: PersistentIdentifier
-    var uiImage: UIImage?
+
+    init(url: URL, data: Data) {
+        self.url = url
+        self.data = data
+    }
 }

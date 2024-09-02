@@ -97,7 +97,7 @@ struct NewVideosNotificationInfo {
             }
         }
 
-        VideoService.storeImages(for: infoWithImageData, container: container)
+        ImageService.storeImages(for: infoWithImageData)
         return infoWithImageData
     }
 

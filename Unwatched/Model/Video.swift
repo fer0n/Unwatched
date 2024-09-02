@@ -15,7 +15,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
     @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
     @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
-    @Relationship(deleteRule: .cascade, inverse: \CachedImage.video) var cachedImage: CachedImage?
     var youtubeId: String = UUID().uuidString
 
     var title: String = "-"

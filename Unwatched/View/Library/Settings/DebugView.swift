@@ -59,7 +59,6 @@ struct DebugView: View {
                         \(info.countQueueEntries)
                         \(info.countInboxEntries)
                         \(info.countSubscriptions)
-                        \(info.countImages)
                         """)
                             .foregroundStyle(.secondary)
                     }

@@ -11,13 +11,18 @@ import TipKit
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var player: PlayerManager
+    @State var imageCacheManager: ImageCacheManager
 
     var sharedModelContainer: ModelContainer
+    static let sharedImageCacheContainer: ModelContainer = DataController.getCachedImageContainer
 
     init() {
         player = PlayerManager()
-        sharedModelContainer = UnwatchedApp.getModelContainer
+        sharedModelContainer = DataController.getModelContainer
 
+        imageCacheManager = ImageCacheManager()
+
+        imageCacheManager.container = UnwatchedApp.sharedImageCacheContainer
         player.container = sharedModelContainer
         player.restoreNowPlayingVideo()
     }
@@ -33,35 +38,10 @@ struct UnwatchedApp: App {
                 }
                 .modelContainer(sharedModelContainer)
                 .environment(player)
+                .environment(imageCacheManager)
         }
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
             await RefreshManager.handleBackgroundVideoRefresh(sharedModelContainer)
         }
     }
-
-    static var getModelContainer: ModelContainer = {
-        var inMemory = false
-        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
-
-        #if DEBUG
-        if CommandLine.arguments.contains("enable-testing") {
-            return DataController.previewContainer
-        }
-        #endif
-
-        let config = ModelConfiguration(
-            schema: DataController.schema,
-            isStoredInMemoryOnly: inMemory,
-            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
-        )
-
-        do {
-            return try ModelContainer(
-                for: DataController.schema,
-                configurations: [config]
-            )
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
 }

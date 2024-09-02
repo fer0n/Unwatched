@@ -64,26 +64,34 @@ extension VideoActor {
 
         var newVideos = [SendableVideo]()
 
+        var imagesToBeDeleted = [URL]()
+
         for video in videos {
             if let oldVideo = subVideosDict[video.youtubeId] {
                 if oldVideo.updatedDate != video.updatedDate {
-                    updateExistingVideo(oldVideo, video)
+                    if let url = updateExistingVideo(oldVideo, video) {
+                        imagesToBeDeleted.append(url)
+                    }
                 }
             } else {
                 newVideos.append(video)
             }
         }
+
+        ImageService.deleteImages(imagesToBeDeleted)
         return newVideos
     }
 
-    func updateExistingVideo(_ video: Video, _ updatedVideo: SendableVideo) {
+    func updateExistingVideo(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
         Logger.log.info("updateExistingVideo: \(video.title)")
         video.title = updatedVideo.title
         video.updatedDate = updatedVideo.updatedDate
 
-        video.thumbnailUrl = updatedVideo.thumbnailUrl
-        if let cachedImage = video.cachedImage {
-            modelContext.delete(cachedImage)
+        var deleteImage: URL?
+        if video.thumbnailUrl != updatedVideo.thumbnailUrl
+            && updatedVideo.thumbnailUrl != nil {
+            deleteImage = video.thumbnailUrl
+            video.thumbnailUrl = updatedVideo.thumbnailUrl
         }
 
         if video.videoDescription != updatedVideo.videoDescription {
@@ -95,6 +103,7 @@ extension VideoActor {
             }
             video.chapters = newChapters
         }
+        return deleteImage
     }
 
     func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {

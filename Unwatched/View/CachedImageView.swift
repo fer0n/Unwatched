@@ -5,16 +5,16 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct CachedImageView<Content, Content2>: View where Content: View, Content2: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ImageCacheManager.self) var cacheManager
 
-    @State var imageTask: Task<ImageCacheInfo, Error>?
-
     var imageHolder: CachedImageHolder?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
+    @State var image: UIImage?
 
     init(
         imageHolder: CachedImageHolder?,
@@ -27,56 +27,46 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
     }
 
     var body: some View {
-        if let uiImage = getUIImage {
+        if let uiImage = image {
             self.contentImage(Image(uiImage: uiImage))
         } else {
             self.placeholder()
-                .onAppear {
-                    loadImage()
-                }
-                .task(id: imageTask) {
-                    guard imageTask != nil,
-                          let holderId = imageHolder?.persistentModelID else {
-                        return
-                    }
-                    do {
-                        if let imageInfo = try await imageTask?.value {
-                            cacheManager[holderId] = imageInfo
-                        }
-                    } catch {
-                        print("error loading image: \(error)")
+                .task {
+                    if image == nil, let url = imageHolder?.thumbnailUrl {
+                        let task = getUIImage(url, cacheManager.container)
+                        image = try? await task.value
                     }
                 }
         }
     }
 
-    func loadImage() {
-        guard let holderId = imageHolder?.persistentModelID,
-              let url = imageHolder?.thumbnailUrl,
-              cacheManager[holderId] == nil else {
-            return
-        }
-        imageTask = Task.detached {
+    func getUIImage(_ url: URL, _ container: ModelContainer?) -> Task<UIImage?, Error> {
+        Task.detached {
+            // fetch from DB
+            if let container = container {
+                let context = ModelContext(container)
+                if let model = ImageService.getCachedImage(for: url, context),
+                   let imageData = model.imageData {
+                    return UIImage(data: imageData)
+                }
+            } else {
+                Logger.log.warning("ImageCacheManager has no container set, images are not peristed")
+            }
+
+            // load from memory
+            if let cacheInfo = self.cacheManager[url.absoluteString] {
+                return UIImage(data: cacheInfo.data)
+            }
+
+            // fetch online
             let imageData = try await ImageService.loadImageData(url: url)
-            return ImageCacheInfo(
+            let imageInfo = ImageCacheInfo(
                 url: url,
-                data: imageData,
-                holderId: holderId,
-                uiImage: UIImage(data: imageData)
+                data: imageData
             )
-        }
-    }
+            self.cacheManager[url.absoluteString] = imageInfo
 
-    var getUIImage: UIImage? {
-        if let imageData = imageHolder?.cachedImage?.imageData {
             return UIImage(data: imageData)
         }
-        if let cacheInfo = cacheManager[imageHolder?.persistentModelID] {
-            if let uiImage = cacheInfo.uiImage {
-                return uiImage
-            }
-            return UIImage(data: cacheInfo.data)
-        }
-        return nil
     }
 }
