@@ -11,11 +11,26 @@ struct BackupSettings: View {
     @AppStorage(Const.enableIcloudSync) var enableIcloudSync = false
     @AppStorage(Const.exludeWatchHistoryInBackup) var exludeWatchHistoryInBackup = false
 
+    @State var showRestartOption = false
+
     var body: some View {
         MySection("icloudSync", footer: "icloudSyncHelper") {
             Toggle(isOn: $enableIcloudSync) {
                 Text("syncToIcloud")
             }
+            .onChange(of: enableIcloudSync) {
+                showRestartOption = true
+            }
+        }
+        .actionSheet(isPresented: $showRestartOption) {
+            ActionSheet(title: Text("restartNow?"),
+                        message: Text("icloudSyncHelper"),
+                        buttons: [
+                            .destructive(Text("restartNow")) {
+                                exit(0)
+                            },
+                            .cancel()
+                        ])
         }
 
         MySection("automaticBackups", footer: "automaticBackupsHelper") {

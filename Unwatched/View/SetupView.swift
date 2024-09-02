@@ -15,10 +15,10 @@ struct SetupView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(PlayerManager.self) var player
+    @Environment(ImageCacheManager.self) var imageCacheManager
 
     @State var sheetPos = SheetPositionReader.load()
     @State var refresher = RefreshManager()
-    @State var imageCacheManager = ImageCacheManager()
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.load()
 
@@ -27,7 +27,6 @@ struct SetupView: View {
     var body: some View {
         ContentView()
             .tint(theme.color)
-            .environment(imageCacheManager)
             .environment(refresher)
             .environment(sheetPos)
             .environment(alerter)
@@ -85,7 +84,7 @@ struct SetupView: View {
     func saveData() async {
         navManager.save()
         sheetPos.save()
-        await imageCacheManager.persistCache(modelContext.container)
+        await imageCacheManager.persistCache()
         Logger.log.info("saved state")
     }
 

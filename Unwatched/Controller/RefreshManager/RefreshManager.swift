@@ -33,7 +33,6 @@ import OSLog
     }
 
     func refreshAll(hardRefresh: Bool = false) async {
-        cancelCloudKitListener()
         await refresh(hardRefresh: hardRefresh)
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
@@ -108,6 +107,9 @@ import OSLog
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
                     autoRefreshTask = Task {
+                        Task { @MainActor in
+                            self.isSyncingIcloud = false
+                        }
                         await executeRefreshOnStartup()
                     }
                 } catch {
@@ -115,6 +117,7 @@ import OSLog
                 }
             }
         } else {
+            cancelCloudKitListener()
             autoRefreshTask = Task {
                 await executeRefreshOnStartup()
             }
@@ -122,7 +125,6 @@ import OSLog
     }
 
     func handleBecameInactive() {
-        cancelCloudKitListener()
         autoRefreshTask?.cancel()
     }
 
@@ -134,9 +136,6 @@ import OSLog
             let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
             let shouldRefresh = lastAutoRefreshDate == nil ||
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
-
-            cancelCloudKitListener()
-
             if shouldRefresh {
                 Logger.log.info("refreshing now")
                 await self.refreshAll()

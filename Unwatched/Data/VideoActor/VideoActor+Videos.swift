@@ -176,7 +176,6 @@ import OSLog
             video.youtubeChannelId = sub.youtubeChannelId
             return video
         }
-        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
         newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
         newVideos = await self.addShortsDetectionAndImageData(to: newVideos)
 
@@ -185,18 +184,9 @@ import OSLog
             let video = vid.createVideo()
             newVideoModels.append(video)
             modelContext.insert(video)
-
-            let discardImage = vid.isYtShort && hideShorts
-            // throw away thumbnail data for shorts when they're not even shown
-
-            if !discardImage,
-               let thumbnailUrl = vid.thumbnailUrl,
-               let imageData = vid.thumbnailData {
-                let cachedImage = CachedImage(thumbnailUrl, imageData: imageData)
-                modelContext.insert(cachedImage)
-                video.cachedImage = cachedImage
-            }
         }
+        storeImages(in: newVideos)
+
         sub.videos?.append(contentsOf: newVideoModels)
 
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
@@ -207,6 +197,22 @@ import OSLog
                                  defaultPlacementInfo: defaultPlacementInfo,
                                  limitVideos: limitVideos)
         updateRecentVideoDate(subscription: sub, videos: newVideos)
+    }
+
+    private func storeImages(in videos: [SendableVideo]) {
+        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
+
+        let imagesToBeSaved = videos.compactMap { vid in
+            let discardImage = vid.isYtShort && hideShorts
+            if !discardImage,
+               let url = vid.thumbnailUrl,
+               let data = vid.thumbnailData {
+                return (url: url, data: data)
+            }
+            return nil
+        }
+        ImageService.storeImages(imagesToBeSaved)
+
     }
 
     func addShortsDetectionAndImageData(to videos: [SendableVideo]) async -> [SendableVideo] {

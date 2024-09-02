@@ -1944,13 +1944,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hilfe"
+            "value" : "Hilfe/FAQ"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Help"
+            "value" : "Help/FAQ"
           }
         }
       }
@@ -2339,7 +2339,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Experimentelle Einstellung. Erstelle ein Backup bevor der Aktivierung. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
+            "value" : "Dies ist eine experimentelle Einstellung, bitte stelle Sicher, dass ein Backup existiert. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
           }
         },
         "en" : {
@@ -3679,18 +3679,18 @@
         }
       }
     },
-    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
+    "removedDuplicates\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld\nBilder: %5$lld"
+            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld\nImages: %5$lld"
+            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld"
           }
         }
       }
@@ -3723,6 +3723,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Require Clear Confirmation"
+          }
+        }
+      }
+    },
+    "restartNow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt neu starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Now"
+          }
+        }
+      }
+    },
+    "restartNow?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neustart notwendig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Required"
           }
         }
       }

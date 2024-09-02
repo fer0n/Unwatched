@@ -78,9 +78,18 @@ struct SubscriptionService {
                              container: ModelContainer) -> Task<(Bool), Never> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
-            return await repo.isSubscribed(channelId: channelId,
-                                           playlistId: playlistId,
-                                           updateInfo: updateSubscriptionInfo)
+            let isSubscribed = await repo.isSubscribed(channelId: channelId,
+                                                       playlistId: playlistId,
+                                                       updateInfo: updateSubscriptionInfo)
+            let imageUrls = await repo.imageUrlsToBeDeleted
+            Task {
+                if !imageUrls.isEmpty {
+                    await ImageService.deleteImages(
+                        repo.imageUrlsToBeDeleted
+                    )
+                }
+            }
+            return isSubscribed
         }
     }
 
