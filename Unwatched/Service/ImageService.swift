@@ -11,10 +11,10 @@ import OSLog
 struct ImageService {
     static func persistImages(
         cache: NSCache<NSString, ImageCacheInfo>,
-        cacheKeys: Set<String>,
-        imageContainer: ModelContainer
-    ) {
-        let context = ModelContext(imageContainer)
+        cacheKeys: Set<String>
+    ) async {
+        let container = await DataController.getCachedImageContainer
+        let context = ModelContext(container)
 
         for key in cacheKeys {
             let key = key as NSString
@@ -43,7 +43,7 @@ struct ImageService {
 
     static func storeImages(_ images: [(url: URL, data: Data)]) {
         Task.detached {
-            let container = await UnwatchedApp.sharedImageCacheContainer
+            let container = await DataController.getCachedImageContainer
             let context = ModelContext(container)
 
             for (url, data) in images {
@@ -56,7 +56,7 @@ struct ImageService {
 
     static func deleteImages(_ urls: [URL]) {
         Task {
-            let imageContainer = await UnwatchedApp.sharedImageCacheContainer
+            let imageContainer = await DataController.getCachedImageContainer
             let context = ModelContext(imageContainer)
             for url in urls {
                 if let image = getCachedImage(for: url, context) {
@@ -77,7 +77,7 @@ struct ImageService {
 
     static func deleteAllImages() -> Task<(), Error> {
         return Task {
-            let imageContainer = await UnwatchedApp.sharedImageCacheContainer
+            let imageContainer = await DataController.getCachedImageContainer
             let context = ModelContext(imageContainer)
             let fetch = FetchDescriptor<CachedImage>()
             let images = try context.fetch(fetch)

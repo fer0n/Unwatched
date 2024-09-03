@@ -12,8 +12,6 @@ import OSLog
 ///
 /// This avoids performance issues when saving data.
 @Observable class ImageCacheManager {
-    weak var container: ModelContainer?
-
     private var cacheKeys = Set<String>()
 
     private var cache = NSCache<NSString, ImageCacheInfo>()
@@ -33,14 +31,9 @@ import OSLog
 
     func persistCache() async {
         let cache = cache
-        guard let container = container else {
-            Logger.log.warning("No container to persist images")
-            return
-        }
-        ImageService.persistImages(
+        await ImageService.persistImages(
             cache: cache,
-            cacheKeys: cacheKeys,
-            imageContainer: container
+            cacheKeys: cacheKeys
         )
         clearCacheAll()
     }

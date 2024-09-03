@@ -33,24 +33,21 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
             self.placeholder()
                 .task {
                     if image == nil, let url = imageHolder?.thumbnailUrl {
-                        let task = getUIImage(url, cacheManager.container)
+                        let task = getUIImage(url)
                         image = try? await task.value
                     }
                 }
         }
     }
 
-    func getUIImage(_ url: URL, _ container: ModelContainer?) -> Task<UIImage?, Error> {
+    func getUIImage(_ url: URL) -> Task<UIImage?, Error> {
         Task.detached {
             // fetch from DB
-            if let container = container {
-                let context = ModelContext(container)
-                if let model = ImageService.getCachedImage(for: url, context),
-                   let imageData = model.imageData {
-                    return UIImage(data: imageData)
-                }
-            } else {
-                Logger.log.warning("ImageCacheManager has no container set, images are not peristed")
+            let container = await DataController.getCachedImageContainer
+            let context = ModelContext(container)
+            if let model = ImageService.getCachedImage(for: url, context),
+               let imageData = model.imageData {
+                return UIImage(data: imageData)
             }
 
             // load from memory
