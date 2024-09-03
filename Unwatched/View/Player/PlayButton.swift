@@ -30,10 +30,8 @@ struct CorePlayButton<Content>: View where Content: View {
     }
 
     var body: some View {
-        let disabled = player.playDisabled
-
         Button {
-            if disabled {
+            if player.playDisabled {
                 if enableHelperPopup {
                     showHelperPopop = true
                 }
@@ -48,7 +46,7 @@ struct CorePlayButton<Content>: View where Content: View {
             contentImage(
                 Image(systemName: player.isPlaying && !player.videoEnded
                         ? "pause\(circle).fill"
-                        : disabled
+                        : player.playDisabled
                         ? "slash.circle.fill"
                         : "play\(circle).fill")
             )
@@ -59,12 +57,12 @@ struct CorePlayButton<Content>: View where Content: View {
             .foregroundStyle(Color.neutralAccentColor)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
+        .keyboardShortcut(.space, modifiers: [])
         .accessibilityLabel(player.isPlaying ? "pause" : "play")
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .contextMenu {
             PlayButtonContextMenu()
         }
-        .keyboardShortcut(.space, modifiers: [])
         .popover(isPresented: $showHelperPopop) {
             VStack {
                 Spacer()

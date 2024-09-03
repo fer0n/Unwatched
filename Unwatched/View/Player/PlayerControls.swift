@@ -8,6 +8,7 @@ import SwiftUI
 struct PlayerControls: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
@@ -27,6 +28,8 @@ struct PlayerControls: View {
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
+    @State var autoHideVM = AutoHideVM()
+
     var body: some View {
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 25))
@@ -36,64 +39,67 @@ struct PlayerControls: View {
             ? AnyLayout(HStackLayout(spacing: 10))
             : AnyLayout(VStackLayout(spacing: 10))
 
-        outerLayout {
-            if !player.embeddingDisabled && !compactSize {
-                Spacer()
-            }
-
-            ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
-
-            if !player.embeddingDisabled && !compactSize {
-                Spacer()
-                Spacer()
-            }
-
-            layout {
-                if compactSize {
-                    SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
+        ZStack {
+            outerLayout {
+                if !player.embeddingDisabled && !compactSize {
+                    Spacer()
                 }
 
-                HStack(spacing: speedSpacing) {
-                    CombinedPlaybackSpeedSetting(spacing: speedSpacing)
-                    if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
-                        RotateOrientationButton()
+                ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
+
+                if !player.embeddingDisabled && !compactSize {
+                    Spacer()
+                    Spacer()
+                }
+
+                layout {
+                    if compactSize {
+                        SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
                     }
-                }
-                .environment(\.symbolVariants, .fill)
 
-                HStack {
-                    WatchedButton(markVideoWatched: markVideoWatched)
-                        .frame(maxWidth: .infinity)
-
-                    PlayButton(size:
-                                (player.embeddingDisabled || compactSize)
-                                ? 70
-                                : 90
-                    )
-                    .fontWeight(.black)
-
-                    NextVideoButton(markVideoWatched: markVideoWatched)
-                        .frame(maxWidth: .infinity)
-
-                    if UIDevice.requiresFullscreenWebWorkaround && compactSize {
-                        HideControlsButton()
+                    HStack(spacing: speedSpacing) {
+                        CombinedPlaybackSpeedSetting(spacing: speedSpacing)
+                        if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
+                            RotateOrientationButton()
+                        }
                     }
-                }
-                .padding(.horizontal, 10)
-            }
-            .padding(.horizontal, compactSize ? 20 : 5)
-            .frame(maxWidth: 1000)
+                    .environment(\.symbolVariants, .fill)
 
-            if !player.embeddingDisabled && !compactSize {
-                Spacer()
-                Spacer()
+                    HStack {
+                        WatchedButton(markVideoWatched: markVideoWatched)
+                            .frame(maxWidth: .infinity)
+
+                        PlayButton(size:
+                                    (player.embeddingDisabled || compactSize)
+                                    ? 70
+                                    : 90
+                        )
+                        .fontWeight(.black)
+
+                        NextVideoButton(markVideoWatched: markVideoWatched)
+                            .frame(maxWidth: .infinity)
+
+                        if UIDevice.requiresFullscreenWebWorkaround && compactSize {
+                            HideControlsButton()
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                }
+                .padding(.horizontal, compactSize ? 20 : 5)
+                .frame(maxWidth: 1000)
+
+                if !player.embeddingDisabled && !compactSize {
+                    Spacer()
+                    Spacer()
+                }
+                if !compactSize {
+                    VideoPlayerFooter(openBrowserUrl: openBrowserUrl,
+                                      setShowMenu: setShowMenu,
+                                      sleepTimerVM: sleepTimerVM,
+                                      onSleepTimerEnded: onSleepTimerEnded)
+                }
             }
-            if !compactSize {
-                VideoPlayerFooter(openBrowserUrl: openBrowserUrl,
-                                  setShowMenu: setShowMenu,
-                                  sleepTimerVM: sleepTimerVM,
-                                  onSleepTimerEnded: onSleepTimerEnded)
-            }
+            .opacity(showControls ? 1 : 0)
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .innerSizeTrackerModifier(onChange: { size in
@@ -103,6 +109,16 @@ struct PlayerControls: View {
             BrowserView(container: modelContext.container,
                         refresher: refresher,
                         startUrl: browserUrl)
+        }
+        .animation(.default.speed(3), value: showControls)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if !showControls {
+                autoHideVM.setShowControls()
+            }
+        }
+        .onHover { over in
+            autoHideVM.keepVisible = over
         }
     }
 
@@ -123,6 +139,12 @@ struct PlayerControls: View {
         } else {
             browserUrl = url
         }
+    }
+
+    var showControls: Bool {
+        !hideControlsFullscreen
+            || fullscreenControlsSetting == .enabled
+            || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
     }
 }
 

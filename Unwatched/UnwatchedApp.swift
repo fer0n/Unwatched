@@ -14,15 +14,12 @@ struct UnwatchedApp: App {
     @State var imageCacheManager: ImageCacheManager
 
     var sharedModelContainer: ModelContainer
-    static let sharedImageCacheContainer: ModelContainer = DataController.getCachedImageContainer
 
     init() {
         player = PlayerManager()
         sharedModelContainer = DataController.getModelContainer
 
         imageCacheManager = ImageCacheManager()
-
-        imageCacheManager.container = UnwatchedApp.sharedImageCacheContainer
         player.container = sharedModelContainer
         player.restoreNowPlayingVideo()
     }
