@@ -53,7 +53,19 @@ struct CleanupService {
     }
 
     private func hasDuplicateEntries() -> Bool {
-        return hasDuplicateInboxEntries()
+        return hasDuplicateInboxEntries() || hasDuplicateUpperQueueEntries()
+    }
+
+    private func hasDuplicateUpperQueueEntries() -> Bool {
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        fetch.fetchLimit = 15
+
+        if let entries = try? modelContext.fetch(fetch) {
+            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
+            return !duplicates.isEmpty
+        }
+        return false
     }
 
     private func hasDuplicateInboxEntries() -> Bool {
