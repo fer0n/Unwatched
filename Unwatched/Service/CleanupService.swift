@@ -59,7 +59,7 @@ struct CleanupService {
     private func hasDuplicateInboxEntries() -> Bool {
         let fetch = FetchDescriptor<InboxEntry>()
         if let entries = try? modelContext.fetch(fetch) {
-            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeChannelId })
+            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
             return !duplicates.isEmpty
         }
         return false
