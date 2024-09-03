@@ -48,6 +48,7 @@ struct CoreNextButton<Content>: View where Content: View {
                 ),
                 continuousPlay
             )
+            .symbolEffect(.bounce.down, value: player.video)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
         .accessibilityLabel(label)
