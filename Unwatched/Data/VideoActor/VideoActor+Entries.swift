@@ -322,9 +322,9 @@ extension VideoActor {
         let dateL = date ?? past
         var filter: Predicate<InboxEntry>
         if direction == .above {
-            filter = #Predicate<InboxEntry> { $0.video?.publishedDate ?? past > dateL }
+            filter = #Predicate<InboxEntry> { $0.date ?? past > dateL }
         } else {
-            filter = #Predicate<InboxEntry> { $0.video?.publishedDate ?? past < dateL }
+            filter = #Predicate<InboxEntry> { $0.date ?? past < dateL }
         }
         let fetch = FetchDescriptor<InboxEntry>(predicate: filter)
         let inboxEntries = try? modelContext.fetch(fetch)

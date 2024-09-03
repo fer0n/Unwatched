@@ -16,7 +16,7 @@ struct InboxView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Query(sort: \InboxEntry.video?.publishedDate, order: .reverse) var inboxEntries: [InboxEntry]
+    @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
 
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
