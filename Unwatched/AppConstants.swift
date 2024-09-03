@@ -196,6 +196,9 @@ extension Const {
         Const.automaticBackups: true,
         Const.minimalBackups: true,
         Const.enableIcloudSync: false,
-        Const.exludeWatchHistoryInBackup: false
+        Const.exludeWatchHistoryInBackup: false,
+
+        // Other Things
+        Const.playbackSpeed: 1
     ]
 }
