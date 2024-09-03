@@ -45,7 +45,7 @@ struct DebugView: View {
                 MySection("icloudSync") {
                     AsyncButton {
                         let container = modelContext.container
-                        let task = CleanupService.cleanupDuplicates(container)
+                        let task = CleanupService.cleanupDuplicatesAndInboxDate(container)
                         cleanupInfo = await task.value
                     } label: {
                         Text("removeDuplicates")

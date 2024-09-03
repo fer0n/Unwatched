@@ -55,7 +55,7 @@ import OSLog
             }
             isLoading = false
             if hardRefresh {
-                _ = CleanupService.cleanupDuplicates(container, onlyIfDuplicateEntriesExist: false)
+                _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
             } else {
                 quickDuplicateCleanup()
             }

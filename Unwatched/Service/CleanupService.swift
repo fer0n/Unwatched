@@ -8,17 +8,31 @@ import SwiftUI
 import OSLog
 
 struct CleanupService {
-    static func cleanupDuplicates(_ container: ModelContainer,
-                                  onlyIfDuplicateEntriesExist: Bool = false) -> Task<RemovedDuplicatesInfo, Never> {
+    static func cleanupDuplicatesAndInboxDate(_ container: ModelContainer,
+                                              onlyIfDuplicateEntriesExist: Bool = false) -> Task<RemovedDuplicatesInfo, Never> {
         return Task(priority: .background) {
             let repo = CleanupActor(modelContainer: container)
-            return await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            await repo.cleanupInboxEntryDates()
+            return info
         }
     }
 }
 
 @ModelActor actor CleanupActor {
     var duplicateInfo = RemovedDuplicatesInfo()
+
+    func cleanupInboxEntryDates() {
+        let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
+        guard let entries = try? modelContext.fetch(fetch) else {
+            Logger.log.info("No inbox entries to cleanup dates")
+            return
+        }
+        for entry in entries {
+            entry.date = entry.video?.publishedDate
+        }
+        try? modelContext.save()
+    }
 
     func removeAllDuplicates(onlyIfDuplicateEntriesExist: Bool = false) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
