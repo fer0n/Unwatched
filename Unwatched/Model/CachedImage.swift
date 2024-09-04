@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Model final class CachedImage {
-    var imageUrl: URL?
+    @Attribute(.unique) var imageUrl: URL?
     @Attribute(.externalStorage) var imageData: Data?
     var createdOn: Date?
 

@@ -64,9 +64,23 @@ class DataController {
         )
 
         do {
+            if let container = try? ModelContainer(
+                for: DataController.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
+                configurations: [config]
+            ) {
+                return container
+            }
+
+            // workaround for migration (disable sync for initial launch)
+            let config = ModelConfiguration(
+                schema: DataController.schema,
+                isStoredInMemoryOnly: inMemory,
+                cloudKitDatabase: .none
+            )
             return try ModelContainer(
                 for: DataController.schema,
-                // migrationPlan: UsersMigrationPlan.self,
+                migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             )
         } catch {
