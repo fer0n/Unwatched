@@ -8,6 +8,55 @@ import SwiftData
 
 class VideoCrawlerTests: XCTestCase {
 
+    func testLoadingVideos() async {
+        let container = await DataController.previewContainer
+        await VideoService.deleteEverything(container)
+
+        let context = ModelContext(container)
+        let subs = VideoCrawlerTestData.subs
+        let fetchVids = FetchDescriptor<Video>()
+
+        for (title, id) in subs {
+            let url = try? UrlService.getFeedUrlFromChannelId(id)
+            let sub = Subscription(link: url!, title: title, youtubeChannelId: id)
+            context.insert(sub)
+        }
+        do {
+            try context.save()
+
+            let fetchSubs = FetchDescriptor<Subscription>()
+            let subCount = try context.fetchCount(fetchSubs)
+            print("subCount: \(subCount)")
+
+            let refresher = RefreshManager()
+            refresher.container = container
+
+            let task1 = Task { await refresher.handleBackgroundVideoRefresh() }
+            let task2 = Task { await refresher.refreshAll() }
+
+            await task1.value
+            await task2.value
+
+            let countVids1 = try? context.fetchCount(fetchVids)
+            print("count: \(countVids1)")
+
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
+            let info = await task.value
+
+            XCTAssertEqual(info.countVideos, 0, "Found duplicates")
+
+            print(info)
+            let countVids2 = try? context.fetchCount(fetchVids)
+            print("count after: \(countVids2)")
+
+            let subCount2 = try context.fetchCount(fetchSubs)
+            print("subCount after: \(subCount2)")
+
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+
     func testParsingVideos() {
         let rssFeedData = VideoCrawlerTestData.rssFeedContent.data(using: .utf8)!
         let delegate = VideoCrawler.parseFeedData(data: rssFeedData, limitVideos: nil)
@@ -28,6 +77,68 @@ class VideoCrawlerTests: XCTestCase {
 
 // swiftlint:disable all
 struct VideoCrawlerTestData {
+    static let subs: [(String, String)] = [
+        (
+            "Beardo Benjo",
+            "UCSzUG-hFZgaKpYA6w2WS8sQ"
+        ),
+        (
+            "ThrillSeeker",
+            "UCSbdMXOI_3HGiFviLZO6kNA"
+        ),
+        (
+            "habie147",
+            "UC-FHoOa_jNSZy3IFctMEq2w"
+        ),
+        (
+            "LastWeekTonight",
+            "UC3XTzVzaHQEd30rQbuvCtTQ"
+        ),
+        (
+            "Marques Brownlee",
+            "UCBJycsmduvYEL83R_U4JriQ"
+        ),
+        (
+            "Kurzgesagt – In a Nutshell",
+            "UCsXVk37bltHxD1rDPwtNM8Q"
+        ),
+        (
+            "seanallen",
+            "UCRGhxM6u14Uv309cC0ywEqA"
+        ),
+        (
+            "UploadVR",
+            "UCqDMvCa1tGak6AmijajiKOw"
+        ),
+        (
+            "Gamertag VR",
+            "UCnrAvt4i_2WV3yEKWyEUMlg"
+        ),
+        (
+            "Apple",
+            "UCE_M8A5yxnLfW0KghEeajjw"
+        ),
+        (
+            "Linus Tech Tips",
+            "UCXuqSBlHAE6Xw-yeJA0Tunw"
+        ),
+        (
+            "Unbox Therapy",
+            "UCsTcErHg8oDvUnTzoqsYeNw"
+        ),
+        (
+            "MKBHD",
+            "UCBJycsmduvYEL83R_U4JriQ"
+        ),
+        (
+            "Veritasium",
+            "UCHnyfMqiRRG1u-2MsSQLbXA"
+        ),
+        (
+            "SmarterEveryDay",
+            "UC6107grRI4m0o2-emgoDnAA"
+        )
+    ]
 
     static let rssFeedContent = """
 <?xml version="1.0" encoding="UTF-8"?>

@@ -10,15 +10,14 @@ import OSLog
 
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
-
     @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(PlayerManager.self) var player
+    @Environment(RefreshManager.self) var refresher
     @Environment(ImageCacheManager.self) var imageCacheManager
 
     @State var sheetPos = SheetPositionReader.load()
-    @State var refresher = RefreshManager()
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.load()
 
@@ -27,7 +26,6 @@ struct SetupView: View {
     var body: some View {
         ContentView()
             .tint(theme.color)
-            .environment(refresher)
             .environment(sheetPos)
             .environment(alerter)
             .environment(navManager)
@@ -59,7 +57,7 @@ struct SetupView: View {
                         await saveData()
                     }
                     refresher.handleBecameInactive()
-                    RefreshManager.scheduleVideoRefresh()
+                    refresher.scheduleVideoRefresh()
 
                     handleDebugRefresh()
                 case .inactive:
@@ -76,7 +74,7 @@ struct SetupView: View {
             let container = modelContext.container
             Task {
                 try? await Task.sleep(s: 1)
-                await RefreshManager.handleBackgroundVideoRefresh(container)
+                await refresher.handleBackgroundVideoRefresh()
             }
         }
     }

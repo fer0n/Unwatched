@@ -139,27 +139,30 @@ import OSLog
             }
 
             for try await (sub, videos) in group {
-                await handleNewVideos(
+                let countNewVideos = await handleNewVideosGetCount(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
-                // save once for each subscription? Might lead to videos showing up sooner
-                try modelContext.save()
+                if countNewVideos > 0 {
+                    // save sooner if videos got added
+                    try modelContext.save()
+                }
             }
         }
 
+        try modelContext.save()
         return newVideos
     }
 
-    private func handleNewVideos(
+    private func handleNewVideosGetCount(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async {
+    ) async -> Int {
         guard let subModel = getSubscription(via: sub) else {
             Logger.log.info("missing info when trying to load videos")
-            return
+            return 0
         }
         var videos = updateYtChannelId(in: videos, subModel)
         videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
@@ -169,10 +172,11 @@ import OSLog
         let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
 
-        triageSubscriptionVideos(subModel,
-                                 videos: videoModels,
-                                 defaultPlacement: defaultPlacement)
+        let addedVideoCount = triageSubscriptionVideos(subModel,
+                                                       videos: videoModels,
+                                                       defaultPlacement: defaultPlacement)
         updateRecentVideoDate(subscription: subModel, videos: videos)
+        return addedVideoCount
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
@@ -201,7 +205,8 @@ import OSLog
         return nil
     }
 
-    /// Returns specified Subscriptions and returns them as Sendable. If none are specified, returns all active subscriptions.
+    /// Returns specified Subscriptions and returns them as Sendable.
+    /// If none are specified, returns all active subscriptions.
     private func getSubscriptions(_ subscriptionIds: [PersistentIdentifier]?) throws -> [SendableSubscription] {
         var subs = [Subscription]()
         if subscriptionIds == nil {
