@@ -44,7 +44,10 @@ import OSLog
     @MainActor
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         if let container = container {
-            if isLoading { return }
+            if isLoading || self.isSyncingIcloud {
+                Logger.log.info("currently refreshing or syncing, stopping now")
+                return
+            }
             isLoading = true
             do {
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
