@@ -104,6 +104,7 @@
 		88415BF92C50EAD40072778F /* AspectRatioPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC12C1985FF007FC1A5 /* AspectRatioPicker.swift */; };
 		88415BFC2C50EB190072778F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B92B46FFD300554E1F /* Color.swift */; };
 		88415BFD2C50EB500072778F /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8843AE572C8843E7001A740A /* CleaupServiceTests.swift */; };
 		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
 		8845F0172B5054570086AA98 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0162B5054570086AA98 /* Chapter.swift */; };
 		8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */; };
@@ -506,6 +507,7 @@
 		883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxHasEntriesTip.swift; sourceTree = "<group>"; };
 		883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleVideoUrlDropModifier.swift; sourceTree = "<group>"; };
 		88415BE92C50E1D50072778F /* ExportableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportableTests.swift; sourceTree = "<group>"; };
+		8843AE572C8843E7001A740A /* CleaupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaupServiceTests.swift; sourceTree = "<group>"; };
 		8845F0142B500E8A0086AA98 /* AllVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVideosView.swift; sourceTree = "<group>"; };
 		8845F0162B5054570086AA98 /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
 		8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterDescriptionView.swift; sourceTree = "<group>"; };
@@ -797,6 +799,7 @@
 				88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */,
 				88415BE92C50E1D50072778F /* ExportableTests.swift */,
 				882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */,
+				8843AE572C8843E7001A740A /* CleaupServiceTests.swift */,
 			);
 			path = UnwatchedUITests;
 			sourceTree = "<group>";
@@ -1350,6 +1353,7 @@
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
 				889AF9552C50ED05001CEDE6 /* CachedImageView.swift in Sources */,
 				889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */,
+				8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */,
 				889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */,
 				889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */,
 				889AF9592C50ED05001CEDE6 /* VideoListItem.swift in Sources */,
