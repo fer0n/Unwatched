@@ -157,7 +157,7 @@ import OSLog
 
 // Background Refresh
 extension RefreshManager {
-    static func scheduleVideoRefresh() {
+    func scheduleVideoRefresh() {
         Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
@@ -175,10 +175,20 @@ extension RefreshManager {
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
     }
 
-    static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
+    func handleBackgroundVideoRefresh() async {
         print("Background task running now")
+        guard let container = container else {
+            print("no container to refresh in background")
+            return
+        }
         do {
             scheduleVideoRefresh()
+
+            if await isLoading {
+                Logger.log.info("Already refreshing")
+                return
+            }
+
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)

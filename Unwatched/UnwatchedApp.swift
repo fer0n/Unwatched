@@ -11,6 +11,7 @@ import TipKit
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var player: PlayerManager
+    @State var refresher = RefreshManager()
     @State var imageCacheManager: ImageCacheManager
 
     var sharedModelContainer: ModelContainer
@@ -18,8 +19,9 @@ struct UnwatchedApp: App {
     init() {
         player = PlayerManager()
         sharedModelContainer = DataController.getModelContainer
-
         imageCacheManager = ImageCacheManager()
+
+        refresher.container = sharedModelContainer
         player.container = sharedModelContainer
         player.restoreNowPlayingVideo()
     }
@@ -35,10 +37,11 @@ struct UnwatchedApp: App {
                 }
                 .modelContainer(sharedModelContainer)
                 .environment(player)
+                .environment(refresher)
                 .environment(imageCacheManager)
         }
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
-            await RefreshManager.handleBackgroundVideoRefresh(sharedModelContainer)
+            await refresher.handleBackgroundVideoRefresh()
         }
     }
 }
