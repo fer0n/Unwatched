@@ -8,8 +8,13 @@ import SwiftUI
 import OSLog
 
 struct CleanupService {
-    static func cleanupDuplicatesAndInboxDate(_ container: ModelContainer,
-                                              onlyIfDuplicateEntriesExist: Bool = false) -> Task<RemovedDuplicatesInfo, Never> {
+    static func cleanupDuplicatesAndInboxDate(
+        _ container: ModelContainer,
+        onlyIfDuplicateEntriesExist: Bool = false
+    ) -> Task<
+        RemovedDuplicatesInfo,
+        Never
+    > {
         return Task(priority: .background) {
             let repo = CleanupActor(modelContainer: container)
             let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
@@ -45,8 +50,8 @@ struct CleanupService {
 
         removeSubscriptionDuplicates()
         removeVideoDuplicates()
-        removeEmptyQueueEntries()
-        removeEmptyInboxEntries()
+        // Keep empty queue/inbox entries
+        // they can be empty due to sync, don't remove them
         try? modelContext.save()
 
         return duplicateInfo
