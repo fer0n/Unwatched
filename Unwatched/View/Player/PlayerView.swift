@@ -196,6 +196,7 @@ struct PlayerView: View {
         .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         .onTapGesture(perform: handleMiniPlayerTap)
+        .id(player.video?.thumbnailUrl)
     }
 
     @MainActor
