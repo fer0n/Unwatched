@@ -409,6 +409,7 @@
 		88DFC0C22B4489F3001895C8 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C12B4489F3001895C8 /* Video.swift */; };
 		88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C52B448C01001895C8 /* VideoService.swift */; };
 		88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
+		88E2BC352C8A07A000E0CA57 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
@@ -425,6 +426,7 @@
 		88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC32C19927E007FC1A5 /* UIDevice.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
 		88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
+		A2F48D9685DA43129FA1A5D6 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 610F44D7F37842AA85568297 /* Sentry */; };
 		CD03C1DD2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD03C1DC2C73BED800913256 /* SponsorBlockAPI.swift */; };
 		CD03C1DE2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD03C1DC2C73BED800913256 /* SponsorBlockAPI.swift */; };
 		CDA07A362C601F250009BFEC /* backup-file.json in Resources */ = {isa = PBXBuildFile; fileRef = CDA07A352C601F250009BFEC /* backup-file.json */; };
@@ -677,6 +679,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88E2BC352C8A07A000E0CA57 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,6 +687,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2F48D9685DA43129FA1A5D6 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1255,12 +1259,16 @@
 				88DFC0A82B44843A001895C8 /* Frameworks */,
 				88DFC0A92B44843A001895C8 /* Resources */,
 				886E79BB2B4701F600554E1F /* ShellScript */,
+				90AACB1D04664E6BB9D88665 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Unwatched;
+			packageProductDependencies = (
+				610F44D7F37842AA85568297 /* Sentry */,
+			);
 			productName = Unwatched;
 			productReference = 88DFC0AB2B44843A001895C8 /* Unwatched.app */;
 			productType = "com.apple.product-type.application";
@@ -1294,6 +1302,9 @@
 				de,
 			);
 			mainGroup = 88DFC0A22B44843A001895C8;
+			packageReferences = (
+				3DFCAECB491A46D4BF3AF2D3 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			productRefGroup = 88DFC0AC2B44843A001895C8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1346,6 +1357,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
 			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  if [ \"${ENABLE_PREVIEWS}\" = \"NO\" ]; then \n    swiftlint --fix --format && swiftlint  \n  fi\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n\n";
+		};
+		90AACB1D04664E6BB9D88665 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script is responsable to upload debug symbols and source context for Sentry.\nif which sentry-cli >/dev/null; then\nexport SENTRY_ORG=michael-1e\nexport SENTRY_PROJECT=apple-ios\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1958,7 +1984,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 116;
+				CURRENT_PROJECT_VERSION = 117;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2003,7 +2030,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 116;
+				CURRENT_PROJECT_VERSION = 117;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2072,6 +2100,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3DFCAECB491A46D4BF3AF2D3 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		610F44D7F37842AA85568297 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DFCAECB491A46D4BF3AF2D3 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 88DFC0A32B44843A001895C8 /* Project object */;
 }

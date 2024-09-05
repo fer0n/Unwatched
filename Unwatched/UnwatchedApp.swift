@@ -6,6 +6,7 @@
 import SwiftUI
 import SwiftData
 import TipKit
+import Sentry
 
 @main
 struct UnwatchedApp: App {
@@ -17,6 +18,12 @@ struct UnwatchedApp: App {
     var sharedModelContainer: ModelContainer
 
     init() {
+        SentrySDK.start { options in
+            options.dsn = Credentials.sentry
+            options.debug = true
+            options.enableTracing = true
+        }
+
         player = PlayerManager()
         sharedModelContainer = DataController.getModelContainer
         imageCacheManager = ImageCacheManager()
