@@ -40,6 +40,7 @@ class DataController {
         do {
             return try ModelContainer(
                 for: schema,
+                migrationPlan: CachedImageMigrationPlan.self,
                 configurations: [config]
             )
         } catch {

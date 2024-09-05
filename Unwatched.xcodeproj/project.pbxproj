@@ -350,6 +350,7 @@
 		88A1B3AA2C88FF6800D32E37 /* VersionedSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3A92C88FF6800D32E37 /* VersionedSchema.swift */; };
 		88A1B3AB2C88FF6800D32E37 /* VersionedSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3A92C88FF6800D32E37 /* VersionedSchema.swift */; };
 		88A1B3AE2C890D2800D32E37 /* UnwatchedSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3AD2C890D2800D32E37 /* UnwatchedSchemaV1.swift */; };
+		88A1B3B22C89616900D32E37 /* CachedImageSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3B12C89616900D32E37 /* CachedImageSchemaV1.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
 		88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AEB5D62B98A69300A2FF0D /* Logger.swift */; };
 		88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */; };
@@ -587,6 +588,7 @@
 		889924872C48E75F001185A6 /* MenuViewSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewSheet.swift; sourceTree = "<group>"; };
 		88A1B3A92C88FF6800D32E37 /* VersionedSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionedSchema.swift; sourceTree = "<group>"; };
 		88A1B3AD2C890D2800D32E37 /* UnwatchedSchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedSchemaV1.swift; sourceTree = "<group>"; };
+		88A1B3B12C89616900D32E37 /* CachedImageSchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageSchemaV1.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavigationTitle.swift; sourceTree = "<group>"; };
@@ -1008,6 +1010,7 @@
 			isa = PBXGroup;
 			children = (
 				88A1B3AD2C890D2800D32E37 /* UnwatchedSchemaV1.swift */,
+				88A1B3B12C89616900D32E37 /* CachedImageSchemaV1.swift */,
 			);
 			path = Legacy;
 			sourceTree = "<group>";
@@ -1705,6 +1708,7 @@
 				88A1B3AA2C88FF6800D32E37 /* VersionedSchema.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* VideoSettingsView.swift in Sources */,
+				88A1B3B22C89616900D32E37 /* CachedImageSchemaV1.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
@@ -1950,7 +1954,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1995,7 +1999,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
