@@ -21,6 +21,7 @@ struct ChapterListItem: View {
                 Text(timeText)
                     .font(.subheadline.monospacedDigit())
                     .foregroundStyle(Color.gray)
+                    .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)

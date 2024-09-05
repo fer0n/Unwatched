@@ -15,7 +15,7 @@ struct CleanupService {
         RemovedDuplicatesInfo,
         Never
     > {
-        return Task(priority: .background) {
+        return Task.detached {
             let repo = CleanupActor(modelContainer: container)
             let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
             await repo.cleanupInboxEntryDates()

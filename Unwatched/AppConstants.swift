@@ -158,7 +158,7 @@ struct Const {
 }
 
 extension Const {
-    static let settingsDefaults: [String: Any] = [
+    static let settingsDefaults: [String: Sendable] = [
         // Notifications
         Const.videoAddedToInboxNotification: false,
         Const.videoAddedToQueueNotification: false,

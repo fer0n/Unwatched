@@ -123,7 +123,6 @@ extension ChapterService {
             newChapters.append(chapter)
             index += 1
         }
-
         return newChapters
     }
 

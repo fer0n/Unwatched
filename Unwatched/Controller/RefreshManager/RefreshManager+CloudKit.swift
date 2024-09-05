@@ -53,7 +53,7 @@ extension RefreshManager {
 
     func handleIcloudSyncDone() async {
         Logger.log.info("iCloud sync: handleIcloudSyncDone")
-        Task { @MainActor in
+        Task {
             self.isSyncingIcloud = false
         }
         await executeRefreshOnStartup()
