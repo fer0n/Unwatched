@@ -7,7 +7,7 @@ import SwiftData
 import SwiftUI
 
 enum UnwatchedSchemaV1p1: VersionedSchema {
-    static var versionIdentifier = Schema.Version(1, 1, 0)
+    static let versionIdentifier = Schema.Version(1, 1, 0)
 
     static var models: [any PersistentModel.Type] {
         [
@@ -46,7 +46,7 @@ enum UnwatchedMigrationPlan: SchemaMigrationPlan {
 // MARK: CachedImageSchema
 
 enum CachedImageSchemaV1p1: VersionedSchema {
-    static var versionIdentifier = Schema.Version(1, 1, 0)
+    static let versionIdentifier = Schema.Version(1, 1, 0)
 
     static var models: [any PersistentModel.Type] {
         [CachedImage.self]

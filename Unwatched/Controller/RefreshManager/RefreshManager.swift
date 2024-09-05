@@ -10,10 +10,11 @@ import CoreData
 import BackgroundTasks
 import OSLog
 
+@MainActor
 @Observable class RefreshManager {
     weak var container: ModelContainer?
-    @MainActor var isLoading: Bool = false
-    @MainActor var isSyncingIcloud: Bool = false
+    var isLoading: Bool = false
+    var isSyncingIcloud: Bool = false
 
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
@@ -29,7 +30,9 @@ import OSLog
     }
 
     deinit {
-        cancelCloudKitListener()
+        Task {
+            await cancelCloudKitListener()
+        }
     }
 
     func refreshAll(hardRefresh: Bool = false) async {
@@ -41,7 +44,6 @@ import OSLog
         await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh)
     }
 
-    @MainActor
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         if let container = container {
             if isLoading || self.isSyncingIcloud {
@@ -187,7 +189,7 @@ extension RefreshManager {
         do {
             scheduleVideoRefresh()
 
-            if await isLoading {
+            if isLoading {
                 Logger.log.info("Already refreshing")
                 return
             }

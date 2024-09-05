@@ -8,6 +8,7 @@ import SwiftData
 
 class VideoCrawlerTests: XCTestCase {
 
+    @MainActor
     func testLoadingVideos() async {
         let container = await DataController.previewContainer
         await VideoService.deleteEverything(container)

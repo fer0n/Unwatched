@@ -40,7 +40,7 @@ struct UnwatchedApp: App {
                 .environment(refresher)
                 .environment(imageCacheManager)
         }
-        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) {
+        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in
             await refresher.handleBackgroundVideoRefresh()
         }
     }

@@ -109,6 +109,8 @@
 		8845F0172B5054570086AA98 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0162B5054570086AA98 /* Chapter.swift */; };
 		8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0182B50648D0086AA98 /* ChapterDescriptionView.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
+		8859320E2C89C8AD009A93AD /* CachedImageSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3B12C89616900D32E37 /* CachedImageSchemaV1.swift */; };
+		8859320F2C89C8AF009A93AD /* UnwatchedSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A1B3AD2C890D2800D32E37 /* UnwatchedSchemaV1.swift */; };
 		88632AF32B64FC0300C93F82 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF22B64FC0300C93F82 /* UserDataService.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
 		8867F5432BC7ABD9008EC182 /* AutoDeleteBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */; };
@@ -1415,6 +1417,7 @@
 				889AF9672C50ED0D001CEDE6 /* YoutubeDataAPI.swift in Sources */,
 				889AF9682C50ED0D001CEDE6 /* YtErrorResponseBody.swift in Sources */,
 				889AF9492C50ECF5001CEDE6 /* ChapterList.swift in Sources */,
+				8859320E2C89C8AD009A93AD /* CachedImageSchemaV1.swift in Sources */,
 				889AF94A2C50ECF5001CEDE6 /* SubscriptionDetailView.swift in Sources */,
 				889AF94B2C50ECF5001CEDE6 /* ChapterMiniControlView.swift in Sources */,
 				889AF94C2C50ECF5001CEDE6 /* SubscriptionListItem.swift in Sources */,
@@ -1560,6 +1563,7 @@
 				88415BF92C50EAD40072778F /* AspectRatioPicker.swift in Sources */,
 				889AF8AA2C50EC2E001CEDE6 /* SendableVideo.swift in Sources */,
 				880505042C83016B005F0972 /* QueueVideoButton.swift in Sources */,
+				8859320F2C89C8AF009A93AD /* UnwatchedSchemaV1.swift in Sources */,
 				88415BF12C50EA5F0072778F /* CachedImage.swift in Sources */,
 				88415BF82C50EABD0072778F /* CachedImageHolder.swift in Sources */,
 			);
