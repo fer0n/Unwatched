@@ -107,15 +107,11 @@ import OSLog
             }
 
             for try await (sub, videos) in group {
-                let countNewVideos = await handleNewVideosGetCount(
+                await handleNewVideos(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
-                if countNewVideos > 0 {
-                    // save sooner if videos got added
-                    try modelContext.save()
-                }
             }
         }
 
@@ -123,14 +119,14 @@ import OSLog
         return newVideos
     }
 
-    private func handleNewVideosGetCount(
+    private func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async -> Int {
+    ) async {
         guard let subModel = getSubscription(via: sub) else {
             Logger.log.info("missing info when trying to load videos")
-            return 0
+            return
         }
         var videos = updateYtChannelId(in: videos, subModel)
         videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
@@ -140,11 +136,11 @@ import OSLog
         let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
 
-        let addedVideoCount = triageSubscriptionVideos(subModel,
-                                                       videos: videoModels,
-                                                       defaultPlacement: defaultPlacement)
+        triageSubscriptionVideos(subModel,
+                                 videos: videoModels,
+                                 defaultPlacement: defaultPlacement)
         updateRecentVideoDate(subscription: subModel, videos: videos)
-        return addedVideoCount
+        return
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
