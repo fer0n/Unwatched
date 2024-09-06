@@ -94,7 +94,7 @@ struct FullscreenSpeedControl: View {
             do {
                 try await Task.sleep(s: 0.3)
                 if !Task.isCancelled {
-                    speedUp()
+                    changeSpeed()
                 }
             } catch {
                 // canceled
@@ -107,9 +107,13 @@ struct FullscreenSpeedControl: View {
         reset()
     }
 
-    func speedUp() {
+    func changeSpeed() {
         menuOpen = true
-        player.temporaryPlaybackSpeed = 2
+        if player.playbackSpeed >= Const.temporarySpeedSwap {
+            player.temporaryPlaybackSpeed = 1
+        } else {
+            player.temporaryPlaybackSpeed = 2
+        }
     }
 
     func reset() {
