@@ -63,6 +63,10 @@ extension PlayerManager {
         }
     }
 
+    var actualPlaybackSpeed: Double {
+        getPlaybackSpeed()
+    }
+
     private func getPlaybackSpeed() -> Double {
         video?.subscription?.customSpeedSetting ??
             UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
