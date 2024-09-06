@@ -83,38 +83,6 @@ import OSLog
         addVideosTo(videos: videos, placement: videoplacement, index: index)
     }
 
-    private func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
-        Logger.log.info("addSubscriptionsForVideos")
-        guard let channelId = video.youtubeChannelId else {
-            Logger.log.info("no channel Id/title found in video")
-            return
-        }
-
-        // video already added, done here
-        guard video.subscription == nil else {
-            Logger.log.info("video already has a subscription")
-            return
-        }
-
-        // check if subs exists (in video or in db)
-        if let existingSub = try subscriptionExists(channelId) {
-            existingSub.videos?.append(video)
-            return
-        }
-
-        // create subs where missing
-        let channelLink = try UrlService.getFeedUrlFromChannelId(channelId)
-        let sub = Subscription(
-            link: channelLink,
-            title: feedTitle ?? "",
-            isArchived: true,
-            youtubeChannelId: channelId)
-        Logger.log.info("new sub: \(sub.isArchived)")
-
-        modelContext.insert(sub)
-        sub.videos?.append(video)
-    }
-
     private func videoAlreadyExists(_ youtubeId: String) -> Video? {
         var fetch = FetchDescriptor<Video>(predicate: #Predicate {
             $0.youtubeId == youtubeId
@@ -195,14 +163,6 @@ import OSLog
             modelContext.insert(video)
         }
         return videoModels
-    }
-
-    /// Fetch the existing Subscription via SendableSubscription's persistentId
-    private func getSubscription(via sub: SendableSubscription) -> Subscription? {
-        if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
-            return modelSub
-        }
-        return nil
     }
 
     /// Returns specified Subscriptions and returns them as Sendable.

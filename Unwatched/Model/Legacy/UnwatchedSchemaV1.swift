@@ -38,8 +38,6 @@ enum UnwatchedSchemaV1: VersionedSchema {
 
     @Model
     final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder {
-        typealias ExportType = SendableSubscription
-
         @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
         @Relationship(deleteRule: .cascade, inverse: \CachedImage.subscription) var cachedImage: CachedImage?
         var link: URL?
@@ -124,8 +122,6 @@ enum UnwatchedSchemaV1: VersionedSchema {
 
     @Model
     final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
-        typealias ExportType = SendableVideo
-
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
         @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
         @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []

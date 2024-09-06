@@ -3647,22 +3647,6 @@
         }
       }
     },
-    "refreshOnClose" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beim schließen im Hintergrund neu laden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Background Refresh on Close"
-          }
-        }
-      }
-    },
     "reloadVideo" : {
       "localizations" : {
         "de" : {

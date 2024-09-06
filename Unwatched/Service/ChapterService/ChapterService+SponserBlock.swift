@@ -7,6 +7,16 @@ import Foundation
 import OSLog
 import SwiftData
 
+struct ChapterHandlingContext {
+    var last: SendableChapter
+    var chapter: SendableChapter
+    var newChapters: [SendableChapter]
+    var index: Int
+    var tolerance: Double
+    var lastEndTime: Double
+    var chapterEndTime: Double
+}
+
 extension ChapterService {
     static func mergeSponsorSegments(
         youtubeId: String,
@@ -54,12 +64,10 @@ extension ChapterService {
     static func cleanupMergedChapters(_ chapters: [SendableChapter]) -> [SendableChapter] {
         let tolerance = Const.chapterTimeTolerance
         var newChapters = [SendableChapter]()
-
         var index = -1
 
         for chapter in chapters {
             if let last = newChapters.last {
-                var chapter = chapter
                 guard let lastEndTime = last.endTime, let chapterEndTime = chapter.endTime else {
                     let result = handleMissingEndTime(chapter)
                     newChapters.append(contentsOf: result)
@@ -67,55 +75,22 @@ extension ChapterService {
                     continue
                 }
 
-                // similar start, different end
-                if abs(chapter.startTime - last.startTime) <= tolerance
-                    && abs(chapterEndTime - lastEndTime) > tolerance {
+                var context = ChapterHandlingContext(
+                    last: last,
+                    chapter: chapter,
+                    newChapters: newChapters,
+                    index: index,
+                    tolerance: tolerance,
+                    lastEndTime: lastEndTime,
+                    chapterEndTime: chapterEndTime
+                )
 
-                    if lastEndTime < chapterEndTime {
-                        chapter.startTime = lastEndTime
-                        newChapters.append(chapter)
-                    } else {
-                        newChapters[index].startTime = chapterEndTime
-                        newChapters.insert(chapter, at: index)
-                    }
-                    index += 1
-                    continue
-                }
-
-                // similar end, different start
-                if abs(chapterEndTime - lastEndTime) <= tolerance
-                    && chapter.startTime - last.startTime > tolerance {
-                    newChapters[index].endTime = chapter.startTime
-                    newChapters.append(chapter)
-                    index += 1
-                    continue
-                }
-
-                // one nested inside the other
-                if chapter.startTime - last.startTime > tolerance
-                    && lastEndTime - chapterEndTime > tolerance {
-
-                    var firstPart = last
-                    firstPart.endTime = chapter.startTime
-
-                    var secondPart = last
-                    secondPart.startTime = chapterEndTime
-
-                    newChapters[index] = firstPart
-                    newChapters.append(chapter)
-                    newChapters.append(secondPart)
-
-                    index += 2
-                    continue
-                }
-
-                // start of second before the end of the first
-                if lastEndTime != chapter.startTime {
-                    let timeBorder = (last.category?.isExternal ?? false) ? lastEndTime : chapter.startTime
-                    newChapters[index].endTime = timeBorder
-                    chapter.startTime = timeBorder
-                    newChapters.append(chapter)
-                    index += 1
+                if handleSimilarStartDifferentEnd(&context) ||
+                    handleSimilarEndDifferentStart(&context) ||
+                    handleNestedChapters(&context) ||
+                    handleOverlappingChapters(&context) {
+                    newChapters = context.newChapters
+                    index = context.index
                     continue
                 }
             }
@@ -129,6 +104,68 @@ extension ChapterService {
     private static func handleMissingEndTime(_ chapter: SendableChapter) -> [SendableChapter] {
         Logger.log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
         return [chapter]
+    }
+
+    private static func handleSimilarStartDifferentEnd(_ context: inout ChapterHandlingContext) -> Bool {
+        if abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
+            abs(context.chapterEndTime - context.lastEndTime) > context.tolerance {
+
+            if context.lastEndTime < context.chapterEndTime {
+                context.chapter.startTime = context.lastEndTime
+                context.newChapters.append(context.chapter)
+            } else {
+                context.newChapters[context.index].startTime = context.chapterEndTime
+                context.newChapters.insert(context.chapter, at: context.index)
+            }
+            context.index += 1
+            return true
+        }
+        return false
+    }
+    private static func handleSimilarEndDifferentStart(_ context: inout ChapterHandlingContext) -> Bool {
+        if abs(context.chapterEndTime - context.lastEndTime) <= context.tolerance &&
+            context.chapter.startTime - context.last.startTime > context.tolerance {
+
+            context.newChapters[context.index].endTime = context.chapter.startTime
+            context.newChapters.append(context.chapter)
+            context.index += 1
+            return true
+        }
+        return false
+    }
+
+    private static func handleNestedChapters(_ context: inout ChapterHandlingContext) -> Bool {
+        if context.chapter.startTime - context.last.startTime > context.tolerance &&
+            context.lastEndTime - context.chapterEndTime > context.tolerance {
+
+            var firstPart = context.last
+            firstPart.endTime = context.chapter.startTime
+
+            var secondPart = context.last
+            secondPart.startTime = context.chapterEndTime
+
+            context.newChapters[context.index] = firstPart
+            context.newChapters.append(context.chapter)
+            context.newChapters.append(secondPart)
+
+            context.index += 2
+            return true
+        }
+        return false
+    }
+
+    private static func handleOverlappingChapters(_ context: inout ChapterHandlingContext) -> Bool {
+        if context.lastEndTime != context.chapter.startTime {
+            let timeBorder = (context.last.category?.isExternal ?? false)
+                ? context.lastEndTime
+                : context.chapter.startTime
+            context.newChapters[context.index].endTime = timeBorder
+            context.chapter.startTime = timeBorder
+            context.newChapters.append(context.chapter)
+            context.index += 1
+            return true
+        }
+        return false
     }
 
     static func generateChapters(from chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {

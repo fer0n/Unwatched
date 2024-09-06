@@ -206,3 +206,14 @@ extension Video {
         )
     }
 }
+
+extension PlayerManager {
+    static func getDummy() -> PlayerManager {
+        let player = PlayerManager()
+        player.video = Video.getDummy()
+        //        player.currentTime = 10
+        player.currentChapter = Chapter.getDummy()
+        //        player.embeddingDisabled = true
+        return player
+    }
+}

@@ -58,8 +58,6 @@ struct SetupView: View {
                     }
                     refresher.handleBecameInactive()
                     refresher.scheduleVideoRefresh()
-
-                    handleDebugRefresh()
                 case .inactive:
                     Logger.log.info("inactive")
                     saveCurrentVideo()
@@ -67,16 +65,6 @@ struct SetupView: View {
                     break
                 }
             }
-    }
-
-    func handleDebugRefresh() {
-        if UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
-            let container = modelContext.container
-            Task {
-                try? await Task.sleep(s: 1)
-                await refresher.handleBackgroundVideoRefresh()
-            }
-        }
     }
 
     func saveData() async {
