@@ -10,7 +10,7 @@ class VideoCrawlerTests: XCTestCase {
 
     @MainActor
     func testLoadingVideos() async {
-        let container = await DataController.previewContainer
+        let container = DataController.previewContainer
         await VideoService.deleteEverything(container)
 
         let context = ModelContext(container)
@@ -26,8 +26,8 @@ class VideoCrawlerTests: XCTestCase {
             try context.save()
 
             let fetchSubs = FetchDescriptor<Subscription>()
-            let subCount = try context.fetchCount(fetchSubs)
-            print("subCount: \(subCount)")
+            // let subCount = try context.fetchCount(fetchSubs)
+            // print("subCount: \(subCount)")
 
             let refresher = RefreshManager()
             refresher.container = container
@@ -38,7 +38,7 @@ class VideoCrawlerTests: XCTestCase {
             await task1.value
             await task2.value
 
-            let countVids1 = try? context.fetchCount(fetchVids)
+            let countVids1 = (try? context.fetchCount(fetchVids)) ?? 0
             print("count: \(countVids1)")
 
             let task = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
@@ -47,7 +47,7 @@ class VideoCrawlerTests: XCTestCase {
             XCTAssertEqual(info.countVideos, 0, "Found duplicates")
 
             print(info)
-            let countVids2 = try? context.fetchCount(fetchVids)
+            let countVids2 = (try? context.fetchCount(fetchVids)) ?? 0
             print("count after: \(countVids2)")
 
             let subCount2 = try context.fetchCount(fetchSubs)
