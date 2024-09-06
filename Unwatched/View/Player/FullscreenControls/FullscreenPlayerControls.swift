@@ -18,11 +18,9 @@ struct FullscreenPlayerControls: View {
         VStack {
             ZStack {
                 if hasChapters {
-                    Button {
-                        player.goToNextChapter()
-                    } label: {
+                    NextChapterButton { image in
                         VStack(spacing: 5) {
-                            Image(systemName: Const.nextChapterSF)
+                            image
                             ChapterTimeRemaining()
                         }
                         .modifier(PlayerControlButtonStyle())
@@ -77,14 +75,11 @@ struct FullscreenPlayerControls: View {
 
             ZStack {
                 if hasChapters {
-                    Button {
-                        player.goToPreviousChapter()
-                    } label: {
-                        Image(systemName: Const.previousChapterSF)
+                    PreviousChapterButton { image in
+                        image
                             .modifier(PlayerControlButtonStyle())
                     }
                     .fontWeight(.bold)
-                    .accessibilityLabel("previousChapter")
                 }
             }
             .frame(maxHeight: .infinity)
