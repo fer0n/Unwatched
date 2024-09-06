@@ -50,7 +50,6 @@ class ExportableTests: XCTestCase {
                 Const.themeColor: ThemeColor.red,
                 Const.browserAsTab: true,
                 Const.sheetOpacity: true,
-                Const.lightPlayer: true,
 
                 // User Data
                 Const.automaticBackups: false,

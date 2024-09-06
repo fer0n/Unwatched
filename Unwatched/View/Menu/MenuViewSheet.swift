@@ -8,6 +8,7 @@ import SwiftUI
 struct MenuViewSheet: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(\.colorScheme) var colorScheme
 
     var allowMaxSheetHeight: Bool
     var embeddingDisabled: Bool
@@ -47,7 +48,7 @@ struct MenuViewSheet: ViewModifier {
                                 ? .hidden
                                 : .visible)
                 }
-
+                .environment(\.colorScheme, colorScheme)
             }
     }
 }

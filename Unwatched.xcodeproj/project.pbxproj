@@ -77,6 +77,14 @@
 		88373C0D2C8AF3EA00ACBB3B /* PreviousChapterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C0B2C8AF3EA00ACBB3B /* PreviousChapterButton.swift */; };
 		88373C0F2C8AF60600ACBB3B /* NextChapterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C0E2C8AF43600ACBB3B /* NextChapterButton.swift */; };
 		88373C102C8AF60700ACBB3B /* NextChapterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C0E2C8AF43600ACBB3B /* NextChapterButton.swift */; };
+		88373C122C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */; };
+		88373C132C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */; };
+		88373C162C8B37FB00ACBB3B /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C152C8B37FB00ACBB3B /* AppAppearance.swift */; };
+		88373C172C8B37FB00ACBB3B /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C152C8B37FB00ACBB3B /* AppAppearance.swift */; };
+		88373C192C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */; };
+		88373C1A2C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */; };
+		88373C1C2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */; };
+		88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */; };
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
@@ -508,6 +516,10 @@
 		88358A7C2C65561B00AF71F8 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		88373C0B2C8AF3EA00ACBB3B /* PreviousChapterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousChapterButton.swift; sourceTree = "<group>"; };
 		88373C0E2C8AF43600ACBB3B /* NextChapterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextChapterButton.swift; sourceTree = "<group>"; };
+		88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedMiniature.swift; sourceTree = "<group>"; };
+		88373C152C8B37FB00ACBB3B /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceSelection.swift; sourceTree = "<group>"; };
+		88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetColorScheme.swift; sourceTree = "<group>"; };
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
@@ -806,6 +818,7 @@
 				8829C7C92C762A940074078A /* ChapterCategory.swift */,
 				880505082C8303D8005F0972 /* VideoListItemConfig.swift */,
 				8805050E2C83638D005F0972 /* VideoListFormat.swift */,
+				88373C152C8B37FB00ACBB3B /* AppAppearance.swift */,
 			);
 			path = HelperModel;
 			sourceTree = "<group>";
@@ -825,6 +838,16 @@
 				8843AE572C8843E7001A740A /* CleaupServiceTests.swift */,
 			);
 			path = UnwatchedUITests;
+			sourceTree = "<group>";
+		};
+		88373C142C8B37D600ACBB3B /* AppearanceSelection */ = {
+			isa = PBXGroup;
+			children = (
+				88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */,
+				88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */,
+				88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */,
+			);
+			path = AppearanceSelection;
 			sourceTree = "<group>";
 		};
 		883CA80B2B5AFD6F00028D52 /* Player */ = {
@@ -969,6 +992,7 @@
 		888F74A52BA1FA6B00B94822 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				88373C142C8B37D600ACBB3B /* AppearanceSelection */,
 				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
 				88C572322B53C8BD002FF07E /* SettingsView.swift */,
 				888F74A62BA1FAC000B94822 /* NotificationSettingsView.swift */,
@@ -1453,6 +1477,7 @@
 				889AF92C2C50ECEE001CEDE6 /* FullscreenPlayerControls.swift in Sources */,
 				889AF92D2C50ECEE001CEDE6 /* FullscreenSpeedControl.swift in Sources */,
 				889AF92E2C50ECEE001CEDE6 /* YouTubePlayerView.swift in Sources */,
+				88373C132C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */,
 				889AF92F2C50ECEE001CEDE6 /* CustomSettingsButton.swift in Sources */,
 				889AF9302C50ECEE001CEDE6 /* ChapterTimeRemaining.swift in Sources */,
 				88358A7B2C64EBAC00AF71F8 /* UNNotificationAttachment.swift in Sources */,
@@ -1558,15 +1583,18 @@
 				CD5AF8472C8AD25A00D18628 /* PlayerManager+Playback.swift in Sources */,
 				889AF9142C50ECE7001CEDE6 /* LibraryView.swift in Sources */,
 				889AF9152C50ECE7001CEDE6 /* AddToLibraryView.swift in Sources */,
+				88373C172C8B37FB00ACBB3B /* AppAppearance.swift in Sources */,
 				889AF9162C50ECE7001CEDE6 /* WatchHistoryView.swift in Sources */,
 				889AF9172C50ECE7001CEDE6 /* DebugView.swift in Sources */,
 				889AF9182C50ECE7001CEDE6 /* SubscriptionListSection.swift in Sources */,
 				889AF9192C50ECE7001CEDE6 /* LibraryDestination.swift in Sources */,
 				889AF91A2C50ECE7001CEDE6 /* BookmarkedVideosView.swift in Sources */,
+				88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
 				889AF91B2C50ECE7001CEDE6 /* BackupSettings.swift in Sources */,
 				889AF91C2C50ECE7001CEDE6 /* LibraryVideoSection.swift in Sources */,
 				889AF91D2C50ECE7001CEDE6 /* SearchableVideos.swift in Sources */,
 				889AF91E2C50ECE7001CEDE6 /* DeleteImageCacheButton.swift in Sources */,
+				88373C1A2C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */,
 				889AF91F2C50ECE7001CEDE6 /* VideoSettingsView.swift in Sources */,
 				889AF9202C50ECE7001CEDE6 /* AllVideosView.swift in Sources */,
 				889AF9212C50ECE7001CEDE6 /* NotificationSettingsView.swift in Sources */,
@@ -1635,6 +1663,7 @@
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */,
 				8805050C2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */,
+				88373C162C8B37FB00ACBB3B /* AppAppearance.swift in Sources */,
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
 				888C49C22B5F288F00CDEC76 /* Binding.swift in Sources */,
 				88D29AEF2B757E7300BDBFDF /* SearchableVideos.swift in Sources */,
@@ -1649,6 +1678,7 @@
 				88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */,
 				8845F0172B5054570086AA98 /* Chapter.swift in Sources */,
 				881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */,
+				88373C1C2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
 				883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */,
 				887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */,
 				88BF35912BC91F20005FA53E /* AddFeedsMenu.swift in Sources */,
@@ -1725,6 +1755,7 @@
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
 				8804A3ED2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift in Sources */,
+				88373C122C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */,
 				8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */,
 				88BFA0EA2C871E8A0095EFBA /* AutoHideVM.swift in Sources */,
 				880505092C8303D8005F0972 /* VideoListItemConfig.swift in Sources */,
@@ -1777,6 +1808,7 @@
 				8899246F2C48150A001185A6 /* VideoListItemMoreMenu.swift in Sources */,
 				8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */,
 				889924752C484752001185A6 /* FullscreenSpeedControl.swift in Sources */,
+				88373C192C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */,
 				887CA9452B52E72700E344EC /* AppShortcutsProvider.swift in Sources */,
 				88BABABE2B62932C001FA0A4 /* CachedImageView.swift in Sources */,
 				8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */,
