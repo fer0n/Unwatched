@@ -24,14 +24,14 @@ struct Const {
 
     /// Playback speeds that will be spelled out
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
-    
+
     /// Playback speeds that can savely shown at smaller sizes without line break
     static let highlightedSpeedsInt = [1.0, 2.0]
     static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
-    
+
     /// The margin at which it will skip to the chapter start instead of the previous chapter
     static let previousChapterDelaySeconds: Double = 4
-    
+
     /// If current playback speed is bigger than this, it will temporarily increase, otherwise decrease
     static let temporarySpeedSwap: Double = 1.6
 
