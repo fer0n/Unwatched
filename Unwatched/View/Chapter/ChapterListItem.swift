@@ -16,7 +16,8 @@ struct ChapterListItem: View {
             VStack(alignment: .leading) {
                 if let title = chapter.titleText {
                     Text(title)
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
                 }
                 Text(timeText)
                     .font(.subheadline.monospacedDigit())
