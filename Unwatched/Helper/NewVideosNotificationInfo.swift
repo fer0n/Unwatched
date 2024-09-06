@@ -55,7 +55,7 @@ struct NewVideosNotificationInfo {
         let countQueue = queue.values.flatMap { $0 }.count
         let count = countInbox + countQueue
 
-        if count <= Const.simultaneousNotificationsLimit || UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
+        if count <= Const.simultaneousNotificationsLimit {
             let info = sendOneNotificationPerVideo()
             let infoWithImages = await getImageData(info, container: container)
             return infoWithImages

@@ -16,6 +16,7 @@ struct SetupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(RefreshManager.self) var refresher
     @Environment(ImageCacheManager.self) var imageCacheManager
+    @Environment(\.colorScheme) var colorScheme
 
     @State var sheetPos = SheetPositionReader.load()
     @State var alerter: Alerter = Alerter()
@@ -29,6 +30,7 @@ struct SetupView: View {
             .environment(sheetPos)
             .environment(alerter)
             .environment(navManager)
+            .environment(\.originalColorScheme, colorScheme)
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
@@ -58,8 +60,6 @@ struct SetupView: View {
                     }
                     refresher.handleBecameInactive()
                     refresher.scheduleVideoRefresh()
-
-                    handleDebugRefresh()
                 case .inactive:
                     Logger.log.info("inactive")
                     saveCurrentVideo()
@@ -67,16 +67,6 @@ struct SetupView: View {
                     break
                 }
             }
-    }
-
-    func handleDebugRefresh() {
-        if UserDefaults.standard.bool(forKey: Const.refreshOnClose) {
-            let container = modelContext.container
-            Task {
-                try? await Task.sleep(s: 1)
-                await refresher.handleBackgroundVideoRefresh()
-            }
-        }
     }
 
     func saveData() async {

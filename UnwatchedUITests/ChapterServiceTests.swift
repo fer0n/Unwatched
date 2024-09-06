@@ -251,8 +251,6 @@ final class ChapterServiceTests: XCTestCase {
 
     func testUpdateDurationOneChapter() async {
         let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
-
         var chapters = [Chapter(title: "0", time: 0, endTime: 10, category: nil)]
         ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, container: container)
 

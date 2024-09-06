@@ -12,11 +12,14 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
-    @AppStorage(Const.lightPlayer) var lightPlayer: Bool = false
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
 
-    var body: some View {
+    @AppStorage(Const.lightModeTheme) var lightModeTheme = AppAppearance.unwatched
+    @AppStorage(Const.darkModeTheme) var darkModeTheme = AppAppearance.dark
 
+    @Environment(\.originalColorScheme) var originalColorScheme
+
+    var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
@@ -48,10 +51,14 @@ struct AppearanceSettingsView: View {
                     .pickerStyle(.menu)
                 }
 
-                MySection {
-                    Toggle(isOn: $lightPlayer) {
-                        Text("lightPlayer")
-                    }
+                MySection(getAppearanceTitle(.light)) {
+                    AppAppearanceSelection(selection: $lightModeTheme)
+                        .environment(\.colorScheme, .light)
+                }
+
+                MySection(getAppearanceTitle(.dark)) {
+                    AppAppearanceSelection(selection: $darkModeTheme)
+                        .environment(\.colorScheme, .dark)
                 }
 
                 MySection("appColor") {
@@ -81,6 +88,22 @@ struct AppearanceSettingsView: View {
                 }
             }
             .myNavigationTitle("appearance")
+        }
+    }
+
+    func getAppearanceTitle(_ colorScheme: ColorScheme) -> LocalizedStringKey {
+        if colorScheme == originalColorScheme {
+            if colorScheme == .dark {
+                return LocalizedStringKey("darkModeCurrent")
+            } else {
+                return LocalizedStringKey("lightModeCurrent")
+            }
+        } else {
+            if colorScheme == .dark {
+                return LocalizedStringKey("darkMode")
+            } else {
+                return LocalizedStringKey("lightMode")
+            }
         }
     }
 

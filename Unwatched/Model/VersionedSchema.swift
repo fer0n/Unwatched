@@ -30,10 +30,7 @@ enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         fromVersion: UnwatchedSchemaV1.self,
         toVersion: UnwatchedSchemaV1p1.self,
         willMigrate: { context in
-            // remove duplicates then save
             try? context.delete(model: UnwatchedSchemaV1.CachedImage.self)
-            let container = context.container
-            _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
             try? context.save()
         }, didMigrate: nil
     )

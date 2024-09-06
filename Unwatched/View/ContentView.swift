@@ -8,13 +8,12 @@ import SwiftData
 
 struct ContentView: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
-    @AppStorage(Const.lightPlayer) var lightPlayer: Bool = false
 
+    @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @Environment(SheetPositionReader.self) var sheetPos
-    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -55,7 +54,7 @@ struct ContentView: View {
             }
             .animation(.default, value: hideControlsFullscreen)
             .background(Color.playerBackgroundColor)
-            .environment(\.colorScheme, lightPlayer ? colorScheme : .dark)
+            .setColorScheme(forPlayer: true)
             .onAppear {
                 sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
             }
@@ -67,6 +66,7 @@ struct ContentView: View {
                             .enabled(upThrough: .height(sheetPos.playerControlHeight))
                         )
                         .presentationDragIndicator(.visible)
+                        .environment(\.colorScheme, colorScheme)
                 }
             }
             .menuViewSheet(allowMaxSheetHeight: videoExists && !navManager.searchFocused,
@@ -75,6 +75,7 @@ struct ContentView: View {
                            disableSheet: bigScreen
             )
         }
+        .setColorScheme()
         .ignoresSafeArea(bigScreen ? .keyboard : [])
         .innerSizeTrackerModifier(onChange: { newSize in
             sheetPos.sheetHeight = newSize.height
@@ -82,19 +83,16 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+#Preview {
+    let player = PlayerManager()
+    player.video = Video.getDummy()
 
-    static var previews: some View {
-        let player = PlayerManager()
-        player.video = Video.getDummy()
-
-        return ContentView(hideControlsFullscreen: false, lightPlayer: true)
-            .modelContainer(DataController.previewContainer)
-            .environment(NavigationManager.getDummy())
-            .environment(Alerter())
-            .environment(player)
-            .environment(ImageCacheManager())
-            .environment(RefreshManager())
-            .environment(SheetPositionReader())
-    }
+    return ContentView(hideControlsFullscreen: false)
+        .modelContainer(DataController.previewContainer)
+        .environment(NavigationManager.getDummy())
+        .environment(Alerter())
+        .environment(player)
+        .environment(ImageCacheManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader())
 }

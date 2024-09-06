@@ -22,12 +22,20 @@ struct Const {
     static let videoAspectRatios: [Double] = [18/9, 4/3]
     static let consideredWideAspectRatio: Double = 18/9
 
+    /// Playback speeds that will be spelled out
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
+
+    /// Playback speeds that can savely shown at smaller sizes without line break
     static let highlightedSpeedsInt = [1.0, 2.0]
     static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
+
+    /// The margin at which it will skip to the chapter start instead of the previous chapter
     static let previousChapterDelaySeconds: Double = 4
 
-    // videos of new subscriptions being triaged
+    /// If current playback speed is bigger than this, it will temporarily increase, otherwise decrease
+    static let temporarySpeedSwap: Double = 1.6
+
+    /// Number of videos from new subscriptions that will be triaged
     static let triageNewSubs = 5
     static let minListEntriesToShowClear = 2
     static let autoRefreshIntervalSeconds: Double = 10 * 60
@@ -38,10 +46,12 @@ struct Const {
     static let askForReviewPointThreashold = 30
     static let sheetOpacityValue = 0.6
 
+    /// Time difference within which it will be considered the same time between start/end of chapters
     static let chapterTimeTolerance: Double = 2.0
 
     static let playlistPageRequestLimit: Int = 25 // 25 * 50 videos per page/request -> 1250 videos
 
+    /// Number of notifications that will be sent at once per inbox/queue
     static let simultaneousNotificationsLimit = 1
     static let notificationImageUrl = "notificationImageUrl"
     static let notificationActionQueue = "notificationActionQueue"
@@ -146,14 +156,14 @@ struct Const {
     static let showNotificationBadge = "showNotificationBadge"
 
     static let themeColor = "themeColor"
+    static let lightModeTheme = "lightModeTheme"
+    static let darkModeTheme = "darkModeTheme"
     static let showTutorial = "showTutorial"
 
     static let reloadVideoId = "reloadVideoId"
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
-    static let refreshOnClose = "refreshOnClose"
 
-    static let lightPlayer = "lightPlayer"
     static let videoListFormat = "videoListFormat"
 }
 
@@ -189,7 +199,8 @@ extension Const {
         Const.themeColor: ThemeColor.teal,
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
-        Const.lightPlayer: false,
+        Const.lightModeTheme: AppAppearance.unwatched,
+        Const.darkModeTheme: AppAppearance.dark,
         Const.videoListFormat: VideoListFormat.compact,
 
         // User Data

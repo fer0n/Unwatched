@@ -17,7 +17,6 @@ struct BackupView: View {
     @State var fileToBeRestored: IdentifiableURL?
 
     @State var isDeletingEverythingTask: Task<(), Never>?
-    @State var saveToIcloudTask: Task<(), any Error>?
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -127,14 +126,6 @@ struct BackupView: View {
             await isDeletingEverythingTask?.value
             isDeletingEverythingTask = nil
         }
-        .task(id: saveToIcloudTask) {
-            do {
-                try await saveToIcloudTask?.value
-                self.getAllIcloudFiles()
-            } catch {
-                alerter.showError(error)
-            }
-        }
         .onAppear {
             getAllIcloudFiles()
         }
@@ -180,8 +171,14 @@ struct BackupView: View {
     }
 
     func saveToIcloud(_ deviceName: String) async {
-        let container = modelContext.container
-        saveToIcloudTask = UserDataService.saveToIcloud(deviceName, container, manual: true)
+        do {
+            let container = modelContext.container
+            let task = UserDataService.saveToIcloud(deviceName, container, manual: true)
+            try await task.value
+            self.getAllIcloudFiles()
+        } catch {
+            alerter.showError(error)
+        }
     }
 
     func restoreBackup(_ file: URL) {

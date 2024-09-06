@@ -1345,6 +1345,38 @@
         }
       }
     },
+    "darkMode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Mode"
+          }
+        }
+      }
+    },
+    "darkModeCurrent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkel (Aktiv)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Mode (Active)"
+          }
+        }
+      }
+    },
     "debug" : {
       "localizations" : {
         "de" : {
@@ -2585,18 +2617,34 @@
         }
       }
     },
-    "lightPlayer" : {
+    "lightMode" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Heller Player im hellen Modus"
+            "value" : "Hell"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Light Player in Light Mode"
+            "value" : "Light Mode"
+          }
+        }
+      }
+    },
+    "lightModeCurrent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hell (Aktiv)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light Mode (Active)"
           }
         }
       }
@@ -3643,22 +3691,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refresh"
-          }
-        }
-      }
-    },
-    "refreshOnClose" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beim schließen im Hintergrund neu laden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Background Refresh on Close"
           }
         }
       }

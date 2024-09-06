@@ -18,6 +18,7 @@ struct DisappearingAddFeedsMenu: View {
 }
 
 struct AddFeedsMenu: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) private var navManager
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
 
@@ -60,6 +61,7 @@ struct AddFeedsMenu: View {
                 .tint(theme.darkColor)
                 .foregroundStyle(Color.neutralAccentColor)
             }
+            .environment(\.colorScheme, colorScheme)
         }
     }
 }

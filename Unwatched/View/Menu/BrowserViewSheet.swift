@@ -7,6 +7,7 @@ import SwiftUI
 
 struct BrowserViewSheet: ViewModifier {
     var navManager: Bindable<NavigationManager>
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
@@ -33,6 +34,7 @@ struct BrowserViewSheet: ViewModifier {
                                 refresher: refresher,
                                 startUrl: browserUrl)
                         .environment(imageCacheManager)
+                        .environment(\.colorScheme, colorScheme)
                 }
         }
     }

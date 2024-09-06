@@ -22,11 +22,10 @@ struct ChapterMiniControlView: View {
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
                 GridRow {
                     if hasChapters {
-                        Button(action: goToPrevious) {
-                            Image(systemName: Const.previousChapterSF)
+                        PreviousChapterButton { image in
+                            image
                                 .font(.system(size: 15))
                         }
-                        .accessibilityLabel("previousChapter")
                         .keyboardShortcut(.leftArrow)
                         .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapterDisabled)
@@ -56,9 +55,16 @@ struct ChapterMiniControlView: View {
                     }
 
                     if hasChapters {
-                        ChapterMiniControlGoToNext(goToNext: goToNext)
-                            .keyboardShortcut(.rightArrow)
-                            .disabled(player.nextChapter == nil || player.playDisabled)
+                        NextChapterButton { image in
+                            image
+                                .font(.system(size: 15))
+                        }
+                        .buttonStyle(ChangeChapterButtonStyle(
+                            chapter: player.currentChapter,
+                            remainingTime: player.currentRemaining
+                        ))
+                        .keyboardShortcut(.rightArrow)
+                        .disabled(player.nextChapter == nil || player.playDisabled)
                     } else {
                         Color.clear.fixedSize()
                     }
@@ -142,16 +148,6 @@ struct ChapterMiniControlView: View {
             .clipShape(.rect(cornerRadius: 10))
         }
     }
-
-    func goToPrevious() {
-        triggerFeedback.toggle()
-        player.goToPreviousChapter()
-    }
-
-    func goToNext() {
-        triggerFeedback.toggle()
-        player.goToNextChapter()
-    }
 }
 
 struct BackgroundProgressBar: View {
@@ -189,24 +185,6 @@ struct ChapterMiniControlRemainingText: View {
                 .font(.system(size: 14))
                 .lineLimit(1)
         }
-    }
-}
-
-struct ChapterMiniControlGoToNext: View {
-    @Environment(PlayerManager.self) var player
-
-    var goToNext: () -> Void
-
-    var body: some View {
-        Button(action: goToNext) {
-            Image(systemName: Const.nextChapterSF)
-                .font(.system(size: 15))
-        }
-        .accessibilityLabel("nextChapter")
-        .buttonStyle(ChangeChapterButtonStyle(
-            chapter: player.currentChapter,
-            remainingTime: player.currentRemaining
-        ))
     }
 }
 

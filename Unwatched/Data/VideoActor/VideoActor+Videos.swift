@@ -83,38 +83,6 @@ import OSLog
         addVideosTo(videos: videos, placement: videoplacement, index: index)
     }
 
-    private func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
-        Logger.log.info("addSubscriptionsForVideos")
-        guard let channelId = video.youtubeChannelId else {
-            Logger.log.info("no channel Id/title found in video")
-            return
-        }
-
-        // video already added, done here
-        guard video.subscription == nil else {
-            Logger.log.info("video already has a subscription")
-            return
-        }
-
-        // check if subs exists (in video or in db)
-        if let existingSub = try subscriptionExists(channelId) {
-            existingSub.videos?.append(video)
-            return
-        }
-
-        // create subs where missing
-        let channelLink = try UrlService.getFeedUrlFromChannelId(channelId)
-        let sub = Subscription(
-            link: channelLink,
-            title: feedTitle ?? "",
-            isArchived: true,
-            youtubeChannelId: channelId)
-        Logger.log.info("new sub: \(sub.isArchived)")
-
-        modelContext.insert(sub)
-        sub.videos?.append(video)
-    }
-
     private func videoAlreadyExists(_ youtubeId: String) -> Video? {
         var fetch = FetchDescriptor<Video>(predicate: #Predicate {
             $0.youtubeId == youtubeId
@@ -139,15 +107,11 @@ import OSLog
             }
 
             for try await (sub, videos) in group {
-                let countNewVideos = await handleNewVideosGetCount(
+                await handleNewVideos(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
-                if countNewVideos > 0 {
-                    // save sooner if videos got added
-                    try modelContext.save()
-                }
             }
         }
 
@@ -155,14 +119,14 @@ import OSLog
         return newVideos
     }
 
-    private func handleNewVideosGetCount(
+    private func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async -> Int {
+    ) async {
         guard let subModel = getSubscription(via: sub) else {
             Logger.log.info("missing info when trying to load videos")
-            return 0
+            return
         }
         var videos = updateYtChannelId(in: videos, subModel)
         videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
@@ -172,11 +136,11 @@ import OSLog
         let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
 
-        let addedVideoCount = triageSubscriptionVideos(subModel,
-                                                       videos: videoModels,
-                                                       defaultPlacement: defaultPlacement)
+        triageSubscriptionVideos(subModel,
+                                 videos: videoModels,
+                                 defaultPlacement: defaultPlacement)
         updateRecentVideoDate(subscription: subModel, videos: videos)
-        return addedVideoCount
+        return
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
@@ -195,14 +159,6 @@ import OSLog
             modelContext.insert(video)
         }
         return videoModels
-    }
-
-    /// Fetch the existing Subscription via SendableSubscription's persistentId
-    private func getSubscription(via sub: SendableSubscription) -> Subscription? {
-        if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
-            return modelSub
-        }
-        return nil
     }
 
     /// Returns specified Subscriptions and returns them as Sendable.

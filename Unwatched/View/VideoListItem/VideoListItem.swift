@@ -87,8 +87,8 @@ enum VideoActions {
     guard let video = videos?.first else {
         return Text("noVideoFound")
     }
-    video.duration = nil // 130
-    video.elapsedSeconds = 20
+    video.duration = 130
+    video.elapsedSeconds = 40
     video.isYtShort = false
 
     return List {

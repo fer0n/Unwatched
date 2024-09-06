@@ -23,10 +23,9 @@ struct SponsorBlockAPI {
         print("skipSegments url: \(urlString)")
         if let result = try? decoder.decode([SponsorBlockSegmentModel].self, from: data) {
             return result
-        } else if let jsonString = String(data: data, encoding: .utf8) {
-            throw SponsorBlockError.httpRequestFailed(jsonString)
         } else {
-            throw SponsorBlockError.httpRequestFailed("unknown")
+            let jsonString = String(decoding: data, as: UTF8.self)
+            throw SponsorBlockError.httpRequestFailed(jsonString)
         }
     }
 

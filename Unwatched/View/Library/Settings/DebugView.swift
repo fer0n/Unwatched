@@ -11,7 +11,6 @@ struct DebugView: View {
     @Environment(Alerter.self) var alerter
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
-    @AppStorage(Const.refreshOnClose) var refreshOnClose: Bool = false
 
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
@@ -36,9 +35,6 @@ struct DebugView: View {
                 MySection("notifications") {
                     Toggle(isOn: $monitorBackgroundFetches) {
                         Text("monitorBackgroundFetches")
-                    }
-                    Toggle(isOn: $refreshOnClose) {
-                        Text("refreshOnClose")
                     }
                 }
 
