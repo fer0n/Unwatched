@@ -97,10 +97,15 @@ struct ChapterList: View {
     context.insert(video)
 
     let ch1 = Chapter(title: "Chapter 1", time: 0, duration: 20, endTime: 20)
-    let ch2 = Chapter(title: "Chapter 2", time: 20, duration: 20, endTime: 40)
+    let ch2 = Chapter(title: nil, time: 20, duration: 20, endTime: 40)
     let ch3 = Chapter(title: "Chapter 3", time: 40, duration: 20, endTime: 60)
     let ch4 = Chapter(title: "Chapter 4", time: 60, duration: 20, endTime: 80)
-    let ch5 = Chapter(title: "Chapter 5", time: 80, duration: 20, endTime: 100)
+    let ch5 = Chapter(
+        title: "Chapter 5 with a very very very very very long title",
+        time: 80,
+        duration: 20,
+        endTime: 100
+    )
     let ch6 = Chapter(title: "Chapter 6", time: 100, duration: 20, endTime: 120)
     let ch7 = Chapter(title: "Chapter 7", time: 120, duration: 20, endTime: 140)
 
