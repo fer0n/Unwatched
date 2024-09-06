@@ -16,6 +16,7 @@ struct SetupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(RefreshManager.self) var refresher
     @Environment(ImageCacheManager.self) var imageCacheManager
+    @Environment(\.colorScheme) var colorScheme
 
     @State var sheetPos = SheetPositionReader.load()
     @State var alerter: Alerter = Alerter()
@@ -29,6 +30,7 @@ struct SetupView: View {
             .environment(sheetPos)
             .environment(alerter)
             .environment(navManager)
+            .environment(\.originalColorScheme, colorScheme)
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }

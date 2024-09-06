@@ -10,6 +10,7 @@ struct PlayerControls: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
+    @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
@@ -109,6 +110,7 @@ struct PlayerControls: View {
             BrowserView(container: modelContext.container,
                         refresher: refresher,
                         startUrl: browserUrl)
+                .environment(\.colorScheme, colorScheme)
         }
         .animation(.default.speed(3), value: showControls)
         .contentShape(Rectangle())

@@ -156,13 +156,14 @@ struct Const {
     static let showNotificationBadge = "showNotificationBadge"
 
     static let themeColor = "themeColor"
+    static let lightModeTheme = "lightModeTheme"
+    static let darkModeTheme = "darkModeTheme"
     static let showTutorial = "showTutorial"
 
     static let reloadVideoId = "reloadVideoId"
     static let sheetOpacity = "sheetOpacity"
     static let fullscreenControlsSetting = "fullscreenControlsSetting"
 
-    static let lightPlayer = "lightPlayer"
     static let videoListFormat = "videoListFormat"
 }
 
@@ -198,7 +199,8 @@ extension Const {
         Const.themeColor: ThemeColor.teal,
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
-        Const.lightPlayer: false,
+        Const.lightModeTheme: AppAppearance.unwatched,
+        Const.darkModeTheme: AppAppearance.dark,
         Const.videoListFormat: VideoListFormat.compact,
 
         // User Data
