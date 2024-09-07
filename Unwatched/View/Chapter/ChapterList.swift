@@ -10,8 +10,6 @@ struct ChapterList: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
-    @State var toggleHaptic = false
-
     var video: Video
     var isCompact: Bool = false
 
@@ -52,20 +50,19 @@ struct ChapterList: View {
                     .tint(foregroundColor)
                 }
             }
-            .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
         }
     }
 
-    func toggleChapter(_ chapter: Chapter) {
+    func toggleChapter(_ chapter: Chapter) -> Bool {
         if chapter == player.currentChapter && player.playDisabled {
-            return
+            return false
         }
 
-        toggleHaptic.toggle()
         chapter.isActive.toggle()
         if video == player.video {
             player.handleChapterChange()
         }
+        return true
     }
 
     func setChapter(_ chapter: Chapter) {
@@ -97,10 +94,15 @@ struct ChapterList: View {
     context.insert(video)
 
     let ch1 = Chapter(title: "Chapter 1", time: 0, duration: 20, endTime: 20)
-    let ch2 = Chapter(title: "Chapter 2", time: 20, duration: 20, endTime: 40)
+    let ch2 = Chapter(title: nil, time: 20, duration: 20, endTime: 40)
     let ch3 = Chapter(title: "Chapter 3", time: 40, duration: 20, endTime: 60)
     let ch4 = Chapter(title: "Chapter 4", time: 60, duration: 20, endTime: 80)
-    let ch5 = Chapter(title: "Chapter 5", time: 80, duration: 20, endTime: 100)
+    let ch5 = Chapter(
+        title: "Chapter 5 with a very very very very very long title",
+        time: 80,
+        duration: 20,
+        endTime: 100
+    )
     let ch6 = Chapter(title: "Chapter 6", time: 100, duration: 20, endTime: 120)
     let ch7 = Chapter(title: "Chapter 7", time: 120, duration: 20, endTime: 140)
 

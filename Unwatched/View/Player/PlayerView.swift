@@ -20,7 +20,7 @@ struct PlayerView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.requestReview) var requestReview
 
-    @State var controlsVM = FullscreenPlayerControlsVM()
+    @State var autoHideVM = AutoHideVM()
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -64,11 +64,11 @@ struct PlayerView: View {
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControlsWrapper(
                             markVideoWatched: markVideoWatched,
-                            controlsVM: controlsVM)
+                            autoHideVM: $autoHideVM)
                             .environment(\.layoutDirection, .leftToRight)
                     }
                 }
-                .environment(\.layoutDirection, controlsVM.positionLeft
+                .environment(\.layoutDirection, autoHideVM.positionLeft
                                 ? .rightToLeft
                                 : .leftToRight)
                 .frame(maxWidth: !showFullscreenControls || wideAspect
@@ -173,11 +173,11 @@ struct PlayerView: View {
         HStack {
             Color.black
                 .onTapGesture {
-                    controlsVM.setShowControls(positionLeft: true)
+                    autoHideVM.setShowControls(positionLeft: true)
                 }
             Color.black
                 .onTapGesture {
-                    controlsVM.setShowControls(positionLeft: false)
+                    autoHideVM.setShowControls(positionLeft: false)
                 }
         }
         .disabled(fullscreenControlsSetting != .autoHide)
@@ -196,6 +196,7 @@ struct PlayerView: View {
         .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         .onTapGesture(perform: handleMiniPlayerTap)
+        .id(player.video?.thumbnailUrl)
     }
 
     @MainActor

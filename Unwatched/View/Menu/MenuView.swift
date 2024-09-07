@@ -8,6 +8,7 @@ import SwiftData
 import OSLog
 
 struct MenuView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -60,6 +61,7 @@ struct MenuView: View {
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video, page: $navManager.videoDetailPage)
                     .presentationDragIndicator(.visible)
+                    .environment(\.colorScheme, colorScheme)
             }
         }
         .browserViewSheet(navManager: $navManager)

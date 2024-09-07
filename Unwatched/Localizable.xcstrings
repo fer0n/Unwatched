@@ -667,6 +667,16 @@
         }
       }
     },
+    "blockingAdsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocking Ads"
+          }
+        }
+      }
+    },
     "blue" : {
       "localizations" : {
         "de" : {
@@ -1227,6 +1237,17 @@
         }
       }
     },
+    "contact" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact"
+          }
+        }
+      }
+    },
     "contactUs" : {
       "localizations" : {
         "de" : {
@@ -1357,6 +1378,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dark Green"
+          }
+        }
+      }
+    },
+    "darkMode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Mode"
+          }
+        }
+      }
+    },
+    "darkModeCurrent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dunkel (Aktiv)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dark Mode (Active)"
           }
         }
       }
@@ -1697,6 +1750,26 @@
         }
       }
     },
+    "durationMissingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Duration"
+          }
+        }
+      }
+    },
+    "emailAndFaq" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email & FAQ"
+          }
+        }
+      }
+    },
     "emptyYoutubeId" : {
       "localizations" : {
         "de" : {
@@ -1955,22 +2028,6 @@
         }
       }
     },
-    "faq" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hilfe"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Help"
-          }
-        }
-      }
-    },
     "fasterSpeedsFaqA" : {
       "localizations" : {
         "de" : {
@@ -2003,6 +2060,16 @@
         }
       }
     },
+    "fasterSpeedsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More Playback Speeds"
+          }
+        }
+      }
+    },
     "forceYtWatchHistory" : {
       "localizations" : {
         "de" : {
@@ -2031,6 +2098,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To add videos to the YouTube watch history, YouTube requires the user to start each video via the YouTube player. All other methods of starting the video will be disabled until then."
+          }
+        }
+      }
+    },
+    "frequentlyAskedQuestions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ & Suggestions"
           }
         }
       }
@@ -2355,7 +2432,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Experimentelle Einstellung. Erstelle ein Backup bevor der Aktivierung. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
+            "value" : "Dies ist eine experimentelle Einstellung, bitte stelle Sicher, dass ein Backup existiert. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
           }
         },
         "en" : {
@@ -2601,18 +2678,34 @@
         }
       }
     },
-    "lightPlayer" : {
+    "lightMode" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Heller Player im hellen Modus"
+            "value" : "Hell"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Light Player in Light Mode"
+            "value" : "Light Mode"
+          }
+        }
+      }
+    },
+    "lightModeCurrent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hell (Aktiv)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light Mode (Active)"
           }
         }
       }
@@ -2645,6 +2738,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How can I like videos or subscribe to channels on YouTube?"
+          }
+        }
+      }
+    },
+    "likeSubscribeVideoFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like & Subscribe on YouTube"
           }
         }
       }
@@ -2777,6 +2880,16 @@
         }
       }
     },
+    "morePlatformsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS & macOS Support"
+          }
+        }
+      }
+    },
     "morePlaylistsFaqA" : {
       "localizations" : {
         "de" : {
@@ -2805,6 +2918,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Will there be multiple playlists or a tagging system?"
+          }
+        }
+      }
+    },
+    "morePlaylistsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists & Tags"
           }
         }
       }
@@ -3390,6 +3513,16 @@
         }
       }
     },
+    "pictureInPictureFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Picture-in-Picture & Background Play"
+          }
+        }
+      }
+    },
     "play" : {
       "localizations" : {
         "de" : {
@@ -3470,6 +3603,16 @@
         }
       }
     },
+    "playerShowsWebsiteFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website in Player"
+          }
+        }
+      }
+    },
     "playPause" : {
       "localizations" : {
         "de" : {
@@ -3482,6 +3625,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play/Pause"
+          }
+        }
+      }
+    },
+    "pleaseCheckFaq" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please check the frequently asked questions (FAQ) and suggestions below to see if yours is already addressed."
           }
         }
       }
@@ -3663,22 +3816,6 @@
         }
       }
     },
-    "refreshOnClose" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beim schließen im Hintergrund neu laden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Background Refresh on Close"
-          }
-        }
-      }
-    },
     "reloadVideo" : {
       "localizations" : {
         "de" : {
@@ -3695,18 +3832,18 @@
         }
       }
     },
-    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
+    "removedDuplicates\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld\nBilder: %5$lld"
+            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld\nImages: %5$lld"
+            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld"
           }
         }
       }
@@ -3739,6 +3876,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Require Clear Confirmation"
+          }
+        }
+      }
+    },
+    "restartNow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt neu starten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Now"
+          }
+        }
+      }
+    },
+    "restartNow?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neustart notwendig"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart Required"
           }
         }
       }
@@ -3923,14 +4092,14 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Feedback senden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Send Feedback"
+            "value" : "Feedback & Help"
           }
         }
       }
@@ -4496,6 +4665,16 @@
         }
       }
     },
+    "syncNotWorkingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        }
+      }
+    },
     "syncToIcloud" : {
       "localizations" : {
         "de" : {
@@ -4556,6 +4735,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How should the playlist be handled?"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    },
+    "Today, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute, %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today, %@"
           }
         }
       }
@@ -4896,6 +5107,16 @@
         }
       }
     },
+    "watchHistoryNotShowingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Watch History"
+          }
+        }
+      }
+    },
     "yellow" : {
       "localizations" : {
         "de" : {
@@ -4908,6 +5129,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yellow"
+          }
+        }
+      }
+    },
+    "Yesterday, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestern, %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday, %@"
           }
         }
       }

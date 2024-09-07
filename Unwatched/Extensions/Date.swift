@@ -30,6 +30,48 @@ extension Date {
         }
     }
 
+    var formattedExtensive: String {
+        let calendar = Calendar.current
+        let formatter = Date.formatter
+
+        if calendar.isDateInToday(self) {
+            formatter.dateFormat = "HH:mm"
+            let time = formatter.string(from: self)
+            return String(localized: "Today, \(time)")
+        } else if calendar.isDateInYesterday(self) {
+            formatter.dateFormat = "HH:mm"
+            let time = formatter.string(from: self)
+            return String(localized: "Yesterday, \(time)")
+        } else if calendar.isDateInLastWeek(self) {
+            formatter.dateFormat = "EEE d, HH:mm"
+            return formatter.string(from: self).uppercased()
+        } else if calendar.isDateInLastSixMonths(self) {
+            formatter.dateFormat = "MMM d, HH:mm"
+            return formatter.string(from: self).uppercased()
+        } else {
+            formatter.dateFormat = "MMM d yyyy, HH:mm"
+            return formatter.string(from: self).uppercased()
+        }
+    }
+
+    var formattedToday: String {
+        let calendar = Calendar.current
+        let formatter = Date.formatter
+
+        if calendar.isDateInToday(self) {
+            return String(localized: "Today")
+        } else if calendar.isDateInLastWeek(self) {
+            formatter.dateFormat = "EEE d"
+            return formatter.string(from: self).uppercased()
+        } else if calendar.isDateInLastSixMonths(self) {
+            formatter.dateFormat = "MMM d"
+            return formatter.string(from: self).uppercased()
+        } else {
+            formatter.dateFormat = "MMM d yyyy"
+            return formatter.string(from: self).uppercased()
+        }
+    }
+
     var formattedRelative: String {
         let calendar = Calendar.current
         let components = calendar.dateComponents(
@@ -86,9 +128,9 @@ extension Calendar {
 
 #Preview {
     Group {
-        Text(Date.now.formatted)
-        Text(Date.now.addingTimeInterval(-60 * 60 * 24).formatted)
-        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 7).formatted)
-        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 365 * 2).formatted)
+        Text(Date.now.formattedExtensive)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24).formattedExtensive)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 7).formattedExtensive)
+        Text(Date.now.addingTimeInterval(-60 * 60 * 24 * 365 * 2).formattedExtensive)
     }
 }

@@ -3,6 +3,15 @@ import SwiftData
 import OSLog
 
 struct SubscriptionService {
+    static func getActiveSubscriptions(_ modelContainer: ModelContainer) async -> [SendableSubscription] {
+        let task = Task {
+            let repo = SubscriptionActor(modelContainer: modelContainer)
+            return await repo.getActiveSubscriptions()
+        }
+        let subs = await task.value
+        return subs
+    }
+
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo],
         modelContainer: ModelContainer) async throws -> [SubscriptionState] {
@@ -33,8 +42,8 @@ struct SubscriptionService {
         return try await repo.getAllFeedUrls()
     }
 
-    static func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier], container: ModelContainer) {
-        Task {
+    static func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier], container: ModelContainer) -> Task<(), Error> {
+        return Task {
             let repo = SubscriptionActor(modelContainer: container)
             return try await repo.deleteSubscriptions(subscriptionIds)
         }
@@ -78,9 +87,18 @@ struct SubscriptionService {
                              container: ModelContainer) -> Task<(Bool), Never> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
-            return await repo.isSubscribed(channelId: channelId,
-                                           playlistId: playlistId,
-                                           updateInfo: updateSubscriptionInfo)
+            let isSubscribed = await repo.isSubscribed(channelId: channelId,
+                                                       playlistId: playlistId,
+                                                       updateInfo: updateSubscriptionInfo)
+            let imageUrls = await repo.imageUrlsToBeDeleted
+            Task {
+                if !imageUrls.isEmpty {
+                    await ImageService.deleteImages(
+                        repo.imageUrlsToBeDeleted
+                    )
+                }
+            }
+            return isSubscribed
         }
     }
 

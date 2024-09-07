@@ -12,7 +12,7 @@ final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
 
     var video: Video? {
         didSet {
-            date = video?.publishedDate ?? .now
+            date = video?.publishedDate
         }
     }
     // workaround: sorting via optional relationship "video.publishedDate" lead to crash
@@ -20,7 +20,7 @@ final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
 
     init(_ video: Video?, _ videoDate: Date? = nil) {
         self.video = video
-        self.date = video?.publishedDate ?? .now
+        self.date = video?.publishedDate
     }
 
     var description: String {

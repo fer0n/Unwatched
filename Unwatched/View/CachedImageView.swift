@@ -5,16 +5,16 @@
 
 import SwiftUI
 import SwiftData
+import OSLog
 
 struct CachedImageView<Content, Content2>: View where Content: View, Content2: View {
     @Environment(\.modelContext) var modelContext
     @Environment(ImageCacheManager.self) var cacheManager
 
-    @State var imageTask: Task<ImageCacheInfo, Error>?
-
     var imageHolder: CachedImageHolder?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
+    @State var image: UIImage?
 
     init(
         imageHolder: CachedImageHolder?,
@@ -27,56 +27,48 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
     }
 
     var body: some View {
-        if let uiImage = getUIImage {
+        if let uiImage = image {
             self.contentImage(Image(uiImage: uiImage))
         } else {
             self.placeholder()
-                .onAppear {
-                    loadImage()
-                }
-                .task(id: imageTask) {
-                    guard imageTask != nil,
-                          let holderId = imageHolder?.persistentModelID else {
-                        return
-                    }
-                    do {
-                        if let imageInfo = try await imageTask?.value {
-                            cacheManager[holderId] = imageInfo
+                .task {
+                    if image == nil, let url = imageHolder?.thumbnailUrl {
+                        let task = getUIImage(url)
+                        if let taskResult = try? await task.value {
+                            let (taskImage, info) = taskResult
+                            image = taskImage
+                            self.cacheManager[url.absoluteString] = info
                         }
-                    } catch {
-                        print("error loading image: \(error)")
                     }
                 }
         }
     }
 
-    func loadImage() {
-        guard let holderId = imageHolder?.persistentModelID,
-              let url = imageHolder?.thumbnailUrl,
-              cacheManager[holderId] == nil else {
-            return
-        }
-        imageTask = Task.detached {
-            let imageData = try await ImageService.loadImageData(url: url)
-            return ImageCacheInfo(
-                url: url,
-                data: imageData,
-                holderId: holderId,
-                uiImage: UIImage(data: imageData)
-            )
-        }
-    }
+    func getUIImage(_ url: URL) -> Task<(UIImage?, ImageCacheInfo?), Error> {
+        let cacheInfo = self.cacheManager[url.absoluteString]
 
-    var getUIImage: UIImage? {
-        if let imageData = imageHolder?.cachedImage?.imageData {
-            return UIImage(data: imageData)
-        }
-        if let cacheInfo = cacheManager[imageHolder?.persistentModelID] {
-            if let uiImage = cacheInfo.uiImage {
-                return uiImage
+        return Task {
+            // load from memory
+            if let cacheInfo = cacheInfo {
+                return (UIImage(data: cacheInfo.data), nil)
             }
-            return UIImage(data: cacheInfo.data)
+
+            // fetch from DB
+            let container = await DataController.getCachedImageContainer
+            let context = ModelContext(container)
+            if let model = ImageService.getCachedImage(for: url, context),
+               let imageData = model.imageData {
+                return (UIImage(data: imageData), nil)
+            }
+
+            // fetch online
+            let imageData = try await ImageService.loadImageData(url: url)
+            let imageInfo = ImageCacheInfo(
+                url: url,
+                data: imageData
+            )
+
+            return (UIImage(data: imageData), imageInfo)
         }
-        return nil
     }
 }

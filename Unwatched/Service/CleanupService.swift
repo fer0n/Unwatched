@@ -8,17 +8,36 @@ import SwiftUI
 import OSLog
 
 struct CleanupService {
-    static func cleanupDuplicates(_ container: ModelContainer,
-                                  onlyIfDuplicateEntriesExist: Bool = false) -> Task<RemovedDuplicatesInfo, Never> {
-        return Task(priority: .background) {
+    static func cleanupDuplicatesAndInboxDate(
+        _ container: ModelContainer,
+        onlyIfDuplicateEntriesExist: Bool = false
+    ) -> Task<
+        RemovedDuplicatesInfo,
+        Never
+    > {
+        return Task.detached {
             let repo = CleanupActor(modelContainer: container)
-            return await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            await repo.cleanupInboxEntryDates()
+            return info
         }
     }
 }
 
 @ModelActor actor CleanupActor {
     var duplicateInfo = RemovedDuplicatesInfo()
+
+    func cleanupInboxEntryDates() {
+        let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
+        guard let entries = try? modelContext.fetch(fetch) else {
+            Logger.log.info("No inbox entries to cleanup dates")
+            return
+        }
+        for entry in entries {
+            entry.date = entry.video?.publishedDate
+        }
+        try? modelContext.save()
+    }
 
     func removeAllDuplicates(onlyIfDuplicateEntriesExist: Bool = false) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
@@ -31,23 +50,33 @@ struct CleanupService {
 
         removeSubscriptionDuplicates()
         removeVideoDuplicates()
-        removeEmptyQueueEntries()
-        removeEmptyInboxEntries()
-        cleanUpCachedImages()
-        removeEmptyImages()
+        // Keep empty queue/inbox entries
+        // they can be empty due to sync, don't remove them
         try? modelContext.save()
 
         return duplicateInfo
     }
 
     private func hasDuplicateEntries() -> Bool {
-        return hasDuplicateInboxEntries()
+        return hasDuplicateInboxEntries() || hasDuplicateUpperQueueEntries()
+    }
+
+    private func hasDuplicateUpperQueueEntries() -> Bool {
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        fetch.fetchLimit = 15
+
+        if let entries = try? modelContext.fetch(fetch) {
+            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
+            return !duplicates.isEmpty
+        }
+        return false
     }
 
     private func hasDuplicateInboxEntries() -> Bool {
         let fetch = FetchDescriptor<InboxEntry>()
         if let entries = try? modelContext.fetch(fetch) {
-            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeChannelId })
+            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
             return !duplicates.isEmpty
         }
         return false
@@ -150,17 +179,17 @@ struct CleanupService {
             let sub0 = vid0.subscription != nil
             let sub1 = vid1.subscription != nil
             if sub0 != sub1 {
-                return sub1
+                return sub0
             }
 
             if vid0.watched != vid1.watched {
-                return vid1.watched
+                return vid0.watched
             }
 
             let cleared0 = vid0.clearedInboxDate != nil
             let cleared1 = vid1.clearedInboxDate != nil
             if cleared0 != cleared1 {
-                return cleared1
+                return cleared0
             }
 
             let sec0 = vid0.elapsedSeconds ?? 0
@@ -172,11 +201,11 @@ struct CleanupService {
             let queue0 = vid0.queueEntry != nil
             let queue1 = vid1.queueEntry != nil
             if queue0 != queue1 {
-                return queue1
+                return queue0
             }
 
-            let inbox1 = vid1.inboxEntry != nil
-            return inbox1
+            let inbox0 = vid0.inboxEntry != nil
+            return inbox0
         }
     }
 
@@ -189,54 +218,6 @@ struct CleanupService {
         }
         modelContext.delete(video)
     }
-
-    // MARK: ImageCache
-    func cleanUpCachedImages() {
-        let fetch = FetchDescriptor<CachedImage>()
-        guard let images = try? modelContext.fetch(fetch) else {
-            return
-        }
-        let toBeRemoved = getDuplicates(from: images, keySelector: { $0.imageUrl }, sort: sortImages)
-        duplicateInfo.countImages += toBeRemoved.count
-        for items in toBeRemoved {
-            modelContext.delete(items)
-        }
-    }
-
-    func sortImages(_ images: [CachedImage]) -> [CachedImage] {
-        images.sorted { (img0: CachedImage, img1: CachedImage) -> Bool in
-            let vid0 = img0.video != nil
-            let vid1 = img1.video != nil
-            if vid0 != vid1 {
-                return vid1
-            }
-
-            let sub0 = img0.subscription != nil
-            let sub1 = img1.subscription != nil
-            if sub0 != sub1 {
-                return sub1
-            }
-
-            let now = Date.now
-            let date0 = img0.createdOn ?? now
-            let date1 = img1.createdOn ?? now
-            return date0 > date1
-        }
-    }
-
-    // Empty images
-    func removeEmptyImages() {
-        let fetch = FetchDescriptor<CachedImage>(predicate: #Predicate<CachedImage> {
-            $0.video == nil && $0.subscription == nil
-        })
-        guard let images = try? modelContext.fetch(fetch) else {
-            return
-        }
-        duplicateInfo.countImages += images.count
-        for img in images {
-            modelContext.delete(img)
-        }
-    }
 }
 
 struct RemovedDuplicatesInfo {
@@ -244,5 +225,4 @@ struct RemovedDuplicatesInfo {
     var countQueueEntries: Int = 0
     var countInboxEntries: Int = 0
     var countSubscriptions: Int = 0
-    var countImages: Int = 0
 }

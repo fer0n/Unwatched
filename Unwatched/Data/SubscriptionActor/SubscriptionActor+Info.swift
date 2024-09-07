@@ -127,8 +127,8 @@ extension SubscriptionActor {
            sub.thumbnailUrl != imageUrl {
             Logger.log.info("Updating thumbnail url")
             sub.thumbnailUrl = imageUrl
-            if let cachedImage = sub.cachedImage {
-                modelContext.delete(cachedImage)
+            if let url = sub.thumbnailUrl {
+                imageUrlsToBeDeleted.append(url)
             }
         }
 

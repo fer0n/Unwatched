@@ -92,10 +92,8 @@ struct FullscreenSpeedControl: View {
         viewModel.debounceTask?.cancel()
         viewModel.debounceTask = Task {
             do {
-                try await Task.sleep(s: 0.3)
-                if !Task.isCancelled {
-                    speedUp()
-                }
+                try await Task.sleep(s: 0.2)
+                changeSpeed()
             } catch {
                 // canceled
             }
@@ -107,9 +105,13 @@ struct FullscreenSpeedControl: View {
         reset()
     }
 
-    func speedUp() {
+    func changeSpeed() {
         menuOpen = true
-        player.temporaryPlaybackSpeed = 2
+        if player.actualPlaybackSpeed >= Const.temporarySpeedSwap {
+            player.temporaryPlaybackSpeed = 1
+        } else {
+            player.temporaryPlaybackSpeed = 2
+        }
     }
 
     func reset() {

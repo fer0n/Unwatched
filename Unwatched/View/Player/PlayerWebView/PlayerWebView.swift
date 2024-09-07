@@ -61,7 +61,7 @@ struct PlayerWebView: UIViewRepresentable {
 
         let prev = player.previousState
 
-        if prev.playbackSpeed != player.playbackSpeed {
+        if prev.playbackSpeed != (player.temporaryPlaybackSpeed ?? player.playbackSpeed) {
             Logger.log.info("SPEED")
             uiView.evaluateJavaScript(getSetPlaybackRateScript())
             player.previousState.playbackSpeed = player.playbackSpeed

@@ -12,41 +12,38 @@ import OSLog
 ///
 /// This avoids performance issues when saving data.
 @Observable class ImageCacheManager {
-    private var cache: [PersistentIdentifier: ImageCacheInfo] = [:]
-    subscript(id: PersistentIdentifier?) -> ImageCacheInfo? {
+    private var cache = [String: ImageCacheInfo]()
+    subscript(id: String?) -> ImageCacheInfo? {
         get {
             guard let id else { return nil }
             return cache[id]
         }
         set {
             guard let id else { return }
-            cache[id] = newValue
+            if let value = newValue {
+                cache[id] = value
+            }
         }
     }
 
-    func persistCache(_ container: ModelContainer) async {
+    func persistCache() async {
         let cache = cache
-        let task = ImageService.persistImages(cache: cache, container: container)
-        do {
-            try await task.value
-            clearCacheAll()
-        } catch {
-            Logger.log.error("error while trying to persist cache: \(error)")
-        }
+        await ImageService.persistImages(
+            cache: cache
+        )
+        clearCacheAll()
     }
 
     func clearCacheAll() {
-        self.cache = [:]
+        cache = [:]
     }
 
-    func clearCache(holderId: PersistentIdentifier) {
-        cache[holderId] = nil
+    func clearCache(_ imageUrl: String) {
+        cache[imageUrl] = nil
     }
 }
 
 struct ImageCacheInfo {
     var url: URL
     var data: Data
-    var holderId: PersistentIdentifier
-    var uiImage: UIImage?
 }
