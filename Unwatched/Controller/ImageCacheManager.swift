@@ -12,19 +12,16 @@ import OSLog
 ///
 /// This avoids performance issues when saving data.
 @Observable class ImageCacheManager {
-    private var cacheKeys = Set<String>()
-
-    private var cache = NSCache<NSString, ImageCacheInfo>()
+    private var cache = [String: ImageCacheInfo]()
     subscript(id: String?) -> ImageCacheInfo? {
         get {
             guard let id else { return nil }
-            return cache.object(forKey: (id as NSString))
+            return cache[id]
         }
         set {
             guard let id else { return }
             if let value = newValue {
-                cacheKeys.insert(id)
-                cache.setObject(value, forKey: (id as NSString))
+                cache[id] = value
             }
         }
     }
@@ -32,27 +29,21 @@ import OSLog
     func persistCache() async {
         let cache = cache
         await ImageService.persistImages(
-            cache: cache,
-            cacheKeys: cacheKeys
+            cache: cache
         )
         clearCacheAll()
     }
 
     func clearCacheAll() {
-        cache.removeAllObjects()
+        cache = [:]
     }
 
     func clearCache(_ imageUrl: String) {
-        cache.removeObject(forKey: imageUrl as NSString)
+        cache[imageUrl] = nil
     }
 }
 
-class ImageCacheInfo {
+struct ImageCacheInfo {
     var url: URL
     var data: Data
-
-    init(url: URL, data: Data) {
-        self.url = url
-        self.data = data
-    }
 }
