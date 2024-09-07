@@ -4,13 +4,23 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct SubscriptionListItem: View {
     @Environment(\.modelContext) var modelContext
-    var subscription: Subscription
+    var subscription: SendableSubscription
+    var onDelete: ((Task<(), Error>) -> Void)?
 
     func deleteSubscription() {
-        SubscriptionService.deleteSubscriptions([subscription.id], container: modelContext.container)
+        guard let id = subscription.persistentId else {
+            Logger.log.info("No id to delete subscription")
+            return
+        }
+        let task = SubscriptionService.deleteSubscriptions(
+            [id],
+            container: modelContext.container
+        )
+        onDelete?(task)
     }
 
     var body: some View {
