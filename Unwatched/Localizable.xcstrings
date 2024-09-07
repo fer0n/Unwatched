@@ -651,6 +651,16 @@
         }
       }
     },
+    "blockingAdsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocking Ads"
+          }
+        }
+      }
+    },
     "blue" : {
       "localizations" : {
         "de" : {
@@ -1211,6 +1221,17 @@
         }
       }
     },
+    "contact" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact"
+          }
+        }
+      }
+    },
     "contactUs" : {
       "localizations" : {
         "de" : {
@@ -1713,6 +1734,26 @@
         }
       }
     },
+    "durationMissingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing Duration"
+          }
+        }
+      }
+    },
+    "emailAndFaq" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email & FAQ"
+          }
+        }
+      }
+    },
     "emptyYoutubeId" : {
       "localizations" : {
         "de" : {
@@ -1971,22 +2012,6 @@
         }
       }
     },
-    "faq" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hilfe/FAQ"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Help/FAQ"
-          }
-        }
-      }
-    },
     "fasterSpeedsFaqA" : {
       "localizations" : {
         "de" : {
@@ -2019,6 +2044,16 @@
         }
       }
     },
+    "fasterSpeedsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More Playback Speeds"
+          }
+        }
+      }
+    },
     "forceYtWatchHistory" : {
       "localizations" : {
         "de" : {
@@ -2047,6 +2082,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To add videos to the YouTube watch history, YouTube requires the user to start each video via the YouTube player. All other methods of starting the video will be disabled until then."
+          }
+        }
+      }
+    },
+    "frequentlyAskedQuestions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ & Suggestions"
           }
         }
       }
@@ -2681,6 +2726,16 @@
         }
       }
     },
+    "likeSubscribeVideoFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Like & Subscribe on YouTube"
+          }
+        }
+      }
+    },
     "manualBackup" : {
       "localizations" : {
         "de" : {
@@ -2809,6 +2864,16 @@
         }
       }
     },
+    "morePlatformsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS & macOS Support"
+          }
+        }
+      }
+    },
     "morePlaylistsFaqA" : {
       "localizations" : {
         "de" : {
@@ -2837,6 +2902,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Will there be multiple playlists or a tagging system?"
+          }
+        }
+      }
+    },
+    "morePlaylistsFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists & Tags"
           }
         }
       }
@@ -3422,6 +3497,16 @@
         }
       }
     },
+    "pictureInPictureFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Picture-in-Picture & Background Play"
+          }
+        }
+      }
+    },
     "play" : {
       "localizations" : {
         "de" : {
@@ -3502,6 +3587,16 @@
         }
       }
     },
+    "playerShowsWebsiteFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website in Player"
+          }
+        }
+      }
+    },
     "playPause" : {
       "localizations" : {
         "de" : {
@@ -3514,6 +3609,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play/Pause"
+          }
+        }
+      }
+    },
+    "pleaseCheckFaq" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please check the frequently asked questions (FAQ) and suggestions below to see if yours is already addressed."
           }
         }
       }
@@ -3971,14 +4076,14 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Feedback senden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Send Feedback"
+            "value" : "Feedback & Help"
           }
         }
       }
@@ -4544,6 +4649,16 @@
         }
       }
     },
+    "syncNotWorkingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        }
+      }
+    },
     "syncToIcloud" : {
       "localizations" : {
         "de" : {
@@ -4972,6 +5087,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Why don't my watched videos appear in my YouTube watch history?"
+          }
+        }
+      }
+    },
+    "watchHistoryNotShowingFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Watch History"
           }
         }
       }

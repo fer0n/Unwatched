@@ -87,6 +87,8 @@
 		88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */; };
 		88373C1F2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */; };
 		88373C202C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */; };
+		88373C222C8C2A9200ACBB3B /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C212C8C2A9200ACBB3B /* HelpView.swift */; };
+		88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C212C8C2A9200ACBB3B /* HelpView.swift */; };
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
@@ -523,6 +525,7 @@
 		88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceSelection.swift; sourceTree = "<group>"; };
 		88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetColorScheme.swift; sourceTree = "<group>"; };
 		88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChaptersButton.swift; sourceTree = "<group>"; };
+		88373C212C8C2A9200ACBB3B /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
@@ -1008,6 +1011,7 @@
 				88017FD62B96161B00192AEA /* DebugView.swift */,
 				888F74A82BA1FD8400B94822 /* VideoSettingsView.swift */,
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
+				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
 				880505112C836882005F0972 /* FaqView.swift */,
 			);
 			path = Settings;
@@ -1573,6 +1577,7 @@
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
+				88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */,
 				889AF9052C50ECD4001CEDE6 /* SetupShareSheetAction.swift in Sources */,
 				CDEB17722C5CCB5800E6FE66 /* VideoCrawlerTests.swift in Sources */,
 				8875125B2C5936B0000E2C6D /* FullscreenControls.swift in Sources */,
@@ -1709,6 +1714,7 @@
 				889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
 				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */,
+				88373C222C8C2A9200ACBB3B /* HelpView.swift in Sources */,
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
 				8875125A2C5936AC000E2C6D /* FullscreenControls.swift in Sources */,
 				88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */,
