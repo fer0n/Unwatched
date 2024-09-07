@@ -10,19 +10,16 @@ import OSLog
 
 struct ImageService {
     static func persistImages(
-        cache: NSCache<NSString, ImageCacheInfo>,
-        cacheKeys: Set<String>
+        cache: [String: ImageCacheInfo]
     ) async {
         let container = await DataController.getCachedImageContainer
         let context = ModelContext(container)
 
-        for key in cacheKeys {
-            let key = key as NSString
-            if let info = cache.object(forKey: key) {
-                let imageCache = CachedImage(info.url, imageData: info.data)
-                context.insert(imageCache)
-                Logger.log.info("saved image with URL: \(info.url)")
-            }
+        for info in cache.values {
+            let imageCache = CachedImage(info.url, imageData: info.data)
+            context.insert(imageCache)
+            Logger.log.info("saved image with URL: \(info.url)")
+
         }
 
         try? context.save()

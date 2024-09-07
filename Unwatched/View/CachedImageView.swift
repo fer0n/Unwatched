@@ -34,25 +34,31 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
                 .task {
                     if image == nil, let url = imageHolder?.thumbnailUrl {
                         let task = getUIImage(url)
-                        image = try? await task.value
+                        if let taskResult = try? await task.value {
+                            let (taskImage, info) = taskResult
+                            image = taskImage
+                            self.cacheManager[url.absoluteString] = info
+                        }
                     }
                 }
         }
     }
 
-    func getUIImage(_ url: URL) -> Task<UIImage?, Error> {
-        Task.detached {
+    func getUIImage(_ url: URL) -> Task<(UIImage?, ImageCacheInfo?), Error> {
+        let cacheInfo = self.cacheManager[url.absoluteString]
+
+        return Task {
+            // load from memory
+            if let cacheInfo = cacheInfo {
+                return (UIImage(data: cacheInfo.data), nil)
+            }
+
             // fetch from DB
             let container = await DataController.getCachedImageContainer
             let context = ModelContext(container)
             if let model = ImageService.getCachedImage(for: url, context),
                let imageData = model.imageData {
-                return UIImage(data: imageData)
-            }
-
-            // load from memory
-            if let cacheInfo = self.cacheManager[url.absoluteString] {
-                return UIImage(data: cacheInfo.data)
+                return (UIImage(data: imageData), nil)
             }
 
             // fetch online
@@ -61,9 +67,8 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
                 url: url,
                 data: imageData
             )
-            self.cacheManager[url.absoluteString] = imageInfo
 
-            return UIImage(data: imageData)
+            return (UIImage(data: imageData), imageInfo)
         }
     }
 }
