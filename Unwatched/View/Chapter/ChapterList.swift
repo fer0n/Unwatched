@@ -10,8 +10,6 @@ struct ChapterList: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
-    @State var toggleHaptic = false
-
     var video: Video
     var isCompact: Bool = false
 
@@ -52,20 +50,19 @@ struct ChapterList: View {
                     .tint(foregroundColor)
                 }
             }
-            .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
         }
     }
 
-    func toggleChapter(_ chapter: Chapter) {
+    func toggleChapter(_ chapter: Chapter) -> Bool {
         if chapter == player.currentChapter && player.playDisabled {
-            return
+            return false
         }
 
-        toggleHaptic.toggle()
         chapter.isActive.toggle()
         if video == player.video {
             player.handleChapterChange()
         }
+        return true
     }
 
     func setChapter(_ chapter: Chapter) {

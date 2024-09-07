@@ -49,11 +49,8 @@ struct SettingsView: View {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
-                    NavigationLink(value: LibraryDestination.faq) {
-                        Label("faq", systemImage: "questionmark")
-                    }
-                    Link(destination: UrlService.emailUrl) {
-                        LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
+                    NavigationLink(value: LibraryDestination.help) {
+                        Label("emailAndFaq", systemImage: Const.contactMailSF)
                     }
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
@@ -132,5 +129,5 @@ struct LinkItemView<Content: View>: View {
     SettingsView()
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
-        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }
