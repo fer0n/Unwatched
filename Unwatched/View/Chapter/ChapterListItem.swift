@@ -2,11 +2,12 @@ import SwiftUI
 
 struct ChapterListItem: View {
     var chapter: Chapter
-    var toggleChapter: (_ chapter: Chapter) -> Void
+    var toggleChapter: (_ chapter: Chapter) -> Bool
     var timeText: String
     var jumpDisabled: Bool = false
 
     @ScaledMetric var frameSize = 30
+    @State var toggleHaptic = false
 
     var body: some View {
         HStack {
@@ -16,13 +17,15 @@ struct ChapterListItem: View {
             VStack(alignment: .leading) {
                 if let title = chapter.titleText {
                     Text(title)
-                        .lineLimit(1)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
                 }
                 Text(timeText)
                     .font(.subheadline.monospacedDigit())
                     .animation(.default, value: timeText)
                     .contentTransition(.numericText(countsDown: true))
                     .foregroundStyle(Color.gray)
+                    .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)
@@ -31,7 +34,9 @@ struct ChapterListItem: View {
 
     var toggleChapterButton: some View {
         Button {
-            toggleChapter(chapter)
+            if toggleChapter(chapter) {
+                toggleHaptic.toggle()
+            }
         } label: {
             ZStack {
                 Image(systemName: Const.circleBackgroundSF)
@@ -47,6 +52,7 @@ struct ChapterListItem: View {
             .animation(nil, value: UUID())
         }
         .accessibilityLabel(chapter.isActive ? "chapterOn" : "chapterOff")
+        .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
     }
 }
 
@@ -55,14 +61,14 @@ struct ChapterListItem: View {
         ChapterListItem(chapter: Chapter(
             title: "Hello there",
             time: 102
-        ), toggleChapter: { _ in },
+        ), toggleChapter: { _ in true },
         timeText: "0 remaining")
         .background(Color.gray)
 
         ChapterListItem(chapter: Chapter(
             title: nil,
             time: 102
-        ), toggleChapter: { _ in },
+        ), toggleChapter: { _ in true },
         timeText: "0 remaining")
         .background(Color.gray)
     }

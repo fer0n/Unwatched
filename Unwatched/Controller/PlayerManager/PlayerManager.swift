@@ -2,15 +2,6 @@ import SwiftUI
 import SwiftData
 import OSLog
 
-enum VideoSource {
-    case continuousPlay
-    case nextUp
-    case userInteraction
-    case hotSwap
-    case errorSwap
-    case playWhenReady
-}
-
 /// Manages the current video, queuing, and chapters
 @Observable class PlayerManager {
     var isPlaying: Bool = false
@@ -37,11 +28,6 @@ enum VideoSource {
         didSet {
             handleNewVideoSet(oldValue)
         }
-    }
-
-    var playDisabled: Bool {
-        let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
-        return forceYtWatchHistory && unstarted && !embeddingDisabled
     }
 
     private func handleNewVideoSet(_ oldValue: Video?) {
@@ -88,15 +74,6 @@ enum VideoSource {
         return video.watched && noQueueEntry && noInboxEntry
     }
 
-    var playbackSpeed: Double {
-        get {
-            temporaryPlaybackSpeed ?? getPlaybackSpeed()
-        }
-        set {
-            setPlaybackSpeed(newValue)
-        }
-    }
-
     var isContinuousPlay: Bool {
         UserDefaults.standard.bool(forKey: Const.continuousPlay)
     }
@@ -131,19 +108,6 @@ enum VideoSource {
         return nil
     }
 
-    private func setPlaybackSpeed(_ value: Double) {
-        if video?.subscription?.customSpeedSetting != nil {
-            video?.subscription?.customSpeedSetting = value
-        } else {
-            UserDefaults.standard.setValue(value, forKey: Const.playbackSpeed)
-        }
-    }
-
-    private func getPlaybackSpeed() -> Double {
-        video?.subscription?.customSpeedSetting ??
-            UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
-    }
-
     func autoSetNextVideo(_ source: VideoSource) {
         if let container = container {
             let modelContext = ModelContext(container)
@@ -160,68 +124,6 @@ enum VideoSource {
             self.videoSource = source
         }
         self.video = video
-    }
-
-    func playVideo(_ video: Video) {
-        self.videoSource = .userInteraction
-        self.video = video
-    }
-
-    func play() {
-        if self.isLoading {
-            self.videoSource = .playWhenReady
-        }
-        if !self.isPlaying {
-            self.isPlaying = true
-        }
-        updateVideoEnded()
-        handleRotateOnPlay()
-    }
-
-    func pause() {
-        if self.isPlaying {
-            self.isPlaying = false
-        }
-        updateVideoEnded()
-    }
-
-    /// Restarts, pauses or plays the current video
-    func handlePlayButton() {
-        if videoEnded {
-            restartVideo()
-        } else if isPlaying {
-            pause()
-        } else {
-            play()
-        }
-    }
-
-    func restartVideo() {
-        seekPosition = 0
-        play()
-    }
-
-    func setVideoEnded(_ value: Bool) {
-        if value != videoEnded {
-            withAnimation {
-                videoEnded = value
-            }
-        }
-    }
-
-    private func updateVideoEnded() {
-        if videoEnded {
-            setVideoEnded(false)
-        }
-    }
-
-    private func handleRotateOnPlay() {
-        let isShort = video?.isYtShort ?? false
-        Task {
-            if !isShort && UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
-                await OrientationManager.changeOrientation(to: .landscapeRight)
-            }
-        }
     }
 
     private func hardClearVideo() {
@@ -351,14 +253,4 @@ enum VideoSource {
         }
         loadTopmostVideoFromQueue()
     }
-
-    static func getDummy() -> PlayerManager {
-        let player = PlayerManager()
-        player.video = Video.getDummy()
-        //        player.currentTime = 10
-        player.currentChapter = Chapter.getDummy()
-        //        player.embeddingDisabled = true
-        return player
-    }
-
 }

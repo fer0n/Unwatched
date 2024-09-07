@@ -8,6 +8,7 @@ import SwiftUI
 struct MenuViewSheet: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(\.colorScheme) var colorScheme
 
     var allowMaxSheetHeight: Bool
     var embeddingDisabled: Bool
@@ -33,17 +34,22 @@ struct MenuViewSheet: ViewModifier {
 
         content
             .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
-                MenuView(showCancelButton: showCancelButton)
-                    .presentationDetents(detents, selection: selectedDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .height(sheetPos.maxSheetHeight))
-                    )
-                    .presentationContentInteraction(.scrolls)
-                    .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
-                    .presentationDragIndicator(
-                        navManager.searchFocused
-                            ? .hidden
-                            : .visible)
+                ZStack {
+                    Color.backgroundColor.ignoresSafeArea(.all)
+                    MenuView(showCancelButton: showCancelButton)
+                        .presentationDetents(detents, selection: selectedDetent)
+                        .presentationBackgroundInteraction(
+                            .enabled(upThrough: .height(sheetPos.maxSheetHeight))
+                        )
+                        .presentationContentInteraction(.scrolls)
+                        .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
+                        .presentationDragIndicator(
+                            navManager.searchFocused
+                                ? .hidden
+                                : .visible)
+                }
+                .environment(\.colorScheme, colorScheme)
+
             }
     }
 }

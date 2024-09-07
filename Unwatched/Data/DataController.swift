@@ -14,8 +14,7 @@ class DataController {
         QueueEntry.self,
         WatchEntry.self,
         InboxEntry.self,
-        Chapter.self,
-        CachedImage.self
+        Chapter.self
     ]
 
     static let schema = Schema(DataController.dbEntries)
@@ -27,6 +26,68 @@ class DataController {
             cloudKitDatabase: .none
         )
     }
+
+    static var getCachedImageContainer: ModelContainer = {
+        let schema = Schema([CachedImage.self])
+        let storeURL = URL.documentsDirectory.appending(path: "imageCache.sqlite")
+
+        let config = ModelConfiguration(
+            schema: schema,
+            url: storeURL,
+            cloudKitDatabase: .none
+        )
+
+        do {
+            return try ModelContainer(
+                for: schema,
+                migrationPlan: CachedImageMigrationPlan.self,
+                configurations: [config]
+            )
+        } catch {
+            fatalError("Could not create CachedImage ModelContainer: \(error)")
+        }
+    }()
+
+    static var getModelContainer: ModelContainer = {
+        var inMemory = false
+        let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+
+        #if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            return DataController.previewContainer
+        }
+        #endif
+
+        let config = ModelConfiguration(
+            schema: DataController.schema,
+            isStoredInMemoryOnly: inMemory,
+            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
+        )
+
+        do {
+            if let container = try? ModelContainer(
+                for: DataController.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
+                configurations: [config]
+            ) {
+                return container
+            }
+
+            // workaround for migration (disable sync for initial launch)
+            let config = ModelConfiguration(
+                schema: DataController.schema,
+                isStoredInMemoryOnly: inMemory,
+                cloudKitDatabase: .none
+            )
+            return try ModelContainer(
+                for: DataController.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
+                configurations: [config]
+            )
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
 
     static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
@@ -143,5 +204,16 @@ extension Video {
             // videoDescription: "The Resident Evil 4 Remake VR mode...
             // chapters: chapters
         )
+    }
+}
+
+extension PlayerManager {
+    static func getDummy() -> PlayerManager {
+        let player = PlayerManager()
+        player.video = Video.getDummy()
+        //        player.currentTime = 10
+        player.currentChapter = Chapter.getDummy()
+        //        player.embeddingDisabled = true
+        return player
     }
 }

@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct DeleteImageCacheButton: View {
     @Environment(\.modelContext) var modelContext
@@ -31,10 +32,9 @@ struct DeleteImageCacheButton: View {
 
     func deleteImageCache() {
         if isDeletingTask != nil { return }
-        let container = modelContext.container
         cacheManager.clearCacheAll()
         isDeletingTask = Task {
-            let task = ImageService.deleteAllImages(container)
+            let task = ImageService.deleteAllImages()
             try? await task.value
         }
     }

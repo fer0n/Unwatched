@@ -11,7 +11,6 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
     typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
-    @Relationship(deleteRule: .cascade, inverse: \CachedImage.subscription) var cachedImage: CachedImage?
     var link: URL?
 
     var title: String = "-"
@@ -30,8 +29,12 @@ final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder
 
     var thumbnailUrl: URL?
 
+    static func getDisplayTitle(_ title: String, _ author: String?) -> String {
+        return "\(title)\(author != nil ? " - \(author ?? "")" : "")"
+    }
+
     var displayTitle: String {
-        "\(title)\(author != nil ? " - \(author ?? "")" : "")"
+        Subscription.getDisplayTitle(title, author)
     }
 
     var description: String {
@@ -111,6 +114,10 @@ struct SendableSubscription: Sendable, Codable, Hashable {
     var youtubeUserName: String?
 
     var thumbnailUrl: URL?
+
+    var displayTitle: String {
+        Subscription.getDisplayTitle(title, author)
+    }
 
     func createSubscription() -> Subscription {
         Subscription(

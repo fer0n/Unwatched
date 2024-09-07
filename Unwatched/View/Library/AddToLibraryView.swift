@@ -8,6 +8,7 @@ import TipKit
 import OSLog
 
 struct AddToLibraryView: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(RefreshManager.self) var refresher
@@ -69,6 +70,7 @@ struct AddToLibraryView: View {
         }
         .sheet(isPresented: $subManager.showDropResults) {
             AddSubscriptionView(subManager: subManager)
+                .environment(\.colorScheme, colorScheme)
         }
         .task(id: addVideosSuccess) {
             await delayedVideoCheckmarkReset()

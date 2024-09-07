@@ -53,7 +53,7 @@ extension RefreshManager {
 
     func handleIcloudSyncDone() async {
         Logger.log.info("iCloud sync: handleIcloudSyncDone")
-        Task { @MainActor in
+        Task {
             self.isSyncingIcloud = false
         }
         await executeRefreshOnStartup()
@@ -64,6 +64,6 @@ extension RefreshManager {
         guard enableIcloudSync, let container = container else {
             return
         }
-        _ = CleanupService.cleanupDuplicates(container, onlyIfDuplicateEntriesExist: true)
+        _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: true)
     }
 }

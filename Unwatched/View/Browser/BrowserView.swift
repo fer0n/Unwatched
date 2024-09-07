@@ -164,8 +164,8 @@ struct BrowserView: View, KeyboardReadable {
                 Logger.log.info("Neither channelId nor userName to update values")
             }
 
-            if let id = sub?.persistentModelID {
-                self.cacheManager.clearCache(holderId: id)
+            if let url = sub?.thumbnailUrl?.absoluteString {
+                self.cacheManager.clearCache(url)
             }
         }
     }

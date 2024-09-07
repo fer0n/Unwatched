@@ -10,44 +10,72 @@ import OSLog
 
 struct ImageService {
     static func persistImages(
-        cache: [PersistentIdentifier: ImageCacheInfo],
-        container: ModelContainer) -> Task<(), Error> {
-        let task = Task {
-            let context = ModelContext(container)
-            cache.forEach { (holderId, info) in
+        cache: [String: ImageCacheInfo]
+    ) async {
+        let container = await DataController.getCachedImageContainer
+        let context = ModelContext(container)
 
-                // Video
-                if let video = context.model(for: holderId) as? Video {
-                    if video.cachedImage != nil {
-                        Logger.log.info("video !has image")
-                        return
-                    }
-                    let imageCache = CachedImage(info.url, imageData: info.data)
-                    context.insert(imageCache)
-                    video.cachedImage = imageCache
-                } else
+        for info in cache.values {
+            let imageCache = CachedImage(info.url, imageData: info.data)
+            context.insert(imageCache)
+            Logger.log.info("saved image with URL: \(info.url)")
 
-                // Subscription
-                if let sub = context.model(for: holderId) as? Subscription {
-                    if sub.cachedImage != nil {
-                        Logger.log.info("sub !has image")
-                        return
-                    }
-                    let imageCache = CachedImage(info.url, imageData: info.data)
-                    context.insert(imageCache)
-                    sub.cachedImage = imageCache
-                }
-
-                Logger.log.info("saved")
-            }
-            try context.save()
         }
-        return task
+
+        try? context.save()
     }
 
-    static func deleteAllImages(_ container: ModelContainer) -> Task<(), Error> {
-        return Task {
+    static func storeImages(for infos: [NotificationInfo]) {
+        let images = infos.compactMap { info in
+            if let sendableVideo = info.video,
+               let url = sendableVideo.thumbnailUrl,
+               let data = sendableVideo.thumbnailData {
+                return (url: url, data: data)
+            }
+            return nil
+        }
+
+        storeImages(images)
+    }
+
+    static func storeImages(_ images: [(url: URL, data: Data)]) {
+        Task.detached {
+            let container = await DataController.getCachedImageContainer
             let context = ModelContext(container)
+
+            for (url, data) in images {
+                let image = CachedImage(url, imageData: data)
+                context.insert(image)
+            }
+            try? context.save()
+        }
+    }
+
+    static func deleteImages(_ urls: [URL]) {
+        Task {
+            let imageContainer = await DataController.getCachedImageContainer
+            let context = ModelContext(imageContainer)
+            for url in urls {
+                if let image = getCachedImage(for: url, context) {
+                    context.delete(image)
+                }
+            }
+            try? context.save()
+        }
+    }
+
+    static func getCachedImage(for url: URL, _ modelContext: ModelContext) -> CachedImage? {
+        var fetch = FetchDescriptor<CachedImage>(predicate: #Predicate {
+            $0.imageUrl == url
+        })
+        fetch.fetchLimit = 1
+        return try? modelContext.fetch(fetch).first
+    }
+
+    static func deleteAllImages() -> Task<(), Error> {
+        return Task {
+            let imageContainer = await DataController.getCachedImageContainer
+            let context = ModelContext(imageContainer)
             let fetch = FetchDescriptor<CachedImage>()
             let images = try context.fetch(fetch)
             for image in images {

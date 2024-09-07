@@ -14,7 +14,7 @@ struct VideoListItemThumbnailOverlay: View {
 
     var color: Color?
     var showDuration = true
-    @ScaledMetric var progressbarHeight: CGFloat = 3
+    @ScaledMetric var progressbarHeight: CGFloat = 5
     @ScaledMetric var padding: CGFloat = 4
     @ScaledMetric var radius: CGFloat = 6
 
@@ -87,19 +87,22 @@ struct VideoListItemThumbnailOverlay: View {
     func progressBar(_ width: Double? = nil) -> some View {
         VStack(spacing: 0) {
             Spacer()
-            Color.black
-                .frame(height: 4)
-                .opacity(0.1)
-                .mask(LinearGradient(gradient: Gradient(
-                    stops: [
-                        .init(color: .black, location: 0),
-                        .init(color: .clear, location: 1)
-                    ]
-                ), startPoint: .bottom, endPoint: .top))
-            HStack(spacing: 0) {
-                (color ?? theme.color)
-                    .frame(width: width ?? 0)
+            ZStack(alignment: .bottomLeading) {
                 Color.clear.background(.thinMaterial)
+                HStack(spacing: 0) {
+                    (color ?? theme.color)
+                        .frame(width: width ?? 0)
+                    Color.black
+                        .opacity(0.2)
+                        .mask(LinearGradient(gradient: Gradient(
+                            stops: [
+                                .init(color: .black, location: 0),
+                                .init(color: .clear, location: 1)
+                            ]
+                        ), startPoint: .leading, endPoint: .trailing))
+                        .frame(width: 2)
+                }
+                .frame(height: progressbarHeight - 0.5)
             }
             .frame(height: progressbarHeight)
         }

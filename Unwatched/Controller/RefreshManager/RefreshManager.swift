@@ -10,10 +10,11 @@ import CoreData
 import BackgroundTasks
 import OSLog
 
+@MainActor
 @Observable class RefreshManager {
     weak var container: ModelContainer?
-    @MainActor var isLoading: Bool = false
-    @MainActor var isSyncingIcloud: Bool = false
+    var isLoading: Bool = false
+    var isSyncingIcloud: Bool = false
 
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
@@ -29,11 +30,12 @@ import OSLog
     }
 
     deinit {
-        cancelCloudKitListener()
+        Task {
+            await cancelCloudKitListener()
+        }
     }
 
     func refreshAll(hardRefresh: Bool = false) async {
-        cancelCloudKitListener()
         await refresh(hardRefresh: hardRefresh)
         UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
@@ -42,10 +44,12 @@ import OSLog
         await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh)
     }
 
-    @MainActor
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         if let container = container {
-            if isLoading { return }
+            if isLoading || self.isSyncingIcloud {
+                Logger.log.info("currently refreshing or syncing, stopping now")
+                return
+            }
             isLoading = true
             do {
                 let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
@@ -56,7 +60,7 @@ import OSLog
             }
             isLoading = false
             if hardRefresh {
-                _ = CleanupService.cleanupDuplicates(container, onlyIfDuplicateEntriesExist: false)
+                _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
             } else {
                 quickDuplicateCleanup()
             }
@@ -108,6 +112,9 @@ import OSLog
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
                     autoRefreshTask = Task {
+                        Task { @MainActor in
+                            self.isSyncingIcloud = false
+                        }
                         await executeRefreshOnStartup()
                     }
                 } catch {
@@ -115,6 +122,7 @@ import OSLog
                 }
             }
         } else {
+            cancelCloudKitListener()
             autoRefreshTask = Task {
                 await executeRefreshOnStartup()
             }
@@ -122,7 +130,6 @@ import OSLog
     }
 
     func handleBecameInactive() {
-        cancelCloudKitListener()
         autoRefreshTask?.cancel()
     }
 
@@ -134,9 +141,6 @@ import OSLog
             let lastAutoRefreshDate = UserDefaults.standard.object(forKey: Const.lastAutoRefreshDate) as? Date
             let shouldRefresh = lastAutoRefreshDate == nil ||
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
-
-            cancelCloudKitListener()
-
             if shouldRefresh {
                 Logger.log.info("refreshing now")
                 await self.refreshAll()
@@ -158,7 +162,7 @@ import OSLog
 
 // Background Refresh
 extension RefreshManager {
-    static func scheduleVideoRefresh() {
+    func scheduleVideoRefresh() {
         Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
@@ -176,10 +180,20 @@ extension RefreshManager {
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
     }
 
-    static func handleBackgroundVideoRefresh(_ container: ModelContainer) async {
+    func handleBackgroundVideoRefresh() async {
         print("Background task running now")
+        guard let container = container else {
+            print("no container to refresh in background")
+            return
+        }
         do {
             scheduleVideoRefresh()
+
+            if isLoading {
+                Logger.log.info("Already refreshing")
+                return
+            }
+
             let task = VideoService.loadNewVideosInBg(container: container)
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)

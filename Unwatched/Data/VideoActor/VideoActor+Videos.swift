@@ -83,38 +83,6 @@ import OSLog
         addVideosTo(videos: videos, placement: videoplacement, index: index)
     }
 
-    private func addSubscriptionsForForeignVideos(_ video: Video, feedTitle: String?) async throws {
-        Logger.log.info("addSubscriptionsForVideos")
-        guard let channelId = video.youtubeChannelId else {
-            Logger.log.info("no channel Id/title found in video")
-            return
-        }
-
-        // video already added, done here
-        guard video.subscription == nil else {
-            Logger.log.info("video already has a subscription")
-            return
-        }
-
-        // check if subs exists (in video or in db)
-        if let existingSub = try subscriptionExists(channelId) {
-            existingSub.videos?.append(video)
-            return
-        }
-
-        // create subs where missing
-        let channelLink = try UrlService.getFeedUrlFromChannelId(channelId)
-        let sub = Subscription(
-            link: channelLink,
-            title: feedTitle ?? "",
-            isArchived: true,
-            youtubeChannelId: channelId)
-        Logger.log.info("new sub: \(sub.isArchived)")
-
-        modelContext.insert(sub)
-        sub.videos?.append(video)
-    }
-
     private func videoAlreadyExists(_ youtubeId: String) -> Video? {
         var fetch = FetchDescriptor<Video>(predicate: #Predicate {
             $0.youtubeId == youtubeId
@@ -125,8 +93,77 @@ import OSLog
     }
 
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
-        newVideos = NewVideosNotificationInfo()
         Logger.log.info("loadVideos")
+        newVideos = NewVideosNotificationInfo()
+
+        let sendableSubs = try getSubscriptions(subscriptionIds)
+        let placementInfo = getDefaultVideoPlacement()
+
+        try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
+            for sub in sendableSubs {
+                group.addTask {
+                    try await self.fetchVideos(sub)
+                }
+            }
+
+            for try await (sub, videos) in group {
+                await handleNewVideos(
+                    sub,
+                    videos,
+                    defaultPlacement: placementInfo
+                )
+            }
+        }
+
+        try modelContext.save()
+        return newVideos
+    }
+
+    private func handleNewVideos(
+        _ sub: SendableSubscription,
+        _ videos: [SendableVideo],
+        defaultPlacement: DefaultVideoPlacement
+    ) async {
+        guard let subModel = getSubscription(via: sub) else {
+            Logger.log.info("missing info when trying to load videos")
+            return
+        }
+        var videos = updateYtChannelId(in: videos, subModel)
+        videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
+        videos = await self.addShortsDetectionAndImageData(to: videos)
+        cacheImages(for: videos)
+
+        let videoModels = insertVideoModels(from: videos)
+        subModel.videos?.append(contentsOf: videoModels)
+
+        triageSubscriptionVideos(subModel,
+                                 videos: videoModels,
+                                 defaultPlacement: defaultPlacement)
+        updateRecentVideoDate(subscription: subModel, videos: videos)
+        return
+    }
+
+    private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
+        videos.map {
+            var video = $0
+            video.youtubeChannelId = sub.youtubeChannelId
+            return video
+        }
+    }
+
+    private func insertVideoModels(from videos: [SendableVideo]) -> [Video] {
+        var videoModels = [Video]()
+        for vid in videos {
+            let video = vid.createVideo()
+            videoModels.append(video)
+            modelContext.insert(video)
+        }
+        return videoModels
+    }
+
+    /// Returns specified Subscriptions and returns them as Sendable.
+    /// If none are specified, returns all active subscriptions.
+    private func getSubscriptions(_ subscriptionIds: [PersistentIdentifier]?) throws -> [SendableSubscription] {
         var subs = [Subscription]()
         if subscriptionIds == nil {
             subs = try getAllActiveSubscriptions()
@@ -135,78 +172,34 @@ import OSLog
             Logger.log.info("found some, fetching")
             subs = try fetchSubscriptions(subscriptionIds)
         }
-
-        let placementInfo = getDefaultVideoPlacement()
         let sendableSubs: [SendableSubscription] = subs.compactMap { $0.toExport }
-
-        try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
-            for sub in sendableSubs {
-                group.addTask {
-                    guard let url = sub.link else {
-                        Logger.log.info("sub has no url: \(sub.title)")
-                        return (sub, [])
-                    }
-                    let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-                    return (sub, videos)
-                }
-            }
-
-            for try await (sub, videos) in group {
-                if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
-                    try await loadVideos(for: modelSub,
-                                         videos: videos,
-                                         defaultPlacementInfo: placementInfo)
-                } else {
-                    Logger.log.info("missing info when trying to load videos")
-                }
-            }
-        }
-
-        try modelContext.save()
-        return newVideos
+        return sendableSubs
     }
 
-    private func loadVideos(
-        for sub: Subscription,
-        videos: [SendableVideo],
-        defaultPlacementInfo: DefaultVideoPlacement
-    ) async throws {
-        var newVideos = videos.map {
-            var video = $0
-            video.youtubeChannelId = sub.youtubeChannelId
-            return video
+    /// Fetches all videos for the specified subscription
+    private func fetchVideos(_ sub: SendableSubscription) async throws -> (SendableSubscription, [SendableVideo]) {
+        guard let url = sub.link else {
+            Logger.log.info("sub has no url: \(sub.title)")
+            return (sub, [])
         }
+        let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+        return (sub, videos)
+    }
+
+    private func cacheImages(for videos: [SendableVideo]) {
         let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
-        newVideos = getVideosNotAlreadyAdded(sub: sub, videos: newVideos)
-        newVideos = await self.addShortsDetectionAndImageData(to: newVideos)
 
-        var newVideoModels = [Video]()
-        for vid in newVideos {
-            let video = vid.createVideo()
-            newVideoModels.append(video)
-            modelContext.insert(video)
-
+        let imagesToBeSaved = videos.compactMap { vid in
             let discardImage = vid.isYtShort && hideShorts
-            // throw away thumbnail data for shorts when they're not even shown
-
             if !discardImage,
-               let thumbnailUrl = vid.thumbnailUrl,
-               let imageData = vid.thumbnailData {
-                let cachedImage = CachedImage(thumbnailUrl, imageData: imageData)
-                modelContext.insert(cachedImage)
-                video.cachedImage = cachedImage
+               let url = vid.thumbnailUrl,
+               let data = vid.thumbnailData {
+                return (url: url, data: data)
             }
+            return nil
         }
-        sub.videos?.append(contentsOf: newVideoModels)
+        ImageService.storeImages(imagesToBeSaved)
 
-        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
-
-        triageSubscriptionVideos(sub,
-                                 videos: newVideoModels,
-                                 defaultPlacementInfo: defaultPlacementInfo,
-                                 limitVideos: limitVideos)
-        updateRecentVideoDate(subscription: sub, videos: newVideos)
     }
 
     func addShortsDetectionAndImageData(to videos: [SendableVideo]) async -> [SendableVideo] {

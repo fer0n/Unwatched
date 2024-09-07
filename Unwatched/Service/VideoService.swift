@@ -222,13 +222,14 @@ struct VideoService {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
             try context.delete(model: WatchEntry.self)
-            try context.delete(model: CachedImage.self)
             try context.delete(model: Subscription.self)
             try context.delete(model: Video.self)
             try context.save()
         } catch {
-            Logger.log.error("Failed to clear everything")
+            Logger.log.error("Failed to delete everything")
         }
+
+        _ = ImageService.deleteAllImages()
     }
 
     static func toggleBookmark(_ video: Video, _ context: ModelContext) {
@@ -245,28 +246,6 @@ struct VideoService {
             try await repo.clearList(list, direction, index: index, date: date)
         }
         return task
-    }
-
-    static func storeImages(for infos: [NotificationInfo], container: ModelContainer) {
-        Task.detached {
-            let context = ModelContext(container)
-            for info in infos {
-                if let sendableVideo = info.video,
-                   let video = getVideo(for: sendableVideo.youtubeId, container: container),
-                   let url = sendableVideo.thumbnailUrl,
-                   let imageData = info.video?.thumbnailData {
-                    if video.cachedImage != nil {
-                        Logger.log.info("video !has image")
-                        continue
-                    }
-
-                    let imageCache = CachedImage(url, imageData: imageData)
-                    context.insert(imageCache)
-                    video.cachedImage = imageCache
-                }
-            }
-            try context.save()
-        }
     }
 
     static func clearAllYtShortsFromInbox(_ modelContext: ModelContext) {

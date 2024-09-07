@@ -8,8 +8,9 @@ import SwiftData
 import OSLog
 
 struct SubscriptionListSection: View {
-    @Query var subscriptions: [Subscription]
+    @Environment(\.modelContext) var modelContext
 
+    @State var subscriptionsVM = SubscriptionListVM()
     @Binding var subManager: SubscribeManager
     var theme: ThemeColor
 
@@ -19,19 +20,27 @@ struct SubscriptionListSection: View {
 
     var body: some View {
         MySection("subscriptions") {
-            if subscriptions.isEmpty {
-                dropArea
-                    .listRowInsets(EdgeInsets())
-            } else {
-                SearchableSubscriptions(text: $text)
-                    .dropDestination(for: URL.self) { items, _ in
-                        handleUrlDrop(items)
-                        return true
-                    }
+            if !subscriptionsVM.isLoading {
+                if subscriptionsVM.subscriptions.isEmpty {
+                    dropArea
+                        .listRowInsets(EdgeInsets())
+                } else {
+                    SearchableSubscriptions(subscriptionsVM: subscriptionsVM, text: $text)
+                        .dropDestination(for: URL.self) { items, _ in
+                            handleUrlDrop(items)
+                            return true
+                        }
+                }
             }
         }
         .task(id: droppedUrls) {
             await addDroppedUrls()
+        }
+        .task {
+            let container = modelContext.container
+            subscriptionsVM.container = container
+            subscriptionsVM.setSorting()
+            await subscriptionsVM.fetchSubscriptions()
         }
 
         Section {
@@ -76,20 +85,44 @@ struct SubscriptionListSection: View {
 }
 
 struct SearchableSubscriptions: View {
+    var subscriptionsVM: SubscriptionListVM
+    @Environment(RefreshManager.self) var refresher
+
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSorting: SubscriptionSorting = .recentlyAdded
+
     @Binding var text: DebouncedText
 
     var body: some View {
         SubscriptionSearchBar(text: $text,
                               subscriptionSorting: $subscriptionSorting)
 
-        SubscriptionListView(
-            sort: subscriptionSorting,
-            manualFilter: {
-                text.debounced.isEmpty
-                    || $0.displayTitle.localizedStandardContains(text.debounced)
+        SubscriptionListView(subscriptionsVM, onDelete: onDelete)
+            .task(id: text.debounced) {
+                subscriptionsVM.filter = filter
             }
-        )
+            .onChange(of: subscriptionSorting) {
+                subscriptionsVM.setSorting(subscriptionSorting)
+            }
+            .task(id: refresher.isLoading) {
+                if !refresher.isLoading {
+                    await subscriptionsVM.fetchSubscriptions()
+                }
+            }
+    }
+
+    var filter: (SendableSubscription) -> Bool {
+        {
+            text.debounced.isEmpty
+                || $0.displayTitle.localizedStandardContains(text.debounced)
+        }
+    }
+
+    @MainActor
+    func onDelete(after task: Task<(), Error>) {
+        Task {
+            try? await task.value
+            await subscriptionsVM.fetchSubscriptions()
+        }
     }
 }
 

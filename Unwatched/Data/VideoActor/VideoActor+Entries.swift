@@ -52,8 +52,8 @@ extension VideoActor {
         try modelContext.save()
     }
 
-    func getVideosNotAlreadyAdded(sub: Subscription,
-                                  videos: [SendableVideo]) -> [SendableVideo] {
+    func getNewVideosAndUpdateExisting(sub: Subscription,
+                                       videos: [SendableVideo]) -> [SendableVideo] {
         guard let subVideos = sub.videos else {
             return videos
         }
@@ -63,31 +63,38 @@ extension VideoActor {
         }
 
         var newVideos = [SendableVideo]()
-
+        var imagesToBeDeleted = [URL]()
         for video in videos {
             if let oldVideo = subVideosDict[video.youtubeId] {
                 if oldVideo.updatedDate != video.updatedDate {
-                    updateExistingVideo(oldVideo, video)
+                    if let url = updateVideoAndGetImageToDelete(oldVideo, video) {
+                        imagesToBeDeleted.append(url)
+                    }
                 }
             } else {
                 newVideos.append(video)
             }
         }
+
+        ImageService.deleteImages(imagesToBeDeleted)
         return newVideos
     }
 
-    func updateExistingVideo(_ video: Video, _ updatedVideo: SendableVideo) {
+    func updateVideoAndGetImageToDelete(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
         Logger.log.info("updateExistingVideo: \(video.title)")
         video.title = updatedVideo.title
         video.updatedDate = updatedVideo.updatedDate
 
-        video.thumbnailUrl = updatedVideo.thumbnailUrl
-        if let cachedImage = video.cachedImage {
-            modelContext.delete(cachedImage)
+        var deleteImage: URL?
+        if video.thumbnailUrl != updatedVideo.thumbnailUrl
+            && updatedVideo.thumbnailUrl != nil {
+            deleteImage = video.thumbnailUrl
+            video.thumbnailUrl = updatedVideo.thumbnailUrl
         }
 
         if video.videoDescription != updatedVideo.videoDescription {
             video.videoDescription = updatedVideo.videoDescription
+            deleteOldChapters(from: video)
             let newChapters = updatedVideo.chapters.map {
                 let chapter = $0.getChapter
                 modelContext.insert(chapter)
@@ -95,6 +102,17 @@ extension VideoActor {
             }
             video.chapters = newChapters
         }
+        return deleteImage
+    }
+
+    private func deleteOldChapters(from video: Video) {
+        for chapter in video.chapters ?? [] {
+            modelContext.delete(chapter)
+        }
+        for chapter in video.mergedChapters ?? [] {
+            modelContext.delete(chapter)
+        }
+        video.sponserBlockUpdateDate = nil
     }
 
     func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {
@@ -107,8 +125,10 @@ extension VideoActor {
 
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
-                                  defaultPlacementInfo: DefaultVideoPlacement,
-                                  limitVideos: Int?) {
+                                  defaultPlacement: DefaultVideoPlacement) {
+        let isFirstTimeLoading = sub.mostRecentVideoDate == nil
+        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
+
         var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
         if let cutOffDate = sub.mostRecentVideoDate {
             videosToAdd = videosToAdd.filter { $0.publishedDate ?? .distantPast > cutOffDate }
@@ -116,14 +136,14 @@ extension VideoActor {
 
         var placement = sub.placeVideosIn
         if sub.placeVideosIn == .defaultPlacement {
-            placement = defaultPlacementInfo.videoPlacement
+            placement = defaultPlacement.videoPlacement
         }
 
-        if defaultPlacementInfo.hideShortsEverywhere {
+        if defaultPlacement.hideShortsEverywhere {
             addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
-                defaultPlacement: defaultPlacementInfo
+                defaultPlacement: defaultPlacement
             )
         } else {
             addVideosTo(videos: videosToAdd, placement: placement, index: 1)
