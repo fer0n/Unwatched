@@ -11,6 +11,14 @@ import OSLog
 actor SubscriptionActor {
     var imageUrlsToBeDeleted = [URL]()
 
+    func getActiveSubscriptions() -> [SendableSubscription] {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.isArchived == false
+        })
+        let subs = try? modelContext.fetch(fetch)
+        return subs?.compactMap { $0.toExport } ?? []
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now

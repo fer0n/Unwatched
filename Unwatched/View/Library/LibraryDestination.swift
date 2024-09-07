@@ -6,12 +6,16 @@
 import SwiftUI
 
 struct LibraryDestinationModifier: ViewModifier {
+    @Environment(\.modelContext) var modelContext
 
     // swiftlint:disable cyclomatic_complexity
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: Subscription.self) { sub in
                 SubscriptionDetailView(subscription: sub)
+            }
+            .navigationDestination(for: SendableSubscription.self) { sub in
+                SendableSubscriptionDetailView(sub, modelContext)
             }
             .navigationDestination(for: LibraryDestination.self) { value in
                 switch value {

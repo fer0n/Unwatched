@@ -7,12 +7,6 @@ import SwiftUI
 import SwiftData
 
 struct LibraryVideoSection: View {
-    @Query(filter: #Predicate<Subscription> { $0.isArchived == true })
-    var sideloads: [Subscription]
-
-    var hasSideloads: Bool {
-        !sideloads.isEmpty
-    }
 
     var body: some View {
         MySection("videos") {
@@ -28,11 +22,9 @@ struct LibraryVideoSection: View {
                 LibraryNavListItem("bookmarkedVideos",
                                    systemName: "bookmark.fill")
             }
-            if hasSideloads {
-                NavigationLink(value: LibraryDestination.sideloading) {
-                    LibraryNavListItem("sideloads",
-                                       systemName: "arrow.forward.circle.fill")
-                }
+            NavigationLink(value: LibraryDestination.sideloading) {
+                LibraryNavListItem("sideloads",
+                                   systemName: "arrow.forward.circle.fill")
             }
         }
         .symbolVariant(.fill)
