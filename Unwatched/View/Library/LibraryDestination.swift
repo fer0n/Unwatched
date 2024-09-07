@@ -39,8 +39,8 @@ struct LibraryDestinationModifier: ViewModifier {
                     AppearanceSettingsView()
                 case .settingsPlayback:
                     PlaybackSettingsView()
-                case .faq:
-                    FaqView()
+                case .help:
+                    HelpView()
                 }
             }
     }
@@ -66,5 +66,5 @@ enum LibraryDestination {
     case settingsPlayback
     case importSubscriptions
     case debug
-    case faq
+    case help
 }
