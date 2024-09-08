@@ -17,12 +17,4 @@ enum ShortsPlacement: Int, Codable, CaseIterable {
         case .discard: return String(localized: "discardShorts")
         }
     }
-
-    var systemImage: String {
-        switch self {
-        case .show: return "eye.fill"
-        case .hide: return "eye.slash.fill"
-        case .discard: return "trash.fill"
-        }
-    }
 }

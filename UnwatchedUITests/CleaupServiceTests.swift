@@ -30,10 +30,10 @@ class CleanupServiceTests: XCTestCase {
         context.insert(subDiffDup)
 
         // watched difference
-        let watchedDiff = Video(title: "watchedDiff", url: URL(string: "watchedDiffUrl"), youtubeId: "watchedDiffYoutubeId", watched: true)
+        let watchedDiff = Video(title: "watchedDiff", url: URL(string: "watchedDiffUrl"), youtubeId: "watchedDiffYoutubeId", watchedDate: .now)
         context.insert(watchedDiff)
 
-        let watchedDiffDup = Video(title: "watchedDiffDup", url: URL(string: "watchedDiffUrl"), youtubeId: "watchedDiffYoutubeId", watched: false)
+        let watchedDiffDup = Video(title: "watchedDiffDup", url: URL(string: "watchedDiffUrl"), youtubeId: "watchedDiffYoutubeId", watchedDate: nil)
         context.insert(watchedDiffDup)
 
         // cleared inbox date difference
