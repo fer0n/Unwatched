@@ -42,7 +42,6 @@ struct UserDataService {
         backup.settings         = getSettings()
         backup.subscriptions    = fetchMapExportable(Subscription.self)
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
-        backup.watchEntries     = fetchMapExportable(WatchEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
 
         if backup.isEmpty {
@@ -64,7 +63,7 @@ struct UserDataService {
             Logger.log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
-                    || (includeWatched && $0.watched == true)
+                    || (includeWatched && $0.watchedDate != nil)
                     || $0.queueEntry != nil
                     || $0.inboxEntry != nil
                     || ($0.publishedDate ?? lastWeek) > lastWeek
@@ -105,7 +104,8 @@ struct UserDataService {
             }
 
             insertModelsFor(backup.queueEntries)
-            insertModelsFor(backup.watchEntries)
+            // insertModelsFor(backup.watchEntries)
+            // TODO: manually convert watchEntries to new format if available
             insertModelsFor(backup.inboxEntries)
 
             // Subscriptions
@@ -275,7 +275,7 @@ struct UnwatchedBackup: Codable {
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()
-    var watchEntries    = [SendableWatchEntry]()
+    var watchEntries    = [SendableWatchEntry]() // TODO: legacy
 
     var isEmpty: Bool {
         videos.isEmpty

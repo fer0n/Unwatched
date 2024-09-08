@@ -25,7 +25,7 @@ struct BookmarkedVideosView: View {
                                 showVideoStatus: true,
                                 hasInboxEntry: video.inboxEntry != nil,
                                 hasQueueEntry: video.queueEntry != nil,
-                                watched: video.watched
+                                watched: video.watchedDate != nil
                             )
                         )
                     }

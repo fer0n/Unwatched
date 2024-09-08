@@ -20,9 +20,7 @@ extension VideoActor {
 
     private func markVideoWatched(_ video: Video) throws {
         clearEntries(from: video, updateCleared: false)
-        video.watched = true
-        let watchEntry = WatchEntry(video: video)
-        modelContext.insert(watchEntry)
+        video.watchedDate = .now
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) throws {

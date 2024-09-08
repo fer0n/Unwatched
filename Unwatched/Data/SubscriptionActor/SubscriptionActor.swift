@@ -199,7 +199,7 @@ actor SubscriptionActor {
     private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
         for subscription in subscriptions {
             for video in subscription.videos ?? [] {
-                if video.queueEntry == nil && !video.watched {
+                if video.queueEntry == nil && video.watchedDate == nil {
                     if let inboxEntry = video.inboxEntry {
                         modelContext.delete(inboxEntry)
                     }
