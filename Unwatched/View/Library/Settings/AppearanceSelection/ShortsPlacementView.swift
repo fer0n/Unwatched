@@ -16,7 +16,7 @@ struct ShortsPlacementView: View {
         MySection("shortsSettings", footer: "shortsSettingsHelper") {
             Picker("shortsPlacement", selection: $shortsPlacement) {
                 ForEach(ShortsPlacement.allCases, id: \.self) {
-                    Label($0.description, systemImage: $0.systemImage)
+                    Text($0.description)
                 }
             }
             .pickerStyle(.menu)
@@ -78,4 +78,9 @@ extension View {
     ) -> some View {
         self.modifier(DiscardShortsActionSheetModifier(isPresented: isPresented, onDelete: onDelete))
     }
+}
+
+#Preview {
+    ShortsPlacementView()
+        .modelContainer(DataController.previewContainer)
 }
