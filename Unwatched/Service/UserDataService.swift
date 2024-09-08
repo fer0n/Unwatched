@@ -103,10 +103,26 @@ struct UserDataService {
                 }
             }
 
+            func migrateWatchEntries(_ entries: [SendableWatchEntry]) {
+                let videoEntries = Dictionary(grouping: entries, by: { $0.videoId })
+                for (_, entries) in videoEntries {
+                    let entries = entries.sorted(by: {
+                        $0.date ?? .distantPast > $1.date ?? .distantPast
+                    })
+                    guard let first = entries.first,
+                          let lastEntryDate = first.date,
+                          var video = videoIdDict[first.videoId] else {
+                        continue
+                    }
+
+                    video.watchedDate = lastEntryDate
+                    videoIdDict[first.videoId] = video
+                }
+            }
+
             insertModelsFor(backup.queueEntries)
-            // insertModelsFor(backup.watchEntries)
-            // TODO: manually convert watchEntries to new format if available
             insertModelsFor(backup.inboxEntries)
+            migrateWatchEntries(backup.watchEntries)
 
             // Subscriptions
             for subscription in backup.subscriptions {
