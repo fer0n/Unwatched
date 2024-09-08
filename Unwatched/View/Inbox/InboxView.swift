@@ -16,8 +16,8 @@ struct InboxView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
 
+    var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
     var hideShortsTip = HideShortsTip()
@@ -162,7 +162,7 @@ struct InboxView: View {
 }
 
 #Preview {
-    InboxView()
+    InboxView(inboxEntries: [])
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())
