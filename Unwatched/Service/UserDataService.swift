@@ -39,10 +39,13 @@ struct UserDataService {
             // Bug: otherwise subscription fails (maybe because it doesn't have the videos ready otherwise?)
             // also happens if subscriptions is called before fetching videos
         }
+
         backup.settings         = getSettings()
-        backup.subscriptions    = fetchMapExportable(Subscription.self)
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
+        let subs                = fetchMapExportable(Subscription.self)
+
+        backup.subscriptions = subs.filter({ $0.isArchived && !$0.videosIds.isEmpty })
 
         if backup.isEmpty {
             Logger.log.info("checkIfBackupEmpty")
