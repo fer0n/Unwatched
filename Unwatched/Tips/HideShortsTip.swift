@@ -19,9 +19,13 @@ struct HideShortsTip: Tip {
     }
 
     var actions: [Action] {
-        Action {
-            Text("HideShortsTipAction")
+        Action(id: Const.hideShortsTipAction) {
+            Text("hideShortsTipAction")
                 .foregroundStyle(.teal)
+        }
+        Action(id: Const.discardShortsTipAction) {
+            Text("discardShortsTipAction")
+                .foregroundStyle(.red)
         }
     }
 
@@ -34,6 +38,38 @@ struct HideShortsTip: Tip {
                 $0 >= 3
             }
         ]
+    }
+}
+
+struct HideShortsTipView: View {
+    @AppStorage(Const.shortsPlacement) var shortsPlacement: ShortsPlacement = .show
+    @Environment(\.modelContext) var modelContext
+
+    @State var showConfirm = false
+
+    var hideShortsTip = HideShortsTip()
+
+    var body: some View {
+        if shortsPlacement == .show {
+            hideShortsTipView
+        }
+    }
+
+    var hideShortsTipView: some View {
+        TipView(hideShortsTip) { action in
+            if action.id == Const.hideShortsTipAction {
+                shortsPlacement = .hide
+                VideoService.clearAllYtShortsFromInbox(modelContext)
+                hideShortsTip.invalidate(reason: .actionPerformed)
+            } else if action.id == Const.discardShortsTipAction {
+                showConfirm = true
+            }
+        }
+        .discardShortsActionSheet(isPresented: $showConfirm, onDelete: {
+            hideShortsTip.invalidate(reason: .actionPerformed)
+        })
+        .tipBackground(Color.insetBackgroundColor)
+        .listRowBackground(Color.backgroundColor)
     }
 }
 
