@@ -248,7 +248,9 @@ import OSLog
             }
         }
 
-        if let video = video {
+        if let video = video, !video.isDeleted {
+            // potential fix: crash when accessing video model that has been deleted (untested)
+            UserDefaults.standard.removeObject(forKey: Const.nowPlayingVideo)
             setNextVideo(video, .nextUp)
         }
         loadTopmostVideoFromQueue()
