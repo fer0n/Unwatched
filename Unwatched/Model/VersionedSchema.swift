@@ -26,6 +26,10 @@ enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p2.self,
         willMigrate: {
             context in
+            if UserDefaults.standard.bool(forKey: "hideShortsEverywhere") {
+                UserDefaults.standard.setValue(ShortsPlacement.hide.rawValue, forKey: Const.shortsPlacement)
+            }
+
             let fetch = FetchDescriptor<UnwatchedSchemaV1p1.Video>(predicate: #Predicate { $0.watched == true })
             if let videos = try? context.fetch(fetch) {
                 for video in videos {

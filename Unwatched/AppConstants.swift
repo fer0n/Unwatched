@@ -60,6 +60,10 @@ struct Const {
     static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
     static let queueVideoAddedCategory = "queueVideoAddedCategory"
 
+    // MARK: - Tips
+    static let hideShortsTipAction = "hideShortsTipAction"
+    static let discardShortsTipAction = "discardShortsTipAction"
+
     // MARK: - SF Symbols
     static let queueTopSF = "text.insert"
     static let queueBottomSF = "text.append"
@@ -118,8 +122,7 @@ struct Const {
     static let continuousPlay = "continuousPlay"
     static let autoRefresh = "refreshOnStartup"
 
-    static let hideShortsEverywhere = "hideShortsEverywhere"
-    static let shortsDetection = "shortsDetection"
+    static let shortsPlacement = "shortsPlacement"
     static let navigationManager = "NavigationManager"
     static let nowPlayingVideo = "nowPlayingVideo"
     static let lastAutoRefreshDate = "lastAutoRefreshDate"
@@ -176,7 +179,7 @@ extension Const {
 
         // Videos
         Const.defaultVideoPlacement: VideoPlacement.inbox,
-        Const.hideShortsEverywhere: false,
+        Const.shortsPlacement: ShortsPlacement.show,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,
