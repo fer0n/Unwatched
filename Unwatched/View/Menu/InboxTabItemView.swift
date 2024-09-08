@@ -10,7 +10,7 @@ struct InboxTabItemView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount: Int = 0
     @Environment(RefreshManager.self) var refresher
     @Environment(NavigationManager.self) var navManager
-    @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
+    @Query(sort: \InboxEntry.date, order: .reverse, animation: .default) var inboxEntries: [InboxEntry]
 
     let showCancelButton: Bool
     let showBadge: Bool
