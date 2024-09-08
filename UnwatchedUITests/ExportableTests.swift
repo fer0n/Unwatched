@@ -134,7 +134,7 @@ class ExportableTests: XCTestCase {
         let video = Video.getDummy()
         video.isYtShort = true
         video.elapsedSeconds = 100
-        video.watched = true
+        video.watchedDate = .now
         video.duration = 200
         video.bookmarkedDate = Date()
 

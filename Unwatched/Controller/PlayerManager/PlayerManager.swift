@@ -71,7 +71,7 @@ import OSLog
         }
         let noQueueEntry = video.queueEntry == nil
         let noInboxEntry = video.inboxEntry == nil
-        return video.watched && noQueueEntry && noInboxEntry
+        return video.watchedDate != nil && noQueueEntry && noInboxEntry
     }
 
     var isContinuousPlay: Bool {

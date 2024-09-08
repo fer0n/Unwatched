@@ -209,7 +209,6 @@ struct VideoService {
         do {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
-            try context.delete(model: WatchEntry.self)
             try context.delete(model: Subscription.self)
             try context.delete(model: Video.self)
             try context.save()
