@@ -10,14 +10,18 @@ import OSLog
 struct CleanupService {
     static func cleanupDuplicatesAndInboxDate(
         _ container: ModelContainer,
-        onlyIfDuplicateEntriesExist: Bool = false
+        onlyIfDuplicateEntriesExist: Bool = false,
+        complete: Bool = false
     ) -> Task<
         RemovedDuplicatesInfo,
         Never
     > {
         return Task.detached {
             let repo = CleanupActor(modelContainer: container)
-            let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            let info = await repo.removeAllDuplicates(
+                onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist,
+                complete: complete
+            )
             await repo.cleanupInboxEntryDates()
             return info
         }
@@ -39,7 +43,10 @@ struct CleanupService {
         try? modelContext.save()
     }
 
-    func removeAllDuplicates(onlyIfDuplicateEntriesExist: Bool = false) -> RemovedDuplicatesInfo {
+    func removeAllDuplicates(
+        onlyIfDuplicateEntriesExist: Bool = false,
+        complete: Bool = false
+    ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
         if onlyIfDuplicateEntriesExist && !hasDuplicateEntries() {
@@ -48,7 +55,10 @@ struct CleanupService {
         }
         Logger.log.info("removing duplicates now")
 
-        removeSubscriptionDuplicates()
+        if complete {
+            removeSubscriptionDuplicates()
+            removeEmptySubscriptions()
+        }
         removeVideoDuplicates()
         // Keep empty queue/inbox entries
         // they can be empty due to sync, don't remove them
@@ -137,6 +147,17 @@ struct CleanupService {
                 }
             }
             modelContext.delete(duplicate)
+        }
+    }
+
+    func removeEmptySubscriptions() {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isArchived })
+        if var subs = try? modelContext.fetch(fetch) {
+            subs = subs.filter({ $0.videos?.isEmpty ?? true })
+            for sub in subs {
+                modelContext.delete(sub)
+            }
+            duplicateInfo.countSubscriptions += subs.count
         }
     }
 
