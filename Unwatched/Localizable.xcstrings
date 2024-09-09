@@ -3935,18 +3935,18 @@
         }
       }
     },
-    "removedDuplicates\n%lld\n%lld\n%lld\n%lld" : {
+    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld Abos: %4$lld"
+            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld\nKapitel: %4$lld Abos: %5$lld"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Subscriptions: %4$lld"
+            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Chapters: %4$lld Subscriptions: %5$lld"
           }
         }
       }
@@ -3956,13 +3956,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplikate löschen"
+            "value" : "Duplikate & Leere Objekte löschen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove Duplicates"
+            "value" : "Cleanup Duplicates & Models"
           }
         }
       }
@@ -4940,6 +4940,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today, %@"
+          }
+        }
+      }
+    },
+    "toggleTemporarySpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorübergehende Abspielgeschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary Playback Speed"
           }
         }
       }

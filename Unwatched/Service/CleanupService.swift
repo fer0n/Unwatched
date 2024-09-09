@@ -10,17 +10,42 @@ import OSLog
 struct CleanupService {
     static func cleanupDuplicatesAndInboxDate(
         _ container: ModelContainer,
-        onlyIfDuplicateEntriesExist: Bool = false
+        onlyIfDuplicateEntriesExist: Bool = false,
+        complete: Bool = false
     ) -> Task<
         RemovedDuplicatesInfo,
         Never
     > {
         return Task.detached {
             let repo = CleanupActor(modelContainer: container)
-            let info = await repo.removeAllDuplicates(onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist)
+            let info = await repo.removeAllDuplicates(
+                onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist,
+                complete: complete
+            )
             await repo.cleanupInboxEntryDates()
             return info
         }
+    }
+
+    /// Deletes video and all relationships (workaround; can be removed if .cascade delete rule works properly)
+    static func deleteVideo(_ video: Video, _ modelContext: ModelContext) {
+        if let entry = video.inboxEntry {
+            modelContext.delete(entry)
+        }
+        if let entry = video.queueEntry {
+            modelContext.delete(entry)
+        }
+        if let chapters = video.chapters {
+            for chapter in chapters {
+                modelContext.delete(chapter)
+            }
+        }
+        if let chapters = video.mergedChapters {
+            for chapter in chapters {
+                modelContext.delete(chapter)
+            }
+        }
+        modelContext.delete(video)
     }
 }
 
@@ -39,7 +64,10 @@ struct CleanupService {
         try? modelContext.save()
     }
 
-    func removeAllDuplicates(onlyIfDuplicateEntriesExist: Bool = false) -> RemovedDuplicatesInfo {
+    func removeAllDuplicates(
+        onlyIfDuplicateEntriesExist: Bool = false,
+        complete: Bool = false
+    ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
         if onlyIfDuplicateEntriesExist && !hasDuplicateEntries() {
@@ -48,7 +76,11 @@ struct CleanupService {
         }
         Logger.log.info("removing duplicates now")
 
-        removeSubscriptionDuplicates()
+        if complete {
+            removeSubscriptionDuplicates()
+            removeEmptySubscriptions()
+            removeEmptyChapters()
+        }
         removeVideoDuplicates()
         // Keep empty queue/inbox entries
         // they can be empty due to sync, don't remove them
@@ -120,6 +152,17 @@ struct CleanupService {
         }
     }
 
+    func removeEmptyChapters() {
+        let fetch = FetchDescriptor<Chapter>()
+        if var chapters = try? modelContext.fetch(fetch) {
+            chapters = chapters.filter({ $0.video == nil && $0.mergedChapterVideo == nil })
+            for chapter in chapters {
+                modelContext.delete(chapter)
+            }
+            duplicateInfo.countChapters += chapters.count
+        }
+    }
+
     // MARK: Subscription
     func removeSubscriptionDuplicates() {
         let fetch = FetchDescriptor<Subscription>()
@@ -133,10 +176,21 @@ struct CleanupService {
         for duplicate in duplicates {
             if let videos = duplicate.videos {
                 for video in videos {
-                    deleteVideo(video)
+                    CleanupService.deleteVideo(video, modelContext)
                 }
             }
             modelContext.delete(duplicate)
+        }
+    }
+
+    func removeEmptySubscriptions() {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { $0.isArchived })
+        if var subs = try? modelContext.fetch(fetch) {
+            subs = subs.filter({ $0.videos?.isEmpty ?? true })
+            for sub in subs {
+                modelContext.delete(sub)
+            }
+            duplicateInfo.countSubscriptions += subs.count
         }
     }
 
@@ -170,7 +224,7 @@ struct CleanupService {
         }, sort: sortVideos)
         duplicateInfo.countVideos = duplicates.count
         for duplicate in duplicates {
-            deleteVideo(duplicate)
+            CleanupService.deleteVideo(duplicate, modelContext)
         }
     }
 
@@ -210,16 +264,6 @@ struct CleanupService {
             return inbox0
         }
     }
-
-    func deleteVideo(_ video: Video) {
-        if let entry = video.inboxEntry {
-            modelContext.delete(entry)
-        }
-        if let entry = video.queueEntry {
-            modelContext.delete(entry)
-        }
-        modelContext.delete(video)
-    }
 }
 
 struct RemovedDuplicatesInfo {
@@ -227,4 +271,5 @@ struct RemovedDuplicatesInfo {
     var countQueueEntries: Int = 0
     var countInboxEntries: Int = 0
     var countSubscriptions: Int = 0
+    var countChapters: Int = 0
 }

@@ -170,12 +170,9 @@ actor SubscriptionActor {
             (channelId != nil && $0.youtubeChannelId == channelId)
                 || (playlistId != nil && $0.youtubePlaylistId == playlistId)
         })
-        fetch.fetchLimit = 1
-        guard let first = try modelContext.fetch(fetch).first else {
-            Logger.log.warning("nothing found to unsubscribe")
-            return
-        }
-        try deleteSubscriptions([first.persistentModelID])
+        // fetch.fetchLimit = 1
+        let subs = try modelContext.fetch(fetch)
+        try deleteSubscriptions(subs)
     }
 
     func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier]) throws {
@@ -198,16 +195,22 @@ actor SubscriptionActor {
 
     private func deleteSubscriptions(_ subscriptions: [Subscription]) throws {
         for subscription in subscriptions {
+            var hasVideosLeft = false
             for video in subscription.videos ?? [] {
-                if video.queueEntry == nil && video.watchedDate == nil {
-                    if let inboxEntry = video.inboxEntry {
-                        modelContext.delete(inboxEntry)
-                    }
-                    modelContext.delete(video)
+                if video.queueEntry == nil &&
+                    video.watchedDate == nil &&
+                    video.bookmarkedDate == nil {
+                    CleanupService.deleteVideo(video, modelContext)
+                } else {
+                    hasVideosLeft = true
                 }
             }
-            subscription.mostRecentVideoDate = nil
-            subscription.isArchived = true
+            if hasVideosLeft {
+                subscription.mostRecentVideoDate = nil
+                subscription.isArchived = true
+            } else {
+                modelContext.delete(subscription)
+            }
         }
     }
 }
