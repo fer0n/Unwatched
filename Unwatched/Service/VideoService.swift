@@ -194,8 +194,7 @@ struct VideoService {
     }
 
     static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 0 })
         fetch.fetchLimit = 1
         let context = ModelContext(container)
         let videos = try? context.fetch(fetch)
