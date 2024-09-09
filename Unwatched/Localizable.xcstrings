@@ -4944,6 +4944,22 @@
         }
       }
     },
+    "toggleTemporarySpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorübergehende Abspielgeschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary Playback Speed"
+          }
+        }
+      }
+    },
     "unsubscribe" : {
       "localizations" : {
         "de" : {

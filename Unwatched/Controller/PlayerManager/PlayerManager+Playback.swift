@@ -67,6 +67,30 @@ extension PlayerManager {
         getPlaybackSpeed()
     }
 
+    var temporarySlowDown: Bool {
+        actualPlaybackSpeed >= Const.temporarySpeedSwap
+    }
+
+    func setTemporaryPlaybackSpeed() {
+        if temporarySlowDown {
+            temporaryPlaybackSpeed = 1
+        } else {
+            temporaryPlaybackSpeed = 2
+        }
+    }
+
+    func resetTemporaryPlaybackSpeed() {
+        temporaryPlaybackSpeed = nil
+    }
+
+    func toggleTemporaryPlaybackSpeed() {
+        if temporaryPlaybackSpeed == nil {
+            setTemporaryPlaybackSpeed()
+        } else {
+            resetTemporaryPlaybackSpeed()
+        }
+    }
+
     private func getPlaybackSpeed() -> Double {
         video?.subscription?.customSpeedSetting ??
             UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
