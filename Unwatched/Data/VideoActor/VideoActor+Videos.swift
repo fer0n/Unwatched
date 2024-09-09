@@ -119,7 +119,7 @@ import OSLog
         return newVideos
     }
 
-    private func handleNewVideos(
+    func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
@@ -128,6 +128,7 @@ import OSLog
             Logger.log.info("missing info when trying to load videos")
             return
         }
+        let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
         videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
@@ -139,7 +140,8 @@ import OSLog
         triageSubscriptionVideos(subModel,
                                  videos: videoModels,
                                  defaultPlacement: defaultPlacement)
-        updateRecentVideoDate(subscription: subModel, videos: videos)
+        subModel.mostRecentVideoDate = mostRecentDate
+        updateRecentVideoDate(subModel, mostRecentDate)
         return
     }
 

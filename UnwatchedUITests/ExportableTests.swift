@@ -15,6 +15,87 @@ class ExportableTests: XCTestCase {
         container = DataController.previewContainer
     }
 
+    func testTriage() async {
+        let oneDay: TimeInterval = 60 * 60 * 24
+        let date = Date(timeIntervalSince1970: 0)
+        let cutOffDate = Date(timeIntervalSince1970: oneDay)
+        let date3 = Date(timeIntervalSince1970: oneDay * 2)
+
+        let repo = VideoActor(modelContainer: container)
+        let sub = TestData.subscription()
+        sub.placeVideosIn = .defaultPlacement
+        sub.mostRecentVideoDate = cutOffDate
+        sub.youtubeChannelId = "channelId"
+
+        let context = ModelContext(container)
+        context.insert(sub)
+        try? context.save()
+
+        guard let sendableSub = sub.toExport else {
+            XCTFail("No subscription for testing")
+            return
+        }
+
+        let videos = [
+            SendableVideo(
+                youtubeId: "vid1Id",
+                title: "vid1",
+                url: URL(string: "vid1url"),
+                publishedDate: date
+            ),
+            SendableVideo(
+                youtubeId: "vid2Id",
+                title: "vid2",
+                url: URL(string: "vid2url"),
+                publishedDate: cutOffDate
+            ),
+            SendableVideo(
+                youtubeId: "vid3Id",
+                title: "vid3",
+                url: URL(string: "vid3url"),
+                publishedDate: date3
+            )
+        ]
+
+        let placement = DefaultVideoPlacement(videoPlacement: .inbox, shortsPlacement: .show)
+        await repo.handleNewVideos(sendableSub, videos, defaultPlacement: placement)
+        try? await repo.modelContext.save()
+
+        // make sure all videos have been added
+        let fetchVideos = FetchDescriptor<Video>()
+        let allVideos = try? context.fetch(fetchVideos)
+
+        print("allVideos", allVideos)
+
+        let hasVid1 = allVideos?.contains(where: { $0.youtubeId == "vid1Id" })
+        let hasVid2 = allVideos?.contains(where: { $0.youtubeId == "vid2Id" })
+        let hasVid3 = allVideos?.contains(where: { $0.youtubeId == "vid3Id" })
+
+        XCTAssert(hasVid1 == true, "vid1 not in videos")
+        XCTAssert(hasVid2 == true, "vid2 not in videos")
+        XCTAssert(hasVid3 == true, "vid3 not in videos")
+
+        // make sure that videos after cutOffDate are not added to inbox
+        let fetch = FetchDescriptor<InboxEntry>()
+        let entries = try? context.fetch(fetch)
+
+        print("entries", entries)
+
+        let hasEntryVid1 = entries?.contains(where: { $0.video?.youtubeId == "vid1Id" })
+        let hasEntryVid2 = entries?.contains(where: { $0.video?.youtubeId == "vid2Id" })
+        let hasEntryVid3 = entries?.contains(where: { $0.video?.youtubeId == "vid3Id" })
+
+        XCTAssert(hasEntryVid1 == false, "vid1 not in inbox")
+        XCTAssert(hasEntryVid2 == false, "vid2 in inbox")
+        XCTAssert(hasEntryVid3 == true, "vid3 not in inbox")
+
+        // sub should have recentVideoDate 3
+        let subFetch = FetchDescriptor<Subscription>()
+        let subs = try? context.fetch(subFetch)
+        let sub3 = subs?.first(where: { $0.youtubeChannelId == "channelId" })
+
+        XCTAssert(sub3?.mostRecentVideoDate == date3, "sub3 mostRecentVideoDate not correct")
+    }
 
     func testBackup() {
         do {
@@ -124,6 +205,8 @@ class ExportableTests: XCTestCase {
             XCTAssertEqual(importedSub.youtubePlaylistId, sub.youtubePlaylistId)
             XCTAssertEqual(importedSub.youtubeUserName, sub.youtubeUserName)
             XCTAssertEqual(importedSub.thumbnailUrl, sub.thumbnailUrl)
+
+            print("importedSub.mostRecentVideoDate", importedSub.mostRecentVideoDate)
 
         } catch {
             XCTFail("Decoding failed with error: \(error)")

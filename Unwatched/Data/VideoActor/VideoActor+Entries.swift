@@ -113,10 +113,18 @@ extension VideoActor {
         video.sponserBlockUpdateDate = nil
     }
 
-    func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {
+    func getMostRecentDate(_ videos: [SendableVideo]) -> Date? {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
-            Logger.log.info("mostRecentDate \(mostRecentDate)")
+            return mostRecentDate
+        }
+        return nil
+    }
+
+    func updateRecentVideoDate(_ subscription: Subscription, _ date: Date?) {
+        if let mostRecentDate = date, date != nil,
+           date ?? .distantPast > subscription.mostRecentVideoDate ?? .distantPast {
+            Logger.log.info("updateRecentVideoDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -129,7 +137,7 @@ extension VideoActor {
 
         var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
         if let cutOffDate = sub.mostRecentVideoDate {
-            videosToAdd = videosToAdd.filter { $0.publishedDate ?? .distantPast > cutOffDate }
+            videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
         }
 
         var placement = sub.placeVideosIn
