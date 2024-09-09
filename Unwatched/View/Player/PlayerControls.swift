@@ -59,7 +59,10 @@ struct PlayerControls: View {
                     }
 
                     HStack(spacing: speedSpacing) {
-                        CombinedPlaybackSpeedSetting(spacing: speedSpacing)
+                        CombinedPlaybackSpeedSetting(
+                            spacing: speedSpacing,
+                            showTemporarySpeed: compactSize
+                        )
                         if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
                             RotateOrientationButton()
                         }
