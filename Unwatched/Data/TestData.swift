@@ -10,7 +10,7 @@ struct TestData {
     static func subscription(customAspectRatio: Double? = nil) -> Subscription {
         Subscription(
             link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
-            title: "Virtual Reality Oasis",
+            title: "TestData.subscription",
             author: "Author name",
             subscribedDate: Date(),
             placeVideosIn: VideoPlacement.queue,
