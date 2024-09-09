@@ -90,7 +90,7 @@ struct VideoService {
             return
         }
         for video in videos {
-            modelContext.delete(video)
+            CleanupService.deleteVideo(video, modelContext)
         }
         try? modelContext.save()
     }
@@ -220,6 +220,7 @@ struct VideoService {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
             try context.delete(model: Subscription.self)
+            try context.delete(model: Chapter.self)
             try context.delete(model: Video.self)
             try context.save()
         } catch {
