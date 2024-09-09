@@ -182,8 +182,10 @@ struct CleanupService {
                 return sub0
             }
 
-            if vid0.watched != vid1.watched {
-                return vid0.watched
+            let watched0 = vid0.watchedDate != nil
+            let watched1 = vid1.watchedDate != nil
+            if watched0 != watched1 {
+                return watched0
             }
 
             let cleared0 = vid0.clearedInboxDate != nil

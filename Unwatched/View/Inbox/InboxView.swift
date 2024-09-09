@@ -11,16 +11,14 @@ import OSLog
 struct InboxView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme: ThemeColor = Color.defaultTheme
-    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Query(sort: \InboxEntry.date, order: .reverse) var inboxEntries: [InboxEntry]
 
+    var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
-    var hideShortsTip = HideShortsTip()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -40,15 +38,12 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last
                 // inbox item to the queue and then moving the video on top of the queue
                 List {
-
                     if !inboxEntries.isEmpty {
                         swipeTipView
                             .listRowBackground(Color.backgroundColor)
                     }
 
-                    if !hideShortsEverywhere {
-                        hideShortsTipView
-                    }
+                    HideShortsTipView()
 
                     ForEach(inboxEntries) { entry in
                         ZStack {
@@ -96,15 +91,6 @@ struct InboxView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
-    }
-
-    var hideShortsTipView: some View {
-        TipView(hideShortsTip) { _ in
-            hideShortsEverywhere = true
-            hideShortsTip.invalidate(reason: .actionPerformed)
-            VideoService.clearAllYtShortsFromInbox(modelContext)
-        }
-        .tipBackground(Color.insetBackgroundColor)
     }
 
     var swipeTipView: some View {
@@ -162,7 +148,7 @@ struct InboxView: View {
 }
 
 #Preview {
-    InboxView()
+    InboxView(inboxEntries: [])
         .modelContainer(DataController.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())

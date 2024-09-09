@@ -84,6 +84,17 @@ struct VideoService {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }
 
+    static func deleteShorts(_ modelContext: ModelContext) {
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.isYtShort == true })
+        guard let videos = try? modelContext.fetch(fetch) else {
+            return
+        }
+        for video in videos {
+            modelContext.delete(video)
+        }
+        try? modelContext.save()
+    }
+
     static func clearFromEverywhere(_ video: Video,
                                     updateCleared: Bool = false,
                                     modelContext: ModelContext) -> Task<(), Error> {
@@ -209,7 +220,6 @@ struct VideoService {
         do {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
-            try context.delete(model: WatchEntry.self)
             try context.delete(model: Subscription.self)
             try context.delete(model: Video.self)
             try context.save()

@@ -20,9 +20,7 @@ extension VideoActor {
 
     private func markVideoWatched(_ video: Video) throws {
         clearEntries(from: video, updateCleared: false)
-        video.watched = true
-        let watchEntry = WatchEntry(video: video)
-        modelContext.insert(watchEntry)
+        video.watchedDate = .now
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) throws {
@@ -139,7 +137,7 @@ extension VideoActor {
             placement = defaultPlacement.videoPlacement
         }
 
-        if defaultPlacement.hideShortsEverywhere {
+        if defaultPlacement.shortsPlacement == .hide {
             addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
@@ -157,7 +155,7 @@ extension VideoActor {
     ) {
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.hideShortsEverywhere)
+            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.shortsPlacement == .hide)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)

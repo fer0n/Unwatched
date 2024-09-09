@@ -121,7 +121,7 @@ enum UnwatchedSchemaV1: VersionedSchema {
     }
 
     @Model
-    final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
+    final class Video: CustomStringConvertible, CachedImageHolder {
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
         @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
         @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
@@ -178,27 +178,6 @@ enum UnwatchedSchemaV1: VersionedSchema {
             return "Video: \(title) (\(url?.absoluteString ?? ""))"
         }
 
-        var toExport: SendableVideo? {
-            SendableVideo(
-                persistendId: self.persistentModelID.hashValue,
-                youtubeId: youtubeId,
-                title: title,
-                url: url,
-                thumbnailUrl: thumbnailUrl,
-                youtubeChannelId: youtubeChannelId,
-                duration: duration,
-                elapsedSeconds: elapsedSeconds,
-                publishedDate: publishedDate,
-                updatedDate: updatedDate,
-                watched: watched,
-                isYtShort: isYtShort,
-                videoDescription: videoDescription,
-                bookmarkedDate: bookmarkedDate,
-                clearedInboxDate: clearedInboxDate,
-                createdDate: createdDate
-            )
-        }
-
         init(title: String,
              url: URL?,
              youtubeId: String,
@@ -234,4 +213,15 @@ enum UnwatchedSchemaV1: VersionedSchema {
         }
     }
 
+    @Model
+    final class WatchEntry {
+
+        var video: Video?
+        var date: Date?
+
+        init(video: Video?, date: Date? = .now) {
+            self.video = video
+            self.date = date
+        }
+    }
 }

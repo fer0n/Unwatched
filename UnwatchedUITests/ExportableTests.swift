@@ -28,7 +28,7 @@ class ExportableTests: XCTestCase {
 
                 // Videos
                 Const.defaultVideoPlacement: VideoPlacement.queue,
-                Const.hideShortsEverywhere: true,
+                Const.shortsPlacement: ShortsPlacement.show,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,
                 Const.showAddToQueueButton: true,
@@ -134,7 +134,7 @@ class ExportableTests: XCTestCase {
         let video = Video.getDummy()
         video.isYtShort = true
         video.elapsedSeconds = 100
-        video.watched = true
+        video.watchedDate = .now
         video.duration = 200
         video.bookmarkedDate = Date()
 

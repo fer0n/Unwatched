@@ -653,6 +653,12 @@
     },
     "blockingAdsFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werbung Blockieren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1221,17 +1227,6 @@
         }
       }
     },
-    "contact" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Contact"
-          }
-        }
-      }
-    },
     "contactUs" : {
       "localizations" : {
         "de" : {
@@ -1558,6 +1553,86 @@
         }
       }
     },
+    "discardShorts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        }
+      }
+    },
+    "discardShortsConfirmationMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausblenden/Einblenden beeinflussen weder die aktuelle Queue noch die Inbox. \"Entfernen\" löscht alle #shorts dauerhaft und speichert verwirft zukünftige #shorts, was die Synchronisation verbessern kann.  Die Erkennung von #shorts ist genau, aber Fehler können vorkommen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will permanently delete all current #shorts and no longer save new ones; which may improve sync. You can always change the setting back to load new #shorts again.  #Shorts detection is accurate, but there can be mistakes."
+          }
+        }
+      }
+    },
+    "discardShortsConfirmationTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geladene #shorts entfernen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Loaded #shorts?"
+          }
+        }
+      }
+    },
+    "discardShortsNow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#shorts jetzt entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard #shorts Now"
+          }
+        }
+      }
+    },
+    "discardShortsTipAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#shorts entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard #shorts"
+          }
+        }
+      }
+    },
     "dismiss" : {
       "localizations" : {
         "de" : {
@@ -1736,6 +1811,12 @@
     },
     "durationMissingFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fehlende Dauer"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1746,6 +1827,12 @@
     },
     "emailAndFaq" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email & FAQ"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1775,13 +1862,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kontextmenü in Queue aktivieren"
+            "value" : "Kontextmenü aktivieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable Context Menu in Queue"
+            "value" : "Enable Context Menu"
           }
         }
       }
@@ -2046,6 +2133,12 @@
     },
     "fasterSpeedsFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr Abspielgeschwindigkeiten"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2088,6 +2181,12 @@
     },
     "frequentlyAskedQuestions" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ & Vorschläge"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2224,34 +2323,18 @@
         }
       }
     },
-    "hideShortsEverywhere" : {
+    "hideShorts" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "#Shorts ausblenden"
+            "value" : "Ausblenden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide #Shorts"
-          }
-        }
-      }
-    },
-    "hideShortsEverywhereHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neue #Shorts landen nicht länger in der Inbox und sind in anderen Listen nicht mehr sichtbar. Queue und Inbox bleiben unberührt."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New #Shorts won't show up in your inbox and will be hidden everywhere. Queue and current Inbox remains unchanged."
+            "value" : "Hide"
           }
         }
       }
@@ -2272,18 +2355,18 @@
         }
       }
     },
-    "HideShortsTipAction" : {
+    "hideShortsTipAction" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle ausblenden"
+            "value" : "#shorts ausblenden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide them all"
+            "value" : "Hide #shorts"
           }
         }
       }
@@ -2293,13 +2376,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn du willst, kannst du ab sofort alle #shorts ausblenden. Unter \"Bibliothek → Einstellungen → Videos\" gibt es die Option es zurückgängig zu machen."
+            "value" : "Wenn erwünscht, können du ab sofort alle #shorts ausgeblendet, oder permanent entfernen werden.   Unter \"Bibliothek → Einstellungen → Videos\" gibt es die Option es zurückgängig zu machen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you wish, you can hide all #shorts from now on. You can change this at any time under \"Library → Settings → Videos\""
+            "value" : "If you wish, you can hide all #shorts from now on, or discard them permanently.  You can change this at any time under \"Library → Settings → Videos\""
           }
         }
       }
@@ -2728,6 +2811,12 @@
     },
     "likeSubscribeVideoFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liken & Abonnieren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2866,6 +2955,12 @@
     },
     "morePlatformsFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tvOS & macOS Support"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2908,6 +3003,12 @@
     },
     "morePlaylistsFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlisten & Tags"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3499,6 +3600,12 @@
     },
     "pictureInPictureFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild-in-Bild & Hintergrund Wiedergabe"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3589,6 +3696,12 @@
     },
     "playerShowsWebsiteFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webseite im Player"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3615,6 +3728,12 @@
     },
     "pleaseCheckFaq" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möglicherweise ist das Anliegen bereits unten im FAQ/Vorschläge Bereich beantwortet."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4076,8 +4195,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Feedback senden"
+            "state" : "translated",
+            "value" : "Feedback & Hilfe"
           }
         },
         "en" : {
@@ -4120,6 +4239,22 @@
         }
       }
     },
+    "shareSheet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen-Menü"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Sheet"
+          }
+        }
+      }
+    },
     "shareVideo" : {
       "localizations" : {
         "de" : {
@@ -4152,6 +4287,22 @@
         }
       }
     },
+    "shortsPlacement" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#shorts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#shorts"
+          }
+        }
+      }
+    },
     "shortsSettings" : {
       "localizations" : {
         "de" : {
@@ -4164,6 +4315,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
+          }
+        }
+      }
+    },
+    "shortsSettingsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Ausblenden\" und \"Einblenden\" beeinflussen weder die aktuelle Queue noch die Inbox. \"Entfernen\" löscht alle #shorts dauerhaft und speichert sie nicht mehr, was die Synchronisierung verbessern kann.  Die Erkennung von #shorts ist präzise, aber Fehler können vorkommen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"Hide\" and \"Show\" will not affect the current Queue or Inbox. \"Discard\" will permanently delete all #shorts and no longer save them; which may improve sync.  #shorts detection is accurate, but there can be mistakes."
           }
         }
       }
@@ -4189,13 +4356,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Queue Leeren\" Button anzeigen"
+            "value" : "\"Leeren\" Button anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show Clear Queue Button"
+            "value" : "Show Clear Button"
           }
         }
       }
@@ -4244,6 +4411,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Icon Badge for new Videos"
+          }
+        }
+      }
+    },
+    "showShorts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
           }
         }
       }
@@ -4651,6 +4834,12 @@
     },
     "syncNotWorkingFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5093,6 +5282,12 @@
     },
     "watchHistoryNotShowingFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Wiedergabeverlauf"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",

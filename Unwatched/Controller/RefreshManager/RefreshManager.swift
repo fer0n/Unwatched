@@ -52,8 +52,10 @@ import OSLog
             }
             isLoading = true
             do {
-                let task = VideoService.loadNewVideosInBg(subscriptionIds: subscriptionIds,
-                                                          container: container)
+                let task = VideoService.loadNewVideosInBg(
+                    subscriptionIds: subscriptionIds,
+                    container: container
+                )
                 _ = try await task.value
             } catch {
                 showError?(error)
@@ -111,10 +113,9 @@ import OSLog
                 do {
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
+                    autoRefreshTask?.cancel()
                     autoRefreshTask = Task {
-                        Task { @MainActor in
-                            self.isSyncingIcloud = false
-                        }
+                        self.isSyncingIcloud = false
                         await executeRefreshOnStartup()
                     }
                 } catch {
