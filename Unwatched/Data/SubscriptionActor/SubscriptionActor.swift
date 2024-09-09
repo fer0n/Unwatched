@@ -200,10 +200,7 @@ actor SubscriptionActor {
                 if video.queueEntry == nil &&
                     video.watchedDate == nil &&
                     video.bookmarkedDate == nil {
-                    if let inboxEntry = video.inboxEntry {
-                        modelContext.delete(inboxEntry)
-                    }
-                    modelContext.delete(video)
+                    CleanupService.deleteVideo(video, modelContext)
                 } else {
                     hasVideosLeft = true
                 }
