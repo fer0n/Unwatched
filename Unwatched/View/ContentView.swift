@@ -46,6 +46,7 @@ struct ContentView: View {
                             .frame(maxWidth: isLandscape
                                     ? min(proxy.size.width * 0.4, 400)
                                     : nil)
+                            .setColorScheme()
                     }
                 }
                 if !bigScreen && !videoExists {

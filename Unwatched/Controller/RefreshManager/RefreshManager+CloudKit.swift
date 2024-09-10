@@ -25,9 +25,7 @@ extension RefreshManager {
                     syncDoneTask?.cancel()
                     // print("iCloud sync: cancelled syncDoneTask")
                     if event.endDate == nil {
-                        Task { @MainActor in
-                            self.isSyncingIcloud = true
-                        }
+                        self.isSyncingIcloud = true
                         // starting event
                     } else {
                         // print("iCloud sync: STOP: \(event.type)")
@@ -53,9 +51,7 @@ extension RefreshManager {
 
     func handleIcloudSyncDone() async {
         Logger.log.info("iCloud sync: handleIcloudSyncDone")
-        Task {
-            self.isSyncingIcloud = false
-        }
+        self.isSyncingIcloud = false
         await executeRefreshOnStartup()
     }
 

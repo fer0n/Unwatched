@@ -14,7 +14,7 @@ struct UnwatchedApp: App {
     @State var refresher = RefreshManager()
     @State var imageCacheManager: ImageCacheManager
 
-    var sharedModelContainer: ModelContainer
+    @State var sharedModelContainer: ModelContainer
 
     init() {
         player = PlayerManager()

@@ -12,7 +12,6 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
 
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
     @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-    @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
     @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
     @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
     var youtubeId: String = UUID().uuidString
@@ -26,7 +25,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
     var duration: Double?
     var elapsedSeconds: Double?
     var videoDescription: String?
-    var watched = false
+    var watchedDate: Date?
     var subscription: Subscription?
     var youtubeChannelId: String?
     var isYtShort: Bool = false
@@ -77,7 +76,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
             elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
             updatedDate: updatedDate,
-            watched: watched,
+            watchedDate: watchedDate,
             isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
@@ -97,7 +96,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
          elapsedSeconds: Double? = nil,
          videoDescription: String? = nil,
          chapters: [Chapter] = [],
-         watched: Bool = false,
+         watchedDate: Date? = nil,
          isYtShort: Bool = false,
          bookmarkedDate: Date? = nil,
          clearedInboxDate: Date? = nil,
@@ -113,7 +112,7 @@ final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
         self.chapters = chapters
-        self.watched = watched
+        self.watchedDate = watchedDate
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate

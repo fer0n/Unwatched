@@ -20,9 +20,7 @@ extension VideoActor {
 
     private func markVideoWatched(_ video: Video) throws {
         clearEntries(from: video, updateCleared: false)
-        video.watched = true
-        let watchEntry = WatchEntry(video: video)
-        modelContext.insert(watchEntry)
+        video.watchedDate = .now
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) throws {
@@ -115,10 +113,18 @@ extension VideoActor {
         video.sponserBlockUpdateDate = nil
     }
 
-    func updateRecentVideoDate(subscription: Subscription, videos: [SendableVideo]) {
+    func getMostRecentDate(_ videos: [SendableVideo]) -> Date? {
         let dates = videos.compactMap { $0.publishedDate }
         if let mostRecentDate = dates.max() {
-            Logger.log.info("mostRecentDate \(mostRecentDate)")
+            return mostRecentDate
+        }
+        return nil
+    }
+
+    func updateRecentVideoDate(_ subscription: Subscription, _ date: Date?) {
+        if let mostRecentDate = date, date != nil,
+           date ?? .distantPast > subscription.mostRecentVideoDate ?? .distantPast {
+            Logger.log.info("updateRecentVideoDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -131,7 +137,7 @@ extension VideoActor {
 
         var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
         if let cutOffDate = sub.mostRecentVideoDate {
-            videosToAdd = videosToAdd.filter { $0.publishedDate ?? .distantPast > cutOffDate }
+            videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
         }
 
         var placement = sub.placeVideosIn
@@ -139,7 +145,7 @@ extension VideoActor {
             placement = defaultPlacement.videoPlacement
         }
 
-        if defaultPlacement.hideShortsEverywhere {
+        if defaultPlacement.shortsPlacement == .hide {
             addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
@@ -157,7 +163,7 @@ extension VideoActor {
     ) {
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.hideShortsEverywhere)
+            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.shortsPlacement == .hide)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)

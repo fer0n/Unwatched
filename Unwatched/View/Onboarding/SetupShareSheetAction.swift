@@ -9,8 +9,6 @@ import TipKit
 
 struct SetupShareSheetAction: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
-    @Query(filter: #Predicate<Subscription> { $0.isArchived == false })
-    var subscriptions: [Subscription]
 
     var body: some View {
         if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {

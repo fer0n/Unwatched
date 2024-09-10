@@ -297,7 +297,7 @@ CHAPTERS
             elapsedSeconds: nil,
             videoDescription: videoDescription,
             chapters: [],
-            watched: false,
+            watchedDate: nil,
             isYtShort: false,
             bookmarkedDate: nil,
             clearedInboxDate: nil,
