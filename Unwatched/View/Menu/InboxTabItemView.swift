@@ -10,7 +10,7 @@ struct InboxTabItemView: View {
     @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount: Int = 0
     @Environment(RefreshManager.self) var refresher
     @Environment(NavigationManager.self) var navManager
-    @Query(animation: .default) var inbox: [InboxEntry]
+    @Query(sort: \InboxEntry.date, order: .reverse, animation: .default) var inboxEntries: [InboxEntry]
 
     let showCancelButton: Bool
     let showBadge: Bool
@@ -20,14 +20,15 @@ struct InboxTabItemView: View {
                     text: "inbox",
                     tag: NavigationTab.inbox,
                     showBadge: showBadge && newInboxItemsCount > 0) {
-            InboxView(showCancelButton: showCancelButton)
+            InboxView(inboxEntries: inboxEntries,
+                      showCancelButton: showCancelButton)
         }
     }
 
     @MainActor
     var getInboxSymbol: Image {
         let isLoading = refresher.isLoading
-        let isEmpty = inbox.isEmpty
+        let isEmpty = inboxEntries.isEmpty
         let currentTab = navManager.tab == .inbox
 
         let full = isEmpty ? "" : ".full"

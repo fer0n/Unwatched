@@ -39,11 +39,13 @@ struct UserDataService {
             // Bug: otherwise subscription fails (maybe because it doesn't have the videos ready otherwise?)
             // also happens if subscriptions is called before fetching videos
         }
+
         backup.settings         = getSettings()
-        backup.subscriptions    = fetchMapExportable(Subscription.self)
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
-        backup.watchEntries     = fetchMapExportable(WatchEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
+        let subs                = fetchMapExportable(Subscription.self)
+
+        backup.subscriptions = subs.filter({ $0.isArchived && !$0.videosIds.isEmpty })
 
         if backup.isEmpty {
             Logger.log.info("checkIfBackupEmpty")
@@ -64,7 +66,7 @@ struct UserDataService {
             Logger.log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
-                    || (includeWatched && $0.watched == true)
+                    || (includeWatched && $0.watchedDate != nil)
                     || $0.queueEntry != nil
                     || $0.inboxEntry != nil
                     || ($0.publishedDate ?? lastWeek) > lastWeek
@@ -104,9 +106,26 @@ struct UserDataService {
                 }
             }
 
+            func migrateWatchEntries(_ entries: [SendableWatchEntry]) {
+                let videoEntries = Dictionary(grouping: entries, by: { $0.videoId })
+                for (_, entries) in videoEntries {
+                    let entries = entries.sorted(by: {
+                        $0.date ?? .distantPast > $1.date ?? .distantPast
+                    })
+                    guard let first = entries.first,
+                          let lastEntryDate = first.date,
+                          var video = videoIdDict[first.videoId] else {
+                        continue
+                    }
+
+                    video.watchedDate = lastEntryDate
+                    videoIdDict[first.videoId] = video
+                }
+            }
+
             insertModelsFor(backup.queueEntries)
-            insertModelsFor(backup.watchEntries)
             insertModelsFor(backup.inboxEntries)
+            migrateWatchEntries(backup.watchEntries)
 
             // Subscriptions
             for subscription in backup.subscriptions {
@@ -275,7 +294,7 @@ struct UnwatchedBackup: Codable {
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()
-    var watchEntries    = [SendableWatchEntry]()
+    var watchEntries    = [SendableWatchEntry]() // TODO: legacy
 
     var isEmpty: Bool {
         videos.isEmpty

@@ -96,7 +96,7 @@ struct QueueView: View {
                 .foregroundStyle(theme.contrastColor)
                 .tint(theme.color)
 
-            DisappearingAddFeedsMenu()
+            AddFeedsMenu()
                 .bold()
                 .foregroundStyle(theme.contrastColor)
                 .tint(theme.color)

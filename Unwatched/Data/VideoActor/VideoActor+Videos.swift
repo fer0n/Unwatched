@@ -119,7 +119,7 @@ import OSLog
         return newVideos
     }
 
-    private func handleNewVideos(
+    func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
@@ -128,18 +128,20 @@ import OSLog
             Logger.log.info("missing info when trying to load videos")
             return
         }
+        let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
         videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
         cacheImages(for: videos)
 
-        let videoModels = insertVideoModels(from: videos)
+        let videoModels = insertVideoModels(from: videos, defaultPlacement)
         subModel.videos?.append(contentsOf: videoModels)
 
         triageSubscriptionVideos(subModel,
                                  videos: videoModels,
                                  defaultPlacement: defaultPlacement)
-        updateRecentVideoDate(subscription: subModel, videos: videos)
+        subModel.mostRecentVideoDate = mostRecentDate
+        updateRecentVideoDate(subModel, mostRecentDate)
         return
     }
 
@@ -151,9 +153,15 @@ import OSLog
         }
     }
 
-    private func insertVideoModels(from videos: [SendableVideo]) -> [Video] {
+    private func insertVideoModels(
+        from videos: [SendableVideo],
+        _ placementInfo: DefaultVideoPlacement
+    ) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
+            if vid.isYtShort && placementInfo.shortsPlacement == .discard {
+                continue
+            }
             let video = vid.createVideo()
             videoModels.append(video)
             modelContext.insert(video)
@@ -187,10 +195,11 @@ import OSLog
     }
 
     private func cacheImages(for videos: [SendableVideo]) {
-        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
+        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
+        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue)
 
         let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort && hideShorts
+            let discardImage = vid.isYtShort && shortsPlacement != .show
             if !discardImage,
                let url = vid.thumbnailUrl,
                let data = vid.thumbnailData {
@@ -235,11 +244,12 @@ import OSLog
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let hideShortsEverywhere = UserDefaults.standard.bool(forKey: Const.hideShortsEverywhere)
+        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
+        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue) ?? .show
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            hideShortsEverywhere: hideShortsEverywhere
+            shortsPlacement: shortsPlacement
         )
         return info
     }

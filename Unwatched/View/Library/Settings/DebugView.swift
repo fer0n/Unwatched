@@ -38,10 +38,13 @@ struct DebugView: View {
                     }
                 }
 
-                MySection("icloudSync") {
+                MySection("userData") {
                     AsyncButton {
                         let container = modelContext.container
-                        let task = CleanupService.cleanupDuplicatesAndInboxDate(container)
+                        let task = CleanupService.cleanupDuplicatesAndInboxDate(
+                            container,
+                            complete: true
+                        )
                         cleanupInfo = await task.value
                     } label: {
                         Text("removeDuplicates")
@@ -54,6 +57,7 @@ struct DebugView: View {
                         \(info.countVideos)
                         \(info.countQueueEntries)
                         \(info.countInboxEntries)
+                        \(info.countChapters)
                         \(info.countSubscriptions)
                         """)
                             .foregroundStyle(.secondary)

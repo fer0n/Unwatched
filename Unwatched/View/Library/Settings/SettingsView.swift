@@ -35,28 +35,13 @@ struct SettingsView: View {
                 }
 
                 if let url = UrlService.shareShortcutUrl {
-                    MySection {
+                    MySection("shareSheet") {
                         Link(destination: url) {
                             LibraryNavListItem(
                                 "setupShareSheetAction",
                                 systemName: "square.and.arrow.up.on.square.fill"
                             )
                         }
-                    }
-                }
-
-                MySection("sendFeedback") {
-                    Link(destination: UrlService.writeReviewUrl) {
-                        LibraryNavListItem("rateUnwatched", systemName: "star.fill")
-                    }
-                    NavigationLink(value: LibraryDestination.help) {
-                        Label("emailAndFaq", systemImage: Const.contactMailSF)
-                    }
-                    Link(destination: UrlService.githubUrl) {
-                        LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
-                    }
-                    Link(destination: UrlService.mastodonUrl) {
-                        LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
                 }
 
@@ -78,6 +63,21 @@ struct SettingsView: View {
                     }
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: "opticaldiscdrive.fill")
+                    }
+                }
+
+                MySection("sendFeedback") {
+                    Link(destination: UrlService.writeReviewUrl) {
+                        LibraryNavListItem("rateUnwatched", systemName: "star.fill")
+                    }
+                    NavigationLink(value: LibraryDestination.help) {
+                        Label("emailAndFaq", systemImage: Const.contactMailSF)
+                    }
+                    Link(destination: UrlService.githubUrl) {
+                        LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
+                    }
+                    Link(destination: UrlService.mastodonUrl) {
+                        LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
                 }
 

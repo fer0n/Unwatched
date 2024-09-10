@@ -84,6 +84,17 @@ struct VideoService {
         VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
     }
 
+    static func deleteShorts(_ modelContext: ModelContext) {
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.isYtShort == true })
+        guard let videos = try? modelContext.fetch(fetch) else {
+            return
+        }
+        for video in videos {
+            CleanupService.deleteVideo(video, modelContext)
+        }
+        try? modelContext.save()
+	}
+
     static func clearEntries(from video: Video,
                              except model: (any PersistentModel.Type)? = nil,
                              updateCleared: Bool,
@@ -195,8 +206,7 @@ struct VideoService {
     }
 
     static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 0 })
         fetch.fetchLimit = 1
         let context = ModelContext(container)
         let videos = try? context.fetch(fetch)
@@ -221,8 +231,8 @@ struct VideoService {
         do {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
-            try context.delete(model: WatchEntry.self)
             try context.delete(model: Subscription.self)
+            try context.delete(model: Chapter.self)
             try context.delete(model: Video.self)
             try context.save()
         } catch {

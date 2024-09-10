@@ -107,15 +107,11 @@ struct FullscreenSpeedControl: View {
 
     func changeSpeed() {
         menuOpen = true
-        if player.actualPlaybackSpeed >= Const.temporarySpeedSwap {
-            player.temporaryPlaybackSpeed = 1
-        } else {
-            player.temporaryPlaybackSpeed = 2
-        }
+        player.setTemporaryPlaybackSpeed()
     }
 
     func reset() {
-        player.temporaryPlaybackSpeed = nil
+        player.resetTemporaryPlaybackSpeed()
         menuOpen = false
     }
 }

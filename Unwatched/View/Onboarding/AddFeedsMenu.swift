@@ -6,17 +6,6 @@
 import SwiftUI
 import SwiftData
 
-struct DisappearingAddFeedsMenu: View {
-    @Query(filter: #Predicate<Subscription> { $0.isArchived == false })
-    var subscriptions: [Subscription]
-
-    var body: some View {
-        if subscriptions.isEmpty {
-            AddFeedsMenu()
-        }
-    }
-}
-
 struct AddFeedsMenu: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) private var navManager
@@ -69,4 +58,5 @@ struct AddFeedsMenu: View {
 #Preview {
     AddFeedsMenu()
         .environment(NavigationManager())
+        .modelContainer(DataController.previewContainer)
 }

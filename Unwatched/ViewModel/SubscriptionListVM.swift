@@ -7,7 +7,6 @@ import SwiftData
 import OSLog
 import SwiftUI
 
-@MainActor
 @Observable
 class SubscriptionListVM {
     var container: ModelContainer?

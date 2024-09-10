@@ -12,7 +12,6 @@ class DataController {
         Video.self,
         Subscription.self,
         QueueEntry.self,
-        WatchEntry.self,
         InboxEntry.self,
         Chapter.self
     ]

@@ -2,7 +2,6 @@ import SwiftUI
 import SwiftData
 
 struct AllVideosView: View {
-    @AppStorage(Const.hideShortsEverywhere) var hideShortsEverywhere: Bool = false
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
 
     @Query(animation: .default) var videos: [Video]
