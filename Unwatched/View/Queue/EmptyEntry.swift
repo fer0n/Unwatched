@@ -19,12 +19,22 @@ struct EmptyEntry<Entry: PersistentModel>: View {
     var body: some View {
         Color.backgroundColor
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button {
-                    modelContext.delete(entry)
-                } label: {
+                Button(action: clearEntry) {
                     Image(systemName: Const.clearSF)
                 }
                 .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
+    }
+
+    func clearEntry() {
+        if let queueEntry = entry as? QueueEntry {
+            VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
+            return
+        }
+
+        if let inboxEntry = entry as? InboxEntry {
+            VideoService.deleteInboxEntry(inboxEntry, modelContext: modelContext)
+            return
+        }
     }
 }
