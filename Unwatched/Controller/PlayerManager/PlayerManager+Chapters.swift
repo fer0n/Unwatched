@@ -136,18 +136,18 @@ extension PlayerManager {
                 }
                 Logger.log.info("SponsorBlock: Refreshed")
                 let modelChapters = newChapters.map(\.getChapter)
-                let modelContext = ModelContext(container)
-                for chapter in modelChapters {
-                    modelContext.insert(chapter)
-                }
-                let video = modelContext.model(for: modelId) as? Video
+                container.useContext { context in
+                    for chapter in modelChapters {
+                        context.insert(chapter)
+                    }
+                    let video = context.model(for: modelId) as? Video
 
-                for chapter in video?.mergedChapters ?? [] {
-                    modelContext.delete(chapter)
-                }
+                    for chapter in video?.mergedChapters ?? [] {
+                        context.delete(chapter)
+                    }
 
-                video?.mergedChapters = modelChapters
-                try modelContext.save()
+                    video?.mergedChapters = modelChapters
+                }
             } catch {
                 Logger.log.error("Error while merging chapters: \(error)")
             }

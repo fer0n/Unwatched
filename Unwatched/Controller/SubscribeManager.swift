@@ -158,6 +158,7 @@ import OSLog
                 }
             } catch {}
         }
+        try? context.save()
     }
 
     func addSubscriptionFromText(_ text: String) async {

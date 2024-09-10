@@ -291,10 +291,10 @@ extension ChapterService {
                let finalChapterSendable = getFillerForEnd(duration, endTime),
                let container = container {
                 let finalChapter = finalChapterSendable.getChapter
-                let modelContext = ModelContext(container)
-                modelContext.insert(finalChapter)
-                chapters.append(finalChapter)
-                try? modelContext.save()
+                container.useContext { context in
+                    context.insert(finalChapter)
+                    chapters.append(finalChapter)
+                }
             } else if lastChapter.endTime == nil {
                 lastChapter.endTime = duration
                 lastChapter.duration = duration - lastChapter.startTime

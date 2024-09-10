@@ -132,17 +132,17 @@ import OSLog
     }
 
     func clearVideo() {
-        guard let video = video,
-              let container = container else {
+        guard let video = video else {
             return
         }
-        let modelContext = ModelContext(container)
-        let task = VideoService.clearFromEverywhere(
-            video,
-            updateCleared: true,
-            modelContext: modelContext
-        )
-        loadTopmostVideoFromQueue(after: task)
+        container?.useContext { context in
+            let task = VideoService.clearFromEverywhere(
+                video,
+                updateCleared: true,
+                modelContext: context
+            )
+            loadTopmostVideoFromQueue(after: task)
+        }
     }
 
     func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
