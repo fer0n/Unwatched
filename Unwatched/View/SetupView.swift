@@ -39,7 +39,6 @@ struct SetupView: View {
                 appDelegate.navManager = navManager
                 appDelegate.container = container
                 refresher.container = container
-                refresher.showError = alerter.showError
             }
             .onChange(of: scenePhase) {
                 switch scenePhase {

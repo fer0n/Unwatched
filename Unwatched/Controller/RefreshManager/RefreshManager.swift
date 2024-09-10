@@ -23,8 +23,6 @@ import OSLog
 
     @ObservationIgnored var autoRefreshTask: Task<(), Never>?
 
-    var showError: ((_ error: any Error) -> Void)?
-
     init() {
         setupCloudKitListener()
     }
@@ -58,7 +56,7 @@ import OSLog
                 )
                 _ = try await task.value
             } catch {
-                showError?(error)
+                Logger.log.info("Error during refresh: \(error)")
             }
             isLoading = false
             if hardRefresh {
