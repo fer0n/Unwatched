@@ -161,10 +161,14 @@ struct VideoService {
 
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
-                                   modelContext: ModelContext) -> Task<(), Error> {
-        let container = modelContext.container
-        let videoIds = videos.map { $0.id }
-        return insertQueueEntries(at: index, videoIds: videoIds, container: container)
+                                   modelContext: ModelContext) {
+        // workaround: update queue on main thread, animaitons don't work in iOS 18 otherwise
+        VideoActor.insertQueueEntries(
+            at: index,
+            videos: videos,
+            modelContext: modelContext
+        )
+        try? modelContext.save()
     }
 
     static func insertQueueEntries(at index: Int = 0,
@@ -177,19 +181,8 @@ struct VideoService {
         return task
     }
 
-    static func addToBottomQueue(video: Video, modelContext: ModelContext) -> Task<(), Error> {
-        let container = modelContext.container
-        let videoId = video.persistentModelID
-        let task = Task {
-            do {
-                let repo = VideoActor(modelContainer: container)
-                try await repo.addToBottomQueue(videoId: videoId)
-            } catch {
-                Logger.log.error("addToBottomQueue: \(error)")
-                throw error
-            }
-        }
-        return task
+    static func addToBottomQueue(video: Video, modelContext: ModelContext) {
+        try? VideoActor.addToBottomQueue(video: video, modelContext: modelContext)
     }
 
     static func addForeignUrls(_ urls: [URL],
