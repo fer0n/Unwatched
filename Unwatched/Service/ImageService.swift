@@ -13,16 +13,13 @@ struct ImageService {
         cache: [String: ImageCacheInfo]
     ) async {
         let container = await DataController.getCachedImageContainer
-        let context = ModelContext(container)
-
-        for info in cache.values {
-            let imageCache = CachedImage(info.url, imageData: info.data)
-            context.insert(imageCache)
-            Logger.log.info("saved image with URL: \(info.url)")
-
+        container.useContext { context in
+            for info in cache.values {
+                let imageCache = CachedImage(info.url, imageData: info.data)
+                context.insert(imageCache)
+                Logger.log.info("saved image with URL: \(info.url)")
+            }
         }
-
-        try? context.save()
     }
 
     static func storeImages(for infos: [NotificationInfo]) {
@@ -41,26 +38,25 @@ struct ImageService {
     static func storeImages(_ images: [(url: URL, data: Data)]) {
         Task.detached {
             let container = await DataController.getCachedImageContainer
-            let context = ModelContext(container)
-
-            for (url, data) in images {
-                let image = CachedImage(url, imageData: data)
-                context.insert(image)
+            container.useContext { context in
+                for (url, data) in images {
+                    let image = CachedImage(url, imageData: data)
+                    context.insert(image)
+                }
             }
-            try? context.save()
         }
     }
 
     static func deleteImages(_ urls: [URL]) {
         Task {
             let imageContainer = await DataController.getCachedImageContainer
-            let context = ModelContext(imageContainer)
-            for url in urls {
-                if let image = getCachedImage(for: url, context) {
-                    context.delete(image)
+            imageContainer.useContext { context in
+                for url in urls {
+                    if let image = getCachedImage(for: url, context) {
+                        context.delete(image)
+                    }
                 }
             }
-            try? context.save()
         }
     }
 

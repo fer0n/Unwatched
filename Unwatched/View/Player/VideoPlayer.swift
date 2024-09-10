@@ -96,24 +96,24 @@ struct VideoPlayer: View {
 
 #Preview {
     let container = DataController.previewContainer
-    let context = ModelContext(container)
     let player = PlayerManager()
-    let video = Video.getDummy()
 
-    let ch1 = Chapter(title: "hi", time: 1)
-    context.insert(ch1)
-    video.chapters = [ch1]
+    container.useContext { context in
+        let video = Video.getDummy()
 
-    context.insert(video)
-    player.video = video
+        let ch1 = Chapter(title: "hi", time: 1)
+        context.insert(ch1)
+        video.chapters = [ch1]
 
-    let sub = Subscription.getDummy()
-    // sub.customAspectRatio = 18/9
+        context.insert(video)
+        player.video = video
 
-    context.insert(sub)
-    sub.videos = [video]
+        let sub = Subscription.getDummy()
+        // sub.customAspectRatio = 18/9
 
-    try? context.save()
+        context.insert(sub)
+        sub.videos = [video]
+    }
 
     return VideoPlayer(compactSize: false,
                        showInfo: true,
