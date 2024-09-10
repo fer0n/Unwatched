@@ -93,7 +93,7 @@ struct VideoService {
             CleanupService.deleteVideo(video, modelContext)
         }
         try? modelContext.save()
-	}
+    }
 
     static func clearEntries(from video: Video,
                              except model: (any PersistentModel.Type)? = nil,
