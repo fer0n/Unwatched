@@ -66,20 +66,20 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func addVideoToTopQueue() {
         Logger.log.info("addVideoTop")
         let order = video.queueEntry?.order
-        let task = VideoService.insertQueueEntries(
+        VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
             modelContext: modelContext
         )
-        handlePotentialQueueChange(after: task, order: order)
+        handlePotentialQueueChange(order: order)
         config.onChange?()
     }
 
     func addVideoToBottomQueue() {
         Logger.log.info("addVideoBottom")
         let order = video.queueEntry?.order
-        let task = VideoService.addToBottomQueue(video: video, modelContext: modelContext)
-        handlePotentialQueueChange(after: task, order: order)
+        VideoService.addToBottomQueue(video: video, modelContext: modelContext)
+        handlePotentialQueueChange(order: order)
         config.onChange?()
     }
 
