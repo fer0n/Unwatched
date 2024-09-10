@@ -236,22 +236,22 @@ struct PlayerView: View {
 
 #Preview {
     let container = DataController.previewContainer
-    let context = ModelContext(container)
     let player = PlayerManager()
-    let video = Video.getDummy()
 
-    let ch1 = Chapter(title: "hi", time: 1)
-    context.insert(ch1)
-    video.chapters = [ch1]
+    container.useContext { context in
+        let video = Video.getDummy()
 
-    context.insert(video)
-    player.video = video
+        let ch1 = Chapter(title: "hi", time: 1)
+        context.insert(ch1)
+        video.chapters = [ch1]
 
-    let sub = Subscription.getDummy()
-    context.insert(sub)
-    sub.videos = [video]
+        context.insert(video)
+        player.video = video
 
-    try? context.save()
+        let sub = Subscription.getDummy()
+        context.insert(sub)
+        sub.videos = [video]
+    }
 
     return PlayerView(landscapeFullscreen: false,
                       markVideoWatched: { _, _ in })

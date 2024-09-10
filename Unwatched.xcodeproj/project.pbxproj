@@ -150,6 +150,8 @@
 		8875125B2C5936B0000E2C6D /* FullscreenControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887512592C5936AC000E2C6D /* FullscreenControls.swift */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
+		887737572C90AFAA004B179E /* ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887737562C90AFA5004B179E /* ModelContainer.swift */; };
+		887737582C90AFAA004B179E /* ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887737562C90AFA5004B179E /* ModelContainer.swift */; };
 		887AC8C62B49368F00512852 /* QueueEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C52B49368F00512852 /* QueueEntry.swift */; };
 		887AC8CA2B4955B200512852 /* WatchEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8C92B4955B200512852 /* WatchEntry.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
@@ -572,6 +574,7 @@
 		886E79B92B46FFD300554E1F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		887512592C5936AC000E2C6D /* FullscreenControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenControls.swift; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
+		887737562C90AFA5004B179E /* ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainer.swift; sourceTree = "<group>"; };
 		887AC8C52B49368F00512852 /* QueueEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueEntry.swift; sourceTree = "<group>"; };
 		887AC8C92B4955B200512852 /* WatchEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchEntry.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
@@ -985,6 +988,7 @@
 		886E79B82B46FFC700554E1F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				887737562C90AFA5004B179E /* ModelContainer.swift */,
 				886E79B92B46FFD300554E1F /* Color.swift */,
 				88250C602B49273100174C8D /* Date.swift */,
 				8891F0AF2B4E9F330098A3FB /* String.swift */,
@@ -1506,6 +1510,7 @@
 				889AF9262C50ECEE001CEDE6 /* WatchedButton.swift in Sources */,
 				889AF9272C50ECEE001CEDE6 /* SpeedControlView.swift in Sources */,
 				889AF9282C50ECEE001CEDE6 /* ShowMenuGesture.swift in Sources */,
+				887737582C90AFAA004B179E /* ModelContainer.swift in Sources */,
 				889AF9292C50ECEE001CEDE6 /* PlayerControls.swift in Sources */,
 				889AF92A2C50ECEE001CEDE6 /* PlayerWebView.swift in Sources */,
 				889AF92B2C50ECEE001CEDE6 /* NextVideoButton.swift in Sources */,
@@ -1759,6 +1764,7 @@
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
+				887737572C90AFAA004B179E /* ModelContainer.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,
 				88CEDA202B6641C6000E3E98 /* Exportable.swift in Sources */,
@@ -2062,7 +2068,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 123;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2107,7 +2113,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 123;
+				CURRENT_PROJECT_VERSION = 124;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
