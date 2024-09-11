@@ -31,9 +31,9 @@ struct AppAppearanceSelection: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .innerSizeTrackerModifier(onChange: { size in
+            .onSizeChange { size in
                 width = size.width
-            })
+            }
         }
     }
 }

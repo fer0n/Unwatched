@@ -16,7 +16,7 @@ struct FullscreenSpeedControl: View {
     @Binding var menuOpen: Bool
 
     @State var viewModel = FullscreenSpeedControlVM()
-
+    var arrowEdge: Edge = .trailing
     @GestureState private var isDetectingLongPress = false
 
     var body: some View {
@@ -38,7 +38,7 @@ struct FullscreenSpeedControl: View {
         )
         .frame(width: 35)
         .fontWeight(.bold)
-        .popover(isPresented: $showSpeedControl) {
+        .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             ZStack {
                 Color.sheetBackground
                     .scaleEffect(1.5)

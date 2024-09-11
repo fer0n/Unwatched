@@ -36,11 +36,11 @@ struct VideoListItemThumbnail: View {
                        height: fixedSize?.height ?? height)
         }
         .aspectRatio(contentMode: .fit)
-        .innerSizeTrackerModifier(onChange: { size in
+        .onSizeChange { size in
             if fixedSize == nil {
                 width = size.width
             }
-        })
+        }
         .overlay {
             VideoListItemThumbnailOverlay(
                 video: video,

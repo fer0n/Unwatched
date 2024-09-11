@@ -88,10 +88,8 @@ struct MenuView: View {
             appearance.shadowImage = nil
 
             UITabBar.appearance().standardAppearance = appearance
-            UITabBar.appearance().barTintColor = UIColor(Color.backgroundColor)
-            UITabBar.appearance().backgroundImage = UIImage()
-            UITabBar.appearance().backgroundColor = UIColor(Color.backgroundColor)
         }
+
         if reload {
             UIApplication
                 .shared
@@ -126,4 +124,5 @@ struct MenuView: View {
         .environment(RefreshManager())
         .environment(Alerter())
         .environment(PlayerManager())
+        .environment(ImageCacheManager())
 }

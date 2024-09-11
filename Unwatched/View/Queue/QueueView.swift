@@ -46,6 +46,8 @@ struct QueueView: View {
                                         showContextMenu: enableQueueContextMenu
                                     )
                                 )
+                            } else {
+                                EmptyEntry(entry)
                             }
                         }
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))

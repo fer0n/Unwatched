@@ -78,9 +78,9 @@ struct ContentView: View {
         }
         .setColorScheme()
         .ignoresSafeArea(bigScreen ? .keyboard : [])
-        .innerSizeTrackerModifier(onChange: { newSize in
+        .onSizeChange { newSize in
             sheetPos.sheetHeight = newSize.height
-        })
+        }
     }
 }
 
