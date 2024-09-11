@@ -58,6 +58,8 @@ struct InboxView: View {
                                         showQueueButton: showAddToQueueButton
                                     )
                                 )
+                            } else {
+                                EmptyEntry(entry)
                             }
                         }
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))

@@ -9,6 +9,8 @@ struct FullscreenChaptersButton: View {
     @Environment(PlayerManager.self) var player
     @State var showChapters = false
 
+    var arrowEdge: Edge
+
     @Binding var menuOpen: Bool
 
     var body: some View {
@@ -23,7 +25,7 @@ struct FullscreenChaptersButton: View {
         }
         .fontWeight(.bold)
         .accessibilityLabel("chapters")
-        .popover(isPresented: $showChapters) {
+        .popover(isPresented: $showChapters, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
                     Color.sheetBackground

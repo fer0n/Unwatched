@@ -42,7 +42,10 @@ struct SubscriptionService {
         return try await repo.getAllFeedUrls()
     }
 
-    static func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier], container: ModelContainer) -> Task<(), Error> {
+    static func deleteSubscriptions(
+        _ subscriptionIds: [PersistentIdentifier],
+        container: ModelContainer
+    ) -> Task<(), Error> {
         return Task {
             let repo = SubscriptionActor(modelContainer: container)
             return try await repo.deleteSubscriptions(subscriptionIds)

@@ -10,6 +10,7 @@ struct FullscreenPlayerControls: View {
     @Binding var menuOpen: Bool
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    var arrowEdge: Edge
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -32,7 +33,10 @@ struct FullscreenPlayerControls: View {
 
             ZStack {
                 if hasChapters {
-                    FullscreenChaptersButton(menuOpen: $menuOpen)
+                    FullscreenChaptersButton(
+                        arrowEdge: arrowEdge,
+                        menuOpen: $menuOpen
+                    )
                 }
             }
             .frame(maxHeight: .infinity)
@@ -50,7 +54,7 @@ struct FullscreenPlayerControls: View {
             .disabled(player.previousChapterDisabled)
 
             ZStack {
-                FullscreenSpeedControl(menuOpen: $menuOpen)
+                FullscreenSpeedControl(menuOpen: $menuOpen, arrowEdge: arrowEdge)
             }
             .frame(maxHeight: .infinity)
 
@@ -90,7 +94,8 @@ struct FullscreenPlayerControls: View {
             .fill(.gray)
         FullscreenPlayerControls(
             menuOpen: .constant(false),
-            markVideoWatched: { _, _ in })
+            markVideoWatched: { _, _ in },
+            arrowEdge: .trailing)
             .padding()
     }
     .ignoresSafeArea(.all)

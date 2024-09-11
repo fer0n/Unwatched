@@ -131,7 +131,7 @@ import OSLog
                 isLoading = false
                 return
             }
-            SubscriptionService.deleteSubscriptions(
+            _ = SubscriptionService.deleteSubscriptions(
                 [subId],
                 container: container)
             isLoading = false

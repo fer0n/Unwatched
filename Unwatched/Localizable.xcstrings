@@ -91,6 +91,22 @@
         }
       }
     },
+    "Add video from ${youtubeUrl}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video von ${youtubeUrl}"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add video from ${youtubeUrl}"
+          }
+        }
+      }
+    },
     "addAsPlaylist" : {
       "localizations" : {
         "de" : {
@@ -1293,6 +1309,7 @@
     },
     "Could not subscribe: (message)" : {
       "comment" : "Could not subscribe",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1304,6 +1321,7 @@
     },
     "Couldn't convert to URL: (noUrl)" : {
       "comment" : "Couldn't convert to URL",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2469,6 +2487,7 @@
     },
     "HTTP request failed: (message)" : {
       "comment" : "Failed Getting Video Info Error",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3743,7 +3762,7 @@
       }
     },
     "potentiallyFaultyYoutubeId" : {
-      "comment" : "(youtubeId)",
+      "comment" : "(value)",
       "localizations" : {
         "de" : {
           "stringUnit" : {

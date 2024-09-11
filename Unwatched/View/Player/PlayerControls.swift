@@ -106,9 +106,9 @@ struct PlayerControls: View {
             .opacity(showControls ? 1 : 0)
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-        .innerSizeTrackerModifier(onChange: { size in
+        .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
-        })
+        }
         .sheet(item: $browserUrl) { browserUrl in
             BrowserView(container: modelContext.container,
                         refresher: refresher,

@@ -19,7 +19,11 @@ extension VideoActor {
     }
 
     private func markVideoWatched(_ video: Video) throws {
-        clearEntries(from: video, updateCleared: false)
+        VideoActor.clearEntries(
+            from: video,
+            updateCleared: false,
+            modelContext: modelContext
+        )
         video.watchedDate = .now
     }
 
@@ -41,9 +45,18 @@ extension VideoActor {
             return
         }
         if video.inboxEntry != nil {
-            clearEntries(from: video, except: InboxEntry.self, updateCleared: false)
+            VideoActor.clearEntries(
+                from: video,
+                except: InboxEntry.self,
+                updateCleared: false,
+                modelContext: modelContext
+            )
         } else {
-            clearEntries(from: video, updateCleared: false)
+            VideoActor.clearEntries(
+                from: video,
+                updateCleared: false,
+                modelContext: modelContext
+            )
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
         }
@@ -174,7 +187,11 @@ extension VideoActor {
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {
-            insertQueueEntries(at: index, videos: videos)
+            VideoActor.insertQueueEntries(
+                at: index,
+                videos: videos,
+                modelContext: modelContext
+            )
             if !videos.isEmpty {
                 let count = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
                 UserDefaults.standard.setValue(count + videos.count, forKey: Const.newQueueItemsCount)
@@ -200,22 +217,32 @@ extension VideoActor {
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
             video.inboxEntry = inboxEntry
-            clearEntries(from: video, except: InboxEntry.self, updateCleared: false)
+            VideoActor.clearEntries(
+                from: video,
+                except: InboxEntry.self,
+                updateCleared: false,
+                modelContext: modelContext
+            )
         }
     }
 
     func clearEntries(from videoId: PersistentIdentifier, updateCleared: Bool = false) throws {
         if let video = modelContext.model(for: videoId) as? Video {
-            clearEntries(from: video, updateCleared: updateCleared)
+            VideoActor.clearEntries(
+                from: video,
+                updateCleared: updateCleared,
+                modelContext: modelContext
+            )
             try modelContext.save()
         } else {
             Logger.log.info("clearEntries: model not found")
         }
     }
 
-    private func clearEntries(from video: Video,
-                              except model: (any PersistentModel.Type)? = nil,
-                              updateCleared: Bool) {
+    private static func clearEntries(from video: Video,
+                                     except model: (any PersistentModel.Type)? = nil,
+                                     updateCleared: Bool,
+                                     modelContext: ModelContext) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
             VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
         }
@@ -224,12 +251,7 @@ extension VideoActor {
         }
     }
 
-    func addToBottomQueue(videoId: PersistentIdentifier) throws {
-        guard let video = modelContext.model(for: videoId) as? Video else {
-            Logger.log.warning("addToBottomQueue couldn't find a video")
-            return
-        }
-
+    static func addToBottomQueue(video: Video, modelContext: ModelContext) throws {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order, order: .reverse)])
         fetch.fetchLimit = 1
         let entries = try? modelContext.fetch(fetch)
@@ -242,7 +264,7 @@ extension VideoActor {
                 insertAt = (entries.first?.order ?? 0) + 1
             }
         }
-        insertQueueEntries(at: insertAt, videos: [video])
+        VideoActor.insertQueueEntries(at: insertAt, videos: [video], modelContext: modelContext)
         try modelContext.save()
     }
 
@@ -253,11 +275,15 @@ extension VideoActor {
                 videos.append(video)
             }
         }
-        insertQueueEntries(at: startIndex, videos: videos)
+        VideoActor.insertQueueEntries(
+            at: startIndex,
+            videos: videos,
+            modelContext: modelContext
+        )
         try modelContext.save()
     }
 
-    private func insertQueueEntries(at startIndex: Int = 0, videos: [Video]) {
+    static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
         do {
             let sort = SortDescriptor<QueueEntry>(\.order)
             let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
@@ -265,7 +291,12 @@ extension VideoActor {
             let queueWasEmpty = queue.isEmpty
 
             for (index, video) in videos.enumerated() {
-                clearEntries(from: video, except: QueueEntry.self, updateCleared: false)
+                VideoActor.clearEntries(
+                    from: video,
+                    except: QueueEntry.self,
+                    updateCleared: false,
+                    modelContext: modelContext
+                )
                 if let queueEntry = video.queueEntry {
                     queue.removeAll { $0 == queueEntry }
                 }

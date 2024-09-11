@@ -23,8 +23,15 @@ struct CoreRefreshButton: View {
                     await refresh()
                 }
             } label: {
-                Image(systemName: Const.refreshSF)
-                    .rotationEffect(Angle(degrees: rotation))
+                if #available(iOS 18, *) {
+                    Image(systemName: Const.refreshSF)
+                        .symbolEffect(.rotate,
+                                      options: .speed(1.5),
+                                      isActive: refresher.isLoading)
+                } else {
+                    Image(systemName: Const.refreshSF)
+                        .rotationEffect(Angle(degrees: rotation))
+                }
             }
             .accessibilityLabel("refresh")
             .contextMenu {
@@ -81,9 +88,6 @@ struct RefreshToolbarButton: ToolbarContent {
 }
 
 // #Preview {
-//     Image(systemName: Const.refreshSF)
-//         .font(.system(size: 13))
-//         .symbolEffect(.variableColor.iterative, options: .repeating, value: true)
 //    RefreshToolbarButton()
 //         .environment(RefreshManager())
 // }

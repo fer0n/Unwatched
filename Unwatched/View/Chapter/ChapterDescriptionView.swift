@@ -16,9 +16,6 @@ struct ChapterDescriptionView: View {
     let video: Video
     @Binding var page: ChapterDescriptionPage
 
-    @State var selectedDetailPageTask: Task<ChapterDescriptionPage, Never>?
-    @GestureState private var dragState: CGFloat = 0
-
     var body: some View {
         NavigationStack {
             let hasChapters = video.sortedChapters.isEmpty == false
@@ -38,7 +35,7 @@ struct ChapterDescriptionView: View {
                     }
                 }
             }
-            .highPriorityGesture(dragGesture(origin: page))
+            .horizontalDragGesture(video: video, page: $page)
             .toolbar {
                 if hasDescription && hasChapters {
                     ToolbarItem(placement: .principal) {
@@ -55,33 +52,69 @@ struct ChapterDescriptionView: View {
             .tint(.neutralAccentColor)
             .myNavigationTitle(showBack: false)
         }
-        .task(id: selectedDetailPageTask) {
-            guard let task = selectedDetailPageTask else {
-                return
+    }
+}
+
+extension View {
+    func horizontalDragGesture(
+        video: Video,
+        page: Binding<ChapterDescriptionPage>
+    ) -> some View {
+        self.modifier(HorizontalDragGestureModifier(video: video, page: page))
+    }
+}
+
+struct HorizontalDragGestureModifier: ViewModifier {
+    @State var selectedDetailPageTask: Task<ChapterDescriptionPage, Never>?
+    @GestureState private var dragState: CGFloat = 0
+    @State private var gestureCancelled = false
+
+    let video: Video
+    @Binding var page: ChapterDescriptionPage
+
+    func body(content: Content) -> some View {
+        content
+            .simultaneousGesture(dragGesture(origin: page))
+            .task(id: selectedDetailPageTask) {
+                guard let task = selectedDetailPageTask else {
+                    return
+                }
+                let direction = await task.value
+                withAnimation {
+                    page = direction
+                }
             }
-            let direction = await task.value
-            withAnimation {
-                page = direction
-            }
-        }
     }
 
     func dragGesture(origin: ChapterDescriptionPage) -> some Gesture {
         DragGesture(minimumDistance: 30, coordinateSpace: .local)
             .updating($dragState) { value, state, _ in
+                if gestureCancelled {
+                    return
+                }
+                // Check if the drag is primarily horizontal
+                let translation = value.translation
+                if abs(translation.height) > abs(translation.width) {
+                    gestureCancelled = true
+                    return // Ignore the gesture if it's more vertical than horizontal
+                }
+
                 let hasChapters = !video.sortedChapters.isEmpty
                 let hasDescription = video.videoDescription != nil
                 if origin == .chapters && !hasDescription || origin == .description && !hasChapters {
                     return
                 }
 
-                state = value.translation.width
+                state = translation.width
                 if (origin == .chapters && state > 30) || (origin == .description && state < -30) {
                     selectedDetailPageTask = Task.detached {
                         let direction: ChapterDescriptionPage = origin == .description ? .chapters : .description
                         return direction
                     }
                 }
+            }
+            .onEnded { _ in
+                gestureCancelled = false
             }
     }
 }

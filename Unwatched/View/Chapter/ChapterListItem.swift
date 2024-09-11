@@ -22,6 +22,8 @@ struct ChapterListItem: View {
                 }
                 Text(timeText)
                     .font(.subheadline.monospacedDigit())
+                    .animation(.default, value: timeText)
+                    .contentTransition(.numericText(countsDown: true))
                     .foregroundStyle(Color.gray)
                     .lineLimit(1)
             }
