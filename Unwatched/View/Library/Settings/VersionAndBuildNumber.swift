@@ -9,7 +9,7 @@ struct VersionAndBuildNumber: View {
     var body: some View {
 
         if let version = version {
-            Text(verbatim: "v\(version)\(buildNumber)")
+            Link("v\(version)\(buildNumber)", destination: UrlService.releasesUrl)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .font(.subheadline)
                 .fontWeight(.medium)
