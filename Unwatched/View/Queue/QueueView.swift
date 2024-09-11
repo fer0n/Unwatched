@@ -114,11 +114,11 @@ struct QueueView: View {
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
-        let task = VideoService.moveQueueEntry(from: source,
-                                               to: destination,
-                                               modelContext: modelContext)
+        VideoService.moveQueueEntry(from: source,
+                                    to: destination,
+                                    modelContext: modelContext)
         if destination == 0 || source.contains(0) {
-            player.loadTopmostVideoFromQueue(after: task)
+            player.loadTopmostVideoFromQueue()
         }
         handleVideoChange()
     }

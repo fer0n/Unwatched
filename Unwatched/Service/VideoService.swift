@@ -40,18 +40,13 @@ struct VideoService {
         from source: IndexSet,
         to destination: Int,
         modelContext: ModelContext
-    ) -> Task<(), Error> {
-        let container = modelContext.container
-        let task = Task.detached {
-            do {
-                let repo = VideoActor(modelContainer: container)
-                try await repo.moveQueueEntry(from: source, to: destination)
-            } catch {
-                Logger.log.error("\(error)")
-                throw error
-            }
-        }
-        return task
+    ) {
+        try? VideoActor
+            .moveQueueEntry(
+                from: source,
+                to: destination,
+                modelContext: modelContext
+            )
     }
 
     static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
