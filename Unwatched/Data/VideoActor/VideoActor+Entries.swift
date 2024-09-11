@@ -27,7 +27,11 @@ extension VideoActor {
         video.watchedDate = .now
     }
 
-    func moveQueueEntry(from source: IndexSet, to destination: Int) throws {
+    static func moveQueueEntry(
+        from source: IndexSet,
+        to destination: Int,
+        modelContext: ModelContext
+    ) throws {
         let fetchDescriptor = FetchDescriptor<QueueEntry>()
         let queue = try modelContext.fetch(fetchDescriptor)
         var orderedQueue = queue.sorted(by: { $0.order < $1.order })
