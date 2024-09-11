@@ -56,13 +56,13 @@ struct MenuView: View {
                         safeArea: false
                     )
                 }
-
             }
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video, page: $navManager.videoDetailPage)
                     .presentationDragIndicator(.visible)
                     .environment(\.colorScheme, colorScheme)
             }
+            .environment(\.horizontalSizeClass, .compact)
         }
         .browserViewSheet(navManager: $navManager)
         .background {
