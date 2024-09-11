@@ -131,7 +131,7 @@ import OSLog
                 isLoading = false
                 return
             }
-            SubscriptionService.deleteSubscriptions(
+            _ = SubscriptionService.deleteSubscriptions(
                 [subId],
                 container: container)
             isLoading = false
@@ -158,7 +158,6 @@ import OSLog
                 }
             } catch {}
         }
-        try? context.save()
     }
 
     func addSubscriptionFromText(_ text: String) async {
