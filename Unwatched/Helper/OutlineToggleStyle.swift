@@ -46,7 +46,7 @@ struct OutlineToggleModifier: ViewModifier {
             .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
+                    .strokeBorder(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
             )
     }
 }

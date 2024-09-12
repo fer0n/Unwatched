@@ -87,6 +87,7 @@ struct Const {
     static let watchedSF = "checkmark.circle.fill"
     static let clearSF = "xmark.circle.fill"
     static let clearNoFillSF = "xmark"
+    static let customPlaybackSpeedSF = "lock.fill"
 
     static let alreadyInLibrarySF = "books.vertical.circle.fill"
 

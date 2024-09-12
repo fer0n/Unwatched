@@ -50,7 +50,10 @@ struct SubscriptionSpeedSetting: View {
                             }
                         }
                     )) {
-                        Label("customSpeedSetting", systemImage: "lock.fill")
+                        Label(
+                            "customSpeedSetting",
+                            systemImage: Const.customPlaybackSpeedSF
+                        )
                     }
                 }
                 .padding()
