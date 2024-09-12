@@ -1307,30 +1307,6 @@
         }
       }
     },
-    "Could not subscribe: (message)" : {
-      "comment" : "Could not subscribe",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abonnieren fehlgeschlagen: (message)"
-          }
-        }
-      }
-    },
-    "Couldn't convert to URL: (noUrl)" : {
-      "comment" : "Couldn't convert to URL",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Konnte nicht in URL umwandeln: (noUrl)"
-          }
-        }
-      }
-    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -2481,18 +2457,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Into Unwatched"
-          }
-        }
-      }
-    },
-    "HTTP request failed: (message)" : {
-      "comment" : "Failed Getting Video Info Error",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "HTTP request fehlgeschlagen: (message)"
           }
         }
       }
@@ -5087,16 +5051,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User Data"
-          }
-        }
-      }
-    },
-    "v%@%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "v%1$@%2$@"
           }
         }
       }
