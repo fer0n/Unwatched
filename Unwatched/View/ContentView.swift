@@ -44,9 +44,11 @@ struct ContentView: View {
                     if bigScreen && !hideControlsFullscreen {
                         MenuView()
                             .frame(maxWidth: isLandscape
-                                    ? min(proxy.size.width * 0.4, 400)
+                                    ? min(proxy.size.width * 0.4, 350)
                                     : nil)
                             .setColorScheme()
+                            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
                 if !bigScreen && !videoExists {
