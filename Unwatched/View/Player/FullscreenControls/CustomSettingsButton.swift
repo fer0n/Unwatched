@@ -18,7 +18,7 @@ struct CustomSettingsButton: View {
             player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
             hapticToggle.toggle()
         })) {
-            Image(systemName: "lock")
+            Image(systemName: Const.customPlaybackSpeedSF)
         }
         .help("customSpeedSetting")
         .accessibilityLabel("customSpeedSetting")

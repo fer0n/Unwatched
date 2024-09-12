@@ -17,7 +17,8 @@ struct SpeedControlView: View {
 
     static let padding: CGFloat = 0
     @ScaledMetric var maxHeight: CGFloat = 40
-    let frameHeight: CGFloat = 30
+    @ScaledMetric var selectedFontSize: CGFloat = 16
+    let frameHeight: CGFloat = 25
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
 
     var body: some View {
@@ -83,8 +84,7 @@ struct SpeedControlView: View {
                         .frame(width: maxHeight, height: maxHeight)
                     Text(getFloatingText())
                         .foregroundStyle(.automaticWhite)
-                        .bold()
-                        .font(.subheadline)
+                        .font(.custom("SFCompactDisplay-Bold", size: selectedFontSize))
                 }
                 .position(x: dragState ?? controlMinX, y: midY)
                 .frame(maxHeight: maxHeight)
