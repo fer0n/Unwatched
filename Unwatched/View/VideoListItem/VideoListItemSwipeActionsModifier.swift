@@ -114,6 +114,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func handlePotentialQueueChange(after task: (Task<(), Error>)? = nil, order: Int? = nil) {
         if order == 0 || video.queueEntry?.order == 0 {
+            try? modelContext.save()
             player.loadTopmostVideoFromQueue(after: task)
         }
     }
