@@ -3670,13 +3670,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Kann unter Einstellungen → Videos deaktiviert werden."
+            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Kann unter Einstellungen → Wiedergabe deaktiviert werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Force YouTube Watch History\" requires starting the video manually. This can be disabled under Library → Settings → Videos."
+            "value" : "\"Force YouTube Watch History\" requires starting the video manually. This can be disabled under Library → Settings → Playback."
           }
         }
       }
@@ -5087,6 +5087,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "User Data"
+          }
+        }
+      }
+    },
+    "v%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "v%1$@%2$@"
           }
         }
       }
