@@ -148,7 +148,7 @@ struct PlayerControls: View {
 
     var showControls: Bool {
         !hideControlsFullscreen
-            || fullscreenControlsSetting == .enabled
+            || fullscreenControlsSetting != .autoHide
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
     }
 }
