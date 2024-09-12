@@ -59,7 +59,7 @@ struct SleepTimer: View {
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .popover(isPresented: $showPopover) {
+        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
             sleepControl
                 .padding()
                 .presentationCompactAdaptation(.popover)
