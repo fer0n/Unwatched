@@ -220,7 +220,7 @@ struct CleanupService {
             return
         }
         let duplicates = getDuplicates(from: videos, keySelector: {
-            ($0.url?.absoluteString ?? "") + ($0.subscription?.youtubePlaylistId ?? "")
+            ($0.url?.absoluteString ?? "")
         }, sort: sortVideos)
         duplicateInfo.countVideos = duplicates.count
         for duplicate in duplicates {
