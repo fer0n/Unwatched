@@ -199,7 +199,7 @@ extension Const {
         // Appearance
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.themeColor: ThemeColor.teal,
+        Const.themeColor: Color.defaultTheme,
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
         Const.lightModeTheme: AppAppearance.unwatched,
