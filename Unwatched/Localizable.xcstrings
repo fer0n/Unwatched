@@ -4788,13 +4788,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unter \"Einstellungen → Benutzerdaten\" kann iCloud-Synchronisierung aktiviert werden. Diese Funktion ist experimentell und funktioniert nicht immer problemlos. Am besten man gibt der App viel Zeit für die Synchronisation.  Entschuldigung für die Unannehmlichkeiten; hoffentlich kann das Feature in Zukunft verbessert werden."
+            "value" : "Unter \"Einstellungen → Benutzerdaten\" kann iCloud-Synchronisierung aktiviert werden. Diese Funktion ist experimentell.  Falls es Probleme gibt, findet sich hier eine Schritt-für-Schritt Anleitung zur Fehlerbehebung: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/iCloud-Troubleshooting)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable iCloud sync in \"Settings → User Data.\" This feature is experimental and not fully working. Syncing can be quite slow, give it some time to catch up.  Apologies for any inconvenience; I'll work on improving this in the future."
+            "value" : "Enable iCloud sync in \"Settings → User Data.\" This feature is still experimental.  If you’re running into issues, you can try the troubleshooting steps here: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/iCloud-Troubleshooting)"
           }
         }
       }
