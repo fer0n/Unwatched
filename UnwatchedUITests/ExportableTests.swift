@@ -15,6 +15,81 @@ class ExportableTests: XCTestCase {
         container = DataController.previewContainer
     }
 
+    func testBackup() async {
+        let context = ModelContext(container)
+
+        let videoDesc = """
+        My video description
+
+        0:00 Intro
+        0:26 AI In A Box
+        3:40 It’s Also Bad
+        7:07 $200
+        9:56 Large Action Model
+        14:06 What Are We Doing Here?
+        16:42 FUTURE
+        """
+
+        // active subscription with videos
+        let video1 = Video(title: "Video 1", url: URL(string: "https://example.com/video1"), youtubeId: "video1Id", videoDescription: videoDesc)
+        let video2 = Video(title: "Video 2", url: URL(string: "https://example.com/video2"), youtubeId: "video2Id")
+
+        context.insert(video1)
+        context.insert(video2)
+
+        let activeSubscriptionWithVideos = Subscription(link: URL(string: "https://example.com/subscription1"), title: "Active Subscription")
+        activeSubscriptionWithVideos.videos = [video1, video2]
+        context.insert(activeSubscriptionWithVideos)
+
+        // active subscription without videos
+        let activeSubscriptionWithoutVideos = Subscription(link: URL(string: "https://example.com/subscription2"), title: "Active Subscription without Videos")
+        activeSubscriptionWithoutVideos.videos = []
+        activeSubscriptionWithoutVideos.isArchived = false
+        context.insert(activeSubscriptionWithoutVideos)
+
+        // inactive subscription with videos
+        let inactiveSubscriptionWithVideos = Subscription(link: URL(string: "https://example.com/subscription3"), title: "Inactive Subscription with Videos")
+        let video3 = Video(title: "Video 3", url: URL(string: "https://example.com/video3"), youtubeId: "video3Id")
+        context.insert(video3)
+        inactiveSubscriptionWithVideos.videos = [video3]
+        inactiveSubscriptionWithVideos.isArchived = true
+        context.insert(inactiveSubscriptionWithVideos)
+
+        // inactive subscription without videos
+        let inactiveSubscriptionWithoutVideos = Subscription(link: URL(string: "https://example.com/subscription4"), title: "Inactive Subscription without Videos")
+        inactiveSubscriptionWithoutVideos.videos = []
+        inactiveSubscriptionWithoutVideos.isArchived = true
+        context.insert(inactiveSubscriptionWithoutVideos)
+
+        try? context.save()
+
+        do {
+            let data = try UserDataService.exportUserData(container: container)
+
+            await VideoService.deleteEverything(container)
+
+            UserDataService.importBackup(data, container: container)
+
+            let fetch = FetchDescriptor<Subscription>()
+            let subs = try? context.fetch(fetch)
+
+            print("subs", subs)
+
+            let newActiveSubscriptionWithVideos = subs?.first(where: { $0.title == activeSubscriptionWithVideos.title })
+            let newActiveSubscriptionWithoutVideos = subs?.first(where: { $0.title == activeSubscriptionWithoutVideos.title })
+            let newInactiveSubscriptionWithVideos = subs?.first(where: { $0.title == inactiveSubscriptionWithVideos.title })
+            let newInactiveSubscriptionWithoutVideos = subs?.first(where: { $0.title == inactiveSubscriptionWithoutVideos.title })
+
+            XCTAssertNotNil(newActiveSubscriptionWithVideos, "Active subscription with videos not found")
+            XCTAssertNotNil(newActiveSubscriptionWithoutVideos, "Active subscription without videos not found")
+            XCTAssertNotNil(newInactiveSubscriptionWithVideos, "Inactive subscription with videos not found")
+            XCTAssertNil(newInactiveSubscriptionWithoutVideos, "Inactive subscription without videos should not be backed up")
+
+        } catch {
+            XCTFail("Decoding failed with error: \(error)")
+        }
+    }
+
     func testTriage() async {
         let oneDay: TimeInterval = 60 * 60 * 24
         let date = Date(timeIntervalSince1970: 0)
@@ -97,7 +172,7 @@ class ExportableTests: XCTestCase {
         XCTAssert(sub3?.mostRecentVideoDate == date3, "sub3 mostRecentVideoDate not correct")
     }
 
-    func testBackup() {
+    func testSettingsBackup() {
         do {
             UserDefaults.standard.register(defaults: Const.settingsDefaults)
 
@@ -279,4 +354,7 @@ class ExportableTests: XCTestCase {
         }
     }
 }
+
+
+
 // swiftlint:enable all
