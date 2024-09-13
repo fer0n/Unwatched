@@ -178,8 +178,8 @@ extension Const {
         Const.showNotificationBadge: false,
 
         // Videos
-        Const.defaultVideoPlacement: VideoPlacement.inbox,
-        Const.shortsPlacement: ShortsPlacement.show,
+        Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
+        Const.shortsPlacement: ShortsPlacement.show.rawValue,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,
@@ -189,7 +189,7 @@ extension Const {
         Const.enableQueueContextMenu: false,
 
         // Playback
-        Const.fullscreenControlsSetting: FullscreenControls.autoHide,
+        Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
         Const.hideMenuOnPlay: true,
         Const.playVideoFullscreen: false,
         Const.returnToQueue: false,
@@ -199,12 +199,12 @@ extension Const {
         // Appearance
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.themeColor: Color.defaultTheme,
+        Const.themeColor: Color.defaultTheme.rawValue,
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
-        Const.lightModeTheme: AppAppearance.unwatched,
-        Const.darkModeTheme: AppAppearance.dark,
-        Const.videoListFormat: VideoListFormat.compact,
+        Const.lightModeTheme: AppAppearance.unwatched.rawValue,
+        Const.darkModeTheme: AppAppearance.dark.rawValue,
+        Const.videoListFormat: VideoListFormat.compact.rawValue,
 
         // User Data
         Const.automaticBackups: true,
