@@ -44,8 +44,7 @@ struct UserDataService {
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
         let subs                = fetchMapExportable(Subscription.self)
-
-        backup.subscriptions = subs.filter({ $0.isArchived && !$0.videosIds.isEmpty })
+        backup.subscriptions = subs.filter({ !$0.isArchived || !$0.videosIds.isEmpty })
 
         if backup.isEmpty {
             Logger.log.info("checkIfBackupEmpty")
