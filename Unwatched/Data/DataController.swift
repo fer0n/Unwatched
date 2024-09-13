@@ -103,18 +103,24 @@ class DataController {
                 fatalError("Could not create ModelContainer: \(error)")
             }
         }()
+        return sharedModelContainer
+    }()
+
+    static let previewContainerFilled: ModelContainer = {
+        var container = previewContainer
         let video = Video.getDummy()
-        sharedModelContainer.mainContext.insert(video)
+        container.mainContext.insert(video)
 
         let sub = Subscription.getDummy()
         sub.videos?.append(video)
-        sharedModelContainer.mainContext.insert(sub)
+        container.mainContext.insert(sub)
+        try? container.mainContext.save()
 
         let jsonData = TestData.backup.data(using: .utf8)!
-        UserDataService.importBackup(jsonData, container: sharedModelContainer)
+        UserDataService.importBackup(jsonData, container: container)
 
-        try? sharedModelContainer.mainContext.save()
-        return sharedModelContainer
+        try? container.mainContext.save()
+        return container
     }()
 }
 

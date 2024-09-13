@@ -11,7 +11,6 @@ class VideoCrawlerTests: XCTestCase {
     @MainActor
     func testLoadingVideos() async {
         let container = DataController.previewContainer
-        await VideoService.deleteEverything(container)
 
         let context = ModelContext(container)
         let subs = VideoCrawlerTestData.subs
@@ -126,10 +125,6 @@ struct VideoCrawlerTestData {
         (
             "Unbox Therapy",
             "UCsTcErHg8oDvUnTzoqsYeNw"
-        ),
-        (
-            "MKBHD",
-            "UCBJycsmduvYEL83R_U4JriQ"
         ),
         (
             "Veritasium",

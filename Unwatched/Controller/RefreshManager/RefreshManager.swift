@@ -10,6 +10,23 @@ import CoreData
 import BackgroundTasks
 import OSLog
 
+actor RefreshActor {
+    private var isLoading: Bool = false
+
+    func startLoading() -> Bool {
+        if isLoading {
+            return false
+        } else {
+            isLoading = true
+            return true
+        }
+    }
+
+    func stopLoading() {
+        isLoading = false
+    }
+}
+
 @MainActor
 @Observable class RefreshManager {
     weak var container: ModelContainer?
@@ -23,14 +40,14 @@ import OSLog
 
     @ObservationIgnored var autoRefreshTask: Task<(), Never>?
 
+    private let refreshActor = RefreshActor()
+
     init() {
         setupCloudKitListener()
     }
 
     deinit {
-        Task {
-            await cancelCloudKitListener()
-        }
+        //
     }
 
     func refreshAll(hardRefresh: Bool = false) async {
@@ -42,13 +59,32 @@ import OSLog
         await refresh(subscriptionIds: [subscriptionId], hardRefresh: hardRefresh)
     }
 
+    func startLoading() async -> Bool {
+        isLoading = true
+        let canStartLoading = await refreshActor.startLoading()
+        return canStartLoading
+    }
+
+    func stopLoading() {
+        isLoading = false
+        Task {
+            await refreshActor.stopLoading()
+        }
+    }
+
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         if let container = container {
-            if isLoading || self.isSyncingIcloud {
-                Logger.log.info("currently refreshing or syncing, stopping now")
+            if isSyncingIcloud {
+                Logger.log.info("currently syncing iCloud, stopping now")
                 return
             }
-            isLoading = true
+
+            let canStartLoading = await startLoading()
+            guard canStartLoading else {
+                Logger.log.info("currently refreshing, stopping now")
+                return
+            }
+
             do {
                 let task = VideoService.loadNewVideosInBg(
                     subscriptionIds: subscriptionIds,
@@ -58,7 +94,9 @@ import OSLog
             } catch {
                 Logger.log.info("Error during refresh: \(error)")
             }
-            isLoading = false
+
+            stopLoading()
+
             if hardRefresh {
                 _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
             } else {
@@ -188,9 +226,16 @@ extension RefreshManager {
         do {
             scheduleVideoRefresh()
 
-            if isLoading {
+            let canStartLoading = await refreshActor.startLoading()
+            guard canStartLoading else {
                 Logger.log.info("Already refreshing")
                 return
+            }
+
+            defer {
+                Task {
+                    await refreshActor.stopLoading()
+                }
             }
 
             let task = VideoService.loadNewVideosInBg(container: container)
