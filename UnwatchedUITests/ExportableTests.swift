@@ -183,8 +183,8 @@ class ExportableTests: XCTestCase {
                 Const.showNotificationBadge: true,
 
                 // Videos
-                Const.defaultVideoPlacement: VideoPlacement.queue,
-                Const.shortsPlacement: ShortsPlacement.show,
+                Const.defaultVideoPlacement: VideoPlacement.queue.rawValue,
+                Const.shortsPlacement: ShortsPlacement.show.rawValue,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,
                 Const.showAddToQueueButton: true,
@@ -194,7 +194,7 @@ class ExportableTests: XCTestCase {
                 Const.enableQueueContextMenu: true,
 
                 // Playback
-                Const.fullscreenControlsSetting: FullscreenControls.enabled,
+                Const.fullscreenControlsSetting: FullscreenControls.enabled.rawValue,
                 Const.hideMenuOnPlay: false,
                 Const.playVideoFullscreen: true,
                 Const.returnToQueue: true,
@@ -203,7 +203,7 @@ class ExportableTests: XCTestCase {
                 // Appearance
                 Const.showTabBarLabels: false,
                 Const.showTabBarBadge: false,
-                Const.themeColor: ThemeColor.red,
+                Const.themeColor: ThemeColor.red.rawValue,
                 Const.browserAsTab: true,
                 Const.sheetOpacity: true,
 
