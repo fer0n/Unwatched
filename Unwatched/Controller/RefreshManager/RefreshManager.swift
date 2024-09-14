@@ -98,7 +98,7 @@ actor RefreshActor {
             stopLoading()
 
             if hardRefresh {
-                _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
+                _ = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
             } else {
                 quickDuplicateCleanup()
             }
