@@ -64,9 +64,12 @@ struct ContentView: View {
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 if let video = player.video {
                     ChapterDescriptionView(video: video, page: $navManager.selectedDetailPage)
-                        .presentationDetents(chapterViewDetent)
+                        .presentationDetents(bigScreen ? [] : chapterViewDetent)
                         .presentationBackgroundInteraction(
-                            .enabled(upThrough: .height(sheetPos.playerControlHeight))
+                            bigScreen
+                                ? .disabled
+                                :
+                                .enabled(upThrough: .height(sheetPos.playerControlHeight))
                         )
                         .presentationDragIndicator(.visible)
                         .environment(\.colorScheme, colorScheme)
