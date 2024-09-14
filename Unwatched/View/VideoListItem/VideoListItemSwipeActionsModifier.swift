@@ -120,6 +120,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func clearList(_ list: ClearList, _ direction: ClearDirection) {
+        try? modelContext.save()
         let container = modelContext.container
         let task = VideoService.clearList(
             list,
