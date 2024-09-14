@@ -15,8 +15,9 @@ struct CoreRefreshButton: View {
         HStack {
             if refresher.isSyncingIcloud {
                 Image(systemName: "icloud.fill")
-                    .opacity(0.5)
+                    .symbolEffect(.pulse, options: .speed(0.7).repeating)
                     .accessibilityLabel("syncing")
+                    .opacity(0.5)
             }
             Button {
                 Task { @MainActor in
