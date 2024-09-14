@@ -21,9 +21,9 @@ struct UnwatchedApp: App {
         sharedModelContainer = DataController.getModelContainer
         imageCacheManager = ImageCacheManager()
 
-        refresher.container = sharedModelContainer
         player.container = sharedModelContainer
         player.restoreNowPlayingVideo()
+        refresher.container = sharedModelContainer
     }
 
     var body: some Scene {

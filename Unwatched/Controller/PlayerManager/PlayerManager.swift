@@ -148,17 +148,25 @@ import OSLog
             Logger.log.error("loadTopmostVideoFromQueue: no container")
             return
         }
-        let currentVideoId = video?.persistentModelID
-        Task { @MainActor in
-            try? await task?.value
-            let videoId = VideoService.getTopVideoInQueue(container)
-            if let videoId = videoId {
-                if currentVideoId != videoId {
-                    let context = ModelContext(container)
-                    if let newVideo = context.model(for: videoId) as? Video {
-                        self.setNextVideo(newVideo, .nextUp)
+        if task != nil {
+            let currentVideoId = video?.persistentModelID
+            Task { @MainActor in
+                let context = ModelContext(container)
+                try? await task?.value
+                let topVideo = VideoService.getTopVideoInQueue(context)
+                if let topVideo = topVideo {
+                    if topVideo.persistentModelID != currentVideoId {
+                        self.setNextVideo(topVideo, .nextUp)
                     }
+                } else {
+                    hardClearVideo()
                 }
+            }
+        } else {
+            let context = ModelContext(container)
+            let topVideo = VideoService.getTopVideoInQueue(context)
+            if topVideo != video {
+                self.setNextVideo(topVideo, .nextUp)
             } else {
                 hardClearVideo()
             }
@@ -229,28 +237,6 @@ import OSLog
         }
         #endif
         Logger.log.info("restoreVideo")
-        var video: Video?
-
-        if let data = UserDefaults.standard.data(forKey: Const.nowPlayingVideo),
-           let videoId = try? JSONDecoder().decode(Video.ID.self, from: data) {
-            if video?.persistentModelID == videoId {
-                // current video is the one stored, all good
-                Logger.log.info("current video seems correct")
-                return
-            }
-            if let container = container {
-                let modelContext = ModelContext(container)
-                video = modelContext.model(for: videoId) as? Video
-            } else {
-                Logger.log.warning("No container loaded for PlayerManager")
-            }
-        }
-
-        if let video = video, !video.isDeleted {
-            // potential fix: crash when accessing video model that has been deleted (untested)
-            UserDefaults.standard.removeObject(forKey: Const.nowPlayingVideo)
-            setNextVideo(video, .nextUp)
-        }
         loadTopmostVideoFromQueue()
     }
 }

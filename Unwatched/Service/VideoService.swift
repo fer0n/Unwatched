@@ -198,6 +198,16 @@ struct VideoService {
         return nil
     }
 
+    static func getTopVideoInQueue(_ context: ModelContext) -> Video? {
+        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 0 })
+        fetch.fetchLimit = 1
+        let videos = try? context.fetch(fetch)
+        if let nextVideo = videos?.first {
+            return nextVideo.video
+        }
+        return nil
+    }
+
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {
         var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 1 })
         fetch.fetchLimit = 1
