@@ -95,8 +95,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func markWatched() {
-        let task = VideoService.markVideoWatched(video, modelContext: modelContext)
-        handlePotentialQueueChange(after: task)
+        VideoService.markVideoWatched(video, modelContext: modelContext)
+        handlePotentialQueueChange()
         config.onChange?()
     }
 

@@ -10,23 +10,6 @@ import OSLog
 
 // Entries
 extension VideoActor {
-
-    func markVideoWatched(_ videoId: PersistentIdentifier) throws {
-        if let video = modelContext.model(for: videoId) as? Video {
-            try markVideoWatched(video)
-            try modelContext.save()
-        }
-    }
-
-    private func markVideoWatched(_ video: Video) throws {
-        VideoActor.clearEntries(
-            from: video,
-            updateCleared: false,
-            modelContext: modelContext
-        )
-        video.watchedDate = .now
-    }
-
     static func moveQueueEntry(
         from source: IndexSet,
         to destination: Int,

@@ -109,14 +109,10 @@ import OSLog
         return nil
     }
 
-    func autoSetNextVideo(_ source: VideoSource) {
-        if let container = container {
-            let modelContext = ModelContext(container)
-            let next = VideoService.getNextVideoInQueue(modelContext)
-            Logger.log.info("setNextVideo \(next?.title ?? "no video found")")
-            withAnimation {
-                setNextVideo(next, source)
-            }
+    func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
+        let next = VideoService.getNextVideoInQueue(modelContext)
+        withAnimation {
+            setNextVideo(next, source)
         }
     }
 

@@ -216,11 +216,11 @@ struct PlayerView: View {
 
         if continuousPlay {
             if let video = player.video {
-                _ = VideoService.markVideoWatched(
+                VideoService.markVideoWatched(
                     video, modelContext: modelContext
                 )
             }
-            player.autoSetNextVideo(.continuousPlay)
+            player.autoSetNextVideo(.continuousPlay, modelContext)
         } else {
             player.pause()
             player.seekPosition = nil
