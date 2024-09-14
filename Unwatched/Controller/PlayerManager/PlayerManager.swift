@@ -84,6 +84,7 @@ import OSLog
         Logger.log.info("updateElapsedTime")
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
+            Logger.log.info("updateElapsedTime: wrong video to update")
             return
         }
 
@@ -119,11 +120,12 @@ import OSLog
         }
     }
 
-    func setNextVideo(_ video: Video?, _ source: VideoSource) {
-        if video != nil {
+    func setNextVideo(_ nextVideo: Video?, _ source: VideoSource) {
+        updateElapsedTime()
+        if nextVideo != nil {
             self.videoSource = source
         }
-        self.video = video
+        self.video = nextVideo
     }
 
     private func hardClearVideo() {
