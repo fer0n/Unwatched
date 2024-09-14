@@ -29,7 +29,7 @@ struct BackupView: View {
 
                 MySection {
                     AsyncButton {
-                        await saveToIcloud(UIDevice.current.name)
+                        await saveToIcloud(deviceName)
                     } label: {
                         Text("backupNow")
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -128,6 +128,14 @@ struct BackupView: View {
         }
         .onAppear {
             getAllIcloudFiles()
+        }
+    }
+
+    var deviceName: String {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            "Mac"
+        } else {
+            UIDevice.current.name
         }
     }
 
