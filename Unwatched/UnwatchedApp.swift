@@ -22,7 +22,6 @@ struct UnwatchedApp: App {
         imageCacheManager = ImageCacheManager()
 
         player.container = sharedModelContainer
-        player.restoreNowPlayingVideo()
         refresher.container = sharedModelContainer
     }
 
@@ -39,6 +38,9 @@ struct UnwatchedApp: App {
                 .environment(player)
                 .environment(refresher)
                 .environment(imageCacheManager)
+                .onAppear {
+                    player.restoreNowPlayingVideo()
+                }
         }
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in
             await refresher.handleBackgroundVideoRefresh()
