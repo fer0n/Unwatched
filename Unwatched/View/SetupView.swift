@@ -59,9 +59,6 @@ struct SetupView: View {
                     }
                     refresher.handleBecameInactive()
                     refresher.scheduleVideoRefresh()
-                case .inactive:
-                    Logger.log.info("inactive")
-                    saveCurrentVideo()
                 default:
                     break
                 }
@@ -73,12 +70,6 @@ struct SetupView: View {
         sheetPos.save()
         await imageCacheManager.persistCache()
         Logger.log.info("saved state")
-    }
-
-    func saveCurrentVideo() {
-        let videoId = player.video?.persistentModelID
-        let data = try? JSONEncoder().encode(videoId)
-        UserDefaults.standard.setValue(data, forKey: Const.nowPlayingVideo)
     }
 }
 
