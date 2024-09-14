@@ -50,6 +50,8 @@ struct Const {
     static let chapterTimeTolerance: Double = 2.0
 
     static let playlistPageRequestLimit: Int = 25 // 25 * 50 videos per page/request -> 1250 videos
+    
+    static let recentVideoDedupeCheck: Int = 30
 
     /// Number of notifications that will be sent at once per inbox/queue
     static let simultaneousNotificationsLimit = 1

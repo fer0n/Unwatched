@@ -60,6 +60,6 @@ extension RefreshManager {
         guard enableIcloudSync, let container = container else {
             return
         }
-        _ = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: true)
+        _ = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: true)
     }
 }

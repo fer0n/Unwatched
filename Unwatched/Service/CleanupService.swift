@@ -10,7 +10,7 @@ import OSLog
 struct CleanupService {
     static func cleanupDuplicatesAndInboxDate(
         _ container: ModelContainer,
-        onlyIfDuplicateEntriesExist: Bool = false,
+        quickCheck: Bool = false,
         complete: Bool = false
     ) -> Task<
         RemovedDuplicatesInfo,
@@ -19,7 +19,7 @@ struct CleanupService {
         return Task.detached {
             let repo = CleanupActor(modelContainer: container)
             let info = await repo.removeAllDuplicates(
-                onlyIfDuplicateEntriesExist: onlyIfDuplicateEntriesExist,
+                quickCheck: quickCheck,
                 complete: complete
             )
             await repo.cleanupInboxEntryDates()
@@ -65,12 +65,12 @@ struct CleanupService {
     }
 
     func removeAllDuplicates(
-        onlyIfDuplicateEntriesExist: Bool = false,
+        quickCheck: Bool = false,
         complete: Bool = false
     ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
-        if onlyIfDuplicateEntriesExist && !hasDuplicateEntries() {
+        if quickCheck && !hasDuplicateRecentVideos() {
             Logger.log.info("Has duplicate inbox entries")
             return duplicateInfo
         }
@@ -89,27 +89,19 @@ struct CleanupService {
         return duplicateInfo
     }
 
-    private func hasDuplicateEntries() -> Bool {
-        return hasDuplicateInboxEntries() || hasDuplicateUpperQueueEntries()
-    }
-
-    private func hasDuplicateUpperQueueEntries() -> Bool {
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
-        fetch.fetchLimit = 15
-
-        if let entries = try? modelContext.fetch(fetch) {
-            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
-            return !duplicates.isEmpty
+    private func hasDuplicateRecentVideos() -> Bool {
+        let sort = SortDescriptor<Video>(\.publishedDate, order: .reverse)
+        var fetch = FetchDescriptor<Video>(sortBy: [sort])
+        fetch.fetchLimit = Const.recentVideoDedupeCheck
+        guard let videos = try? modelContext.fetch(fetch) else {
+            return false
         }
-        return false
-    }
-
-    private func hasDuplicateInboxEntries() -> Bool {
-        let fetch = FetchDescriptor<InboxEntry>()
-        if let entries = try? modelContext.fetch(fetch) {
-            let duplicates = getDuplicates(from: entries, keySelector: { $0.video?.youtubeId })
-            return !duplicates.isEmpty
+        var seenIds = Set<String>()
+        for video in videos {
+            if seenIds.contains(video.youtubeId) {
+                return true
+            }
+            seenIds.insert(video.youtubeId)
         }
         return false
     }
