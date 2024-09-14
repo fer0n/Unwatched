@@ -21,19 +21,13 @@ struct VideoService {
         }
     }
 
-    static func markVideoWatched(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
-        let container = modelContext.container
-        let videoId = video.id
-        let task = Task {
-            do {
-                let repo = VideoActor(modelContainer: container)
-                try await repo.markVideoWatched(videoId)
-            } catch {
-                Logger.log.error("\(error)")
-                throw error
-            }
-        }
-        return task
+    static func markVideoWatched(_ video: Video, modelContext: ModelContext) {
+        clearEntries(
+            from: video,
+            updateCleared: false,
+            modelContext: modelContext
+        )
+        video.watchedDate = .now
     }
 
     static func moveQueueEntry(
@@ -205,8 +199,8 @@ struct VideoService {
     }
 
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        let fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order > 0 }, sortBy: [sort])
+        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 1 })
+        fetch.fetchLimit = 1
         let videos = try? modelContext.fetch(fetch)
         if let nextVideo = videos?.first {
             return nextVideo.video

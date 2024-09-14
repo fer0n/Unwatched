@@ -74,8 +74,8 @@ struct VideoPlayer: View {
                     navManager.navigateToQueue()
                 }
             }
-            player.autoSetNextVideo(source)
-            _ = VideoService.markVideoWatched(
+            player.autoSetNextVideo(source, modelContext)
+            VideoService.markVideoWatched(
                 video, modelContext: modelContext
             )
         }
