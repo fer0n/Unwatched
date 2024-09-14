@@ -12,8 +12,12 @@ struct ChapterService {
     static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
         let input = description
         do {
-            let regexTimeThenTitle = try NSRegularExpression(pattern: #"\n\s*(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)"#)
-            let regexTitleThenTime = try NSRegularExpression(pattern: #"\n(.+)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)"#)
+            let regexTimeThenTitle = try NSRegularExpression(
+                pattern: #"\n\s*(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)(?<!,|;|\s)"#
+            )
+            let regexTitleThenTime = try NSRegularExpression(
+                pattern: #"\n(.+)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)"#
+            )
 
             var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
             if chapters?.isEmpty == true || chapters == nil {
