@@ -6,6 +6,7 @@
 import Foundation
 import OSLog
 import CoreData
+import SwiftData
 
 extension RefreshManager {
     func setupCloudKitListener() {
@@ -55,11 +56,26 @@ extension RefreshManager {
         await executeRefreshOnStartup()
     }
 
-    func quickDuplicateCleanup() {
+    func cleanup(
+        hardRefresh: Bool,
+        _ container: ModelContainer
+    ) async {
+        if hardRefresh {
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
+            _ = await task.value
+        } else {
+            await quickCleanup(container)
+        }
+    }
+
+    private func quickCleanup(_ container: ModelContainer) async {
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
-        guard enableIcloudSync, let container = container else {
+        guard enableIcloudSync else {
             return
         }
-        _ = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: true)
+        Logger.log.info("quickCleanup")
+
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: true)
+        _ = await task.value
     }
 }

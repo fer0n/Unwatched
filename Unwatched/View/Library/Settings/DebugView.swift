@@ -43,7 +43,7 @@ struct DebugView: View {
                         let container = modelContext.container
                         let task = CleanupService.cleanupDuplicatesAndInboxDate(
                             container,
-                            complete: true
+                            videoOnly: false
                         )
                         cleanupInfo = await task.value
                     } label: {

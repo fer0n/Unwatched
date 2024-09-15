@@ -11,16 +11,17 @@ struct CleanupService {
     static func cleanupDuplicatesAndInboxDate(
         _ container: ModelContainer,
         quickCheck: Bool = false,
-        complete: Bool = false
+        videoOnly: Bool = true
     ) -> Task<
         RemovedDuplicatesInfo,
         Never
     > {
+        Logger.log.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
             let repo = CleanupActor(modelContainer: container)
-            let info = await repo.removeAllDuplicates(
+            let info = await repo.removeDuplicates(
                 quickCheck: quickCheck,
-                complete: complete
+                videoOnly: videoOnly
             )
             await repo.cleanupInboxEntryDates()
             return info
@@ -64,9 +65,9 @@ struct CleanupService {
         try? modelContext.save()
     }
 
-    func removeAllDuplicates(
+    func removeDuplicates(
         quickCheck: Bool = false,
-        complete: Bool = false
+        videoOnly: Bool = true
     ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
@@ -76,7 +77,7 @@ struct CleanupService {
         }
         Logger.log.info("removing duplicates now")
 
-        if complete {
+        if !videoOnly {
             removeSubscriptionDuplicates()
             removeEmptySubscriptions()
             removeEmptyChapters()

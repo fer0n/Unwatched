@@ -73,36 +73,38 @@ actor RefreshActor {
     }
 
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
-        if let container = container {
-            if isSyncingIcloud {
-                Logger.log.info("currently syncing iCloud, stopping now")
-                return
-            }
-
-            let canStartLoading = await startLoading()
-            guard canStartLoading else {
-                Logger.log.info("currently refreshing, stopping now")
-                return
-            }
-
-            do {
-                let task = VideoService.loadNewVideosInBg(
-                    subscriptionIds: subscriptionIds,
-                    container: container
-                )
-                _ = try await task.value
-            } catch {
-                Logger.log.info("Error during refresh: \(error)")
-            }
-
-            stopLoading()
-
-            if hardRefresh {
-                _ = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
-            } else {
-                quickDuplicateCleanup()
-            }
+        guard let container = container else {
+            Logger.log.warning("RefreshManager has no container to refresh")
+            return
         }
+
+        if isSyncingIcloud {
+            Logger.log.info("currently syncing iCloud, stopping now")
+            return
+        }
+
+        let canStartLoading = await startLoading()
+        guard canStartLoading else {
+            Logger.log.info("currently refreshing, stopping now")
+            return
+        }
+
+        do {
+            let task = VideoService.loadNewVideosInBg(
+                subscriptionIds: subscriptionIds,
+                container: container
+            )
+            _ = try await task.value
+        } catch {
+            Logger.log.info("Error during refresh: \(error)")
+        }
+
+        await cleanup(
+            hardRefresh: hardRefresh,
+            container
+        )
+
+        stopLoading()
     }
 
     func handleAutoBackup(_ deviceName: String) {
