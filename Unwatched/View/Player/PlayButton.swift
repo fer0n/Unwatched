@@ -96,7 +96,7 @@ struct PlayButtonContextMenu: View {
             PlayerManager.reloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
         } label: {
-            Label("reloadVideo", systemImage: "arrow.circlepath")
+            Label("reloadVideo", systemImage: Const.reloadSF)
         }
     }
 }
