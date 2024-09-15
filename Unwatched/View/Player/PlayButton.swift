@@ -89,6 +89,8 @@ struct PlayButtonContextMenu: View {
         } label: {
             Label("restartVideo", systemImage: "restart")
         }
+        .disabled(player.playDisabled)
+
         Button {
             player.handleHotSwap()
             PlayerManager.reloadPlayer()

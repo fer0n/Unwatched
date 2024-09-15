@@ -132,7 +132,7 @@ struct BackupView: View {
     }
 
     var deviceName: String {
-        if ProcessInfo.processInfo.isiOSAppOnMac {
+        if UIDevice.isMac {
             "Mac"
         } else {
             UIDevice.current.name

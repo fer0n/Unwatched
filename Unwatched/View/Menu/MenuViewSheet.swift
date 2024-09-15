@@ -49,7 +49,6 @@ struct MenuViewSheet: ViewModifier {
                                 : .visible)
                 }
                 .environment(\.colorScheme, colorScheme)
-
             }
     }
 }

@@ -57,6 +57,7 @@ struct MenuView: View {
                     )
                 }
             }
+            .setTabViewStyle()
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video, page: $navManager.videoDetailPage)
                     .presentationDragIndicator(.visible)
@@ -113,6 +114,18 @@ struct MenuView: View {
             UserDefaults.standard.set(0, forKey: Const.newInboxItemsCount)
         } else if newTab == .queue {
             UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
+        }
+    }
+}
+
+extension TabView {
+    @ViewBuilder
+    /// Workaround: avoid tab view items in title bar on Mac
+    func setTabViewStyle() -> some View {
+        if #available(iOS 18.0, *), UIDevice.isMac {
+            self.tabViewStyle(.sidebarAdaptable)
+        } else {
+            self
         }
     }
 }

@@ -19,6 +19,10 @@ public extension UIDevice {
         !UIDevice.modelName.contains("iPhone")
     }()
 
+    static let isMac: Bool = {
+        ProcessInfo.processInfo.isiOSAppOnMac
+    }()
+
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)
