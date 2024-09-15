@@ -113,6 +113,8 @@ struct Const {
     static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
     static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
 
+    static let reloadSF = "arrow.circlepath"
+
     // MARK: - AppStorage
     static let subscriptionSortOrder = "subscriptionSortOrder"
     static let playVideoFullscreen = "playVideoFullscreen"

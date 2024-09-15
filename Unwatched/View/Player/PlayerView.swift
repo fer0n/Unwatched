@@ -83,6 +83,10 @@ struct PlayerView: View {
                 .onChange(of: playbackSpeed) {
                     // workaround: doesn't update otherwise
                 }
+                .overlay {
+                    PlayerLoadingTimeout()
+                        .opacity(hideMiniPlayer ? 1 : 0)
+                }
             }
         }
         .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)

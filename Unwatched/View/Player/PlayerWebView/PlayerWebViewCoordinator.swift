@@ -16,6 +16,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        parent.player.isLoading = true
         parent.loadWebContent(webView)
     }
 
