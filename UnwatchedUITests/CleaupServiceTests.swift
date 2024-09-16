@@ -84,7 +84,7 @@ class CleanupServiceTests: XCTestCase {
             XCTFail("Fetching failed: \(error)")
         }
 
-        let task = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
         _ = await task.value
 
         do {
