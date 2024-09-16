@@ -52,7 +52,6 @@ actor RefreshActor {
 
     func refreshAll(hardRefresh: Bool = false) async {
         await refresh(hardRefresh: hardRefresh)
-        UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
     }
 
     func refreshSubscription(subscriptionId: PersistentIdentifier, hardRefresh: Bool = false) async {
@@ -89,6 +88,9 @@ actor RefreshActor {
             return
         }
 
+        if subscriptionIds?.isEmpty ?? true {
+            UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
+        }
         do {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
@@ -154,7 +156,7 @@ actor RefreshActor {
                     autoRefreshTask?.cancel()
                     autoRefreshTask = Task { @MainActor in
                         self.isSyncingIcloud = false
-                        await executeRefreshOnStartup()
+                        await executeAutoRefresh()
                     }
                 } catch {
                     Logger.log.info("error: \(error)")
@@ -163,7 +165,7 @@ actor RefreshActor {
         } else {
             cancelCloudKitListener()
             autoRefreshTask = Task {
-                await executeRefreshOnStartup()
+                await executeAutoRefresh()
             }
         }
     }
@@ -172,7 +174,7 @@ actor RefreshActor {
         autoRefreshTask?.cancel()
     }
 
-    func executeRefreshOnStartup() async {
+    func executeAutoRefresh() async {
         Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
         let autoRefresh = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
 
@@ -192,7 +194,7 @@ actor RefreshActor {
         do {
             try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
             Logger.log.info("scheduleRepeatingRefresh now")
-            await self.executeRefreshOnStartup()
+            await self.executeAutoRefresh()
         } catch {
             Logger.log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
         }
