@@ -54,10 +54,11 @@ extension RefreshManager {
 
     func handleIcloudSyncDone() async {
         Logger.log.info("iCloud sync: handleIcloudSyncDone")
-        Task { @MainActor in
+        let task = Task { @MainActor in
             self.isSyncingIcloud = false
         }
-        await executeRefreshOnStartup()
+        await task.value
+        await executeAutoRefresh()
     }
 
     func cleanup(
