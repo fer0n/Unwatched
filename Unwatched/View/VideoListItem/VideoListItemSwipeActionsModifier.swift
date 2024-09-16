@@ -131,6 +131,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         if list == .queue && direction == .above {
             player.loadTopmostVideoFromQueue(after: task)
         }
+        config.onChange?()
     }
 }
 

@@ -42,6 +42,8 @@ struct TabItemView<Content: View>: View {
                         Text(verbatim: "●")
                     } else if showTabBarLabels {
                         Text(text)
+                    } else {
+                        Text(verbatim: "")
                     }
                 }
                 .tag(tag)
