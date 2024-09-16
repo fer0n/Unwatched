@@ -19,7 +19,7 @@ struct InboxTabItemView: View {
         TabItemView(image: getInboxSymbol,
                     text: "inbox",
                     tag: NavigationTab.inbox,
-                    showBadge: showBadge && newInboxItemsCount > 0) {
+                    showBadge: showBadge && newInboxItemsCount > 0 && inboxEntries.count > 0) {
             InboxView(inboxEntries: inboxEntries,
                       showCancelButton: showCancelButton)
         }
