@@ -152,7 +152,7 @@ actor RefreshActor {
                     // timeout in case CloudKit sync doesn't start
                     try await Task.sleep(s: 3)
                     autoRefreshTask?.cancel()
-                    autoRefreshTask = Task {
+                    autoRefreshTask = Task { @MainActor in
                         self.isSyncingIcloud = false
                         await executeRefreshOnStartup()
                     }
