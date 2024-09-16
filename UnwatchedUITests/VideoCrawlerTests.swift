@@ -40,7 +40,7 @@ class VideoCrawlerTests: XCTestCase {
             let countVids1 = (try? context.fetchCount(fetchVids)) ?? 0
             print("count: \(countVids1)")
 
-            let task = CleanupService.cleanupDuplicatesAndInboxDate(container, onlyIfDuplicateEntriesExist: false)
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
             let info = await task.value
 
             XCTAssertEqual(info.countVideos, 0, "Found duplicates")
