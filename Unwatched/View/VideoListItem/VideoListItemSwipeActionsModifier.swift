@@ -34,25 +34,38 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     config: config,
                     clearVideoEverywhere: clearVideoEverywhere,
                     markWatched: markWatched,
+                    addVideoToTopQueue: addVideoToTopQueue,
+                    addVideoToBottomQueue: addVideoToBottomQueue,
                     toggleBookmark: toggleBookmark,
                     moveToInbox: moveToInbox,
                     clearList: clearList,
                     canBeCleared: canBeCleared
                 )
             }
-            .contextMenu(config.showContextMenu
-                            ? ContextMenu(menuItems: {
-                                VideoListItemContextMenu(
-                                    config: config,
-                                    addVideoToTopQueue: addVideoToTopQueue,
-                                    addVideoToBottomQueue: addVideoToBottomQueue,
-                                    clearVideoEverywhere: clearVideoEverywhere,
-                                    clearList: clearList,
-                                    canBeCleared: canBeCleared
-                                )
-                            })
-                            : nil
+            .contextMenu(
+                config.showContextMenu
+                    ? ContextMenu(
+                        menuItems: {
+                            VideoListItemMoreMenuView(
+                                video: video,
+                                config: config,
+                                markWatched: markWatched,
+                                addVideoToTopQueue: addVideoToTopQueue,
+                                addVideoToBottomQueue: addVideoToBottomQueue,
+                                clearVideoEverywhere: clearVideoEverywhere,
+                                canBeCleared: canBeCleared,
+                                toggleBookmark: toggleBookmark,
+                                moveToInbox: moveToInbox,
+                                openUrlInApp: { urlString in
+                                    navManager.openUrlInApp(.url(urlString))
+                                },
+                                clearList: clearList
+                            )
+                        })
+                    : nil
             )
+            .menuOrder(.priority) // <- not working inside lists
+            .symbolVariant(.fill)
     }
 
     var canBeCleared: Bool {
@@ -173,6 +186,8 @@ struct TrailingSwipeActionsView: View {
     var config: VideoListItemConfig
     var clearVideoEverywhere: () -> Void
     var markWatched: () -> Void
+    var addVideoToTopQueue: () -> Void
+    var addVideoToBottomQueue: () -> Void
     var toggleBookmark: () -> Void
     var moveToInbox: () -> Void
     var clearList: (ClearList, ClearDirection) -> Void
@@ -191,17 +206,25 @@ struct TrailingSwipeActionsView: View {
                 .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
             if config.videoSwipeActions.contains(.more) {
-                VideoListItemMoreMenuView(
-                    video: video,
-                    config: config,
-                    markWatched: markWatched,
-                    toggleBookmark: toggleBookmark,
-                    moveToInbox: moveToInbox,
-                    openUrlInApp: { urlString in
-                        navManager.openUrlInApp(.url(urlString))
-                    },
-                    clearList: clearList
-                )
+                Menu {
+                    VideoListItemMoreMenuView(
+                        video: video,
+                        config: config,
+                        markWatched: markWatched,
+                        addVideoToTopQueue: addVideoToTopQueue,
+                        addVideoToBottomQueue: addVideoToBottomQueue,
+                        clearVideoEverywhere: clearVideoEverywhere,
+                        canBeCleared: canBeCleared,
+                        toggleBookmark: toggleBookmark,
+                        moveToInbox: moveToInbox,
+                        openUrlInApp: { urlString in
+                            navManager.openUrlInApp(.url(urlString))
+                        },
+                        clearList: clearList
+                    )
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
                 .tint(theme.color.mix(with: Color.black, by: 0.7))
             }
             if config.videoSwipeActions.contains(.details) {
@@ -214,41 +237,6 @@ struct TrailingSwipeActionsView: View {
                 .accessibilityLabel("videoDescription")
             }
         }
-    }
-}
-
-struct VideoListItemContextMenu: View {
-    var config: VideoListItemConfig
-    var addVideoToTopQueue: () -> Void
-    var addVideoToBottomQueue: () -> Void
-    var clearVideoEverywhere: () -> Void
-    var clearList: (ClearList, ClearDirection) -> Void
-
-    var canBeCleared: Bool
-
-    var body: some View {
-        ControlGroup {
-            if !config.showQueueButton {
-                // queue button is already shown, no need to have it here as well
-                Button("addVideoToTopQueue",
-                       systemImage: Const.queueTopSF,
-                       action: addVideoToTopQueue
-                )
-            }
-            Button("addVideoToBottomQueue",
-                   systemImage: Const.queueBottomSF,
-                   action: addVideoToBottomQueue
-            )
-            Button(
-                "clearVideo",
-                systemImage: "xmark",
-                action: clearVideoEverywhere
-            )
-            .disabled(!canBeCleared)
-        }
-        .controlGroupStyle(.compactMenu)
-
-        ClearAboveBelowButtons(clearList: clearList, config: config)
     }
 }
 
@@ -278,7 +266,8 @@ enum ClearList {
                 showVideoStatus: true,
                 hasInboxEntry: true,
                 hasQueueEntry: true,
-                watched: true
+                watched: true,
+                clearAboveBelowList: .inbox
             )
         )
     }
