@@ -69,6 +69,7 @@ class DataController {
                 migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             ) {
+                container.mainContext.undoManager = UndoManager()
                 return container
             }
 
@@ -78,11 +79,13 @@ class DataController {
                 isStoredInMemoryOnly: inMemory,
                 cloudKitDatabase: .none
             )
-            return try ModelContainer(
+            let container = try ModelContainer(
                 for: DataController.schema,
                 migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             )
+            container.mainContext.undoManager = UndoManager()
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

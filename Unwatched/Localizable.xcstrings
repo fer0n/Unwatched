@@ -4991,6 +4991,22 @@
         }
       }
     },
+    "undo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig machen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo"
+          }
+        }
+      }
+    },
     "unsubscribe" : {
       "localizations" : {
         "de" : {

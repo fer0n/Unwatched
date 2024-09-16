@@ -84,6 +84,7 @@ struct InboxView: View {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
+                undoRedoToolbarButton
                 RefreshToolbarButton()
             }
             .myNavigationTitle("inbox", showBack: false)
@@ -93,6 +94,22 @@ struct InboxView: View {
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
+    }
+
+    var undoRedoToolbarButton: some ToolbarContent {
+        // Workaround: having this be its own view
+        // doesn't work for some reason
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                modelContext.undoManager?.undo()
+            } label: {
+                Image(systemName: "arrow.uturn.backward")
+            }
+            .accessibilityLabel("undo")
+            .opacity(modelContext.undoManager?.canUndo == true ? 1 : 0)
+            .font(.footnote)
+            .fontWeight(.bold)
+        }
     }
 
     var swipeTipView: some View {
