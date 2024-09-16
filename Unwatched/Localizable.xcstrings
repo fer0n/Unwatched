@@ -2877,13 +2877,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als gesehen markieren"
+            "value" : "Gesehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mark Watched"
+            "value" : "Watched"
           }
         }
       }

@@ -226,26 +226,27 @@ struct VideoListItemContextMenu: View {
     var canBeCleared: Bool
 
     var body: some View {
-        if !config.showQueueButton {
-            // queue button is already shown, no need to have it here as well
-            Button("addVideoToTopQueue",
-                   systemImage: Const.queueTopSF,
-                   action: addVideoToTopQueue
+        ControlGroup {
+            if !config.showQueueButton {
+                // queue button is already shown, no need to have it here as well
+                Button("addVideoToTopQueue",
+                       systemImage: Const.queueTopSF,
+                       action: addVideoToTopQueue
+                )
+            }
+            Button("addVideoToBottomQueue",
+                   systemImage: Const.queueBottomSF,
+                   action: addVideoToBottomQueue
             )
-        }
-        Button("addVideoToBottomQueue",
-               systemImage: Const.queueBottomSF,
-               action: addVideoToBottomQueue
-        )
-        Divider()
-        if canBeCleared {
             Button(
                 "clearVideo",
-                systemImage: Const.clearSF,
+                systemImage: "xmark",
                 action: clearVideoEverywhere
             )
+            .disabled(!canBeCleared)
         }
-        Divider()
+        .controlGroupStyle(.compactMenu)
+
         ClearAboveBelowButtons(clearList: clearList, config: config)
     }
 }
@@ -261,7 +262,7 @@ enum ClearList {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataController.previewContainerFilled
     let context = ModelContext(container)
     let fetch = FetchDescriptor<Video>()
     let videos = try? context.fetch(fetch)
@@ -274,7 +275,7 @@ enum ClearList {
             video,
             config: VideoListItemConfig(
                 showVideoStatus: true,
-                hasInboxEntry: false,
+                hasInboxEntry: true,
                 hasQueueEntry: true,
                 watched: true
             )
