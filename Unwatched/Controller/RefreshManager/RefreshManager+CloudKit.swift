@@ -27,7 +27,9 @@ extension RefreshManager {
                     // print("iCloud sync: cancelled syncDoneTask")
                     if event.endDate == nil {
                         Task { @MainActor in
-                            self.isSyncingIcloud = true
+                            if !self.isSyncingIcloud {
+                                self.isSyncingIcloud = true
+                            }
                         }
                         // starting event
                     } else {

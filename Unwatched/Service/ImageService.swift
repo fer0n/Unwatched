@@ -99,28 +99,29 @@ struct ImageService {
         let size = image.size
 
         // top and bottom of a regular video thumbnail is a black bar
-        let width = size.width
-        let height = size.height
+        let width: Double = size.width
+        let height: Double = size.height
 
-        let topY = height / 30
-        let topBottomY = height / 12
+        let topY: Double = height / 30.0
+        let topBottomY: Double = height / 12.0
 
-        let centerX = width / 2
-        let xDist = width / 6
+        let centerX: Double = width / 2.0
+        let xDist: Double = width / 4.3
 
         let points: [CGPoint] = [
-            // top      ° . °
+            // edge pixels should be in the very corner
+            // top      . ° .
             // image
-            // bottom   . ° .
+            // bottom   ° . °
 
-            CGPoint(x: centerX, y: topBottomY),
-            CGPoint(x: centerX, y: height - topBottomY),
+            CGPoint(x: centerX, y: topY),
+            CGPoint(x: centerX, y: height - topY),
 
-            CGPoint(x: centerX + xDist, y: topY),
-            CGPoint(x: centerX - xDist, y: topY),
+            CGPoint(x: centerX + xDist, y: topBottomY),
+            CGPoint(x: centerX - xDist, y: topBottomY),
 
-            CGPoint(x: centerX + xDist, y: height - topY),
-            CGPoint(x: centerX - xDist, y: height - topY)
+            CGPoint(x: centerX + xDist, y: height - topBottomY),
+            CGPoint(x: centerX - xDist, y: height - topBottomY)
         ]
 
         let colors = image.pixelColors(at: points)
