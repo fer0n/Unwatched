@@ -84,7 +84,7 @@ struct SpeedControlView: View {
                         .frame(width: maxHeight, height: maxHeight)
                     Text(getFloatingText())
                         .foregroundStyle(.automaticWhite)
-                        .font(.custom("SFCompactDisplay-Bold", size: selectedFontSize))
+                        .font(.system(size: selectedFontSize, weight: .bold))
                 }
                 .position(x: dragState ?? controlMinX, y: midY)
                 .frame(maxHeight: maxHeight)

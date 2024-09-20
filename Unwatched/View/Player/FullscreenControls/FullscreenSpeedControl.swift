@@ -61,10 +61,10 @@ struct FullscreenSpeedControl: View {
         return HStack(spacing: 0) {
             let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
             Text(verbatim: speedText)
-                .font(.custom("SFCompactDisplay-Bold", size: 16))
+                .font(.system(size: 16, weight: .semibold))
             if speedText.count <= 1 {
                 Text(verbatim: "×")
-                    .font(.custom("SFCompactDisplay-Semibold", size: 14))
+                    .font(.system(size: 14, weight: .semibold))
             }
         }
         .fixedSize()
