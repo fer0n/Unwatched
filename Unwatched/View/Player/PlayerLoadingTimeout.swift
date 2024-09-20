@@ -33,6 +33,7 @@ struct PlayerLoadingTimeout: View {
             }
             .opacity(showReload ? 1 : 0)
         }
+        .opacity(player.isLoading ? 1 : 0)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .task(id: player.isLoading) {
@@ -58,8 +59,7 @@ struct PlayerLoadingTimeout: View {
                     } else {
                         return
                     }
-                } catch {
-                }
+                } catch { }
             }
         }
     }
