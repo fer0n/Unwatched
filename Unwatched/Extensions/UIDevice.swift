@@ -33,7 +33,8 @@ public extension UIDevice {
         }
 
         // swiftlint:disable all
-        func mapToDevice(identifier: String) -> String {
+        // https://stackoverflow.com/questions/26028918/how-to-determine-the-current-iphone-device-model
+        func mapToDevice(identifier: String) -> String { // swiftlint:disable:this cyclomatic_complexity
             #if os(iOS)
             switch identifier {
             case "iPod5,1":                                       return "iPod touch (5th generation)"
@@ -75,6 +76,10 @@ public extension UIDevice {
             case "iPhone15,5":                                    return "iPhone 15 Plus"
             case "iPhone16,1":                                    return "iPhone 15 Pro"
             case "iPhone16,2":                                    return "iPhone 15 Pro Max"
+            case "iPhone17,3":                                    return "iPhone 16"
+            case "iPhone17,4":                                    return "iPhone 16 Plus"
+            case "iPhone17,1":                                    return "iPhone 16 Pro"
+            case "iPhone17,2":                                    return "iPhone 16 Pro Max"
             case "iPhone8,4":                                     return "iPhone SE"
             case "iPhone12,8":                                    return "iPhone SE (2nd generation)"
             case "iPhone14,6":                                    return "iPhone SE (3rd generation)"
@@ -111,7 +116,7 @@ public extension UIDevice {
             case "iPad7,1", "iPad7,2":                            return "iPad Pro (12.9-inch) (2nd generation)"
             case "iPad8,5", "iPad8,6", "iPad8,7", "iPad8,8":      return "iPad Pro (12.9-inch) (3rd generation)"
             case "iPad8,11", "iPad8,12":                          return "iPad Pro (12.9-inch) (4th generation)"
-            case "iPad13,8", "iPad13,9", "iPad13,10", "iPad13,11": return "iPad Pro (12.9-inch) (5th generation)"
+            case "iPad13,8", "iPad13,9", "iPad13,10", "iPad13,11":return "iPad Pro (12.9-inch) (5th generation)"
             case "iPad14,5", "iPad14,6":                          return "iPad Pro (12.9-inch) (6th generation)"
             case "iPad16,5", "iPad16,6":                          return "iPad Pro (13-inch) (M4)"
             case "AppleTV5,3":                                    return "Apple TV"
