@@ -2482,13 +2482,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dies ist eine experimentelle Einstellung, bitte stelle Sicher, dass ein Backup existiert. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
+            "value" : "Bitte stelle Sicher, dass ein Backup existiert. Ein Neustart der App ist erforderlich, damit die Änderungen wirksam werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This is experimental, make sure to backup everything before enabling this. Requires app restart to take effect."
+            "value" : "Make sure to backup everything before enabling this. Requires app restart to take effect."
           }
         }
       }
@@ -4355,13 +4355,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beim Abspielen von Videos halte dein iPhone horizontal, um in den Vollbildmodus zu wechseln, in dem Steuerelemente links oder rechts vom Video angezeigt werden und das nächste Video automatisch abgespielt werden kann.\n\nFür Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann."
+            "value" : "iPhone: Beim Abspielen von Videos iPhone horizontal halten, um den Vollbildmodus zu starten, in dem Steuerelemente links oder rechts vom Video angezeigt werden können. Für Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann.  iPad: Betrifft Steuerelemente nach dem aktivieren des Vollbild-modus."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "While playing a video, hold your iPhone horizontal to enter a fullscreen that can show controls on the left or right of the video and continuously play the next video.\n\nIf you wish to enter Picture-in-picture, tap the maximise button inside the video."
+            "value" : "iPhone: While playing a video, hold your phone horizontal to enter a fullscreen that can show controls on the left or right side. If you wish to enter Picture-in-picture, tap the maximise button inside the video.  iPad: Affects controls after tapping the fullscreen button next to “play”."
           }
         }
       }
