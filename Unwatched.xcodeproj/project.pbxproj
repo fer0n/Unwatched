@@ -631,8 +631,6 @@
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myNavigationTitle.swift; sourceTree = "<group>"; };
 		88B0C15D2C4165BC006D2423 /* UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWindow.swift; sourceTree = "<group>"; };
-		88B0C15F2C41C4D2006D2423 /* SF-Compact-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Bold.otf"; sourceTree = "<group>"; };
-		88B0C1602C41C5A6006D2423 /* SF-Compact-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Display-Semibold.otf"; sourceTree = "<group>"; };
 		88B0C1612C427940006D2423 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		88BABABB2B6290AC001FA0A4 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
 		88BABABD2B62932C001FA0A4 /* CachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageView.swift; sourceTree = "<group>"; };
@@ -1178,7 +1176,6 @@
 				8823EB752B54FB510010A12F /* apiKey.swift */,
 				88904B062C07428500F95C67 /* apiKey.swift.example */,
 				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
-				88FEF56F2BC3113500366CE6 /* Font */,
 				88143EB52B4A7FEF00829E13 /* Helper */,
 				8802F8532C6950AC008A7778 /* Tips */,
 				8898B6802B48464000348D01 /* Errors */,
@@ -1259,15 +1256,6 @@
 				881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */,
 			);
 			path = Browser;
-			sourceTree = "<group>";
-		};
-		88FEF56F2BC3113500366CE6 /* Font */ = {
-			isa = PBXGroup;
-			children = (
-				88B0C1602C41C5A6006D2423 /* SF-Compact-Display-Semibold.otf */,
-				88B0C15F2C41C4D2006D2423 /* SF-Compact-Display-Bold.otf */,
-			);
-			path = Font;
 			sourceTree = "<group>";
 		};
 		CDA07A372C601F350009BFEC /* TestData */ = {
