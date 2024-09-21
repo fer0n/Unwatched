@@ -107,31 +107,35 @@ struct PlayerView: View {
     @MainActor
     var playerEmbedded: some View {
         HStack {
-            PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: handleVideoEnded)
-                .aspectRatio(videoAspectRatio, contentMode: .fit)
-                .overlay {
-                    OverlayFullscreenButton(
-                        enabled: showFullscreenControls,
-                        landscapeFullscreen: landscapeFullscreen
-                    )
+            PlayerWebView(
+                autoHideVM: $autoHideVM,
+                playerType: .youtubeEmbedded,
+                onVideoEnded: handleVideoEnded
+            )
+            .aspectRatio(videoAspectRatio, contentMode: .fit)
+            .overlay {
+                OverlayFullscreenButton(
+                    enabled: showFullscreenControls,
+                    landscapeFullscreen: landscapeFullscreen
+                )
 
-                    thumbnailPlaceholder
-                        .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
+                thumbnailPlaceholder
+                    .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
+            }
+            .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
+                        .delay(player.isPlaying ? 0.3 : 0),
+                       value: player.isPlaying)
+            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
+            .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
+            .frame(width: !hideMiniPlayer ? 89 : nil,
+                   height: !hideMiniPlayer ? 50 : nil)
+            .onTapGesture {
+                if !hideMiniPlayer {
+                    handleMiniPlayerTap()
                 }
-                .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
-                            .delay(player.isPlaying ? 0.3 : 0),
-                           value: player.isPlaying)
-                .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-                .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-                .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-                .frame(width: !hideMiniPlayer ? 89 : nil,
-                       height: !hideMiniPlayer ? 50 : nil)
-                .onTapGesture {
-                    if !hideMiniPlayer {
-                        handleMiniPlayerTap()
-                    }
-                }
-                .padding(.leading, !hideMiniPlayer ? 2 : 0)
+            }
+            .padding(.leading, !hideMiniPlayer ? 2 : 0)
 
             if !hideMiniPlayer {
                 miniPlayerContent
@@ -144,16 +148,20 @@ struct PlayerView: View {
     @MainActor
     var playerWebsite: some View {
         ZStack {
-            PlayerWebView(playerType: .youtube, onVideoEnded: handleVideoEnded)
-                .frame(maxHeight: .infinity)
-                .frame(maxWidth: .infinity)
-                .mask(LinearGradient(gradient: Gradient(
-                    stops: [
-                        .init(color: .black, location: 0),
-                        .init(color: .black, location: 0.9),
-                        .init(color: .clear, location: 1)
-                    ]
-                ), startPoint: .top, endPoint: .bottom))
+            PlayerWebView(
+                autoHideVM: $autoHideVM,
+                playerType: .youtube,
+                onVideoEnded: handleVideoEnded
+            )
+            .frame(maxHeight: .infinity)
+            .frame(maxWidth: .infinity)
+            .mask(LinearGradient(gradient: Gradient(
+                stops: [
+                    .init(color: .black, location: 0),
+                    .init(color: .black, location: 0.9),
+                    .init(color: .clear, location: 1)
+                ]
+            ), startPoint: .top, endPoint: .bottom))
 
             Color.black
                 .opacity(!hideMiniPlayer ? 1 : 0)

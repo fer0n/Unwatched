@@ -53,6 +53,9 @@ struct Const {
 
     static let recentVideoDedupeCheck: Int = 30
 
+    /// Time in seconds before fullscreen controls are automatically hidden
+    static let controlsAutoHideDebounce: Double = 4
+
     /// Number of notifications that will be sent at once per inbox/queue
     static let simultaneousNotificationsLimit = 1
     static let notificationImageUrl = "notificationImageUrl"
