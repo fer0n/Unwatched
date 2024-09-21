@@ -9,6 +9,7 @@ import StoreKit
 import SwiftData
 
 struct PlayerView: View {
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
@@ -89,7 +90,18 @@ struct PlayerView: View {
                 }
             }
         }
-        .persistentSystemOverlays(landscapeFullscreen ? .hidden : .visible)
+        .persistentSystemOverlays(
+            landscapeFullscreen || controlsHidden
+                ? .hidden
+                : .visible
+        )
+        .statusBarHidden(controlsHidden)
+    }
+
+    var controlsHidden: Bool {
+        !(
+            fullscreenControlsSetting == .enabled || autoHideVM.showControls
+        ) && hideControlsFullscreen
     }
 
     @MainActor
