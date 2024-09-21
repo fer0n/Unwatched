@@ -189,7 +189,7 @@ class ExportableTests: XCTestCase {
                 Const.showClearQueueButton: false,
                 Const.showAddToQueueButton: true,
                 Const.mergeSponsorBlockChapters: true,
-                Const.forceYtWatchHistory: true,
+                Const.enableYtWatchHistory: true,
                 Const.autoRefresh: false,
                 Const.enableQueueContextMenu: true,
 

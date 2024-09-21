@@ -8,6 +8,19 @@ import SwiftData
 
 class VideoCrawlerTests: XCTestCase {
 
+    func testParseDurationToSeconds() {
+        let time = "PT3H2M27S"
+        let duration = parseDurationToSeconds(time)
+        let result: Double = 27 + 2 * 60 + 3 * 60 * 60
+        XCTAssertEqual(duration, result)
+
+        let time2 = "PT2D3H2M27S"
+        let duration2 = parseDurationToSeconds(time2)
+        // 27 + 2 * 60 + 3 * 60 * 60 + 2 * 60 * 60 * 24
+        let result2: Double = 183747.0
+        XCTAssertEqual(duration2, result2)
+    }
+
     @MainActor
     func testLoadingVideos() async {
         let container = DataController.previewContainer
