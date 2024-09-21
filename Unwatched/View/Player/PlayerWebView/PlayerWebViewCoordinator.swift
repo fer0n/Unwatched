@@ -113,13 +113,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleError(_ payload: String?) {
-        guard let error = YtIframeError(rawValue: payload ?? "") else {
-            Logger.log.error("Unknown YtIframeError")
-            return
-        }
+        Logger.log.error("video player error: \(payload ?? "Unknown")")
 
-        switch error {
-        case .ownerForbidsEmbedding, .ownerForbidsEmbedding2:
+        if !parent.player.embeddingDisabled {
             parent.player.isLoading = true
 
             parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
@@ -133,8 +129,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
                 parent.player.pause()
                 parent.player.embeddingDisabled = true
             }
-        default:
-            Logger.log.error("Unhandled YtIframeError")
         }
     }
 
@@ -161,11 +155,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-        if parent.playerType != .youtube || !parent.player.embeddingDisabled {
-            // workaround: without "!parent.player.embeddingDisabled", the video doesn't start
-            // switching from a non-embedding to an embedded video, probably a race condition
-            return
-        }
+        //        if parent.playerType != .youtube || !parent.player.embeddingDisabled {
+        //            // workaround: without "!parent.player.embeddingDisabled", the video doesn't start
+        //            // switching from a non-embedding to an embedded video, probably a race condition
+        //            return
+        //        }
         let script = PlayerWebView.nonEmbeddedInitScript(
             parent.player.playbackSpeed,
             parent.player.getStartPosition(),

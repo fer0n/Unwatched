@@ -64,7 +64,7 @@ struct ChapterMiniControlView: View {
                             remainingTime: player.currentRemaining
                         ))
                         .keyboardShortcut(.rightArrow)
-                        .disabled(player.nextChapter == nil || player.playDisabled)
+                        .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()
                     }

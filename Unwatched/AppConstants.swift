@@ -27,7 +27,7 @@ struct Const {
 
     /// Playback speeds that can savely shown at smaller sizes without line break
     static let highlightedSpeedsInt = [1.0, 2.0]
-    static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
+    static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 3]
 
     /// The margin at which it will skip to the chapter start instead of the previous chapter
     static let previousChapterDelaySeconds: Double = 4
@@ -136,7 +136,7 @@ struct Const {
     static let showClearQueueButton = "showClearQueueButton"
     static let showAddToQueueButton = "showAddToQueueButton"
     static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
-    static let forceYtWatchHistory = "forceYtWatchHistory"
+    static let enableYtWatchHistory = "enableYtWatchHistory"
     static let enableQueueContextMenu = "enableQueueContextMenu"
 
     static let automaticBackups = "automaticBackups"
@@ -189,7 +189,7 @@ extension Const {
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,
         Const.mergeSponsorBlockChapters: false,
-        Const.forceYtWatchHistory: false,
+        Const.enableYtWatchHistory: true,
         Const.autoRefresh: true,
         Const.enableQueueContextMenu: false,
 

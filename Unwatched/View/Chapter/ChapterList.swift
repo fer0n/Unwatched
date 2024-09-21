@@ -22,12 +22,11 @@ struct ChapterList: View {
                     let isCurrent = chapter == player.currentChapter
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
-                    let jumpDisabled = player.playDisabled
 
                     Button {
                         if !chapter.isActive {
                             toggleChapter(chapter)
-                        } else if !jumpDisabled {
+                        } else {
                             setChapter(chapter)
                         }
                     } label: {
@@ -35,14 +34,13 @@ struct ChapterList: View {
                                         toggleChapter: toggleChapter,
                                         timeText: getTimeText(
                                             chapter, isCurrent: isCurrent
-                                        ),
-                                        jumpDisabled: jumpDisabled)
+                                        ))
                             .padding(isCompact ? 4 : 10)
                             .padding(.trailing, 4)
                             .background(
                                 backgroundColor
                                     .clipShape(.rect(cornerRadius: 15.0))
-                                    .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)
+                                    .opacity(chapter.isActive ? 1 : 0.6)
                             )
                             .id(chapter.persistentModelID)
                     }
@@ -53,23 +51,18 @@ struct ChapterList: View {
         }
     }
 
-    func toggleChapter(_ chapter: Chapter) -> Bool {
-        if chapter == player.currentChapter && player.playDisabled {
-            return false
-        }
-
+    func toggleChapter(_ chapter: Chapter) {
         chapter.isActive.toggle()
         if video == player.video {
             player.handleChapterChange()
         }
-        return true
     }
 
     func setChapter(_ chapter: Chapter) {
         if video != player.video {
             video.elapsedSeconds = chapter.startTime
             player.playVideo(video)
-            _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+            VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }
         player.setChapter(chapter)
     }

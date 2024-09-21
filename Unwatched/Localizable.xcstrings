@@ -143,7 +143,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Speichern"
           }
         },
@@ -1867,6 +1867,38 @@
         }
       }
     },
+    "enableYtWatchHistory" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Wiedergabeverlauf"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Watch History"
+          }
+        }
+      }
+    },
+    "enableYtWatchHistoryHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfordert angemeldeten YouTube Account im in-App Browser."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure you're signed into your account in the in-app browser."
+          }
+        }
+      }
+    },
     "enterFullscreen" : {
       "localizations" : {
         "de" : {
@@ -2089,86 +2121,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to parse the data"
-          }
-        }
-      }
-    },
-    "fasterSpeedsFaqA" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube bietet diese Option derzeit nicht an. Eine Anfrage kann auf [YouTube's Hilfe-Seite](https://www.youtube.com/t/contact_us) gestellt werden."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube doesn't currently offer this option. You can visit [YouTube's help page](https://www.youtube.com/t/contact_us) to request it."
-          }
-        }
-      }
-    },
-    "fasterSpeedsFaqQ" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kann das Video schneller als 2x abgespielt werden?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Can I speed up the video beyond 2x?"
-          }
-        }
-      }
-    },
-    "fasterSpeedsFaqT" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mehr Abspielgeschwindigkeiten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More Playback Speeds"
-          }
-        }
-      }
-    },
-    "forceYtWatchHistory" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Wiedergabeverlauf erzwingen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Force YouTube Watch History"
-          }
-        }
-      }
-    },
-    "forceYtWatchHistoryHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Um Videos zur YouTube-Wiedergabeverlauf hinzuzufügen, erfordert YouTube, dass der Benutzer jedes Video über den YouTube-Player startet. Alle anderen Methoden zum Starten des Videos werden bis dahin deaktiviert."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To add videos to the YouTube watch history, YouTube requires the user to start each video via the YouTube player. All other methods of starting the video will be disabled until then."
           }
         }
       }
@@ -3625,22 +3577,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Playback"
-          }
-        }
-      }
-    },
-    "playButtonDisabledDueToForceHistory" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube-Wiedergabeverlauf erfordert es, videos manuell zu starten. Kann unter Einstellungen → Wiedergabe deaktiviert werden."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Force YouTube Watch History\" requires starting the video manually. This can be disabled under Library → Settings → Playback."
           }
         }
       }
@@ -5316,13 +5252,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unter \"Einstellungen → Wiedergabe\" kann \"YouTube Verlauf erzwingen\" aktiviert werden, was sicherstellt, dass angesehene Videos auf YouTube auftauchen. YouTube erfordert, dass Videos manuell gestartet werden."
+            "value" : "Die Option \"Einstellungen → Wiedergabe → YouTube Wiedergabeverlauf\" muss aktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser mit deinem YouTube Account angemeldet bist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable the setting under \"Settings → Playback\" to ensure watched videos appear in YouTube. This also makes sure you start each video manually, since YouTube requires this."
+            "value" : "Enable “Settings → Playback → YouTube Watch History” to ensure watched videos appear on YouTube, and sign in through the in-app browser."
           }
         }
       }

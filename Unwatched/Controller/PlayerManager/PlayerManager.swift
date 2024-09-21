@@ -43,10 +43,7 @@ import OSLog
 
         if video.url == oldValue?.url {
             Logger.log.info("Tapped existing video")
-
-            if !playDisabled {
-                self.play()
-            }
+            self.play()
             return
         }
         unstarted = true
@@ -176,11 +173,6 @@ import OSLog
     func handleAutoStart() {
         Logger.log.info("handleAutoStart")
         isLoading = false
-
-        if UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory) {
-            Logger.log.info("forceYtWatchHistory is enabled")
-            return
-        }
 
         guard let source = videoSource else {
             Logger.log.info("no source, stopping")

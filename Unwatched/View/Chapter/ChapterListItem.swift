@@ -2,9 +2,8 @@ import SwiftUI
 
 struct ChapterListItem: View {
     var chapter: Chapter
-    var toggleChapter: (_ chapter: Chapter) -> Bool
+    var toggleChapter: (_ chapter: Chapter) -> Void
     var timeText: String
-    var jumpDisabled: Bool = false
 
     @ScaledMetric var frameSize = 30
     @State var toggleHaptic = false
@@ -28,15 +27,14 @@ struct ChapterListItem: View {
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .opacity(chapter.isActive && !jumpDisabled ? 1 : 0.6)
+            .opacity(chapter.isActive ? 1 : 0.6)
         }
     }
 
     var toggleChapterButton: some View {
         Button {
-            if toggleChapter(chapter) {
-                toggleHaptic.toggle()
-            }
+            toggleChapter(chapter)
+            toggleHaptic.toggle()
         } label: {
             ZStack {
                 Image(systemName: Const.circleBackgroundSF)

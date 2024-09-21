@@ -22,15 +22,15 @@ struct UrlService {
         URL(string: "mailto:unwatched.app@gmail.com?body=\n\n\(body)")!
     }
 
-    static func getEmbeddedYoutubeUrl (_ youtubeId: String) -> String {
-        let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
-        let cookieUrl = forceYtWatchHistory ? "" : "-nocookie"
-        return "https://www.youtube\(cookieUrl).com/embed/\(youtubeId)"
-            + "?enablejsapi=1&color=white&controls=1&iv_load_policy=3"
-    }
-
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
         "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
+    }
+
+    static func getEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
+        let enableYtWatchHistory = (UserDefaults.standard.value(forKey: Const.enableYtWatchHistory) as? Bool) ?? true
+        let cookieUrl = enableYtWatchHistory ? "" : "-nocookie"
+        return  "https://www.youtube\(cookieUrl).com/embed/\(youtubeId)"
+            + "?t=\(startAt)s&enablejsapi=1&color=white&controls=1&iv_load_policy=3"
     }
 
     static func stringContainsUrl (_ text: String) -> Bool {

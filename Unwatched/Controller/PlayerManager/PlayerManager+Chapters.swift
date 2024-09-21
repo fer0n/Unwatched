@@ -11,7 +11,7 @@ import SwiftData
 extension PlayerManager {
 
     var previousChapterDisabled: Bool {
-        previousChapter == nil && currentChapter == nil || playDisabled
+        previousChapter == nil && currentChapter == nil
     }
 
     func monitorChapters(time: Double) {

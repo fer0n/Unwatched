@@ -10,8 +10,6 @@ struct CorePlayButton<Content>: View where Content: View {
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
-    @State var showHelperPopop = false
-
     private let contentImage: ((Image) -> Content)
     private let circle: String
     let enableHaptics: Bool
@@ -31,13 +29,6 @@ struct CorePlayButton<Content>: View where Content: View {
 
     var body: some View {
         Button {
-            if player.playDisabled {
-                if enableHelperPopup {
-                    showHelperPopop = true
-                }
-                Logger.log.info("Play button is disabled (forceYtWatchHistory)")
-                return
-            }
             player.handlePlayButton()
             if enableHaptics {
                 hapticToggle.toggle()
@@ -46,8 +37,6 @@ struct CorePlayButton<Content>: View where Content: View {
             contentImage(
                 Image(systemName: player.isPlaying && !player.videoEnded
                         ? "pause\(circle).fill"
-                        : player.playDisabled
-                        ? "slash.circle.fill"
                         : "play\(circle).fill")
             )
             .rotationEffect(.degrees(player.videoEnded
@@ -63,20 +52,6 @@ struct CorePlayButton<Content>: View where Content: View {
         .contextMenu {
             PlayButtonContextMenu()
         }
-        .popover(isPresented: $showHelperPopop) {
-            VStack {
-                Spacer()
-                    .frame(height: 25)
-                Text("playButtonDisabledDueToForceHistory")
-                    .padding()
-                Spacer()
-                    .frame(height: 25)
-            }
-            .fixedSize(horizontal: false, vertical: true)
-            .font(.body)
-            .fontWeight(.regular)
-            .presentationCompactAdaptation(.popover)
-        }
     }
 }
 
@@ -89,7 +64,6 @@ struct PlayButtonContextMenu: View {
         } label: {
             Label("restartVideo", systemImage: "restart")
         }
-        .disabled(player.playDisabled)
 
         Button {
             player.handleHotSwap()

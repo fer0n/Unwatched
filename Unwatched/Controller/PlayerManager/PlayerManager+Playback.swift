@@ -26,11 +26,6 @@ extension PlayerManager {
         handleRotateOnPlay()
     }
 
-    var playDisabled: Bool {
-        let forceYtWatchHistory = UserDefaults.standard.bool(forKey: Const.forceYtWatchHistory)
-        return forceYtWatchHistory && unstarted && !embeddingDisabled
-    }
-
     func pause() {
         if self.isPlaying {
             self.isPlaying = false
@@ -75,7 +70,7 @@ extension PlayerManager {
         if temporarySlowDown {
             temporaryPlaybackSpeed = 1
         } else {
-            temporaryPlaybackSpeed = 2
+            temporaryPlaybackSpeed = 3
         }
     }
 
