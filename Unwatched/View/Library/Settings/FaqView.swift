@@ -68,11 +68,6 @@ struct FaqView: View {
             "playerShowsWebsiteFaqA"
         ),
         FaqInfo(
-            "fasterSpeedsFaqT",
-            "fasterSpeedsFaqQ",
-            "fasterSpeedsFaqA"
-        ),
-        FaqInfo(
             "morePlaylistsFaqT",
             "morePlaylistsFaqQ",
             "morePlaylistsFaqA"

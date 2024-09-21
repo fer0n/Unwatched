@@ -12,7 +12,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.swapNextAndContinuous) var swapNextAndContinuous: Bool = false
-    @AppStorage(Const.forceYtWatchHistory) var forceYtWatchHistory: Bool = false
+    @AppStorage(Const.enableYtWatchHistory) var enableYtWatchHistory: Bool = true
 
     var body: some View {
         ZStack {
@@ -57,11 +57,11 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection("youtube", footer: "forceYtWatchHistoryHelper") {
-                    Toggle(isOn: $forceYtWatchHistory) {
-                        Text("forceYtWatchHistory")
+                MySection("youtube", footer: "enableYtWatchHistoryHelper") {
+                    Toggle(isOn: $enableYtWatchHistory) {
+                        Text("enableYtWatchHistory")
                     }
-                    .onChange(of: forceYtWatchHistory) { _, _ in
+                    .onChange(of: enableYtWatchHistory) { _, _ in
                         PlayerManager.reloadPlayer()
                     }
                 }

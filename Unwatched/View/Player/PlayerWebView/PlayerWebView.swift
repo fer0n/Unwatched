@@ -84,64 +84,22 @@ struct PlayerWebView: UIViewRepresentable {
             player.seekPosition = nil
         }
 
-        if prev.videoId != player.video?.youtubeId,
-           let videoId = player.video?.youtubeId {
+        if prev.videoId != player.video?.youtubeId {
             Logger.log.info("CUE VIDEO: \(player.video?.title ?? "-")")
             print("\(playerType)")
             let startAt = player.getStartPosition()
-            if playerType == .youtube {
-                if let url = URL(string: UrlService.getNonEmbeddedYoutubeUrl(videoId, startAt)) {
-                    let request = URLRequest(url: url)
-                    uiView.load(request)
-                }
-            } else {
-                let script = "player.cueVideoById('\(videoId)', \(startAt));"
-                uiView.evaluateJavaScript(script)
+
+            let success = loadPlayer(webView: uiView, startAt: startAt, type: playerType)
+            if success {
+                player.previousState.videoId = player.video?.youtubeId
             }
-            player.previousState.videoId = player.video?.youtubeId
         }
     }
 
     @MainActor
     func loadWebContent(_ webView: WKWebView) {
         let startAt = player.getStartPosition()
-        if playerType == .youtubeEmbedded {
-            setupEmbeddedYouTubePlayer(webView: webView, startAt: startAt)
-        } else {
-            setupYouTubePlayer(webView: webView, startAt: startAt)
-        }
-    }
-
-    func getPlayScript() -> String {
-        if playerType == .youtube {
-            return "document.querySelector('video').play();"
-        } else {
-            return "player.playVideo()"
-        }
-    }
-
-    func getPauseScript() -> String {
-        if playerType == .youtube {
-            return "document.querySelector('video').pause();"
-        } else {
-            return "player.pauseVideo()"
-        }
-    }
-
-    func getSeekToScript(_ seekTo: Double) -> String {
-        if playerType == .youtube {
-            return "document.querySelector('video').currentTime = \(seekTo);"
-        } else {
-            return "player.seekTo(\(seekTo), true)"
-        }
-    }
-
-    func getSetPlaybackRateScript() -> String {
-        if playerType == .youtube {
-            return "document.querySelector('video').playbackRate = \(player.playbackSpeed);"
-        } else {
-            return "player.setPlaybackRate(\(player.playbackSpeed))"
-        }
+        _ = loadPlayer(webView: webView, startAt: startAt, type: playerType)
     }
 
     func makeCoordinator() -> PlayerWebViewCoordinator {

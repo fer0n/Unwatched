@@ -24,11 +24,6 @@
 	<array>
 		<string>AddVideoIntent</string>
 	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>SF-Compact-Display-Bold.otf</string>
-		<string>SF-Compact-Display-Semibold.otf</string>
-	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
