@@ -26,7 +26,6 @@ struct FullscreenSpeedControl: View {
         } label: {
             fullscreenControlLabel
         }
-        .simultaneousGesture(longPress)
         .highPriorityGesture(
             TapGesture()
                 .onEnded { _ in
@@ -76,42 +75,5 @@ struct FullscreenSpeedControl: View {
         .onChange(of: player.video?.subscription) {
             // workaround: refresh speed
         }
-    }
-
-    var longPress: some Gesture {
-        DragGesture(minimumDistance: 0)
-            .updating($isDetectingLongPress) { _, _, _ in
-                startDebouncedSpeedUp()
-            }
-            .onEnded { _ in
-                cancelSpeedUp()
-            }
-    }
-
-    func startDebouncedSpeedUp() {
-        viewModel.debounceTask?.cancel()
-        viewModel.debounceTask = Task {
-            do {
-                try await Task.sleep(s: 0.2)
-                changeSpeed()
-            } catch {
-                // canceled
-            }
-        }
-    }
-
-    func cancelSpeedUp() {
-        viewModel.debounceTask?.cancel()
-        reset()
-    }
-
-    func changeSpeed() {
-        menuOpen = true
-        player.setTemporaryPlaybackSpeed()
-    }
-
-    func reset() {
-        player.resetTemporaryPlaybackSpeed()
-        menuOpen = false
     }
 }

@@ -57,11 +57,33 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleDuration(payload)
         case "playbackRate":
             handlePlaybackSpeed(payload)
+        case "longTouch":
+            handleLongTouchStart(payload)
+        case "longTouchEnd":
+            handleLongTouchEnd()
         case "error":
             handleError(payload)
         default:
             break
         }
+    }
+
+    func handleLongTouchStart(_ payload: String?) {
+        guard let side = payload else {
+            Logger.log.warning("No side given for longTouch")
+            return
+        }
+        if side == "left" {
+            parent.player.temporarySlowDown()
+            return
+        }
+        if side == "right" {
+            parent.player.temporarySpeedUp()
+        }
+    }
+
+    func handleLongTouchEnd() {
+        parent.player.resetTemporaryPlaybackSpeed()
     }
 
     func updateUnstarted() {

@@ -19,8 +19,6 @@ extension PlayerWebView {
             ? UrlService.getNonEmbeddedYoutubeUrl(youtubeId, startAt)
             : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt)
 
-        // TODO: adjust translations: ... make sure you're signed in into the in-app browser
-
         guard let url = URL(string: urlString) else {
             Logger.log.warning("loadPlayer: no url")
             return false
@@ -66,6 +64,21 @@ extension PlayerWebView {
 
         styling()
 
+        const touchCountsAsLongPress = 300
+        var touchStartTime;
+        var touchTimeout;
+        var longTouchSent = false;
+
+        document.addEventListener('touchstart', function(event) {
+            handleTouchStart(event);
+        });
+        document.addEventListener('touchend', function(event) {
+            handleTouchEnd(event);
+        });
+        document.addEventListener('touchcancel', function(event) {
+            handleTouchEnd(event);
+        });
+
         video.addEventListener('play', function() {
             startTimer();
             sendMessage("play")
@@ -88,6 +101,25 @@ extension PlayerWebView {
             \(requiresFetchingVideoData == true ? "sendMessage('updateTitle', document.title);" : "")
             cancelErrorChecks();
         });
+
+        function handleTouchStart(event) {
+            touchStartTime = Date.now();
+            touchTimeout = setTimeout(function() {
+                const touch = event.touches[0];
+                const screenWidth = window.innerWidth;
+                const side = touch.clientX < screenWidth / 2 ? "left" : "right";
+                sendMessage("longTouch", side);
+                longTouchSent = true;
+            }, touchCountsAsLongPress);
+        }
+
+        function handleTouchEnd(event) {
+            clearTimeout(touchTimeout);
+            if (longTouchSent) {
+                sendMessage("longTouchEnd");
+                longTouchSent = false;
+            }
+        }
 
         function styling() {
              const style = document.createElement('style');
