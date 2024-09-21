@@ -13,6 +13,7 @@ struct PlayerWebView: UIViewRepresentable {
     // workaround: view doesn't update otherwise
     @Environment(PlayerManager.self) var player
 
+    @Binding var autoHideVM: AutoHideVM
     let playerType: PlayerType
     let onVideoEnded: () -> Void
 
@@ -142,12 +143,18 @@ struct PreviousState {
     var isPlaying: Bool = false
 }
 
-#Preview {
-    let video = Video.getDummy()
-    let player = PlayerManager()
-    player.video = video
-    return (
-        PlayerWebView(playerType: .youtubeEmbedded, onVideoEnded: { })
-            .environment(player)
-    )
-}
+// #Preview {
+//    let video = Video.getDummy()
+//    let player = PlayerManager()
+//    player.video = video
+//
+//    (
+//        PlayerWebView(
+//            autoHideVM: AutoHideVM(),
+//            playerType: .youtubeEmbedded,
+//            onVideoEnded: {
+//
+//            })
+//            .environment(player)
+//    )
+// }

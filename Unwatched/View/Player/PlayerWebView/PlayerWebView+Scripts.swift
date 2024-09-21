@@ -64,6 +64,7 @@ extension PlayerWebView {
 
         styling()
 
+        // long press
         const touchCountsAsLongPress = 300
         var touchStartTime;
         var touchTimeout;
@@ -71,6 +72,7 @@ extension PlayerWebView {
 
         document.addEventListener('touchstart', function(event) {
             handleTouchStart(event);
+            sendMessage("interaction")
         });
         document.addEventListener('touchend', function(event) {
             handleTouchEnd(event);

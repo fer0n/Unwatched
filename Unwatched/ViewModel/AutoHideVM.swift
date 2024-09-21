@@ -8,7 +8,7 @@ import SwiftUI
 @Observable class AutoHideVM {
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
-    var keepVisible = false
+    private var keepVisibleCounter: Int = 0
     var positionLeft = false
 
     private var showControlsLocal = false {
@@ -18,7 +18,7 @@ import SwiftUI
                     hideControlsTask?.cancel()
                     hideControlsTask = Task {
                         do {
-                            try await Task.sleep(s: 3)
+                            try await Task.sleep(s: Const.controlsAutoHideDebounce)
                             withAnimation {
                                 showControlsLocal = false
                             }
@@ -30,7 +30,7 @@ import SwiftUI
     }
 
     var showControls: Bool {
-        showControlsLocal || keepVisible
+        showControlsLocal || keepVisibleCounter > 0
     }
 
     func setShowControls(positionLeft: Bool? = nil) {
@@ -39,6 +39,21 @@ import SwiftUI
                 self.positionLeft = positionLeft
             }
             showControlsLocal = true
+        }
+    }
+
+    var keepVisible: Bool {
+        get {
+            keepVisibleCounter > 0
+        }
+        set {
+            if newValue {
+                keepVisibleCounter += 1
+            } else {
+                if keepVisibleCounter > 0 {
+                    keepVisibleCounter -= 1
+                }
+            }
         }
     }
 }

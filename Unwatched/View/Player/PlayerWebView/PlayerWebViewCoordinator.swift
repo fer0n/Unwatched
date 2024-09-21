@@ -59,13 +59,21 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handlePlaybackSpeed(payload)
         case "longTouch":
             handleLongTouchStart(payload)
+            parent.autoHideVM.keepVisible = true
         case "longTouchEnd":
             handleLongTouchEnd()
+            parent.autoHideVM.keepVisible = false
+        case "interaction":
+            handleInteraction()
         case "error":
             handleError(payload)
         default:
             break
         }
+    }
+
+    func handleInteraction() {
+        parent.autoHideVM.setShowControls()
     }
 
     func handleLongTouchStart(_ payload: String?) {
