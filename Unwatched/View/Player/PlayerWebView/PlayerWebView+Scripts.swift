@@ -50,7 +50,7 @@ extension PlayerWebView {
     }
 
     // swiftlint:disable function_body_length
-    static func nonEmbeddedInitScript(
+    static func initScript(
         _ playbackSpeed: Double,
         _ startAt: Double,
         _ requiresFetchingVideoData: Bool?

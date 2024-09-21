@@ -190,12 +190,13 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         //            // switching from a non-embedding to an embedded video, probably a race condition
         //            return
         //        }
-        let script = PlayerWebView.nonEmbeddedInitScript(
+        let script = PlayerWebView.initScript(
             parent.player.playbackSpeed,
             parent.player.getStartPosition(),
             parent.player.requiresFetchingVideoData()
         )
         webView.evaluateJavaScript(script)
+        parent.player.unstarted = true
         parent.player.handleAutoStart()
     }
 }
