@@ -67,10 +67,26 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleInteraction()
         case "aspectRatio":
             handleAspectRatio(payload)
+        case "swipe":
+            handleSwipe(payload)
         case "error":
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func handleSwipe(_ payload: String?) {
+        guard let direction = payload else {
+            Logger.log.warning("No side given for longTouch")
+            return
+        }
+        if direction == "left" {
+            parent.player.goToNextChapter()
+            return
+        }
+        if direction == "right" {
+            parent.player.goToPreviousChapter()
         }
     }
 
