@@ -22,6 +22,7 @@ struct PlayerView: View {
     @Environment(\.requestReview) var requestReview
 
     @State var autoHideVM = AutoHideVM()
+    @State var overlayVM = OverlayFullscreenVM()
 
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
@@ -111,6 +112,7 @@ struct PlayerView: View {
     var playerEmbedded: some View {
         HStack {
             PlayerWebView(
+                overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded
@@ -118,6 +120,7 @@ struct PlayerView: View {
             .aspectRatio(videoAspectRatio, contentMode: .fit)
             .overlay {
                 OverlayFullscreenButton(
+                    overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
                     landscapeFullscreen: landscapeFullscreen
                 )
@@ -152,6 +155,7 @@ struct PlayerView: View {
     var playerWebsite: some View {
         ZStack {
             PlayerWebView(
+                overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 playerType: .youtube,
                 onVideoEnded: handleVideoEnded

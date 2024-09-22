@@ -13,6 +13,7 @@ struct PlayerWebView: UIViewRepresentable {
     // workaround: view doesn't update otherwise
     @Environment(PlayerManager.self) var player
 
+    @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
     let playerType: PlayerType
     let onVideoEnded: () -> Void

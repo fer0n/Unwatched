@@ -83,10 +83,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
         if direction == "left" {
             parent.player.goToNextChapter()
+            parent.overlayVM.show(.next)
             return
         }
         if direction == "right" {
             parent.player.goToPreviousChapter()
+            parent.overlayVM.show(.previous)
         }
     }
 
