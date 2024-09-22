@@ -119,15 +119,47 @@ extension PlayerWebView {
         }
 
 
-        // long press
+        // swipe left/right
+        var touchStartX;
+        var touchStartY;
+
+        function handleSwipe(event) {
+            const touchEndX = event.changedTouches[0].clientX;
+            const touchEndY = event.changedTouches[0].clientY;
+            const screenHeight = window.innerHeight;
+
+            if (touchStartY > screenHeight * 0.8) {
+                return;
+            }
+
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (deltaX > 50) {
+                    sendMessage("swipe", "right");
+                    isSwiping = true;
+                } else if (deltaX < -50) {
+                    sendMessage("swipe", "left");
+                    isSwiping = true;
+                }
+            }
+        }
+
+
+        // long press & swipe
         const touchCountsAsLongPress = 300
         var touchStartTime;
         var touchTimeout;
         var longTouchSent = false;
+        var isSwiping = false;
 
         document.addEventListener('touchstart', function(event) {
             handleTouchStart(event);
             sendMessage("interaction")
+        });
+        document.addEventListener('touchmove', function(event) {
+            handleTouchMove(event);
         });
         document.addEventListener('touchend', function(event) {
             handleTouchEnd(event);
@@ -138,13 +170,33 @@ extension PlayerWebView {
 
         function handleTouchStart(event) {
             touchStartTime = Date.now();
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+            isSwiping = false;
             touchTimeout = setTimeout(function() {
-                const touch = event.touches[0];
-                const screenWidth = window.innerWidth;
-                const side = touch.clientX < screenWidth / 2 ? "left" : "right";
-                sendMessage("longTouch", side);
-                longTouchSent = true;
+                if (!isSwiping) {
+                    const touch = event.touches[0];
+                    const screenWidth = window.innerWidth;
+                    const side = touch.clientX < screenWidth / 2 ? "left" : "right";
+                    sendMessage("longTouch", side);
+                    longTouchSent = true;
+                }
             }, touchCountsAsLongPress);
+        }
+
+        function handleTouchMove(event) {
+            if (isSwiping || longTouchSent) {
+                return;
+            }
+            const touchMoveX = event.touches[0].clientX;
+            const touchMoveY = event.touches[0].clientY;
+            const deltaX = touchMoveX - touchStartX;
+            const deltaY = touchMoveY - touchStartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                isSwiping = true;
+                clearTimeout(touchTimeout);
+            }
         }
 
         function handleTouchEnd(event) {
@@ -152,6 +204,8 @@ extension PlayerWebView {
             if (longTouchSent) {
                 sendMessage("longTouchEnd");
                 longTouchSent = false;
+            } else {
+                handleSwipe(event);
             }
         }
 
