@@ -69,11 +69,21 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleAspectRatio(payload)
         case "swipe":
             handleSwipe(payload)
+        case "centerTouch":
+            handleCenterTouch(payload)
         case "error":
             handleError(payload)
         default:
             break
         }
+    }
+
+    func handleCenterTouch(_ payload: String?) {
+        guard let payload = payload else {
+            return
+        }
+        let play = payload == "play"
+        parent.overlayVM.show(play ? .play : .pause)
     }
 
     func handleSwipe(_ payload: String?) {

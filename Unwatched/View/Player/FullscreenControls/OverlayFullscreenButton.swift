@@ -11,11 +11,13 @@ import SwiftUI
     var icon: OverlayIcon = .play
     var show = false {
         didSet {
-            Task {
-                if show {
-                    try? await Task.sleep(s: 0.2)
-                    show = false
-                }
+            if !show {
+                return
+            }
+            hideControlsTask?.cancel()
+            hideControlsTask = Task {
+                try? await Task.sleep(s: 0.2)
+                show = false
             }
         }
     }
@@ -34,36 +36,25 @@ struct OverlayFullscreenButton: View {
     var landscapeFullscreen: Bool
 
     var body: some View {
-        let touchSize: CGFloat = landscapeFullscreen ? 125 : 90
+        ZStack {
+            Image(systemName: overlayVM.icon.systemName)
+                .resizable()
+                .frame(width: 90, height: 90)
+                .animation(nil, value: overlayVM.show)
+                .fontWeight(.black)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.black, .white)
+                .opacity(overlayVM.show && landscapeFullscreen ? 1 : 0)
 
-        Color.white
-            .opacity(.leastNonzeroMagnitude)
-            .contentShape(Rectangle())
-            .frame(width: touchSize, height: touchSize)
-            .onTapGesture {
-                overlayVM.show(player.isPlaying ? .pause : .play)
-                player.handlePlayButton()
+                .scaleEffect(overlayVM.show && landscapeFullscreen ? 1 : 0.7)
+                .animation(.bouncy, value: overlayVM.show)
+                .accessibilityLabel("playPause")
+
+            if player.videoEnded {
+                PlayButton(size: 90)
+                    .opacity(enabled && landscapeFullscreen ? 1 : 0)
             }
-            .opacity(enabled ? 1 : 0)
-            .overlay {
-                Image(systemName: overlayVM.icon.systemName)
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .animation(nil, value: overlayVM.show)
-                    .fontWeight(.black)
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(.black, .white)
-                    .opacity(overlayVM.show && landscapeFullscreen ? 1 : 0)
-
-                    .scaleEffect(overlayVM.show && landscapeFullscreen ? 1 : 0.7)
-                    .animation(.bouncy, value: overlayVM.show)
-                    .accessibilityLabel("playPause")
-
-                if player.videoEnded {
-                    PlayButton(size: 90)
-                        .opacity(enabled && landscapeFullscreen ? 1 : 0)
-                }
-            }
+        }
     }
 }
 
