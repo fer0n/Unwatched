@@ -65,11 +65,22 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.autoHideVM.keepVisible = false
         case "interaction":
             handleInteraction()
+        case "aspectRatio":
+            handleAspectRatio(payload)
         case "error":
             handleError(payload)
         default:
             break
         }
+    }
+
+    func handleAspectRatio(_ payload: String?) {
+        guard let value = payload,
+              let aspectRatio = Double(value) else {
+            Logger.log.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
+            return
+        }
+        parent.player.handleAspectRatio(aspectRatio)
     }
 
     func handleInteraction() {
@@ -185,11 +196,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-        //        if parent.playerType != .youtube || !parent.player.embeddingDisabled {
-        //            // workaround: without "!parent.player.embeddingDisabled", the video doesn't start
-        //            // switching from a non-embedding to an embedded video, probably a race condition
-        //            return
-        //        }
         let script = PlayerWebView.initScript(
             parent.player.playbackSpeed,
             parent.player.getStartPosition(),

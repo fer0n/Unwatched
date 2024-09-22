@@ -56,31 +56,17 @@ extension PlayerWebView {
         _ requiresFetchingVideoData: Bool?
     ) -> String {
         """
-        var timer;
         var video = document.querySelector('video');
         video.playbackRate = \(playbackSpeed);
         video.currentTime = \(startAt);
         video.muted = false;
 
-        styling()
+        function sendMessage(topic, payload) {
+            window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
+        }
 
-        // long press
-        const touchCountsAsLongPress = 300
-        var touchStartTime;
-        var touchTimeout;
-        var longTouchSent = false;
 
-        document.addEventListener('touchstart', function(event) {
-            handleTouchStart(event);
-            sendMessage("interaction")
-        });
-        document.addEventListener('touchend', function(event) {
-            handleTouchEnd(event);
-        });
-        document.addEventListener('touchcancel', function(event) {
-            handleTouchEnd(event);
-        });
-
+        // play, pause, ended
         video.addEventListener('play', function() {
             startTimer();
             sendMessage("play")
@@ -97,11 +83,57 @@ extension PlayerWebView {
         video.addEventListener('webkitpresentationmodechanged', function (event) {
             event.stopPropagation()
         }, true)
+
+
+        // meta data
         video.addEventListener('loadedmetadata', function() {
             const duration = video.duration;
             sendMessage("duration", duration.toString());
             \(requiresFetchingVideoData == true ? "sendMessage('updateTitle', document.title);" : "")
             cancelErrorChecks();
+        });
+        video.addEventListener('loadeddata', function() {
+            sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);
+        });
+
+
+        // styling
+        styling()
+        function styling() {
+             const style = document.createElement('style');
+             style.innerHTML = '.ytp-pause-overlay, .branding-img { display: none !important; }';
+             document.head.appendChild(style);
+        }
+
+
+        // elapsed time
+        var timer;
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(function() {
+                sendMessage("currentTime", video.currentTime);
+            }, 1000);
+        }
+        function stopTimer() {
+            clearInterval(timer);
+        }
+
+
+        // long press
+        const touchCountsAsLongPress = 300
+        var touchStartTime;
+        var touchTimeout;
+        var longTouchSent = false;
+
+        document.addEventListener('touchstart', function(event) {
+            handleTouchStart(event);
+            sendMessage("interaction")
+        });
+        document.addEventListener('touchend', function(event) {
+            handleTouchEnd(event);
+        });
+        document.addEventListener('touchcancel', function(event) {
+            handleTouchEnd(event);
         });
 
         function handleTouchStart(event) {
@@ -123,26 +155,6 @@ extension PlayerWebView {
             }
         }
 
-        function styling() {
-             const style = document.createElement('style');
-             style.innerHTML = '.ytp-pause-overlay, .branding-img { display: none !important; }';
-             document.head.appendChild(style);
-        }
-
-        function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(function() {
-                sendMessage("currentTime", video.currentTime);
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timer);
-        }
-
-        function sendMessage(topic, payload) {
-            window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
-        }
 
         // Error handling
         var errorCheckTimers = [];
@@ -153,7 +165,6 @@ extension PlayerWebView {
                 sendMessage("error", errorContent?.innerText);
             }
         }
-
         function cancelErrorChecks() {
             errorCheckTimers.forEach(clearTimeout);
             errorCheckTimers = [];

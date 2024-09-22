@@ -16,6 +16,7 @@ import OSLog
     var unstarted: Bool = true
     var isLoading: Bool = true
     var temporaryPlaybackSpeed: Double?
+    private(set) var aspectRatio: Double?
 
     weak var container: ModelContainer?
 
@@ -41,6 +42,7 @@ import OSLog
             return
         }
 
+        aspectRatio = nil
         if video.url == oldValue?.url {
             Logger.log.info("Tapped existing video")
             self.play()
@@ -230,5 +232,39 @@ import OSLog
         #endif
         Logger.log.info("restoreVideo")
         loadTopmostVideoFromQueue()
+    }
+
+    func handleAspectRatio(_ aspectRatio: Double) {
+        guard let video = video,
+              let subscription = video.subscription else {
+            Logger.log.info("No video/subscription to set aspect ratio for")
+            return
+        }
+
+        let consideredYtShort = aspectRatio < Const.consideredYtShortAspectRatio
+        if consideredYtShort {
+            let minAspectRatio = Const.videoAspectRatios.min()
+            self.aspectRatio = minAspectRatio
+            if !video.isYtShort,
+               let duration = video.duration,
+               duration < Const.maxYtShortsDuration {
+                video.isYtShort = true
+            }
+            return
+        }
+        let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
+        if cleanedAspectRatio == Const.defaultVideoAspectRatio {
+            return
+        }
+
+        withAnimation {
+            if subscription.customAspectRatio == nil {
+                video.subscription?.customAspectRatio = cleanedAspectRatio
+            }
+            // video might be different than subscription aspect ratio → use custom one only for this video
+            if aspectRatio != subscription.customAspectRatio {
+                self.aspectRatio = aspectRatio
+            }
+        }
     }
 }
