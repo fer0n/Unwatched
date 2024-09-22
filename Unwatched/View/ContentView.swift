@@ -14,6 +14,7 @@ struct ContentView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -30,6 +31,7 @@ struct ContentView: View {
             let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
                 ? [.medium]
                 : [.height(sheetPos.playerControlHeight)]
+            let sidebarWidth: Double = dynamicTypeSize >= .large ? 400 : 350
 
             ZStack {
                 layout {
@@ -44,7 +46,7 @@ struct ContentView: View {
                     if bigScreen && !hideControlsFullscreen {
                         MenuView()
                             .frame(maxWidth: isLandscape
-                                    ? min(proxy.size.width * 0.4, 350)
+                                    ? min(proxy.size.width * 0.4, sidebarWidth)
                                     : nil)
                             .setColorScheme()
                             .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
@@ -101,4 +103,5 @@ struct ContentView: View {
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader())
+        // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
 }
