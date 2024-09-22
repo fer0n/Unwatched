@@ -22,6 +22,7 @@ struct PlayerWebView: UIViewRepresentable {
         player.isLoading = true
 
         let webViewConfig = WKWebViewConfiguration()
+        webViewConfig.preferences.isTextInteractionEnabled = false
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
         webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen

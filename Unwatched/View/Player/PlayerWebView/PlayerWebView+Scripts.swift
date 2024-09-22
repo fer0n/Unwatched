@@ -57,8 +57,10 @@ extension PlayerWebView {
     ) -> String {
         """
         var video = document.querySelector('video');
+        var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
         video.playbackRate = \(playbackSpeed);
         video.currentTime = \(startAt);
+
         video.muted = false;
 
         function sendMessage(topic, payload) {
@@ -89,7 +91,9 @@ extension PlayerWebView {
         video.addEventListener('loadedmetadata', function() {
             const duration = video.duration;
             sendMessage("duration", duration.toString());
-            \(requiresFetchingVideoData == true ? "sendMessage('updateTitle', document.title);" : "")
+            if (requiresFetchingVideoData) {
+                sendMessage('updateTitle', document.title);
+            }
             cancelErrorChecks();
         });
         video.addEventListener('loadeddata', function() {
@@ -101,8 +105,12 @@ extension PlayerWebView {
         styling()
         function styling() {
              const style = document.createElement('style');
-             style.innerHTML = '.ytp-pause-overlay, .branding-img { display: none !important; }';
-             document.head.appendChild(style);
+            style.innerHTML = `
+                .ytp-pause-overlay, .branding-img {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(style);
         }
 
 
@@ -126,11 +134,6 @@ extension PlayerWebView {
         function handleSwipe(event) {
             const touchEndX = event.changedTouches[0].clientX;
             const touchEndY = event.changedTouches[0].clientY;
-            const screenHeight = window.innerHeight;
-
-            if (touchStartY > screenHeight * 0.8) {
-                return;
-            }
 
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
@@ -151,32 +154,91 @@ extension PlayerWebView {
         const touchCountsAsLongPress = 300
         var touchStartTime;
         var touchTimeout;
+        var centerTouchSent = false;
         var longTouchSent = false;
-        var isSwiping = false;
 
-        document.addEventListener('touchstart', function(event) {
-            handleTouchStart(event);
-            sendMessage("interaction")
-        });
-        document.addEventListener('touchmove', function(event) {
-            handleTouchMove(event);
-        });
-        document.addEventListener('touchend', function(event) {
-            handleTouchEnd(event);
-        });
-        document.addEventListener('touchcancel', function(event) {
-            handleTouchEnd(event);
-        });
+        window.addEventListener('touchstart', event => {
+            event.preventDefault();
+            if (event.target.matches('video')) {
+                if (!event.isReTriggering) {
+                    event.stopPropagation();
+                    handleTouchStart(event);
+
+                    setTimeout(function() {
+                        if (isSwiping || longTouchSent || centerTouchSent) {
+                            return;
+                        }
+
+                        // Manually trigger the event again with the custom property
+                        const newEvent = new event.constructor(event.type, event);
+                        newEvent.isReTriggering = true;
+                        event.target.dispatchEvent(newEvent);
+
+                        // trigger end as well
+                        setTimeout(function() {
+                            const endEvent = new event.constructor('touchend', event);
+                            endEvent.isReTriggering = true;
+                            event.target.dispatchEvent(endEvent);
+                        }, 0);
+
+                    }, touchCountsAsLongPress + 10);
+                } else {
+                    sendMessage("interaction");
+                }
+            }
+        }, true);
+        window.addEventListener('touchmove', event => {
+            if (event.target.matches('video')) {
+                event.stopPropagation();
+                handleTouchMove(event);
+            }
+        }, true);
+        window.addEventListener('touchend', event => {
+            if (event.target.matches('video')) {
+                if (!event.isReTriggering) {
+                    event.stopPropagation();
+                    handleTouchEnd(event);
+                }
+            }
+        }, true);
+        window.addEventListener('touchcancel', event => {
+            if (event.target.matches('video')) {
+                handleTouchEnd(event);
+                event.stopPropagation();
+            }
+        }, true);
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
 
         function handleTouchStart(event) {
             touchStartTime = Date.now();
             touchStartX = event.touches[0].clientX;
             touchStartY = event.touches[0].clientY;
             isSwiping = false;
+            centerTouchSent = false;
+            longTouchSent = false;
+
+            const screenWidth = window.innerWidth;
+            const touch = event.touches[0];
+
+            const touchSize = screenWidth * 0.15;
+            const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < touchSize;
+
+            if (isCenterTouch) {
+                sendMessage("centerTouch", video.paused ? "play" : "pause");
+                togglePlay();
+                centerTouchSent = true;
+                return;
+            }
+
             touchTimeout = setTimeout(function() {
                 if (!isSwiping) {
-                    const touch = event.touches[0];
-                    const screenWidth = window.innerWidth;
                     const side = touch.clientX < screenWidth / 2 ? "left" : "right";
                     sendMessage("longTouch", side);
                     longTouchSent = true;
@@ -185,7 +247,7 @@ extension PlayerWebView {
         }
 
         function handleTouchMove(event) {
-            if (isSwiping || longTouchSent) {
+            if (isSwiping || longTouchSent || centerTouchSent) {
                 return;
             }
             const touchMoveX = event.touches[0].clientX;
@@ -203,8 +265,7 @@ extension PlayerWebView {
             clearTimeout(touchTimeout);
             if (longTouchSent) {
                 sendMessage("longTouchEnd");
-                longTouchSent = false;
-            } else {
+            } else if (!centerTouchSent) {
                 handleSwipe(event);
             }
         }
