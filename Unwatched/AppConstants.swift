@@ -21,6 +21,9 @@ struct Const {
     static let defaultVideoAspectRatio: Double = 16/9
     static let videoAspectRatios: [Double] = [18/9, 4/3]
     static let consideredWideAspectRatio: Double = 18/9
+    static let consideredYtShortAspectRatio: Double = 1
+    static let maxYtShortsDuration: Double = 60
+    static let aspectRatioBuffer: Double = 0.1
 
     /// Playback speeds that will be spelled out
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]

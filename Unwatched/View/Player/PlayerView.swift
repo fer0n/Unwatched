@@ -34,7 +34,9 @@ struct PlayerView: View {
     }
 
     var videoAspectRatio: Double {
-        player.video?.subscription?.customAspectRatio ?? Const.defaultVideoAspectRatio
+        player.aspectRatio
+            ?? player.video?.subscription?.customAspectRatio
+            ?? Const.defaultVideoAspectRatio
     }
 
     var showFullscreenControls: Bool {
@@ -49,6 +51,7 @@ struct PlayerView: View {
                 .aspectRatio(videoAspectRatio, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .background(backgroundTapRecognizer)
+                .animation(.default, value: videoAspectRatio)
 
             if player.video != nil {
                 HStack(spacing: 0) {
