@@ -80,7 +80,7 @@ enum VideoActions {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataController.previewContainerFilled
     let context = ModelContext(container)
     let fetch = FetchDescriptor<Video>()
     let videos = try? context.fetch(fetch)
@@ -88,7 +88,7 @@ enum VideoActions {
         return Text("noVideoFound")
     }
     video.duration = 130
-    video.elapsedSeconds = 40
+    video.elapsedSeconds = 0.1
     video.isYtShort = false
 
     return List {
