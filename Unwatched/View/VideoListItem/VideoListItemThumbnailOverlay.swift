@@ -34,13 +34,13 @@ struct VideoListItemThumbnailOverlay: View {
             if let elapsed = elapsed, let total = total {
                 let progress = elapsed / total
                 // if the time is barely started, show a little bit of progress
-                let cleanedProgress = progress > 0 && progress < 0.1
+                let cleanedProgress = (progress > 0 && progress < 0.1)
                     ? 0.1
                     : progress
 
                 GeometryReader { geo in
                     let progressWidth = geo.size.width * cleanedProgress
-                    let cleanedProgressWidth = min(radius * 3, progressWidth)
+                    let cleanedProgressWidth = max(radius * 3, progressWidth)
                     progressBar(cleanedProgressWidth)
                 }
             } else if hasDuration {
