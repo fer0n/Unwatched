@@ -103,5 +103,5 @@ struct ContentView: View {
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader())
-        // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
+    // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
 }

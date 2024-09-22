@@ -1771,6 +1771,42 @@
         }
       }
     },
+    "duplicatesFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplikate können bei aktivem iCloud-Sync nicht verhindert werden, sollten aber automatisch nach der Aktualisierung entfernt werden.\n\nFalls nicht, drücke lange auf den „Neu laden“-Button und wähle „Neu laden & deduplizieren“. Sind danach immer noch Duplikate vorhanden, bitte Bescheid geben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If iCloud sync is enabled, duplicates can’t currently be avoided. However, they should automatically clean up after refresh.\n\nIf still visible, long press the refresh button and select “Reload & Dedupe.” If they remain, please let me know."
+          }
+        }
+      }
+    },
+    "duplicatesFaqQ" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why are there duplicate videos/subscriptions?"
+          }
+        }
+      }
+    },
+    "duplicatesFaqT" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicates"
+          }
+        }
+      }
+    },
     "durationMissingFaqA" : {
       "localizations" : {
         "de" : {
@@ -2242,13 +2278,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hard reload"
+            "value" : "Neu laden & deduplizieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hard Reload"
+            "value" : "Reload & Dedupe"
           }
         }
       }

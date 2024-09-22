@@ -43,6 +43,11 @@ struct FaqView: View {
             "durationMissingFaqA"
         ),
         FaqInfo(
+            "duplicatesFaqT",
+            "duplicatesFaqQ",
+            "duplicatesFaqA"
+        ),
+        FaqInfo(
             "macOsFaqT",
             "macOsFaqQ",
             "macOsFaqA"
