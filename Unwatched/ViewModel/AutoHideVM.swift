@@ -32,6 +32,11 @@ import SwiftUI
     var showControls: Bool {
         showControlsLocal || keepVisibleCounter > 0
     }
+    
+    func reset() {
+        showControlsLocal = false
+        keepVisibleCounter = 0
+    }
 
     func setShowControls(positionLeft: Bool? = nil) {
         withAnimation(.default.speed(3)) {

@@ -88,6 +88,9 @@ struct PlayerView: View {
                 .onChange(of: playbackSpeed) {
                     // workaround: doesn't update otherwise
                 }
+                .onChange(of: reloadVideoId) {
+                    autoHideVM.reset()
+                }
                 .overlay {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
