@@ -156,34 +156,14 @@ extension PlayerWebView {
         var touchTimeout;
         var centerTouchSent = false;
         var longTouchSent = false;
+        var touchStartEvent;
 
         window.addEventListener('touchstart', event => {
-            event.preventDefault();
             if (event.target.matches('video')) {
+                touchStartEvent = event;
                 if (!event.isReTriggering) {
                     event.stopPropagation();
                     handleTouchStart(event);
-
-                    setTimeout(function() {
-                        if (isSwiping || longTouchSent || centerTouchSent) {
-                            return;
-                        }
-
-                        // Manually trigger the event again with the custom property
-                        const newEvent = new event.constructor(event.type, event);
-                        newEvent.isReTriggering = true;
-                        event.target.dispatchEvent(newEvent);
-
-                        // trigger end as well
-                        setTimeout(function() {
-                            const endEvent = new event.constructor('touchend', event);
-                            endEvent.isReTriggering = true;
-                            event.target.dispatchEvent(endEvent);
-                        }, 0);
-
-                    }, touchCountsAsLongPress + 10);
-                } else {
-                    sendMessage("interaction");
                 }
             }
         }, true);
@@ -203,8 +183,10 @@ extension PlayerWebView {
         }, true);
         window.addEventListener('touchcancel', event => {
             if (event.target.matches('video')) {
-                handleTouchEnd(event);
-                event.stopPropagation();
+                if (!event.isReTriggering) {
+                    handleTouchEnd(event);
+                    event.stopPropagation();
+                }
             }
         }, true);
 
@@ -262,12 +244,33 @@ extension PlayerWebView {
         }
 
         function handleTouchEnd(event) {
+            triggerTouchEvent(event);
             clearTimeout(touchTimeout);
             if (longTouchSent) {
                 sendMessage("longTouchEnd");
             } else if (!centerTouchSent) {
                 handleSwipe(event);
             }
+        }
+
+        function triggerTouchEvent() {
+            if (isSwiping || longTouchSent || centerTouchSent) {
+                return;
+            }
+            sendMessage("interaction");
+            const event = touchStartEvent;
+
+            // Manually trigger the event again with the custom property
+            const newEvent = new event.constructor('touchstart', event);
+            newEvent.isReTriggering = true;
+            event.target.dispatchEvent(newEvent);
+
+            // trigger end as well
+            setTimeout(function() {
+                const endEvent = new event.constructor('touchend', event);
+                endEvent.isReTriggering = true;
+                event.target.dispatchEvent(endEvent);
+            }, 0);
         }
 
 
