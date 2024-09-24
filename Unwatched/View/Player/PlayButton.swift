@@ -66,6 +66,7 @@ struct PlayButtonContextMenu: View {
         }
 
         Button {
+            player.embeddingDisabled = false
             player.handleHotSwap()
             PlayerManager.reloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
