@@ -32,7 +32,7 @@ import SwiftUI
     var showControls: Bool {
         showControlsLocal || keepVisibleCounter > 0
     }
-    
+
     func reset() {
         showControlsLocal = false
         keepVisibleCounter = 0

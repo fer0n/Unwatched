@@ -39,6 +39,7 @@ class DataController {
         do {
             return try ModelContainer(
                 for: schema,
+                migrationPlan: CachedImageMigrationPlan.self,
                 configurations: [config]
             )
         } catch {
@@ -65,6 +66,7 @@ class DataController {
         do {
             if let container = try? ModelContainer(
                 for: DataController.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             ) {
                 container.mainContext.undoManager = UndoManager()
@@ -79,6 +81,7 @@ class DataController {
             )
             let container = try ModelContainer(
                 for: DataController.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             )
             container.mainContext.undoManager = UndoManager()
