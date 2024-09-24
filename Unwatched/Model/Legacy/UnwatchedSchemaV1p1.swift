@@ -14,7 +14,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             Video.self,
             Subscription.self,
             QueueEntry.self,
-            UnwatchedSchemaV1.WatchEntry.self,
+            WatchEntry.self,
             InboxEntry.self,
             Chapter.self
         ]
@@ -24,7 +24,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
     final class Video {
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
         @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-        @Relationship(inverse: \UnwatchedSchemaV1.WatchEntry.video) var watchEntries: [UnwatchedSchemaV1.WatchEntry]? = []
+        @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
         @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
         @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
         var youtubeId: String = UUID().uuidString
@@ -80,6 +80,18 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             self.clearedInboxDate = clearedInboxDate
             self.createdDate = createdDate
             self.isYtShort = isYtShort
+        }
+    }
+
+    @Model
+    final class WatchEntry {
+
+        var video: Video?
+        var date: Date?
+
+        init(video: Video?, date: Date? = .now) {
+            self.video = video
+            self.date = date
         }
     }
 }
