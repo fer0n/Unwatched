@@ -446,6 +446,7 @@
 		88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE522B5D3211009866A0 /* BrowserView.swift */; };
 		88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */; };
 		88F4087F2C18F541009F90E6 /* fullscreenSafeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */; };
+		88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */; };
 		88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */; };
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
@@ -705,6 +706,7 @@
 		88F1EE522B5D3211009866A0 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
 		88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropUrlArea.swift; sourceTree = "<group>"; };
 		88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fullscreenSafeArea.swift; sourceTree = "<group>"; };
+		88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlServiceTests.swift; sourceTree = "<group>"; };
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
@@ -854,6 +856,7 @@
 			children = (
 				CDA07A372C601F350009BFEC /* TestData */,
 				CDA07A382C601F510009BFEC /* DataSpeedTests.swift */,
+				88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */,
 				CDEB17712C5CCB4B00E6FE66 /* VideoCrawlerTests.swift */,
 				882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */,
 				8802F84E2C691A51008A7778 /* ImageServiceTests.swift */,
@@ -1555,6 +1558,7 @@
 				8805050D2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */,
 				889AF8DD2C50ECA9001CEDE6 /* NewVideosNotificationInfo.swift in Sources */,
 				889AF8DE2C50ECA9001CEDE6 /* HandleVideoUrlDropModifier.swift in Sources */,
+				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
 				889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */,
 				889AF8E02C50ECA9001CEDE6 /* RefreshToolbarButton.swift in Sources */,
 				889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */,
@@ -2056,7 +2060,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2101,7 +2105,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 138;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
