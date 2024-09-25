@@ -25,6 +25,6 @@ struct SearchableVideos: View {
                         placement: .navigationBarDrawer(displayMode: .always))
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
-            .keyboardType(.alphabet)
+            .keyboardType(.webSearch)
     }
 }

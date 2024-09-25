@@ -15,7 +15,7 @@ struct SubscriptionSearchBar: View {
                 .padding(.trailing, 5)
                 .foregroundStyle(.secondary)
             TextField("searchLibrary", text: $text.val)
-                .keyboardType(.alphabet)
+                .keyboardType(.webSearch)
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.done)
