@@ -44,7 +44,7 @@ struct AddToLibraryView: View {
 
         HStack(spacing: 0) {
             TextField("enterUrls", text: $addText)
-                .keyboardType(.alphabet)
+                .keyboardType(.webSearch)
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.send)
