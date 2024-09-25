@@ -50,6 +50,12 @@ struct UrlService {
             return res
         }
 
+        // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
+        let embedRegex = #"(?:https\:\/\/)?(?:www\.)?youtube\.com\/embed\/([^\s\/\?\n]+)"#
+        if let res = url.absoluteString.matching(regex: embedRegex) {
+            return res
+        }
+
         // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
         // https://piped.video/watch?v=VZIm_2MgdeA
