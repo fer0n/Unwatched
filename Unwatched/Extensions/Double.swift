@@ -59,10 +59,7 @@ extension Double {
     }()
 
     var formatTimeMinimal: String? {
-        if 10 < self && self < 60 {
-            return "<1m"
-        }
-        return Double.timeMinimalFormatter.string(from: TimeInterval(self))
+        Double.timeMinimalFormatter.string(from: TimeInterval(self))
     }
 }
 
@@ -70,10 +67,8 @@ extension Double {
     /// Allow a small discrepancy between the given and usual aspect ratios
     var cleanedAspectRatio: Double {
         let buffer = Const.aspectRatioBuffer
-        for aspectRatio in Const.videoAspectRatios {
-            if abs(aspectRatio - self) < buffer {
-                return aspectRatio
-            }
+        for aspectRatio in Const.videoAspectRatios where abs(aspectRatio - self) < buffer {
+            return aspectRatio
         }
         return self
     }
