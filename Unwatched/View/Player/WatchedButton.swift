@@ -7,7 +7,7 @@ import Foundation
 import SwiftUI
 
 struct WatchedButton: View {
-
+    @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
@@ -27,7 +27,7 @@ struct WatchedButton: View {
         .contextMenu {
             if player.video != nil {
                 Button {
-                    player.clearVideo()
+                    player.clearVideo(modelContext)
                 } label: {
                     Label("clearVideo", systemImage: Const.clearNoFillSF)
                 }
