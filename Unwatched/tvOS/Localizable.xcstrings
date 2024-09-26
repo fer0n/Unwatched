@@ -1,0 +1,70 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "fillData" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testdaten hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Test Data"
+          }
+        }
+      }
+    },
+    "queue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        }
+      }
+    },
+    "videosUnavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Videos"
+          }
+        }
+      }
+    },
+    "videosUnavailableDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um Videos anzusehen, öffne Unwatched auf deinem iOS/iPadOS-Gerät und füge Videos zu deiner Warteschlange hinzu.\n\nStelle sicher, dass die iCloud-Synchronisierung aktiviert ist (unter Mediathek → Einstellungen → Benutzerdaten)."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To see videos, open Unwatched on your iOS/iPadOS device and add Videos to your Queue.  Make sure you have iCloud sync enabled (under Library → Settings → User Data)."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
