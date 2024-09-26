@@ -9,6 +9,7 @@ import OSLog
 
 class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
     let parent: PlayerWebView
+    var updateTimeCounter: Int = 0
 
     init(_ parent: PlayerWebView) {
         self.parent = parent
@@ -215,11 +216,17 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         if parent.player.isPlaying {
             parent.player.monitorChapters(time: time)
         }
-        if let urlString = urlString,
+
+        updateTimeCounter += 1
+        if persist,
+           let urlString = urlString,
            let url = URL(string: String(urlString)),
-           let videoId = UrlService.getYoutubeIdFromUrl(url: url),
-           persist {
+           let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
+            updateTimeCounter = 0
             parent.player.updateElapsedTime(time, videoId: videoId)
+        } else if updateTimeCounter >= Const.updateDbTimeSeconds {
+            updateTimeCounter = 0
+            parent.player.updateElapsedTime(time)
         }
     }
 

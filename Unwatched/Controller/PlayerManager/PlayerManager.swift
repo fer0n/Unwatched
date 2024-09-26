@@ -80,12 +80,12 @@ import OSLog
     @ObservationIgnored var currentEndTime: Double?
 
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        Logger.log.info("updateElapsedTime")
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             Logger.log.info("updateElapsedTime: wrong video to update")
             return
         }
+        Logger.log.info("updateElapsedTime")
 
         let newTime = time ?? currentTime
         if let time = newTime, video?.elapsedSeconds != time {
