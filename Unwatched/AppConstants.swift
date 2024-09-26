@@ -23,7 +23,7 @@ struct Const {
     static let consideredWideAspectRatio: Double = 18/9
     static let consideredYtShortAspectRatio: Double = 1
     static let maxYtShortsDuration: Double = 60
-    static let aspectRatioBuffer: Double = 0.1
+    static let aspectRatioTolerance: Double = 0.1
 
     /// Playback speeds that will be spelled out
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
@@ -55,6 +55,8 @@ struct Const {
     static let playlistPageRequestLimit: Int = 25 // 25 * 50 videos per page/request -> 1250 videos
 
     static let recentVideoDedupeCheck: Int = 30
+
+    static let updateDbTimeSeconds: Int = 30
 
     /// Time in seconds before fullscreen controls are automatically hidden
     static let controlsAutoHideDebounce: Double = 4

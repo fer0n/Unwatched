@@ -66,7 +66,7 @@ extension Double {
 extension Double {
     /// Allow a small discrepancy between the given and usual aspect ratios
     var cleanedAspectRatio: Double {
-        let buffer = Const.aspectRatioBuffer
+        let buffer = Const.aspectRatioTolerance
         for aspectRatio in Const.videoAspectRatios where abs(aspectRatio - self) < buffer {
             return aspectRatio
         }
