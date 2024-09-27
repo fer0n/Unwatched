@@ -247,7 +247,7 @@ extension PlayerWebView {
                 sendMessage("longTouchEnd");
             } else if (isSwiping) {
                 handleSwipe(event);
-            } else if  (centerTouch) {
+            } else if (centerTouch) {
                 togglePlay();
                 sendMessage("centerTouch", video.paused ? "play" : "pause");
             }
