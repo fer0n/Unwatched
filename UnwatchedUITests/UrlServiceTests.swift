@@ -24,7 +24,8 @@ final class UrlServiceTests: XCTestCase {
             ("https://www.youtube.com/watch?v=epBbbysk5cU", "epBbbysk5cU"),
             ("https://piped.video/watch?v=VZIm_2MgdeA", "VZIm_2MgdeA"),
             ("https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1&color=white&controls=1&iv_load_policy=3", "Udl16tb2xv8"),
-            ("youtube.com/watch?v=epBbbysk5cU", "epBbbysk5cU")
+            ("youtube.com/watch?v=epBbbysk5cU", "epBbbysk5cU"),
+            ("https://youtu.be/jWH8Aztd-zM?si=0GjLAkM5ZeeSsUoH", "jWH8Aztd-zM")
         ]
 
         for (url, expected) in testValues {
