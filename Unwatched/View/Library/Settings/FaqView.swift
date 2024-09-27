@@ -33,14 +33,19 @@ struct FaqView: View {
             "tvOsFaqA"
         ),
         FaqInfo(
-            "watchHistoryNotShowingFaqT",
-            "watchHistoryNotShowingFaqQ",
-            "watchHistoryNotShowingFaqA"
-        ),
-        FaqInfo(
             "durationMissingFaqT",
             "durationMissingFaqQ",
             "durationMissingFaqA"
+        ),
+        FaqInfo(
+            "overlayStuckFaqT",
+            "overlayStuckFaqQ",
+            "overlayStuckFaqA"
+        ),
+        FaqInfo(
+            "watchHistoryNotShowingFaqT",
+            "watchHistoryNotShowingFaqQ",
+            "watchHistoryNotShowingFaqA"
         ),
         FaqInfo(
             "duplicatesFaqT",

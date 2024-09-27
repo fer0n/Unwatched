@@ -3489,6 +3489,54 @@
         }
       }
     },
+    "overlayStuckFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem langen drücken auf die „Play“-Taste unter „Player neu laden“ (im Querformat „nächstes Video“-Taste), kann das Problem behoben werden. Alternativ kann der native iOS-Vollbildmodus aktiviert werden, oder in den Einstellungen automatisch eingeschaltet werden.\n\nDies tritt auf, wenn der Player ein „Touch Down“ ohne „Touch Up“ erkennt (z. B. beim Hochwischen zum Home-Bildschirm, während das Video berührt wird). Leider ist dies ein Problem von YouTube, das ich nicht beheben kann."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long press the “play” button and select “reload player” (in horizontal mode, long press the “next” button) to resolve the issue. You can also enable native iOS fullscreen, which can be set to turn on automatically in Settings.\n\nThis issue occurs when the player detects a \"touch down\" without a corresponding \"touch up\" (e.g., swiping up to return to the home screen when the swipe happens over the video). Unfortunately, this is a YouTube issue I cannot resolve."
+          }
+        }
+      }
+    },
+    "overlayStuckFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das YouTube Overlay (play button etc.) verschwindet nicht mehr von alleine."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube’s player controls are stuck and don’t disappear."
+          }
+        }
+      }
+    },
+    "overlayStuckFaqT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Overlay immer Sichtbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Overlays Stuck"
+          }
+        }
+      }
+    },
     "page" : {
       "localizations" : {
         "de" : {
@@ -4920,13 +4968,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay kann verwendet werden um Videos direkt auf dem Apple TV abzuspielen. Dazu muss im Player unten rechts der native iOS Vollbild-Modus gestartet werden. Von dort kann AirPlay ausgewählt werden.\n\nEine native tvOS Version ist leider nicht möglich. Um YouTubes [Nutzungsbedingungen](https://www.youtube.com/static?template=terms) zu erfüllen, muss Unwatched eine Webansicht verwenden, um den [YouTube-Iframe-Player](https://developers.google.com/youtube/iframe_api_reference) anzuzeigen – und Webansichten sind auf tvOS nicht verfügbar."
+            "value" : "Ja, aber Unwatched unterstützt keinen eigenen Player auf tvOS und öffnet stattdessen die YouTube App.  Alternativ kann AirPlay verwendet werden. Dazu muss im Player unten rechts der native iOS Vollbild-Modus gestartet werden. Von dort kann AirPlay ausgewählt werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can use AirPlay to cast from Unwatched to your Apple TV. Enter the native iOS fullscreen by tapping on the fullscreen button inside the video player on the bottom right (not available on macOS). Choose AirPlay from there.  A native tvOS Version is, unfortunately, not possible. To comply with YouTube’s [Terms of Service](https://www.youtube.com/static?template=terms), Unwatched must use a web view to display the [YouTube iframe player](https://developers.google.com/youtube/iframe_api_reference), and web views aren't available on tvOS."
+            "value" : "Yes, but it doesn't support a custom player and opens the YouTube app instead.   You can also use AirPlay to cast from Unwatched to Apple TV. Enter fullscreen by tapping the fullscreen button on the video player (bottom right, not on macOS), then choose AirPlay."
           }
         }
       }
@@ -4936,13 +4984,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wird es eine tvOS Version von Unwatched geben?"
+            "value" : "Gibt es eine tvOS Version von Unwatched?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Will Unwatched be available on tvOS?"
+            "value" : "Is Unwatched available on tvOS?"
           }
         }
       }
