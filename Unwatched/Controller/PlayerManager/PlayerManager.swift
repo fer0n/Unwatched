@@ -212,6 +212,7 @@ import OSLog
         Logger.log.info("handleHotSwap")
         isLoading = true
         previousIsPlaying = isPlaying
+        previousState.isPlaying = false
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()
