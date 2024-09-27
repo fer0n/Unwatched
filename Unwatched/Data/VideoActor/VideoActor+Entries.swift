@@ -131,7 +131,7 @@ extension VideoActor {
 
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
-                                  defaultPlacement: DefaultVideoPlacement) {
+                                  defaultPlacement: DefaultVideoPlacement) -> Int {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
 
@@ -144,30 +144,34 @@ extension VideoActor {
         if sub.placeVideosIn == .defaultPlacement {
             placement = defaultPlacement.videoPlacement
         }
-
         if defaultPlacement.shortsPlacement == .hide {
-            addSingleVideoTo(
+            let count = addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
                 defaultPlacement: defaultPlacement
             )
+            return count
         } else {
             addVideosTo(videos: videosToAdd, placement: placement, index: 1)
         }
+        return videosToAdd.count
     }
 
     private func addSingleVideoTo(
         _ videos: [Video],
         videoPlacement: VideoPlacement,
         defaultPlacement: DefaultVideoPlacement
-    ) {
+    ) -> Int {
+        var addedVideosCount = 0
         // check setting for ytShort, use individual setting in that case
         for video in videos {
             let placement: VideoPlacement = (video.isYtShort && defaultPlacement.shortsPlacement == .hide)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)
+            addedVideosCount += 1
         }
+        return addedVideosCount
     }
 
     func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 1) {
