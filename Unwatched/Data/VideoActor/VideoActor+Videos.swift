@@ -107,11 +107,15 @@ import OSLog
             }
 
             for try await (sub, videos) in group {
-                await handleNewVideos(
+                let countNewVideos = await handleNewVideosGetCount(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
+                if countNewVideos > 0 {
+                    // save sooner if videos got added
+                    try modelContext.save()
+                }
             }
         }
 
@@ -119,14 +123,14 @@ import OSLog
         return newVideos
     }
 
-    func handleNewVideos(
+    private func handleNewVideosGetCount(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async {
+    ) async -> Int {
         guard let subModel = getSubscription(via: sub) else {
             Logger.log.info("missing info when trying to load videos")
-            return
+            return 0
         }
         let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
@@ -137,12 +141,12 @@ import OSLog
         let videoModels = insertVideoModels(from: videos, defaultPlacement)
         subModel.videos?.append(contentsOf: videoModels)
 
-        triageSubscriptionVideos(subModel,
-                                 videos: videoModels,
-                                 defaultPlacement: defaultPlacement)
+        let addedVideoCount = triageSubscriptionVideos(subModel,
+                                                       videos: videoModels,
+                                                       defaultPlacement: defaultPlacement)
         subModel.mostRecentVideoDate = mostRecentDate
         updateRecentVideoDate(subModel, mostRecentDate)
-        return
+        return addedVideoCount
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
@@ -190,8 +194,13 @@ import OSLog
             Logger.log.info("sub has no url: \(sub.title)")
             return (sub, [])
         }
-        let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-        return (sub, videos)
+        do {
+            let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+            return (sub, videos)
+        } catch {
+            Logger.log.error("Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)")
+            throw error
+        }
     }
 
     private func cacheImages(for videos: [SendableVideo]) {
