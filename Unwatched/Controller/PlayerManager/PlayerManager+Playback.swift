@@ -79,7 +79,11 @@ extension PlayerManager {
     }
 
     func temporarySlowDown() {
-        temporaryPlaybackSpeed = 1
+        if actualPlaybackSpeed == 1 {
+            temporaryPlaybackSpeed = 0.5
+        } else {
+            temporaryPlaybackSpeed = 1
+        }
     }
 
     func resetTemporaryPlaybackSpeed() {
