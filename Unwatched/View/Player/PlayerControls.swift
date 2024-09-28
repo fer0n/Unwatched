@@ -150,6 +150,7 @@ struct PlayerControls: View {
         !hideControlsFullscreen
             || fullscreenControlsSetting != .autoHide
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
+            || player.videoIsCloseToEnd
     }
 }
 

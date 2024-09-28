@@ -33,7 +33,15 @@ struct FullscreenPlayerControlsWrapper: View {
                 }
             })
             .frame(width: nonEmbedding ? 60 : 0)
-            .opacity(fullscreenControlsSetting == .enabled || !player.isPlaying || autoHideVM.showControls ? 1 : 0)
+            .opacity(showControls ? 1 : 0)
+            .animation(.default, value: showControls)
         }
+    }
+
+    var showControls: Bool {
+        fullscreenControlsSetting == .enabled
+            || !player.isPlaying
+            || autoHideVM.showControls
+            || player.videoIsCloseToEnd
     }
 }

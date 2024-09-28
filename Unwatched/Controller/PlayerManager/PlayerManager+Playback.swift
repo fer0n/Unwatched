@@ -126,6 +126,13 @@ extension PlayerManager {
         }
     }
 
+    var videoIsCloseToEnd: Bool {
+        guard let duration = video?.duration, let time = currentTime else {
+            return false
+        }
+        return duration - time <= Const.secondsConsideredCloseToEnd
+    }
+
     func setVideoEnded(_ value: Bool) {
         if value != videoEnded {
             withAnimation {
