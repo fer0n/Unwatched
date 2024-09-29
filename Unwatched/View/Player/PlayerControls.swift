@@ -123,7 +123,7 @@ struct PlayerControls: View {
             }
         }
         .onHover { over in
-            autoHideVM.keepVisible = over
+            autoHideVM.setKeepVisible(over, "hover")
         }
     }
 
