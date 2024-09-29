@@ -7,11 +7,11 @@ import TipKit
 
 struct HideShortsTip: Tip {
     var title: Text {
-        Text("HideShortsTip")
+        Text("hideShortsTip")
     }
 
     var message: Text? {
-        Text("HideShortsTipMessage")
+        Text("hideShortsTipMessage")
     }
 
     var image: Image? {
@@ -19,13 +19,9 @@ struct HideShortsTip: Tip {
     }
 
     var actions: [Action] {
-        Action(id: Const.hideShortsTipAction) {
+        Action {
             Text("hideShortsTipAction")
                 .foregroundStyle(.teal)
-        }
-        Action(id: Const.discardShortsTipAction) {
-            Text("discardShortsTipAction")
-                .foregroundStyle(.red)
         }
     }
 
@@ -42,32 +38,22 @@ struct HideShortsTip: Tip {
 }
 
 struct HideShortsTipView: View {
-    @AppStorage(Const.shortsPlacement) var shortsPlacement: ShortsPlacement = .show
+    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
     @Environment(\.modelContext) var modelContext
-
-    @State var showConfirm = false
 
     var hideShortsTip = HideShortsTip()
 
     var body: some View {
-        if shortsPlacement == .show {
+        if !hideShorts {
             hideShortsTipView
         }
     }
 
     var hideShortsTipView: some View {
-        TipView(hideShortsTip) { action in
-            if action.id == Const.hideShortsTipAction {
-                shortsPlacement = .hide
-                VideoService.clearAllYtShortsFromInbox(modelContext)
-                hideShortsTip.invalidate(reason: .actionPerformed)
-            } else if action.id == Const.discardShortsTipAction {
-                showConfirm = true
-            }
+        TipView(hideShortsTip) { _ in
+            VideoService.clearAllYtShortsFromInbox(modelContext)
+            hideShorts = true
         }
-        .discardShortsActionSheet(isPresented: $showConfirm, onDelete: {
-            hideShortsTip.invalidate(reason: .actionPerformed)
-        })
         .tipBackground(Color.insetBackgroundColor)
         .listRowBackground(Color.backgroundColor)
     }

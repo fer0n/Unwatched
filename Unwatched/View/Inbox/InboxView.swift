@@ -19,6 +19,7 @@ struct InboxView: View {
     var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
+    var hideShortsTip = HideShortsTip()
 
     var body: some View {
         @Bindable var navManager = navManager

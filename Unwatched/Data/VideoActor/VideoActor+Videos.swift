@@ -138,7 +138,7 @@ import OSLog
         videos = await self.addShortsDetectionAndImageData(to: videos)
         cacheImages(for: videos)
 
-        let videoModels = insertVideoModels(from: videos, defaultPlacement)
+        let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
 
         let addedVideoCount = triageSubscriptionVideos(subModel,
@@ -157,15 +157,9 @@ import OSLog
         }
     }
 
-    private func insertVideoModels(
-        from videos: [SendableVideo],
-        _ placementInfo: DefaultVideoPlacement
-    ) -> [Video] {
+    private func insertVideoModels(from videos: [SendableVideo]) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
-            if vid.isYtShort && placementInfo.shortsPlacement == .discard {
-                continue
-            }
             let video = vid.createVideo()
             videoModels.append(video)
             modelContext.insert(video)
@@ -204,11 +198,10 @@ import OSLog
     }
 
     private func cacheImages(for videos: [SendableVideo]) {
-        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
-        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue)
+        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
 
         let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort && shortsPlacement != .show
+            let discardImage = vid.isYtShort && hideShorts
             if !discardImage,
                let url = vid.thumbnailUrl,
                let data = vid.thumbnailData {
@@ -253,12 +246,11 @@ import OSLog
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
-        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue) ?? .show
+        let hideShortsEverywhere = UserDefaults.standard.bool(forKey: Const.hideShorts)
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            shortsPlacement: shortsPlacement
+            hideShortsEverywhere: hideShortsEverywhere
         )
         return info
     }
