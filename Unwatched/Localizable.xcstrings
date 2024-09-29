@@ -1547,86 +1547,6 @@
         }
       }
     },
-    "discardShorts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discard"
-          }
-        }
-      }
-    },
-    "discardShortsConfirmationMessage" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausblenden/Einblenden beeinflussen weder die aktuelle Queue noch die Inbox. \"Entfernen\" löscht alle #shorts dauerhaft und speichert verwirft zukünftige #shorts, was die Synchronisation verbessern kann.  Die Erkennung von #shorts ist genau, aber Fehler können vorkommen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This will permanently delete all current #shorts and no longer save new ones; which may improve sync. You can always change the setting back to load new #shorts again.  #Shorts detection is accurate, but there can be mistakes."
-          }
-        }
-      }
-    },
-    "discardShortsConfirmationTitle" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Geladene #shorts entfernen?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete Loaded #shorts?"
-          }
-        }
-      }
-    },
-    "discardShortsNow" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "#shorts jetzt entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discard #shorts Now"
-          }
-        }
-      }
-    },
-    "discardShortsTipAction" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "#shorts entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discard #shorts"
-          }
-        }
-      }
-    },
     "dismiss" : {
       "localizations" : {
         "de" : {
@@ -1789,6 +1709,12 @@
     },
     "duplicatesFaqQ" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum gibt es doppelte Video/Abos?"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1799,6 +1725,12 @@
     },
     "duplicatesFaqT" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplikate"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2305,7 +2237,23 @@
         }
       }
     },
-    "hideShorts" : {
+    "hideShortsEverywhere" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#Shorts ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide #Shorts"
+          }
+        }
+      }
+    },
+    "hideShortsEverywhereHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2321,7 +2269,7 @@
         }
       }
     },
-    "HideShortsTip" : {
+    "hideShortsTip" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2353,18 +2301,18 @@
         }
       }
     },
-    "HideShortsTipMessage" : {
+    "hideShortsTipMessage" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn erwünscht, können du ab sofort alle #shorts ausgeblendet, oder permanent entfernen werden.   Unter \"Bibliothek → Einstellungen → Videos\" gibt es die Option es zurückgängig zu machen."
+            "value" : "Wenn erwünscht, können ab sofort alle #shorts ausgeblendet werden.   Unter \"Bibliothek → Einstellungen → Videos\" kann dies rückgängig gemacht werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you wish, you can hide all #shorts from now on, or discard them permanently.  You can change this at any time under \"Library → Settings → Videos\""
+            "value" : "If you wish, you can hide all #shorts from now on.  You can change this at any time under \"Library → Settings → Videos\""
           }
         }
       }
@@ -4290,22 +4238,6 @@
         }
       }
     },
-    "shortsPlacement" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "#shorts"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "#shorts"
-          }
-        }
-      }
-    },
     "shortsSettings" : {
       "localizations" : {
         "de" : {
@@ -4318,22 +4250,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
-          }
-        }
-      }
-    },
-    "shortsSettingsHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Ausblenden\" und \"Einblenden\" beeinflussen weder die aktuelle Queue noch die Inbox. \"Entfernen\" löscht alle #shorts dauerhaft und speichert sie nicht mehr, was die Synchronisierung verbessern kann.  Die Erkennung von #shorts ist präzise, aber Fehler können vorkommen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Hide\" and \"Show\" will not affect the current Queue or Inbox. \"Discard\" will permanently delete all #shorts and no longer save them; which may improve sync.  #shorts detection is accurate, but there can be mistakes."
           }
         }
       }
@@ -4414,22 +4330,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Icon Badge for new Videos"
-          }
-        }
-      }
-    },
-    "showShorts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einblenden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show"
           }
         }
       }

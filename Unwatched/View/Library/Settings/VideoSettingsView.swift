@@ -7,6 +7,7 @@ import SwiftUI
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
+    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
@@ -50,7 +51,11 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                ShortsPlacementView()
+                MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
+                    Toggle(isOn: $hideShorts) {
+                        Text("hideShortsEverywhere")
+                    }
+                }
 
                 MySection("sponsorBlockSettings", footer: "sponsorBlockSettingsHelper") {
                     Toggle(isOn: $mergeSponsorBlockChapters) {

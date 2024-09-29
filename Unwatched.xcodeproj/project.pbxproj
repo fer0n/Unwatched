@@ -44,10 +44,6 @@
 		8811C9322C8DDC5200A1A78E /* UnwatchedSchemaV1p1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9302C8DDC5200A1A78E /* UnwatchedSchemaV1p1.swift */; };
 		8811C9342C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9332C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift */; };
 		8811C9352C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9332C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift */; };
-		8811C9372C8E281600A1A78E /* ShortsPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9362C8E11F400A1A78E /* ShortsPlacement.swift */; };
-		8811C9382C8E281700A1A78E /* ShortsPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9362C8E11F400A1A78E /* ShortsPlacement.swift */; };
-		8811C93A2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */; };
-		8811C93B2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */; };
 		8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */; };
 		881346602B88C988005A4790 /* CachedImageHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465F2B88C988005A4790 /* CachedImageHolder.swift */; };
 		88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
@@ -505,8 +501,6 @@
 		8811A4A62B540D8100799CB2 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		8811C9302C8DDC5200A1A78E /* UnwatchedSchemaV1p1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedSchemaV1p1.swift; sourceTree = "<group>"; };
 		8811C9332C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedSchemaV1p2.swift; sourceTree = "<group>"; };
-		8811C9362C8E11F400A1A78E /* ShortsPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsPlacement.swift; sourceTree = "<group>"; };
-		8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsPlacementView.swift; sourceTree = "<group>"; };
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		8813465F2B88C988005A4790 /* CachedImageHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImageHolder.swift; sourceTree = "<group>"; };
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
@@ -838,7 +832,6 @@
 				CD5AF8422C8AD10200D18628 /* VideoSource.swift */,
 				887AC8D52B49D0BE00512852 /* VideoPlacement.swift */,
 				88D8585A2B55B0E70047E0E6 /* SendableVideo.swift */,
-				8811C9362C8E11F400A1A78E /* ShortsPlacement.swift */,
 				8813465F2B88C988005A4790 /* CachedImageHolder.swift */,
 				88CEDA1F2B6641C6000E3E98 /* Exportable.swift */,
 				8867F5442BC7AC4D008EC182 /* FileInfo.swift */,
@@ -875,7 +868,6 @@
 				88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */,
 				88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */,
 				88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */,
-				8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */,
 			);
 			path = AppearanceSelection;
 			sourceTree = "<group>";
@@ -1440,7 +1432,6 @@
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
 				889AF9552C50ED05001CEDE6 /* CachedImageView.swift in Sources */,
 				889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */,
-				8811C93B2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */,
 				8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */,
 				889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */,
 				889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */,
@@ -1597,7 +1588,6 @@
 				88415BED2C50E7110072778F /* DataController.swift in Sources */,
 				8829C7CB2C762A9B0074078A /* ChapterCategory.swift in Sources */,
 				88415BEB2C50E2440072778F /* Subscription.swift in Sources */,
-				8811C9382C8E281700A1A78E /* ShortsPlacement.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
@@ -1674,7 +1664,6 @@
 				88D8585B2B55B0E70047E0E6 /* SendableVideo.swift in Sources */,
 				886E79BA2B46FFD300554E1F /* Color.swift in Sources */,
 				88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */,
-				8811C9372C8E281600A1A78E /* ShortsPlacement.swift in Sources */,
 				88373C282C8C6A9100ACBB3B /* SubscriptionListVM.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
@@ -1817,7 +1806,6 @@
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
 				8805050F2C83638D005F0972 /* VideoListFormat.swift in Sources */,
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
-				8811C93A2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */,
 				88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */,
 				8811A4A72B540D8100799CB2 /* DataController.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,

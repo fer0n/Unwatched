@@ -50,5 +50,5 @@ enum VideoPlacement: Int, Codable, CaseIterable {
 
 struct DefaultVideoPlacement {
     var videoPlacement: VideoPlacement
-    var shortsPlacement: ShortsPlacement
+    var hideShortsEverywhere: Bool
 }

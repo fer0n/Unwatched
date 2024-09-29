@@ -7,13 +7,12 @@ import SwiftUI
 import SwiftData
 
 struct VideoListView: View {
-    @AppStorage(Const.shortsPlacement) var shortsPlacement: ShortsPlacement = .show
+    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
     @Query var videos: [Video]
 
     init(subscriptionId: PersistentIdentifier? = nil,
          sort: VideoSorting? = nil,
          searchText: String = "") {
-        let hideShorts = shortsPlacement == .hide
         let filter = VideoListView.getVideoFilter(showShorts: !hideShorts, subscriptionId, searchText)
         let sorting = VideoListView.getVideoSorting(sort)
         _videos = Query(filter: filter, sort: sorting, animation: .default)

@@ -144,7 +144,7 @@ extension VideoActor {
         if sub.placeVideosIn == .defaultPlacement {
             placement = defaultPlacement.videoPlacement
         }
-        if defaultPlacement.shortsPlacement == .hide {
+        if defaultPlacement.hideShortsEverywhere {
             let count = addSingleVideoTo(
                 videosToAdd,
                 videoPlacement: placement,
@@ -165,7 +165,7 @@ extension VideoActor {
         var addedVideosCount = 0
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.shortsPlacement == .hide)
+            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.hideShortsEverywhere)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)
