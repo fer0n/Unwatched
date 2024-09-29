@@ -132,7 +132,7 @@ class ExportableTests: XCTestCase {
             )
         ]
 
-        let placement = DefaultVideoPlacement(videoPlacement: .inbox, shortsPlacement: .show)
+        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShortsEverywhere: false)
         await repo.handleNewVideosGetCount(sendableSub, videos, defaultPlacement: placement)
         try? await repo.modelContext.save()
 
@@ -184,7 +184,7 @@ class ExportableTests: XCTestCase {
 
                 // Videos
                 Const.defaultVideoPlacement: VideoPlacement.queue.rawValue,
-                Const.shortsPlacement: ShortsPlacement.show.rawValue,
+                Const.hideShorts: false,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,
                 Const.showAddToQueueButton: true,
