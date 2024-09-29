@@ -123,7 +123,7 @@ import OSLog
         return newVideos
     }
 
-    private func handleNewVideosGetCount(
+    public func handleNewVideosGetCount(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
