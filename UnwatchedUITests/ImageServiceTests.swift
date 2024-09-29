@@ -53,6 +53,9 @@ class ImageServiceTests: XCTestCase {
 
         let url9 = URL(string: "https://i3.ytimg.com/vi/FVwV5BxJ8M4/hqdefault.jpg")!
         XCTAssertEqual(isShortThumbnail(url9), false)
+
+        let url10 = URL(string: "https://i4.ytimg.com/vi/Wx-SSG0RVbY/hqdefault.jpg")!
+        XCTAssertEqual(isShortThumbnail(url10), false)
     }
 
     func isShortThumbnail(_ url: URL) -> Bool? {

@@ -102,8 +102,8 @@ struct ImageService {
         let width: Double = size.width
         let height: Double = size.height
 
-        let topY: Double = height / 30.0
-        let topBottomY: Double = height / 12.0
+        let topY: Double = height / 40.0
+        let topBottomY: Double = height / 22.0
 
         let centerX: Double = width / 2.0
         let xDist: Double = width / 4.3
