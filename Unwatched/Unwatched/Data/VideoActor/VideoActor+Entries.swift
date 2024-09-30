@@ -236,10 +236,10 @@ extension VideoActor {
                                      updateCleared: Bool,
                                      modelContext: ModelContext) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
+            VideoService.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
-            VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
+            VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
         }
     }
 
@@ -322,31 +322,6 @@ extension VideoActor {
         }
     }
 
-    static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
-        let deletedOrder = queueEntry.order
-        modelContext.delete(queueEntry)
-        VideoActor.updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
-    }
-
-    static func deleteInboxEntry(_ entry: InboxEntry, updateCleared: Bool = false, modelContext: ModelContext) {
-        if updateCleared {
-            entry.video?.clearedInboxDate = .now
-        }
-        modelContext.delete(entry)
-    }
-
-    private static func updateQueueOrderDelete(deletedOrder: Int, modelContext: ModelContext) {
-        do {
-            let fetchDescriptor = FetchDescriptor<QueueEntry>()
-            let queue = try modelContext.fetch(fetchDescriptor)
-            for queueEntry in queue where queueEntry.order > deletedOrder {
-                queueEntry.order -= 1
-            }
-        } catch {
-            Logger.log.error("No queue entry found to delete")
-        }
-    }
-
     func clearList(_ list: ClearList, _ direction: ClearDirection, index: Int?, date: Date?) throws {
         switch list {
         case .inbox:
@@ -369,7 +344,7 @@ extension VideoActor {
         let fetch = FetchDescriptor<InboxEntry>(predicate: filter)
         let inboxEntries = try? modelContext.fetch(fetch)
         for entry in inboxEntries ?? [] {
-            VideoActor.deleteInboxEntry(entry, modelContext: modelContext)
+            VideoService.deleteInboxEntry(entry, modelContext: modelContext)
         }
     }
 
@@ -383,7 +358,7 @@ extension VideoActor {
         let fetch = FetchDescriptor<QueueEntry>(predicate: filter)
         let queueEntries = try? modelContext.fetch(fetch)
         for entry in queueEntries ?? [] {
-            VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
+            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
 }

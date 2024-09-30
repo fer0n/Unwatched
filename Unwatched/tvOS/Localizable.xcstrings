@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "clear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
     "fillData" : {
       "localizations" : {
         "de" : {
@@ -13,6 +23,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Test Data"
+          }
+        }
+      }
+    },
+    "markWatched" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watched"
           }
         }
       }

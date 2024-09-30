@@ -59,10 +59,10 @@ extension DataController {
             thumbnailUrl: URL(string: "https://i.ytimg.com/vi/l7eut-nYIUc/mqdefault.jpg")
         )
         let vid8 = Video(
-            title: "Legaler Steuertrick: 28.000€ Vorteil bei ETF-Verkauf | Finanztip 3x10-Strategie (1/2)",
-            url: URL(string: "https://www.youtube.com/watch?v=4T0oulT66ps"),
-            youtubeId: "4T0oulT66ps",
-            thumbnailUrl: URL(string: "https://i.ytimg.com/vi/4T0oulT66ps/mqdefault.jpg")
+            title: "Orion Drift: The Greatest Driftball Match in IAA History",
+            url: URL(string: "https://www.youtube.com/watch?v=0KHG86FmQ7g"),
+            youtubeId: "0KHG86FmQ7g",
+            thumbnailUrl: URL(string: "https://i1.ytimg.com/vi/0KHG86FmQ7g/hqdefault.jpg")
         )
         let vid9 = Video(
             title: "The Most In Disguise EV...",
@@ -71,10 +71,10 @@ extension DataController {
             thumbnailUrl: URL(string: "https://i2.ytimg.com/vi/q6BNg_kZ6Jc/hqdefault.jpg")
         )
         let vid10 = Video(
-            title: "Simplest Way to Build 6-Figure App Business",
-            url: URL(string: "https://www.youtube.com/watch?v=x1Apl3aV6No"),
-            youtubeId: "x1Apl3aV6No",
-            thumbnailUrl: URL(string: "https://i.ytimg.com/vi/x1Apl3aV6No/mqdefault.jpg")
+            title: "AirPods 4 Review: Which Ones To Get?",
+            url: URL(string: "https://www.youtube.com/watch?v=WwjHonzRd4E"),
+            youtubeId: "WwjHonzRd4E",
+            thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/WwjHonzRd4E/hqdefault.jpg")
         )
         let vid11 = Video(
             title: "2 Fancy 2 Furious: Wine",
@@ -90,10 +90,10 @@ extension DataController {
         )
 
         let vid13 = Video(
-            title: "Der teuerste Fehler beim Investieren...",
-            url: URL(string: "https://www.youtube.com/watch?v=keXUUpXJdCQ"),
-            youtubeId: "keXUUpXJdCQ",
-            thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/keXUUpXJdCQ/hqdefault.jpg")
+            title: "iPhone 16/16 Pro Unboxing: End of an Era!",
+            url: URL(string: "https://www.youtube.com/watch?v=h3BKjZMGoIw"),
+            youtubeId: "h3BKjZMGoIw",
+            thumbnailUrl: URL(string: "https://i1.ytimg.com/vi/h3BKjZMGoIw/hqdefault.jpg")
         )
 
         let vid14 = Video(
@@ -111,10 +111,10 @@ extension DataController {
         )
 
         let vid16 = Video(
-            title: "How I Fixed My Terrible Posture - 5 Habits",
-            url: URL(string: "https://www.youtube.com/watch?v=in9ubCilsT8"),
-            youtubeId: "in9ubCilsT8",
-            thumbnailUrl: URL(string: "https://i.ytimg.com/vi/in9ubCilsT8/mqdefault.jpg")
+            title: "Orion Drift: Developer Snapshot 1",
+            url: URL(string: "https://www.youtube.com/channel/UC-I4Tk3RHe2bFJr2aAWBp4w"),
+            youtubeId: "8xjnw_skc9g",
+            thumbnailUrl: URL(string: "https://i1.ytimg.com/vi/8xjnw_skc9g/hqdefault.jpg")
         )
 
         let vid17 = Video(

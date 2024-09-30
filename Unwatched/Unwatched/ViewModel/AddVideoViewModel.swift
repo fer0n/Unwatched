@@ -6,6 +6,7 @@
 import SwiftData
 import OSLog
 import SwiftUI
+import UnwatchedShared
 
 @Observable class AddVideoViewModel {
     var isDragOver = false

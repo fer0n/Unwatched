@@ -92,8 +92,6 @@ extension Const {
     static let filterEmptySF = "line.3.horizontal.decrease.circle"
     static let addSF = "plus"
 
-    static let watchedSF = "checkmark.circle.fill"
-    static let clearNoFillSF = "xmark"
     static let customPlaybackSpeedSF = "lock.fill"
 
     static let alreadyInLibrarySF = "books.vertical.circle.fill"
@@ -103,7 +101,6 @@ extension Const {
     static let listItemChevronSF = "chevron.right"
 
     static let circleBackgroundSF = "circle.fill"
-    static let checkmarkSF = "checkmark"
 
     static let videoDescriptionSF = "quote.bubble.fill"
     static let chaptersSF = "checklist.checked"
