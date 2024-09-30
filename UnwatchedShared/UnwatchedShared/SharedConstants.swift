@@ -16,4 +16,9 @@ public struct Const {
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"
     
     public static let themeColor = "themeColor"
+    
+    // MARK: - SF Symbols
+    public static let watchedSF = "checkmark.circle.fill"
+    public static let clearNoFillSF = "xmark"
+    public static let checkmarkSF = "checkmark"
 }

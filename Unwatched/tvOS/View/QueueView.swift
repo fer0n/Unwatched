@@ -33,7 +33,8 @@ struct QueueView: View {
                         QueueEntryListItem(
                             entry,
                             width: width,
-                            openYouTube: openYouTube
+                            openYouTube: openYouTube,
+                            beforeRemove: beforeRemove
                         )
                         .focused($focusedVideo, equals: entry)
                         .padding()
@@ -42,7 +43,8 @@ struct QueueView: View {
                 .padding()
             }
             .onAppear {
-                if let firstEntry = queue.first {
+                if focusedVideo == nil,
+                   let firstEntry = queue.first {
                     focusedVideo = firstEntry
                 }
             }
@@ -52,6 +54,22 @@ struct QueueView: View {
     func openYouTube(_ id: String) {
         if let url = URL(string: "youtube://watch/\(id)") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+    
+    func beforeRemove(_ entry: QueueEntry) {
+        if let currentIndex = queue.firstIndex(of: entry) {
+            let nextIndex = queue.index(after: currentIndex)
+            if nextIndex < queue.endIndex {
+                focusedVideo = queue[nextIndex]
+            } else {
+                let previousIndex = queue.index(before: currentIndex)
+                if previousIndex >= queue.startIndex {
+                    focusedVideo = queue[previousIndex]
+                } else {
+                    focusedVideo = nil
+                }
+            }
         }
     }
 }

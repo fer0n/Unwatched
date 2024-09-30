@@ -3,7 +3,7 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
-struct VideoService {
+extension VideoService {
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         container: ModelContainer
@@ -20,15 +20,6 @@ struct VideoService {
                 throw error
             }
         }
-    }
-
-    static func markVideoWatched(_ video: Video, modelContext: ModelContext) {
-        clearEntries(
-            from: video,
-            updateCleared: false,
-            modelContext: modelContext
-        )
-        video.watchedDate = .now
     }
 
     static func moveQueueEntry(
@@ -60,42 +51,10 @@ struct VideoService {
         }
     }
 
-    static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
-        VideoActor.deleteInboxEntry(entry, modelContext: modelContext)
-    }
-
     static func deleteQueueEntries(_ entries: [QueueEntry], modelContext: ModelContext) {
         for entry in entries {
             deleteQueueEntry(entry, modelContext: modelContext)
         }
-    }
-
-    static func deleteQueueEntry(_ entry: QueueEntry, modelContext: ModelContext) {
-        VideoActor.deleteQueueEntry(entry, modelContext: modelContext)
-    }
-
-    static func clearEntries(from video: Video,
-                             except model: (any PersistentModel.Type)? = nil,
-                             updateCleared: Bool,
-                             modelContext: ModelContext) {
-        if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            VideoActor.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
-        }
-        if model != QueueEntry.self, let queueEntry = video.queueEntry {
-            VideoActor.deleteQueueEntry(queueEntry, modelContext: modelContext)
-        }
-    }
-
-    static func clearFromEverywhere(_ video: Video,
-                                    updateCleared: Bool = false,
-                                    modelContext: ModelContext) -> Task<(), Error> {
-        let container = modelContext.container
-        let videoId = video.id
-        let task = Task {
-            let repo = VideoActor(modelContainer: container)
-            try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
-        }
-        return task
     }
 
     static func updateDuration(_ video: Video, duration: Double) {

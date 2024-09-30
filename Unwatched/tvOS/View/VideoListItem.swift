@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct VideoListItem: View {
     @Environment(\.isFocused) var isFocused
+    @Environment(\.modelContext) var modelContext
 
     var video: Video
     let width: Double
@@ -42,7 +43,6 @@ struct VideoListItem: View {
             Spacer()
         }
         .frame(width: width)
-
     }
 }
 
