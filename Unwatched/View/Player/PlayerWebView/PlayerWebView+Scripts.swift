@@ -147,6 +147,14 @@ extension PlayerWebView {
                     sendMessage("swipe", "left");
                     isSwiping = true;
                 }
+            } else {
+                if (deltaY > 50) {
+                    sendMessage("swipe", "down");
+                    isSwiping = true;
+                } else if (deltaY < -50) {
+                    sendMessage("swipe", "up");
+                    isSwiping = true;
+                }
             }
         }
 
@@ -241,7 +249,7 @@ extension PlayerWebView {
             const deltaX = touchMoveX - touchStartX;
             const deltaY = touchMoveY - touchStartY;
 
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
                 isSwiping = true;
                 clearTimeout(touchTimeout);
             }
