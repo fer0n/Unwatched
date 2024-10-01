@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct EmptyQueueView: View {
-    @Environment(SyncManager.self) var sycner
+    @Environment(SyncManager.self) var syncer
 
     var body: some View {
         VStack(spacing: 20) {
@@ -21,9 +21,10 @@ struct EmptyQueueView: View {
             Text("videosUnavailableDescription")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
 
             ProgressView()
-                .opacity(sycner.isSyncing ? 1 : 0)
+                .opacity(syncer.isSyncing ? 1 : 0)
                 .padding(.top, 10)
 
             #if DEBUG
@@ -48,4 +49,6 @@ struct AddTestDataButton: View {
 
 #Preview {
     EmptyQueueView()
+        .environment(SyncManager())
+//        .modelContainer(DataController.previewContainer)
 }

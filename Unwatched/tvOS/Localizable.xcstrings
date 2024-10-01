@@ -3,6 +3,12 @@
   "strings" : {
     "clear" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16,19 +22,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Testdaten hinzufügen"
+            "value" : "Testdaten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Test Data"
+            "value" : "Test Data"
           }
         }
       }
     },
     "markWatched" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
