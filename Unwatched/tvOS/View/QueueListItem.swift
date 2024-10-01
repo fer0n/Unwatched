@@ -32,22 +32,21 @@ struct QueueEntryListItem: View {
     var body: some View {
         ZStack {
             if let video = entry.video {
-                Button {
-                    openYouTube(video.youtubeId)
-                } label: {
-                    VideoListItem(video: video, width: width)
-                }
-                .contextMenu {
+                Menu {
                     Button(
                         "markWatched",
                         systemImage: Const.checkmarkSF,
-                        action: { toBeWatched = video }
+                        action: { toBeWatched = entry.video }
                     )
                     Button(
                         "clear",
                         systemImage: Const.clearNoFillSF,
-                        action: { toBeCleared = video }
+                        action: { toBeCleared = entry.video }
                     )
+                } label: {
+                    VideoListItem(video: video, width: width)
+                } primaryAction: {
+                    openYouTube(video.youtubeId)
                 }
                 .buttonStyle(FocusButtonStyle())
             } else {
