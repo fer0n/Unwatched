@@ -101,6 +101,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.player.goToPreviousChapter()
             parent.overlayVM.show(.previous)
         }
+        if direction == "up" {
+            parent.setShowMenu?()
+        }
     }
 
     func handleAspectRatio(_ payload: String?) {

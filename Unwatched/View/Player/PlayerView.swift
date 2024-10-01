@@ -27,6 +27,7 @@ struct PlayerView: View {
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    var setShowMenu: (() -> Void)?
 
     var hideMiniPlayer: Bool {
         ((navManager.showMenu || navManager.showDescriptionDetail)
@@ -118,7 +119,8 @@ struct PlayerView: View {
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 playerType: .youtubeEmbedded,
-                onVideoEnded: handleVideoEnded
+                onVideoEnded: handleVideoEnded,
+                setShowMenu: setShowMenu
             )
             .aspectRatio(videoAspectRatio, contentMode: .fit)
             .overlay {

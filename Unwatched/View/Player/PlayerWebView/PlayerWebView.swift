@@ -17,6 +17,7 @@ struct PlayerWebView: UIViewRepresentable {
     @Binding var autoHideVM: AutoHideVM
     let playerType: PlayerType
     let onVideoEnded: () -> Void
+    var setShowMenu: (() -> Void)?
 
     func makeUIView(context: Context) -> WKWebView {
         player.isLoading = true
