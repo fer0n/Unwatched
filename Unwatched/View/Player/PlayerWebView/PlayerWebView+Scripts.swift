@@ -104,7 +104,7 @@ extension PlayerWebView {
         // styling
         styling()
         function styling() {
-             const style = document.createElement('style');
+            const style = document.createElement('style');
             style.innerHTML = `
                 .ytp-pause-overlay, .branding-img {
                     display: none !important;
@@ -130,6 +130,7 @@ extension PlayerWebView {
         // swipe left/right
         var touchStartX;
         var touchStartY;
+        var isPinching = false;
 
         function handleSwipe(event) {
             const touchEndX = event.changedTouches[0].clientX;
@@ -161,6 +162,9 @@ extension PlayerWebView {
         window.addEventListener('touchstart', event => {
             if (event.target.matches('video')) {
                 touchStartEvent = event;
+                if (event.touches.length > 1) {
+                    isPinching = true;
+                }
                 if (!event.isReTriggering) {
                     event.stopPropagation();
                     handleTouchStart(event);
@@ -168,13 +172,16 @@ extension PlayerWebView {
             }
         }, true);
         window.addEventListener('touchmove', event => {
-            if (event.target.matches('video')) {
+            if (event.target.matches('video') && !isPinching) {
                 event.stopPropagation();
                 handleTouchMove(event);
             }
         }, true);
         window.addEventListener('touchend', event => {
             if (event.target.matches('video')) {
+                if (event.touches.length === 0) {
+                    isPinching = false;
+                }
                 if (!event.isReTriggering) {
                     event.stopPropagation();
                     handleTouchEnd(event);
@@ -212,12 +219,12 @@ extension PlayerWebView {
             const touchSize = screenWidth * 0.15;
             const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < touchSize;
 
-            if (isCenterTouch) {
+            if (isCenterTouch && !isPinching) {
                 centerTouch = true;
             }
 
             touchTimeout = setTimeout(function() {
-                if (!isSwiping) {
+                if (!isSwiping && !isPinching) {
                     const side = touch.clientX < screenWidth / 2 ? "left" : "right";
                     sendMessage("longTouch", side);
                     longTouchSent = true;
@@ -226,7 +233,7 @@ extension PlayerWebView {
         }
 
         function handleTouchMove(event) {
-            if (isSwiping || longTouchSent) {
+            if (isSwiping || longTouchSent || isPinching) {
                 return;
             }
             const touchMoveX = event.touches[0].clientX;
@@ -243,7 +250,9 @@ extension PlayerWebView {
         function handleTouchEnd(event) {
             triggerTouchEvent(event);
             clearTimeout(touchTimeout);
-            if (longTouchSent) {
+            if (isPinching) {
+                // nothing
+            } else if (longTouchSent) {
                 sendMessage("longTouchEnd");
             } else if (isSwiping) {
                 handleSwipe(event);
@@ -294,7 +303,7 @@ extension PlayerWebView {
         errorCheckTimers.push(setTimeout(checkError, 3000));
         errorCheckTimers.push(setTimeout(checkError, 5000));
         errorCheckTimers.push(setTimeout(checkError, 10000));
-     """
+    """
     }
     // swiftlint:enable function_body_length
 }
