@@ -31,7 +31,7 @@ struct ContentView: View {
             let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
                 ? [.medium]
                 : [.height(sheetPos.playerControlHeight)]
-            let sidebarWidth: Double = dynamicTypeSize >= .large ? 400 : 350
+            let sidebarWidth: Double = dynamicTypeSize >= .accessibility1 ? 400 : 350
 
             ZStack {
                 layout {
