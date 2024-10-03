@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct FaqInfo {
     var title: LocalizedStringKey
@@ -98,9 +99,22 @@ struct FaqView: View {
                         .textSelection(.enabled)
                 }
             }
+            .contextMenu {
+                Button("copyAnswer") {
+                    copyFaqAnswer(faq.answer)
+                }
+            }
             .padding(.vertical, 5)
         }
         .listRowBackground(Color.insetBackgroundColor)
+    }
+
+    func copyFaqAnswer(_ value: LocalizedStringKey) {
+        let value = value.stringValue()
+        UIPasteboard.general.setValue(
+            value,
+            forPasteboardType: UTType.plainText.identifier
+        )
     }
 }
 
