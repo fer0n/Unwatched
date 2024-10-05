@@ -394,6 +394,8 @@
 		88BE6C312B723B9900456777 /* PlayerWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE6C302B723B9900456777 /* PlayerWebView.swift */; };
 		88BF31052CAE813400AE26EC /* LocalizedStringKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */; };
 		88BF31062CAE813400AE26EC /* LocalizedStringKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */; };
+		88BF327A2CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF32792CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift */; };
+		88BF327B2CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF32792CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift */; };
 		88BF35912BC91F20005FA53E /* AddFeedsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */; };
 		88BF35932BC91F45005FA53E /* SetupShareSheetAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */; };
 		88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35942BC95BE7005FA53E /* AddVideosButton.swift */; };
@@ -652,6 +654,7 @@
 		88BE6C2E2B72089000456777 /* PlayerWebView+Scripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerWebView+Scripts.swift"; sourceTree = "<group>"; };
 		88BE6C302B723B9900456777 /* PlayerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebView.swift; sourceTree = "<group>"; };
 		88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStringKey.swift; sourceTree = "<group>"; };
+		88BF32792CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedSchemaV1p3.swift; sourceTree = "<group>"; };
 		88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedsMenu.swift; sourceTree = "<group>"; };
 		88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupShareSheetAction.swift; sourceTree = "<group>"; };
 		88BF35942BC95BE7005FA53E /* AddVideosButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideosButton.swift; sourceTree = "<group>"; };
@@ -1085,6 +1088,7 @@
 				88A1B3AD2C890D2800D32E37 /* UnwatchedSchemaV1.swift */,
 				8811C9302C8DDC5200A1A78E /* UnwatchedSchemaV1p1.swift */,
 				8811C9332C8DDFAB00A1A78E /* UnwatchedSchemaV1p2.swift */,
+				88BF32792CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift */,
 				88A1B3B12C89616900D32E37 /* CachedImageSchemaV1.swift */,
 			);
 			path = Legacy;
@@ -1478,6 +1482,7 @@
 				880505012C81E4BC005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				889AF9642C50ED0D001CEDE6 /* YtChannelId.swift in Sources */,
 				889AF9652C50ED0D001CEDE6 /* YtVideoInfo.swift in Sources */,
+				88BF327B2CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift in Sources */,
 				88A1B3AB2C88FF6800D32E37 /* VersionedSchema.swift in Sources */,
 				889AF9662C50ED0D001CEDE6 /* YtPlaylistItems.swift in Sources */,
 				889AF9672C50ED0D001CEDE6 /* YoutubeDataAPI.swift in Sources */,
@@ -1854,6 +1859,7 @@
 				88BF31062CAE813400AE26EC /* LocalizedStringKey.swift in Sources */,
 				888C49C72B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift in Sources */,
 				88BABAC22B630EF8001FA0A4 /* ImageCacheManager.swift in Sources */,
+				88BF327A2CB1CA9600AE26EC /* UnwatchedSchemaV1p3.swift in Sources */,
 				88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */,
 				889924782C4847C0001185A6 /* PlayerControlButtonStyle.swift in Sources */,
 				8867F5452BC7AC4D008EC182 /* FileInfo.swift in Sources */,
@@ -2054,7 +2060,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2099,7 +2105,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 144;
+				CURRENT_PROJECT_VERSION = 145;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;

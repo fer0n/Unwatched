@@ -120,7 +120,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                   modelContext: modelContext)
         handlePotentialQueueChange(order: order)
         config.onChange?()
-        if video.isYtShort {
+        if video.isYtShort == true {
             HideShortsTip.clearedShorts += 1
         }
     }
