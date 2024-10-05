@@ -46,7 +46,8 @@ struct PlayerView: View {
     }
 
     var body: some View {
-        let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
+        let wideAspect = (videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
+            && landscapeFullscreen
         ZStack(alignment: .top) {
             Rectangle()
                 .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
