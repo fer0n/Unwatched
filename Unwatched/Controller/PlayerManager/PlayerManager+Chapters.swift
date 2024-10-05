@@ -75,30 +75,34 @@ extension PlayerManager {
         handleChapterChange()
     }
 
-    func goToNextChapter() {
+    func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
+            return true
         }
+        return false
     }
 
-    func goToPreviousChapter() {
+    func goToPreviousChapter() -> Bool {
         guard let current = currentChapter else {
             Logger.log.warning("goToPreviousChapter: No current chapter found")
-            return
+            return false
         }
 
         if let currentTime = currentTime,
            (currentTime - current.startTime) >= Const.previousChapterDelaySeconds * playbackSpeed {
             setChapter(current)
-            return
+            return true
         } else if previousChapter == nil {
             setChapter(current)
-            return
+            return true
         }
 
         if let previous = previousChapter {
             setChapter(previous)
+            return true
         }
+        return false
     }
 
     func handleChapterRefresh(forceRefresh: Bool = false) {
