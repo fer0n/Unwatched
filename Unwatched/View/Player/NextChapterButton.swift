@@ -20,7 +20,7 @@ struct NextChapterButton<Content>: View where Content: View {
     var body: some View {
         Button {
             actionToggle.toggle()
-            player.goToNextChapter()
+            _ = player.goToNextChapter()
         } label: {
             contentImage(
                 Image(systemName: Const.nextChapterSF)
