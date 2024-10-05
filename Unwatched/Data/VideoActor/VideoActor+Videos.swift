@@ -134,8 +134,10 @@ import OSLog
         }
         let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
-        videos = getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
+        videos = await getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
+        // TODO: ^ do this inside the task group? could take some time
+
         cacheImages(for: videos)
 
         let videoModels = insertVideoModels(from: videos)
@@ -201,7 +203,7 @@ import OSLog
         let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
 
         let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort && hideShorts
+            let discardImage = vid.isYtShort == true && hideShorts
             if !discardImage,
                let url = vid.thumbnailUrl,
                let data = vid.thumbnailData {
@@ -221,13 +223,10 @@ import OSLog
                 group.addTask {
                     var updatedVideo = video
                     var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
-                    if isYtShort == false,
-                       let url = video.thumbnailUrl,
-                       let imageData = try? await ImageService.loadImageData(url: url) {
+                    if isYtShort == false {
+                        let (isShort, imageData) = await VideoActor.isYtShort(video.thumbnailUrl)
+                        isYtShort = isShort
                         updatedVideo.thumbnailData = imageData
-                        if let isShort = ImageService.isYtShort(imageData) {
-                            isYtShort = isShort
-                        }
                     }
                     updatedVideo.isYtShort = isYtShort
                     return (index, updatedVideo)
@@ -240,6 +239,15 @@ import OSLog
         }
 
         return videosWithImage
+    }
+
+    static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
+        if let url = imageUrl,
+           let imageData = try? await ImageService.loadImageData(url: url),
+           let isShort = ImageService.isYtShort(imageData) {
+            return (isShort, imageData)
+        }
+        return (nil, nil)
     }
 
     private func getDefaultVideoPlacement() -> DefaultVideoPlacement {

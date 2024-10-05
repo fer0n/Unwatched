@@ -51,7 +51,7 @@ extension VideoActor {
     }
 
     func getNewVideosAndUpdateExisting(sub: Subscription,
-                                       videos: [SendableVideo]) -> [SendableVideo] {
+                                       videos: [SendableVideo]) async -> [SendableVideo] {
         guard let subVideos = sub.videos else {
             return videos
         }
@@ -69,6 +69,9 @@ extension VideoActor {
                         imagesToBeDeleted.append(url)
                     }
                 }
+                if oldVideo.isYtShort == nil {
+                    await detectShortAndAdjustEntries(oldVideo)
+                }
             } else {
                 newVideos.append(video)
             }
@@ -76,6 +79,20 @@ extension VideoActor {
 
         ImageService.deleteImages(imagesToBeDeleted)
         return newVideos
+    }
+
+    func detectShortAndAdjustEntries(_ video: Video) async {
+        Logger.log.info("detectShortAndAdjustEntries: \(video.title)")
+        let (isYtShort, _) = await VideoActor.isYtShort(video.thumbnailUrl)
+        video.isYtShort = isYtShort
+        if isYtShort == true && UserDefaults.standard.bool(forKey: Const.hideShorts) {
+            VideoService.clearEntries(
+                from: video,
+                except: QueueEntry.self,
+                updateCleared: false,
+                modelContext: modelContext
+            )
+        }
     }
 
     func updateVideoAndGetImageToDelete(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
@@ -165,7 +182,7 @@ extension VideoActor {
         var addedVideosCount = 0
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let placement: VideoPlacement = (video.isYtShort && defaultPlacement.hideShortsEverywhere)
+            let placement: VideoPlacement = (video.isYtShort == true && defaultPlacement.hideShortsEverywhere)
                 ? VideoPlacement.nothing
                 : videoPlacement
             addVideosTo(videos: [video], placement: placement, index: 1)

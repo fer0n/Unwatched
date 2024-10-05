@@ -244,7 +244,7 @@ import OSLog
         if consideredYtShort {
             let minAspectRatio = Const.videoAspectRatios.min()
             self.aspectRatio = minAspectRatio
-            if !video.isYtShort,
+            if video.isYtShort != true,
                let duration = video.duration,
                duration < Const.maxYtShortsDuration {
                 video.isYtShort = true
