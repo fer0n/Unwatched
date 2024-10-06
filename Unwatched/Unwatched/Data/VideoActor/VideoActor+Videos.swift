@@ -224,7 +224,7 @@ import UnwatchedShared
                 group.addTask {
                     var updatedVideo = video
                     var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
-                    if isYtShort == false {
+                    if isYtShort == nil {
                         let (isShort, imageData) = await VideoActor.isYtShort(video.thumbnailUrl)
                         isYtShort = isShort
                         updatedVideo.thumbnailData = imageData
@@ -243,10 +243,15 @@ import UnwatchedShared
     }
 
     static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
-        if let url = imageUrl,
-           let imageData = try? await ImageService.loadImageData(url: url),
-           let isShort = ImageService.isYtShort(imageData) {
-            return (isShort, imageData)
+        do {
+            if let url = imageUrl {
+                let imageData = try await ImageService.loadImageData(url: url)
+                if let isShort = ImageService.isYtShort(imageData) {
+                    return (isShort, imageData)
+                }
+            }
+        } catch {
+            Logger.log.error("isYtShort detection failed to load image data: \(error)")
         }
         return (nil, nil)
     }

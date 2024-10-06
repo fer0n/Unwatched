@@ -89,7 +89,6 @@ extension VideoActor {
         if isYtShort == true && UserDefaults.standard.bool(forKey: Const.hideShorts) {
             VideoService.clearEntries(
                 from: video,
-                except: QueueEntry.self,
                 updateCleared: false,
                 modelContext: modelContext
             )
