@@ -4099,13 +4099,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bibliothek durchsuchen"
+            "value" : "Durchsuchen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search library"
+            "value" : "Search"
           }
         }
       }
@@ -4591,18 +4591,18 @@
         }
       }
     },
-    "subscriptions%@" : {
+    "subscriptions" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abos %@"
+            "value" : "Abos"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Subscriptions %@"
+            "value" : "Subscriptions"
           }
         }
       }

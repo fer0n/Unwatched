@@ -20,7 +20,7 @@ struct SubscriptionListSection: View {
     @State var text = DebouncedText(0.3)
 
     var body: some View {
-        MySection("subscriptions\(subscriptionsVM.countText)") {
+        MySection("subscriptions") {
             if !subscriptionsVM.isLoading {
                 if subscriptionsVM.subscriptions.isEmpty {
                     dropArea
@@ -45,9 +45,17 @@ struct SubscriptionListSection: View {
         }
 
         Section {
+            Text(subscriptionsVM.countText)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+                .padding(0)
+
             Spacer()
                 .frame(height: text.debounced.isEmpty ? 0 : 300)
         }
+        .listRowSeparator(.hidden)
         .listRowBackground(Color.backgroundColor)
     }
 
