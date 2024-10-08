@@ -199,7 +199,8 @@ public struct SendableSubscription: Sendable, Codable, Hashable {
              youtubeChannelId,
              youtubePlaylistId,
              youtubeUserName,
-             thumbnailUrl
+             thumbnailUrl,
+             persistentId
     }
 }
 

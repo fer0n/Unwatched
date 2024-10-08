@@ -12,9 +12,6 @@ struct LibraryDestinationModifier: ViewModifier {
     // swiftlint:disable cyclomatic_complexity
     func body(content: Content) -> some View {
         content
-            .navigationDestination(for: Subscription.self) { sub in
-                SubscriptionDetailView(subscription: sub)
-            }
             .navigationDestination(for: SendableSubscription.self) { sub in
                 SendableSubscriptionDetailView(sub, modelContext)
             }
@@ -58,7 +55,7 @@ extension View {
     }
 }
 
-enum LibraryDestination {
+enum LibraryDestination: Codable {
     case sideloading
     case watchHistory
     case allVideos

@@ -90,8 +90,8 @@ struct InboxView: View {
                 RefreshToolbarButton()
             }
             .myNavigationTitle("inbox", showBack: false)
-            .navigationDestination(for: Subscription.self) { sub in
-                SubscriptionDetailView(subscription: sub)
+            .navigationDestination(for: SendableSubscription.self) { sub in
+                SendableSubscriptionDetailView(sub, modelContext)
             }
             .tint(theme.color)
         }
