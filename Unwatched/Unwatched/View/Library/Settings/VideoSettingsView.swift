@@ -52,7 +52,7 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                MySection("shortsSettings", footer: "hideShortsEverywhereHelper") {
+                MySection("shortsSettings") {
                     Toggle(isOn: $hideShorts) {
                         Text("hideShortsEverywhere")
                     }

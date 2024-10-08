@@ -2269,22 +2269,6 @@
         }
       }
     },
-    "hideShortsEverywhereHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausblenden"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide"
-          }
-        }
-      }
-    },
     "hideShortsTip" : {
       "localizations" : {
         "de" : {
