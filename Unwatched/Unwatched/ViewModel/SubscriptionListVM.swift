@@ -73,4 +73,11 @@ class SubscriptionListVM {
             }
         }
     }
+
+    var countText: String {
+        if isLoading {
+            return ""
+        }
+        return "(\(subscriptions.count))"
+    }
 }

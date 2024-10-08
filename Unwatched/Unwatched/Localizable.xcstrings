@@ -4591,18 +4591,18 @@
         }
       }
     },
-    "subscriptions" : {
+    "subscriptions%@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abos"
+            "value" : "Abos %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Subscriptions"
+            "value" : "Subscriptions %@"
           }
         }
       }

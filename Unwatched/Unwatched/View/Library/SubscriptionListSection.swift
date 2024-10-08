@@ -20,7 +20,7 @@ struct SubscriptionListSection: View {
     @State var text = DebouncedText(0.3)
 
     var body: some View {
-        MySection("subscriptions") {
+        MySection("subscriptions\(subscriptionsVM.countText)") {
             if !subscriptionsVM.isLoading {
                 if subscriptionsVM.subscriptions.isEmpty {
                     dropArea
