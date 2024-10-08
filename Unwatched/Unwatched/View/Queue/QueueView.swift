@@ -64,8 +64,8 @@ struct QueueView: View {
                 .disabled(queue.isEmpty)
             }
             .myNavigationTitle("queue", showBack: false)
-            .navigationDestination(for: Subscription.self) { sub in
-                SubscriptionDetailView(subscription: sub)
+            .navigationDestination(for: SendableSubscription.self) { sub in
+                SendableSubscriptionDetailView(sub, modelContext)
                     .foregroundStyle(Color.neutralAccentColor)
             }
             .toolbar {

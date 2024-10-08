@@ -24,8 +24,8 @@ import UnwatchedShared
 
     var askForReviewPoints = 0
 
-    var presentedSubscriptionQueue = [Subscription]()
-    var presentedSubscriptionInbox = [Subscription]()
+    var presentedSubscriptionQueue = [SendableSubscription]()
+    var presentedSubscriptionInbox = [SendableSubscription]()
     var presentedLibrary = NavigationPath() {
         didSet {
             if oldValue.count > presentedLibrary.count {
@@ -37,6 +37,8 @@ import UnwatchedShared
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
     var lastLibrarySubscriptionId: PersistentIdentifier?
+    var lastInboxSubscriptionId: PersistentIdentifier?
+    var lastQueueSubscriptionId: PersistentIdentifier?
 
     init() { }
 
@@ -63,6 +65,14 @@ import UnwatchedShared
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
         tab = try container.decode(NavigationTab.self, forKey: .tab)
         askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
+
+        let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
+        presentedLibrary = NavigationPath(decoded)
+
+        presentedSubscriptionInbox = try container.decode(
+            [SendableSubscription].self,
+            forKey: .presentedSubscriptionInbox
+        )
     }
 
     func encode(to encoder: Encoder) throws {
@@ -71,30 +81,41 @@ import UnwatchedShared
         try container.encode(showMenu, forKey: .showMenu)
         try container.encode(tab, forKey: .tab)
         try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
+
+        if let representation = presentedLibrary.codable {
+            try container.encode(representation, forKey: .presentedLibrary)
+        }
+        try container.encode(presentedSubscriptionInbox, forKey: .presentedSubscriptionInbox)
     }
 
     func pushSubscription(_ subscription: Subscription) {
+        guard let sendableSub = subscription.toExport else {
+            Logger.log.error("Could not convert to sendable subscription")
+            return
+        }
         switch tab {
         case .inbox:
-            if presentedSubscriptionInbox.last != subscription {
-                presentedSubscriptionInbox.append(subscription)
+            if presentedSubscriptionInbox.last != sendableSub {
+                presentedSubscriptionInbox.append(sendableSub)
+                lastInboxSubscriptionId = sendableSub.persistentId
             }
         case .queue:
-            if presentedSubscriptionQueue.last != subscription {
-                presentedSubscriptionQueue.append(subscription)
+            if presentedSubscriptionQueue.last != sendableSub {
+                presentedSubscriptionQueue.append(sendableSub)
+                lastQueueSubscriptionId = sendableSub.persistentId
             }
         case .browser:
             tab = .library
-            pushToLibrary(subscription)
+            pushToLibrary(sendableSub)
         case .library:
-            pushToLibrary(subscription)
+            pushToLibrary(sendableSub)
         }
     }
 
-    func pushToLibrary(_ subscription: Subscription) {
-        if lastLibrarySubscriptionId != subscription.persistentModelID {
-            presentedLibrary.append(subscription)
-            lastLibrarySubscriptionId = subscription.persistentModelID
+    func pushToLibrary(_ sendableSub: SendableSubscription) {
+        if lastLibrarySubscriptionId != sendableSub.persistentId {
+            presentedLibrary.append(sendableSub)
+            lastLibrarySubscriptionId = sendableSub.persistentId
         }
     }
 
@@ -132,17 +153,23 @@ import UnwatchedShared
         }
 
         if !isOnTopView {
-            popCurrentNaviagtionStack()
+            popCurrentNavigationStack()
         }
         return isOnTopView
     }
 
-    func popCurrentNaviagtionStack() {
+    func popCurrentNavigationStack() {
         switch tab {
         case .inbox:
             _ = presentedSubscriptionInbox.popLast()
+            if presentedSubscriptionInbox.isEmpty {
+                lastInboxSubscriptionId = nil
+            }
         case .queue:
             _ = presentedSubscriptionQueue.popLast()
+            if presentedSubscriptionQueue.isEmpty {
+                lastQueueSubscriptionId = nil
+            }
         case .library:
             if !presentedLibrary.isEmpty {
                 presentedLibrary.removeLast()
@@ -157,8 +184,10 @@ import UnwatchedShared
         switch tab {
         case .inbox:
             presentedSubscriptionInbox.removeAll()
+            lastInboxSubscriptionId = nil
         case .queue:
             presentedSubscriptionQueue.removeAll()
+            lastQueueSubscriptionId = nil
         case .library:
             lastLibrarySubscriptionId = nil
             presentedLibrary = NavigationPath()
@@ -185,8 +214,12 @@ import UnwatchedShared
 }
 
 enum NavManagerCodingKeys: CodingKey {
-    case showMenu, tab, askForReviewPoints
-
+    case showMenu,
+         tab,
+         askForReviewPoints,
+         presentedLibrary,
+         presentedSubscriptionInbox,
+         presentedSubscriptionQueue
 }
 
 enum NavigationTab: String, Codable {
