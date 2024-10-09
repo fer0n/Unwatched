@@ -53,11 +53,7 @@ import UnwatchedShared
 
         handleChapterRefresh()
         withAnimation {
-            if requiresFetchingVideoData() {
-                embeddingDisabled = true
-            } else {
-                embeddingDisabled = false
-            }
+            embeddingDisabled = false
         }
     }
 
