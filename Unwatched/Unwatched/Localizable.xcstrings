@@ -1323,6 +1323,38 @@
         }
       }
     },
+    "Could not subscribe: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnieren fehlgeschlagen: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not subscribe: %@"
+          }
+        }
+      }
+    },
+    "Couldn't convert to URL: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL konnte nicht erstellt werden: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't convert to URL: %@"
+          }
+        }
+      }
+    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -2075,6 +2107,22 @@
         }
       }
     },
+    "failedGettingChannelIdFromUsername%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konnte channel ID nicht via Nutzernamen ermitteln: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed getting channel ID from username %@"
+          }
+        }
+      }
+    },
     "failedGettingVideoInfo" : {
       "comment" : "Failed Getting Video Info Error",
       "localizations" : {
@@ -2397,6 +2445,22 @@
         }
       }
     },
+    "HTTP request failed: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP request fehlgeschlagen: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HTTP request failed: %@"
+          }
+        }
+      }
+    },
     "icloudSync" : {
       "localizations" : {
         "de" : {
@@ -2483,6 +2547,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "importiere %lld Abos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing %lld subscriptions"
           }
         }
       }
@@ -3693,19 +3763,18 @@
         }
       }
     },
-    "potentiallyFaultyYoutubeId" : {
-      "comment" : "(value)",
+    "potentiallyFaultyYoutubeId%@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube ID könnte fehlerhaft sein"
+            "value" : "YouTube ID könnte fehlerhaft sein: %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube ID may be faulty"
+            "value" : "YouTube ID may be faulty: %@"
           }
         }
       }

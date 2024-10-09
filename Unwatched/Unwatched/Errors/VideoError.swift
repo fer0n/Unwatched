@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum VideoError: LocalizedError {
     case noVideoFound
@@ -17,19 +18,19 @@ enum VideoError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noVideoFound:
-            return NSLocalizedString("noVideoFound", comment: "")
+            return String(localized: "noVideoFound")
         case .noYoutubeId:
-            return NSLocalizedString("noYoutubeIdFound", comment: "")
+            return String(localized: "noYoutubeIdFound")
         case .faultyYoutubeVideoId(let youtubeId):
-            return NSLocalizedString("potentiallyFaultyYoutubeId", comment: "\(youtubeId)")
+            return String(localized: "potentiallyFaultyYoutubeId\(youtubeId)")
         case .emptyYoutubeId:
-            return NSLocalizedString("emptyYoutubeId", comment: "")
+            return String(localized: "emptyYoutubeId")
         case .noYoutubePlaylistId:
-            return NSLocalizedString("noYoutubePlaylistId", comment: "")
+            return String(localized: "noYoutubePlaylistId")
         case .noVideosFoundInPlaylist:
-            return NSLocalizedString("noVideosFoundInPlaylist", comment: "")
+            return String(localized: "noVideosFoundInPlaylist")
         case .noVideoInfo:
-            return NSLocalizedString("noVideoInfo", comment: "")
+            return String(localized: "noVideoInfo")
         }
     }
 }

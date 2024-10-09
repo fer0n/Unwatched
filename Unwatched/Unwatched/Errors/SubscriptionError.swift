@@ -3,7 +3,7 @@
 //  Unwatched
 //
 
-import Foundation
+import SwiftUI
 
 enum SubscriptionError: LocalizedError {
     case notSupported
@@ -18,29 +18,26 @@ enum SubscriptionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .notSupported:
-            return NSLocalizedString("notSupported",
-                                     comment: "No Supported Error")
+            return String(localized: "notSupported")
         case .failedGettingChannelIdFromUsername(let message):
             let msg = """
             Failed to get channel ID from username.
             Try adding the RSS feed directly (instead of the channel URL).
             \(message != nil ? "Error: \(message!)" : "" )")
             """
-            return NSLocalizedString(msg, comment: "Failed Getting Channel ID Error")
+            return String(localized: "failedGettingChannelIdFromUsername\(msg)")
         case .failedGettingVideoInfo:
-            return NSLocalizedString("failedGettingVideoInfo",
-                                     comment: "Failed Getting Video Info Error")
+            return String(localized: "failedGettingVideoInfo")
         case .httpRequestFailed(let message):
-            return NSLocalizedString("HTTP request failed: \(message)",
-                                     comment: "Failed Getting Video Info Error")
+            return String(localized: "HTTP request failed: \(message)")
         case .notAnUrl(let noUrl):
-            return NSLocalizedString("Couldn't convert to URL: \(noUrl)", comment: "Couldn't convert to URL")
+            return String(localized: "Couldn't convert to URL: \(noUrl)")
         case .noInfoFoundToSubscribeTo:
-            return NSLocalizedString("noInfoFoundToSubscribeTo", comment: "No info found to subscribe to")
+            return String(localized: "noInfoFoundToSubscribeTo")
         case .couldNotSubscribe(let message):
-            return NSLocalizedString("Could not subscribe: \(message)", comment: "Could not subscribe")
+            return String(localized: "Could not subscribe: \(message)")
         case .noInfoFoundToUnsibscribe:
-            return NSLocalizedString("noInfoFoundToUnsibscribe", comment: "noInfoFoundToUnsibscribe")
+            return String(localized: "noInfoFoundToUnsibscribe")
         }
     }
 }
