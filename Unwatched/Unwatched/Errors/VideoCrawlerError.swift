@@ -3,7 +3,7 @@
 //  Unwatched
 //
 
-import Foundation
+import SwiftUI
 
 enum VideoCrawlerError: LocalizedError {
     case subscriptionInfoNotFound
@@ -13,11 +13,11 @@ enum VideoCrawlerError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .subscriptionInfoNotFound:
-            return NSLocalizedString("subscriptionInfoNotFound", comment: "Subscription Info Not Found Error")
+            return String(localized: "subscriptionInfoNotFound")
         case .invalidUrl:
-            return NSLocalizedString("invalidUrl", comment: "Invalid URL Error")
+            return String(localized: "invalidUrl")
         case .failedToParse:
-            return NSLocalizedString("failedToParse", comment: "Failed To Parse Error")
+            return String(localized: "failedToParse")
         }
     }
 }
