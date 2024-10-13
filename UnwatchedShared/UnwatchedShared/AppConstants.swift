@@ -36,7 +36,7 @@ public struct Const {
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
     public static let consideredWideAspectRatio: Double = 18/9
     public static let consideredYtShortAspectRatio: Double = 1
-    public static let maxYtShortsDuration: Double = 60
+    public static let maxYtShortsDuration: Double = 60 * 3
     public static let aspectRatioTolerance: Double = 0.1
     public static let secondsConsideredCloseToEnd: CGFloat = 20
 
