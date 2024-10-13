@@ -38,7 +38,7 @@ public struct Const {
     public static let consideredYtShortAspectRatio: Double = 1
     public static let maxYtShortsDuration: Double = 60
     public static let aspectRatioTolerance: Double = 0.1
-    public static let secondsConsideredCloseToEnd: CGFloat = 15
+    public static let secondsConsideredCloseToEnd: CGFloat = 20
 
     /// Playback speeds that will be spelled out
     public static let highlightedPlaybackSpeeds = [1, 1.5, 2, 3]
