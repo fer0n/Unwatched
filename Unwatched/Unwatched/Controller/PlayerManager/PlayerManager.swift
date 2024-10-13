@@ -243,7 +243,7 @@ import UnwatchedShared
             self.aspectRatio = minAspectRatio
             if video.isYtShort != true,
                let duration = video.duration,
-               duration < Const.maxYtShortsDuration {
+               duration <= Const.maxYtShortsDuration {
                 video.isYtShort = true
             }
             return
