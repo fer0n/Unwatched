@@ -5,6 +5,7 @@
 
 import XCTest
 import SwiftData
+import UnwatchedShared
 
 // swiftlint:disable all
 final class ChapterServiceTests: XCTestCase {
@@ -138,11 +139,13 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testSponsorBlock() async {
+        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
         let container = await DataController.previewContainer
         let modelContext = ModelContext(container)
 
         let video = ChapterServiceTestData.getSponsoredVideo()
         modelContext.insert(video)
+        try? modelContext.save()
 
         guard let videoDescription = video.videoDescription else {
             XCTFail("video description is nil")
@@ -158,8 +161,9 @@ final class ChapterServiceTests: XCTestCase {
                 container: container
             )
             print("chapters with duration: \(String(describing: chapters))")
+            XCTAssertGreaterThan(chapters?.count ?? 0, 0)
         } catch {
-            print("error: \(error)")
+            XCTFail("error: \(error)")
         }
     }
 
