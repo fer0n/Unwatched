@@ -12,6 +12,7 @@ struct DebugView: View {
     @Environment(Alerter.self) var alerter
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
+    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
@@ -36,6 +37,12 @@ struct DebugView: View {
                 MySection("notifications") {
                     Toggle(isOn: $monitorBackgroundFetches) {
                         Text("monitorBackgroundFetches")
+                    }
+                }
+
+                MySection("appearance") {
+                    Toggle(isOn: $showVideoListOrder) {
+                        Text("showVideoListOrder")
                     }
                 }
 
