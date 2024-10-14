@@ -5,6 +5,7 @@
 
 import XCTest
 import SwiftData
+import UnwatchedShared
 
 // swiftlint:disable all
 class ExportableTests: XCTestCase {
@@ -132,7 +133,7 @@ class ExportableTests: XCTestCase {
             )
         ]
 
-        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShortsEverywhere: false)
+        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShorts: false)
         await repo.handleNewVideosGetCount(sendableSub, videos, defaultPlacement: placement)
         try? await repo.modelContext.save()
 
@@ -312,7 +313,7 @@ class ExportableTests: XCTestCase {
         let decoder = JSONDecoder()
         do {
             let sendableVideo = try decoder.decode(SendableVideo.self, from: importedData)
-            let importedVideo = sendableVideo.createVideo()
+            let importedVideo = sendableVideo.createVideo(extractChapters: ChapterService.extractChapters)
 
             XCTAssertEqual(importedVideo.title, video.title)
             XCTAssertEqual(importedVideo.url, video.url)

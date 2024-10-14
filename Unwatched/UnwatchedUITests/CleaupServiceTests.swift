@@ -5,6 +5,7 @@
 
 import XCTest
 import SwiftData
+import UnwatchedShared
 
 // swiftlint:disable all
 class CleanupServiceTests: XCTestCase {
