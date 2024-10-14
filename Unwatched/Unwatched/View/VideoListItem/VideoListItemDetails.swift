@@ -9,6 +9,8 @@ import UnwatchedShared
 struct VideoListItemDetails: View {
     @Environment(NavigationManager.self) private var navManager
 
+    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
+
     var video: Video
     var queueButtonSize: CGFloat?
 
@@ -40,11 +42,20 @@ struct VideoListItemDetails: View {
                         }
                 }
 
-                if let published = video.publishedDate {
-                    Text("\(published.formattedRelative) ago")
-                        .fontWeight(.regular)
-                        .font(.system(size: timeSize))
+                HStack(spacing: 5) {
+                    if showVideoListOrder,
+                       navManager.tab == .queue,
+                       navManager.presentedSubscriptionQueue.isEmpty,
+                       let order = video.queueEntry?.order {
+                        Text(verbatim: "#\(order)")
+                    }
+
+                    if let published = video.publishedDate {
+                        Text("\(published.formattedRelative) ago")
+                    }
                 }
+                .fontWeight(.regular)
+                .font(.system(size: timeSize))
             }
             .padding(.trailing, queueButtonSize)
         }

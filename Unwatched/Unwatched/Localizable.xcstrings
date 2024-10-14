@@ -4451,6 +4451,22 @@
         }
       }
     },
+    "showVideoListOrder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue Position anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Queue Order"
+          }
+        }
+      }
+    },
     "sideloads" : {
       "localizations" : {
         "de" : {
