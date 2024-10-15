@@ -37,7 +37,7 @@ extension Const {
         // Appearance
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.themeColor: ThemeColor(),
+        Const.themeColor: ThemeColor().rawValue,
         Const.browserAsTab: false,
         Const.sheetOpacity: false,
         Const.lightModeTheme: AppAppearance.unwatched.rawValue,

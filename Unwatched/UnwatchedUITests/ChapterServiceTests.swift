@@ -173,6 +173,7 @@ final class ChapterServiceTests: XCTestCase {
 
         let video = ChapterServiceTestData.getSponsoredVideo()
         modelContext.insert(video)
+        try? modelContext.save()
 
         do {
             let chapters = try await ChapterService.mergeSponsorSegments(
