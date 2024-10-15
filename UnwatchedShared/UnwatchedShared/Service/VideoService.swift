@@ -26,6 +26,7 @@ public struct VideoService {
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
             deleteQueueEntry(queueEntry, modelContext: modelContext)
         }
+        try? modelContext.save()
     }
     
     public static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
