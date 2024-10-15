@@ -53,7 +53,8 @@ struct VideoListItem: View {
 
             VideoListItemDetails(
                 video: video,
-                queueButtonSize: config.showQueueButton ? queueButtonSize : nil
+                queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
+                showVideoListOrder: config.showVideoListOrder
             )
         }
         .overlay {
