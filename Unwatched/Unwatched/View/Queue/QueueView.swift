@@ -13,6 +13,7 @@ struct QueueView: View {
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount = 0
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
+    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
@@ -44,7 +45,8 @@ struct QueueView: View {
                                         clearRole: .destructive,
                                         onChange: handleVideoChange,
                                         clearAboveBelowList: .queue,
-                                        showContextMenu: enableQueueContextMenu
+                                        showContextMenu: enableQueueContextMenu,
+                                        showVideoListOrder: showVideoListOrder
                                     )
                                 )
                             } else {

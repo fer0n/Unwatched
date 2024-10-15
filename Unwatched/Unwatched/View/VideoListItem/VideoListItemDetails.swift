@@ -9,10 +9,9 @@ import UnwatchedShared
 struct VideoListItemDetails: View {
     @Environment(NavigationManager.self) private var navManager
 
-    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
-
     var video: Video
     var queueButtonSize: CGFloat?
+    var showVideoListOrder: Bool = false
 
     @ScaledMetric var titleSize = 15
     @ScaledMetric var subSize   = 14
@@ -44,8 +43,6 @@ struct VideoListItemDetails: View {
 
                 HStack(spacing: 5) {
                     if showVideoListOrder,
-                       navManager.tab == .queue,
-                       navManager.presentedSubscriptionQueue.isEmpty,
                        let order = video.queueEntry?.order {
                         Text(verbatim: "#\(order)")
                     }
