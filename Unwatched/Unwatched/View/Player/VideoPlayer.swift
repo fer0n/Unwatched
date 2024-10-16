@@ -22,19 +22,20 @@ struct VideoPlayer: View {
     var compactSize = false
     var showInfo = true
     var horizontalLayout = false
-
     var landscapeFullscreen = true
-    let hasWiderAspectRatio = true
 
     var body: some View {
+        let tallestAspectRatio = player.videoAspectRatio <= Const.tallestAspectRatio + Const.aspectRatioTolerance
+
         VStack(spacing: 0) {
             PlayerView(landscapeFullscreen: landscapeFullscreen,
                        markVideoWatched: markVideoWatched,
                        setShowMenu: setShowMenu)
+                .layoutPriority(1)
 
             if !landscapeFullscreen {
                 PlayerControls(compactSize: compactSize,
-                               showInfo: showInfo,
+                               showInfo: showInfo && !tallestAspectRatio,
                                horizontalLayout: horizontalLayout,
                                setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched,
