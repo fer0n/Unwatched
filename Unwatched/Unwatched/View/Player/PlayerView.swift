@@ -26,7 +26,6 @@ struct PlayerView: View {
     @State var overlayVM = OverlayFullscreenVM()
 
     var landscapeFullscreen = true
-    let hasWiderAspectRatio = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var setShowMenu: (() -> Void)?
 
@@ -36,26 +35,20 @@ struct PlayerView: View {
             || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
     }
 
-    var videoAspectRatio: Double {
-        player.aspectRatio
-            ?? player.video?.subscription?.customAspectRatio
-            ?? Const.defaultVideoAspectRatio
-    }
-
     var showFullscreenControls: Bool {
         fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
     }
 
     var body: some View {
-        let wideAspect = (videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
+        let wideAspect = (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
             && landscapeFullscreen
         ZStack(alignment: .top) {
             Rectangle()
                 .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
-                .aspectRatio(videoAspectRatio, contentMode: .fit)
+                .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                 .frame(maxWidth: .infinity)
                 .background(backgroundTapRecognizer)
-                .animation(.default, value: videoAspectRatio)
+                .animation(.default, value: player.videoAspectRatio)
 
             if player.video != nil {
                 HStack(spacing: 0) {
@@ -124,7 +117,7 @@ struct PlayerView: View {
                 onVideoEnded: handleVideoEnded,
                 setShowMenu: setShowMenu
             )
-            .aspectRatio(videoAspectRatio, contentMode: .fit)
+            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
             .overlay {
                 OverlayFullscreenButton(
                     overlayVM: $overlayVM,

@@ -230,6 +230,12 @@ import UnwatchedShared
         loadTopmostVideoFromQueue()
     }
 
+    var videoAspectRatio: Double {
+        aspectRatio
+            ?? video?.subscription?.customAspectRatio
+            ?? Const.defaultVideoAspectRatio
+    }
+
     func handleAspectRatio(_ aspectRatio: Double) {
         guard let video = video,
               let subscription = video.subscription else {
@@ -237,10 +243,9 @@ import UnwatchedShared
             return
         }
 
-        let consideredYtShort = aspectRatio < Const.consideredYtShortAspectRatio
-        if consideredYtShort {
-            let minAspectRatio = Const.videoAspectRatios.min()
-            self.aspectRatio = minAspectRatio
+        let isTallAspectRatio = (aspectRatio - Const.aspectRatioTolerance) < Const.consideredTallAspectRatio
+        if isTallAspectRatio {
+            self.aspectRatio = aspectRatio
             if video.isYtShort != true,
                let duration = video.duration,
                duration <= Const.maxYtShortsDuration {

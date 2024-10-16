@@ -33,13 +33,15 @@ struct PlayerControls: View {
     @State var autoHideVM = AutoHideVM()
 
     var body: some View {
+        let compactHeight = player.videoAspectRatio <= Const.consideredTallAspectRatio
+
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 25))
-            : AnyLayout(VStackLayout(spacing: 25))
+            : AnyLayout(VStackLayout(spacing: compactHeight ? 15 : 25))
 
         let outerLayout = horizontalLayout
             ? AnyLayout(HStackLayout(spacing: 10))
-            : AnyLayout(VStackLayout(spacing: 10))
+            : AnyLayout(VStackLayout(spacing: compactHeight ? 7 : 10))
 
         ZStack {
             outerLayout {
@@ -49,7 +51,7 @@ struct PlayerControls: View {
 
                 ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
 
-                if !player.embeddingDisabled && !compactSize {
+                if !player.embeddingDisabled && !compactSize && !compactHeight {
                     Spacer()
                     Spacer()
                 }
@@ -89,11 +91,17 @@ struct PlayerControls: View {
                         }
                     }
                     .padding(.horizontal, 10)
+
+                    if compactHeight {
+                        // make sure play button vertical spacing is equal
+                        Spacer()
+                            .frame(height: 0)
+                    }
                 }
                 .padding(.horizontal, compactSize ? 20 : 5)
                 .frame(maxWidth: 1000)
 
-                if !player.embeddingDisabled && !compactSize {
+                if !player.embeddingDisabled && !compactSize && !compactHeight {
                     Spacer()
                     Spacer()
                 }
@@ -117,6 +125,7 @@ struct PlayerControls: View {
                 .environment(\.colorScheme, colorScheme)
         }
         .animation(.default.speed(3), value: showControls)
+        .animation(.default, value: compactHeight)
         .contentShape(Rectangle())
         .onTapGesture {
             if !showControls {
@@ -156,9 +165,9 @@ struct PlayerControls: View {
 }
 
 #Preview {
-    PlayerControls(compactSize: true,
+    PlayerControls(compactSize: false,
                    showInfo: false,
-                   horizontalLayout: true,
+                   horizontalLayout: false,
                    setShowMenu: { },
                    markVideoWatched: { _, _ in },
                    sleepTimerVM: SleepTimerViewModel())
