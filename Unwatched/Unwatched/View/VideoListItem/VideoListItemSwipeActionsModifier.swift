@@ -98,8 +98,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func moveToInbox() {
-        let task = VideoService.moveVideoToInbox(video, modelContext: modelContext)
-        handlePotentialQueueChange(after: task)
+        VideoService.moveVideoToInbox(video, modelContext: modelContext)
+        handlePotentialQueueChange()
         config.onChange?()
     }
 
