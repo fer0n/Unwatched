@@ -35,14 +35,23 @@ extension VideoService {
             )
     }
 
-    static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) -> Task<(), Error> {
-        let container = modelContext.container
-        let videoId = video.id
-        let task = Task {
-            let repo = VideoActor(modelContainer: container)
-            try await repo.moveVideoToInbox(videoId)
+    static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) {
+        if video.inboxEntry != nil {
+            clearEntries(
+                from: video,
+                except: InboxEntry.self,
+                updateCleared: false,
+                modelContext: modelContext
+            )
+        } else {
+            clearEntries(
+                from: video,
+                updateCleared: false,
+                modelContext: modelContext
+            )
+            let inboxEntry = InboxEntry(video)
+            modelContext.insert(inboxEntry)
         }
-        return task
     }
 
     static func deleteInboxEntries(_ entries: [InboxEntry], modelContext: ModelContext) {

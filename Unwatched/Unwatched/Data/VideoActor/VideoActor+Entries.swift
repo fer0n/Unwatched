@@ -27,30 +27,6 @@ extension VideoActor {
         try modelContext.save()
     }
 
-    func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
-        guard let video = modelContext.model(for: videoId) as? Video else {
-            Logger.log.warning("moveVideoToInbox no video found")
-            return
-        }
-        if video.inboxEntry != nil {
-            VideoActor.clearEntries(
-                from: video,
-                except: InboxEntry.self,
-                updateCleared: false,
-                modelContext: modelContext
-            )
-        } else {
-            VideoActor.clearEntries(
-                from: video,
-                updateCleared: false,
-                modelContext: modelContext
-            )
-            let inboxEntry = InboxEntry(video)
-            modelContext.insert(inboxEntry)
-        }
-        try modelContext.save()
-    }
-
     func getNewVideosAndUpdateExisting(sub: Subscription,
                                        videos: [SendableVideo]) async -> [SendableVideo] {
         guard let subVideos = sub.videos else {
