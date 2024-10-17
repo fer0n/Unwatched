@@ -262,6 +262,122 @@ final class ChapterServiceTests: XCTestCase {
         XCTAssertEqual(chapters[0].endTime, 10)
         XCTAssertEqual(chapters[1].endTime, 40)
     }
+
+    func testChapterRecognition() {
+        let testValues = [
+            // no chapters
+            (
+                """
+                Fleischmann, M., and S. Pons. 1989. Electrochemically induced nuclear fusion of deuterium. Journal of Electroanalytical Chemistry 261:301–308.
+                Fleischmann, M., and S. Pons et. al. 1990. Calorimetry of the palladium-deuterium-heavy water system. Journal of Electroanalytical Chemistry 287:293–348.
+                Jones, S.E, E.P Palmer, J.B Czirr, D.L Decker, G.L Jensen, J.M Thorne, S.F Taylor, and J Rafelski. 1989. Observation of cold nuclear fusion in condensed matter. Nature 388:737–740.
+                """,
+                []
+            ),
+
+            // title then time
+            (
+                """
+                CHAPTERS
+
+                Chapter 1: 10:13
+                Chapter 2: 20:45
+                Chapter 3: 30:22
+                """,
+                [
+                    SendableChapter(title: "Chapter 1", startTime: 10 * 60 + 13, endTime: 20 * 60 + 45),
+                    SendableChapter(title: "Chapter 2", startTime: 20 * 60 + 45, endTime: 30 * 60 + 22),
+                    SendableChapter(title: "Chapter 3", startTime: 30 * 60 + 22, endTime: nil)
+                ]
+            ),
+
+            // time then title
+            (
+                """
+                No Leading Zeroes
+
+                0:00 Intro,
+                1:30 Overview,
+                03:45 Topic 1,
+                05:10 Topic 2,
+                07:25 Conclusion
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
+                    SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
+                    SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                ]
+            ),
+            (
+                """
+                0:00 Intro
+                1:30 Overview
+                3:45 Topic 1
+                5:10 Topic 2
+                7:25 Conclusion
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
+                    SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
+                    SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                ]
+            ),
+            (
+                """
+                00:00 - Introduction;
+                01:30 - Overview;
+                03:45 - Topic 1,
+                05:10 - Topic 2,
+                07:25 - Conclusion
+                """,
+                [
+                    SendableChapter(title: "Introduction", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
+                    SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
+                    SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                ]
+            ),
+            (
+                """
+                • 00:00 Intro
+                • 01:30 Overview
+                • 03:45 Topic 1
+                - 05:10 Topic 2
+                - 07:25 Conclusion
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
+                    SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
+                    SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                ]
+            )
+        ]
+
+        for (description, expected) in testValues {
+            let chapters = ChapterService.extractChapters(from: description, videoDuration: nil)
+            compareChapters(chapters, expected, description)
+        }
+    }
+
+    func compareChapters(_ chapters: [SendableChapter], _ expected: [SendableChapter], _ description: String) {
+        if chapters.count != expected.count {
+            XCTFail("Chapter count mismatch: \(chapters.count) vs \(expected.count) in \(description)")
+            return
+        }
+
+        for (index, chapter) in chapters.enumerated() {
+            XCTAssertEqual(chapter.title, expected[index].title, "\(chapter.title) vs \(expected[index].title) in \(description)")
+            XCTAssertEqual(chapter.startTime, expected[index].startTime, "\(chapter.startTime) vs \(expected[index].startTime) in \(description)")
+            XCTAssertEqual(chapter.endTime, expected[index].endTime, "\(chapter.endTime) vs \(expected[index].endTime) in \(description)")
+        }
+    }
 }
 
 struct ChapterServiceTestData {

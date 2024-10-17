@@ -14,10 +14,12 @@ struct ChapterService {
         let input = description
         do {
             let regexTimeThenTitle = try NSRegularExpression(
-                pattern: #"\n\s*(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)(?<!,|;|\s)"#
+                pattern: #"^\s*(?:[-–•\s])*?(\d+(?:\:\d+)+)\s*[-–•]?\s*(.+)(?<![,;\s])"#,
+                options: [.anchorsMatchLines]
             )
             let regexTitleThenTime = try NSRegularExpression(
-                pattern: #"\n(.+)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)"#
+                pattern: #"^(.+)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)$"#,
+                options: [.anchorsMatchLines]
             )
 
             var chapters = try? getChaptersViaRegex(regexTimeThenTitle, input, 2, 1)
