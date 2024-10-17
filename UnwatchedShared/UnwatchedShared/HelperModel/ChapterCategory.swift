@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible {
+public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible, Sendable {
     case sponsor
     case filler
     case intro
