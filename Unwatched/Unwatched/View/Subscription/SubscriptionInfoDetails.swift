@@ -88,8 +88,6 @@ struct SubscriptionInfoDetails: View {
                             },
                             menuLabel: "videoPlacement")
 
-                        AspectRatioPicker(subscription: subscription)
-
                         Spacer()
                     }
                     .padding(.horizontal)
