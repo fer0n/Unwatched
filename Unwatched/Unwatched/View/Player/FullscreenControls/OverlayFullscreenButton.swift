@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 @Observable class OverlayFullscreenVM {
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
@@ -33,7 +34,8 @@ struct OverlayFullscreenButton: View {
     @Binding var overlayVM: OverlayFullscreenVM
 
     var enabled: Bool
-    var landscapeFullscreen: Bool
+    var show: Bool
+    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var body: some View {
         ZStack {
@@ -44,15 +46,20 @@ struct OverlayFullscreenButton: View {
                 .fontWeight(.black)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.black, .white)
-                .opacity(overlayVM.show && landscapeFullscreen ? 1 : 0)
-                .scaleEffect(overlayVM.show && landscapeFullscreen ? 1 : 0.7)
+                .opacity(overlayVM.show && show ? 1 : 0)
+                .scaleEffect(overlayVM.show && show ? 1 : 0.7)
                 .animation(.bouncy, value: overlayVM.show)
                 .accessibilityLabel("playPause")
                 .allowsHitTesting(false)
 
             if player.videoEnded {
-                PlayButton(size: 90)
-                    .opacity(enabled && landscapeFullscreen ? 1 : 0)
+                HStack(spacing: 20) {
+                    WatchedButton(markVideoWatched: markVideoWatched)
+                    PlayButton(size: 90)
+                    NextVideoButton(markVideoWatched: markVideoWatched)
+                }
+                .opacity(enabled && show ? 1 : 0)
+                .animation(.default, value: show)
             }
         }
     }
@@ -72,4 +79,18 @@ enum OverlayIcon {
         case .previous: return "backward.end.circle.fill"
         }
     }
+}
+
+#Preview {
+    let player = PlayerManager()
+    player.videoEnded = true
+
+    return OverlayFullscreenButton(
+        overlayVM: .constant(OverlayFullscreenVM()),
+        enabled: true,
+        show: true,
+        markVideoWatched: {_, _ in }
+    )
+    .environment(player)
+    .modelContainer(DataController.previewContainerFilled)
 }

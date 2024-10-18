@@ -122,7 +122,8 @@ struct PlayerView: View {
                 OverlayFullscreenButton(
                     overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
-                    landscapeFullscreen: landscapeFullscreen
+                    show: landscapeFullscreen || navManager.showMenu,
+                    markVideoWatched: markVideoWatched
                 )
 
                 thumbnailPlaceholder
