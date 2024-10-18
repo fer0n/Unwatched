@@ -54,19 +54,18 @@ struct VideoListView: View {
 
         if allSubscriptions {
             filter = #Predicate<Video> { video in
-                (showShorts || video.isYtShort == false)
+                (showShorts || !(video.isYtShort ?? false))
                     && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         } else {
             filter = #Predicate<Video> { video in
-                video.subscription?.persistentModelID == subscriptionId &&
-                    (showShorts || video.isYtShort == false)
+                video.subscription?.persistentModelID == subscriptionId
+                    && (showShorts || !(video.isYtShort ?? false))
                     && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         }
         return filter
     }
-
 }
 
 // #Preview {
