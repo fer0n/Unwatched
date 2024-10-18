@@ -10,7 +10,6 @@ struct SpeedControlView: View {
     @Environment(NavigationManager.self) private var navManager
 
     @State var viewModel = SpeedControlViewModel()
-    @State var hapticToggle = false
     @State var controlMinX: CGFloat?
     @State private var dragState: CGFloat?
 
@@ -53,7 +52,6 @@ struct SpeedControlView: View {
                                 withAnimation {
                                     selectedSpeed = speed
                                     controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
-                                    hapticToggle.toggle()
                                     dragState = nil
                                 }
                             }
@@ -79,13 +77,15 @@ struct SpeedControlView: View {
             .padding(.horizontal, SpeedControlView.padding)
 
             if let controlMinX = controlMinX {
+                let floatingText = getFloatingText()
                 ZStack {
                     Circle()
                         .fill()
                         .frame(width: maxHeight, height: maxHeight)
-                    Text(getFloatingText())
+                    Text(floatingText)
                         .foregroundStyle(.automaticWhite)
                         .font(.system(size: selectedFontSize, weight: .bold))
+                        .sensoryFeedback(Const.sensoryFeedback, trigger: floatingText)
                 }
                 .position(x: dragState ?? controlMinX, y: midY)
                 .frame(maxHeight: maxHeight)
@@ -119,13 +119,11 @@ struct SpeedControlView: View {
 
                     withAnimation {
                         controlMinX = viewModel.getXPos(viewModel.width, selected)
-                        hapticToggle.toggle()
                         dragState = nil
                     }
                 }
         )
         .coordinateSpace(.named("speed"))
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .padding(.horizontal, 5)
     }
 
