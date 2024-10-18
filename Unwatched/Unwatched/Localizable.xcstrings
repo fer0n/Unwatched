@@ -1483,22 +1483,6 @@
         }
       }
     },
-    "defaultAspectRatio (%@)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standard (%@)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default (%@)"
-          }
-        }
-      }
-    },
     "defaultSpeed%@" : {
       "localizations" : {
         "de" : {
@@ -5152,22 +5136,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos Added to Queue"
-          }
-        }
-      }
-    },
-    "videoAspectRatio" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seitenverhältnis"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aspect Ratio"
           }
         }
       }

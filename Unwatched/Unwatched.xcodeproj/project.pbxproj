@@ -101,7 +101,6 @@
 		883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */; };
 		88415BEA2C50E1D50072778F /* ExportableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88415BE92C50E1D50072778F /* ExportableTests.swift */; };
 		88415BF72C50EAA80072778F /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF22B64FC0300C93F82 /* UserDataService.swift */; };
-		88415BF92C50EAD40072778F /* AspectRatioPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC12C1985FF007FC1A5 /* AspectRatioPicker.swift */; };
 		88415BFD2C50EB500072778F /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
 		8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8843AE572C8843E7001A740A /* CleaupServiceTests.swift */; };
 		8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8845F0142B500E8A0086AA98 /* AllVideosView.swift */; };
@@ -421,7 +420,6 @@
 		88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */; };
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
-		88FEBFC22C1985FF007FC1A5 /* AspectRatioPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC12C1985FF007FC1A5 /* AspectRatioPicker.swift */; };
 		88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC32C19927E007FC1A5 /* UIDevice.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
 		88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
@@ -703,7 +701,6 @@
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
-		88FEBFC12C1985FF007FC1A5 /* AspectRatioPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectRatioPicker.swift; sourceTree = "<group>"; };
 		88FEBFC32C19927E007FC1A5 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
@@ -948,7 +945,6 @@
 				888C49C62B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift */,
 				88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */,
 				881E51432B5A75AD006384E4 /* SubscriptionListView.swift */,
-				88FEBFC12C1985FF007FC1A5 /* AspectRatioPicker.swift */,
 				889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */,
 				88373C242C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift */,
 			);
@@ -1700,7 +1696,6 @@
 				889AF96A2C50ED6C001CEDE6 /* apiKey.swift in Sources */,
 				889AF90E2C50ECE2001CEDE6 /* InboxView.swift in Sources */,
 				88BF31052CAE813400AE26EC /* LocalizedStringKey.swift in Sources */,
-				88415BF92C50EAD40072778F /* AspectRatioPicker.swift in Sources */,
 				881942A22C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				880505042C83016B005F0972 /* QueueVideoButton.swift in Sources */,
 			);
@@ -1750,7 +1745,6 @@
 				880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */,
 				8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */,
-				88FEBFC22C1985FF007FC1A5 /* AspectRatioPicker.swift in Sources */,
 				8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */,
 				883F41052BDECB5C00535952 /* InboxHasEntriesTip.swift in Sources */,
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,

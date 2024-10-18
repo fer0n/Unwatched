@@ -49,10 +49,6 @@ struct InteractiveSubscriptionTitle: View {
                     }
                 }
                 .disabled(subscribeManager.isLoading)
-
-                if let sub = video?.subscription {
-                    AspectRatioPicker(subscription: sub)
-                }
             }
             .onAppear {
                 subscribeManager.container = modelContext.container
