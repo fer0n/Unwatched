@@ -78,10 +78,11 @@ struct ContentView: View {
                         .environment(\.colorScheme, colorScheme)
                 }
             }
-            .menuViewSheet(allowMaxSheetHeight: videoExists && !navManager.searchFocused,
-                           embeddingDisabled: player.embeddingDisabled,
-                           showCancelButton: landscapeFullscreen,
-                           disableSheet: bigScreen
+            .menuViewSheet(
+                allowMaxSheetHeight: videoExists && !navManager.searchFocused,
+                allowPlayerControlHeight: !player.embeddingDisabled && player.videoAspectRatio > Const.tallestAspectRatio,
+                showCancelButton: landscapeFullscreen,
+                disableSheet: bigScreen
             )
         }
         .setColorScheme()

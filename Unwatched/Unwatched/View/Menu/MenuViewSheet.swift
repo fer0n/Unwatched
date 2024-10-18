@@ -11,7 +11,7 @@ struct MenuViewSheet: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
 
     var allowMaxSheetHeight: Bool
-    var embeddingDisabled: Bool
+    var allowPlayerControlHeight: Bool
     var showCancelButton: Bool
     var disableSheet: Bool
 
@@ -19,9 +19,10 @@ struct MenuViewSheet: ViewModifier {
 
         let detents: Set<PresentationDetent> = allowMaxSheetHeight
             ? Set([.height(sheetPos.maxSheetHeight)]).union(
-                embeddingDisabled
-                    ? []
-                    : [.height(sheetPos.playerControlHeight)]
+                allowPlayerControlHeight
+                    ? [.height(sheetPos.playerControlHeight)]
+                    : []
+
             )
             : [.large]
 
@@ -55,11 +56,11 @@ struct MenuViewSheet: ViewModifier {
 
 extension View {
     func menuViewSheet(allowMaxSheetHeight: Bool,
-                       embeddingDisabled: Bool,
+                       allowPlayerControlHeight: Bool,
                        showCancelButton: Bool,
                        disableSheet: Bool) -> some View {
         self.modifier(MenuViewSheet(allowMaxSheetHeight: allowMaxSheetHeight,
-                                    embeddingDisabled: embeddingDisabled,
+                                    allowPlayerControlHeight: allowPlayerControlHeight,
                                     showCancelButton: showCancelButton,
                                     disableSheet: disableSheet))
     }
