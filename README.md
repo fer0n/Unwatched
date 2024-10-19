@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="160" height="160" src="./Assets/Icon.png" alt="Unwatched logo">
+  <img width="160" height="160" src="./Unwatched/Assets/Icon.png" alt="Unwatched logo">
 </p>
 
 <h1 align="center"/>Unwatched</h1>
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="./Assets/promo.png" alt="Unwatched screenshots" width="800" height="auto">
+  <img src="./Unwatched/Assets/promo.png" alt="Unwatched screenshots" width="800" height="auto">
 </p>
 
 ## Unwatched
