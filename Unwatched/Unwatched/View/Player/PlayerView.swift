@@ -33,6 +33,7 @@ struct PlayerView: View {
         ((navManager.showMenu || navManager.showDescriptionDetail)
             && sheetPos.swipedBelow)
             || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
+            || landscapeFullscreen
     }
 
     var showFullscreenControls: Bool {
