@@ -8,17 +8,17 @@ import SwiftData
 import UnwatchedShared
 
 struct SendableSubscriptionDetailView: View {
-    var subscription: Subscription?
+    @Query var subscription: [Subscription]
 
     init(_ sendableSub: SendableSubscription, _ modelContext: ModelContext) {
-        if let id = sendableSub.persistentId,
-           let sub = modelContext.model(for: id) as? Subscription {
-            self.subscription = sub
+        if let id = sendableSub.persistentId {
+            let filter = #Predicate<Subscription> { $0.persistentModelID == id }
+            self._subscription = Query(filter: filter, animation: .default)
         }
     }
 
     var body: some View {
-        if let subscription = subscription {
+        if let subscription = subscription.first {
             SubscriptionDetailView(subscription: subscription)
         }
     }
