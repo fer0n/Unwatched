@@ -167,43 +167,48 @@ extension PlayerWebView {
         var longTouchSent = false;
         var touchStartEvent;
 
-        window.addEventListener('touchstart', event => {
-            if (event.target.matches('video')) {
-                touchStartEvent = event;
-                if (event.touches.length > 1) {
-                    isPinching = true;
+        function addTouchEventListener(eventType, handler) {
+            window.addEventListener(eventType, event => {
+                if (event.target.matches('video') || event.target.matches('.ytp-cued-thumbnail-overlay-image')) {
+                    handler(event);
                 }
-                if (!event.isReTriggering) {
-                    event.stopPropagation();
-                    handleTouchStart(event);
-                }
+            }, true);
+        }
+
+        addTouchEventListener('touchstart', event => {
+            touchStartEvent = event;
+            if (event.touches.length > 1) {
+                isPinching = true;
             }
-        }, true);
-        window.addEventListener('touchmove', event => {
-            if (event.target.matches('video') && !isPinching) {
+            if (!event.isReTriggering) {
+                event.stopPropagation();
+                handleTouchStart(event);
+            }
+        });
+
+        addTouchEventListener('touchmove', event => {
+            if (!isPinching) {
                 event.stopPropagation();
                 handleTouchMove(event);
             }
-        }, true);
-        window.addEventListener('touchend', event => {
-            if (event.target.matches('video')) {
-                if (event.touches.length === 0) {
-                    isPinching = false;
-                }
-                if (!event.isReTriggering) {
-                    event.stopPropagation();
-                    handleTouchEnd(event);
-                }
+        });
+
+        addTouchEventListener('touchend', event => {
+            if (event.touches.length === 0) {
+                isPinching = false;
             }
-        }, true);
-        window.addEventListener('touchcancel', event => {
-            if (event.target.matches('video')) {
-                if (!event.isReTriggering) {
-                    handleTouchEnd(event);
-                    event.stopPropagation();
-                }
+            if (!event.isReTriggering) {
+                event.stopPropagation();
+                handleTouchEnd(event);
             }
-        }, true);
+        });
+
+        addTouchEventListener('touchcancel', event => {
+            if (!event.isReTriggering) {
+                handleTouchEnd(event);
+                event.stopPropagation();
+            }
+        });
 
         function togglePlay() {
             if (video.paused) {

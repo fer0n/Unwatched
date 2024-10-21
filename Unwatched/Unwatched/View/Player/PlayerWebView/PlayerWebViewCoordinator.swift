@@ -93,6 +93,13 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             Logger.log.warning("No side given for longTouch")
             return
         }
+        if direction == "up" {
+            parent.setShowMenu?()
+        }
+        if parent.player.unstarted {
+            // don't allow chapter change before starting the video
+            return
+        }
         if direction == "left" {
             if parent.player.goToNextChapter() {
                 parent.overlayVM.show(.next)
@@ -102,9 +109,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             if parent.player.goToPreviousChapter() {
                 parent.overlayVM.show(.previous)
             }
-        }
-        if direction == "up" {
-            parent.setShowMenu?()
         }
     }
 
