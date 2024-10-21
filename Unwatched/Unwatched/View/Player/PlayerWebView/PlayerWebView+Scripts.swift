@@ -59,7 +59,7 @@ extension PlayerWebView {
         var video = document.querySelector('video');
         var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
         video.playbackRate = \(playbackSpeed);
-        video.currentTime = \(startAt);
+        var startAtTime = \(startAt);
 
         video.muted = false;
 
@@ -94,7 +94,7 @@ extension PlayerWebView {
             if (requiresFetchingVideoData) {
                 sendMessage('updateTitle', document.title);
             }
-            cancelErrorChecks();
+            video.currentTime = startAtTime;
         });
         video.addEventListener('loadeddata', function() {
             sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);

@@ -18,12 +18,14 @@ public final class Chapter {
         time: Double,
         duration: Double? = nil,
         endTime: Double? = nil,
+        isActive: Bool? = nil,
         category: ChapterCategory? = nil
     ) {
         self.title = title
         self.startTime = time
         self.duration = duration
         self.endTime = endTime
+        self.isActive = isActive ?? true
         self.category = category
     }
 
@@ -56,7 +58,14 @@ public struct SendableChapter: Sendable, CustomStringConvertible {
     }
 
     public var getChapter: Chapter {
-        Chapter(title: title, time: startTime, duration: duration, endTime: endTime, category: category)
+        Chapter(
+            title: title,
+            time: startTime,
+            duration: duration,
+            endTime: endTime,
+            isActive: isActive,
+            category: category
+        )
     }
 
     public init(
