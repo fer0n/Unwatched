@@ -193,6 +193,8 @@ import UnwatchedShared
             if previousIsPlaying {
                 play()
             }
+        @unknown default:
+            break
         }
         videoSource = nil
     }
@@ -202,7 +204,29 @@ import UnwatchedShared
         if video?.hasFinished == true {
             startAt = 0
         }
-        return startAt
+        return ensureStartPositionWorksWithChapters(startAt)
+    }
+
+    func ensureStartPositionWorksWithChapters(_ time: Double) -> Double {
+        guard let video = video else {
+            Logger.log.warning("ensureStartPositionWorksWithChapters: no video")
+            return time
+        }
+        // regular chapter is active, time is okay
+        if video.sortedChapters.first(
+            where: {
+                $0.isActive && $0.startTime <= time
+            }) != nil {
+            return time
+        }
+        // no active chapter found, try to find the first chapter with a start time after the current time
+        if let nextChapter = video.sortedChapters.first(
+            where: {
+                $0.isActive && $0.startTime > time
+            }) {
+            return nextChapter.startTime
+        }
+        return time
     }
 
     func handleHotSwap() {
