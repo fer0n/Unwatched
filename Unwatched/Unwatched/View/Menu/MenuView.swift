@@ -22,6 +22,13 @@ struct MenuView: View {
 
     var showCancelButton: Bool = false
 
+    var shouldShowCancelButton: Bool {
+        if showCancelButton, #unavailable(iOS 18.1) {
+            return true
+        }
+        return false
+    }
+
     var body: some View {
         @Bindable var navManager = navManager
 
@@ -33,16 +40,16 @@ struct MenuView: View {
                             text: "queue",
                             tag: NavigationTab.queue,
                             showBadge: showTabBarBadge && newQueueItemsCount > 0) {
-                    QueueView(showCancelButton: showCancelButton)
+                    QueueView(showCancelButton: shouldShowCancelButton)
                 }
 
-                InboxTabItemView(showCancelButton: showCancelButton,
+                InboxTabItemView(showCancelButton: shouldShowCancelButton,
                                  showBadge: showTabBarBadge)
 
                 TabItemView(image: Image(systemName: "books.vertical"),
                             text: "library",
                             tag: NavigationTab.library) {
-                    LibraryView(showCancelButton: showCancelButton)
+                    LibraryView(showCancelButton: shouldShowCancelButton)
                 }
 
                 TabItemView(image: Image(systemName: Const.appBrowserSF),
