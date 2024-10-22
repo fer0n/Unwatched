@@ -26,13 +26,7 @@ import UnwatchedShared
 
     var presentedSubscriptionQueue = [SendableSubscription]()
     var presentedSubscriptionInbox = [SendableSubscription]()
-    var presentedLibrary = NavigationPath() {
-        didSet {
-            if oldValue.count > presentedLibrary.count {
-                lastLibrarySubscriptionId = nil
-            }
-        }
-    }
+    var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?
     @ObservationIgnored private var lastTabTwiceDate: Date?
@@ -152,32 +146,11 @@ import UnwatchedShared
             openTabBrowserUrl = .youtubeStartPage
         }
 
-        if !isOnTopView {
-            popCurrentNavigationStack()
+        if !isOnTopView, #unavailable(iOS 18) {
+            // happens automatically on iOS 18
+            clearNavigationStack(tab)
         }
         return isOnTopView
-    }
-
-    func popCurrentNavigationStack() {
-        switch tab {
-        case .inbox:
-            _ = presentedSubscriptionInbox.popLast()
-            if presentedSubscriptionInbox.isEmpty {
-                lastInboxSubscriptionId = nil
-            }
-        case .queue:
-            _ = presentedSubscriptionQueue.popLast()
-            if presentedSubscriptionQueue.isEmpty {
-                lastQueueSubscriptionId = nil
-            }
-        case .library:
-            if !presentedLibrary.isEmpty {
-                presentedLibrary.removeLast()
-                lastLibrarySubscriptionId = nil
-            }
-        case .browser:
-            break
-        }
     }
 
     func clearNavigationStack(_ tab: NavigationTab) {
