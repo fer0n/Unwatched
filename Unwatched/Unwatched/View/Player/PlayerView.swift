@@ -120,7 +120,7 @@ struct PlayerView: View {
             )
             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
             .overlay {
-                OverlayFullscreenButton(
+                FullscreenOverlayControls(
                     overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
                     show: landscapeFullscreen || navManager.showMenu,
