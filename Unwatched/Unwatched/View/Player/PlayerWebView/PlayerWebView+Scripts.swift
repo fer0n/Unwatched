@@ -109,6 +109,9 @@ extension PlayerWebView {
                 .ytp-pause-overlay, .branding-img {
                     display: none !important;
                 }
+                .videowall-endscreen {
+                    opacity: 0.2;
+                }
             `;
             document.head.appendChild(style);
         }

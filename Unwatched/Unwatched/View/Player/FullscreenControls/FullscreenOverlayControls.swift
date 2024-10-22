@@ -29,7 +29,7 @@ import UnwatchedShared
     }
 }
 
-struct OverlayFullscreenButton: View {
+struct FullscreenOverlayControls: View {
     @Environment(PlayerManager.self) var player
     @Binding var overlayVM: OverlayFullscreenVM
 
@@ -53,11 +53,17 @@ struct OverlayFullscreenButton: View {
                 .allowsHitTesting(false)
 
             if player.videoEnded {
-                HStack(spacing: 20) {
+                HStack {
                     WatchedButton(markVideoWatched: markVideoWatched)
+                        .frame(maxWidth: .infinity)
+
                     PlayButton(size: 90)
+
                     NextVideoButton(markVideoWatched: markVideoWatched)
+                        .frame(maxWidth: .infinity)
                 }
+                .frame(maxWidth: 500)
+                .padding(.horizontal, 10)
                 .opacity(enabled && show ? 1 : 0)
                 .animation(.default, value: show)
             }
@@ -85,7 +91,7 @@ enum OverlayIcon {
     let player = PlayerManager()
     player.videoEnded = true
 
-    return OverlayFullscreenButton(
+    return FullscreenOverlayControls(
         overlayVM: .constant(OverlayFullscreenVM()),
         enabled: true,
         show: true,

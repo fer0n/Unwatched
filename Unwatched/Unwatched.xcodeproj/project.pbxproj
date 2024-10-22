@@ -154,8 +154,8 @@
 		8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B72B4F3E080098A3FB /* Collection.swift */; };
 		8891F0BA2B4F54940098A3FB /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B92B4F54940098A3FB /* Double.swift */; };
 		88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */; };
-		8897E94D2C599031006093B5 /* OverlayFullscreenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* OverlayFullscreenButton.swift */; };
-		8897E94E2C59903B006093B5 /* OverlayFullscreenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* OverlayFullscreenButton.swift */; };
+		8897E94D2C599031006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
+		8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
 		8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6782B481F2100348D01 /* SubscriptionActor.swift */; };
 		8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */; };
@@ -603,7 +603,7 @@
 		8891F0B72B4F3E080098A3FB /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		8891F0B92B4F54940098A3FB /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmableMenuButton.swift; sourceTree = "<group>"; };
-		8897E94C2C599031006093B5 /* OverlayFullscreenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayFullscreenButton.swift; sourceTree = "<group>"; };
+		8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenOverlayControls.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
 		8898B67E2B483D6F00348D01 /* SubscriptionListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListItem.swift; sourceTree = "<group>"; };
@@ -1071,7 +1071,7 @@
 			isa = PBXGroup;
 			children = (
 				887E72912B91ED9500928946 /* FullscreenPlayerControls.swift */,
-				8897E94C2C599031006093B5 /* OverlayFullscreenButton.swift */,
+				8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */,
 				88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */,
 				889924742C484752001185A6 /* FullscreenSpeedControl.swift */,
 				889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */,
@@ -1666,7 +1666,7 @@
 				88F3AA9F2C998FFD0030B2EA /* PreviewData.swift in Sources */,
 				88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
 				889AF9102C50ECE7001CEDE6 /* SettingsView.swift in Sources */,
-				8897E94E2C59903B006093B5 /* OverlayFullscreenButton.swift in Sources */,
+				8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */,
 				889AF9112C50ECE7001CEDE6 /* BackupView.swift in Sources */,
 				889AF9122C50ECE7001CEDE6 /* AutoDeleteBackupView.swift in Sources */,
 				889AF9132C50ECE7001CEDE6 /* SubscriptionSearchBar.swift in Sources */,
@@ -1880,7 +1880,7 @@
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				8808A9112B928CD8004D7CE2 /* ChapterList.swift in Sources */,
 				888322522B872EE1004E2DE4 /* BrowserUrl.swift in Sources */,
-				8897E94D2C599031006093B5 /* OverlayFullscreenButton.swift in Sources */,
+				8897E94D2C599031006093B5 /* FullscreenOverlayControls.swift in Sources */,
 				888F74AB2BA1FEC600B94822 /* PlaybackSettingsView.swift in Sources */,
 				88C194772BBFCE9A0073E2E1 /* WatchedButton.swift in Sources */,
 				88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */,
@@ -2160,7 +2160,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 150;
+				CURRENT_PROJECT_VERSION = 151;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2206,7 +2206,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 150;
+				CURRENT_PROJECT_VERSION = 151;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
