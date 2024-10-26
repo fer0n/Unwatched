@@ -1915,6 +1915,22 @@
         }
       }
     },
+    "enterPip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pip aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Pip"
+          }
+        }
+      }
+    },
     "enterUrls" : {
       "localizations" : {
         "de" : {
@@ -2023,6 +2039,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exit Fullscreen"
+          }
+        }
+      }
+    },
+    "exitPip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pip deaktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Pip"
           }
         }
       }
@@ -2217,6 +2249,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On"
+          }
+        }
+      }
+    },
+    "fullscreenLeft" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild links"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fullscreen Left"
+          }
+        }
+      }
+    },
+    "fullscreenRight" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild rechts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fullscreen Right"
           }
         }
       }
@@ -3592,13 +3656,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Im Video den Vollbild-Button unten rechts antippen, um den nativen iOS-Vollbildplayer zu starten. Von dort aus den \"Pip\"-Button antippen oder zum Homescreen zurück gehen"
+            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inside the video, tap the fullscreen button at the bottom right to start the native iOS fullscreen player. From there, tap the \"Pip\" button or leave the app to keep the video playing."
+            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing."
           }
         }
       }
@@ -4099,22 +4163,6 @@
         }
       }
     },
-    "rotateLeft" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach links drehen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rotate left"
-          }
-        }
-      }
-    },
     "rotateOnPlay" : {
       "localizations" : {
         "de" : {
@@ -4127,22 +4175,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enter Horizontal Fullscreen on Play"
-          }
-        }
-      }
-    },
-    "rotateRight" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechts rotieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rotate Right"
           }
         }
       }

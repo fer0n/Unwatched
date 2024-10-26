@@ -65,7 +65,7 @@ struct PlayButtonContextMenu: View {
         } label: {
             Label("restartVideo", systemImage: "restart")
         }
-
+        Divider()
         Button {
             player.embeddingDisabled = false
             player.handleHotSwap()

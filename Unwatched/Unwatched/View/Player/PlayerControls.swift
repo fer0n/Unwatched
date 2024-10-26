@@ -25,6 +25,7 @@ struct PlayerControls: View {
     let compactSize: Bool
     let showInfo: Bool
     let horizontalLayout: Bool
+    let enableHideControls: Bool
 
     let setShowMenu: () -> Void
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -49,7 +50,13 @@ struct PlayerControls: View {
                     Spacer()
                 }
 
-                ChapterMiniControlView(setShowMenu: setShowMenu, showInfo: showInfo)
+                if showInfo {
+                    DescriptionMiniProgressBar()
+                        .padding(.vertical, 10)
+                }
+
+                ChapterMiniControlView(setShowMenu: setShowMenu)
+                    .padding(.horizontal)
 
                 if !player.embeddingDisabled && !compactSize && !compactHeight {
                     Spacer()
@@ -68,7 +75,10 @@ struct PlayerControls: View {
                         )
                         if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
                             RotateOrientationButton()
-                            pipButton
+                        }
+
+                        if !UIDevice.isMac {
+                            PipButton()
                         }
                     }
                     .environment(\.symbolVariants, .fill)
@@ -87,7 +97,7 @@ struct PlayerControls: View {
                         NextVideoButton(markVideoWatched: markVideoWatched)
                             .frame(maxWidth: .infinity)
 
-                        if UIDevice.requiresFullscreenWebWorkaround && compactSize {
+                        if enableHideControls {
                             HideControlsButton()
                         }
                     }
@@ -99,7 +109,7 @@ struct PlayerControls: View {
                             .frame(height: 0)
                     }
                 }
-                .padding(.horizontal, compactSize ? 20 : 5)
+                .padding(.horizontal)
                 .frame(maxWidth: 1000)
 
                 if !player.embeddingDisabled && !compactSize && !compactHeight {
@@ -138,15 +148,6 @@ struct PlayerControls: View {
         }
     }
 
-    var pipButton: some View {
-        Button {
-            player.pipEnabled.toggle()
-        } label: {
-            Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
-                .outlineToggleModifier(isOn: false, isSmall: true)
-        }
-    }
-
     func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
         var seconds = player.currentTime ?? 0
         player.pause()
@@ -178,6 +179,7 @@ struct PlayerControls: View {
     PlayerControls(compactSize: false,
                    showInfo: false,
                    horizontalLayout: false,
+                   enableHideControls: false,
                    setShowMenu: { },
                    markVideoWatched: { _, _ in },
                    sleepTimerVM: SleepTimerViewModel())

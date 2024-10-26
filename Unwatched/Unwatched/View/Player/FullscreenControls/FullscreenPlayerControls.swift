@@ -75,6 +75,14 @@ struct FullscreenPlayerControls: View {
                         .modifier(PlayerControlButtonStyle())
                 }
                 .accessibilityLabel("exitFullscreen")
+                .contextMenu {
+                    Button {
+                        player.pipEnabled.toggle()
+                    } label: {
+                        Text(player.pipEnabled ? "exitPip" : "enterPip")
+                        Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
+                    }
+                }
             }
             .font(.system(size: 18))
             .fontWeight(.bold)

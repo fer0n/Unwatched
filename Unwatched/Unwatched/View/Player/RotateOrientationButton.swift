@@ -7,23 +7,27 @@ import SwiftUI
 import UnwatchedShared
 
 struct RotateOrientationButton: View {
+    @State var hapticToggle = false
     var body: some View {
         Button {
+            hapticToggle.toggle()
             OrientationManager.changeOrientation(to: .landscapeRight)
         } label: {
-            Image(systemName: "arrowshape.turn.up.right.fill")
+            Image(systemName: Const.enableFullscreenSF)
                 .outlineToggleModifier(isOn: false, isSmall: true)
         }
-        .help("rotateRight")
-        .accessibilityLabel("rotateRight")
+        .help("fullscreenRight")
+        .accessibilityLabel("fullscreenRight")
         .padding(2)
         .contextMenu {
             Button {
                 OrientationManager.changeOrientation(to: .landscapeLeft)
             } label: {
-                Label("rotateLeft", systemImage: "arrowshape.turn.up.left.fill")
+                Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
             }
         }
+        .padding(-2)
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 }
 

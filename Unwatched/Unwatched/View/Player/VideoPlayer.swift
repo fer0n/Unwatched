@@ -26,17 +26,20 @@ struct VideoPlayer: View {
 
     var body: some View {
         let tallestAspectRatio = player.videoAspectRatio <= Const.tallestAspectRatio + Const.aspectRatioTolerance
+        let enableHideControls = UIDevice.requiresFullscreenWebWorkaround && compactSize
 
         VStack(spacing: 0) {
             PlayerView(landscapeFullscreen: landscapeFullscreen,
                        markVideoWatched: markVideoWatched,
-                       setShowMenu: setShowMenu)
+                       setShowMenu: setShowMenu,
+                       enableHideControls: enableHideControls)
                 .layoutPriority(1)
 
             if !landscapeFullscreen {
                 PlayerControls(compactSize: compactSize,
                                showInfo: showInfo && !tallestAspectRatio,
                                horizontalLayout: horizontalLayout,
+                               enableHideControls: enableHideControls,
                                setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched,
                                sleepTimerVM: sleepTimerVM)

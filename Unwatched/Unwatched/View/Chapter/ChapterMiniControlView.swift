@@ -13,7 +13,6 @@ struct ChapterMiniControlView: View {
     @State var triggerFeedback = false
 
     var setShowMenu: () -> Void
-    var showInfo: Bool = true
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -86,14 +85,9 @@ struct ChapterMiniControlView: View {
                 }
             }
             .frame(maxWidth: 600)
-
-            if showInfo, let video = player.video, !player.embeddingDisabled {
-                videoDescription(video, hasChapters)
-            }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: triggerFeedback)
         .frame(maxWidth: .infinity)
-        .padding(.horizontal)
         .animation(.bouncy(duration: 0.5), value: player.currentChapter != nil)
         .onChange(of: hasAnyChapters) {
             if player.currentChapter == nil {
@@ -121,32 +115,6 @@ struct ChapterMiniControlView: View {
                         }
                     }
                 })
-        }
-    }
-
-    func videoDescription(_ video: Video, _ hasChapters: Bool) -> some View {
-        Button {
-            navManager.selectedDetailPage = .description
-            navManager.showDescriptionDetail = true
-        } label: {
-            HStack {
-                Image(systemName: Const.videoDescriptionSF)
-                if let published = video.publishedDate {
-                    Text(Const.dotString)
-                    Text(verbatim: "\(published.formattedToday)")
-                }
-
-                if let duration = video.duration?.formattedSeconds {
-                    Text(Const.dotString)
-                    Text(verbatim: "\(duration)")
-                }
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .background {
-                BackgroundProgressBar()
-            }
-            .clipShape(.rect(cornerRadius: 10))
         }
     }
 }

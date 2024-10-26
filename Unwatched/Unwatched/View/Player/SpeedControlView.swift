@@ -15,7 +15,7 @@ struct SpeedControlView: View {
 
     @Binding var selectedSpeed: Double
 
-    static let padding: CGFloat = 0
+    static let padding: CGFloat = 4
     @ScaledMetric var maxHeight: CGFloat = 40
     @ScaledMetric var selectedFontSize: CGFloat = 16
     let frameHeight: CGFloat = 25
