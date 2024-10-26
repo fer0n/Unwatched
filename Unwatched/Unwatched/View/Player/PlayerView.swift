@@ -28,6 +28,7 @@ struct PlayerView: View {
     var landscapeFullscreen = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var setShowMenu: (() -> Void)?
+    var enableHideControls: Bool
 
     var hideMiniPlayer: Bool {
         ((navManager.showMenu || navManager.showDescriptionDetail)
@@ -276,13 +277,17 @@ struct PlayerView: View {
         let landscapeFullscreen = overlayVM.landscapeFullscreen
         switch direction {
         case .up:
-            if !landscapeFullscreen {
+            if enableHideControls {
+                hideControlsFullscreen = true
+            } else if !landscapeFullscreen {
                 OrientationManager.changeOrientation(to: .landscapeRight)
             } else {
                 setShowMenu?()
             }
         case .down:
-            if landscapeFullscreen {
+            if enableHideControls && hideControlsFullscreen {
+                hideControlsFullscreen = false
+            } else if landscapeFullscreen {
                 OrientationManager.changeOrientation(to: .portrait)
             } else {
                 player.setPip(true)
@@ -319,7 +324,8 @@ struct PlayerView: View {
     try? context.save()
 
     return PlayerView(landscapeFullscreen: false,
-                      markVideoWatched: { _, _ in })
+                      markVideoWatched: { _, _ in },
+                      enableHideControls: false)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

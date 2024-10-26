@@ -88,7 +88,6 @@ struct CoreNextButton<Content>: View where Content: View {
             }
 
             if extendedContextMenu {
-                Divider()
                 PlayButtonContextMenu()
             }
         }
