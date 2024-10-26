@@ -73,10 +73,25 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleSwipe(payload)
         case "centerTouch":
             handleCenterTouch(payload)
+        case "pip":
+            handlePip(payload)
         case "error":
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func handlePip(_ payload: String?) {
+        guard let payload else {
+            return
+        }
+        if payload == "enter" {
+            parent.player.previousState.pipEnabled = true
+            parent.player.setPip(true)
+        } else if payload == "exit" {
+            parent.player.previousState.pipEnabled = false
+            parent.player.setPip(false)
         }
     }
 

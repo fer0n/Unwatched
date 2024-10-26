@@ -45,7 +45,7 @@ public struct Const {
     public static let highlightedPlaybackSpeeds = [1, 1.5, 2, 3]
 
     /// Playback speeds that can savely shown at smaller sizes without line break
-    public static let highlightedSpeedsInt = [1.0, 2.0]
+    public static let highlightedSpeedsInt = [1.0, 2.0, 3.0]
     public static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.5, 3]
 
     /// The margin at which it will skip to the chapter start instead of the previous chapter

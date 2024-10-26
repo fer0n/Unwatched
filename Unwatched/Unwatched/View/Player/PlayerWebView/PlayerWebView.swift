@@ -83,6 +83,17 @@ struct PlayerWebView: UIViewRepresentable {
             player.previousState.isPlaying = player.isPlaying
         }
 
+        if prev.pipEnabled != player.pipEnabled {
+            if player.pipEnabled {
+                Logger.log.info("PIP ON")
+                uiView.evaluateJavaScript(getEnterPipScript())
+            } else {
+                Logger.log.info("PIP OFF")
+                uiView.evaluateJavaScript(getExitPipScript())
+            }
+            player.previousState.pipEnabled = player.pipEnabled
+        }
+
         if let seekTo = player.seekPosition {
             Logger.log.info("SEEK")
             uiView.evaluateJavaScript(getSeekToScript(seekTo))
@@ -145,6 +156,7 @@ struct PreviousState {
     var videoId: String?
     var playbackSpeed: Double?
     var isPlaying: Bool = false
+    var pipEnabled: Bool = false
 }
 
 // #Preview {
