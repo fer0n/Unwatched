@@ -4916,6 +4916,134 @@
         }
       }
     },
+    "tipChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel vorab auswählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre-select Chapters"
+          }
+        }
+      }
+    },
+    "tipChaptersMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für Videos mit Kapiteln kannst du im Voraus die Kapitel abwählen, die du überspringen möchtest. Das ist nicht auf das aktuelle Video oder die Warteschlange beschränkt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For videos that provide chapters, you can untick chapters you want to skip in advance. This is also possible for videos that are queued up and not currently playing."
+          }
+        }
+      }
+    },
+    "tipKeyboardShortcuts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tastenkürzel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyboard shortcuts"
+          }
+        }
+      }
+    },
+    "tipKeyboardShortcutsMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• **n**: Nächstes Video\n• **d**: Als gesehen markieren\n• **f**: Vollbild an/aus\n• **space**: Play/pause\n• **cmd + links/rechts**: Kapitel wechseln"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• **n**: next video\n• **d**: mark video as watched\n• **f**: toggle fullscreen\n• **space**: play/pause\n• **cmd + left/right**: change chapter"
+          }
+        }
+      }
+    },
+    "tipPlaybackSpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzerdefinierte Geschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Speed"
+          }
+        }
+      }
+    },
+    "tipPlaybackSpeedMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf das „Schloss“-Symbol im Player, um die ausgewählte Wiedergabegeschwindigkeit auf den aktuellen Kanal zu beschränken."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the “lock” icon inside the player to restrict the selected playback speed to the current channel."
+          }
+        }
+      }
+    },
+    "tipSwipeActions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe Gesten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe Actions"
+          }
+        }
+      }
+    },
+    "tipSwipeActionsMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Unterstützte Video Gesten:**\n• Links/rechts swipen: Kapitel wechseln\n• Mitte antippen: Play/pause\n• Hoch/runter swipen: Vollbild an/aus\n• Rechts/links lange halten: Schneller/langsamer abspielen\n• Mini-player swipe nach unten: PiP"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
+          }
+        }
+      }
+    },
     "Today" : {
       "localizations" : {
         "de" : {

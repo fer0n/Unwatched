@@ -40,6 +40,8 @@
 		88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
 		8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
 		8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
+		8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
+		8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
 		8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */; };
 		88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
 		88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3D2B99D97900F048C3 /* CleanupService.swift */; };
@@ -372,6 +374,8 @@
 		88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205272B516D2A008EC51D /* ChapterListItem.swift */; };
 		88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
 		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
+		88C5F3F02CCCF50500DA802F /* UserTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */; };
+		88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */; };
 		88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC372BA49D63000202D9 /* ShareView.swift */; };
 		88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */; };
 		88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
@@ -512,6 +516,7 @@
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
 		8816A1FF2CCD0D19001FE63E /* PipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipButton.swift; sourceTree = "<group>"; };
+		8816A2FC2CCD5125001FE63E /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
 		88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+CloudKit.swift"; sourceTree = "<group>"; };
 		88190E3D2B99D97900F048C3 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
@@ -659,6 +664,7 @@
 		88C205272B516D2A008EC51D /* ChapterListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListItem.swift; sourceTree = "<group>"; };
 		88C205292B517732008EC51D /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		88C572322B53C8BD002FF07E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTipsView.swift; sourceTree = "<group>"; };
 		88CAEC372BA49D63000202D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlViewModelTests.swift; sourceTree = "<group>"; };
 		88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedContolViewModel.swift; sourceTree = "<group>"; };
@@ -1045,6 +1051,8 @@
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
 				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
 				880505112C836882005F0972 /* FaqView.swift */,
+				88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */,
+				8816A2FC2CCD5125001FE63E /* PageControl.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1597,6 +1605,7 @@
 				889AF9372C50ECEE001CEDE6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
 				889AF90C2C50ECDE001CEDE6 /* InboxHasEntriesTip.swift in Sources */,
 				889AF90D2C50ECDE001CEDE6 /* QueueView.swift in Sources */,
+				8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */,
 				889AF8CE2C50ECA9001CEDE6 /* AsyncSharableUrl.swift in Sources */,
 				889AF8CF2C50ECA9001CEDE6 /* SubscriptionSorting.swift in Sources */,
 				889AF8D02C50ECA9001CEDE6 /* fullscreenSafeArea.swift in Sources */,
@@ -1623,6 +1632,7 @@
 				889AF9082C50ECD8001CEDE6 /* MenuViewSheet.swift in Sources */,
 				889AF9092C50ECD8001CEDE6 /* TabItemView.swift in Sources */,
 				889AF90A2C50ECD8001CEDE6 /* MenuView.swift in Sources */,
+				88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				889AF90B2C50ECD8001CEDE6 /* BrowserViewSheet.swift in Sources */,
 				882A75102C74A7070051BBF0 /* ChapterServiceTests.swift in Sources */,
 				889AF8F42C50ECC5001CEDE6 /* String.swift in Sources */,
@@ -1745,6 +1755,7 @@
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,
 				880505062C8302AA005F0972 /* VideoListItemThumbnailOverlay.swift in Sources */,
 				889924692C47F4D4001185A6 /* ShowMenuGesture.swift in Sources */,
+				88C5F3F02CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				8802F84C2C691970008A7778 /* UIColor.swift in Sources */,
 				889924712C4824EE001185A6 /* InteractiveSubscriptionTitle.swift in Sources */,
 				CD6364112C6DD9DF00C5DD43 /* EmptyEntry.swift in Sources */,
@@ -1869,6 +1880,7 @@
 				88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
+				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
 				883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */,
 				88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */,
 				888E1E002B7000DA00608F99 /* BookmarkedVideosView.swift in Sources */,
@@ -2172,7 +2184,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 152;
+				CURRENT_PROJECT_VERSION = 153;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2196,7 +2208,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2218,7 +2230,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 152;
+				CURRENT_PROJECT_VERSION = 153;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2242,7 +2254,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

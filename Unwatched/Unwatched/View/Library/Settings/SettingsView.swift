@@ -8,11 +8,11 @@ import OSLog
 import UnwatchedShared
 
 struct SettingsView: View {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(\.modelContext) var modelContext
     @State var isExportingAll = false
 
     var body: some View {
-
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
@@ -81,6 +81,16 @@ struct SettingsView: View {
                         LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
                 }
+
+                Section {
+                    ZStack {
+                        UserTipsView()
+                            .padding(.top)
+                    }
+                }
+                .listRowBackground(theme.color.mix(with: .black, by: 0.4))
+                .listRowInsets(EdgeInsets())
+                .foregroundStyle(theme.darkContrastColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: "ladybug.fill")
