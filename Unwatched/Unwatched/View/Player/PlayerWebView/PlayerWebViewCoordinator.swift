@@ -104,27 +104,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleSwipe(_ payload: String?) {
-        guard let direction = payload else {
+        guard let direction = payload,
+              let parsed = SwipeDirecton(rawValue: direction) else {
             Logger.log.warning("No side given for longTouch")
             return
         }
-        if direction == "up" {
-            parent.setShowMenu?()
-        }
-        if parent.player.unstarted {
-            // don't allow chapter change before starting the video
-            return
-        }
-        if direction == "left" {
-            if parent.player.goToNextChapter() {
-                parent.overlayVM.show(.next)
-            }
-        }
-        if direction == "right" {
-            if parent.player.goToPreviousChapter() {
-                parent.overlayVM.show(.previous)
-            }
-        }
+        parent.handleSwipe(parsed)
     }
 
     func handleAspectRatio(_ payload: String?) {
@@ -264,4 +249,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         parent.player.unstarted = true
         parent.player.handleAutoStart()
     }
+}
+
+enum SwipeDirecton: String {
+    case left = "left"
+    case right = "right"
+    case up = "up"
+    case down = "down"
 }

@@ -92,6 +92,9 @@ struct PlayerView: View {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
+                .onChange(of: landscapeFullscreen) {
+                    overlayVM.landscapeFullscreen = landscapeFullscreen
+                }
             }
         }
         .persistentSystemOverlays(
@@ -116,7 +119,8 @@ struct PlayerView: View {
                 autoHideVM: $autoHideVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
-                setShowMenu: setShowMenu
+                setShowMenu: setShowMenu,
+                handleSwipe: handleSwipe
             )
             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
             .overlay {
@@ -160,7 +164,8 @@ struct PlayerView: View {
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 playerType: .youtube,
-                onVideoEnded: handleVideoEnded
+                onVideoEnded: handleVideoEnded,
+                handleSwipe: handleSwipe
             )
             .frame(maxHeight: .infinity)
             .frame(maxWidth: .infinity)
@@ -264,6 +269,33 @@ struct PlayerView: View {
     func handleMiniPlayerTap() {
         navManager.showMenu = false
         navManager.showDescriptionDetail = false
+    }
+
+    func handleSwipe(_ direction: SwipeDirecton) {
+        // workaround: when using landscapeFullscreen directly, it captures the initial value
+        let landscapeFullscreen = overlayVM.landscapeFullscreen
+        switch direction {
+        case .up:
+            if !landscapeFullscreen {
+                OrientationManager.changeOrientation(to: .landscapeRight)
+            } else {
+                setShowMenu?()
+            }
+        case .down:
+            if landscapeFullscreen {
+                OrientationManager.changeOrientation(to: .portrait)
+            } else {
+                player.setPip(true)
+            }
+        case .left:
+            if !player.unstarted && player.goToNextChapter() {
+                overlayVM.show(.next)
+            }
+        case .right:
+            if !player.unstarted && player.goToPreviousChapter() {
+                overlayVM.show(.previous)
+            }
+        }
     }
 }
 

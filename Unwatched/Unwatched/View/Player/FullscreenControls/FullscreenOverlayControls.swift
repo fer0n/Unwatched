@@ -8,6 +8,7 @@ import UnwatchedShared
 
 @Observable class OverlayFullscreenVM {
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
+    @ObservationIgnored var landscapeFullscreen: Bool = false
 
     var icon: OverlayIcon = .play
     var show = false {
