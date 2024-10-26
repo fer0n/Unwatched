@@ -19,6 +19,7 @@ struct PlayerWebView: UIViewRepresentable {
     let playerType: PlayerType
     let onVideoEnded: () -> Void
     var setShowMenu: (() -> Void)?
+    var handleSwipe: (SwipeDirecton) -> Void
 
     func makeUIView(context: Context) -> WKWebView {
         player.isLoading = true
