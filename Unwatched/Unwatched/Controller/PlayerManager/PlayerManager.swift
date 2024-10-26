@@ -12,6 +12,7 @@ import UnwatchedShared
     var nextChapter: Chapter?
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
+    var pipEnabled: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
     var unstarted: Bool = true

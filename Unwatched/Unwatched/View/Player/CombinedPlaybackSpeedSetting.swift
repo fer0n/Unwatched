@@ -16,8 +16,8 @@ struct CombinedPlaybackSpeedSetting: View {
         @Bindable var player = player
 
         HStack(spacing: spacing) {
-            CustomSettingsButton(playbackSpeed: $playbackSpeed, player: player)
             SpeedControlView(selectedSpeed: $player.playbackSpeed)
+            CustomSettingsButton(playbackSpeed: $playbackSpeed, player: player)
             if showTemporarySpeed {
                 Button {
                     player.toggleTemporaryPlaybackSpeed()

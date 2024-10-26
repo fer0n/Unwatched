@@ -34,19 +34,28 @@ extension PlayerWebView {
             Logger.log.info("PLAY: unstarted")
             return "document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2).click();"
         }
-        return "document.querySelector('video').play();"
+        return "video.play();"
     }
 
     func getPauseScript() -> String {
-        return "document.querySelector('video').pause();"
+        "video.pause();"
     }
 
     func getSeekToScript(_ seekTo: Double) -> String {
-        return "document.querySelector('video').currentTime = \(seekTo);"
+        "video.currentTime = \(seekTo);"
     }
 
     func getSetPlaybackRateScript() -> String {
-        return "document.querySelector('video').playbackRate = \(player.playbackSpeed);"
+        "video.playbackRate = \(player.playbackSpeed);"
+    }
+
+    func getEnterPipScript() -> String {
+        // "document.querySelector('video').requestPictureInPicture();"
+        "startPiP();"
+    }
+
+    func getExitPipScript() -> String {
+        "document.exitPictureInPicture();"
     }
 
     // swiftlint:disable function_body_length
@@ -296,6 +305,22 @@ extension PlayerWebView {
                 endEvent.isReTriggering = true;
                 event.target.dispatchEvent(endEvent);
             }, 0);
+        }
+
+
+        // Pip
+        video.addEventListener("enterpictureinpicture", function(event) {
+            sendMessage("pip", "enter");
+        });
+        video.addEventListener("leavepictureinpicture", function(event) {
+            sendMessage("pip", "exit");
+        });
+        function startPiP() {
+            if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+                video.requestPictureInPicture().catch(error => {
+                    sendMessage('pip', error);
+                });
+            }
         }
 
 

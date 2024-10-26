@@ -68,6 +68,12 @@ struct PlayerControls: View {
                         )
                         if fullscreenControlsSetting != .disabled && !UIDevice.requiresFullscreenWebWorkaround {
                             RotateOrientationButton()
+                            Button {
+                                player.pipEnabled.toggle()
+                            } label: {
+                                Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
+                                    .outlineToggleModifier(isOn: false, isSmall: true)
+                            }
                         }
                     }
                     .environment(\.symbolVariants, .fill)

@@ -20,6 +20,7 @@ struct WatchedButton: View {
             hapticToggle.toggle()
         } label: {
             Image(systemName: "checkmark")
+                .fontWeight(.bold)
         }
         .accessibilityLabel("markWatched")
         .keyboardShortcut("d")

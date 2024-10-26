@@ -141,4 +141,10 @@ extension PlayerManager {
             }
         }
     }
+
+    func setPip(_ value: Bool) {
+        if pipEnabled != value {
+            pipEnabled = value
+        }
+    }
 }

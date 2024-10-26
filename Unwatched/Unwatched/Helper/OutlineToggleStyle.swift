@@ -26,8 +26,8 @@ struct OutlineToggleModifier: ViewModifier {
     var isSmall: Bool = false
     var stroke: Bool = true
 
-    @ScaledMetric var smallSize: CGFloat = 35
-    @ScaledMetric var normalSize: CGFloat = 45
+    @ScaledMetric var smallSize: CGFloat = 40
+    @ScaledMetric var normalSize: CGFloat = 50
 
     init(isOn: Bool, isSmall: Bool = false, stroke: Bool = true) {
         self.isOn = isOn
