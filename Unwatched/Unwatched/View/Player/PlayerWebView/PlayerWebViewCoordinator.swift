@@ -145,7 +145,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     func updateUnstarted() {
         if parent.player.unstarted {
-            parent.player.unstarted = false
+            withAnimation {
+                parent.player.unstarted = false
+            }
         }
     }
 
@@ -246,14 +248,17 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.player.requiresFetchingVideoData()
         )
         webView.evaluateJavaScript(script)
-        parent.player.unstarted = true
+        withAnimation {
+            parent.player.unstarted = true
+        }
         parent.player.handleAutoStart()
     }
 }
 
 enum SwipeDirecton: String {
-    case left = "left"
-    case right = "right"
-    case up = "up"
-    case down = "down"
+    case left
+    case right
+    // swiftlint:disable:next identifier_name
+    case up
+    case down
 }

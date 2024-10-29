@@ -26,6 +26,7 @@ struct OutlineToggleModifier: ViewModifier {
     var isSmall: Bool = false
     var stroke: Bool = true
 
+    @Environment(\.isEnabled) var isEnabled
     @ScaledMetric var smallSize: CGFloat = 40
     @ScaledMetric var normalSize: CGFloat = 50
 
@@ -48,6 +49,7 @@ struct OutlineToggleModifier: ViewModifier {
                 Circle()
                     .strokeBorder(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
             )
+            .opacity(isEnabled ? 1 : 0.4)
     }
 }
 
