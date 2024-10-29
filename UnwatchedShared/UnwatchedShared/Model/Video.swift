@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Video: CustomStringConvertible, Exportable, CachedImageHolder {
+public final class Video: CustomStringConvertible, Exportable {
     public typealias ExportType = SendableVideo
 
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video)

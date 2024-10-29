@@ -108,7 +108,7 @@ struct SubscriptionInfoDetails: View {
         HStack {
             if hasImage {
                 ZStack {
-                    CachedImageView(imageHolder: subscription) { image in
+                    CachedImageView(imageUrl: subscription.thumbnailUrl) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)

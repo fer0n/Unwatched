@@ -35,7 +35,7 @@ struct SubscriptionDetailView: View {
                 .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
                 .background(
-                    CachedImageView(imageHolder: cachedImageHolder) { image in
+                    CachedImageView(imageUrl: imageUrl) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -78,11 +78,13 @@ struct SubscriptionDetailView: View {
         }
     }
 
-    var cachedImageHolder: CachedImageHolder? {
+    var imageUrl: URL? {
         if subscription.thumbnailUrl != nil {
-            return subscription
+            return subscription.thumbnailUrl
         }
-        return subscription.videos?.first(where: { $0.isYtShort != true })
+        return subscription.videos?.first(where: {
+            $0.isYtShort != true
+        })?.thumbnailUrl
     }
 
     func handleOnAppear() {

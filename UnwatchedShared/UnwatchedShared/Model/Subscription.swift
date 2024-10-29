@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Subscription: CustomStringConvertible, Exportable, CachedImageHolder {
+public final class Subscription: CustomStringConvertible, Exportable {
     public typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription)
