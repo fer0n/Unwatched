@@ -11,17 +11,17 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     @Environment(\.modelContext) var modelContext
     @Environment(ImageCacheManager.self) var cacheManager
 
-    var imageHolder: CachedImageHolder?
+    var imageUrl: URL?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
     @State var image: UIImage?
 
     public init(
-        imageHolder: CachedImageHolder?,
+        imageUrl: URL?,
         @ViewBuilder content: @escaping (Image) -> Content,
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
-        self.imageHolder = imageHolder
+        self.imageUrl = imageUrl
         self.contentImage = content
         self.placeholder = placeholder
     }
@@ -32,7 +32,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         } else {
             self.placeholder()
                 .task {
-                    if image == nil, let url = imageHolder?.thumbnailUrl {
+                    if image == nil, let url = imageUrl {
                         let task = getUIImage(url)
                         if let taskResult = try? await task.value {
                             let (taskImage, info) = taskResult

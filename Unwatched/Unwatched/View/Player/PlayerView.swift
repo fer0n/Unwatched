@@ -223,7 +223,7 @@ struct PlayerView: View {
     }
 
     var thumbnailPlaceholder: some View {
-        CachedImageView(imageHolder: player.video) { image in
+        CachedImageView(imageUrl: player.video?.thumbnailUrl) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)

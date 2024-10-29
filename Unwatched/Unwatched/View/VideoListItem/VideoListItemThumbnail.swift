@@ -24,7 +24,7 @@ struct VideoListItemThumbnail: View {
     }
 
     var body: some View {
-        CachedImageView(imageHolder: video) { image in
+        CachedImageView(imageUrl: video.thumbnailUrl) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)

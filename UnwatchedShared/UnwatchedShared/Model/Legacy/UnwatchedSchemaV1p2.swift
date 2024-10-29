@@ -20,7 +20,7 @@ enum UnwatchedSchemaV1p2: VersionedSchema {
     }
 
     @Model
-    final class Video: CustomStringConvertible, CachedImageHolder {
+    final class Video: CustomStringConvertible {
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
         @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
         @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
