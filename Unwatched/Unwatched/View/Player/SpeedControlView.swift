@@ -58,7 +58,7 @@ struct SpeedControlView: View {
                         if isHightlighted {
                             Text(SpeedControlViewModel.formatSpeed(speed))
                                 .fontWeight(.bold)
-                                .font(.system(size: 12))
+                                .font(.custom("SFCompactDisplay-Semibold", size: 12))
                                 .foregroundStyle(foregroundColor)
                         }
                     }
@@ -128,11 +128,11 @@ struct SpeedControlView: View {
     }
 
     func getFloatingText() -> String {
-        if dragState == nil {
-            return SpeedControlViewModel.formatSpeed(selectedSpeed) + "×"
-        }
-        let speed = viewModel.getSpeedFromPos(dragState ?? 0)
-        return SpeedControlViewModel.formatSpeed(speed) + "×"
+        let speed = dragState == nil
+            ? selectedSpeed
+            : viewModel.getSpeedFromPos(dragState ?? 0)
+        let text = SpeedControlViewModel.formatSpeed(speed)
+        return text + (text.count <= 1 ? "×" : "")
     }
 }
 
