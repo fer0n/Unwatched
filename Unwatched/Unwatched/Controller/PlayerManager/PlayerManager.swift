@@ -39,6 +39,7 @@ import UnwatchedShared
         isPlaying = false
         currentChapter = nil
         setVideoEnded(false)
+        pipEnabled = false
         handleChapterChange()
         guard let video = video else {
             return
