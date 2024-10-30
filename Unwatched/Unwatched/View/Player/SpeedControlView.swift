@@ -30,7 +30,7 @@ struct SpeedControlView: View {
             let midY: CGFloat = maxHeight / 2
 
             Capsule()
-                .fill(Color.backgroundGray)
+                .fill(Color.myBackgroundGray2)
                 .frame(height: frameHeight)
                 .frame(maxWidth: .infinity)
 

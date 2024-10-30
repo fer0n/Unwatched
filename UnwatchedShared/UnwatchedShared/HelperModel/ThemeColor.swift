@@ -81,6 +81,9 @@ public extension Color {
     static var myBackgroundGray: Color {
         Color("backgroundGray")
     }
+    static var myBackgroundGray2: Color {
+        Color("backgroundGray2")
+    }
     static var myForegroundGray: Color {
         Color("foregroundGray")
     }

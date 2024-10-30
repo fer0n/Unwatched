@@ -34,6 +34,7 @@ struct DescriptionMiniProgressBar: View {
                 .background {
                     BackgroundProgressBar()
                 }
+                .foregroundStyle(Color.automaticBlack.opacity(0.8))
                 .clipShape(.rect(cornerRadius: 10))
             }
         }

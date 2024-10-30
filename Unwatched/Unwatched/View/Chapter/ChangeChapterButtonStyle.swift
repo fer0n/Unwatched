@@ -14,8 +14,7 @@ struct ChangeChapterButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         ZStack {
             Circle()
-                .foregroundStyle(Color.foregroundGray)
-                .opacity(0.3)
+                .foregroundStyle(Color.myBackgroundGray2)
                 .progressCircleModifier(remaining: remainingTime, total: chapter?.duration)
             configuration.label
         }
