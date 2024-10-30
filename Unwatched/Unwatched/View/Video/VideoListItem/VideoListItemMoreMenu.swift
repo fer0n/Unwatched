@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemMoreMenuView: View {
-    var video: Video
+    var videoData: VideoData
     var config: VideoListItemConfig
     var markWatched: () -> Void
     var addVideoToTopQueue: () -> Void
@@ -40,7 +40,7 @@ struct VideoListItemMoreMenuView: View {
             .disabled(!canBeCleared)
 
             Button(action: toggleBookmark) {
-                let isBookmarked = video.bookmarkedDate != nil
+                let isBookmarked = videoData.bookmarkedDate != nil
 
                 Image(systemName: "bookmark")
                     .environment(\.symbolVariants,
@@ -53,11 +53,11 @@ struct VideoListItemMoreMenuView: View {
                     Text("addBookmark")
                 }
             }
-            if video.inboxEntry == nil {
+            if videoData.hasInboxEntry != true {
                 Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
             }
 
-            if let url = video.url {
+            if let url = videoData.url {
                 Button("openInApp", systemImage: Const.appBrowserSF) {
                     openUrlInApp(url.absoluteString)
                 }

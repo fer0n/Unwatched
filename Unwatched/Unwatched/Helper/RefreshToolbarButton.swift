@@ -49,16 +49,26 @@ struct CoreRefreshButton: View {
         }
         .font(.footnote)
         .fontWeight(.bold)
-        .modifier(AnimationCompletionCallback(animatedValue: rotation) {
-            if refresher.isLoading {
-                nextTurn()
-            }
-        })
-        .onChange(of: refresher.isLoading) {
-            if refresher.isLoading {
-                nextTurn()
-            }
+        .if(!supportsIos18) { view in
+            view
+                .modifier(AnimationCompletionCallback(animatedValue: rotation) {
+                    if refresher.isLoading {
+                        nextTurn()
+                    }
+                })
+                .onChange(of: refresher.isLoading) {
+                    if refresher.isLoading {
+                        nextTurn()
+                    }
+                }
         }
+    }
+
+    private var supportsIos18: Bool {
+        if #available(iOS 18.0, *) {
+            return true
+        }
+        return false
     }
 
     @MainActor

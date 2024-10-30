@@ -9,8 +9,7 @@ import SwiftUI
 import UnwatchedShared
 
 @Observable
-class SubscriptionListVM {
-    var container: ModelContainer?
+class SubscriptionListVM: TransactionVM<Subscription> {
     var subscriptions = [SendableSubscription]()
     var isLoading = true
 
@@ -19,7 +18,7 @@ class SubscriptionListVM {
     var filter: ((SendableSubscription) -> Bool)?
     var sort: ((SendableSubscription, SendableSubscription) -> Bool)?
 
-    func fetchSubscriptions() async {
+    private func fetchSubscriptions() async {
         guard let container = container else {
             isLoading = false
             Logger.log.info("No container found when trying to fetch subscriptions")
@@ -79,5 +78,44 @@ class SubscriptionListVM {
             return ""
         }
         return "(\(subscriptions.count))"
+    }
+
+    func updateData() async {
+        var loaded = false
+        if subscriptions.isEmpty {
+            await fetchSubscriptions()
+            loaded = true
+        }
+        let ids = modelsHaveChangesUpdateToken()
+        if loaded {
+            return
+        }
+        if let ids = ids {
+            updateSubscriptions(ids)
+        } else {
+            await fetchSubscriptions()
+        }
+    }
+
+    func updateSubscriptions(_ ids: Set<PersistentIdentifier>) {
+        print("updateSubscriptions: \(ids.count)")
+        guard let container = container else {
+            Logger.log.warning("updateSubscription failed")
+            return
+        }
+        let modelContext = ModelContext(container)
+        for persistentId in ids {
+            guard let updatedSub = modelContext.model(for: persistentId) as? Subscription else {
+                Logger.log.warning("updateSubscription failed: no model found")
+                return
+            }
+
+            print("updatedSub", updatedSub)
+
+            if let index = subscriptions.firstIndex(where: { $0.persistentId == persistentId }),
+               let sendable = updatedSub.toExport {
+                subscriptions[index] = sendable
+            }
+        }
     }
 }

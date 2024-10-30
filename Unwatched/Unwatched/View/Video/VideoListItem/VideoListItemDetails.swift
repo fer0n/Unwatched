@@ -9,7 +9,7 @@ import UnwatchedShared
 struct VideoListItemDetails: View {
     @Environment(NavigationManager.self) private var navManager
 
-    var video: Video
+    var video: VideoData
     var queueButtonSize: CGFloat?
     var showVideoListOrder: Bool = false
 
@@ -28,22 +28,30 @@ struct VideoListItemDetails: View {
                 .foregroundStyle(.primary)
 
             VStack(alignment: .leading, spacing: 3) {
-                if let subTitle = video.subscription?.displayTitle {
+                if let subTitle = video.subscriptionData?.displayTitle {
                     Text(subTitle)
                         .font(.system(size: subSize))
                         .fontWeight(.regular)
                         .lineLimit(1)
                         .textCase(.uppercase)
                         .onTapGesture {
-                            if let sub = video.subscription {
-                                navManager.pushSubscription(sub)
+                            if let sub = video.subscriptionData {
+                                if let sendable = sub as? SendableSubscription {
+                                    navManager.pushSubscription(
+                                        sendableSubscription: sendable
+                                    )
+                                } else if let subscription = sub as? Subscription {
+                                    navManager.pushSubscription(
+                                        subscription: subscription
+                                    )
+                                }
                             }
                         }
                 }
 
                 HStack(spacing: 5) {
                     if showVideoListOrder,
-                       let order = video.queueEntry?.order {
+                       let order = video.queueEntryData?.order {
                         Text(verbatim: "#\(order)")
                     }
 

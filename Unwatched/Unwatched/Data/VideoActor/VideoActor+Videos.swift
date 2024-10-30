@@ -298,4 +298,15 @@ import UnwatchedShared
         }
         return (video, videoData.feedTitle)
     }
+
+    func getSendableVideos(
+        _ filter: Predicate<Video>?,
+        _ sortBy: [SortDescriptor<Video>]
+    ) -> [SendableVideo] {
+        let fetch = FetchDescriptor<Video>(predicate: filter, sortBy: sortBy)
+        let videos = try? modelContext.fetch(fetch)
+        return videos?.compactMap {
+            $0.toExportWithSubscription
+        } ?? []
+    }
 }

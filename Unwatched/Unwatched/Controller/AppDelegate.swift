@@ -77,7 +77,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
         switch response.actionIdentifier {
         case Const.notificationActionQueue:
-            VideoService.insertQueueEntries(at: 1, youtubeId: youtubeId, container: container)
+            VideoService.insertQueueEntriesAsync(at: 1, youtubeId: youtubeId, container: container)
             NotificationManager.changeBadgeNumer(by: -1, placement)
         case Const.notificationActionClear:
             VideoService.clearFromEverywhere(youtubeId, container: container)

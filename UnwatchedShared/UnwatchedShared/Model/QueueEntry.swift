@@ -6,9 +6,13 @@
 import Foundation
 import SwiftData
 
+public protocol QueueEntryData {
+    var order: Int { get }
+}
+
 
 @Model
-public final class QueueEntry: CustomStringConvertible, Exportable, HasVideo {
+public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportable, HasVideo {
     public typealias ExportType = SendableQueueEntry
 
     public var video: Video?
@@ -31,7 +35,7 @@ public final class QueueEntry: CustomStringConvertible, Exportable, HasVideo {
     }
 }
 
-public struct SendableQueueEntry: Codable, ModelConvertable {
+public struct SendableQueueEntry: QueueEntryData, Sendable, Codable, ModelConvertable {
     public typealias ModelType = QueueEntry
 
     public var videoId: Int

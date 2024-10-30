@@ -41,7 +41,7 @@ struct SubscriptionListSection: View {
             let container = modelContext.container
             subscriptionsVM.container = container
             subscriptionsVM.setSorting()
-            await subscriptionsVM.fetchSubscriptions()
+            await subscriptionsVM.updateData()
         }
 
         Section {
@@ -114,7 +114,7 @@ struct SearchableSubscriptions: View {
             }
             .task(id: refresher.isLoading) {
                 if !refresher.isLoading {
-                    await subscriptionsVM.fetchSubscriptions()
+                    await subscriptionsVM.updateData()
                 }
             }
     }
@@ -130,7 +130,7 @@ struct SearchableSubscriptions: View {
     func onDelete(after task: Task<(), Error>) {
         Task {
             try? await task.value
-            await subscriptionsVM.fetchSubscriptions()
+            await subscriptionsVM.updateData()
         }
     }
 }

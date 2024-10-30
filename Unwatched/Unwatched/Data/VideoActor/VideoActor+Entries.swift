@@ -235,6 +235,19 @@ extension VideoActor {
         }
     }
 
+    func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
+        if let video = modelContext.model(for: videoId) as? Video {
+            VideoService.moveVideoToInbox(video, modelContext: modelContext)
+            try modelContext.save()
+        }
+    }
+
+    func addToBottomQueue(videoId: PersistentIdentifier) throws {
+        if let video = modelContext.model(for: videoId) as? Video {
+            try VideoActor.addToBottomQueue(video: video, modelContext: modelContext)
+        }
+    }
+
     static func addToBottomQueue(video: Video, modelContext: ModelContext) throws {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order, order: .reverse)])
         fetch.fetchLimit = 1
@@ -351,6 +364,13 @@ extension VideoActor {
         let queueEntries = try? modelContext.fetch(fetch)
         for entry in queueEntries ?? [] {
             VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+        }
+    }
+
+    func markVideoWatched(_ videoId: PersistentIdentifier) throws {
+        if let video = modelContext.model(for: videoId) as? Video {
+            VideoService.markVideoWatched(video, modelContext: modelContext)
+            try modelContext.save()
         }
     }
 }

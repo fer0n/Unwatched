@@ -82,9 +82,12 @@ import UnwatchedShared
         try container.encode(presentedSubscriptionInbox, forKey: .presentedSubscriptionInbox)
     }
 
-    func pushSubscription(_ subscription: Subscription) {
-        guard let sendableSub = subscription.toExport else {
-            Logger.log.error("Could not convert to sendable subscription")
+    func pushSubscription(
+        subscription: Subscription? = nil,
+        sendableSubscription: SendableSubscription? = nil
+    ) {
+        guard let sendableSub = sendableSubscription ?? subscription?.toExport else {
+            Logger.log.error("pushSubscription: no subscription given")
             return
         }
         switch tab {

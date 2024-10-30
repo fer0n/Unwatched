@@ -14,6 +14,7 @@ public struct VideoService {
             modelContext: modelContext
         )
         video.watchedDate = .now
+        try? modelContext.save()
     }
     
     public static func clearEntries(from video: Video,

@@ -6,8 +6,12 @@
 import Foundation
 import SwiftData
 
+public protocol SubscriptionData: Sendable {
+    var displayTitle: String { get }
+}
+
 @Model
-public final class Subscription: CustomStringConvertible, Exportable {
+public final class Subscription: SubscriptionData, CustomStringConvertible, Exportable {
     public typealias ExportType = SendableSubscription
 
     @Relationship(deleteRule: .nullify, inverse: \Video.subscription)
@@ -97,7 +101,7 @@ public final class Subscription: CustomStringConvertible, Exportable {
     }
 }
 
-public struct SendableSubscription: Sendable, Codable, Hashable {
+public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashable {
     public var persistentId: PersistentIdentifier?
     public var videosIds = [Int]()
     public var link: URL?

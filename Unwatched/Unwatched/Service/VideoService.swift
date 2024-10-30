@@ -22,6 +22,29 @@ extension VideoService {
         }
     }
 
+    static func clearEntriesAsync(from videoId: PersistentIdentifier,
+                                  except model: (any PersistentModel.Type)? = nil,
+                                  updateCleared: Bool,
+                                  container: ModelContainer) -> Task<Void, Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            return try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
+        }
+        return task
+    }
+
+    static func getSendableVideos(
+        _ modelContainer: ModelContainer,
+        _ filter: Predicate<Video>?,
+        _ sort: [SortDescriptor<Video>]
+    ) async -> [SendableVideo] {
+        let task = Task {
+            let repo = VideoActor(modelContainer: modelContainer)
+            return await repo.getSendableVideos(filter, sort)
+        }
+        return await task.value
+    }
+
     static func moveQueueEntry(
         from source: IndexSet,
         to destination: Int,
@@ -33,6 +56,14 @@ extension VideoService {
                 to: destination,
                 modelContext: modelContext
             )
+    }
+
+    static func moveVideoToInboxAsync(_ videoId: PersistentIdentifier, container: ModelContainer) -> Task<Void, Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            return try await repo.moveVideoToInbox(videoId)
+        }
+        return task
     }
 
     static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) {
@@ -76,6 +107,14 @@ extension VideoService {
         }
     }
 
+    static func markVideoWatchedAsync(_ videoId: PersistentIdentifier, container: ModelContainer) -> Task<Void, Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.markVideoWatched(videoId)
+        }
+        return task
+    }
+
     static func clearFromEverywhere(_ youtubeId: String, container: ModelContainer) {
         _ = Task {
             let videoId = getModelId(for: youtubeId, container: container)
@@ -100,11 +139,11 @@ extension VideoService {
         getVideo(for: youtubeId, container: container)?.persistentModelID
     }
 
-    static func insertQueueEntries(at index: Int = 0,
-                                   youtubeId: String,
-                                   container: ModelContainer) {
+    static func insertQueueEntriesAsync(at index: Int = 0,
+                                        youtubeId: String,
+                                        container: ModelContainer) {
         if let videoId = getModelId(for: youtubeId, container: container) {
-            _ = insertQueueEntries(at: index, videoIds: [videoId], container: container)
+            _ = insertQueueEntriesAsync(at: index, videoIds: [videoId], container: container)
         }
     }
 
@@ -120,12 +159,20 @@ extension VideoService {
         try? modelContext.save()
     }
 
-    static func insertQueueEntries(at index: Int = 0,
-                                   videoIds: [PersistentIdentifier],
-                                   container: ModelContainer) -> Task<(), Error> {
+    static func insertQueueEntriesAsync(at index: Int = 0,
+                                        videoIds: [PersistentIdentifier],
+                                        container: ModelContainer) -> Task<(), Error> {
         let task = Task {
             let repo = VideoActor(modelContainer: container)
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)
+        }
+        return task
+    }
+
+    static func addToBottomQueueAsync(videoId: PersistentIdentifier, container: ModelContainer) -> Task<(), Error> {
+        let task = Task {
+            let repo = VideoActor(modelContainer: container)
+            try await repo.addToBottomQueue(videoId: videoId)
         }
         return task
     }
@@ -235,5 +282,16 @@ extension VideoService {
         }
 
         return (duration, nil)
+    }
+
+    static func getVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {
+        if let video = videoData as? Video {
+            return video
+        } else if let video = videoData as? SendableVideo,
+                  let id = video.persistentId,
+                  let video = modelContext.model(for: id) as? Video {
+            return video
+        }
+        return nil
     }
 }

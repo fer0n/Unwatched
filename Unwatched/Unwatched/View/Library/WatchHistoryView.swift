@@ -8,40 +8,24 @@ import SwiftData
 import UnwatchedShared
 
 struct WatchHistoryView: View {
-    @Query(
-        filter: #Predicate<Video> {
-            $0.watchedDate != nil
-        },
-        sort: \Video.watchedDate,
-        order: .reverse
-    )
-    var videos: [Video]
+    @State var videoListVM = VideoListVM()
 
     var body: some View {
-
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
-            if videos.isEmpty {
+            if videoListVM.hasNoVideos {
                 ContentUnavailableView("noHistoryItems",
                                        systemImage: Const.watchedSF,
                                        description: Text("noHistoryItemsDescription"))
             } else {
-                List {
-                    ForEach(videos) { video in
-                        VideoListItem(
-                            video,
-                            config: VideoListItemConfig(
-                                showVideoStatus: true,
-                                hasInboxEntry: video.inboxEntry != nil,
-                                hasQueueEntry: video.queueEntry != nil,
-                                watched: video.watchedDate != nil
-                            )
-                        )
+                VideosViewAsync(
+                    videoListVM: $videoListVM,
+                    sorting: [SortDescriptor<Video>(\.watchedDate, order: .reverse)],
+                    filter: #Predicate<Video> {
+                        $0.watchedDate != nil
                     }
-                    .listRowBackground(Color.backgroundColor)
-                }
-                .listStyle(.plain)
+                )
             }
         }
         .myNavigationTitle("watched")

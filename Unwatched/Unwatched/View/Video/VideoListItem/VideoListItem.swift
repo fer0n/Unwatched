@@ -16,12 +16,12 @@ struct VideoListItem: View {
 
     @ScaledMetric var queueButtonSize = 30
 
-    let video: Video
+    let videoData: any VideoData
     let config: VideoListItemConfig
 
-    init(_ video: Video,
+    init(_ videoData: any VideoData,
          config: VideoListItemConfig) {
-        self.video = video
+        self.videoData = videoData
         self.config = config
     }
 
@@ -34,14 +34,14 @@ struct VideoListItem: View {
 
         layout {
             VideoListItemThumbnail(
-                video,
+                videoData,
                 config: config,
                 size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
             )
             .padding([.vertical, .leading], config.showVideoStatus ? 5 : 0)
             .overlay(alignment: .topLeading) {
                 VideoListItemStatus(
-                    video: video,
+                    youtubeId: videoData.youtubeId,
                     playingVideoId: player.video?.youtubeId,
                     hasInboxEntry: config.hasInboxEntry,
                     hasQueueEntry: config.hasQueueEntry,
@@ -52,23 +52,24 @@ struct VideoListItem: View {
             }
 
             VideoListItemDetails(
-                video: video,
+                video: videoData,
                 queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
                 showVideoListOrder: config.showVideoListOrder
             )
         }
         .overlay {
             if config.showQueueButton {
-                QueueVideoButton(video, size: queueButtonSize)
+                QueueVideoButton(videoData, size: queueButtonSize)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             }
         }
         .padding([.vertical, .leading], config.showVideoStatus ? -5 : 0)
-        .handleVideoListItemTap(video)
+        .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
-                    video: video,
-                    config: config))
+            videoData: videoData,
+            config: config
+        ))
     }
 }
 
