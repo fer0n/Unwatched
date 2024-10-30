@@ -49,7 +49,7 @@ struct UserTipsView: View {
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
-                HStack(alignment: .top) {
+                LazyHStack(alignment: .top) {
                     ForEach(userTips.indices, id: \.self) { index in
                         renderUserTip(userTips[index])
                     }

@@ -17,8 +17,8 @@ struct PageControl: UIViewRepresentable {
     func makeUIView(context: Context) -> UIPageControl {
         let control = UIPageControl()
         control.numberOfPages = 1
-        control.pageIndicatorTintColor = UIColor(.white)
-        control.currentPageIndicatorTintColor = UIColor(.white.opacity(0.5))
+        control.pageIndicatorTintColor = UIColor(.white.opacity(0.3))
+        control.currentPageIndicatorTintColor = UIColor(.white)
         control.translatesAutoresizingMaskIntoConstraints = false
         control.setContentHuggingPriority(.required, for: .horizontal)
         control.addTarget(
