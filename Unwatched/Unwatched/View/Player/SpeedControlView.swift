@@ -15,7 +15,7 @@ struct SpeedControlView: View {
 
     @Binding var selectedSpeed: Double
 
-    static let padding: CGFloat = 4
+    nonisolated static let padding: CGFloat = 8
     @ScaledMetric var maxHeight: CGFloat = 40
     @ScaledMetric var selectedFontSize: CGFloat = 16
     let frameHeight: CGFloat = 25
@@ -108,7 +108,7 @@ struct SpeedControlView: View {
                 .onChanged { gesture in
                     let dragPosition = (controlMinX ?? 0) + gesture.translation.width
                     let cappedMax = max(dragPosition, SpeedControlView.padding + (viewModel.itemWidth / 2))
-                    dragState = min(cappedMax, viewModel.width - (SpeedControlView.padding + (viewModel.itemWidth / 2)))
+                    dragState = min(cappedMax, viewModel.width + SpeedControlView.padding - (viewModel.itemWidth / 2))
                 }
                 .onEnded { state in
                     let value = state.translation.width
