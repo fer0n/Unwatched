@@ -24,7 +24,7 @@ struct CombinedPlaybackSpeedSetting: View {
                 } label: {
                     Image(systemName: "waveform")
                         .font(.title3)
-                        .outlineToggleModifier(
+                        .playerToggleModifier(
                             isOn: player.temporaryPlaybackSpeed != nil,
                             isSmall: true
                         )

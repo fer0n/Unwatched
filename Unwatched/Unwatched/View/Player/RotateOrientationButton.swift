@@ -14,7 +14,7 @@ struct RotateOrientationButton: View {
             OrientationManager.changeOrientation(to: .landscapeRight)
         } label: {
             Image(systemName: Const.enableFullscreenSF)
-                .outlineToggleModifier(isOn: false, isSmall: true)
+                .playerToggleModifier(isOn: false, isSmall: true)
         }
         .help("fullscreenRight")
         .accessibilityLabel("fullscreenRight")
@@ -41,7 +41,7 @@ struct HideControlsButton: View {
             Image(systemName: hideControlsFullscreen
                     ? Const.disableFullscreenSF
                     : Const.enableFullscreenSF)
-                .outlineToggleModifier(isOn: hideControlsFullscreen)
+                .playerToggleModifier(isOn: hideControlsFullscreen)
         }
         .accessibilityLabel("enterFullscreen")
         .keyboardShortcut("f", modifiers: [])

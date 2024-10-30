@@ -24,7 +24,7 @@ struct WatchedButton: View {
         }
         .accessibilityLabel("markWatched")
         .keyboardShortcut("d")
-        .outlineToggleModifier(isOn: player.isConsideredWatched)
+        .playerToggleModifier(isOn: player.isConsideredWatched)
         .padding(3)
         .contextMenu {
             if player.video != nil {

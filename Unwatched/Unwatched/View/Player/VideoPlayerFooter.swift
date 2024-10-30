@@ -64,15 +64,22 @@ struct VideoPlayerFooter: View {
                         openBrowserUrl(.url(url.absoluteString))
                     } label: {
                         Image(systemName: Const.appBrowserSF)
+                            .padding(5)
                     }
                     .accessibilityLabel("openInAppBrowser")
                     .frame(maxWidth: .infinity)
                 }
             }
         }
-        .font(.title2)
+        .font(.headline)
         .fontWeight(.bold)
-        // .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+        .foregroundStyle(Color.automaticBlack.opacity(0.5))
+        .padding(.vertical, 8)
+        .background {
+            Color.myBackgroundGray
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        }
+        .padding(.horizontal)
         .environment(\.symbolVariants, .fill)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }

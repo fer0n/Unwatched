@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct OutlineToggleStyle: ToggleStyle {
+struct PlayerToggleStyle: ToggleStyle {
     var isSmall: Bool = false
     var stroke: Bool = true
 
@@ -14,14 +14,14 @@ struct OutlineToggleStyle: ToggleStyle {
             configuration.isOn.toggle()
         }, label: {
             configuration.label
-                .outlineToggleModifier(isOn: configuration.isOn,
-                                       isSmall: isSmall,
-                                       stroke: stroke)
+                .playerToggleModifier(isOn: configuration.isOn,
+                                      isSmall: isSmall,
+                                      stroke: stroke)
         })
     }
 }
 
-struct OutlineToggleModifier: ViewModifier {
+struct PlayerToggleModifier: ViewModifier {
     let isOn: Bool
     var isSmall: Bool = false
     var stroke: Bool = true
@@ -42,24 +42,23 @@ struct OutlineToggleModifier: ViewModifier {
             .font(isSmall ? .subheadline : .headline)
             .fontWeight(.regular)
             .frame(width: size, height: size)
-            .background(isOn ? Color.neutralAccentColor : Color.myBackgroundGray)
-            .foregroundStyle(isOn ? Color.backgroundColor : Color.myForegroundGray)
-            .clipShape(Circle())
-            .overlay(
-                Circle()
-                    .strokeBorder(isOn || !stroke ? .clear : .myForegroundGray, lineWidth: 1)
+            .background(isOn
+                            ? Color.neutralAccentColor
+                            : Color.myBackgroundGray2
             )
+            .foregroundStyle(isOn ? Color.backgroundColor : Color.automaticBlack)
+            .clipShape(Circle())
             .opacity(isEnabled ? 1 : 0.4)
     }
 }
 
 extension View {
-    func outlineToggleModifier(isOn: Bool,
-                               isSmall: Bool = false,
-                               stroke: Bool = true) -> some View {
-        self.modifier(OutlineToggleModifier(isOn: isOn,
-                                            isSmall: isSmall,
-                                            stroke: stroke))
+    func playerToggleModifier(isOn: Bool,
+                              isSmall: Bool = false,
+                              stroke: Bool = true) -> some View {
+        self.modifier(PlayerToggleModifier(isOn: isOn,
+                                           isSmall: isSmall,
+                                           stroke: stroke))
     }
 }
 
@@ -68,11 +67,11 @@ extension View {
         Toggle(isOn: .constant(true)) {
             Image(systemName: "checkmark")
         }
-        .toggleStyle(OutlineToggleStyle())
+        .toggleStyle(PlayerToggleStyle())
 
         Toggle(isOn: .constant(false)) {
             Image(systemName: "checkmark")
         }
-        .toggleStyle(OutlineToggleStyle(isSmall: true))
+        .toggleStyle(PlayerToggleStyle(isSmall: true))
     }
 }

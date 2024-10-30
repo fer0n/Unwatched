@@ -29,6 +29,7 @@ struct InteractiveSubscriptionTitle: View {
                 }
                 .padding(5)
                 .foregroundStyle(.secondary)
+                .fontWeight(.medium)
             }
             .contextMenu {
                 Button {

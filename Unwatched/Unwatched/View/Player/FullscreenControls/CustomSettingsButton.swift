@@ -23,7 +23,7 @@ struct CustomSettingsButton: View {
         }
         .help("customSpeedSetting")
         .accessibilityLabel("customSpeedSetting")
-        .toggleStyle(OutlineToggleStyle(isSmall: true))
+        .toggleStyle(PlayerToggleStyle(isSmall: true))
         .disabled(player.video?.subscription == nil)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }

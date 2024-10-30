@@ -141,7 +141,7 @@ extension PlayerManager {
             }
         }
     }
-    
+
     var canSetPip: Bool {
         !unstarted
     }
