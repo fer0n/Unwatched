@@ -6,7 +6,7 @@
 import Foundation
 import SwiftUI
 
-enum VideoError: LocalizedError {
+enum VideoError: Error, CustomLocalizedStringResourceConvertible {
     case noVideoFound
     case noYoutubeId
     case noYoutubePlaylistId
@@ -15,22 +15,22 @@ enum VideoError: LocalizedError {
     case noVideosFoundInPlaylist
     case noVideoInfo
 
-    var errorDescription: String? {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .noVideoFound:
-            return String(localized: "noVideoFound")
+            return "noVideoFound"
         case .noYoutubeId:
-            return String(localized: "noYoutubeIdFound")
+            return "noYoutubeIdFound"
         case .faultyYoutubeVideoId(let youtubeId):
-            return String(localized: "potentiallyFaultyYoutubeId\(youtubeId)")
+            return "potentiallyFaultyYoutubeId\(youtubeId)"
         case .emptyYoutubeId:
-            return String(localized: "emptyYoutubeId")
+            return "emptyYoutubeId"
         case .noYoutubePlaylistId:
-            return String(localized: "noYoutubePlaylistId")
+            return "noYoutubePlaylistId"
         case .noVideosFoundInPlaylist:
-            return String(localized: "noVideosFoundInPlaylist")
+            return "noVideosFoundInPlaylist"
         case .noVideoInfo:
-            return String(localized: "noVideoInfo")
+            return "noVideoInfo"
         }
     }
 }
