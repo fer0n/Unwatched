@@ -10,12 +10,12 @@ struct VideoListItem: View {
     @Environment(\.isFocused) var isFocused
     @Environment(\.modelContext) var modelContext
 
-    var video: Video
+    var video: VideoData
     let width: Double
 
     var body: some View {
         VStack(alignment: .leading) {
-            CachedImageView(imageHolder: video) { image in
+            CachedImageView(imageUrl: video.thumbnailUrl) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fill)

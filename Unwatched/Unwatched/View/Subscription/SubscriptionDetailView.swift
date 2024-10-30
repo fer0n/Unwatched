@@ -82,9 +82,10 @@ struct SubscriptionDetailView: View {
         if subscription.thumbnailUrl != nil {
             return subscription.thumbnailUrl
         }
-        return subscription.videos?.first(where: {
+        let fallbackVideo = subscription.videos?.first(where: {
             $0.isYtShort != true
-        })?.thumbnailUrl
+        })
+        return fallbackVideo?.thumbnailUrl
     }
 
     func handleOnAppear() {

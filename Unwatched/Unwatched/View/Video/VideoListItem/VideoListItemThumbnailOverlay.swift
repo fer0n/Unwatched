@@ -9,7 +9,7 @@ import UnwatchedShared
 struct VideoListItemThumbnailOverlay: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    let video: Video
+    let video: VideoData
     var videoDuration: Double?
     // workaround: doesn't update instantly otherwise
 

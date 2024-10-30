@@ -19,6 +19,7 @@ public struct VideoListItemConfig {
     public var showQueueButton: Bool
     public var showContextMenu: Bool
     public var showVideoListOrder: Bool
+    public var async: Bool
 
     public init(
         showVideoStatus: Bool = false,
@@ -33,7 +34,8 @@ public struct VideoListItemConfig {
         videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details],
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
-        showVideoListOrder: Bool = false
+        showVideoListOrder: Bool = false,
+        async: Bool = false
     ) {
         self.showVideoStatus = showVideoStatus
         self.hasInboxEntry = hasInboxEntry
@@ -48,5 +50,6 @@ public struct VideoListItemConfig {
         self.showQueueButton = showQueueButton
         self.showContextMenu = showContextMenu
         self.showVideoListOrder = showVideoListOrder
+        self.async = async
     }
 }

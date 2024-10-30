@@ -137,7 +137,9 @@ struct SubscriptionInfoDetails: View {
                                let regularChannel = SubscriptionService.getRegularChannel(
                                 channelId,
                                 container: container) {
-                                navManager.pushSubscription(regularChannel)
+                                navManager.pushSubscription(
+                                    subscription: regularChannel
+                                )
                             }
                         }
                 }

@@ -6,8 +6,10 @@
 import Foundation
 import SwiftData
 
-public struct SendableVideo: Sendable, Codable {
-    public var persistendId: Int?
+public struct SendableVideo: VideoData, Sendable, Codable {
+    
+    public var persistentId: PersistentIdentifier?
+    public var videoId: Int?
     public var youtubeId: String
     public var title: String
     public var url: URL?
@@ -18,6 +20,10 @@ public struct SendableVideo: Sendable, Codable {
     public var duration: Double?
     public var elapsedSeconds: Double?
     public var chapters = [SendableChapter]()
+    
+    public var sortedChapterData: [any ChapterData] {
+        Video.getSortedChapters([], chapters)
+    }
 
     public var publishedDate: Date?
     public var updatedDate: Date?
@@ -28,6 +34,16 @@ public struct SendableVideo: Sendable, Codable {
     public var bookmarkedDate: Date?
     public var clearedInboxDate: Date?
     public var createdDate: Date?
+    
+    
+    // relationship related values
+    public var hasInboxEntry: Bool?
+    public var queueEntry: SendableQueueEntry?
+    public var subscriptionData: SubscriptionData?
+    
+    public var queueEntryData: QueueEntryData? {
+        queueEntry
+    }
 
     public func createVideo(
         title: String? = nil,
@@ -69,7 +85,7 @@ public struct SendableVideo: Sendable, Codable {
     }
 
     public init(
-        persistendId: Int? = nil,
+        persistentId: PersistentIdentifier? = nil,
         youtubeId: String,
         title: String,
         url: URL?,
@@ -86,9 +102,12 @@ public struct SendableVideo: Sendable, Codable {
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
         clearedInboxDate: Date? = nil,
-        createdDate: Date? = .now
+        createdDate: Date? = .now,
+        hasInboxEntry: Bool? = nil,
+        queueEntry: SendableQueueEntry? = nil,
+        subscriptionData: SubscriptionData? = nil
     ) {
-        self.persistendId = persistendId
+        self.persistentId = persistentId
         self.youtubeId = youtubeId
         self.title = title
         self.url = url
@@ -106,12 +125,15 @@ public struct SendableVideo: Sendable, Codable {
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate
+        self.hasInboxEntry = hasInboxEntry
+        self.queueEntry = queueEntry
+        self.subscriptionData = subscriptionData
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: SendableVideoCodingKeys.self)
 
-        persistendId = try container.decodeIfPresent(Int.self, forKey: .persistendId)
+        videoId = try container.decodeIfPresent(Int.self, forKey: .persistendId)
         youtubeId = try container.decode(String.self, forKey: .youtubeId)
         title = try container.decode(String.self, forKey: .title)
         url = try container.decode(URL.self, forKey: .url)
@@ -132,7 +154,7 @@ public struct SendableVideo: Sendable, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: SendableVideoCodingKeys.self)
 
-        try container.encodeIfPresent(persistendId, forKey: .persistendId)
+        try container.encodeIfPresent(persistentId?.hashValue, forKey: .persistendId)
         try container.encode(youtubeId, forKey: .youtubeId)
         try container.encode(title, forKey: .title)
         try container.encode(url, forKey: .url)

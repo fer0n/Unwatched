@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Chapter {
+public final class Chapter: ChapterData {
 
     public var title: String?
     public var startTime: Double = 0
@@ -45,12 +45,12 @@ public final class Chapter {
 
 }
 
-public struct SendableChapter: Sendable, CustomStringConvertible {
+public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible {
     public var title: String?
     public var startTime: Double
     public var endTime: Double?
     public var duration: Double?
-    public var isActive: Bool?
+    public var isActive: Bool = true
     public var category: ChapterCategory?
 
     public var description: String {
@@ -80,7 +80,7 @@ public struct SendableChapter: Sendable, CustomStringConvertible {
         self.startTime = startTime
         self.endTime = endTime
         self.duration = duration
-        self.isActive = isActive
+        self.isActive = isActive ?? true
         self.category = category
     }
 }

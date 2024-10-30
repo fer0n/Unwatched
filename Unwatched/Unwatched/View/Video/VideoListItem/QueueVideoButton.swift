@@ -5,16 +5,17 @@
 
 import SwiftUI
 import UnwatchedShared
+import OSLog
 
 struct QueueVideoButton: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(\.modelContext) var modelContext
 
-    var video: Video
+    var videoData: VideoData
     var size: CGFloat = 30
 
-    init(_ video: Video, size: CGFloat = 30) {
-        self.video = video
+    init(_ videoData: VideoData, size: CGFloat = 30) {
+        self.videoData = videoData
         self.size = size
     }
 
@@ -36,6 +37,13 @@ struct QueueVideoButton: View {
     }
 
     func addToTopQueue() {
+        guard let video = VideoService.getVideoModel(
+            from: videoData,
+            modelContext: modelContext
+        ) else {
+            Logger.log.error("addToTopQueue: no video")
+            return
+        }
         _ = VideoService.insertQueueEntries(
             at: 1,
             videos: [video],

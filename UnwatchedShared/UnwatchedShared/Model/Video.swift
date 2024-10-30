@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Video: CustomStringConvertible, Exportable {
+public final class Video: VideoData, CustomStringConvertible, Exportable {
     public typealias ExportType = SendableVideo
 
     @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video)
@@ -40,12 +40,35 @@ public final class Video: CustomStringConvertible, Exportable {
     public var bookmarkedDate: Date?
     public var clearedInboxDate: Date?
     public var createdDate: Date?
+    
+    public var subscriptionData: SubscriptionData? {
+        return subscription
+    }
 
     public var sponserBlockUpdateDate: Date?
 
     // MARK: Computed Properties
+    public var persistentId: PersistentIdentifier? {
+        persistentModelID
+    }
+    
     public var sortedChapters: [Chapter] {
-        var result = [Chapter]()
+        Video.getSortedChapters(mergedChapters, chapters)
+    }
+    
+    public var sortedChapterData: [ChapterData] {
+        Video.getSortedChapters(mergedChapters, chapters)
+    }
+    
+    public var hasInboxEntry: Bool? {
+        inboxEntry != nil
+    }
+    
+    public static func getSortedChapters<T: ChapterData>(
+        _ mergedChapters: [T]?,
+        _ chapters: [T]?
+    ) -> [T] {
+        var result = [T]()
 
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if (mergedChapters?.count ?? 0) > 1 && settingOn {
@@ -71,10 +94,14 @@ public final class Video: CustomStringConvertible, Exportable {
     public var description: String {
         return "Video: \(title) (\(url?.absoluteString ?? ""))"
     }
+    
+    public var queueEntryData: QueueEntryData? {
+        queueEntry
+    }
 
     public var toExport: SendableVideo? {
         SendableVideo(
-            persistendId: self.persistentModelID.hashValue,
+            persistentId: self.persistentModelID,
             youtubeId: youtubeId,
             title: title,
             url: url,
@@ -89,8 +116,16 @@ public final class Video: CustomStringConvertible, Exportable {
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
             clearedInboxDate: clearedInboxDate,
-            createdDate: createdDate
+            createdDate: createdDate,
+            hasInboxEntry: inboxEntry != nil,
+            queueEntry: queueEntry?.toExport
         )
+    }
+    
+    public var toExportWithSubscription: SendableVideo? {
+        var video = toExport
+        video?.subscriptionData = subscription?.toExport
+        return video
     }
 
     public init(title: String,

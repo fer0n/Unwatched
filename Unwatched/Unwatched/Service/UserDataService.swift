@@ -91,7 +91,7 @@ struct UserDataService {
             for video in backup.videos {
                 let videoModel = video.createVideo(extractChapters: ChapterService.extractChapters)
                 context.insert(videoModel)
-                if let id = video.persistendId {
+                if let id = video.videoId {
                     videoIdDict[id] = videoModel
                 }
             }

@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemStatus: View {
-    var video: Video
+    var youtubeId: String
     var playingVideoId: String?
 
     var hasInboxEntry: Bool?
@@ -30,7 +30,7 @@ struct VideoListItemStatus: View {
 
     var videoStatusSystemName: (status: String?, color: Color)? {
         let defaultColor = Color.green
-        if video.youtubeId == playingVideoId {
+        if youtubeId == playingVideoId {
             return ("play.circle.fill", defaultColor)
         }
         if hasInboxEntry == true {
@@ -48,7 +48,7 @@ struct VideoListItemStatus: View {
 
 #Preview {
     VideoListItemStatus(
-        video: Video.getDummy(),
+        youtubeId: "id",
         hasInboxEntry: true,
         hasQueueEntry: false,
         watched: false

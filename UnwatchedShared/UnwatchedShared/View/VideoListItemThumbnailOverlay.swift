@@ -4,12 +4,38 @@
 //
 
 import SwiftUI
+import SwiftData
 
+
+public protocol VideoData {
+    var title: String { get }
+    var elapsedSeconds: Double? { get }
+    var duration: Double? { get }
+    var isYtShort: Bool? { get }
+    var thumbnailUrl: URL? { get }
+    var youtubeId: String { get }
+    var publishedDate: Date? { get }
+    var queueEntryData: QueueEntryData? { get }
+    var bookmarkedDate: Date? { get }
+    var url: URL? { get }
+    var persistentId: PersistentIdentifier? { get }
+    
+    var sortedChapterData: [ChapterData] { get }
+    var subscriptionData: SubscriptionData? { get }
+    var hasInboxEntry: Bool? { get }
+}
+
+public protocol ChapterData {
+    var startTime: Double { get }
+    var endTime: Double? { get }
+    var isActive: Bool { get }
+}
+        
 
 public struct VideoListItemThumbnailOverlay: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    let video: Video
+    let video: VideoData
     var videoDuration: Double?
     // workaround: doesn't update instantly otherwise
 
@@ -21,7 +47,7 @@ public struct VideoListItemThumbnailOverlay: View {
     @ScaledMetric var radius: CGFloat = 6
     
     public init(
-        video: Video,
+        video: VideoData,
         videoDuration: Double? = nil,
         barHeight: CGFloat? = nil
     ) {

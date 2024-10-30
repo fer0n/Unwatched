@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import OSLog
 
 struct HandleVideoListItemTap: ViewModifier {
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
@@ -15,12 +16,19 @@ struct HandleVideoListItemTap: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) private var player
 
-    let video: Video
+    let videoData: VideoData
 
     func body(content: Content) -> some View {
         content
             .contentShape(Rectangle())
             .onTapGesture {
+                guard let video = VideoService.getVideoModel(
+                    from: videoData,
+                    modelContext: modelContext
+                ) else {
+                    Logger.log.error("no video to tap")
+                    return
+                }
                 Task {
                     _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
                 }
@@ -39,7 +47,7 @@ struct HandleVideoListItemTap: ViewModifier {
 }
 
 extension View {
-    func handleVideoListItemTap(_ video: Video) -> some View {
-        self.modifier(HandleVideoListItemTap(video: video))
+    func handleVideoListItemTap(_ videoData: VideoData) -> some View {
+        self.modifier(HandleVideoListItemTap(videoData: videoData))
     }
 }

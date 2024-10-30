@@ -97,7 +97,7 @@ struct ChapterMiniControlView: View {
     }
 
     func openSubscription(_ sub: Subscription) {
-        navManager.pushSubscription(sub)
+        navManager.pushSubscription(subscription: sub)
         setShowMenu()
     }
 

@@ -15,7 +15,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
 
-    let video: Video
+    let videoData: VideoData
     var config: VideoListItemConfig
 
     func body(content: Content) -> some View {
@@ -30,7 +30,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 TrailingSwipeActionsView(
-                    video: video,
+                    videoData: videoData,
                     theme: theme,
                     config: config,
                     clearVideoEverywhere: clearVideoEverywhere,
@@ -48,7 +48,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     ? ContextMenu(
                         menuItems: {
                             VideoListItemMoreMenuView(
-                                video: video,
+                                videoData: videoData,
                                 config: config,
                                 markWatched: markWatched,
                                 addVideoToTopQueue: addVideoToTopQueue,
@@ -69,6 +69,13 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             .symbolVariant(.fill)
     }
 
+    func getVideo() -> Video? {
+        VideoService.getVideoModel(
+            from: videoData,
+            modelContext: modelContext
+        )
+    }
+
     var canBeCleared: Bool {
         config.videoSwipeActions.contains(.clear) &&
             (config.hasInboxEntry == true
@@ -77,57 +84,138 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             )
     }
 
+    func performVideoAction(
+        asyncAction: ((PersistentIdentifier) -> Task<Void, Error>)?,
+        syncAction: ((Video) -> Void)?
+    ) {
+        Logger.log.info("performVideoAction")
+
+        var order = videoData.queueEntryData?.order
+        var task: Task<Void, Error>?
+        if config.async, let videoId = videoData.persistentId {
+            task = asyncAction?(videoId)
+            Task {
+                try? await task?.value
+                config.onChange?()
+            }
+        } else {
+            guard let video = getVideo() else {
+                Logger.log.error("performVideoAction: no video")
+                return
+            }
+            order = order ?? video.queueEntry?.order
+            syncAction?(video)
+            config.onChange?()
+        }
+        handlePotentialQueueChange(after: task, order: order)
+    }
+
     func addVideoToTopQueue() {
         Logger.log.info("addVideoTop")
-        let order = video.queueEntry?.order
-        VideoService.insertQueueEntries(
-            at: 1,
-            videos: [video],
-            modelContext: modelContext
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.insertQueueEntriesAsync(
+                    at: 1,
+                    videoIds: [videoId],
+                    container: modelContext.container
+                )
+            },
+            syncAction: { video in
+                VideoService.insertQueueEntries(
+                    at: 1,
+                    videos: [video],
+                    modelContext: modelContext
+                )
+            }
         )
-        handlePotentialQueueChange(order: order)
-        config.onChange?()
     }
 
     func addVideoToBottomQueue() {
         Logger.log.info("addVideoBottom")
-        let order = video.queueEntry?.order
-        VideoService.addToBottomQueue(video: video, modelContext: modelContext)
-        handlePotentialQueueChange(order: order)
-        config.onChange?()
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.addToBottomQueueAsync(
+                    videoId: videoId,
+                    container: modelContext.container
+                )
+            },
+            syncAction: { video in
+                VideoService.addToBottomQueue(
+                    video: video,
+                    modelContext: modelContext
+                )
+            }
+        )
     }
 
     func moveToInbox() {
-        VideoService.moveVideoToInbox(video, modelContext: modelContext)
-        handlePotentialQueueChange()
-        config.onChange?()
+        Logger.log.info("moveToInbox")
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.moveVideoToInboxAsync(
+                    videoId,
+                    container: modelContext.container
+                )
+            },
+            syncAction: { video in
+                VideoService.moveVideoToInbox(
+                    video,
+                    modelContext: modelContext
+                )
+            }
+        )
     }
 
     func toggleBookmark() {
+        guard let video = getVideo() else {
+            Logger.log.error("toggleBookmark: no video")
+            return
+        }
         VideoService.toggleBookmark(video, modelContext)
         config.onChange?()
     }
 
     func markWatched() {
-        VideoService.markVideoWatched(video, modelContext: modelContext)
-        handlePotentialQueueChange()
-        config.onChange?()
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.markVideoWatchedAsync(
+                    videoId,
+                    container: modelContext.container
+                )
+            },
+            syncAction: { video in
+                VideoService.markVideoWatched(
+                    video,
+                    modelContext: modelContext
+                )
+            }
+        )
     }
 
     func clearVideoEverywhere() {
-        let order = video.queueEntry?.order
-        VideoService.clearEntries(from: video,
-                                  updateCleared: true,
-                                  modelContext: modelContext)
-        handlePotentialQueueChange(order: order)
-        config.onChange?()
-        if video.isYtShort == true {
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.clearEntriesAsync(
+                    from: videoId,
+                    updateCleared: true,
+                    container: modelContext.container
+                )
+            },
+            syncAction: { video in
+                VideoService.clearEntries(
+                    from: video,
+                    updateCleared: true,
+                    modelContext: modelContext
+                )
+            }
+        )
+        if videoData.isYtShort == true {
             HideShortsTip.clearedShorts += 1
         }
     }
 
-    func handlePotentialQueueChange(after task: (Task<(), Error>)? = nil, order: Int? = nil) {
-        if order == 0 || video.queueEntry?.order == 0 {
+    func handlePotentialQueueChange(_ video: Video? = nil, after task: (Task<(), Error>)? = nil, order: Int? = nil) {
+        if order == 0 || video?.queueEntry?.order == 0 {
             try? modelContext.save()
             player.loadTopmostVideoFromQueue(after: task)
         }
@@ -135,6 +223,10 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func clearList(_ list: ClearList, _ direction: ClearDirection) {
         try? modelContext.save()
+        guard let video = getVideo() else {
+            Logger.log.error("clearList: no video")
+            return
+        }
         let container = modelContext.container
         let task = VideoService.clearList(
             list,
@@ -181,8 +273,9 @@ struct LeadingSwipeActionsView: View {
 
 struct TrailingSwipeActionsView: View {
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.modelContext) var modelContext
 
-    var video: Video
+    var videoData: VideoData
     var theme: ThemeColor
     var config: VideoListItemConfig
     var clearVideoEverywhere: () -> Void
@@ -209,7 +302,7 @@ struct TrailingSwipeActionsView: View {
             if config.videoSwipeActions.contains(.more) {
                 Menu {
                     VideoListItemMoreMenuView(
-                        video: video,
+                        videoData: videoData,
                         config: config,
                         markWatched: markWatched,
                         addVideoToTopQueue: addVideoToTopQueue,
@@ -230,6 +323,13 @@ struct TrailingSwipeActionsView: View {
             }
             if config.videoSwipeActions.contains(.details) {
                 Button {
+                    guard let video = VideoService.getVideoModel(
+                        from: videoData,
+                        modelContext: modelContext
+                    ) else {
+                        Logger.log.error("No video to show details for")
+                        return
+                    }
                     navManager.videoDetail = video
                 } label: {
                     Image(systemName: Const.videoDescriptionSF)

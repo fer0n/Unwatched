@@ -7,14 +7,14 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemThumbnail: View {
-    let video: Video
+    let video: VideoData
     let config: VideoListItemConfig
     let fixedSize: CGSize?
 
     @State var width: CGFloat?
 
     init(
-        _ video: Video,
+        _ video: VideoData,
         config: VideoListItemConfig,
         size: CGSize? = nil
     ) {

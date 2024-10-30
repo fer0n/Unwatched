@@ -4,10 +4,11 @@ import UnwatchedShared
 
 struct AllVideosView: View {
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
-
-    @Query(animation: .default) var videos: [Video]
+    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
+    @State var videoListVM = VideoListVM()
 
     @State var text = DebouncedText(0.5)
+
     let sortingOptions: [VideoSorting] = [.publishedDate, .clearedInboxDate]
 
     var body: some View {
@@ -18,15 +19,18 @@ struct AllVideosView: View {
             ContentUnavailableView("noVideosYet",
                                    systemImage: Const.allVideosViewSF,
                                    description: Text("noVideosYetDescription"))
-                .opacity(videos.isEmpty ? 1 : 0)
-            List {
-                VideoListView(
-                    sort: allVideosSortOrder,
-                    searchText: text.debounced
+                .opacity(videoListVM.hasNoVideos ? 1 : 0)
+            VideosViewAsync(
+                videoListVM: $videoListVM,
+                searchText: text.debounced,
+                sorting: VideoListView.getVideoSorting(
+                    allVideosSortOrder
+                ),
+                filter: VideoListView.getVideoFilter(
+                    showShorts: !hideShorts
                 )
-            }
-            .listStyle(.plain)
-            .opacity(videos.isEmpty ? 0 : 1)
+            )
+            .opacity(videoListVM.hasNoVideos ? 0 : 1)
         }
         .myNavigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)
