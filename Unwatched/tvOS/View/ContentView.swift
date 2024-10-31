@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            QueueView()
+            QueueGridView()
                 .tabItem {
                     Label("queue", systemImage: "rectangle.stack")
                 }

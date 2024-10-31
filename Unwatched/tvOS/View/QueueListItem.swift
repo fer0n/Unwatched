@@ -44,7 +44,7 @@ struct QueueEntryListItem: View {
                         action: { toBeCleared = entry.video }
                     )
                 } label: {
-                    VideoListItem(video: video, width: width)
+                    VideoGridItem(video: video, width: width)
                 } primaryAction: {
                     openYouTube(video.youtubeId)
                 }
@@ -103,7 +103,7 @@ struct QueueEntryListItem: View {
 }
 
 #Preview {
-    QueueView()
+    QueueGridView()
         .modelContainer(DataController.previewContainerFilled)
         .environment(ImageCacheManager())
         .environment(SyncManager())
