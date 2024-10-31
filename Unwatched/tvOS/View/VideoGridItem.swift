@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoListItem: View {
+struct VideoGridItem: View {
     @Environment(\.isFocused) var isFocused
     @Environment(\.modelContext) var modelContext
 
@@ -64,6 +64,6 @@ struct ThumbnailPlaceholder: View {
 }
 
 #Preview {
-    VideoListItem(video: Video.getDummy(), width: 400)
+    VideoGridItem(video: Video.getDummy(), width: 400)
         .environment(ImageCacheManager())
 }

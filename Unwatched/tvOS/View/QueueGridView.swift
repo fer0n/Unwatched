@@ -7,7 +7,7 @@ import SwiftUI
 import SwiftData
 import UnwatchedShared
 
-struct QueueView: View {
+struct QueueGridView: View {
     @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
@@ -75,7 +75,7 @@ struct QueueView: View {
 }
 
 #Preview {
-    QueueView()
+    QueueGridView()
         .modelContainer(DataController.previewContainerFilled)
         .environment(ImageCacheManager())
         .environment(SyncManager())
