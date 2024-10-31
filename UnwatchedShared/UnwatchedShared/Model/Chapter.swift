@@ -45,7 +45,7 @@ public final class Chapter: ChapterData {
 
 }
 
-public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible {
+public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, Hashable {
     public var title: String?
     public var startTime: Double
     public var endTime: Double?

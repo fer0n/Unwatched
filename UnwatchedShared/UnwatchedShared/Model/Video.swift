@@ -41,7 +41,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var clearedInboxDate: Date?
     public var createdDate: Date?
     
-    public var subscriptionData: SubscriptionData? {
+    public var subscriptionData: (any SubscriptionData)? {
         return subscription
     }
 
@@ -124,7 +124,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     
     public var toExportWithSubscription: SendableVideo? {
         var video = toExport
-        video?.subscriptionData = subscription?.toExport
+        video?.subscription = subscription?.toExport
         return video
     }
 

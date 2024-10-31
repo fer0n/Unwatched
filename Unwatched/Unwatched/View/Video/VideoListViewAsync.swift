@@ -10,13 +10,12 @@ struct VideosViewAsync: View {
     @Environment(\.modelContext) var modelContext
 
     @Binding var videoListVM: VideoListVM
-    var searchText: String?
     var sorting: [SortDescriptor<Video>] = []
     var filter: Predicate<Video>?
 
     var body: some View {
         List {
-            VideoListViewAsync(videoListVM: $videoListVM, searchText: searchText)
+            VideoListViewAsync(videoListVM: $videoListVM)
         }
         .listStyle(.plain)
         .task {
@@ -35,10 +34,9 @@ struct VideoListViewAsync: View {
     @AppStorage(Const.hideShorts) var hideShorts: Bool = false
 
     @Binding var videoListVM: VideoListVM
-    var searchText: String?
 
     var body: some View {
-        ForEach(filtered, id: \.persistentId) { video in
+        ForEach(videoListVM.videos, id: \.persistentId) { video in
             let config = VideoListItemConfig(
                 showVideoStatus: true,
                 hasInboxEntry: video.hasInboxEntry,
@@ -54,15 +52,17 @@ struct VideoListViewAsync: View {
                 video,
                 config: config
             )
+            .onAppear {
+                videoListVM.loadMoreContentIfNeeded(currentItem: video)
+            }
         }
         .listRowBackground(Color.backgroundColor)
-    }
 
-    var filtered: [SendableVideo] {
-        if let searchText = searchText, !searchText.isEmpty {
-            videoListVM.videos.filter({ $0.title.localizedStandardContains(searchText) })
-        } else {
-            videoListVM.videos
+        if videoListVM.isLoading && !videoListVM.videos.isEmpty {
+            ProgressView()
+                .frame(maxWidth: .infinity)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.backgroundColor)
         }
     }
 }

@@ -21,7 +21,7 @@ public protocol VideoData {
     var persistentId: PersistentIdentifier? { get }
     
     var sortedChapterData: [ChapterData] { get }
-    var subscriptionData: SubscriptionData? { get }
+    var subscriptionData: (any SubscriptionData)? { get }
     var hasInboxEntry: Bool? { get }
 }
 

@@ -35,7 +35,7 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
     }
 }
 
-public struct SendableQueueEntry: QueueEntryData, Sendable, Codable, ModelConvertable {
+public struct SendableQueueEntry: QueueEntryData, Sendable, Codable, ModelConvertable, Hashable {
     public typealias ModelType = QueueEntry
 
     public var videoId: Int

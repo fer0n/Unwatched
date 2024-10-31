@@ -6,7 +6,7 @@
 import Foundation
 import SwiftData
 
-public protocol SubscriptionData: Sendable {
+public protocol SubscriptionData: Sendable, Hashable {
     var displayTitle: String { get }
 }
 

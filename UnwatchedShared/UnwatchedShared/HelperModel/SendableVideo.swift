@@ -6,8 +6,7 @@
 import Foundation
 import SwiftData
 
-public struct SendableVideo: VideoData, Sendable, Codable {
-    
+public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var persistentId: PersistentIdentifier?
     public var videoId: Int?
     public var youtubeId: String
@@ -39,7 +38,11 @@ public struct SendableVideo: VideoData, Sendable, Codable {
     // relationship related values
     public var hasInboxEntry: Bool?
     public var queueEntry: SendableQueueEntry?
-    public var subscriptionData: SubscriptionData?
+    
+    public var subscription: SendableSubscription?
+    public var subscriptionData: (any SubscriptionData)? {
+        subscription
+    }
     
     public var queueEntryData: QueueEntryData? {
         queueEntry
@@ -105,7 +108,7 @@ public struct SendableVideo: VideoData, Sendable, Codable {
         createdDate: Date? = .now,
         hasInboxEntry: Bool? = nil,
         queueEntry: SendableQueueEntry? = nil,
-        subscriptionData: SubscriptionData? = nil
+        subscription: SendableSubscription? = nil
     ) {
         self.persistentId = persistentId
         self.youtubeId = youtubeId
@@ -127,7 +130,7 @@ public struct SendableVideo: VideoData, Sendable, Codable {
         self.createdDate = createdDate
         self.hasInboxEntry = hasInboxEntry
         self.queueEntry = queueEntry
-        self.subscriptionData = subscriptionData
+        self.subscription = subscription
     }
 
     public init(from decoder: Decoder) throws {
