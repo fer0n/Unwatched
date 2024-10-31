@@ -9,18 +9,37 @@ import SwiftUI
 import OSLog
 
 @Observable class VideoListVM: TransactionVM<Video> {
+    @ObservationIgnored private let initialBatchSize: Int = 150
+    @ObservationIgnored private let pageSize: Int = 250
+    @ObservationIgnored private var allVideos = [SendableVideo]()
+    @ObservationIgnored private var allFilteredVideos = [SendableVideo]()
+
     var videos = [SendableVideo]()
     var isLoading = true
+    private var isSearching = false
 
-    var adjusted = [SendableVideo]()
-
-    var manualFilter: ((SendableVideo) -> Bool)?
     var filter: Predicate<Video>?
-
-    var sort: [SortDescriptor<Video>] = []
+    private var sort: [SortDescriptor<Video>] = []
 
     var hasNoVideos: Bool {
         videos.isEmpty && !isLoading
+    }
+
+    func setSearchText(_ searchText: String) {
+        isSearching = !searchText.isEmpty
+        let newVideos: [SendableVideo]
+        if !searchText.isEmpty {
+            allFilteredVideos = allVideos.filter({
+                $0.title.localizedStandardContains(searchText)
+            })
+            newVideos = allFilteredVideos
+        } else {
+            allFilteredVideos = []
+            newVideos = allVideos
+        }
+        withAnimation {
+            setInitialBatch(newVideos)
+        }
     }
 
     private func fetchVideos() async {
@@ -31,9 +50,10 @@ import OSLog
             Logger.log.info("fetchVideos: No container found")
             return
         }
-        let vids = await VideoService.getSendableVideos(container, filter, sort)
+        allVideos = await VideoService.getSendableVideos(container, filter, sort)
+
         withAnimation {
-            videos = vids
+            setInitialBatch(allVideos)
             isLoading = false
         }
     }
@@ -61,14 +81,17 @@ import OSLog
         }
         let modelContext = ModelContext(container)
         for persistentId in ids {
-            guard let updatedVideo = modelContext.model(for: persistentId) as? Video else {
+            guard let updatedVideo = modelContext.model(for: persistentId) as? Video,
+                  let sendable = updatedVideo.toExportWithSubscription else {
                 Logger.log.warning("updateVideo failed: no model found")
                 return
             }
 
-            if let index = videos.firstIndex(where: { $0.persistentId == persistentId }),
-               let sendable = updatedVideo.toExportWithSubscription {
+            if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
                 videos[index] = sendable
+            }
+            if let index = allVideos.firstIndex(where: { $0.persistentId == persistentId }) {
+                allVideos[index] = sendable
             }
         }
     }
@@ -88,5 +111,38 @@ import OSLog
         } else {
             await fetchVideos()
         }
+    }
+
+    func loadMoreContentIfNeeded(currentItem: SendableVideo) {
+        let thresholdIndex = videos.index(videos.endIndex, offsetBy: -5)
+        if videos.firstIndex(of: currentItem) == thresholdIndex {
+            loadMoreContent()
+        }
+    }
+
+    func setInitialBatch(_ newVideos: [SendableVideo]) {
+        let endIndex = min(newVideos.count, initialBatchSize)
+        videos = Array(newVideos[0..<endIndex])
+    }
+
+    private func loadMoreContent() {
+        guard !isLoading else {
+            return
+        }
+        isLoading = true
+
+        let currentAllVideos = isSearching ? allFilteredVideos : allVideos
+
+        let currentCount = videos.count
+        let endIndex = min(currentCount + pageSize, currentAllVideos.count)
+
+        guard currentCount < endIndex else {
+            isLoading = false
+            return
+        }
+
+        let nextBatch = Array(currentAllVideos[currentCount..<endIndex])
+        videos.append(contentsOf: nextBatch)
+        isLoading = false
     }
 }

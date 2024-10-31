@@ -22,7 +22,6 @@ struct AllVideosView: View {
                 .opacity(videoListVM.hasNoVideos ? 1 : 0)
             VideosViewAsync(
                 videoListVM: $videoListVM,
-                searchText: text.debounced,
                 sorting: VideoListView.getVideoSorting(
                     allVideosSortOrder
                 ),
@@ -31,6 +30,9 @@ struct AllVideosView: View {
                 )
             )
             .opacity(videoListVM.hasNoVideos ? 0 : 1)
+        }
+        .onChange(of: text.debounced) {
+            videoListVM.setSearchText(text.debounced)
         }
         .myNavigationTitle("allVideos")
         .navigationBarTitleDisplayMode(.inline)
