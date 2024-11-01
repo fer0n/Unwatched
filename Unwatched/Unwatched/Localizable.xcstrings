@@ -2846,6 +2846,22 @@
         }
       }
     },
+    "lightAppIcon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helle Icon Alternative"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Light App Icon Alternative"
+          }
+        }
+      }
+    },
     "lightMode" : {
       "localizations" : {
         "de" : {
