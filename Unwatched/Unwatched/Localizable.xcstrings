@@ -91,22 +91,6 @@
         }
       }
     },
-    "Add video from ${youtubeUrl}" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video von ${youtubeUrl}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add video from ${youtubeUrl}"
-          }
-        }
-      }
-    },
     "addAsPlaylist" : {
       "localizations" : {
         "de" : {
@@ -407,6 +391,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add YouTube URL"
+          }
+        }
+      }
+    },
+    "addYoutubeUrl ${youtubeUrl}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video ${youtubeUrl} hinzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add video from ${youtubeUrl}"
+          }
+        }
+      }
+    },
+    "addYoutubeUrlDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt das Video als nächstes Video auf die Warteschlange/Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds the video to the top of the Queue"
           }
         }
       }
@@ -919,6 +935,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "[Sponsor]"
+          }
+        }
+      }
+    },
+    "channelTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanal Name"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Channel Title"
           }
         }
       }
@@ -2281,6 +2313,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fullscreen Right"
+          }
+        }
+      }
+    },
+    "getCurrentVideoInfo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info über aktuelles Video"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get current video info"
+          }
+        }
+      }
+    },
+    "getCurrentVideoInfoDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lädt Daten zum aktuell ausgewählte Video"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gets the currently selected video"
           }
         }
       }
@@ -5268,6 +5332,22 @@
         }
       }
     },
+    "Video" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        }
+      }
+    },
     "videoAddedToInbox" : {
       "localizations" : {
         "de" : {
@@ -5412,6 +5492,22 @@
         }
       }
     },
+    "videoTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        }
+      }
+    },
     "videoTriage" : {
       "localizations" : {
         "de" : {
@@ -5424,6 +5520,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Triage"
+          }
+        }
+      }
+    },
+    "videoURL" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
           }
         }
       }
