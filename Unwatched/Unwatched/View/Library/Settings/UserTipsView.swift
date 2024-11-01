@@ -47,7 +47,7 @@ struct UserTipsView: View {
     @State var currentPage: Int?
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView(.horizontal) {
                 LazyHStack(alignment: .top) {
                     ForEach(userTips.indices, id: \.self) { index in
@@ -67,6 +67,7 @@ struct UserTipsView: View {
             .animation(.default, value: currentPage)
 
             PageControl(currentPage: $currentPage, numberOfPages: userTips.count)
+                .padding(10)
         }
     }
 
