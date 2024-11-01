@@ -14,7 +14,7 @@ struct BrowserViewSheet: ViewModifier {
     @Environment(ImageCacheManager.self) var imageCacheManager
 
     func body(content: Content) -> some View {
-        let bigScreen = sizeClass == .regular
+        let bigScreen = sizeClass == .regular && !UIDevice.isIphone
 
         if bigScreen {
             content
