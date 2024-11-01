@@ -17,6 +17,7 @@ struct AppearanceSettingsView: View {
 
     @AppStorage(Const.lightModeTheme) var lightModeTheme = AppAppearance.unwatched
     @AppStorage(Const.darkModeTheme) var darkModeTheme = AppAppearance.dark
+    @AppStorage(Const.lightAppIcon) var lightAppIcon = false
 
     @Environment(\.originalColorScheme) var originalColorScheme
 
@@ -85,6 +86,15 @@ struct AppearanceSettingsView: View {
                                 }
                             }
                         }
+                    }
+                }
+
+                MySection {
+                    Toggle(isOn: $lightAppIcon) {
+                        Text("lightAppIcon")
+                    }
+                    .onChange(of: lightAppIcon) {
+                        setAppIcon(themeColor)
                     }
                 }
             }

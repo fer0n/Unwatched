@@ -35,29 +35,32 @@ extension ThemeColor {
     }
 
     var appIconName: String {
+        let lightAppIcon = UserDefaults.standard.bool(forKey: Const.lightAppIcon)
+        let suffix = lightAppIcon ? "Light" : ""
+
         switch self {
         case .red:
-            return "IconRed"
+            return "IconRed" + suffix
         case .orange:
-            return "IconOrange"
+            return "IconOrange" + suffix
         case .yellow:
-            return "IconYellow"
+            return "IconYellow" + suffix
         case .green:
-            return "IconGreen"
+            return "IconGreen" + suffix
         case .darkGreen:
-            return "IconDarkGreen"
+            return "IconDarkGreen" + suffix
         case .mint:
-            return "IconMint"
+            return "IconMint" + suffix
         case .teal:
-            return "IconTeal"
+            return "IconTeal" + suffix
         case .blue:
-            return "IconBlue"
+            return "IconBlue" + suffix
         case .purple:
-            return "IconPurple"
+            return "IconPurple" + suffix
         case .blackWhite:
-            return "IconBlackWhite"
+            return "IconBlackWhite" + suffix
         @unknown default:
-            return "IconTeal"
+            return "IconTeal" + suffix
         }
     }
 }
