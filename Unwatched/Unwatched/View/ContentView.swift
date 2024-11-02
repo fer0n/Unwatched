@@ -66,16 +66,19 @@ struct ContentView: View {
             }
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 if let video = player.video {
-                    ChapterDescriptionView(video: video, page: $navManager.selectedDetailPage)
-                        .presentationDetents(bigScreen ? [] : chapterViewDetent)
-                        .presentationBackgroundInteraction(
-                            bigScreen
-                                ? .disabled
-                                :
-                                .enabled(upThrough: .height(sheetPos.playerControlHeight))
-                        )
-                        .presentationDragIndicator(.visible)
-                        .environment(\.colorScheme, colorScheme)
+                    ChapterDescriptionView(
+                        video: video,
+                        page: $navManager.selectedDetailPage
+                    )
+                    .presentationDetents(bigScreen ? [] : chapterViewDetent)
+                    .presentationBackgroundInteraction(
+                        bigScreen
+                            ? .disabled
+                            :
+                            .enabled(upThrough: .height(sheetPos.playerControlHeight))
+                    )
+                    .presentationDragIndicator(.visible)
+                    .environment(\.colorScheme, colorScheme)
                 }
             }
             .menuViewSheet(

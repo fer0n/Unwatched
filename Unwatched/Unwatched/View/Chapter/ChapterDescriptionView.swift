@@ -13,6 +13,7 @@ enum ChapterDescriptionPage {
 
 struct ChapterDescriptionView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(PlayerManager.self) var player
 
     let video: Video
     @Binding var page: ChapterDescriptionPage
@@ -25,14 +26,23 @@ struct ChapterDescriptionView: View {
             ZStack {
                 Color.backgroundColor.ignoresSafeArea(.all)
 
-                ScrollView {
-                    if page == .chapters && hasChapters {
-                        ChapterList(video: video)
-                            .padding(.horizontal)
-                            .transition(.move(edge: .trailing))
-                    } else {
-                        DescriptionDetailView(video: video)
-                            .transition(.move(edge: .leading))
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        if page == .chapters && hasChapters {
+                            ChapterList(video: video)
+                                .padding(.horizontal)
+                                .transition(.move(edge: .trailing))
+                        } else {
+                            DescriptionDetailView(video: video)
+                                .transition(.move(edge: .leading))
+                        }
+                    }
+                    .horizontalDragGesture(video: video, page: $page)
+                    .onAppear {
+                        if page == .chapters && hasChapters,
+                           player.video == video {
+                            proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
+                        }
                     }
                 }
             }
