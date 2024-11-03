@@ -24,29 +24,28 @@ struct ChapterList: View {
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
-                    Button {
-                        if !chapter.isActive {
-                            toggleChapter(chapter)
-                        } else {
-                            setChapter(chapter)
+                    ChapterListItem(chapter: chapter,
+                                    toggleChapter: toggleChapter,
+                                    timeText: getTimeText(
+                                        chapter, isCurrent: isCurrent
+                                    ))
+                        .padding(isCompact ? 4 : 10)
+                        .padding(.trailing, 4)
+                        .background(
+                            backgroundColor
+                                .clipShape(.rect(cornerRadius: 15.0))
+                                .opacity(chapter.isActive ? 1 : 0.6)
+                        )
+                        .id(chapter.persistentModelID)
+                        .onTapGesture {
+                            if !chapter.isActive {
+                                toggleChapter(chapter)
+                            } else {
+                                setChapter(chapter)
+                            }
                         }
-                    } label: {
-                        ChapterListItem(chapter: chapter,
-                                        toggleChapter: toggleChapter,
-                                        timeText: getTimeText(
-                                            chapter, isCurrent: isCurrent
-                                        ))
-                            .padding(isCompact ? 4 : 10)
-                            .padding(.trailing, 4)
-                            .background(
-                                backgroundColor
-                                    .clipShape(.rect(cornerRadius: 15.0))
-                                    .opacity(chapter.isActive ? 1 : 0.6)
-                            )
-                            .id(chapter.persistentModelID)
-                    }
-                    .foregroundStyle(foregroundColor)
-                    .tint(foregroundColor)
+                        .foregroundStyle(foregroundColor)
+                        .tint(foregroundColor)
                 }
             }
         }

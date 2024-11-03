@@ -2322,13 +2322,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Info über aktuelles Video"
+            "value" : "Aktuelles Video Info"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get current video info"
+            "value" : "Get Current Video Info"
           }
         }
       }

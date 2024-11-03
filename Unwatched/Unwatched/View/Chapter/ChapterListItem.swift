@@ -28,6 +28,7 @@ struct ChapterListItem: View {
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .animation(nil, value: chapter.isActive)
             .opacity(chapter.isActive ? 1 : 0.6)
         }
     }
@@ -42,13 +43,14 @@ struct ChapterListItem: View {
                     .resizable()
                     .frame(width: frameSize, height: frameSize)
                     .foregroundStyle(Color.backgroundColor)
+
                 if chapter.isActive {
                     Image(systemName: Const.checkmarkSF)
                         .fontWeight(.bold)
                         .foregroundStyle(Color.neutralAccentColor)
                 }
             }
-            .animation(nil, value: UUID())
+            .animation(nil, value: chapter.isActive)
         }
         .accessibilityLabel(chapter.isActive ? "chapterOn" : "chapterOff")
         .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)

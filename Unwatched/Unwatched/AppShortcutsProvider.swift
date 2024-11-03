@@ -35,11 +35,11 @@ struct VideoEntityQuery: EntityQuery {
 struct VideoEntity: AppEntity {
     let id: String
 
-    @Property(title: "videoTitle")
-    var title: String
-
     @Property(title: "videoURL")
     var url: URL?
+
+    @Property(title: "videoTitle")
+    var title: String
 
     @Property(title: "channelTitle")
     var channelTitle: String?
