@@ -188,6 +188,76 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
+    func testOverrideRegularChapter() async {
+        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+
+        let video = ChapterServiceTestData.getOverrideVideo()
+        modelContext.insert(video)
+        try? modelContext.save()
+
+        guard let videoDescription = video.videoDescription else {
+            XCTFail("video description is nil")
+            return
+        }
+        let realChapters = ChapterService.extractChapters(from: videoDescription, videoDuration: nil)
+
+        do {
+            let chapters = try await ChapterService.mergeSponsorSegments(
+                youtubeId: video.youtubeId,
+                videoId: video.persistentModelID,
+                videoChapters: realChapters,
+                container: container
+            )
+            print("chapters with duration: \(String(describing: chapters))")
+            guard let chapters else {
+                XCTFail("No chapters")
+                return
+            }
+
+            XCTAssertGreaterThan(chapters.count, 0)
+
+            XCTAssertEqual(chapters[0].title, "Intro")
+            XCTAssertEqual(chapters[1].category, .sponsor)
+            // the sponsor segment matches the a regular chapter very closely, it should be overwritten
+            XCTAssertEqual(chapters[2].title, "Quest Plus Games")
+
+            for chapter in chapters {
+                guard let duration = chapter.duration else {
+                    continue
+                }
+                XCTAssertTrue(duration > Const.chapterTimeTolerance)
+            }
+
+            // check that each end of the previous chapter matches the start of the next chapter
+            for index in 0..<chapters.count - 1 {
+                let currentChapter = chapters[index]
+                let nextChapter = chapters[index + 1]
+
+                // Ensure both chapters have endTime and startTime
+                guard let currentEndTime = currentChapter.endTime else {
+                    XCTFail("Chapters \(currentChapter.description) or \(nextChapter.description) do not have valid end/start times.")
+                    continue
+                }
+                let nextStartTime = nextChapter.startTime
+
+                // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
+                let timeDifference = abs(nextStartTime - currentEndTime)
+                XCTAssertEqual(
+                    timeDifference,
+                    0,
+                    "Time difference between \(currentChapter.description) and \(nextChapter.description)"
+                        + " exceeds \(Const.chapterTimeTolerance) seconds: \(timeDifference)"
+                )
+            }
+
+
+        } catch {
+            XCTFail("error: \(error)")
+        }
+    }
+
     func testNoRegularChapters() {
         let chapters = [
             SendableChapter(
@@ -381,6 +451,45 @@ final class ChapterServiceTests: XCTestCase {
 }
 
 struct ChapterServiceTestData {
+
+    static func getOverrideVideo() -> Video {
+        let desc = """
+        Get all of you VR Hardware, Accessories and Games here
+        https://docs.google.com/spreadsheets/...
+
+        Intro 00:00
+        Sponsored Ad 00:20
+        Quest Plus Games 00:50
+        Heroes Battle: Dark Sword 02:27
+        Dumb Ways Feel for All 02:48
+        Living room 03:06
+        Wall Town Wonders 03:23
+        Metro Awakening 03:50
+        The Last Stand 04:25
+        Starship Troopers Continuum 04:53
+        Dig VR 05:19
+        Spatial Ops 05:45
+        Exocars 06:12
+        MS Flight Simulator 2024  06:41
+        Thrill of the Fight 2 07:04
+        By Grit Alone 07:30
+        Bounce Arcade 07:57
+        Pixel Arcade 08:10
+        Augmented Empire 08:30
+        Ember Souls 09:00
+        Trombone Champ Unflattened 09:20
+        Epyka 09:45
+        Songbird 10:00
+
+        new vr games
+        """
+        return Video(
+            title: "INCREDIBLE VR Games Releasing this Month",
+            url: URL(string: "https://www.youtube.com/watch?v=PRik4f9oJug"),
+            youtubeId: "PRik4f9oJug",
+            videoDescription: desc
+        )
+    }
 
     static func getSponsoredVideo() -> Video {
         let videoDescription = """
