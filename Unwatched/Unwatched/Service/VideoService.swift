@@ -36,11 +36,13 @@ extension VideoService {
     static func getSendableVideos(
         _ modelContainer: ModelContainer,
         _ filter: Predicate<Video>?,
-        _ sort: [SortDescriptor<Video>]
+        _ sort: [SortDescriptor<Video>],
+        _ skip: Int = 0,
+        _ limit: Int? = nil
     ) async -> [SendableVideo] {
         let task = Task {
             let repo = VideoActor(modelContainer: modelContainer)
-            return await repo.getSendableVideos(filter, sort)
+            return await repo.getSendableVideos(filter, sort, skip, limit)
         }
         return await task.value
     }

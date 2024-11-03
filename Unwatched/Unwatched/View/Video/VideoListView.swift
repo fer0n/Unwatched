@@ -14,7 +14,7 @@ struct VideoListView: View {
     init(subscriptionId: PersistentIdentifier? = nil,
          sort: VideoSorting? = nil,
          searchText: String = "") {
-        let filter = VideoListView.getVideoFilter(showShorts: !hideShorts, subscriptionId, searchText)
+        let filter = VideoListView.getVideoFilter(showShorts: !hideShorts, subscriptionId, searchText: searchText)
         let sorting = VideoListView.getVideoSorting(sort)
         _videos = Query(filter: filter, sort: sorting, animation: .default)
     }
@@ -46,9 +46,9 @@ struct VideoListView: View {
         }
     }
 
-    static func getVideoFilter(showShorts: Bool,
-                               _ subscriptionId: PersistentIdentifier? = nil,
-                               _ searchText: String = "") -> Predicate<Video>? {
+    nonisolated static func getVideoFilter(showShorts: Bool,
+                                           _ subscriptionId: PersistentIdentifier? = nil,
+                                           searchText: String = "") -> Predicate<Video>? {
         var filter: Predicate<Video>?
         let allSubscriptions = subscriptionId == nil
 

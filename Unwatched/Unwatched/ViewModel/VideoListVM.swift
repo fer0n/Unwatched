@@ -11,12 +11,9 @@ import OSLog
 @Observable class VideoListVM: TransactionVM<Video> {
     @ObservationIgnored private let initialBatchSize: Int = 150
     @ObservationIgnored private let pageSize: Int = 250
-    @ObservationIgnored private var allVideos = [SendableVideo]()
-    @ObservationIgnored private var allFilteredVideos = [SendableVideo]()
 
     var videos = [SendableVideo]()
     var isLoading = true
-    private var isSearching = false
 
     var filter: Predicate<Video>?
     private var sort: [SortDescriptor<Video>] = []
@@ -26,34 +23,35 @@ import OSLog
     }
 
     func setSearchText(_ searchText: String) {
-        isSearching = !searchText.isEmpty
-        let newVideos: [SendableVideo]
-        if !searchText.isEmpty {
-            allFilteredVideos = allVideos.filter({
-                $0.title.localizedStandardContains(searchText)
-            })
-            newVideos = allFilteredVideos
-        } else {
-            allFilteredVideos = []
-            newVideos = allVideos
-        }
-        withAnimation {
-            setInitialBatch(newVideos)
+        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
+        filter = VideoListView.getVideoFilter(showShorts: !hideShorts, searchText: searchText)
+        Task {
+            await updateData(force: true)
         }
     }
 
-    private func fetchVideos() async {
+    private func fetchVideos(skip: Int = 0, limit: Int? = nil) async {
         Logger.log.info("VideoListVM: fetchVideos")
         isLoading = true
-        guard let container = container else {
+        guard let container else {
             isLoading = false
             Logger.log.info("fetchVideos: No container found")
             return
         }
-        allVideos = await VideoService.getSendableVideos(container, filter, sort)
+        let newVideos = await VideoService.getSendableVideos(
+            container,
+            filter,
+            sort,
+            skip,
+            limit ?? initialBatchSize
+        )
 
         withAnimation {
-            setInitialBatch(allVideos)
+            if skip != 0 {
+                videos.append(contentsOf: newVideos)
+            } else {
+                videos = newVideos
+            }
             isLoading = false
         }
     }
@@ -90,9 +88,6 @@ import OSLog
             if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
                 videos[index] = sendable
             }
-            if let index = allVideos.firstIndex(where: { $0.persistentId == persistentId }) {
-                allVideos[index] = sendable
-            }
         }
     }
 
@@ -120,29 +115,18 @@ import OSLog
         }
     }
 
-    func setInitialBatch(_ newVideos: [SendableVideo]) {
-        let endIndex = min(newVideos.count, initialBatchSize)
-        videos = Array(newVideos[0..<endIndex])
-    }
-
     private func loadMoreContent() {
         guard !isLoading else {
             return
         }
         isLoading = true
 
-        let currentAllVideos = isSearching ? allFilteredVideos : allVideos
+        let skip = videos.count
+        let limit = pageSize
 
-        let currentCount = videos.count
-        let endIndex = min(currentCount + pageSize, currentAllVideos.count)
-
-        guard currentCount < endIndex else {
-            isLoading = false
-            return
+        Task {
+            await fetchVideos(skip: skip, limit: limit)
         }
-
-        let nextBatch = Array(currentAllVideos[currentCount..<endIndex])
-        videos.append(contentsOf: nextBatch)
         isLoading = false
     }
 }

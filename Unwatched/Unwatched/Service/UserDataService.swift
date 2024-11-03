@@ -280,7 +280,10 @@ struct UserDataService {
         return result
     }
 
-    static func restoreSettings(_ settings: [String: AnyCodable]) {
+    static func restoreSettings(_ settings: [String: AnyCodable]?) {
+        guard let settings else {
+            return
+        }
         for (key, value) in settings {
             UserDefaults.standard.setValue(value.value, forKey: key)
         }
@@ -289,7 +292,7 @@ struct UserDataService {
 }
 
 struct UnwatchedBackup: Codable {
-    var settings: [String: AnyCodable] = [:]
+    var settings: [String: AnyCodable]? = [:]
     var subscriptions   = [SendableSubscription]()
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
@@ -302,7 +305,7 @@ struct UnwatchedBackup: Codable {
             && watchEntries.isEmpty
             && inboxEntries.isEmpty
             && subscriptions.isEmpty
-            && settings.isEmpty
+            && (settings?.isEmpty ?? true)
     }
 }
 
