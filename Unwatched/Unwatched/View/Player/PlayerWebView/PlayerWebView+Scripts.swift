@@ -42,7 +42,7 @@ extension PlayerWebView {
     }
 
     func getSeekToScript(_ seekTo: Double) -> String {
-        "video.currentTime = \(seekTo);"
+        "seekTo(\(seekTo));"
     }
 
     func getSetPlaybackRateScript() -> String {
@@ -87,6 +87,10 @@ extension PlayerWebView {
             const url = window.location.href;
             const payload = `${video.currentTime},${url}`;
             sendMessage("pause", payload);
+            if (scheduleEnded) {
+                sendMessage("ended");
+                scheduleEnded = false;
+            }
         });
         video.addEventListener('ended', function() {
             sendMessage("ended");
@@ -136,6 +140,16 @@ extension PlayerWebView {
         }
         function stopTimer() {
             clearInterval(timer);
+        }
+
+
+        // Seek
+        var scheduleEnded = false
+        function seekTo(time) {
+            if (video.duration - time < 0.1) {
+                scheduleEnded = true
+            }
+            video.currentTime = time;
         }
 
 
