@@ -9,6 +9,25 @@ import UnwatchedShared
 
 // swiftlint:disable all
 final class DataSpeedTests: XCTestCase {
+    func testAsyncVideoLoading() async {
+        let container = await DataController.previewContainer
+        let data = (try? loadFileData(for: "backup-file.json"))!
+        UserDataService.importBackup(data, container: container)
+
+        let videoListVM = VideoListVM()
+        videoListVM.container = container
+        let sorting = SortDescriptor<Video>(\.publishedDate)
+        videoListVM.setSorting([sorting])
+
+        measure {
+            let exp = expectation(description: "Async task finished")
+            Task {
+                await videoListVM.updateData(force: true)
+                exp.fulfill()
+            }
+            wait(for: [exp], timeout: 10.0)
+        }
+    }
 
     func testFilterShorts() async {
         let modelContext = await getModelContext()
@@ -21,7 +40,6 @@ final class DataSpeedTests: XCTestCase {
                 XCTFail("Failed to fetch videos")
                 return
             }
-
             print("Videos: \(videos.count)")
         }
     }
