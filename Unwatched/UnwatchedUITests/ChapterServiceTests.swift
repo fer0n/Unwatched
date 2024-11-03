@@ -188,6 +188,74 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
+    func testSponsorOverlap() async {
+        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+
+        let video = ChapterServiceTestData.getOverlapVideo()
+        modelContext.insert(video)
+        try? modelContext.save()
+
+        guard let videoDescription = video.videoDescription else {
+            XCTFail("video description is nil")
+            return
+        }
+        let realChapters = ChapterService.extractChapters(from: videoDescription, videoDuration: nil)
+
+        do {
+            let chapters = try await ChapterService.mergeSponsorSegments(
+                youtubeId: video.youtubeId,
+                videoId: video.persistentModelID,
+                videoChapters: realChapters,
+                container: container
+            )
+            print("chapters with duration: \(String(describing: chapters))")
+            guard let chapters else {
+                XCTFail("No chapters")
+                return
+            }
+
+            XCTAssertGreaterThan(chapters.count, 0)
+
+            for chapter in chapters {
+                guard let duration = chapter.duration else {
+                    continue
+                }
+                XCTAssertTrue(duration > Const.chapterTimeTolerance)
+            }
+
+            // check that each end of the previous chapter matches the start of the next chapter
+            checkChapterStartEndTimes(chapters)
+        } catch {
+            XCTFail("error: \(error)")
+        }
+    }
+
+    /// Check that each end of the previous chapter matches the start of the next chapter
+    func checkChapterStartEndTimes(_ chapters: [SendableChapter]) {
+        for index in 0..<chapters.count - 1 {
+            let currentChapter = chapters[index]
+            let nextChapter = chapters[index + 1]
+
+            // Ensure both chapters have endTime and startTime
+            guard let currentEndTime = currentChapter.endTime else {
+                XCTFail("Chapters \(currentChapter.description) or \(nextChapter.description) do not have valid end/start times.")
+                continue
+            }
+            let nextStartTime = nextChapter.startTime
+
+            // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
+            let timeDifference = abs(nextStartTime - currentEndTime)
+            XCTAssertEqual(
+                timeDifference,
+                0,
+                "Time difference between \(currentChapter.description) and \(nextChapter.description)"
+                    + " exceeds \(Const.chapterTimeTolerance) seconds: \(timeDifference)"
+            )
+        }
+    }
+
     func testOverrideRegularChapter() async {
         UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
         let container = await DataController.previewContainer
@@ -230,29 +298,7 @@ final class ChapterServiceTests: XCTestCase {
                 XCTAssertTrue(duration > Const.chapterTimeTolerance)
             }
 
-            // check that each end of the previous chapter matches the start of the next chapter
-            for index in 0..<chapters.count - 1 {
-                let currentChapter = chapters[index]
-                let nextChapter = chapters[index + 1]
-
-                // Ensure both chapters have endTime and startTime
-                guard let currentEndTime = currentChapter.endTime else {
-                    XCTFail("Chapters \(currentChapter.description) or \(nextChapter.description) do not have valid end/start times.")
-                    continue
-                }
-                let nextStartTime = nextChapter.startTime
-
-                // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
-                let timeDifference = abs(nextStartTime - currentEndTime)
-                XCTAssertEqual(
-                    timeDifference,
-                    0,
-                    "Time difference between \(currentChapter.description) and \(nextChapter.description)"
-                        + " exceeds \(Const.chapterTimeTolerance) seconds: \(timeDifference)"
-                )
-            }
-
-
+            checkChapterStartEndTimes(chapters)
         } catch {
             XCTFail("error: \(error)")
         }
@@ -451,6 +497,28 @@ final class ChapterServiceTests: XCTestCase {
 }
 
 struct ChapterServiceTestData {
+
+    static func getOverlapVideo() -> Video {
+        let desc = """
+        CHAPTERS
+        ---------------------------------------------------
+        0:00 Intro
+        1:04 Premise
+        2:12 Nene
+        7:41 Alyssa
+        10:39 Michael
+        13:16 Skosche
+        15:23 The Leader
+        24:18 Conclusion
+        26:57 Outro
+        """
+        return Video(
+            title: "I Paid Strangers to Secret Shop My Own Store",
+            url: URL(string: "https://www.youtube.com/watch?v=0IxaD8QwKTs"),
+            youtubeId: "0IxaD8QwKTs",
+            videoDescription: desc
+        )
+    }
 
     static func getOverrideVideo() -> Video {
         let desc = """

@@ -15,7 +15,6 @@ struct ChapterHandlingContext {
     var index: Int
     var tolerance: Double
     var lastEndTime: Double
-    var chapterEndTime: Double
 }
 
 extension ChapterService {
@@ -69,7 +68,7 @@ extension ChapterService {
 
         for chapter in chapters {
             if let last = newChapters.last {
-                guard let lastEndTime = last.endTime, let chapterEndTime = chapter.endTime else {
+                guard let lastEndTime = last.endTime else {
                     let result = handleMissingEndTime(chapter)
                     newChapters.append(contentsOf: result)
                     index += 1
@@ -82,13 +81,12 @@ extension ChapterService {
                     newChapters: newChapters,
                     index: index,
                     tolerance: tolerance,
-                    lastEndTime: lastEndTime,
-                    chapterEndTime: chapterEndTime
+                    lastEndTime: lastEndTime
                 )
 
                 if handleSimilarStartAndEnd(&context) ||
                     handleSimilarStartDifferentEnd(&context) ||
-                    handleSimilarEndDifferentStart(&context) ||
+                    handleDifferentStartSimilarEnd(&context) ||
                     handleNestedChapters(&context) ||
                     handleOverlappingChapters(&context) {
                     newChapters = context.newChapters
@@ -109,8 +107,9 @@ extension ChapterService {
     }
 
     private static func handleSimilarStartAndEnd(_ context: inout ChapterHandlingContext) -> Bool {
-        if abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
-            abs(context.chapterEndTime - context.lastEndTime) <= context.tolerance {
+        if let chapterEndTime = context.chapter.endTime,
+           abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
+            abs(chapterEndTime - context.lastEndTime) <= context.tolerance {
             if context.chapter.category?.isExternal ?? false {
                 context.newChapters[context.index] = context.chapter
                 let secondToLastIndex = context.index - 1
@@ -127,14 +126,15 @@ extension ChapterService {
     }
 
     private static func handleSimilarStartDifferentEnd(_ context: inout ChapterHandlingContext) -> Bool {
-        if abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
-            abs(context.chapterEndTime - context.lastEndTime) > context.tolerance {
+        if let chapterEndTime = context.chapter.endTime,
+           abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
+            abs(chapterEndTime - context.lastEndTime) > context.tolerance {
 
-            if context.lastEndTime < context.chapterEndTime {
+            if context.lastEndTime < chapterEndTime {
                 context.chapter.startTime = context.lastEndTime
                 context.newChapters.append(context.chapter)
             } else {
-                context.newChapters[context.index].startTime = context.chapterEndTime
+                context.newChapters[context.index].startTime = chapterEndTime
                 context.newChapters.insert(context.chapter, at: context.index)
             }
             context.index += 1
@@ -142,8 +142,9 @@ extension ChapterService {
         }
         return false
     }
-    private static func handleSimilarEndDifferentStart(_ context: inout ChapterHandlingContext) -> Bool {
-        if abs(context.chapterEndTime - context.lastEndTime) <= context.tolerance &&
+    private static func handleDifferentStartSimilarEnd(_ context: inout ChapterHandlingContext) -> Bool {
+        if let chapterEndTime = context.chapter.endTime,
+           abs(chapterEndTime - context.lastEndTime) <= context.tolerance &&
             context.chapter.startTime - context.last.startTime > context.tolerance {
 
             context.newChapters[context.index].endTime = context.chapter.startTime
@@ -155,15 +156,15 @@ extension ChapterService {
     }
 
     private static func handleNestedChapters(_ context: inout ChapterHandlingContext) -> Bool {
-        if context.chapter.startTime - context.last.startTime > context.tolerance &&
-            context.lastEndTime - context.chapterEndTime > context.tolerance {
-            print("handleNestedChapters")
+        if let chapterEndTime = context.chapter.endTime,
+           context.chapter.startTime - context.last.startTime > context.tolerance &&
+            context.lastEndTime - chapterEndTime > context.tolerance {
 
             var firstPart = context.last
             firstPart.endTime = context.chapter.startTime
 
             var secondPart = context.last
-            secondPart.startTime = context.chapterEndTime
+            secondPart.startTime = chapterEndTime
 
             context.newChapters[context.index] = firstPart
             context.newChapters.append(context.chapter)
