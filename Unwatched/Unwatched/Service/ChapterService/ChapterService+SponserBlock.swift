@@ -86,7 +86,8 @@ extension ChapterService {
                     chapterEndTime: chapterEndTime
                 )
 
-                if handleSimilarStartDifferentEnd(&context) ||
+                if handleSimilarStartAndEnd(&context) ||
+                    handleSimilarStartDifferentEnd(&context) ||
                     handleSimilarEndDifferentStart(&context) ||
                     handleNestedChapters(&context) ||
                     handleOverlappingChapters(&context) {
@@ -105,6 +106,24 @@ extension ChapterService {
     private static func handleMissingEndTime(_ chapter: SendableChapter) -> [SendableChapter] {
         Logger.log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
         return [chapter]
+    }
+
+    private static func handleSimilarStartAndEnd(_ context: inout ChapterHandlingContext) -> Bool {
+        if abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
+            abs(context.chapterEndTime - context.lastEndTime) <= context.tolerance {
+            if context.chapter.category?.isExternal ?? false {
+                context.newChapters[context.index] = context.chapter
+                let secondToLastIndex = context.index - 1
+                if secondToLastIndex >= 0 {
+                    context.newChapters[secondToLastIndex].endTime = context.chapter.startTime
+                }
+            } else {
+                // keep the other chapter, as it might be a sponsor block chapter with fixed times
+                // ignore the current chapter
+            }
+            return true
+        }
+        return false
     }
 
     private static func handleSimilarStartDifferentEnd(_ context: inout ChapterHandlingContext) -> Bool {
@@ -138,6 +157,7 @@ extension ChapterService {
     private static func handleNestedChapters(_ context: inout ChapterHandlingContext) -> Bool {
         if context.chapter.startTime - context.last.startTime > context.tolerance &&
             context.lastEndTime - context.chapterEndTime > context.tolerance {
+            print("handleNestedChapters")
 
             var firstPart = context.last
             firstPart.endTime = context.chapter.startTime
