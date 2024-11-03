@@ -59,9 +59,7 @@ extension PlayerManager {
                 Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
                 seekPosition = nextActive.startTime
             } else if let duration = video.duration {
-                // workaround: ensure "ended" event doesn't trigger by adding time
-                // (it's triggered manually in seekTo)
-                seekPosition = duration + 1
+                seekPosition = duration - 0.5
             }
         }
 
