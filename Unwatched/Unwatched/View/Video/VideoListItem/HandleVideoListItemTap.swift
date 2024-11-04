@@ -28,6 +28,7 @@ struct HandleVideoListItemTap: ViewModifier {
                 Task {
                     VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
                 }
+                player.playVideo(video)
                 navManager.handlePlay()
             }
     }
