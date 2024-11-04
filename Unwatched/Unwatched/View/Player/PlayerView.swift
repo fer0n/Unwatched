@@ -32,7 +32,7 @@ struct PlayerView: View {
 
     var hideMiniPlayer: Bool {
         ((navManager.showMenu || navManager.showDescriptionDetail)
-            && sheetPos.swipedBelow)
+            && sheetPos.swipedBelow && navManager.videoDetail == nil)
             || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
             || landscapeFullscreen
     }
