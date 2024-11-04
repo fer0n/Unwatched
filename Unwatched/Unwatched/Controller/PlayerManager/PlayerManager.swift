@@ -237,6 +237,7 @@ import UnwatchedShared
         isLoading = true
         previousIsPlaying = isPlaying
         previousState.isPlaying = false
+        pipEnabled = false
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()
