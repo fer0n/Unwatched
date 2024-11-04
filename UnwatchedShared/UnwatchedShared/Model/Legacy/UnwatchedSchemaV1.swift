@@ -224,4 +224,87 @@ enum UnwatchedSchemaV1: VersionedSchema {
             self.date = date
         }
     }
+    
+    
+    @Model
+    public final class QueueEntry {
+        public typealias ExportType = SendableQueueEntry
+
+        public var video: Video?
+        public var order: Int = Int.max
+
+        public init(video: Video?, order: Int) {
+            self.video = video
+            self.order = order
+        }
+
+        public var description: String {
+            return "\(video?.title ?? "not found") at (\(order))"
+        }
+
+        public var toExport: SendableQueueEntry? {
+            if let video = video {
+                return SendableQueueEntry(videoId: video.persistentModelID.hashValue, order: order)
+            }
+            return nil
+        }
+    }
+    
+    @Model
+    public final class InboxEntry {
+        public typealias ExportType = SendableInboxEntry
+
+        public var video: Video? {
+            didSet {
+                date = video?.publishedDate
+            }
+        }
+        // workaround: sorting via optional relationship "video.publishedDate" lead to crash
+        public var date: Date?
+
+        public init(_ video: Video?, _ videoDate: Date? = nil) {
+            self.video = video
+            self.date = video?.publishedDate
+        }
+
+        public var description: String {
+            return "InboxEntry: \(video?.title ?? "no title")"
+        }
+
+        public var toExport: SendableInboxEntry? {
+            if let videoId = video?.persistentModelID.hashValue {
+                return SendableInboxEntry(videoId: videoId)
+            }
+            return nil
+        }
+    }
+    
+    @Model
+    public final class Chapter {
+
+        public var title: String?
+        public var startTime: Double = 0
+        public var endTime: Double?
+        public var video: Video?
+        public var mergedChapterVideo: Video?
+        public var duration: Double?
+        public var isActive = true
+        public var category: ChapterCategory?
+
+        public init(
+            title: String?,
+            time: Double,
+            duration: Double? = nil,
+            endTime: Double? = nil,
+            isActive: Bool? = nil,
+            category: ChapterCategory? = nil
+        ) {
+            self.title = title
+            self.startTime = time
+            self.duration = duration
+            self.endTime = endTime
+            self.isActive = isActive ?? true
+            self.category = category
+        }
+    }
 }
