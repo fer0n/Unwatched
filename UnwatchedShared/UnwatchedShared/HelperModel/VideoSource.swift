@@ -3,7 +3,7 @@
 //  Unwatched
 //
 
-public enum VideoSource {
+public enum VideoSource: Sendable {
     case continuousPlay
     case nextUp
     case userInteraction

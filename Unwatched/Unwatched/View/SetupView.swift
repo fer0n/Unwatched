@@ -64,6 +64,9 @@ struct SetupView: View {
                     break
                 }
             }
+            .onReceive(NotificationCenter.default.publisher(for: .watchInUnwatched)) {
+                handleWatchInUnwatched($0)
+            }
     }
 
     func saveData() async {
@@ -71,6 +74,20 @@ struct SetupView: View {
         sheetPos.save()
         await imageCacheManager.persistCache()
         Logger.log.info("saved state")
+    }
+
+    func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
+        if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
+            let container = modelContext.container
+            let task = VideoService.addForeignUrls(
+                [youtubeUrl],
+                in: .queue,
+                at: 0,
+                container: container
+            )
+            player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .userInteraction)
+            navManager.handlePlay()
+        }
     }
 }
 

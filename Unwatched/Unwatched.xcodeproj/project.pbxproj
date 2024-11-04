@@ -138,6 +138,12 @@
 		887E72922B91ED9500928946 /* FullscreenPlayerControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72912B91ED9500928946 /* FullscreenPlayerControls.swift */; };
 		887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72932B91F6D400928946 /* NextVideoButton.swift */; };
 		887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E72952B92219C00928946 /* DismissToolbarButton.swift */; };
+		887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */; };
+		887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82A92CD8FC4600B196EA /* VideoEntity.swift */; };
+		887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */; };
+		887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */; };
+		887E82B02CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
+		887E82B12CD8FD8800B196EA /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887E82AF2CD8FD8500B196EA /* Notification.swift */; };
 		8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */; };
 		888322522B872EE1004E2DE4 /* BrowserUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888322512B872EE1004E2DE4 /* BrowserUrl.swift */; };
 		8884ECFC2C58B7490085BD52 /* FullscreenPlayerControlsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */; };
@@ -601,6 +607,11 @@
 		887E72912B91ED9500928946 /* FullscreenPlayerControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPlayerControls.swift; sourceTree = "<group>"; };
 		887E72932B91F6D400928946 /* NextVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideoButton.swift; sourceTree = "<group>"; };
 		887E72952B92219C00928946 /* DismissToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissToolbarButton.swift; sourceTree = "<group>"; };
+		887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddYoutubeURL.swift; sourceTree = "<group>"; };
+		887E82A92CD8FC4600B196EA /* VideoEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEntity.swift; sourceTree = "<group>"; };
+		887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrentVideo.swift; sourceTree = "<group>"; };
+		887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchInUnwatched.swift; sourceTree = "<group>"; };
+		887E82AF2CD8FD8500B196EA /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		888322512B872EE1004E2DE4 /* BrowserUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUrl.swift; sourceTree = "<group>"; };
 		888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserTip.swift; sourceTree = "<group>"; };
@@ -1018,6 +1029,7 @@
 		886E79B82B46FFC700554E1F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				887E82AF2CD8FD8500B196EA /* Notification.swift */,
 				88F3AA902C998BFC0030B2EA /* VideoPlacement.swift */,
 				882966F52CCE1F9100E96D3C /* View.swift */,
 				88F3AA8D2C998B840030B2EA /* VideoListFormat.swift */,
@@ -1041,6 +1053,18 @@
 				8802F84B2C691970008A7778 /* UIColor.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		887E82A62CD8FBF600B196EA /* App Intents */ = {
+			isa = PBXGroup;
+			children = (
+				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
+				887E82A92CD8FC4600B196EA /* VideoEntity.swift */,
+				887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */,
+				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
+				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
+			);
+			path = "App Intents";
 			sourceTree = "<group>";
 		};
 		888C49C32B5FA73200CDEC76 /* Service */ = {
@@ -1274,7 +1298,7 @@
 				881E51362B59CAFF006384E4 /* AppConstants.swift */,
 				8823EB752B54FB510010A12F /* apiKey.swift */,
 				88904B062C07428500F95C67 /* apiKey.swift.example */,
-				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
+				887E82A62CD8FBF600B196EA /* App Intents */,
 				8821B89A2CD1543C00B2704D /* Font */,
 				88143EB52B4A7FEF00829E13 /* Helper */,
 				8802F8532C6950AC008A7778 /* Tips */,
@@ -1637,6 +1661,7 @@
 				888CDF782C997A20007A8A54 /* FullscreenControls.swift in Sources */,
 				889AF9322C50ECEE001CEDE6 /* VideoPlayerFooter.swift in Sources */,
 				889AF9342C50ECEE001CEDE6 /* PlayButton.swift in Sources */,
+				887E82B12CD8FD8800B196EA /* Notification.swift in Sources */,
 				889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */,
 				889AF9362C50ECEE001CEDE6 /* PlayerView.swift in Sources */,
 				88373C102C8AF60700ACBB3B /* NextChapterButton.swift in Sources */,
@@ -1794,6 +1819,7 @@
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
+				887E82B02CD8FD8800B196EA /* Notification.swift in Sources */,
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,
 				880505062C8302AA005F0972 /* VideoListItemThumbnailOverlay.swift in Sources */,
 				889924692C47F4D4001185A6 /* ShowMenuGesture.swift in Sources */,
@@ -1870,6 +1896,7 @@
 				881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
+				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,
@@ -1903,6 +1930,7 @@
 				88D858502B55AB4D0047E0E6 /* DateTimeConversion.swift in Sources */,
 				88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */,
 				88373C0F2C8AF60600ACBB3B /* NextChapterButton.swift in Sources */,
+				887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */,
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
 				8847D6C72C99865400BFA12F /* ChapterCategory.swift in Sources */,
@@ -1913,6 +1941,7 @@
 				88BF35972BC96BCD005FA53E /* AddVideosTip.swift in Sources */,
 				88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */,
 				88017FD72B96161B00192AEA /* DebugView.swift in Sources */,
+				887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */,
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* VideoSettingsView.swift in Sources */,
@@ -1942,6 +1971,7 @@
 				883CA81E2B5BD3ED00028D52 /* SubscribeManager.swift in Sources */,
 				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				88D858532B55ABD50047E0E6 /* YtVideoInfo.swift in Sources */,
+				887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */,
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,
 				883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */,
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,

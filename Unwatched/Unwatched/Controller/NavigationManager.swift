@@ -182,6 +182,22 @@ import UnwatchedShared
         }
     }
 
+    func handlePlay() {
+        let hideMenuOnPlay = UserDefaults.standard.value(forKey: Const.hideMenuOnPlay) as? Bool ?? true
+        let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
+        let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
+
+        if hideMenuOnPlay || rotateOnPlay {
+            withAnimation {
+                showMenu = false
+            }
+        }
+
+        if returnToQueue {
+            navigateToQueue()
+        }
+    }
+
     static func getDummy() -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = true
