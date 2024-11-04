@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Chapter: ChapterData {
+public final class Chapter: ChapterData, CustomStringConvertible {
 
     public var title: String?
     public var startTime: Double = 0
@@ -43,6 +43,9 @@ public final class Chapter: ChapterData {
         )
     }
 
+    public var description: String {
+        "\(startTime)-\(endTime ?? -1): \(title ?? category?.description ?? "-")"
+    }
 }
 
 public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, Hashable {
@@ -52,6 +55,11 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var duration: Double?
     public var isActive: Bool = true
     public var category: ChapterCategory?
+    
+    /// Chapter origin isn't the video directly
+    public var isExternal: Bool {
+        category?.isExternal ?? false
+    }
 
     public var description: String {
         "\(startTime)-\(endTime ?? -1): \(title ?? category?.description ?? "-")"
@@ -66,6 +74,18 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
             isActive: isActive,
             category: category
         )
+    }
+    
+    public init(
+        _ startTime: Double,
+        to endTime: Double? = nil,
+        _ title: String? = nil,
+        category: ChapterCategory? = nil
+    ) {
+        self.startTime = startTime
+        self.endTime = endTime
+        self.title = title
+        self.category = category
     }
 
     public init(

@@ -101,10 +101,6 @@ extension VideoService {
 
     static func updateDuration(_ video: Video, duration: Double) {
         withAnimation {
-            if let last = video.sortedChapters.last {
-                last.endTime = duration
-                last.duration = duration - last.startTime
-            }
             video.duration = duration
         }
     }

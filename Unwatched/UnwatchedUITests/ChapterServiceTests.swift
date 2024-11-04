@@ -10,6 +10,86 @@ import UnwatchedShared
 // swiftlint:disable all
 final class ChapterServiceTests: XCTestCase {
 
+    func testNestedChapter() {
+        let chapters: [SendableChapter] = [
+            .init(0,    "ch1"),
+            .init(30,   "ch2"),
+            .init(100,  "ch3"),
+            .init(150,  "ch4")
+        ]
+
+        let sponsorSegments: [SendableChapter] = [
+            .init(startTime: 20, endTime: 110, category: .sponsor),
+        ]
+
+        let expected: [SendableChapter] = [
+            .init(0, to: 20, "ch1"),
+
+            .init(20, to: 110, category: .sponsor),
+
+            .init(120, to: 150,  "ch3"),
+            .init(150,  "ch4")
+        ]
+
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
+    }
+
+    func testOverlappingChapter() {
+        let chapters: [SendableChapter] = [
+            .init(0,    "Intro"),
+            .init(165,  "New rumored Apple accessories"),
+            .init(361,  "Snapdragon X Elite"),
+            .init(791,  "Apple's hearing test"),
+            .init(1474, "Samsung Tri-fold rumors"),
+            .init(1679, "Trivia question"),
+            .init(1750, "AT&T (Sponsored)"),
+            .init(1810, "Orion Vs Spectacles discussion"),
+            .init(4330, "BOOX Palma 2 announced"),
+            .init(4494, "Trivia question"),
+            .init(4586, "AT&T (Sponsored)"),
+            .init(4655, "Marques interviews Boz from Meta"),
+            .init(5537, "Trivia answers")
+        ]
+
+        let sponsorSegments: [SendableChapter] = [
+            .init(startTime: 1753.645, endTime: 1810.567, category: .sponsor),
+            .init(startTime: 4586.197, endTime: 4655.412, category: .sponsor)
+        ]
+
+        let expected: [SendableChapter] = [
+            .init(0,        to: 165,        "Intro"),
+            .init(165,      to: 361,        "New rumored Apple accessories"),
+            .init(361,      to: 791,        "Snapdragon X Elite"),
+            .init(791,      to: 1474,       "Apple's hearing test"),
+            .init(1474,     to: 1679,       "Samsung Tri-fold rumors"),
+            .init(1679,     to: 1750,       "Trivia question"),
+            .init(1750,     to: 1753.645,   "AT&T (Sponsored)"),
+
+            .init(1753.645, to: 1810.567, category: .sponsor),
+
+            .init(1810.567, to: 4330,       "Orion Vs Spectacles discussion"),
+            .init(4330,     to: 4494,       "BOOX Palma 2 announced"),
+            .init(4494,     to: 4586.197,   "Trivia question"),
+
+            .init(4586.197, to: 4655.412, category: .sponsor),
+
+            .init(4655.412, to: 5537,       "Marques interviews Boz from Meta"),
+            .init(5537,                     "Trivia answers")
+        ]
+
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
+    }
+
     func testCleanupMergedChapters() {
         let chapters = [
             SendableChapter(
@@ -154,7 +234,7 @@ final class ChapterServiceTests: XCTestCase {
         let realChapters = ChapterService.extractChapters(from: videoDescription, videoDuration: nil)
 
         do {
-            let chapters = try await ChapterService.mergeSponsorSegments(
+            let chapters = try await ChapterService.mergeOrGenerateChapters(
                 youtubeId: video.youtubeId,
                 videoId: video.persistentModelID,
                 videoChapters: realChapters,
@@ -176,7 +256,7 @@ final class ChapterServiceTests: XCTestCase {
         try? modelContext.save()
 
         do {
-            let chapters = try await ChapterService.mergeSponsorSegments(
+            let chapters = try await ChapterService.mergeOrGenerateChapters(
                 youtubeId: "Fbphhg9ArXw", // video.youtubeId,
                 videoId: video.persistentModelID,
                 videoChapters: [],
@@ -188,120 +268,77 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
-    func testSponsorOverlap() async {
-        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
+    func testSponsorOverlap() {
+        let chapters: [SendableChapter] = [
+            .init(0,    "Intro"),
+            .init(64,   "Premise"),
+            .init(132,  "Nene"),
+            .init(461,  "Alyssa"),
+            .init(639,  "Michael"),
+            .init(796,  "Skosche"),
+            .init(923,  "The Leader"),
+            .init(1458, "Conclusion"),
+            .init(1539, "Outro")
+        ]
 
-        let video = ChapterServiceTestData.getOverlapVideo()
-        modelContext.insert(video)
-        try? modelContext.save()
+        let sponsorSegments: [SendableChapter] = [
+            .init(startTime: 36.293, endTime: 54.267, category: .sponsor),
+            .init(startTime: 1539.968, endTime: 1618.18, category: .sponsor)
+        ]
 
-        guard let videoDescription = video.videoDescription else {
-            XCTFail("video description is nil")
-            return
-        }
-        let realChapters = ChapterService.extractChapters(from: videoDescription, videoDuration: nil)
+        let expected: [SendableChapter] = [
+            .init(0,        to: 36.293,    "Intro"),
+            .init(36.293,   to: 54.267,    category: .sponsor),
+            .init(54.267,   to: 64,        "Intro"),
+            .init(64,       to: 132,       "Premise"),
+            .init(132,      to: 461,       "Nene"),
+            .init(461,      to: 639,       "Alyssa"),
+            .init(639,      to: 796,       "Michael"),
+            .init(796,      to: 923,       "Skosche"),
+            .init(923,      to: 1458,      "The Leader"),
+            .init(1458,     to: 1539,  "Conclusion"),
+            .init(1539,                 "Outro"),
+            .init(1539.968, to: 1618.18,  category: .sponsor)
+        ]
 
-        do {
-            let chapters = try await ChapterService.mergeSponsorSegments(
-                youtubeId: video.youtubeId,
-                videoId: video.persistentModelID,
-                videoChapters: realChapters,
-                container: container
-            )
-            print("chapters with duration: \(String(describing: chapters))")
-            guard let chapters else {
-                XCTFail("No chapters")
-                return
-            }
-
-            XCTAssertGreaterThan(chapters.count, 0)
-
-            for chapter in chapters {
-                guard let duration = chapter.duration else {
-                    continue
-                }
-                XCTAssertTrue(duration > Const.chapterTimeTolerance)
-            }
-
-            // check that each end of the previous chapter matches the start of the next chapter
-            checkChapterStartEndTimes(chapters)
-        } catch {
-            XCTFail("error: \(error)")
-        }
-    }
-
-    /// Check that each end of the previous chapter matches the start of the next chapter
-    func checkChapterStartEndTimes(_ chapters: [SendableChapter]) {
-        for index in 0..<chapters.count - 1 {
-            let currentChapter = chapters[index]
-            let nextChapter = chapters[index + 1]
-
-            // Ensure both chapters have endTime and startTime
-            guard let currentEndTime = currentChapter.endTime else {
-                XCTFail("Chapters \(currentChapter.description) or \(nextChapter.description) do not have valid end/start times.")
-                continue
-            }
-            let nextStartTime = nextChapter.startTime
-
-            // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
-            let timeDifference = abs(nextStartTime - currentEndTime)
-            XCTAssertEqual(
-                timeDifference,
-                0,
-                "Time difference between \(currentChapter.description) and \(nextChapter.description)"
-                    + " exceeds \(Const.chapterTimeTolerance) seconds: \(timeDifference)"
-            )
-        }
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
     }
 
     func testOverrideRegularChapter() async {
-        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
 
-        let video = ChapterServiceTestData.getOverrideVideo()
-        modelContext.insert(video)
-        try? modelContext.save()
+        let chapters: [SendableChapter] = [
+            .init(0,    "Intro"),
+            .init(20,   "Sponsored Ad"),
+            .init(50,   "Quest Plus Games"),
+            .init(147,  "Heroes Battle: Dark Sword"),
+            .init(168,  "Dumb Ways Feel for All"),
+            .init(186,  "Living room")
+        ]
 
-        guard let videoDescription = video.videoDescription else {
-            XCTFail("video description is nil")
-            return
-        }
-        let realChapters = ChapterService.extractChapters(from: videoDescription, videoDuration: nil)
+        let sponsorSegments: [SendableChapter] = [
+            .init(startTime: 20.07, endTime: 49.616, category: .sponsor)
+        ]
 
-        do {
-            let chapters = try await ChapterService.mergeSponsorSegments(
-                youtubeId: video.youtubeId,
-                videoId: video.persistentModelID,
-                videoChapters: realChapters,
-                container: container
-            )
-            print("chapters with duration: \(String(describing: chapters))")
-            guard let chapters else {
-                XCTFail("No chapters")
-                return
-            }
+        let expected: [SendableChapter] = [
+            .init(0,        to: 20.07,  "Intro"),
+            .init(20.07,    to: 49.616, category: .sponsor),
+            .init(49.616,   to: 147,    "Quest Plus Games"),
+            .init(147,      to: 168,    "Heroes Battle: Dark Sword"),
+            .init(168,      to: 186,    "Dumb Ways Feel for All"),
+            .init(186,                  "Living room")
+        ]
 
-            XCTAssertGreaterThan(chapters.count, 0)
-
-            XCTAssertEqual(chapters[0].title, "Intro")
-            XCTAssertEqual(chapters[1].category, .sponsor)
-            // the sponsor segment matches the a regular chapter very closely, it should be overwritten
-            XCTAssertEqual(chapters[2].title, "Quest Plus Games")
-
-            for chapter in chapters {
-                guard let duration = chapter.duration else {
-                    continue
-                }
-                XCTAssertTrue(duration > Const.chapterTimeTolerance)
-            }
-
-            checkChapterStartEndTimes(chapters)
-        } catch {
-            XCTFail("error: \(error)")
-        }
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
     }
 
     func testNoRegularChapters() {
@@ -363,7 +400,7 @@ final class ChapterServiceTests: XCTestCase {
         modelContext.insert(ch4)
         modelContext.insert(ch5)
 
-        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 70, container: container)
+        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 70, context: modelContext)
 
         XCTAssertEqual(chapters[1].endTime, 20)
         XCTAssertEqual(chapters[3].endTime, 40)
@@ -372,11 +409,121 @@ final class ChapterServiceTests: XCTestCase {
 
     func testUpdateDurationOneChapter() async {
         let container = await DataController.previewContainer
+        let context = ModelContext(container)
         var chapters = [Chapter(title: "0", time: 0, endTime: 10, category: nil)]
-        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, container: container)
+        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, context: context)
 
         XCTAssertEqual(chapters[0].endTime, 10)
         XCTAssertEqual(chapters[1].endTime, 40)
+    }
+
+    func testMergeThenDuration() async {
+        // params
+        let chapters = [
+            Chapter(title: "0", time: 0, endTime: 10, category: nil),
+            Chapter(title: "1", time: 10, endTime: nil, category: nil),
+            Chapter(title: "2", time: 20, endTime: 30, category: nil),
+            Chapter(title: "3", time: 30, endTime: nil, category: nil),
+            Chapter(title: "4", time: 40, endTime: nil, category: nil)
+        ]
+        let externalChapters = [
+            SendableChapter(title: "ad", startTime: 50, endTime: 60, category: .sponsor)
+        ]
+        let duration: Double = 70
+
+
+        // -- Setup original chapters
+
+        let container = await DataController.previewContainer
+        let modelContext = ModelContext(container)
+
+        chapters.forEach(modelContext.insert)
+
+        let video = Video(title: "My Video", url: nil, youtubeId: "1234")
+        modelContext.insert(video)
+
+        video.chapters = chapters
+
+        print("chapters before: \(chapters)")
+        try? modelContext.save()
+
+
+        // -- Add sponsor chapter
+        let sendableChapters = chapters.map { $0.toExport }
+
+
+        // add merged chapters
+        var newChapters = ChapterService.updateDurationAndEndTime(in: sendableChapters, videoDuration: nil)
+        newChapters.append(contentsOf: externalChapters)
+        newChapters.sort(by: { $0.startTime < $1.startTime})
+
+        // update end time/duration correctly
+        newChapters = ChapterService.cleanupMergedChapters(newChapters)
+        print("chapters time update & merged: \(newChapters)")
+
+
+        // -- Update duration after merged chapters are complete
+        let result = ChapterService.updateDuration(in: newChapters)
+        print("chapters duration: \(result)")
+
+        let modelChapters = result.map(\.getChapter)
+        for chapter in modelChapters {
+            modelContext.insert(chapter)
+        }
+
+        guard let loadedVideo = try? modelContext.fetch(FetchDescriptor<Video>()).first else {
+            XCTFail("no video")
+            return
+        }
+
+        loadedVideo.mergedChapters = modelChapters
+        print("modelChapters: \(modelChapters)")
+
+        // add duration afterwards
+        VideoService.updateDuration(loadedVideo, duration: duration)
+        ChapterService.updateDuration(loadedVideo, duration: duration, container)
+        try? modelContext.save()
+
+
+        guard let finalVideo = try? modelContext.fetch(FetchDescriptor<Video>()).first else {
+            XCTFail("no video")
+            return
+        }
+
+        print("finalVideo mergedChapters: \(finalVideo.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }))")
+        print("finalVideo chapters: \(finalVideo.chapters?.sorted(by: { $0.startTime < $1.startTime }))")
+        print("finalVideo sortedChapters: \(finalVideo.sortedChapters)")
+
+        let final = Video.getSortedChapters(finalVideo.mergedChapters, finalVideo.mergedChapters)
+
+        print("chapters sorted: \(final)")
+
+        // TODO:
+        // - problem: final chapter duration doesn't get updated, because .sponsor is placed after and has an end date
+        // -> update both "chapters" and last regular "mergedChapter" duration with final stop time
+        // -> re-run chapter cleanup for merged chapters afterwards to adjust chapters & end time accordingly
+        //
+        // - problem: unticking a merged chapter never updates the regular chapter
+        // -> add uuid for regular chapters, link them in merged chapter (or maybe via persistentId)
+        // -> update regular chapter when merged chapter is unticked/ticked?
+        //
+        // maybe: re-extract chapters from description when switching back to non-merged chapters? (reindex every single chapter? probably not)
+        // ask marco?
+
+
+        XCTAssertEqual(final[1].endTime, 20)
+        XCTAssertEqual(final[3].endTime, 40)
+
+        XCTAssertEqual(final[4].endTime, 50)
+        XCTAssertEqual(final[4].title, "4")
+
+        XCTAssertEqual(final[5].startTime, 50)
+        XCTAssertEqual(final[5].endTime, 60)
+        XCTAssertEqual(final[5].title, "ad")
+
+        // XCTAssertEqual(final[6].title, "4") generated chapter
+        XCTAssertEqual(final[6].startTime, 60)
+        XCTAssertEqual(final[6].endTime, 70)
     }
 
     func testChapterRecognition() {
@@ -478,20 +625,75 @@ final class ChapterServiceTests: XCTestCase {
 
         for (description, expected) in testValues {
             let chapters = ChapterService.extractChapters(from: description, videoDuration: nil)
-            compareChapters(chapters, expected, description)
+            checkChapterEqual(chapters, expected)
         }
     }
 
-    func compareChapters(_ chapters: [SendableChapter], _ expected: [SendableChapter], _ description: String) {
-        if chapters.count != expected.count {
-            XCTFail("Chapter count mismatch: \(chapters.count) vs \(expected.count) in \(description)")
-            return
-        }
+    // MARK: Helper functions
 
-        for (index, chapter) in chapters.enumerated() {
-            XCTAssertEqual(chapter.title, expected[index].title, "\(chapter.title) vs \(expected[index].title) in \(description)")
-            XCTAssertEqual(chapter.startTime, expected[index].startTime, "\(chapter.startTime) vs \(expected[index].startTime) in \(description)")
-            XCTAssertEqual(chapter.endTime, expected[index].endTime, "\(chapter.endTime) vs \(expected[index].endTime) in \(description)")
+    func doChapterMergeTest(
+        chapters: [SendableChapter],
+        sponsorSegments: [SendableChapter],
+        duration: Double? = nil,
+        expected: [SendableChapter]
+    ) {
+        let result = ChapterService.mergeSponsorSegments(
+            chapters,
+            sponsorSegments: sponsorSegments,
+            duration: duration
+        )
+
+        print("result: \(result)")
+
+        checkChapterStartEndTimes(result)
+        checkChapterEqual(result, expected)
+    }
+
+    /// Makes sure title, times, and category are the same
+    func checkChapterEqual(_ lhs: [SendableChapter], _ rhs: [SendableChapter]) {
+        XCTAssertEqual(lhs.count, rhs.count)
+
+        for (index, chapter) in lhs.enumerated() {
+            XCTAssertEqual(
+                chapter.title,
+                rhs[index].title
+            )
+            XCTAssertEqual(
+                chapter.startTime,
+                rhs[index].startTime
+            )
+            XCTAssertEqual(
+                chapter.endTime,
+                rhs[index].endTime
+            )
+            XCTAssertEqual(
+                chapter.category,
+                rhs[index].category
+            )
+        }
+    }
+
+    /// Check that each end of the previous chapter matches the start of the next chapter
+    func checkChapterStartEndTimes(_ chapters: [SendableChapter]) {
+        for index in 0..<chapters.count - 1 {
+            let currentChapter = chapters[index]
+            let nextChapter = chapters[index + 1]
+
+            // Ensure both chapters have endTime and startTime
+            guard let currentEndTime = currentChapter.endTime else {
+                print("Chapters \(currentChapter.description) or \(nextChapter.description) do not have valid end/start times.")
+                continue
+            }
+            let nextStartTime = nextChapter.startTime
+
+            // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
+            let timeDifference = abs(nextStartTime - currentEndTime)
+            XCTAssertEqual(
+                timeDifference,
+                0,
+                "Time difference between \(currentChapter.description) and \(nextChapter.description)"
+                    + " exceeds \(Const.chapterTimeTolerance) seconds: \(timeDifference)"
+            )
         }
     }
 }
@@ -516,45 +718,6 @@ struct ChapterServiceTestData {
             title: "I Paid Strangers to Secret Shop My Own Store",
             url: URL(string: "https://www.youtube.com/watch?v=0IxaD8QwKTs"),
             youtubeId: "0IxaD8QwKTs",
-            videoDescription: desc
-        )
-    }
-
-    static func getOverrideVideo() -> Video {
-        let desc = """
-        Get all of you VR Hardware, Accessories and Games here
-        https://docs.google.com/spreadsheets/...
-
-        Intro 00:00
-        Sponsored Ad 00:20
-        Quest Plus Games 00:50
-        Heroes Battle: Dark Sword 02:27
-        Dumb Ways Feel for All 02:48
-        Living room 03:06
-        Wall Town Wonders 03:23
-        Metro Awakening 03:50
-        The Last Stand 04:25
-        Starship Troopers Continuum 04:53
-        Dig VR 05:19
-        Spatial Ops 05:45
-        Exocars 06:12
-        MS Flight Simulator 2024  06:41
-        Thrill of the Fight 2 07:04
-        By Grit Alone 07:30
-        Bounce Arcade 07:57
-        Pixel Arcade 08:10
-        Augmented Empire 08:30
-        Ember Souls 09:00
-        Trombone Champ Unflattened 09:20
-        Epyka 09:45
-        Songbird 10:00
-
-        new vr games
-        """
-        return Video(
-            title: "INCREDIBLE VR Games Releasing this Month",
-            url: URL(string: "https://www.youtube.com/watch?v=PRik4f9oJug"),
-            youtubeId: "PRik4f9oJug",
             videoDescription: desc
         )
     }

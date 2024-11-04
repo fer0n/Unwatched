@@ -137,7 +137,6 @@ import UnwatchedShared
         var videos = updateYtChannelId(in: videos, subModel)
         videos = await getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
-        // TODO: ^ do this inside the task group? could take some time
 
         cacheImages(for: videos)
 
