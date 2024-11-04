@@ -27,12 +27,14 @@ extension PlayerManager {
 
     func handleChapterChange() {
         Logger.log.info("handleChapterChange")
-        guard let time = currentTime else {
-            Logger.log.info("no time")
+        guard let time = currentTime,
+              let video else {
+            Logger.log.info("no time or video")
             return
         }
 
-        guard let chapters = video?.sortedChapters, let video = video, !chapters.isEmpty else {
+        let chapters = video.sortedChapters
+        guard !chapters.isEmpty else {
             currentEndTime = nil // stop monitoring this video for chapters
             Logger.log.info("no info to check for chapters")
             return
@@ -116,11 +118,11 @@ extension PlayerManager {
 
         guard let videoId = video?.persistentModelID,
               let youtubeId = video?.youtubeId,
-              let modelId = video?.persistentModelID,
               let container = container else {
             Logger.log.warning("Not enough info to enrich chapters")
             return
         }
+
         let chapters = (video?.chapters ?? []).sorted(by: { $0.startTime < $1.startTime })
         let sendableChapters = chapters.map(\.toExport)
         let duration = video?.duration
@@ -128,30 +130,26 @@ extension PlayerManager {
         Task {
             do {
                 guard let newChapters = try await ChapterService
-                        .mergeSponsorSegments(
+                        .mergeOrGenerateChapters(
                             youtubeId: youtubeId,
                             videoId: videoId,
                             videoChapters: sendableChapters,
-                            duration: duration,
                             container: container,
+                            duration: duration,
                             forceRefresh: forceRefresh
                         ) else {
                     Logger.log.info("SponsorBlock: Not updating merged chapters")
                     return
                 }
                 Logger.log.info("SponsorBlock: Refreshed")
-                let modelChapters = newChapters.map(\.getChapter)
+
                 let modelContext = ModelContext(container)
-                for chapter in modelChapters {
-                    modelContext.insert(chapter)
-                }
-                let video = modelContext.model(for: modelId) as? Video
-
-                for chapter in video?.mergedChapters ?? [] {
-                    modelContext.delete(chapter)
+                guard let video = modelContext.model(for: videoId) as? Video else {
+                    Logger.log.info("handleChapterRefresh: no video")
+                    return
                 }
 
-                video?.mergedChapters = modelChapters
+                ChapterService.updateIfNeeded(newChapters, video, modelContext)
                 try modelContext.save()
             } catch {
                 Logger.log.error("Error while merging chapters: \(error)")

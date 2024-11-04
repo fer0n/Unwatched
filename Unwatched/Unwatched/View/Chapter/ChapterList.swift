@@ -15,12 +15,10 @@ struct ChapterList: View {
     var isCompact: Bool = false
 
     var body: some View {
-        let sorted = video.sortedChapters
-
-        if !sorted.isEmpty {
+        if !chapters.isEmpty {
             VStack(spacing: isCompact ? 4 : 10) {
-                ForEach(sorted) { chapter in
-                    let isCurrent = chapter == player.currentChapter
+                ForEach(chapters) { chapter in
+                    let isCurrent = chapter.persistentModelID == player.currentChapter?.persistentModelID
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
@@ -51,6 +49,10 @@ struct ChapterList: View {
         }
     }
 
+    var chapters: [Chapter] {
+        Video.getSortedChapters(video.mergedChapters, video.chapters)
+    }
+
     func toggleChapter(_ chapter: Chapter) {
         chapter.isActive.toggle()
         if video == player.video {
@@ -67,11 +69,11 @@ struct ChapterList: View {
         player.setChapter(chapter)
     }
 
-    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String {
+    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String? {
         guard isCurrent,
               let endTime = chapter.endTime,
               let currentTime = player.currentTime else {
-            return chapter.duration?.formattedSeconds ?? ""
+            return chapter.duration?.formattedSeconds
         }
         let remaining = endTime - currentTime
         return "\(remaining.formattedSeconds ?? "") remaining"

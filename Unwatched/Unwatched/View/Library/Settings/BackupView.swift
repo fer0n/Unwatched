@@ -222,6 +222,7 @@ struct BackupView: View {
         let container = modelContext.container
         withAnimation {
             player.clearVideo(modelContext)
+            player.video = nil
         }
         let task = Task {
             await VideoService.deleteEverything(container)

@@ -10,6 +10,7 @@ import UnwatchedShared
     var currentChapter: Chapter?
     var previousChapter: Chapter?
     var nextChapter: Chapter?
+
     var seekPosition: Double?
     var embeddingDisabled: Bool = false
     var pipEnabled: Bool = false
@@ -128,7 +129,7 @@ import UnwatchedShared
     }
 
     func clearVideo(_ modelContext: ModelContext) {
-        guard let video = video else {
+        guard let video else {
             Logger.log.warning("No container when trying to clear video")
             return
         }

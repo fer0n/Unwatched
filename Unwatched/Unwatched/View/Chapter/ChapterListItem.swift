@@ -4,7 +4,7 @@ import UnwatchedShared
 struct ChapterListItem: View {
     var chapter: Chapter
     var toggleChapter: (_ chapter: Chapter) -> Void
-    var timeText: String
+    var timeText: String?
 
     @ScaledMetric var frameSize = 30
     @State var toggleHaptic = false
@@ -20,12 +20,14 @@ struct ChapterListItem: View {
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                 }
-                Text(timeText)
-                    .font(.subheadline.monospacedDigit())
-                    .animation(.default, value: timeText)
-                    .contentTransition(.numericText(countsDown: true))
-                    .foregroundStyle(Color.gray)
-                    .lineLimit(1)
+                if let timeText {
+                    Text(timeText)
+                        .font(.subheadline.monospacedDigit())
+                        .animation(.default, value: timeText)
+                        .contentTransition(.numericText(countsDown: true))
+                        .foregroundStyle(Color.gray)
+                        .lineLimit(1)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .animation(nil, value: chapter.isActive)

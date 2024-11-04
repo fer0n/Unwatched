@@ -18,12 +18,12 @@ struct ChapterHandlingContext {
 }
 
 extension ChapterService {
-    static func mergeSponsorSegments(
+    static func mergeOrGenerateChapters(
         youtubeId: String,
         videoId: PersistentIdentifier,
         videoChapters: [SendableChapter],
-        duration: Double? = nil,
         container: ModelContainer,
+        duration: Double? = nil,
         forceRefresh: Bool = false
     ) async throws -> [SendableChapter]? {
         if !shouldRefreshSponserBlock(videoId, container, forceRefresh) {
@@ -34,11 +34,10 @@ extension ChapterService {
         Logger.log.info("SponsorBlock, old: \(videoChapters)")
 
         let loadAllSegments = videoChapters.isEmpty
-
         let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, allSegments: loadAllSegments)
-        print("segments", segments)
         let externalChapters = SponsorBlockAPI.getChapters(from: segments)
-        let newChapters: [SendableChapter]
+
+        var newChapters: [SendableChapter]
 
         // only sponser chapters available: fill up the rest
         if videoChapters.isEmpty && !externalChapters.isEmpty {
@@ -47,17 +46,25 @@ extension ChapterService {
 
         // regular chapters available: combine both
         else {
-            var chapters = ChapterService.updateDurationAndEndTime(in: videoChapters, videoDuration: duration)
-            chapters.append(contentsOf: externalChapters)
-            chapters.sort(by: { $0.startTime < $1.startTime})
-
-            // update end time/duration correctly
-            newChapters = ChapterService.cleanupMergedChapters(chapters)
+            newChapters = mergeSponsorSegments(videoChapters, sponsorSegments: externalChapters, duration: duration)
         }
 
-        let result = updateDuration(in: newChapters)
-        Logger.log.info("SponsorBlock, new: \(result)")
-        return result
+        Logger.log.info("SponsorBlock, new: \(newChapters)")
+        return newChapters
+    }
+
+    static func mergeSponsorSegments(
+        _ videoChapters: [SendableChapter],
+        sponsorSegments: [SendableChapter],
+        duration: Double?
+    ) -> [SendableChapter] {
+        var chapters = ChapterService.updateDurationAndEndTime(in: videoChapters, videoDuration: duration)
+        chapters.append(contentsOf: sponsorSegments)
+        chapters.sort(by: { $0.startTime < $1.startTime})
+
+        // update end time/duration correctly
+        let newChapters = ChapterService.cleanupMergedChapters(chapters)
+        return updateDuration(in: newChapters)
     }
 
     /// Expects chapters sorted by startTime with endTime set for each
@@ -110,7 +117,7 @@ extension ChapterService {
         if let chapterEndTime = context.chapter.endTime,
            abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
             abs(chapterEndTime - context.lastEndTime) <= context.tolerance {
-            if context.chapter.category?.isExternal ?? false {
+            if context.chapter.isExternal {
                 context.newChapters[context.index] = context.chapter
                 let secondToLastIndex = context.index - 1
                 if secondToLastIndex >= 0 {
@@ -160,6 +167,11 @@ extension ChapterService {
            context.chapter.startTime - context.last.startTime > context.tolerance &&
             context.lastEndTime - chapterEndTime > context.tolerance {
 
+            if !context.chapter.isExternal && context.last.isExternal {
+                // skip chapter if the outer one is a e.g. sponsor segment and the inner one is a subset
+                return false
+            }
+
             var firstPart = context.last
             firstPart.endTime = context.chapter.startTime
 
@@ -178,7 +190,7 @@ extension ChapterService {
 
     private static func handleOverlappingChapters(_ context: inout ChapterHandlingContext) -> Bool {
         if context.lastEndTime != context.chapter.startTime {
-            let timeBorder = (context.last.category?.isExternal ?? false)
+            let timeBorder = (context.last.isExternal)
                 ? context.lastEndTime
                 : context.chapter.startTime
             context.newChapters[context.index].endTime = timeBorder
@@ -224,13 +236,14 @@ extension ChapterService {
             newChapters.append(filler)
         }
 
-        return newChapters
+        return updateDuration(in: newChapters)
     }
 
     static func getFillerForEnd(_ videoDuration: Double?, _ previousEndTime: Double) -> SendableChapter? {
-
         if let videoDuration = videoDuration,
+           videoDuration > previousEndTime,
            videoDuration - previousEndTime > Const.chapterTimeTolerance {
+
             // Create a filler chapter to fill the remaining time
             return SendableChapter(
                 title: nil,
@@ -248,7 +261,6 @@ extension ChapterService {
         _ container: ModelContainer,
         _ forceRefresh: Bool
     ) -> Bool {
-
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             Logger.log.info("SponsorBlock: Turned off in settings")
@@ -278,8 +290,14 @@ extension ChapterService {
                 shouldRefresh = true
             }
         } else {
-            Logger.log.info("SponsorBlock: never refreshed")
-            shouldRefresh = true
+
+            // updateDate not saved properly?
+            if video.mergedChapters?.isEmpty ?? true {
+                Logger.log.info("SponsorBlock: never refreshed")
+                shouldRefresh = true
+            } else {
+                Logger.log.info("SponsorBlock: no date, but mergedChapters exist")
+            }
         }
 
         if shouldRefresh {
@@ -289,9 +307,10 @@ extension ChapterService {
         return shouldRefresh
     }
 
-    static func fillOutEmptyEndTimes(chapters: inout [Chapter], duration: Double, container: ModelContainer?) {
+    static func fillOutEmptyEndTimes(chapters: inout [Chapter], duration: Double, context: ModelContext) {
         // Go through, set missing end-dates to the start date of the following chapter.
         // Add a "filler" chapter at the end if the duration doesn't match the length.
+        Logger.log.info("fillOutEmptyEndTimes")
 
         if chapters.isEmpty {
             return
@@ -310,17 +329,56 @@ extension ChapterService {
         // Handle the last chapter
         if let lastChapter = chapters.last {
             if let endTime = lastChapter.endTime,
-               let finalChapterSendable = getFillerForEnd(duration, endTime),
-               let container = container {
+               let finalChapterSendable = getFillerForEnd(duration, endTime) {
                 let finalChapter = finalChapterSendable.getChapter
-                let modelContext = ModelContext(container)
-                modelContext.insert(finalChapter)
+                context.insert(finalChapter)
                 chapters.append(finalChapter)
-                try? modelContext.save()
-            } else if lastChapter.endTime == nil {
-                lastChapter.endTime = duration
-                lastChapter.duration = duration - lastChapter.startTime
+            } else if lastChapter.endTime == nil, duration > lastChapter.startTime {
+                chapters[chapters.count - 1].endTime = duration
+                chapters[chapters.count - 1].duration = duration - lastChapter.startTime
             }
+        }
+    }
+
+    static func chapterEqual(_ sendable: SendableChapter, _ chapter: Chapter?) -> Bool {
+        guard let chapter else { return false }
+
+        return sendable.startTime == chapter.startTime
+            && sendable.endTime == chapter.endTime
+            && sendable.category == chapter.category
+            && sendable.title == chapter.title
+    }
+
+    static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
+        Logger.log.info("updateIfNeeded")
+        var newChapters = [Chapter]()
+        let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
+        newChapters.reserveCapacity(chapters.count)
+
+        var hasChanges = false
+        chapters.indices.forEach { index in
+            let newChapter = chapters[index]
+            let oldChapter = index < oldChapters.count
+                ? oldChapters[index]
+                : nil
+            if !chapterEqual(newChapter, oldChapter) {
+                Logger.log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
+                hasChanges = true
+                if let oldChapter {
+                    modelContext.delete(oldChapter)
+                }
+                let newChapterModel = newChapter.getChapter
+                modelContext.insert(newChapterModel)
+
+                newChapters.append(newChapterModel)
+            } else if let oldChapter {
+                newChapters.append(oldChapter)
+            }
+        }
+
+        if hasChanges {
+
+            video?.mergedChapters = newChapters
         }
     }
 }
