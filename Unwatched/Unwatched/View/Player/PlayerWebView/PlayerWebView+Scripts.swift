@@ -181,7 +181,10 @@ extension PlayerWebView {
 
         function addTouchEventListener(eventType, handler) {
             window.addEventListener(eventType, event => {
-                if (event.target.matches('video') || event.target.matches('.ytp-cued-thumbnail-overlay-image')) {
+                if (event.target.matches('video')
+                    || event.target.matches('.ytp-cued-thumbnail-overlay-image')
+                    || event.target.matches('.videowall-endscreen')
+                    || event.target.matches('.ytp-videowall-still-info-content')) {
                     handler(event);
                 }
             }, true);
