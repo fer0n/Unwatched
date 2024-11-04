@@ -427,6 +427,22 @@
         }
       }
     },
+    "allowRefreshDuringSync" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuladen während Synchronisation"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Refresh During Sync"
+          }
+        }
+      }
+    },
     "allVideos" : {
       "localizations" : {
         "de" : {

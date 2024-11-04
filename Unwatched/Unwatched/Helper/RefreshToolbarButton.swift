@@ -8,6 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 struct CoreRefreshButton: View {
+    @AppStorage(Const.allowRefreshDuringSync) var allowRefreshDuringSync: Bool = false
+
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
     @State private var rotation = 0.0
@@ -45,7 +47,7 @@ struct CoreRefreshButton: View {
                     Label("hardReload", systemImage: "clock.arrow.2.circlepath")
                 }
             }
-            .disabled(refresher.isSyncingIcloud)
+            .disabled(refresher.isSyncingIcloud && !allowRefreshDuringSync)
         }
         .font(.footnote)
         .fontWeight(.bold)

@@ -181,6 +181,7 @@ public struct Const {
     public static let darkModeTheme = "darkModeTheme"
     public static let showTutorial = "showTutorial"
     public static let lightAppIcon = "lightAppIcon"
+    public static let allowRefreshDuringSync = "allowRefreshDuringSync"
 
     public static let reloadVideoId = "reloadVideoId"
     public static let sheetOpacity = "sheetOpacity"
