@@ -54,6 +54,10 @@ struct PlayerWebView: UIViewRepresentable {
             }
         }
 
+        DispatchQueue.main.async {
+            webView.becomeFirstResponder()
+        }
+
         loadWebContent(webView)
         return webView
     }

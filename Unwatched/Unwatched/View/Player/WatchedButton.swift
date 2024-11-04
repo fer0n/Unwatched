@@ -23,7 +23,7 @@ struct WatchedButton: View {
                 .fontWeight(.bold)
         }
         .accessibilityLabel("markWatched")
-        .keyboardShortcut("d")
+        .keyboardShortcut("d", modifiers: [])
         .playerToggleModifier(isOn: player.isConsideredWatched)
         .padding(3)
         .contextMenu {
