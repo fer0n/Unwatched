@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum VideoPlacement: Int, Codable, CaseIterable {
+public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
     case inbox
     case queue
     case nothing

@@ -16,6 +16,7 @@ struct DebugView: View {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
+    @AppStorage(Const.allowRefreshDuringSync) var allowRefreshDuringSync: Bool = false
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
@@ -47,6 +48,9 @@ struct DebugView: View {
                 }
 
                 MySection("userData") {
+                    Toggle(isOn: $allowRefreshDuringSync) {
+                        Text("allowRefreshDuringSync")
+                    }
                     AsyncButton {
                         let container = modelContext.container
                         let task = CleanupService.cleanupDuplicatesAndInboxDate(
