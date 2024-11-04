@@ -139,7 +139,11 @@ import UnwatchedShared
         loadTopmostVideoFromQueue(modelContext: modelContext)
     }
 
-    func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil, modelContext: ModelContext? = nil) {
+    func loadTopmostVideoFromQueue(
+        after task: (Task<(), Error>)? = nil,
+        modelContext: ModelContext? = nil,
+        source: VideoSource = .nextUp
+    ) {
         Logger.log.info("loadTopmostVideoFromQueue")
         guard let container = container else {
             Logger.log.error("loadTopmostVideoFromQueue: no container")
@@ -153,7 +157,7 @@ import UnwatchedShared
                 let topVideo = VideoService.getTopVideoInQueue(context)
                 if let topVideo = topVideo {
                     if topVideo.persistentModelID != currentVideoId {
-                        self.setNextVideo(topVideo, .nextUp)
+                        self.setNextVideo(topVideo, source)
                     }
                 } else {
                     hardClearVideo()
@@ -163,7 +167,7 @@ import UnwatchedShared
             let context = modelContext ?? ModelContext(container)
             let topVideo = VideoService.getTopVideoInQueue(context)
             if topVideo != video {
-                self.setNextVideo(topVideo, .nextUp)
+                self.setNextVideo(topVideo, source)
             } else {
                 hardClearVideo()
             }

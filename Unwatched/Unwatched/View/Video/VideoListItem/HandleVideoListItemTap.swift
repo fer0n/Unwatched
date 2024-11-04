@@ -8,10 +8,6 @@ import UnwatchedShared
 import OSLog
 
 struct HandleVideoListItemTap: ViewModifier {
-    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
-    @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
-    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
-
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) private var player
@@ -30,18 +26,9 @@ struct HandleVideoListItemTap: ViewModifier {
                     return
                 }
                 Task {
-                    _ = VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+                    VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
                 }
-                player.playVideo(video)
-                if hideMenuOnPlay || rotateOnPlay {
-                    withAnimation {
-                        navManager.showMenu = false
-                    }
-                }
-
-                if returnToQueue {
-                    navManager.navigateToQueue()
-                }
+                navManager.handlePlay()
             }
     }
 }

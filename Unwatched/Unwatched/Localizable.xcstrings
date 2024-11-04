@@ -2333,28 +2333,28 @@
         }
       }
     },
-    "getCurrentVideoInfo" : {
+    "getCurrentVideo" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktuelles Video Info"
+            "value" : "Aktuelles Video"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get Current Video Info"
+            "value" : "Get Current Video"
           }
         }
       }
     },
-    "getCurrentVideoInfoDescription" : {
+    "getCurrentVideoDescription" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lädt Daten zum aktuell ausgewählte Video"
+            "value" : "Lädt Daten zum aktuell ausgewählten Video"
           }
         },
         "en" : {
@@ -5632,6 +5632,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Watch History"
+          }
+        }
+      }
+    },
+    "WatchInUnwatched" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Unwatched ansehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch in Unwatched"
+          }
+        }
+      }
+    },
+    "WatchInUnwatchedDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet Unwatched und started das Video"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays the video in and opens Unwatched"
           }
         }
       }
