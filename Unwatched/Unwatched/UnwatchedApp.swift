@@ -12,7 +12,7 @@ import UnwatchedShared
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var player: PlayerManager
-    @State var refresher = RefreshManager()
+    @State var refresher = RefreshManager.shared
     @State var imageCacheManager: ImageCacheManager
 
     @State var sharedModelContainer: ModelContainer
@@ -40,7 +40,12 @@ struct UnwatchedApp: App {
                 .environment(refresher)
                 .environment(imageCacheManager)
                 .onAppear {
-                    player.restoreNowPlayingVideo()
+                    if refresher.consumeTriggerPasteAction() {
+                        NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
+                    } else {
+                        // avoid fetching another video first
+                        player.restoreNowPlayingVideo()
+                    }
                 }
         }
         .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in

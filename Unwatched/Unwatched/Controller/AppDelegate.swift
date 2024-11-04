@@ -29,6 +29,19 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return true
     }
 
+    func application(
+        _ application: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let sceneConfiguration = UISceneConfiguration(
+            name: "Custom Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+        sceneConfiguration.delegateClass = SceneDelegate.self
+        return sceneConfiguration
+    }
+
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -115,5 +128,37 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                                    intentIdentifiers: [],
                                                    options: [])
         center.setNotificationCategories([category, clearCategory])
+    }
+}
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    private let refresher = RefreshManager.shared
+
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        performActionFor shortcutItem: UIApplicationShortcutItem,
+        completionHandler: @escaping (
+            Bool
+        ) -> Void
+    ) {
+        handleShortcutItem(shortcutItem)
+    }
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        if let shortcutItem = connectionOptions.shortcutItem {
+            if shortcutItem.type == Const.shortcutItemPasteAndPlay {
+                refresher.triggerPasteAction = true
+            }
+        }
+    }
+
+    private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) {
+        if shortcutItem.type == Const.shortcutItemPasteAndPlay {
+            NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
+        }
     }
 }

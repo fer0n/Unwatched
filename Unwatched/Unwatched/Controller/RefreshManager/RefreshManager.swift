@@ -30,9 +30,21 @@ actor RefreshActor {
 
 @MainActor
 @Observable class RefreshManager {
+    static let shared = RefreshManager()
+
     weak var container: ModelContainer?
-    var isLoading: Bool = false
-    var isSyncingIcloud: Bool = false
+    var isLoading = false
+    var isSyncingIcloud = false
+
+    @ObservationIgnored var triggerPasteAction = false
+
+    func consumeTriggerPasteAction() -> Bool {
+        if triggerPasteAction {
+            triggerPasteAction = false
+            return true
+        }
+        return false
+    }
 
     @ObservationIgnored var minimumAnimationDuration: Double = 0.5
 
