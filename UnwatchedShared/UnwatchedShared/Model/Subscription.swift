@@ -208,7 +208,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     }
 }
 
-public struct SubscriptionState: Identifiable {
+public struct SubscriptionState: Identifiable, Sendable {
     public var id = UUID()
     public var url: URL?
     public var title: String?
