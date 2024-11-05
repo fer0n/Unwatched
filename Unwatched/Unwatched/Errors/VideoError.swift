@@ -14,6 +14,7 @@ enum VideoError: Error, CustomLocalizedStringResourceConvertible {
     case emptyYoutubeId
     case noVideosFoundInPlaylist
     case noVideoInfo
+    case noVideoUrl
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -31,6 +32,8 @@ enum VideoError: Error, CustomLocalizedStringResourceConvertible {
             return "noVideosFoundInPlaylist"
         case .noVideoInfo:
             return "noVideoInfo"
+        case .noVideoUrl:
+            return "noVideoUrl"
         }
     }
 }

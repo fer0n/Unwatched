@@ -3571,6 +3571,22 @@
         }
       }
     },
+    "noVideoUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Video URL gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Video URL found"
+          }
+        }
+      }
+    },
     "noYoutubeIdFound" : {
       "localizations" : {
         "de" : {

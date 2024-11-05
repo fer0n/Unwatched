@@ -15,7 +15,7 @@ import UnwatchedShared
 
     var container: ModelContainer?
 
-    @MainActor func addUrls(_ urls: [URL]) async {
+    @MainActor func addUrls(_ urls: [URL], at index: Int = 1) async {
         Logger.log.info("handleUrlDrop inbox \(urls)")
         withAnimation {
             isLoading = true
@@ -24,7 +24,12 @@ import UnwatchedShared
             Logger.log.warning("No container found")
             return
         }
-        let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
+        let task = VideoService.addForeignUrls(
+            urls,
+            in: .queue,
+            at: index,
+            container: container
+        )
         let success: ()? = try? await task.value
         withAnimation {
             self.isSuccess = success != nil

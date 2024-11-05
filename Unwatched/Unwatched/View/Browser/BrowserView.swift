@@ -202,4 +202,8 @@ struct BrowserView: View, KeyboardReadable {
     BrowserView(container: DataController.previewContainer,
                 refresher: RefreshManager(),
                 startUrl: BrowserUrl.youtubeStartPage)
+        .modelContainer(DataController.previewContainer)
+        .environment(ImageCacheManager())
+        .environment(PlayerManager())
+        .environment(NavigationManager())
 }

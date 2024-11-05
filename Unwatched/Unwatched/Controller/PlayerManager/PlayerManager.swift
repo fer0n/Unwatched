@@ -142,7 +142,8 @@ import UnwatchedShared
     func loadTopmostVideoFromQueue(
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
-        source: VideoSource = .nextUp
+        source: VideoSource = .nextUp,
+        playIfCurrent: Bool = false
     ) {
         Logger.log.info("loadTopmostVideoFromQueue")
         guard let container = container else {
@@ -157,6 +158,8 @@ import UnwatchedShared
                 let topVideo = VideoService.getTopVideoInQueue(context)
                 if let topVideo = topVideo {
                     if topVideo.persistentModelID != currentVideoId {
+                        self.setNextVideo(topVideo, source)
+                    } else if playIfCurrent {
                         self.setNextVideo(topVideo, source)
                     }
                 } else {
