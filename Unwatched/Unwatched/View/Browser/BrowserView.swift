@@ -32,6 +32,8 @@ struct BrowserView: View, KeyboardReadable {
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
 
+    let size: Double = 20
+
     var body: some View {
         let subscriptionText = browserManager.channelTextRepresentation
 
@@ -53,21 +55,26 @@ struct BrowserView: View, KeyboardReadable {
                                     .padding(.horizontal)
                             }
 
-                            ZStack {
+                            HStack(alignment: .center) {
+                                Spacer()
+                                    .frame(width: size, height: size)
+                                    .padding(size)
+
                                 if let text = subscriptionText, !isKeyboardVisible {
                                     addSubButton(text)
                                         .popoverTip(addButtonTip, arrowEdge: .bottom)
                                         .disabled(subscribeManager.isLoading)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                } else {
+                                    Spacer()
                                 }
 
-                                HStack {
-                                    Spacer()
-                                    AddVideoButton(container: container,
-                                                   youtubeUrl: browserManager.videoUrl)
-                                        .padding(20)
-                                        .padding(.trailing, supportsSplitView ? 110 : 0)
-                                }
+                                AddVideoButton(container: container,
+                                               youtubeUrl: browserManager.videoUrl,
+                                               size: size)
+                                    .padding(size)
                             }
+                            .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
 
                             Spacer()
@@ -128,6 +135,7 @@ struct BrowserView: View, KeyboardReadable {
                     Image(systemName: systemName)
                         .contentTransition(.symbolEffect(.replace))
                     Text(text)
+                        .lineLimit(2)
                 }
                 .padding(10)
             }
@@ -201,7 +209,7 @@ struct BrowserView: View, KeyboardReadable {
 #Preview {
     BrowserView(container: DataController.previewContainer,
                 refresher: RefreshManager(),
-                startUrl: BrowserUrl.youtubeStartPage)
+                startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
         .modelContainer(DataController.previewContainer)
         .environment(ImageCacheManager())
         .environment(PlayerManager())
