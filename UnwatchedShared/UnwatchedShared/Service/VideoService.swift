@@ -45,10 +45,11 @@ public struct VideoService {
     
     public static func updateQueueOrderDelete(deletedOrder: Int, modelContext: ModelContext) {
         do {
-            let fetchDescriptor = FetchDescriptor<QueueEntry>()
+            let fetchDescriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
             let queue = try modelContext.fetch(fetchDescriptor)
-            for queueEntry in queue where queueEntry.order > deletedOrder {
-                queueEntry.order -= 1
+            
+            for (index, queueEntry) in queue.enumerated() {
+                queueEntry.order = index
             }
         } catch {
             Logger.log.error("No queue entry found to delete")

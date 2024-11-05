@@ -193,18 +193,12 @@ extension VideoService {
     }
 
     static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {
-        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 0 })
-        fetch.fetchLimit = 1
         let context = ModelContext(container)
-        let videos = try? context.fetch(fetch)
-        if let nextVideo = videos?.first {
-            return nextVideo.video?.persistentModelID
-        }
-        return nil
+        return getTopVideoInQueue(context)?.persistentModelID
     }
 
     static func getTopVideoInQueue(_ context: ModelContext) -> Video? {
-        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 0 })
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
         fetch.fetchLimit = 1
         let videos = try? context.fetch(fetch)
         if let nextVideo = videos?.first {
@@ -214,10 +208,10 @@ extension VideoService {
     }
 
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {
-        var fetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.order == 1 })
-        fetch.fetchLimit = 1
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
+        fetch.fetchLimit = 2
         let videos = try? modelContext.fetch(fetch)
-        if let nextVideo = videos?.first {
+        if let nextVideo = videos?.last {
             return nextVideo.video
         }
         return nil
