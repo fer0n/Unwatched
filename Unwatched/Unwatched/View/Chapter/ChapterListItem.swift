@@ -64,14 +64,14 @@ struct ChapterListItem: View {
         ChapterListItem(chapter: Chapter(
             title: "Hello there",
             time: 102
-        ), toggleChapter: { _ in true },
+        ), toggleChapter: { _ in },
         timeText: "0 remaining")
         .background(Color.gray)
 
         ChapterListItem(chapter: Chapter(
             title: nil,
             time: 102
-        ), toggleChapter: { _ in true },
+        ), toggleChapter: { _ in },
         timeText: "0 remaining")
         .background(Color.gray)
     }

@@ -130,7 +130,7 @@ struct MenuView: View {
 }
 
 extension TabView {
-    @ViewBuilder
+    @MainActor @ViewBuilder
     /// Workaround: avoid tab view items in title bar on Mac
     func setTabViewStyle() -> some View {
         if #available(iOS 18.0, *), UIDevice.isMac {
