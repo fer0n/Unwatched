@@ -24,19 +24,18 @@ struct AddVideoButton: View {
     var size: Double = 20
 
     var body: some View {
-        VStack(spacing: 25) {
-            if isVideoUrl {
+        addVideoButton
+            .overlay {
                 playNowButton
+                    .opacity(isVideoUrl ? 1 : 0)
                     .animation(.default, value: isVideoUrl)
+                    .offset(y: -(35 + size))
             }
-
-            addVideoButton
-        }
-        .foregroundStyle(Color.backgroundColor)
-        .onAppear {
-            avm.container = container
-        }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
+            .foregroundStyle(Color.backgroundColor)
+            .onAppear {
+                avm.container = container
+            }
+            .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
     }
 
     var playNowButton: some View {
@@ -130,14 +129,14 @@ struct AddVideoButton: View {
                 }
             }
         }
-        .frame(width: size, height: size)
-        .padding(.vertical, 15)
         .popover(isPresented: $showHelp) {
             Text("dropVideosTip")
                 .padding()
                 .presentationCompactAdaptation(.popover)
+                .foregroundStyle(Color.neutralAccentColor)
+                .fontWeight(.semibold)
         }
-        .padding(.vertical, -15)
+        .frame(width: size, height: size)
     }
 
     var backgroundSize: CGFloat {
