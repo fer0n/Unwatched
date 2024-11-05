@@ -25,9 +25,10 @@ struct AddVideoButton: View {
 
     var body: some View {
         VStack(spacing: 25) {
-            playNowButton
-                .opacity(isVideoUrl ? 1 : 0)
-                .animation(.default, value: isVideoUrl)
+            if isVideoUrl {
+                playNowButton
+                    .animation(.default, value: isVideoUrl)
+            }
 
             addVideoButton
         }
