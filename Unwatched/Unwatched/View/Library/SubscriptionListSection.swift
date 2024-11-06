@@ -32,6 +32,8 @@ struct SubscriptionListSection: View {
                             return true
                         }
                 }
+            } else {
+                workaroundPlaceholder
             }
         }
         .task(id: droppedUrls) {
@@ -57,6 +59,14 @@ struct SubscriptionListSection: View {
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.backgroundColor)
+    }
+
+    @ViewBuilder var workaroundPlaceholder: some View {
+        // workaround: transparent tabbar in library tab otherwise due to async loading
+        if subscriptionsVM.subscriptions.isEmpty && subscriptionsVM.isLoading {
+            Spacer()
+                .frame(height: UIScreen.main.bounds.size.height)
+        }
     }
 
     var dropArea: some View {
