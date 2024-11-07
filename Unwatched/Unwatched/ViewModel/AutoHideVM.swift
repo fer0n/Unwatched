@@ -41,8 +41,11 @@ import UnwatchedShared
 
     func setShowControls(positionLeft: Bool? = nil) {
         withAnimation(.default.speed(3)) {
-            if let positionLeft = positionLeft {
+            if let positionLeft {
                 self.positionLeft = positionLeft
+            } else if !keepVisible && !showControls {
+                // if not already shown, default to right side
+                self.positionLeft = false
             }
             showControlsLocal = true
         }
