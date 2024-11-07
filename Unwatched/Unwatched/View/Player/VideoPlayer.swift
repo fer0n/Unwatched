@@ -74,7 +74,6 @@ struct VideoPlayer: View {
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
         Logger.log.info(">markVideoWatched")
-        try? modelContext.save()
         if let video = player.video {
             if showMenu {
                 setShowMenu()
@@ -83,9 +82,15 @@ struct VideoPlayer: View {
                 }
             }
             player.autoSetNextVideo(source, modelContext)
-            VideoService.markVideoWatched(
-                video, modelContext: modelContext
-            )
+            
+            // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
+            VideoService.markVideoWatched(video, modelContext: modelContext)
+
+            // attempts clearing a second time in the background, as it's so unreliable
+            let videoId = video.id
+            try? modelContext.save()
+            let container = modelContext.container
+            _ = VideoService.markVideoWatchedAsync(videoId, container: container)
         }
     }
 
