@@ -112,9 +112,20 @@ class SubscriptionListVM: TransactionVM<Subscription> {
 
             print("updatedSub", updatedSub)
 
-            if let index = subscriptions.firstIndex(where: { $0.persistentId == persistentId }),
-               let sendable = updatedSub.toExport {
-                subscriptions[index] = sendable
+            if let index = subscriptions.firstIndex(where: { $0.persistentId == persistentId }) {
+                withAnimation {
+                    if updatedSub.isArchived {
+                        subscriptions.remove(at: index)
+                    } else if let sendable = updatedSub.toExport {
+                        subscriptions[index] = sendable
+                    }
+                }
+            } else {
+                isLoading = true
+                Task {
+                    await fetchSubscriptions()
+                }
+                return
             }
         }
     }
