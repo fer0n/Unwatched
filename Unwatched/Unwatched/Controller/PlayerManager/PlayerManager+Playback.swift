@@ -11,11 +11,13 @@ import UnwatchedShared
 // PlayerManager+Playback
 extension PlayerManager {
 
+    @MainActor
     func playVideo(_ video: Video) {
         self.videoSource = .userInteraction
         self.video = video
     }
 
+    @MainActor
     func play() {
         if self.isLoading {
             self.videoSource = .playWhenReady
@@ -35,6 +37,7 @@ extension PlayerManager {
     }
 
     /// Restarts, pauses or plays the current video
+    @MainActor
     func handlePlayButton() {
         if videoEnded {
             restartVideo()
@@ -45,11 +48,13 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     func restartVideo() {
         seekPosition = 0
         play()
     }
 
+    @MainActor
     var playbackSpeed: Double {
         get {
             temporaryPlaybackSpeed ?? getPlaybackSpeed()
@@ -59,14 +64,17 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     var actualPlaybackSpeed: Double {
         getPlaybackSpeed()
     }
 
+    @MainActor
     var temporarySlowDownThreshold: Bool {
         actualPlaybackSpeed >= Const.temporarySpeedSwap
     }
 
+    @MainActor
     func setTemporaryPlaybackSpeed() {
         if temporarySlowDownThreshold {
             temporaryPlaybackSpeed = 1
@@ -79,6 +87,7 @@ extension PlayerManager {
         temporaryPlaybackSpeed = 3
     }
 
+    @MainActor
     func temporarySlowDown() {
         if actualPlaybackSpeed == 1 {
             temporaryPlaybackSpeed = 0.5
@@ -91,6 +100,7 @@ extension PlayerManager {
         temporaryPlaybackSpeed = nil
     }
 
+    @MainActor
     func toggleTemporaryPlaybackSpeed() {
         if temporaryPlaybackSpeed == nil {
             setTemporaryPlaybackSpeed()
@@ -99,11 +109,13 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     private func getPlaybackSpeed() -> Double {
         video?.subscription?.customSpeedSetting ??
             UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
     }
 
+    @MainActor
     private func setPlaybackSpeed(_ value: Double) {
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
@@ -112,6 +124,7 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     private func handleRotateOnPlay() {
         let isShort = video?.isYtShort ?? false
         Task {
@@ -127,6 +140,7 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     var videoIsCloseToEnd: Bool {
         guard let duration = video?.duration, let time = currentTime else {
             return false

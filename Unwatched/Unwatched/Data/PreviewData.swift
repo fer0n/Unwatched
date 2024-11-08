@@ -26,6 +26,7 @@ extension DataController {
 }
 
 extension PlayerManager {
+    @MainActor
     static func getDummy() -> PlayerManager {
         let player = PlayerManager()
         player.video = Video.getDummy()

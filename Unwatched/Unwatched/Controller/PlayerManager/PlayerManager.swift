@@ -28,12 +28,14 @@ import UnwatchedShared
 
     @ObservationIgnored var previousState = PreviousState()
 
+    @MainActor
     var video: Video? {
         didSet {
             handleNewVideoSet(oldValue)
         }
     }
 
+    @MainActor
     private func handleNewVideoSet(_ oldValue: Video?) {
         currentEndTime = 0
         currentTime = video?.elapsedSeconds ?? 0
@@ -60,10 +62,12 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     func requiresFetchingVideoData() -> Bool {
         video?.title.isEmpty == true
     }
 
+    @MainActor
     var isConsideredWatched: Bool {
         guard let video = video else {
             return false
@@ -79,6 +83,7 @@ import UnwatchedShared
 
     @ObservationIgnored var currentEndTime: Double?
 
+    @MainActor
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
@@ -108,6 +113,7 @@ import UnwatchedShared
         return nil
     }
 
+    @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
         let next = VideoService.getNextVideoInQueue(modelContext)
         withAnimation {
@@ -115,6 +121,7 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     func setNextVideo(_ nextVideo: Video?, _ source: VideoSource) {
         updateElapsedTime()
         if nextVideo != nil {
@@ -123,11 +130,13 @@ import UnwatchedShared
         self.video = nextVideo
     }
 
+    @MainActor
     private func hardClearVideo() {
         self.video = nil
         UserDefaults.standard.set(nil, forKey: Const.nowPlayingVideo)
     }
 
+    @MainActor
     func clearVideo(_ modelContext: ModelContext) {
         guard let video else {
             Logger.log.warning("No container when trying to clear video")
@@ -139,6 +148,7 @@ import UnwatchedShared
         loadTopmostVideoFromQueue(modelContext: modelContext)
     }
 
+    @MainActor
     func loadTopmostVideoFromQueue(
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
@@ -177,6 +187,7 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     func handleAutoStart() {
         Logger.log.info("handleAutoStart")
         isLoading = false
@@ -209,6 +220,7 @@ import UnwatchedShared
         videoSource = nil
     }
 
+    @MainActor
     func getStartPosition() -> Double {
         var startAt = video?.elapsedSeconds ?? 0
         if video?.hasFinished == true {
@@ -217,6 +229,7 @@ import UnwatchedShared
         return ensureStartPositionWorksWithChapters(startAt)
     }
 
+    @MainActor
     func ensureStartPositionWorksWithChapters(_ time: Double) -> Double {
         guard let video = video else {
             Logger.log.warning("ensureStartPositionWorksWithChapters: no video")
@@ -239,6 +252,7 @@ import UnwatchedShared
         return time
     }
 
+    @MainActor
     func handleHotSwap() {
         Logger.log.info("handleHotSwap")
         isLoading = true
@@ -255,6 +269,7 @@ import UnwatchedShared
         UserDefaults.standard.set(reloadVideoId, forKey: Const.reloadVideoId)
     }
 
+    @MainActor
     func restoreNowPlayingVideo() {
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
@@ -265,12 +280,14 @@ import UnwatchedShared
         loadTopmostVideoFromQueue()
     }
 
+    @MainActor
     var videoAspectRatio: Double {
         aspectRatio
             ?? video?.subscription?.customAspectRatio
             ?? Const.defaultVideoAspectRatio
     }
 
+    @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
         guard let video = video,
               let subscription = video.subscription else {
