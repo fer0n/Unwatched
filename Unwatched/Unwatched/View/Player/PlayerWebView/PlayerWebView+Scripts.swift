@@ -121,6 +121,10 @@ extension PlayerWebView {
                 .videowall-endscreen {
                     opacity: 0.2;
                 }
+                body, html {
+                    overflow: hidden !important;
+                    touch-action: none !important;
+                }
             `;
             document.head.appendChild(style);
         }
