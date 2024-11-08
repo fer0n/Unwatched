@@ -39,6 +39,10 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return ".generated"
         }
     }
+    
+    public var hasPriority: Bool {
+        self == .sponsor
+    }
 
     public var isExternal: Bool {
         self != .generated
