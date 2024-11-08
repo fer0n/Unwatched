@@ -15,6 +15,7 @@ extension PlayerManager {
         previousChapter == nil && currentChapter == nil
     }
 
+    @MainActor
     func monitorChapters(time: Double) {
         currentTime = time
         if let endTime = currentEndTime, time >= endTime {
@@ -25,6 +26,7 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     func handleChapterChange() {
         Logger.log.info("handleChapterChange")
         guard let time = currentTime,
@@ -71,6 +73,7 @@ extension PlayerManager {
         currentEndTime = next?.startTime
     }
 
+    @MainActor
     func setChapter(_ chapter: Chapter) {
         seekPosition = chapter.startTime
         currentTime = chapter.startTime
@@ -78,6 +81,7 @@ extension PlayerManager {
         handleChapterChange()
     }
 
+    @MainActor
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
@@ -86,6 +90,7 @@ extension PlayerManager {
         return false
     }
 
+    @MainActor
     func goToPreviousChapter() -> Bool {
         guard let current = currentChapter else {
             Logger.log.warning("goToPreviousChapter: No current chapter found")
@@ -108,6 +113,7 @@ extension PlayerManager {
         return false
     }
 
+    @MainActor
     func handleChapterRefresh(forceRefresh: Bool = false) {
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
