@@ -36,17 +36,17 @@ extension ChapterService {
         let loadAllSegments = videoChapters.isEmpty
         let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, allSegments: loadAllSegments)
         let externalChapters = SponsorBlockAPI.getChapters(from: segments)
+        let cleanedExternalChapters = cleanExternalChapters(externalChapters)
 
         var newChapters: [SendableChapter]
 
         // only sponser chapters available: fill up the rest
-        if videoChapters.isEmpty && !externalChapters.isEmpty {
-            newChapters = generateChapters(from: externalChapters, videoDuration: duration)
+        if videoChapters.isEmpty && !cleanedExternalChapters.isEmpty {
+            newChapters = generateChapters(from: cleanedExternalChapters, videoDuration: duration)
         }
-
         // regular chapters available: combine both
         else {
-            newChapters = mergeSponsorSegments(videoChapters, sponsorSegments: externalChapters, duration: duration)
+            newChapters = mergeSponsorSegments(videoChapters, sponsorSegments: cleanedExternalChapters, duration: duration)
         }
 
         Logger.log.info("SponsorBlock, new: \(newChapters)")
@@ -117,7 +117,7 @@ extension ChapterService {
         if let chapterEndTime = context.chapter.endTime,
            abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
             abs(chapterEndTime - context.lastEndTime) <= context.tolerance {
-            if context.chapter.isExternal {
+            if context.chapter.hasPriority {
                 context.newChapters[context.index] = context.chapter
                 let secondToLastIndex = context.index - 1
                 if secondToLastIndex >= 0 {
@@ -154,9 +154,13 @@ extension ChapterService {
            abs(chapterEndTime - context.lastEndTime) <= context.tolerance &&
             context.chapter.startTime - context.last.startTime > context.tolerance {
 
-            context.newChapters[context.index].endTime = context.chapter.startTime
-            context.newChapters.append(context.chapter)
-            context.index += 1
+            if context.last.hasPriority && !context.chapter.hasPriority {
+                // the current chapter has priority & starts sooner, keep it and skip the other one
+            } else {
+                context.newChapters[context.index].endTime = context.chapter.startTime
+                context.newChapters.append(context.chapter)
+                context.index += 1
+            }
             return true
         }
         return false
@@ -167,7 +171,7 @@ extension ChapterService {
            context.chapter.startTime - context.last.startTime > context.tolerance &&
             context.lastEndTime - chapterEndTime > context.tolerance {
 
-            if !context.chapter.isExternal && context.last.isExternal {
+            if !context.chapter.hasPriority && context.last.hasPriority {
                 // skip chapter if the outer one is a e.g. sponsor segment and the inner one is a subset
                 return false
             }
@@ -190,7 +194,7 @@ extension ChapterService {
 
     private static func handleOverlappingChapters(_ context: inout ChapterHandlingContext) -> Bool {
         if context.lastEndTime != context.chapter.startTime {
-            let timeBorder = (context.last.isExternal)
+            let timeBorder = (context.last.hasPriority)
                 ? context.lastEndTime
                 : context.chapter.startTime
             context.newChapters[context.index].endTime = timeBorder
@@ -380,5 +384,44 @@ extension ChapterService {
 
             video?.mergedChapters = newChapters
         }
+    }
+
+    static func cleanExternalChapters(_ chapters: [SendableChapter]) -> [SendableChapter] {
+        guard !chapters.isEmpty else { return [] }
+
+        // Sort chapters by startTime first, and then by endTime if they have the same start
+        let sortedChapters = chapters.sorted {
+            $0.startTime < $1.startTime || ($0.startTime == $1.startTime && $0.endTime ?? 0 < $1.endTime ?? 0)
+        }
+
+        var mergedChapters: [SendableChapter] = []
+        var currentChapter = sortedChapters[0]
+
+        for chapter in sortedChapters.dropFirst() {
+            // only compare if it's the same category, otherwise just add it
+            if currentChapter.category != chapter.category {
+                mergedChapters.append(currentChapter)
+                currentChapter = chapter
+                continue
+            }
+
+            // Check if chapters are overlapping or continuous
+            if let currentEndTime = currentChapter.endTime, let chapterEndTime = chapter.endTime,
+               currentChapter.category == chapter.category,
+               currentEndTime >= chapter.startTime {
+
+                // Merge chapters by extending the endTime of the current chapter if needed
+                currentChapter.endTime = max(currentEndTime, chapterEndTime)
+            } else {
+                // No overlap, add current chapter to the result and update current chapter
+                mergedChapters.append(currentChapter)
+                currentChapter = chapter
+            }
+        }
+
+        // Add the last merged chapter
+        mergedChapters.append(currentChapter)
+
+        return mergedChapters
     }
 }

@@ -60,6 +60,10 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var isExternal: Bool {
         category?.isExternal ?? false
     }
+    
+    public var hasPriority: Bool {
+        category?.hasPriority ?? false
+    }
 
     public var description: String {
         "\(startTime)-\(endTime ?? -1): \(title ?? category?.description ?? "-")"

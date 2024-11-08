@@ -10,6 +10,324 @@ import UnwatchedShared
 // swiftlint:disable all
 final class ChapterServiceTests: XCTestCase {
 
+    func testChapterOverrides() {
+        let data: [(
+            regular: [SendableChapter],
+            external: [SendableChapter],
+            exptected: [SendableChapter]
+        )] = [
+            // empty
+            (
+                regular: [],
+                external: [],
+                exptected: []
+            ),
+
+            // no overlap
+            (
+                regular: [
+                    .init(0,    to: 30,     category: nil),
+                ],
+                external: [
+                    .init(50,   to: 80,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,    to: 30,     category: nil),
+                    .init(50,   to: 80,    category: .sponsor)
+                ]
+            ),
+
+            // continuous
+            (
+                regular: [
+                    .init(0,    to: 30,     category: nil),
+                ],
+                external: [
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,    to: 30,     category: nil),
+                    .init(30,  to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // overlap
+            (
+                regular: [
+                    .init(0,    to: 50,     category: nil),
+                ],
+                external: [
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,    to: 30,     category: nil),
+                    .init(30,   to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // overlap 2
+            (
+                regular: [
+                    .init(0,    to: 50,     category: .sponsor),
+                ],
+                external: [
+                    .init(30,   to: 100,    category: nil)
+                ],
+                exptected: [
+                    .init(0,    to: 50,     category: .sponsor),
+                    .init(50,   to: 100,    category: nil)
+                ]
+            ),
+
+            // same start, different end
+            (
+                regular: [
+                    .init(30,    to: 50,     category: nil),
+                ],
+                external: [
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(30,  to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // same start, different end 2
+            (
+                regular: [
+                    .init(30,    to: 50,     category: .sponsor),
+                ],
+                external: [
+                    .init(30,   to: 100,    category: nil)
+                ],
+                exptected: [
+                    .init(30,  to: 50,    category: .sponsor),
+                    .init(50,  to: 100,    category: nil)
+                ]
+            ),
+
+            // different start, same end
+            (
+                regular: [
+                    .init(10,    to: 80,     category: nil),
+                ],
+                external: [
+                    .init(30,   to: 80,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(10,  to: 30,    category: nil),
+                    .init(30,  to: 80,    category: .sponsor)
+                ]
+            ),
+
+            // different start, same end 2
+            (
+                regular: [
+                    .init(10,    to: 80,     category: .sponsor),
+                ],
+                external: [
+                    .init(30,   to: 80,    category: nil)
+                ],
+                exptected: [
+                    .init(10,  to: 80,    category: nil),
+                ]
+            ),
+
+            // nested
+            (
+                regular: [
+                    .init(10,    to: 80,     category: nil),
+                    .init(30,   to: 50,    category: .sponsor)
+                ],
+                external: [
+
+                ],
+                exptected: [
+                    .init(10,    to: 30,     category: nil),
+                    .init(30,   to: 50,    category: .sponsor),
+                    .init(50,    to: 80,     category: nil)
+                ]
+            ),
+
+            // nested 2
+            (
+                regular: [
+                    .init(30,   to: 50,    category: nil)
+                ],
+                external: [
+                    .init(10,    to: 80,     category: .sponsor)
+                ],
+                exptected: [
+                    .init(10,    to: 80,     category: .sponsor)
+                ]
+            )
+        ]
+
+        for (regular, external, expected) in data {
+            let result = ChapterService.mergeSponsorSegments(
+                regular,
+                sponsorSegments: external,
+                duration: nil
+            )
+            let isEqual = checkChapterEqual(result, expected)
+            XCTAssertTrue(isEqual)
+            if !isEqual {
+                print("input", regular)
+                print("expected", expected)
+                print("result", result)
+                print("\n")
+            }
+        }
+    }
+
+    func testCleanExternalChapters() {
+        let data: [(input: [SendableChapter], exptected: [SendableChapter])] = [
+            // empty
+            (
+                input: [],
+                exptected: []
+            ),
+
+            // no overlap
+            (
+                input: [
+                    .init(0,    to: 30,     category: .sponsor),
+                    .init(50,   to: 80,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,    to: 30,     category: .sponsor),
+                    .init(50,   to: 80,    category: .sponsor)
+                ]
+            ),
+
+            // continuous
+            (
+                input: [
+                    .init(0,    to: 30,     category: .sponsor),
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,  to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // overlap
+            (
+                input: [
+                    .init(0,    to: 50,     category: .sponsor),
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(0,  to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // same start, different end
+            (
+                input: [
+                    .init(30,    to: 50,     category: .sponsor),
+                    .init(30,   to: 100,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(30,  to: 100,    category: .sponsor)
+                ]
+            ),
+
+            // different start, same end
+            (
+                input: [
+                    .init(10,    to: 80,     category: .sponsor),
+                    .init(30,   to: 80,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(10,  to: 80,    category: .sponsor)
+                ]
+            ),
+
+            // nested
+            (
+                input: [
+                    .init(10,    to: 80,     category: .sponsor),
+                    .init(30,   to: 50,    category: .sponsor)
+                ],
+                exptected: [
+                    .init(10,  to: 80,    category: .sponsor)
+                ]
+            ),
+
+            // different category, stay the same
+            (
+                input: [
+                    .init(10,    to: 80,     category: .sponsor),
+                    .init(30,   to: 50,    category: .intro)
+                ],
+                exptected: [
+                    .init(10,    to: 80,     category: .sponsor),
+                    .init(30,   to: 50,    category: .intro)
+                ]
+            )
+        ]
+
+        for (input, expected) in data {
+            let result = ChapterService.cleanExternalChapters(input)
+            let isEqual = checkChapterEqual(result, expected)
+            XCTAssertTrue(isEqual)
+            if !isEqual {
+                print("input", input)
+                print("expected", expected)
+                print("result", result)
+                print("\n")
+            }
+        }
+    }
+
+    func testOverride2() {
+        let chapters: [SendableChapter] = [
+            .init(0,    to: 81,     "Intro"),
+            .init(81,   to: 612,    "Crazy Tundra truck"),
+            .init(612,  to: 913,    "Li Auto van"),
+            .init(913,  to: 987,    "Trivia"),
+            .init(987,  to: 1038,   "AT&T (Sponsored)"),
+            .init(1038, to: 2434,   "New Mac Mini"),
+            .init(2434, to: 4000,   "Apps that we love/hate"),
+            .init(4000, to: 4052,   "AT&T (Sponsored)"),
+            .init(4052, to: 6384,   "Overrated or Underrated?"),
+            .init(6384, to: 6687,   "Trivia answers"),
+            .init(6687, to: nil,    "Outro")
+        ]
+
+        let sponsorSegments: [SendableChapter] = [
+            .init(975, to: 1038.257, category: .sponsor),
+            .init(3987.255, to: 4051.21, category: .sponsor),
+            .init(3989.648, to: 3991.064, category: .sponsor)
+        ]
+
+        let expected: [SendableChapter] = [
+            .init(0,    to: 81,     "Intro"),
+            .init(81,   to: 612,    "Crazy Tundra truck"),
+            .init(612,  to: 913,    "Li Auto van"),
+            .init(913,  to: 975,    "Trivia"),
+
+            .init(975, to: 1038.257, category: .sponsor),
+
+            .init(1038.257, to: 2434,   "New Mac Mini"),
+            .init(2434, to: 3987.255,   "Apps that we love/hate"),
+
+            .init(3987.255, to: 4051.21, category: .sponsor),
+
+            .init(4051.21, to: 6384,   "Overrated or Underrated?"),
+            .init(6384, to: 6687,   "Trivia answers"),
+            .init(6687, to: nil,    "Outro")
+        ]
+
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
+    }
+
     func testNestedChapter() {
         let chapters: [SendableChapter] = [
             .init(0,    "ch1"),
@@ -620,12 +938,76 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
                     SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
                 ]
-            )
+            ),
+            (
+                """
+                Chapters:
+                Intro 00:00
+                Crazy Tundra truck 01:21
+                Li Auto van 10:12
+                Trivia 15:13
+                AT&T (Sponsored) 16:27
+                New Mac Mini 17:18
+                Apps that we love/hate 40:34
+                AT&T (Sponsored) 01:06:40
+                Overrated or Underrated? 01:07:32
+                Trivia answers 01:46:24
+                Outro 01:51:27
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 21),
+                    SendableChapter(title: "Crazy Tundra truck", startTime: 1 * 60 + 21, endTime: 10 * 60 + 12),
+                    SendableChapter(title: "Li Auto van", startTime: 10 * 60 + 12, endTime: 15 * 60 + 13),
+                    SendableChapter(title: "Trivia", startTime: 15 * 60 + 13, endTime: 16 * 60 + 27),
+                    SendableChapter(title: "AT&T (Sponsored)", startTime: 16 * 60 + 27, endTime: 17 * 60 + 18),
+                    SendableChapter(title: "New Mac Mini", startTime: 17 * 60 + 18, endTime: 40 * 60 + 34),
+                    SendableChapter(title: "Apps that we love/hate", startTime: 40 * 60 + 34, endTime: 3600 + 6 * 60 + 40),
+                    SendableChapter(title: "AT&T (Sponsored)", startTime: 3600 + 6 * 60 + 40, endTime: 3600 + 7 * 60 + 32),
+                    SendableChapter(title: "Overrated or Underrated?", startTime: 1 * 3600 + 7 * 60 + 32, endTime: 3600 + 46 * 60 + 24),
+                    SendableChapter(title: "Trivia answers", startTime: 3600 + 46 * 60 + 24, endTime: 3600 + 51 * 60 + 27),
+                    SendableChapter(title: "Outro", startTime: 3600 + 51 * 60 + 27, endTime: nil)
+                ]
+            ),
+            (
+                """
+                Chapters:
+                00:00 Intro
+                01:21 Crazy Tundra truck
+                10:12 Li Auto van
+                15:13 Trivia
+                16:27 AT&T (Sponsored)
+                17:18 New Mac Mini
+                40:34 Apps that we love/hate
+                01:06:40 AT&T (Sponsored)
+                01:07:32 Overrated or Underrated?
+                01:46:24 Trivia answers
+                01:51:27 Outro
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 21),
+                    SendableChapter(title: "Crazy Tundra truck", startTime: 1 * 60 + 21, endTime: 10 * 60 + 12),
+                    SendableChapter(title: "Li Auto van", startTime: 10 * 60 + 12, endTime: 15 * 60 + 13),
+                    SendableChapter(title: "Trivia", startTime: 15 * 60 + 13, endTime: 16 * 60 + 27),
+                    SendableChapter(title: "AT&T (Sponsored)", startTime: 16 * 60 + 27, endTime: 17 * 60 + 18),
+                    SendableChapter(title: "New Mac Mini", startTime: 17 * 60 + 18, endTime: 40 * 60 + 34),
+                    SendableChapter(title: "Apps that we love/hate", startTime: 40 * 60 + 34, endTime: 3600 + 6 * 60 + 40),
+                    SendableChapter(title: "AT&T (Sponsored)", startTime: 3600 + 6 * 60 + 40, endTime: 3600 + 7 * 60 + 32),
+                    SendableChapter(title: "Overrated or Underrated?", startTime: 1 * 3600 + 7 * 60 + 32, endTime: 3600 + 46 * 60 + 24),
+                    SendableChapter(title: "Trivia answers", startTime: 3600 + 46 * 60 + 24, endTime: 3600 + 51 * 60 + 27),
+                    SendableChapter(title: "Outro", startTime: 3600 + 51 * 60 + 27, endTime: nil)
+                ]
+            ),
         ]
 
         for (description, expected) in testValues {
             let chapters = ChapterService.extractChapters(from: description, videoDuration: nil)
-            checkChapterEqual(chapters, expected)
+            let isEqual = checkChapterEqual(chapters, expected)
+            if !isEqual {
+                print("chapters", chapters)
+                print("expected", expected)
+                print("\n")
+            }
+            XCTAssertTrue(isEqual)
         }
     }
 
@@ -637,40 +1019,53 @@ final class ChapterServiceTests: XCTestCase {
         duration: Double? = nil,
         expected: [SendableChapter]
     ) {
+
+        let cleanSponsorSegments = ChapterService.cleanExternalChapters(sponsorSegments)
         let result = ChapterService.mergeSponsorSegments(
             chapters,
-            sponsorSegments: sponsorSegments,
+            sponsorSegments: cleanSponsorSegments,
             duration: duration
         )
 
         print("result: \(result)")
 
         checkChapterStartEndTimes(result)
-        checkChapterEqual(result, expected)
+        let isEqual = checkChapterEqual(result, expected)
+        if !isEqual {
+            print("chapters", result)
+            print("expected", expected)
+            print("\n")
+        }
+        XCTAssertTrue(isEqual)
     }
 
     /// Makes sure title, times, and category are the same
-    func checkChapterEqual(_ lhs: [SendableChapter], _ rhs: [SendableChapter]) {
+    func checkChapterEqual(_ lhs: [SendableChapter], _ rhs: [SendableChapter]) -> Bool {
         XCTAssertEqual(lhs.count, rhs.count)
 
         for (index, chapter) in lhs.enumerated() {
-            XCTAssertEqual(
-                chapter.title,
-                rhs[index].title
-            )
-            XCTAssertEqual(
-                chapter.startTime,
-                rhs[index].startTime
-            )
-            XCTAssertEqual(
-                chapter.endTime,
-                rhs[index].endTime
-            )
-            XCTAssertEqual(
-                chapter.category,
-                rhs[index].category
-            )
+            if chapter.title != rhs[index].title {
+                print("title mismatch: \(chapter.title) != \(rhs[index].title)")
+                return false
+            }
+
+            if chapter.startTime != rhs[index].startTime {
+                print("start time mismatch: \(chapter.startTime) != \(rhs[index].startTime)")
+                return false
+            }
+
+            if chapter.endTime != rhs[index].endTime {
+                print("end time mismatch: \(chapter.endTime) != \(rhs[index].endTime)")
+                return false
+            }
+
+            if chapter.category != rhs[index].category {
+                print("category mismatch: \(chapter.category) != \(rhs[index].category)")
+                return false
+            }
         }
+
+        return true
     }
 
     /// Check that each end of the previous chapter matches the start of the next chapter
@@ -699,28 +1094,6 @@ final class ChapterServiceTests: XCTestCase {
 }
 
 struct ChapterServiceTestData {
-
-    static func getOverlapVideo() -> Video {
-        let desc = """
-        CHAPTERS
-        ---------------------------------------------------
-        0:00 Intro
-        1:04 Premise
-        2:12 Nene
-        7:41 Alyssa
-        10:39 Michael
-        13:16 Skosche
-        15:23 The Leader
-        24:18 Conclusion
-        26:57 Outro
-        """
-        return Video(
-            title: "I Paid Strangers to Secret Shop My Own Store",
-            url: URL(string: "https://www.youtube.com/watch?v=0IxaD8QwKTs"),
-            youtubeId: "0IxaD8QwKTs",
-            videoDescription: desc
-        )
-    }
 
     static func getSponsoredVideo() -> Video {
         let videoDescription = """
