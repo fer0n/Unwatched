@@ -82,7 +82,7 @@ struct VideoPlayer: View {
                 }
             }
             player.autoSetNextVideo(source, modelContext)
-            
+
             // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
             VideoService.markVideoWatched(video, modelContext: modelContext)
 
