@@ -11,19 +11,25 @@ import UnwatchedShared
     @ObservationIgnored var landscapeFullscreen: Bool = false
 
     var icon: OverlayIcon = .play
+
+    @MainActor
     var show = false {
         didSet {
-            if !show {
-                return
-            }
-            hideControlsTask?.cancel()
-            hideControlsTask = Task {
-                try? await Task.sleep(s: 0.2)
-                show = false
+            if show {
+                hideControlsTask?.cancel()
+                hideControlsTask = Task { @MainActor in
+                    do {
+                        try await Task.sleep(s: 0.2)
+                    } catch {}
+                    show = false
+                }
             }
         }
     }
 
+    init() {}
+
+    @MainActor
     func show(_ icon: OverlayIcon) {
         self.icon = icon
         show = true
