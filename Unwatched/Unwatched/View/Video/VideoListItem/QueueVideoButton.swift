@@ -11,6 +11,8 @@ struct QueueVideoButton: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(\.modelContext) var modelContext
 
+    @State var hapticToggle = false
+
     var videoData: VideoData
     var size: CGFloat = 30
 
@@ -33,6 +35,7 @@ struct QueueVideoButton: View {
         })
         .onTapGesture(perform: addToTopQueue)
         .accessibilityLabel("queueNext")
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         // button for accessibility, tapGesture to override parent
     }
 
@@ -44,7 +47,8 @@ struct QueueVideoButton: View {
             Logger.log.error("addToTopQueue: no video")
             return
         }
-        _ = VideoService.insertQueueEntries(
+        hapticToggle.toggle()
+        VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
             modelContext: modelContext
