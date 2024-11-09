@@ -35,7 +35,7 @@ struct FullscreenPlayerControlsWrapper: View {
             })
             .frame(width: nonEmbedding ? 60 : 0)
             .opacity(showControls ? 1 : 0)
-            .animation(.default, value: showControls)
+            .animation(.easeInOut(duration: 3), value: player.videoIsCloseToEnd)
         }
     }
 

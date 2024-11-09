@@ -14,17 +14,15 @@ import UnwatchedShared
 
     private var showControlsLocal = false {
         didSet {
-            Task {
-                if showControlsLocal {
-                    hideControlsTask?.cancel()
-                    hideControlsTask = Task {
-                        do {
-                            try await Task.sleep(s: Const.controlsAutoHideDebounce)
-                            withAnimation {
-                                showControlsLocal = false
-                            }
-                        } catch { }
-                    }
+            if showControlsLocal {
+                hideControlsTask?.cancel()
+                hideControlsTask = Task {
+                    do {
+                        try await Task.sleep(s: Const.controlsAutoHideDebounce)
+                        withAnimation(.bouncy(duration: 1)) {
+                            showControlsLocal = false
+                        }
+                    } catch { }
                 }
             }
         }
@@ -40,15 +38,13 @@ import UnwatchedShared
     }
 
     func setShowControls(positionLeft: Bool? = nil) {
-        withAnimation(.default.speed(3)) {
-            if let positionLeft {
-                self.positionLeft = positionLeft
-            } else if !keepVisible && !showControls {
-                // if not already shown, default to right side
-                self.positionLeft = false
-            }
-            showControlsLocal = true
+        if let positionLeft {
+            self.positionLeft = positionLeft
+        } else if !keepVisible && !showControls {
+            // if not already shown, default to right side
+            self.positionLeft = false
         }
+        showControlsLocal = true
     }
 
     func setKeepVisible(_ value: Bool, _ source: String) {
