@@ -3022,6 +3022,22 @@
         }
       }
     },
+    "markUnwatched" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesehen entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Watched"
+          }
+        }
+      }
+    },
     "markWatched" : {
       "localizations" : {
         "de" : {

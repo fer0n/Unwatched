@@ -7,13 +7,17 @@ import SwiftData
 import OSLog
 
 public struct VideoService {
-    public static func markVideoWatched(_ video: Video, modelContext: ModelContext) {
-        clearEntries(
-            from: video,
-            updateCleared: false,
-            modelContext: modelContext
-        )
-        video.watchedDate = .now
+    public static func setVideoWatched(_ video: Video, watched: Bool = true, modelContext: ModelContext) {
+        if watched {
+            clearEntries(
+                from: video,
+                updateCleared: false,
+                modelContext: modelContext
+            )
+            video.watchedDate = .now
+        } else {
+            video.watchedDate = nil
+        }
         try? modelContext.save()
     }
     

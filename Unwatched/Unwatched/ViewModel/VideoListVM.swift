@@ -79,14 +79,19 @@ import OSLog
         }
         let modelContext = ModelContext(container)
         for persistentId in ids {
-            guard let updatedVideo = modelContext.model(for: persistentId) as? Video,
-                  let sendable = updatedVideo.toExportWithSubscription else {
+            guard let updatedVideo = modelContext.model(for: persistentId) as? Video else {
                 Logger.log.warning("updateVideo failed: no model found")
                 return
             }
 
-            if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
-                videos[index] = sendable
+            withAnimation {
+                if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
+                    if let filter, !((try? filter.evaluate(updatedVideo)) ?? false) {
+                        videos.remove(at: index)
+                    } else if let sendable = updatedVideo.toExportWithSubscription {
+                        videos[index] = sendable
+                    }
+                }
             }
         }
     }

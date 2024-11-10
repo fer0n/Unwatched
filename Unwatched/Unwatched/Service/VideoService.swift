@@ -105,10 +105,14 @@ extension VideoService {
         }
     }
 
-    static func markVideoWatchedAsync(_ videoId: PersistentIdentifier, container: ModelContainer) -> Task<Void, Error> {
+    static func setVideoWatchedAsync(
+        _ videoId: PersistentIdentifier,
+        watched: Bool = true,
+        container: ModelContainer
+    ) -> Task<Void, Error> {
         let task = Task {
             let repo = VideoActor(modelContainer: container)
-            try await repo.markVideoWatched(videoId)
+            try await repo.setVideoWatched(videoId, watched: watched)
         }
         return task
     }
