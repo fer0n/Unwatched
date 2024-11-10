@@ -41,31 +41,37 @@ extension PlayerManager {
             Logger.log.info("no info to check for chapters")
             return
         }
+
+        // current chapter
         guard let current = chapters.first(where: { chapter in
             return chapter.startTime <= time && time < (chapter.endTime ?? 0)
         }) else {
             currentEndTime = nil
             return
         }
+
+        // next chapter
         let next = chapters.first(where: { chapter in
             chapter.startTime > current.startTime
         })
-        nextChapter = next
-
-        let previous = chapters.last(where: { chapter in
-            chapter.startTime < current.startTime
+        let nextActive = chapters.first(where: { chapter in
+            chapter.startTime > current.startTime && chapter.isActive
         })
-        previousChapter = previous
+        nextChapter = nextActive
         if !current.isActive {
-            if let nextActive = chapters.first(where: { chapter in
-                chapter.startTime > current.startTime && chapter.isActive
-            }) {
+            if let nextActive {
                 Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
                 seekPosition = nextActive.startTime
             } else if let duration = video.duration {
                 seekPosition = duration - 0.5
             }
         }
+
+        // previous chapter
+        let previous = chapters.last(where: { chapter in
+            chapter.startTime < current.startTime && chapter.isActive
+        })
+        previousChapter = previous
 
         withAnimation {
             currentChapter = current
