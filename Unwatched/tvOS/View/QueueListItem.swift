@@ -86,7 +86,7 @@ struct QueueEntryListItem: View {
     func markWatched(_ video: Video) {
         withAnimation {
             beforeRemove(entry)
-            VideoService.markVideoWatched(video, modelContext: modelContext)
+            VideoService.setVideoWatched(video, modelContext: modelContext)
         }
     }
 

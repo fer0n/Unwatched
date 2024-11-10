@@ -255,7 +255,7 @@ struct PlayerView: View {
 
         if continuousPlay {
             if let video = player.video {
-                VideoService.markVideoWatched(
+                VideoService.setVideoWatched(
                     video, modelContext: modelContext
                 )
             }

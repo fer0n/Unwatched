@@ -9,7 +9,7 @@ import UnwatchedShared
 struct VideoListItemMoreMenuView: View {
     var videoData: VideoData
     var config: VideoListItemConfig
-    var markWatched: () -> Void
+    var setWatched: (Bool) -> Void
     var addVideoToTopQueue: () -> Void
     var addVideoToBottomQueue: () -> Void
     var clearVideoEverywhere: () -> Void
@@ -21,7 +21,7 @@ struct VideoListItemMoreMenuView: View {
 
     var body: some View {
         ControlGroup {
-            Button("markWatched", systemImage: "checkmark", action: markWatched)
+            Button("markWatched", systemImage: "checkmark", action: { setWatched(true) })
 
             Button("addVideoToTopQueue",
                    systemImage: Const.queueTopSF,
@@ -53,6 +53,15 @@ struct VideoListItemMoreMenuView: View {
                     Text("addBookmark")
                 }
             }
+            if config.watched ?? (videoData.watchedDate != nil) {
+                Button {
+                    setWatched(false)
+                } label: {
+                    Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
+                }
+            }
+            Divider()
+
             if videoData.hasInboxEntry != true {
                 Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
             }

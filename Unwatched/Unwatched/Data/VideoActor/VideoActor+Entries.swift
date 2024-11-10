@@ -367,9 +367,9 @@ extension VideoActor {
         }
     }
 
-    func markVideoWatched(_ videoId: PersistentIdentifier) throws {
+    func setVideoWatched(_ videoId: PersistentIdentifier, watched: Bool = true) throws {
         if let video = modelContext.model(for: videoId) as? Video {
-            VideoService.markVideoWatched(video, modelContext: modelContext)
+            VideoService.setVideoWatched(video, watched: watched, modelContext: modelContext)
             try modelContext.save()
         }
     }

@@ -34,7 +34,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     theme: theme,
                     config: config,
                     clearVideoEverywhere: clearVideoEverywhere,
-                    markWatched: markWatched,
+                    setWatched: setWatched,
                     addVideoToTopQueue: addVideoToTopQueue,
                     addVideoToBottomQueue: addVideoToBottomQueue,
                     toggleBookmark: toggleBookmark,
@@ -50,7 +50,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                             VideoListItemMoreMenuView(
                                 videoData: videoData,
                                 config: config,
-                                markWatched: markWatched,
+                                setWatched: setWatched,
                                 addVideoToTopQueue: addVideoToTopQueue,
                                 addVideoToBottomQueue: addVideoToBottomQueue,
                                 clearVideoEverywhere: clearVideoEverywhere,
@@ -183,17 +183,19 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         )
     }
 
-    func markWatched() {
+    func setWatched(_ watched: Bool) {
         performVideoAction(
             asyncAction: { videoId in
-                VideoService.markVideoWatchedAsync(
+                VideoService.setVideoWatchedAsync(
                     videoId,
+                    watched: watched,
                     container: modelContext.container
                 )
             },
             syncAction: { video in
-                VideoService.markVideoWatched(
+                VideoService.setVideoWatched(
                     video,
+                    watched: watched,
                     modelContext: modelContext
                 )
             }
@@ -287,7 +289,7 @@ struct TrailingSwipeActionsView: View {
     var theme: ThemeColor
     var config: VideoListItemConfig
     var clearVideoEverywhere: () -> Void
-    var markWatched: () -> Void
+    var setWatched: (Bool) -> Void
     var addVideoToTopQueue: () -> Void
     var addVideoToBottomQueue: () -> Void
     var toggleBookmark: () -> Void
@@ -312,7 +314,7 @@ struct TrailingSwipeActionsView: View {
                     VideoListItemMoreMenuView(
                         videoData: videoData,
                         config: config,
-                        markWatched: markWatched,
+                        setWatched: setWatched,
                         addVideoToTopQueue: addVideoToTopQueue,
                         addVideoToBottomQueue: addVideoToBottomQueue,
                         clearVideoEverywhere: clearVideoEverywhere,
