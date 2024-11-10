@@ -1,6 +1,22 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "clear" : {
       "localizations" : {
         "de" : {
@@ -49,6 +65,22 @@
         }
       }
     },
+    "openAppStore" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        }
+      }
+    },
     "queue" : {
       "localizations" : {
         "de" : {
@@ -93,6 +125,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "To see videos, open Unwatched on your iOS/iPadOS device and add Videos to your Queue.  Make sure you have iCloud sync enabled (under Library → Settings → User Data)."
+          }
+        }
+      }
+    },
+    "youtubeAppRequired" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-App ist erforderlich, um Videos anzusehen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube App is required to watch videos"
           }
         }
       }
