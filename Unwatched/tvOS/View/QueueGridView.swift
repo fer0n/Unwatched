@@ -12,6 +12,7 @@ struct QueueGridView: View {
 
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
     @FocusState private var focusedVideo: QueueEntry?
+    @State private var showAlert = false
 
     let width: Double = 380
 
@@ -48,12 +49,32 @@ struct QueueGridView: View {
                     focusedVideo = firstEntry
                 }
             }
+            .alert("youtubeAppRequired", isPresented: $showAlert) {
+                Button("cancel", role: .cancel) { }
+                Button("openAppStore") {
+                    guard let url = URL(string: "https://apps.apple.com/app/id544007664") else {
+                        print("YouTube App Store URL not working")
+                        return
+                    }
+                    UIApplication.shared.open(
+                        url,
+                        options: [:],
+                        completionHandler: nil
+                    )
+                }
+            }
         }
     }
 
     func openYouTube(_ id: String) {
-        if let url = URL(string: "youtube://watch/\(id)") {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        guard let appURL = URL(string: "youtube://watch/\(id)") else {
+            print("Invalid YouTube URL: \(id)")
+            return
+        }
+        if UIApplication.shared.canOpenURL(appURL) {
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+        } else {
+            showAlert = true
         }
     }
 
