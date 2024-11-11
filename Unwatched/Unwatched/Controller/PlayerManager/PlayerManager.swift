@@ -28,6 +28,8 @@ import UnwatchedShared
 
     @ObservationIgnored var previousState = PreviousState()
 
+    init() {}
+
     @MainActor
     var video: Video? {
         didSet {
@@ -82,36 +84,6 @@ import UnwatchedShared
     }
 
     @ObservationIgnored var currentEndTime: Double?
-
-    @MainActor
-    func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
-        if videoId != nil && videoId != video?.youtubeId {
-            // avoid updating the wrong video
-            Logger.log.info("updateElapsedTime: wrong video to update")
-            return
-        }
-        Logger.log.info("updateElapsedTime")
-
-        let newTime = time ?? currentTime
-        if let time = newTime, video?.elapsedSeconds != time {
-            video?.elapsedSeconds = time
-        }
-    }
-
-    var currentRemaining: Double? {
-        if let end = currentEndTime, let current = currentTime {
-            return max(end - current, 0)
-        }
-        return nil
-    }
-
-    var currentRemainingText: String? {
-        if let remaining = currentRemaining,
-           let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
-            return "\(rem)"
-        }
-        return nil
-    }
 
     @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
@@ -227,29 +199,6 @@ import UnwatchedShared
             startAt = 0
         }
         return ensureStartPositionWorksWithChapters(startAt)
-    }
-
-    @MainActor
-    func ensureStartPositionWorksWithChapters(_ time: Double) -> Double {
-        guard let video = video else {
-            Logger.log.warning("ensureStartPositionWorksWithChapters: no video")
-            return time
-        }
-        // regular chapter is active, time is okay
-        if video.sortedChapters.first(
-            where: {
-                $0.isActive && $0.startTime <= time
-            }) != nil {
-            return time
-        }
-        // no active chapter found, try to find the first chapter with a start time after the current time
-        if let nextChapter = video.sortedChapters.first(
-            where: {
-                $0.isActive && $0.startTime > time
-            }) {
-            return nextChapter.startTime
-        }
-        return time
     }
 
     @MainActor

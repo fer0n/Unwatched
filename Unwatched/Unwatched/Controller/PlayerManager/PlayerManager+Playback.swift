@@ -12,6 +12,36 @@ import UnwatchedShared
 extension PlayerManager {
 
     @MainActor
+    func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
+        if videoId != nil && videoId != video?.youtubeId {
+            // avoid updating the wrong video
+            Logger.log.info("updateElapsedTime: wrong video to update")
+            return
+        }
+        Logger.log.info("updateElapsedTime")
+
+        let newTime = time ?? currentTime
+        if let time = newTime, video?.elapsedSeconds != time {
+            video?.elapsedSeconds = time
+        }
+    }
+
+    var currentRemaining: Double? {
+        if let end = currentEndTime, let current = currentTime {
+            return max(end - current, 0)
+        }
+        return nil
+    }
+
+    var currentRemainingText: String? {
+        if let remaining = currentRemaining,
+           let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
+            return "\(rem)"
+        }
+        return nil
+    }
+
+    @MainActor
     func playVideo(_ video: Video) {
         self.videoSource = .userInteraction
         self.video = video
@@ -129,7 +159,7 @@ extension PlayerManager {
         let isShort = video?.isYtShort ?? false
         Task {
             if !isShort && UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
-                await OrientationManager.changeOrientation(to: .landscapeRight)
+                OrientationManager.changeOrientation(to: .landscapeRight)
             }
         }
     }

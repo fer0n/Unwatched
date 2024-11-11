@@ -79,12 +79,11 @@ struct UserDataService {
     static func importBackup(_ data: Data, container: ModelContainer) {
         Logger.log.info("importBackup, userdataservice")
         var videoIdDict = [Int: Video]()
-
         let context = ModelContext(container)
         let decoder = JSONDecoder()
+
         do {
             let backup = try decoder.decode(UnwatchedBackup.self, from: data)
-
             restoreSettings(backup.settings)
 
             // Videos, get id mapping
@@ -96,36 +95,10 @@ struct UserDataService {
                 }
             }
 
-            func insertModelsFor<T: ModelConvertable>(_ entries: [T]) {
-                for entry in entries {
-                    if let video = videoIdDict[entry.videoId] {
-                        var modelEntry = entry.toModel
-                        context.insert(modelEntry)
-                        modelEntry.video = video
-                    }
-                }
-            }
-
-            func migrateWatchEntries(_ entries: [SendableWatchEntry]) {
-                let videoEntries = Dictionary(grouping: entries, by: { $0.videoId })
-                for (_, entries) in videoEntries {
-                    let entries = entries.sorted(by: {
-                        $0.date ?? .distantPast > $1.date ?? .distantPast
-                    })
-                    guard let first = entries.first,
-                          let lastEntryDate = first.date,
-                          var video = videoIdDict[first.videoId] else {
-                        continue
-                    }
-
-                    video.watchedDate = lastEntryDate
-                    videoIdDict[first.videoId] = video
-                }
-            }
-
-            insertModelsFor(backup.queueEntries)
-            insertModelsFor(backup.inboxEntries)
-            migrateWatchEntries(backup.watchEntries)
+            // Use the extracted functions
+            insertModelsFor(backup.queueEntries, videoIdDict: videoIdDict, context: context)
+            insertModelsFor(backup.inboxEntries, videoIdDict: videoIdDict, context: context)
+            migrateWatchEntries(backup.watchEntries, videoIdDict: &videoIdDict)
 
             // Subscriptions
             for subscription in backup.subscriptions {
@@ -139,6 +112,40 @@ struct UserDataService {
 
         } catch {
             Logger.log.error("error decoding: \(error)")
+        }
+    }
+
+    static private func insertModelsFor<T: ModelConvertable>(
+        _ entries: [T],
+        videoIdDict: [Int: Video],
+        context: ModelContext
+    ) {
+        for entry in entries {
+            if let video = videoIdDict[entry.videoId] {
+                var modelEntry = entry.toModel
+                context.insert(modelEntry)
+                modelEntry.video = video
+            }
+        }
+    }
+
+    static private func migrateWatchEntries(
+        _ entries: [SendableWatchEntry],
+        videoIdDict: inout [Int: Video]
+    ) {
+        let videoEntries = Dictionary(grouping: entries, by: { $0.videoId })
+        for (_, entries) in videoEntries {
+            let entries = entries.sorted(by: {
+                $0.date ?? .distantPast > $1.date ?? .distantPast
+            })
+            guard let first = entries.first,
+                  let lastEntryDate = first.date,
+                  var video = videoIdDict[first.videoId] else {
+                continue
+            }
+
+            video.watchedDate = lastEntryDate
+            videoIdDict[first.videoId] = video
         }
     }
 

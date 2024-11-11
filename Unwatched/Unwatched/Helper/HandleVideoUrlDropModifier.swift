@@ -56,9 +56,10 @@ struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewCo
     }
 
     var body: some View {
-        content.dropDestination(for: URL.self) { items, index in
-            handleUrlDrop(items, index)
-        }
+        content
+            .dropDestination(for: URL.self) { items, index in
+                handleUrlDrop(items, index)
+            }
     }
 
     func handleUrlDrop(_ items: [URL], _ index: Int) {
