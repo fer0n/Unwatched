@@ -86,7 +86,7 @@ struct VideoPlayerFooter: View {
 
     func toggleBookmark() {
         if let video = player.video {
-            VideoService.toggleBookmark(video, modelContext)
+            VideoService.toggleBookmark(video)
             hapticToggle.toggle()
         }
     }

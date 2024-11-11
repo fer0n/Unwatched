@@ -233,7 +233,15 @@ extension VideoService {
         _ = ImageService.deleteAllImages()
     }
 
-    static func toggleBookmark(_ video: Video, _ context: ModelContext) {
+    static func toggleBookmarkFetch(_ videoId: PersistentIdentifier, _ context: ModelContext) -> (Task<(), Error>)? {
+        if let video = context.model(for: videoId) as? Video {
+            video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
+            try? context.save()
+        }
+        return nil
+    }
+
+    static func toggleBookmark(_ video: Video) {
         video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
     }
 
