@@ -85,7 +85,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func performVideoAction(
-        asyncAction: ((PersistentIdentifier) -> Task<Void, Error>)?,
+        asyncAction: ((PersistentIdentifier) -> (Task<Void, Error>)?)?,
         syncAction: ((Video) -> Void)?
     ) {
         Logger.log.info("performVideoAction")
@@ -167,12 +167,20 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func toggleBookmark() {
-        guard let video = getVideo() else {
-            Logger.log.error("toggleBookmark: no video")
-            return
-        }
-        VideoService.toggleBookmark(video, modelContext)
-        config.onChange?()
+        Logger.log.error("toggleBookmark: no video")
+        performVideoAction(
+            asyncAction: { videoId in
+                VideoService.toggleBookmarkFetch(
+                    videoId,
+                    modelContext
+                )
+            },
+            syncAction: { video in
+                VideoService.toggleBookmark(
+                    video
+                )
+            }
+        )
     }
 
     func markWatched() {
