@@ -4,7 +4,7 @@
 //
 
 
-public struct NotificationInfo {
+public struct NotificationInfo: Sendable {
     public let title: String
     public let subtitle: String
 

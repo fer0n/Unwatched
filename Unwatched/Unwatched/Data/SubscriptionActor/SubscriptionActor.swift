@@ -167,11 +167,10 @@ actor SubscriptionActor {
         if channelId == nil && playlistId == nil {
             throw SubscriptionError.noInfoFoundToUnsibscribe
         }
-        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             (channelId != nil && $0.youtubeChannelId == channelId)
                 || (playlistId != nil && $0.youtubePlaylistId == playlistId)
         })
-        // fetch.fetchLimit = 1
         let subs = try modelContext.fetch(fetch)
         try deleteSubscriptions(subs)
     }

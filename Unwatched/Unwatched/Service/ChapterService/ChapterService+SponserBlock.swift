@@ -8,15 +8,6 @@ import OSLog
 import SwiftData
 import UnwatchedShared
 
-struct ChapterHandlingContext {
-    var last: SendableChapter
-    var chapter: SendableChapter
-    var newChapters: [SendableChapter]
-    var index: Int
-    var tolerance: Double
-    var lastEndTime: Double
-}
-
 extension ChapterService {
     static func mergeOrGenerateChapters(
         youtubeId: String,
@@ -46,7 +37,11 @@ extension ChapterService {
         }
         // regular chapters available: combine both
         else {
-            newChapters = mergeSponsorSegments(videoChapters, sponsorSegments: cleanedExternalChapters, duration: duration)
+            newChapters = mergeSponsorSegments(
+                videoChapters,
+                sponsorSegments: cleanedExternalChapters,
+                duration: duration
+            )
         }
 
         Logger.log.info("SponsorBlock, new: \(newChapters)")

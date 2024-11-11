@@ -38,6 +38,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func handleJsMessages(_ topic: String, _ payload: String?) {
         switch topic {
         case "pause":

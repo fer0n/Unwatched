@@ -83,7 +83,8 @@ struct ContentView: View {
             }
             .menuViewSheet(
                 allowMaxSheetHeight: videoExists && !navManager.searchFocused,
-                allowPlayerControlHeight: !player.embeddingDisabled && player.videoAspectRatio > Const.tallestAspectRatio,
+                allowPlayerControlHeight: !player.embeddingDisabled
+                    && player.videoAspectRatio > Const.tallestAspectRatio,
                 showCancelButton: landscapeFullscreen,
                 disableSheet: bigScreen
             )

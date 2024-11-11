@@ -41,16 +41,14 @@ struct PlayerView: View {
         fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
     }
 
-    var body: some View {
-        let wideAspect = (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
+    var wideAspect: Bool {
+        (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
             && landscapeFullscreen
+    }
+
+    var body: some View {
         ZStack(alignment: .top) {
-            Rectangle()
-                .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
-                .aspectRatio(player.videoAspectRatio, contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .background(backgroundTapRecognizer)
-                .animation(.default, value: player.videoAspectRatio)
+            videoPlaceholder
 
             if player.video != nil {
                 HStack(spacing: 0) {
@@ -110,6 +108,15 @@ struct PlayerView: View {
         !(
             fullscreenControlsSetting == .enabled || autoHideVM.showControls
         ) && hideControlsFullscreen
+    }
+
+    var videoPlaceholder: some View {
+        Rectangle()
+            .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
+            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+            .frame(maxWidth: .infinity)
+            .background(backgroundTapRecognizer)
+            .animation(.default, value: player.videoAspectRatio)
     }
 
     @MainActor

@@ -194,7 +194,9 @@ import UnwatchedShared
             let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
             return (sub, videos)
         } catch {
-            Logger.log.error("Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)")
+            Logger.log.error(
+                "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
+            )
             throw error
         }
     }
