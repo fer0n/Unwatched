@@ -100,6 +100,6 @@ struct PlayButton: View {
 
 #Preview {
     PlayButton(size: 90)
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager())
 }

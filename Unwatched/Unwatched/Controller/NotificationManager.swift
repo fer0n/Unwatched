@@ -11,14 +11,13 @@ import UnwatchedShared
 
 struct NotificationManager {
 
-    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo, container: ModelContainer) async {
+    static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) async {
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
         let notificationInfos = await newVideoInfo.getNewVideoNotificationContent(
             includeInbox: notifyAboutInbox,
-            includeQueue: notifyAboutQueue,
-            container: container)
+            includeQueue: notifyAboutQueue)
 
         for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)

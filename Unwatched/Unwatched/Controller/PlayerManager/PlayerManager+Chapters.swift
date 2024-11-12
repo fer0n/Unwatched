@@ -129,8 +129,7 @@ extension PlayerManager {
         Logger.log.info("handleChapterRefresh")
 
         guard let videoId = video?.persistentModelID,
-              let youtubeId = video?.youtubeId,
-              let container = container else {
+              let youtubeId = video?.youtubeId else {
             Logger.log.warning("Not enough info to enrich chapters")
             return
         }
@@ -146,7 +145,6 @@ extension PlayerManager {
                             youtubeId: youtubeId,
                             videoId: videoId,
                             videoChapters: sendableChapters,
-                            container: container,
                             duration: duration,
                             forceRefresh: forceRefresh
                         ) else {
@@ -155,7 +153,7 @@ extension PlayerManager {
                 }
                 Logger.log.info("SponsorBlock: Refreshed")
 
-                let modelContext = ModelContext(container)
+                let modelContext = DataProvider.newContext()
                 guard let video = modelContext.model(for: videoId) as? Video else {
                     Logger.log.info("handleChapterRefresh: no video")
                     return

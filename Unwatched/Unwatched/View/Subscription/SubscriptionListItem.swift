@@ -8,7 +8,6 @@ import OSLog
 import UnwatchedShared
 
 struct SubscriptionListItem: View {
-    @Environment(\.modelContext) var modelContext
     var subscription: SendableSubscription
     var onDelete: ((Task<(), Error>) -> Void)?
 
@@ -18,8 +17,7 @@ struct SubscriptionListItem: View {
             return
         }
         let task = SubscriptionService.deleteSubscriptions(
-            [id],
-            container: modelContext.container
+            [id]
         )
         onDelete?(task)
     }

@@ -170,8 +170,7 @@ struct ImportSubscriptionsView: View {
 
         SubscriptionService.softUnsubscribeAll(modelContext)
         startAddImport()
-        let container = modelContext.container
-        SubscriptionService.cleanupArchivedSubscriptions(container)
+        SubscriptionService.cleanupArchivedSubscriptions()
     }
 
     func startAddImport() {
@@ -184,8 +183,7 @@ struct ImportSubscriptionsView: View {
         let subs = Array(selection)
         loadSubStatesTask = Task {
             return try await SubscriptionService.addSubscriptions(
-                from: subs,
-                modelContainer: container)
+                from: subs)
         }
     }
 
@@ -269,7 +267,7 @@ struct ImportSubscriptionsView: View {
         //        SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ")
         //    ]
     )
-    .modelContainer(DataController.previewContainer)
+    .modelContainer(DataProvider.previewContainer)
     .environment(RefreshManager())
     .environment(NavigationManager())
 }

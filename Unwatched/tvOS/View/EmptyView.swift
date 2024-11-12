@@ -43,7 +43,7 @@ struct AddTestDataButton: View {
     }
 
     func fillData() {
-        DataController.fillWithTestData(modelContext)
+        DataProvider.fillWithTestData(modelContext)
     }
 }
 

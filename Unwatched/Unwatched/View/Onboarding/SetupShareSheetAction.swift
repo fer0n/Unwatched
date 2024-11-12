@@ -45,5 +45,5 @@ struct ShareSheetTip: View {
 
 #Preview {
     SetupShareSheetAction()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
 }

@@ -50,7 +50,7 @@ struct AddSubscriptionView: View {
 
 #Preview {
     AddSubscriptionView(subManager: SubscribeManager())
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
 }
 
 // let newSubs = [

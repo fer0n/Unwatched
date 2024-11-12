@@ -4,9 +4,10 @@ import OSLog
 import UnwatchedShared
 
 struct SubscriptionService {
-    static func getActiveSubscriptions(_ modelContainer: ModelContainer) async -> [SendableSubscription] {
+    static func getActiveSubscriptions() async -> [SendableSubscription] {
+        let container = DataProvider.shared.container
         let task = Task {
-            let repo = SubscriptionActor(modelContainer: modelContainer)
+            let repo = SubscriptionActor(modelContainer: container)
             return await repo.getActiveSubscriptions()
         }
         let subs = await task.value
@@ -14,48 +15,44 @@ struct SubscriptionService {
     }
 
     static func addSubscriptions(
-        subscriptionInfo: [SubscriptionInfo],
-        modelContainer: ModelContainer) async throws -> [SubscriptionState] {
-        let repo = SubscriptionActor(modelContainer: modelContainer)
+        subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
+        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
         return try await repo.addSubscriptions(subscriptionInfo: subscriptionInfo)
     }
 
     static func addSubscriptions(
-        from sendableSubs: [SendableSubscription],
-        modelContainer: ModelContainer
+        from sendableSubs: [SendableSubscription]
     ) async throws -> [SubscriptionState] {
-        let repo = SubscriptionActor(modelContainer: modelContainer)
+        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
         return try await repo.addSubscriptions(sendableSubs: sendableSubs)
     }
 
     static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
-                                subsciptionId: PersistentIdentifier? = nil,
-                                modelContainer: ModelContainer) async throws {
+                                subsciptionId: PersistentIdentifier? = nil) async throws {
         guard subscriptionInfo != nil || subsciptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
-        let repo = SubscriptionActor(modelContainer: modelContainer)
+        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
         return try await repo.subscribeTo(subscriptionInfo, subsciptionId)
     }
 
-    static func getAllFeedUrls(_ container: ModelContainer) async throws -> [(title: String, link: URL?)] {
-        let repo = SubscriptionActor(modelContainer: container)
+    static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {
+        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
         return try await repo.getAllFeedUrls()
     }
 
     static func deleteSubscriptions(
-        _ subscriptionIds: [PersistentIdentifier],
-        container: ModelContainer
+        _ subscriptionIds: [PersistentIdentifier]
     ) -> Task<(), Error> {
         return Task {
-            let repo = SubscriptionActor(modelContainer: container)
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.deleteSubscriptions(subscriptionIds)
         }
     }
 
-    static func unsubscribe(_ info: SubscriptionInfo, container: ModelContainer) -> Task<(), Error> {
+    static func unsubscribe(_ info: SubscriptionInfo) -> Task<(), Error> {
         return Task {
-            let repo = SubscriptionActor(modelContainer: container)
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.unsubscribe(info.channelId, playlistId: info.playlistId)
         }
     }
@@ -74,9 +71,9 @@ struct SubscriptionService {
         try? modelContext.save()
     }
 
-    static func cleanupArchivedSubscriptions(_ container: ModelContainer) {
+    static func cleanupArchivedSubscriptions() {
         Task {
-            let repo = SubscriptionActor(modelContainer: container)
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.cleanupArchivedSubscriptions()
         }
     }
@@ -87,10 +84,9 @@ struct SubscriptionService {
 
     static func isSubscribed(channelId: String? = nil,
                              playlistId: String? = nil,
-                             updateSubscriptionInfo: SubscriptionInfo? = nil,
-                             container: ModelContainer) -> Task<(Bool), Never> {
+                             updateSubscriptionInfo: SubscriptionInfo? = nil) -> Task<(Bool), Never> {
         return Task {
-            let repo = SubscriptionActor(modelContainer: container)
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             let isSubscribed = await repo.isSubscribed(channelId: channelId,
                                                        playlistId: playlistId,
                                                        updateInfo: updateSubscriptionInfo)
@@ -106,22 +102,22 @@ struct SubscriptionService {
         }
     }
 
-    static func getRegularChannel(_ channelId: String, container: ModelContainer) -> Subscription? {
+    static func getRegularChannel(_ channelId: String) -> Subscription? {
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
         })
         fetch.fetchLimit = 1
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
         let subs = try? modelContext.fetch(fetch)
         return subs?.first
     }
 
-    static func getRegularChannel(userName: String, container: ModelContainer) -> Subscription? {
+    static func getRegularChannel(userName: String) -> Subscription? {
         var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             $0.youtubePlaylistId == nil && $0.youtubeUserName == userName
         })
         fetch.fetchLimit = 1
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
         let subs = try? modelContext.fetch(fetch)
         return subs?.first
     }

@@ -11,7 +11,6 @@ import UnwatchedShared
 // MARK: View
 
 struct HandleVideoUrlDropModifier: ViewModifier {
-    @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) private var player
 
     var placement: VideoPlacement
@@ -26,8 +25,7 @@ struct HandleVideoUrlDropModifier: ViewModifier {
 
     func handleUrlDrop(_ items: [URL], _ location: CGPoint) -> Bool {
         Logger.log.info("handleUrlDrop \(items)")
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(items, in: placement, at: 0, container: container)
+        let task = VideoService.addForeignUrls(items, in: placement, at: 0)
         if placement == .queue {
             player.loadTopmostVideoFromQueue(after: task)
         }
@@ -45,7 +43,6 @@ extension View {
 
 struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
     @Environment(PlayerManager.self) private var player
-    @Environment(\.modelContext) var modelContext
 
     var placement: VideoPlacement
     let content: Content
@@ -64,8 +61,7 @@ struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewCo
 
     func handleUrlDrop(_ items: [URL], _ index: Int) {
         Logger.log.info("handleUrlDrop \(items)")
-        let container = modelContext.container
-        let task = VideoService.addForeignUrls(items, in: placement, at: index, container: container)
+        let task = VideoService.addForeignUrls(items, in: placement, at: index)
         if placement == .queue && index == 0 {
             player.loadTopmostVideoFromQueue(after: task)
         }

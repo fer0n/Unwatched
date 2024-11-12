@@ -64,11 +64,6 @@ struct AddToLibraryView: View {
             handleTextFieldSubmit()
         }
         .disabled(subManager.isLoading)
-        .onAppear {
-            if subManager.container == nil {
-                subManager.container = modelContext.container
-            }
-        }
         .sheet(isPresented: $subManager.showDropResults) {
             AddSubscriptionView(subManager: subManager)
                 .environment(\.colorScheme, colorScheme)
@@ -206,7 +201,7 @@ struct AddToLibraryView: View {
             videoUrls = []
             isLoadingVideos = true
             let container = modelContext.container
-            let task = VideoService.addForeignUrls(urls, in: .queue, container: container)
+            let task = VideoService.addForeignUrls(urls, in: .queue)
             do {
                 try await task.value
                 isLoadingVideos = false
@@ -223,7 +218,7 @@ struct AddToLibraryView: View {
 
 #Preview {
     AddToLibraryView(subManager: .constant(SubscribeManager()), showBrowser: true)
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(RefreshManager())
 }

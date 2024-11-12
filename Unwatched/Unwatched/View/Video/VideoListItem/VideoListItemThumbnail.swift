@@ -74,7 +74,7 @@ struct VideoListItemThumbnail: View {
     )
     .environment(ImageCacheManager())
     .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-    .modelContainer(DataController.previewContainer)
+    .modelContainer(DataProvider.previewContainer)
     .frame(width: 300, height: 300)
     .background(.gray)
 

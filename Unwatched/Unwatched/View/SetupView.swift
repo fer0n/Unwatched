@@ -36,10 +36,7 @@ struct SetupView: View {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
             .onAppear {
-                let container = modelContext.container
                 appDelegate.navManager = navManager
-                appDelegate.container = container
-                refresher.container = container
             }
             .onChange(of: scenePhase) {
                 switch scenePhase {
@@ -101,8 +98,7 @@ struct SetupView: View {
         let task = VideoService.addForeignUrls(
             [url],
             in: .queue,
-            at: 0,
-            container: container
+            at: 0
         )
         player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .userInteraction)
         navManager.handlePlay()
@@ -111,5 +107,5 @@ struct SetupView: View {
 
 #Preview {
     SetupView(appDelegate: AppDelegate())
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
 }

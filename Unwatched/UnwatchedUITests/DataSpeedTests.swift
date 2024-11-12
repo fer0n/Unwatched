@@ -10,12 +10,10 @@ import UnwatchedShared
 // swiftlint:disable all
 final class DataSpeedTests: XCTestCase {
     func testAsyncVideoLoading() async {
-        let container = await DataController.previewContainer
         let data = (try? loadFileData(for: "backup-file.json"))!
-        UserDataService.importBackup(data, container: container)
+        UserDataService.importBackup(data)
 
         let videoListVM = VideoListVM()
-        videoListVM.container = container
         let sorting = SortDescriptor<Video>(\.publishedDate)
         videoListVM.setSorting([sorting])
 
@@ -47,10 +45,9 @@ final class DataSpeedTests: XCTestCase {
     // MARK: Helpers
 
     func getModelContext() async -> ModelContext {
-        let container = await DataController.previewContainer
         let data = (try? loadFileData(for: "backup-file.json"))!
-        UserDataService.importBackup(data, container: container)
-        return ModelContext(container)
+        UserDataService.importBackup(data)
+        return DataProvider.newContext()
     }
 
     func loadFileData(for fixture: String) throws -> Data {

@@ -24,9 +24,7 @@ class VideoCrawlerTests: XCTestCase {
 
     @MainActor
     func testLoadingVideos() async {
-        let container = DataController.previewContainer
-
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         let subs = VideoCrawlerTestData.subs
         let fetchVids = FetchDescriptor<Video>()
 
@@ -43,7 +41,6 @@ class VideoCrawlerTests: XCTestCase {
             // print("subCount: \(subCount)")
 
             let refresher = RefreshManager()
-            refresher.container = container
 
             let task1 = Task { await refresher.handleBackgroundVideoRefresh() }
             let task2 = Task { await refresher.refreshAll() }
@@ -55,7 +52,6 @@ class VideoCrawlerTests: XCTestCase {
             print("count: \(countVids1)")
 
             let task = CleanupService.cleanupDuplicatesAndInboxDate(
-                container,
                 quickCheck: false,
                 videoOnly: false
             )

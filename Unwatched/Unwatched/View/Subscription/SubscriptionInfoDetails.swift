@@ -134,9 +134,7 @@ struct SubscriptionInfoDetails: View {
                         .onTapGesture {
                             let container = modelContext.container
                             if let channelId = subscription.youtubeChannelId,
-                               let regularChannel = SubscriptionService.getRegularChannel(
-                                channelId,
-                                container: container) {
+                               let regularChannel = SubscriptionService.getRegularChannel(channelId) {
                                 navManager.pushSubscription(
                                     subscription: regularChannel
                                 )
@@ -182,7 +180,7 @@ struct SubscriptionInfoDetails: View {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataProvider.previewContainer
     let fetch = FetchDescriptor<Subscription>()
     let subs = try? container.mainContext.fetch(fetch)
     let sub = subs?.first

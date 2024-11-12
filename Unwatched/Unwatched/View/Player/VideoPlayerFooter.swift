@@ -98,7 +98,7 @@ struct VideoPlayerFooter: View {
         setShowMenu: { },
         sleepTimerVM: SleepTimerViewModel(),
         onSleepTimerEnded: { _ in })
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
 }

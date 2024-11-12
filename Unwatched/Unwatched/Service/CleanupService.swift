@@ -10,7 +10,6 @@ import UnwatchedShared
 
 struct CleanupService {
     static func cleanupDuplicatesAndInboxDate(
-        _ container: ModelContainer,
         quickCheck: Bool = false,
         videoOnly: Bool = true
     ) -> Task<
@@ -19,7 +18,7 @@ struct CleanupService {
     > {
         Logger.log.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
-            let repo = CleanupActor(modelContainer: container)
+            let repo = CleanupActor(modelContainer: DataProvider.shared.container)
             let info = await repo.removeDuplicates(
                 quickCheck: quickCheck,
                 videoOnly: videoOnly

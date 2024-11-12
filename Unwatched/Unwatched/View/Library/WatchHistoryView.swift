@@ -34,6 +34,6 @@ struct WatchHistoryView: View {
 
 #Preview {
     WatchHistoryView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(ImageCacheManager())
 }

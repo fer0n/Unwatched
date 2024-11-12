@@ -161,7 +161,7 @@ struct ChapterMiniControlRemainingText: View {
 
 #Preview {
     ChapterMiniControlView(setShowMenu: {})
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager.getDummy())
         .environment(Alerter())

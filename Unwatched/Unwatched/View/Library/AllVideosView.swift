@@ -64,7 +64,7 @@ struct AllVideosView: View {
 #Preview {
     NavigationStack {
         AllVideosView()
-            .modelContainer(DataController.previewContainer)
+            .modelContainer(DataProvider.previewContainer)
             .environment(NavigationManager())
             .environment(RefreshManager())
             .environment(PlayerManager())

@@ -11,7 +11,6 @@ import UnwatchedShared
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     weak var navManager: NavigationManager?
-    var container: ModelContainer?
     let notificationCenter = UNUserNotificationCenter.current()
 
     func woraroundInitialWebViewDelay() {
@@ -82,18 +81,17 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         }()
         let placement: VideoPlacement? = tab == .queue ? .queue : tab == .inbox ? .inbox : nil
 
-        guard let youtubeId = userInfo[Const.notificationVideoId] as? String,
-              let container = self.container else {
+        guard let youtubeId = userInfo[Const.notificationVideoId] as? String else {
             Logger.log.warning("Notification action cannot function")
             return
         }
 
         switch response.actionIdentifier {
         case Const.notificationActionQueue:
-            VideoService.insertQueueEntriesAsync(at: 1, youtubeId: youtubeId, container: container)
+            VideoService.insertQueueEntriesAsync(at: 1, youtubeId: youtubeId)
             NotificationManager.changeBadgeNumer(by: -1, placement)
         case Const.notificationActionClear:
-            VideoService.clearFromEverywhere(youtubeId, container: container)
+            VideoService.clearFromEverywhere(youtubeId)
             NotificationManager.changeBadgeNumer(by: -1, placement)
         default:
             break

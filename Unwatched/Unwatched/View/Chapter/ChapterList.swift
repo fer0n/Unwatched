@@ -81,7 +81,7 @@ struct ChapterList: View {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataProvider.previewContainer
     let context = ModelContext(container)
     let player = PlayerManager()
 

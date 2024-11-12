@@ -65,25 +65,24 @@ extension RefreshManager {
     }
 
     func cleanup(
-        hardRefresh: Bool,
-        _ container: ModelContainer
+        hardRefresh: Bool
     ) async {
         if hardRefresh {
-            let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
             _ = await task.value
         } else {
-            await quickCleanup(container)
+            await quickCleanup()
         }
     }
 
-    private func quickCleanup(_ container: ModelContainer) async {
+    private func quickCleanup() async {
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         guard enableIcloudSync else {
             return
         }
         Logger.log.info("quickCleanup")
 
-        let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: true)
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: true)
         _ = await task.value
     }
 }

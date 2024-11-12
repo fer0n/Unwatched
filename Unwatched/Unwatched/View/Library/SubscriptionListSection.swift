@@ -9,8 +9,6 @@ import OSLog
 import UnwatchedShared
 
 struct SubscriptionListSection: View {
-    @Environment(\.modelContext) var modelContext
-
     @State var subscriptionsVM = SubscriptionListVM()
     @Binding var subManager: SubscribeManager
     var theme: ThemeColor
@@ -40,8 +38,6 @@ struct SubscriptionListSection: View {
             await addDroppedUrls()
         }
         .task {
-            let container = modelContext.container
-            subscriptionsVM.container = container
             subscriptionsVM.setSorting()
             await subscriptionsVM.updateData()
         }

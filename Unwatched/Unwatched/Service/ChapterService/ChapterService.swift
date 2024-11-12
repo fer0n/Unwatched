@@ -124,8 +124,7 @@ struct ChapterService {
 
     static func updateDuration(
         _ video: Video,
-        duration: Double,
-        _ container: ModelContainer?
+        duration: Double
     ) {
         if let lastNormalChapter = (video.chapters ?? []).max(by: { $0.startTime < $1.startTime }) {
             if  lastNormalChapter.endTime == nil, duration > lastNormalChapter.startTime {
@@ -135,11 +134,7 @@ struct ChapterService {
         }
 
         if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
-            guard let container else {
-                Logger.log.warning("No container to update duration")
-                return
-            }
-            let context = ModelContext(container)
+            let context = DataProvider.newContext()
             fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
             video.mergedChapters = chapters
             try? context.save()

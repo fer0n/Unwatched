@@ -188,8 +188,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
             ChapterService.updateDuration(
                 video,
-                duration: duration,
-                parent.player.container
+                duration: duration
             )
         }
     }

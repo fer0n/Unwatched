@@ -77,7 +77,7 @@ struct NotificationSettingsView: View {
 
 #Preview {
     NotificationSettingsView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(Alerter())
 }

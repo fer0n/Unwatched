@@ -11,7 +11,6 @@ import UnwatchedShared
 
 struct DropUrlArea<Content: View>: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @Environment(\.modelContext) var modelContext
     @State var avm = AddVideoViewModel()
 
     let content: Content
@@ -53,9 +52,6 @@ struct DropUrlArea<Content: View>: View {
         .task(id: avm.isSuccess) {
             await avm.handleSuccessChange()
         }
-        .onAppear {
-            avm.container = modelContext.container
-        }
     }
 
     var dropAreaContent: some View {
@@ -95,5 +91,5 @@ struct DropUrlArea<Content: View>: View {
     DropUrlArea {
         Text(verbatim: "hello")
     }
-    .modelContainer(DataController.previewContainer)
+    .modelContainer(DataProvider.previewContainer)
 }

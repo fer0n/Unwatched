@@ -312,7 +312,7 @@ struct PlayerView: View {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataProvider.previewContainer
     let context = ModelContext(container)
     let player = PlayerManager()
     let video = Video.getDummy()

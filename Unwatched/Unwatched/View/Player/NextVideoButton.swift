@@ -113,6 +113,6 @@ struct NextVideoButton: View {
 
 #Preview {
     NextVideoButton(markVideoWatched: { _, _ in })
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager())
 }

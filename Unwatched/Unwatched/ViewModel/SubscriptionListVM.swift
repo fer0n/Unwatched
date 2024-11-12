@@ -19,12 +19,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     var sort: ((SendableSubscription, SendableSubscription) -> Bool)?
 
     private func fetchSubscriptions() async {
-        guard let container = container else {
-            isLoading = false
-            Logger.log.info("No container found when trying to fetch subscriptions")
-            return
-        }
-        let subs = await SubscriptionService.getActiveSubscriptions(container)
+        let subs = await SubscriptionService.getActiveSubscriptions()
         withAnimation {
             subscriptions = subs
             isLoading = false
@@ -99,11 +94,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
 
     func updateSubscriptions(_ ids: Set<PersistentIdentifier>) {
         print("updateSubscriptions: \(ids.count)")
-        guard let container = container else {
-            Logger.log.warning("updateSubscription failed")
-            return
-        }
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
         for persistentId in ids {
             guard let updatedSub = modelContext.model(for: persistentId) as? Subscription else {
                 Logger.log.warning("updateSubscription failed: no model found")

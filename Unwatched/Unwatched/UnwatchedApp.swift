@@ -19,11 +19,8 @@ struct UnwatchedApp: App {
 
     init() {
         player = PlayerManager()
-        sharedModelContainer = DataController.getModelContainer()
+        sharedModelContainer = DataProvider.shared.container
         imageCacheManager = ImageCacheManager()
-
-        player.container = sharedModelContainer
-        refresher.container = sharedModelContainer
     }
 
     var body: some Scene {

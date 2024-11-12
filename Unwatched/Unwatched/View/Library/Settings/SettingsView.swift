@@ -9,7 +9,6 @@ import UnwatchedShared
 
 struct SettingsView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @Environment(\.modelContext) var modelContext
     @State var isExportingAll = false
 
     var body: some View {
@@ -107,8 +106,7 @@ struct SettingsView: View {
     }
 
     func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
-        let container = modelContext.container
-        let result = try? await SubscriptionService.getAllFeedUrls(container)
+        let result = try? await SubscriptionService.getAllFeedUrls()
         return result ?? []
     }
 }
@@ -138,7 +136,7 @@ struct LinkItemView<Content: View>: View {
 
 #Preview {
     SettingsView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

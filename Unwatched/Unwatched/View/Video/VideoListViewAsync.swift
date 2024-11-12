@@ -20,7 +20,6 @@ struct VideosViewAsync: View {
         }
         .listStyle(.plain)
         .task {
-            videoListVM.container = modelContext.container
             videoListVM.filter = filter
             videoListVM.setSorting(sorting)
             await videoListVM.updateData()

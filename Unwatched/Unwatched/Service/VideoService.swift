@@ -5,12 +5,11 @@ import UnwatchedShared
 
 extension VideoService {
     static func loadNewVideosInBg(
-        subscriptionIds: [PersistentIdentifier]? = nil,
-        container: ModelContainer
+        subscriptionIds: [PersistentIdentifier]? = nil
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Logger.log.info("loadNewVideosInBg")
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             do {
                 return try await repo.loadVideos(
                     subscriptionIds
@@ -24,24 +23,22 @@ extension VideoService {
 
     static func clearEntriesAsync(from videoId: PersistentIdentifier,
                                   except model: (any PersistentModel.Type)? = nil,
-                                  updateCleared: Bool,
-                                  container: ModelContainer) -> Task<Void, Error> {
+                                  updateCleared: Bool) -> Task<Void, Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
         }
         return task
     }
 
     static func getSendableVideos(
-        _ modelContainer: ModelContainer,
         _ filter: Predicate<Video>?,
         _ sort: [SortDescriptor<Video>],
         _ skip: Int = 0,
         _ limit: Int? = nil
     ) async -> [SendableVideo] {
         let task = Task {
-            let repo = VideoActor(modelContainer: modelContainer)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return await repo.getSendableVideos(filter, sort, skip, limit)
         }
         return await task.value
@@ -60,9 +57,9 @@ extension VideoService {
             )
     }
 
-    static func moveVideoToInboxAsync(_ videoId: PersistentIdentifier, container: ModelContainer) -> Task<Void, Error> {
+    static func moveVideoToInboxAsync(_ videoId: PersistentIdentifier) -> Task<Void, Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return try await repo.moveVideoToInbox(videoId)
         }
         return task
@@ -107,22 +104,20 @@ extension VideoService {
 
     static func setVideoWatchedAsync(
         _ videoId: PersistentIdentifier,
-        watched: Bool = true,
-        container: ModelContainer
+        watched: Bool = true
     ) -> Task<Void, Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.setVideoWatched(videoId, watched: watched)
         }
         return task
     }
 
-    static func clearFromEverywhere(_ youtubeId: String, container: ModelContainer) {
+    static func clearFromEverywhere(_ youtubeId: String) {
         _ = Task {
-            let videoId = getModelId(for: youtubeId, container: container)
-
+            let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
-                let repo = VideoActor(modelContainer: container)
+                let repo = VideoActor(modelContainer: DataProvider.shared.container)
                 try await repo.clearEntries(from: videoId, updateCleared: true)
             } else {
                 Logger.log.info("Video not found")
@@ -130,22 +125,21 @@ extension VideoService {
         }
     }
 
-    static func getVideo(for youtubeId: String, container: ModelContainer) -> Video? {
-        let context = ModelContext(container)
+    static func getVideo(for youtubeId: String) -> Video? {
+        let context = DataProvider.newContext()
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
         let videos = try? context.fetch(fetch)
         return videos?.first
     }
 
-    static func getModelId(for youtubeId: String, container: ModelContainer) -> PersistentIdentifier? {
-        getVideo(for: youtubeId, container: container)?.persistentModelID
+    static func getModelId(for youtubeId: String) -> PersistentIdentifier? {
+        getVideo(for: youtubeId)?.persistentModelID
     }
 
     static func insertQueueEntriesAsync(at index: Int = 0,
-                                        youtubeId: String,
-                                        container: ModelContainer) {
-        if let videoId = getModelId(for: youtubeId, container: container) {
-            _ = insertQueueEntriesAsync(at: index, videoIds: [videoId], container: container)
+                                        youtubeId: String) {
+        if let videoId = getModelId(for: youtubeId) {
+            _ = insertQueueEntriesAsync(at: index, videoIds: [videoId])
         }
     }
 
@@ -162,18 +156,17 @@ extension VideoService {
     }
 
     static func insertQueueEntriesAsync(at index: Int = 0,
-                                        videoIds: [PersistentIdentifier],
-                                        container: ModelContainer) -> Task<(), Error> {
+                                        videoIds: [PersistentIdentifier]) -> Task<(), Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)
         }
         return task
     }
 
-    static func addToBottomQueueAsync(videoId: PersistentIdentifier, container: ModelContainer) -> Task<(), Error> {
+    static func addToBottomQueueAsync(videoId: PersistentIdentifier) -> Task<(), Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.addToBottomQueue(videoId: videoId)
         }
         return task
@@ -185,19 +178,18 @@ extension VideoService {
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacement,
-                               at index: Int = 1,
-                               container: ModelContainer) -> Task<(), Error> {
+                               at index: Int = 1) -> Task<(), Error> {
         Logger.log.info("addForeignUrls")
 
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.addForeignUrls(urls, in: videoPlacement, at: index)
         }
         return task
     }
 
-    static func getTopVideoInQueue(_ container: ModelContainer) -> PersistentIdentifier? {
-        let context = ModelContext(container)
+    static func getTopVideoInQueue() -> PersistentIdentifier? {
+        let context = DataProvider.newContext()
         return getTopVideoInQueue(context)?.persistentModelID
     }
 
@@ -221,8 +213,8 @@ extension VideoService {
         return nil
     }
 
-    static func deleteEverything(_ container: ModelContainer) async {
-        let context = ModelContext(container)
+    static func deleteEverything() async {
+        let context = DataProvider.newContext()
         do {
             try context.delete(model: QueueEntry.self)
             try context.delete(model: InboxEntry.self)
@@ -252,10 +244,9 @@ extension VideoService {
     static func clearList(_ list: ClearList,
                           _ direction: ClearDirection,
                           index: Int?,
-                          date: Date?,
-                          container: ModelContainer) -> Task<(), Error> {
+                          date: Date?) -> Task<(), Error> {
         let task = Task {
-            let repo = VideoActor(modelContainer: container)
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.clearList(list, direction, index: index, date: date)
         }
         return task

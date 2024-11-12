@@ -74,7 +74,7 @@ struct VideoListItem: View {
 }
 
 #Preview {
-    let container = DataController.previewContainerFilled
+    let container = DataProvider.previewContainerFilled
     let context = ModelContext(container)
     let fetch = FetchDescriptor<Video>()
     let videos = try? context.fetch(fetch)

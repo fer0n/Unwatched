@@ -538,8 +538,7 @@ final class ChapterServiceTests: XCTestCase {
 
     func testSponsorBlock() async {
         UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
 
         let video = ChapterServiceTestData.getSponsoredVideo()
         modelContext.insert(video)
@@ -555,8 +554,7 @@ final class ChapterServiceTests: XCTestCase {
             let chapters = try await ChapterService.mergeOrGenerateChapters(
                 youtubeId: video.youtubeId,
                 videoId: video.persistentModelID,
-                videoChapters: realChapters,
-                container: container
+                videoChapters: realChapters
             )
             print("chapters with duration: \(String(describing: chapters))")
             XCTAssertGreaterThan(chapters?.count ?? 0, 0)
@@ -566,9 +564,7 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testSponsorBlockChapters() async {
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
-
+        let modelContext = DataProvider.newContext()
         let video = ChapterServiceTestData.getSponsoredVideo()
         modelContext.insert(video)
         try? modelContext.save()
@@ -577,8 +573,7 @@ final class ChapterServiceTests: XCTestCase {
             let chapters = try await ChapterService.mergeOrGenerateChapters(
                 youtubeId: "Fbphhg9ArXw", // video.youtubeId,
                 videoId: video.persistentModelID,
-                videoChapters: [],
-                container: container
+                videoChapters: []
             )
             print("chapters with duration: \(String(describing: chapters))")
         } catch {
@@ -702,8 +697,7 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testUpdateDuration() async {
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
 
         let ch1 = Chapter(title: "0", time: 0, endTime: 10, category: nil)
         let ch2 = Chapter(title: "1", time: 10, endTime: nil, category: nil)
@@ -726,8 +720,7 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testUpdateDurationOneChapter() async {
-        let container = await DataController.previewContainer
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         var chapters = [Chapter(title: "0", time: 0, endTime: 10, category: nil)]
         ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, context: context)
 
@@ -751,9 +744,7 @@ final class ChapterServiceTests: XCTestCase {
 
 
         // -- Setup original chapters
-
-        let container = await DataController.previewContainer
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
 
         chapters.forEach(modelContext.insert)
 
@@ -799,7 +790,7 @@ final class ChapterServiceTests: XCTestCase {
 
         // add duration afterwards
         VideoService.updateDuration(loadedVideo, duration: duration)
-        ChapterService.updateDuration(loadedVideo, duration: duration, container)
+        ChapterService.updateDuration(loadedVideo, duration: duration)
         try? modelContext.save()
 
 

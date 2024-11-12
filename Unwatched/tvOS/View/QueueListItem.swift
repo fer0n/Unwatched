@@ -104,7 +104,7 @@ struct QueueEntryListItem: View {
 
 #Preview {
     QueueGridView()
-        .modelContainer(DataController.previewContainerFilled)
+        .modelContainer(DataProvider.previewContainerFilled)
         .environment(ImageCacheManager())
         .environment(SyncManager())
 }

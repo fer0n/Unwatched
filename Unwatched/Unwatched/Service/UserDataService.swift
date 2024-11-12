@@ -16,9 +16,9 @@ enum UserDataServiceError: Error {
 struct UserDataService {
 
     // saves user data as .unwatchedbackup
-    static func exportUserData(container: ModelContainer) throws -> Data {
+    static func exportUserData() throws -> Data {
         var backup = UnwatchedBackup()
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
 
         func fetchMapExportable<T: PersistentModel & Exportable>(
             _ model: T.Type,
@@ -76,10 +76,10 @@ struct UserDataService {
     }
 
     // loads user data from .unwatchedbackup files
-    static func importBackup(_ data: Data, container: ModelContainer) {
+    static func importBackup(_ data: Data) {
         Logger.log.info("importBackup, userdataservice")
         var videoIdDict = [Int: Video]()
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         let decoder = JSONDecoder()
 
         do {
@@ -140,7 +140,7 @@ struct UserDataService {
             })
             guard let first = entries.first,
                   let lastEntryDate = first.date,
-                  var video = videoIdDict[first.videoId] else {
+                  let video = videoIdDict[first.videoId] else {
                 continue
             }
 
@@ -149,9 +149,9 @@ struct UserDataService {
         }
     }
 
-    static func exportFile(_ container: ModelContainer) throws -> Data {
+    static func exportFile() throws -> Data {
         do {
-            return try UserDataService.exportUserData(container: container)
+            return try UserDataService.exportUserData()
         } catch {
             Logger.log.error("couldn't export: \(error)")
             throw error
@@ -159,7 +159,6 @@ struct UserDataService {
     }
 
     static func saveToIcloud(_ deviceName: String,
-                             _ container: ModelContainer,
                              manual: Bool = false) -> Task<(), Error> {
         return Task {
             do {
@@ -168,7 +167,7 @@ struct UserDataService {
                 guard let filename = filename else {
                     throw UserDataServiceError.directoryError
                 }
-                let data = try self.exportFile(container)
+                let data = try self.exportFile()
                 try data.write(to: filename)
             } catch {
                 Logger.log.error("saveToIcloud: \(error)")

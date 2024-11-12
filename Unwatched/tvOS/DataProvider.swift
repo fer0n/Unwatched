@@ -7,7 +7,8 @@ import SwiftData
 import UnwatchedShared
 
 // swiftlint:disable all
-extension DataController {
+extension DataProvider {
+    @MainActor
     public static let previewContainerFilled: ModelContainer = {
         var container = previewContainer
         let context = container.mainContext

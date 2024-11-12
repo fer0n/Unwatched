@@ -47,8 +47,7 @@ struct NewVideosNotificationInfo {
     }
 
     func getNewVideoNotificationContent(includeInbox: Bool,
-                                        includeQueue: Bool,
-                                        container: ModelContainer) async -> [NotificationInfo] {
+                                        includeQueue: Bool) async -> [NotificationInfo] {
         if !includeInbox && !includeQueue {
             return []
         }
@@ -58,7 +57,7 @@ struct NewVideosNotificationInfo {
 
         if count <= Const.simultaneousNotificationsLimit {
             let info = sendOneNotificationPerVideo()
-            let infoWithImages = await getImageData(info, container: container)
+            let infoWithImages = await getImageData(info)
             return infoWithImages
 
         } else {
@@ -66,7 +65,7 @@ struct NewVideosNotificationInfo {
         }
     }
 
-    private func getImageData(_ infos: [NotificationInfo], container: ModelContainer) async -> [NotificationInfo] {
+    private func getImageData(_ infos: [NotificationInfo]) async -> [NotificationInfo] {
         var infoWithImageData = infos
 
         await withTaskGroup(of: (Int, Data?).self) { group in

@@ -6,7 +6,8 @@
 import SwiftData
 import UnwatchedShared
 
-extension DataController {
+extension DataProvider {
+    @MainActor
     static let previewContainerFilled: ModelContainer = {
         var container = previewContainer
         let video = Video.getDummy()
@@ -18,7 +19,7 @@ extension DataController {
         try? container.mainContext.save()
 
         let jsonData = TestData.backup.data(using: .utf8)!
-        UserDataService.importBackup(jsonData, container: container)
+        UserDataService.importBackup(jsonData)
 
         try? container.mainContext.save()
         return container

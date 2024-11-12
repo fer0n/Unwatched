@@ -32,7 +32,6 @@ actor RefreshActor {
 @Observable class RefreshManager {
     static let shared = RefreshManager()
 
-    weak var container: ModelContainer?
     var isLoading = false
     var isSyncingIcloud = false
 
@@ -85,11 +84,6 @@ actor RefreshActor {
     }
 
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
-        guard let container = container else {
-            Logger.log.warning("RefreshManager has no container to refresh")
-            return
-        }
-
         if isSyncingIcloud {
             Logger.log.info("currently syncing iCloud, stopping now")
             return
@@ -106,18 +100,14 @@ actor RefreshActor {
         }
         do {
             let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: subscriptionIds,
-                container: container
+                subscriptionIds: subscriptionIds
             )
             _ = try await task.value
         } catch {
             Logger.log.info("Error during refresh: \(error)")
         }
 
-        await cleanup(
-            hardRefresh: hardRefresh,
-            container
-        )
+        await cleanup(hardRefresh: hardRefresh)
 
         stopLoading()
     }
@@ -139,17 +129,16 @@ actor RefreshActor {
             return
         }
 
-        if let container = container {
-            let task = UserDataService.saveToIcloud(deviceName, container)
-            Task {
-                try await task.value
-                UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-                Logger.log.info("saved backup")
+        let container = DataProvider.shared.container
+        let task = UserDataService.saveToIcloud(deviceName)
+        Task {
+            try await task.value
+            UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
+            Logger.log.info("saved backup")
 
-                // Auto delete
-                if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
-                    _ = UserDataService.autoDeleteBackups()
-                }
+            // Auto delete
+            if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
+                _ = UserDataService.autoDeleteBackups()
             }
         }
     }
@@ -236,10 +225,6 @@ extension RefreshManager {
 
     func handleBackgroundVideoRefresh() async {
         print("Background task running now")
-        guard let container = container else {
-            print("no container to refresh in background")
-            return
-        }
         do {
             scheduleVideoRefresh()
 
@@ -255,7 +240,7 @@ extension RefreshManager {
                 }
             }
 
-            let task = VideoService.loadNewVideosInBg(container: container)
+            let task = VideoService.loadNewVideosInBg()
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if Task.isCancelled {
@@ -267,7 +252,7 @@ extension RefreshManager {
             } else {
                 print("notifyNewVideos")
                 NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
-                await NotificationManager.notifyNewVideos(newVideos, container: container)
+                await NotificationManager.notifyNewVideos(newVideos)
             }
         } catch {
             print("Error during background refresh: \(error)")

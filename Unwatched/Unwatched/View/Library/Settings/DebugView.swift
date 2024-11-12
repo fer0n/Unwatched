@@ -52,11 +52,7 @@ struct DebugView: View {
                         Text("allowRefreshDuringSync")
                     }
                     AsyncButton {
-                        let container = modelContext.container
-                        let task = CleanupService.cleanupDuplicatesAndInboxDate(
-                            container,
-                            videoOnly: false
-                        )
+                        let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)
                         cleanupInfo = await task.value
                     } label: {
                         Text("removeDuplicates")
@@ -92,7 +88,7 @@ struct DebugView: View {
 
 #Preview {
     DebugView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(Alerter())
         .environment(PlayerManager())
 }

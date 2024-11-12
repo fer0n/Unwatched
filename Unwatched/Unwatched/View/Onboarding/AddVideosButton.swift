@@ -25,5 +25,5 @@ struct AddVideosButton: View {
 #Preview {
     AddVideosButton()
         .environment(NavigationManager())
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
 }
