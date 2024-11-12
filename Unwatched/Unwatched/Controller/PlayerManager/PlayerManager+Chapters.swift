@@ -137,10 +137,14 @@ extension PlayerManager {
         let chapters = (video?.chapters ?? []).sorted(by: { $0.startTime < $1.startTime })
         let sendableChapters = chapters.map(\.toExport)
         let duration = video?.duration
+        if let mergedChapters = video?.mergedChapters {
+            ChapterService.skipSponsorSegments(in: mergedChapters)
+            self.handleChapterChange()
+        }
 
         Task {
             do {
-                guard let newChapters = try await ChapterService
+                guard var newChapters = try await ChapterService
                         .mergeOrGenerateChapters(
                             youtubeId: youtubeId,
                             videoId: videoId,
@@ -152,6 +156,7 @@ extension PlayerManager {
                     return
                 }
                 Logger.log.info("SponsorBlock: Refreshed")
+                ChapterService.skipSponsorSegments(in: &newChapters)
 
                 let modelContext = DataProvider.newContext()
                 guard let video = modelContext.model(for: videoId) as? Video else {
