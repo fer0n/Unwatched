@@ -108,7 +108,7 @@ struct FullscreenPlayerControls: View {
             .padding()
     }
     .ignoresSafeArea(.all)
-    .modelContainer(DataController.previewContainer)
+    .modelContainer(DataProvider.previewContainer)
     .environment(PlayerManager())
     .environment(NavigationManager())
 }

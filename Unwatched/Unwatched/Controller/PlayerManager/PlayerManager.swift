@@ -21,8 +21,6 @@ import UnwatchedShared
     var temporaryPlaybackSpeed: Double?
     private(set) var aspectRatio: Double?
 
-    weak var container: ModelContainer?
-
     @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
 
@@ -128,10 +126,7 @@ import UnwatchedShared
         playIfCurrent: Bool = false
     ) {
         Logger.log.info("loadTopmostVideoFromQueue")
-        guard let container = container else {
-            Logger.log.error("loadTopmostVideoFromQueue: no container")
-            return
-        }
+        let container = DataProvider.shared.container
         if task != nil {
             let currentVideoId = video?.persistentModelID
             Task { @MainActor in

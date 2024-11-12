@@ -5,8 +5,17 @@
 
 import SwiftData
 
-@MainActor
-public class DataController {
+public class DataProvider {
+    public static let shared = DataProvider()
+    
+    public let container: ModelContainer = {
+        getModelContainer()
+    }()
+    
+    public static func newContext() -> ModelContext {
+        ModelContext(shared.container)
+    }
+    
     public static let dbEntries: [any PersistentModel.Type] = [
         Video.self,
         Subscription.self,
@@ -15,11 +24,11 @@ public class DataController {
         Chapter.self
     ]
 
-    static let schema = Schema(DataController.dbEntries)
+    static let schema = Schema(DataProvider.dbEntries)
 
     public static func modelConfig(_ isStoredInMemoryOnly: Bool = false) -> ModelConfiguration {
         ModelConfiguration(
-            schema: DataController.schema,
+            schema: DataProvider.schema,
             isStoredInMemoryOnly: isStoredInMemoryOnly,
             cloudKitDatabase: .none
         )
@@ -51,43 +60,50 @@ public class DataController {
         }
     }()
 
-    public static func getModelContainer(enableIcloudSync: Bool? = nil) -> ModelContainer {
-        let enableIcloudSync = enableIcloudSync ?? UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+    public static func getModelContainer() -> ModelContainer {
+        var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+        #if os(tvOS)
+            enableIcloudSync = true
+        #endif
 
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
-            return DataController.previewContainer
+            return DataProvider.previewContainer
         }
         #endif
 
         let config = ModelConfiguration(
-            schema: DataController.schema,
+            schema: DataProvider.schema,
             isStoredInMemoryOnly: false,
             cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
 
         do {
             if let container = try? ModelContainer(
-                for: DataController.schema,
+                for: DataProvider.schema,
                 migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             ) {
-                container.mainContext.undoManager = UndoManager()
+                Task { @MainActor in
+                    container.mainContext.undoManager = UndoManager()
+                }
                 return container
             }
 
             // workaround for migration (disable sync for initial launch)
             let config = ModelConfiguration(
-                schema: DataController.schema,
+                schema: DataProvider.schema,
                 isStoredInMemoryOnly: false,
                 cloudKitDatabase: .none
             )
             let container = try ModelContainer(
-                for: DataController.schema,
+                for: DataProvider.schema,
                 migrationPlan: UnwatchedMigrationPlan.self,
                 configurations: [config]
             )
-            container.mainContext.undoManager = UndoManager()
+            Task { @MainActor in
+                container.mainContext.undoManager = UndoManager()
+            }
             return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
@@ -96,7 +112,7 @@ public class DataController {
 
     public static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {
-            let schema = Schema(DataController.dbEntries)
+            let schema = Schema(DataProvider.dbEntries)
             let modelConfiguration = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: true,

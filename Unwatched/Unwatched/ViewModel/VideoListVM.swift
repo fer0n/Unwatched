@@ -33,13 +33,7 @@ import OSLog
     private func fetchVideos(skip: Int = 0, limit: Int? = nil) async {
         Logger.log.info("VideoListVM: fetchVideos")
         isLoading = true
-        guard let container else {
-            isLoading = false
-            Logger.log.info("fetchVideos: No container found")
-            return
-        }
         let newVideos = await VideoService.getSendableVideos(
-            container,
             filter,
             sort,
             skip,
@@ -73,11 +67,7 @@ import OSLog
 
     func updateVideos(_ ids: Set<PersistentIdentifier>) {
         Logger.log.info("updateVideos: \(ids.count)")
-        guard let container = container else {
-            Logger.log.warning("updateVideo failed")
-            return
-        }
-        let modelContext = ModelContext(container)
+        let modelContext = DataProvider.newContext()
         for persistentId in ids {
             guard let updatedVideo = modelContext.model(for: persistentId) as? Video else {
                 Logger.log.warning("updateVideo failed: no model found")

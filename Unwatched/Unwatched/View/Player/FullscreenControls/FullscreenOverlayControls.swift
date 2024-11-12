@@ -105,5 +105,5 @@ enum OverlayIcon {
         markVideoWatched: {_, _ in }
     )
     .environment(player)
-    .modelContainer(DataController.previewContainerFilled)
+    .modelContainer(DataProvider.previewContainerFilled)
 }

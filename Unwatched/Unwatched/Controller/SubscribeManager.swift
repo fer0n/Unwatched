@@ -10,8 +10,6 @@ import OSLog
 import UnwatchedShared
 
 @Observable class SubscribeManager {
-    weak var container: ModelContainer?
-
     var isSubscribedSuccess: Bool?
     var isLoading: Bool
 
@@ -36,14 +34,9 @@ import UnwatchedShared
 
     @MainActor
     func setIsSubscribed(_ subscriptionInfo: SubscriptionInfo?) async {
-        guard let container = container else {
-            Logger.log.warning("checkIsSubscribed has no ModelContainer")
-            return
-        }
         isLoading = true
         let task = SubscriptionService.isSubscribed(channelId: subscriptionInfo?.channelId,
-                                                    playlistId: subscriptionInfo?.playlistId,
-                                                    container: container)
+                                                    playlistId: subscriptionInfo?.playlistId)
         let isSubscribed = await task.value
         self.isSubscribedSuccess = isSubscribed
         isLoading = false
@@ -73,15 +66,14 @@ import UnwatchedShared
     }
 
     func unsubscribe(_ info: SubscriptionInfo) async {
-        guard let container = container,
-              info.channelId != nil && info.playlistId != nil else {
+        guard info.channelId != nil && info.playlistId != nil else {
             Logger.log.warning("addNewSubscription has no container/channelId/playlistId")
             return
         }
         isSubscribedSuccess = nil
         isLoading = true
         do {
-            let task = SubscriptionService.unsubscribe(info, container: container)
+            let task = SubscriptionService.unsubscribe(info)
             try await task.value
             isSubscribedSuccess = false
         } catch {
@@ -92,17 +84,11 @@ import UnwatchedShared
 
     func addSubscription(_ subscriptionInfo: SubscriptionInfo? = nil,
                          subscriptionId: PersistentIdentifier? = nil) async {
-        guard let container = container else {
-            Logger.log.warning("addNewSubscription has no container")
-            return
-        }
-
         isSubscribedSuccess = nil
         isLoading = true
         do {
             try await SubscriptionService.addSubscription(subscriptionInfo: subscriptionInfo,
-                                                          subsciptionId: subscriptionId,
-                                                          modelContainer: container)
+                                                          subsciptionId: subscriptionId)
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
@@ -114,10 +100,7 @@ import UnwatchedShared
     }
 
     func handleSubscription(_ videoId: PersistentIdentifier) async {
-        guard let container = container else {
-            return
-        }
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         guard let video = context.model(for: videoId) as? Video else {
             Logger.log.info("handleSubscription: video not found")
             return
@@ -133,8 +116,7 @@ import UnwatchedShared
                 return
             }
             _ = SubscriptionService.deleteSubscriptions(
-                [subId],
-                container: container)
+                [subId])
             isLoading = false
             isLoading = false
         } else {
@@ -144,8 +126,7 @@ import UnwatchedShared
             do {
                 try await SubscriptionService.addSubscription(
                     subscriptionInfo: subscriptionInfo,
-                    subsciptionId: subId,
-                    modelContainer: container)
+                    subsciptionId: subId)
                 isSubscribedSuccess = true
             } catch {
                 Logger.log.error("error subscribing: \(error)")
@@ -178,18 +159,13 @@ import UnwatchedShared
 
     @MainActor
     func addSubscription(subscriptionInfo: [SubscriptionInfo]) async {
-        guard let container = container else {
-            Logger.log.warning("no container in addSubscriptionFromText")
-            return
-        }
         errorMessage = nil
         isLoading = true
 
         Logger.log.info("load new")
         do {
             let subs = try await SubscriptionService.addSubscriptions(
-                subscriptionInfo: subscriptionInfo,
-                modelContainer: container
+                subscriptionInfo: subscriptionInfo
             )
             let hasError = subs.first(where: { !($0.alreadyAdded || $0.success) }) != nil
             self.newSubs = subs

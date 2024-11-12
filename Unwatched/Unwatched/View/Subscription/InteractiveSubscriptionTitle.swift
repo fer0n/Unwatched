@@ -51,9 +51,6 @@ struct InteractiveSubscriptionTitle: View {
                 }
                 .disabled(subscribeManager.isLoading)
             }
-            .onAppear {
-                subscribeManager.container = modelContext.container
-            }
         }
     }
 }

@@ -19,7 +19,6 @@ struct AddVideoButton: View {
     @State var showInsert = false
     @State var hapticToggle = false
 
-    var container: ModelContainer
     var youtubeUrl: URL?
     var size: Double = 20
 
@@ -32,9 +31,6 @@ struct AddVideoButton: View {
                     .offset(y: -(35 + size))
             }
             .foregroundStyle(Color.backgroundColor)
-            .onAppear {
-                avm.container = container
-            }
             .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
     }
 
@@ -161,8 +157,7 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(container: DataController.previewContainer,
-                       youtubeUrl: URL(string: "www.google.com")!)
+        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
             .padding(20)
     }
     .environment(RefreshManager())

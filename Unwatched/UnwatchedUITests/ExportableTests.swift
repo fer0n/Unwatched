@@ -9,15 +9,8 @@ import UnwatchedShared
 
 // swiftlint:disable all
 class ExportableTests: XCTestCase {
-    var container: ModelContainer!
-
-    @MainActor override func setUp() {
-        super.setUp()
-        container = DataController.previewContainer
-    }
-
     func testBackup() async {
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
 
         let videoDesc = """
         My video description
@@ -65,12 +58,9 @@ class ExportableTests: XCTestCase {
         try? context.save()
 
         do {
-            let data = try UserDataService.exportUserData(container: container)
-
-            await VideoService.deleteEverything(container)
-
-            UserDataService.importBackup(data, container: container)
-
+            let data = try UserDataService.exportUserData()
+            await VideoService.deleteEverything()
+            UserDataService.importBackup(data)
             let fetch = FetchDescriptor<Subscription>()
             let subs = try? context.fetch(fetch)
 
@@ -97,13 +87,13 @@ class ExportableTests: XCTestCase {
         let cutOffDate = Date(timeIntervalSince1970: oneDay)
         let date3 = Date(timeIntervalSince1970: oneDay * 2)
 
-        let repo = VideoActor(modelContainer: container)
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
         let sub = TestData.subscription()
         sub.placeVideosIn = .defaultPlacement
         sub.mostRecentVideoDate = cutOffDate
         sub.youtubeChannelId = "channelId"
 
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         context.insert(sub)
         try? context.save()
 
@@ -220,7 +210,7 @@ class ExportableTests: XCTestCase {
                 UserDefaults.standard.setValue(value, forKey: key)
             }
 
-            let exported = try UserDataService.exportUserData(container: container)
+            let exported = try UserDataService.exportUserData()
             let encoder = JSONEncoder()
             let data = try encoder.encode(exported)
 
@@ -229,7 +219,7 @@ class ExportableTests: XCTestCase {
                 UserDefaults.standard.setValue(value, forKey: key)
             }
 
-            UserDataService.importBackup(data, container: container)
+            UserDataService.importBackup(data)
 
             // settings set correctly?
             for (key, value) in settingsOppositeDefaults {
@@ -247,7 +237,7 @@ class ExportableTests: XCTestCase {
         let customAspectRatio: Double = 16/9
         let sub = TestData.subscription(customAspectRatio: customAspectRatio)
         sub.mostRecentVideoDate = Date()
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         context.insert(sub)
         try? context.save()
 
@@ -297,7 +287,7 @@ class ExportableTests: XCTestCase {
         video.duration = 200
         video.bookmarkedDate = Date()
 
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         context.insert(video)
         try? context.save()
 

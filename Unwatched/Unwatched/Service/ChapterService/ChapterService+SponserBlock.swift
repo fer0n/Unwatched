@@ -13,11 +13,10 @@ extension ChapterService {
         youtubeId: String,
         videoId: PersistentIdentifier,
         videoChapters: [SendableChapter],
-        container: ModelContainer,
         duration: Double? = nil,
         forceRefresh: Bool = false
     ) async throws -> [SendableChapter]? {
-        if !shouldRefreshSponserBlock(videoId, container, forceRefresh) {
+        if !shouldRefreshSponserBlock(videoId, forceRefresh) {
             Logger.log.info("SponsorBlock: not refreshing")
             return nil
         }
@@ -257,7 +256,6 @@ extension ChapterService {
 
     static func shouldRefreshSponserBlock(
         _ videoId: PersistentIdentifier,
-        _ container: ModelContainer,
         _ forceRefresh: Bool
     ) -> Bool {
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
@@ -266,7 +264,7 @@ extension ChapterService {
             return false
         }
 
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
         guard let video = context.model(for: videoId) as? Video else {
             Logger.log.info("SponsorBlock: No video model, not loading")
             return false

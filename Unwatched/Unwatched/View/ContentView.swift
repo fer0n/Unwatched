@@ -102,7 +102,7 @@ struct ContentView: View {
     player.video = Video.getDummy()
 
     return ContentView(hideControlsFullscreen: false)
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(Alerter())
         .environment(player)

@@ -170,7 +170,7 @@ struct InboxView: View {
 
 #Preview {
     InboxView(inboxEntries: [])
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())

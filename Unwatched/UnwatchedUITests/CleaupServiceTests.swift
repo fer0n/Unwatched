@@ -9,15 +9,8 @@ import UnwatchedShared
 
 // swiftlint:disable all
 class CleanupServiceTests: XCTestCase {
-    var container: ModelContainer!
-
-    @MainActor override func setUp() {
-        super.setUp()
-        container = DataController.previewContainer
-    }
-
     func testDedup() async {
-        let context = ModelContext(container)
+        let context = DataProvider.newContext()
 
         let sub = Subscription.getDummy()
         context.insert(sub)
@@ -85,7 +78,7 @@ class CleanupServiceTests: XCTestCase {
             XCTFail("Fetching failed: \(error)")
         }
 
-        let task = CleanupService.cleanupDuplicatesAndInboxDate(container, quickCheck: false)
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
         _ = await task.value
 
         do {

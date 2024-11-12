@@ -9,8 +9,6 @@ import SwiftUI
 import OSLog
 
 @Observable class TransactionVM<T: PersistentModel> {
-    var container: ModelContainer?
-
     @ObservationIgnored
     @available(iOS 18.0, *)
     var historyToken: DefaultHistoryToken? {
@@ -25,11 +23,6 @@ import OSLog
 
     @available(iOS 18, *)
     func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
-        guard let container = container else {
-            Logger.log.warning("findTransactions: no container")
-            return []
-        }
-
         var historyDescriptor = HistoryDescriptor<DefaultHistoryTransaction>()
         if let token {
             historyDescriptor.predicate = #Predicate { transaction in
@@ -38,7 +31,7 @@ import OSLog
         }
 
         var transactions: [DefaultHistoryTransaction] = []
-        let taskContext = ModelContext(container)
+        let taskContext = DataProvider.newContext()
         do {
             transactions = try taskContext.fetchHistory(historyDescriptor)
         } catch let error {

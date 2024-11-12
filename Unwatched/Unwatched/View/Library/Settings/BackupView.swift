@@ -181,8 +181,7 @@ struct BackupView: View {
 
     func saveToIcloud(_ deviceName: String) async {
         do {
-            let container = modelContext.container
-            let task = UserDataService.saveToIcloud(deviceName, container, manual: true)
+            let task = UserDataService.saveToIcloud(deviceName, manual: true)
             try await task.value
             self.getAllIcloudFiles()
         } catch {
@@ -219,13 +218,12 @@ struct BackupView: View {
 
     func deleteEverything() -> Task<(), Never>? {
         if isDeletingEverythingTask != nil { return nil }
-        let container = modelContext.container
         withAnimation {
             player.clearVideo(modelContext)
             player.video = nil
         }
         let task = Task {
-            await VideoService.deleteEverything(container)
+            await VideoService.deleteEverything()
         }
         isDeletingEverythingTask = task
         UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
@@ -235,7 +233,6 @@ struct BackupView: View {
 
     func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
         Logger.log.info("importFile: \(filePath)")
-        let container = modelContext.container
         let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
         Task {
@@ -244,7 +241,7 @@ struct BackupView: View {
             do {
                 let data = try Data(contentsOf: filePath)
                 Logger.log.info("data is there")
-                UserDataService.importBackup(data, container: container)
+                UserDataService.importBackup(data)
             } catch {
                 Logger.log.error("error when importing: \(error)")
             }
@@ -257,7 +254,7 @@ struct BackupView: View {
 
 #Preview {
     BackupView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())

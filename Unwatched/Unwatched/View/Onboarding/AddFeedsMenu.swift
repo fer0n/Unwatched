@@ -59,5 +59,5 @@ struct AddFeedsMenu: View {
 #Preview {
     AddFeedsMenu()
         .environment(NavigationManager())
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
 }

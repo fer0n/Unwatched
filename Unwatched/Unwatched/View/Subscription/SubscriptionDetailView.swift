@@ -98,7 +98,7 @@ struct SubscriptionDetailView: View {
         if subscription.isArchived && requiresUnsubscribe {
             let subId = subscription.persistentModelID
             let container = modelContext.container
-            SubscriptionService.deleteSubscriptions([subId], container: container)
+            SubscriptionService.deleteSubscriptions([subId])
         }
         if navManager.tab == .library {
             navManager.lastLibrarySubscriptionId = nil
@@ -112,15 +112,14 @@ struct SubscriptionDetailView: View {
         let subId = subscription.persistentModelID
         loadNewVideosTask = Task {
             let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: [subId],
-                container: container)
+                subscriptionIds: [subId])
             _ = try? await task.value
         }
     }
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataProvider.previewContainer
     let fetch = FetchDescriptor<Subscription>()
     let subs = try? container.mainContext.fetch(fetch)
     let sub = subs?.first

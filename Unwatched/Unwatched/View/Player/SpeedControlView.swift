@@ -157,7 +157,7 @@ struct SpeedControlViewPreview: View {
 
     var body: some View {
         SpeedControlView(selectedSpeed: $selected)
-            .modelContainer(DataController.previewContainer)
+            .modelContainer(DataProvider.previewContainer)
             .environment(NavigationManager())
             .padding()
     }

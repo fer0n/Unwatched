@@ -19,8 +19,7 @@ struct BrowserViewSheet: ViewModifier {
         if bigScreen {
             content
                 .fullScreenCover(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(container: modelContext.container,
-                                refresher: refresher,
+                    BrowserView(refresher: refresher,
                                 startUrl: browserUrl)
                         .environment(imageCacheManager)
                 }
@@ -30,8 +29,7 @@ struct BrowserViewSheet: ViewModifier {
         } else {
             content
                 .sheet(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(container: modelContext.container,
-                                refresher: refresher,
+                    BrowserView(refresher: refresher,
                                 startUrl: browserUrl)
                         .environment(imageCacheManager)
                         .environment(\.colorScheme, colorScheme)

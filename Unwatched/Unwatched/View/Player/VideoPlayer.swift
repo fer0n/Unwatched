@@ -89,8 +89,7 @@ struct VideoPlayer: View {
             // attempts clearing a second time in the background, as it's so unreliable
             let videoId = video.id
             try? modelContext.save()
-            let container = modelContext.container
-            _ = VideoService.setVideoWatchedAsync(videoId, container: container)
+            _ = VideoService.setVideoWatchedAsync(videoId)
         }
     }
 
@@ -108,7 +107,7 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    let container = DataController.previewContainer
+    let container = DataProvider.previewContainer
     let context = ModelContext(container)
     let player = PlayerManager()
     let video = Video.getDummy()

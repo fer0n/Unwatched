@@ -134,7 +134,7 @@ struct QueueView: View {
 
 #Preview {
     QueueView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())

@@ -116,8 +116,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             asyncAction: { videoId in
                 VideoService.insertQueueEntriesAsync(
                     at: 1,
-                    videoIds: [videoId],
-                    container: modelContext.container
+                    videoIds: [videoId]
                 )
             },
             syncAction: { video in
@@ -135,8 +134,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         performVideoAction(
             asyncAction: { videoId in
                 VideoService.addToBottomQueueAsync(
-                    videoId: videoId,
-                    container: modelContext.container
+                    videoId: videoId
                 )
             },
             syncAction: { video in
@@ -153,8 +151,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         performVideoAction(
             asyncAction: { videoId in
                 VideoService.moveVideoToInboxAsync(
-                    videoId,
-                    container: modelContext.container
+                    videoId
                 )
             },
             syncAction: { video in
@@ -188,8 +185,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             asyncAction: { videoId in
                 VideoService.setVideoWatchedAsync(
                     videoId,
-                    watched: watched,
-                    container: modelContext.container
+                    watched: watched
                 )
             },
             syncAction: { video in
@@ -207,8 +203,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             asyncAction: { videoId in
                 VideoService.clearEntriesAsync(
                     from: videoId,
-                    updateCleared: true,
-                    container: modelContext.container
+                    updateCleared: true
                 )
             },
             syncAction: { video in
@@ -237,13 +232,11 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Logger.log.error("clearList: no video")
             return
         }
-        let container = modelContext.container
         let task = VideoService.clearList(
             list,
             direction,
             index: video.queueEntry?.order,
-            date: video.inboxEntry?.date,
-            container: container)
+            date: video.inboxEntry?.date)
         if list == .queue && direction == .above {
             player.loadTopmostVideoFromQueue(after: task)
         }
@@ -357,7 +350,7 @@ enum ClearDirection {
 }
 
 #Preview {
-    let container = DataController.previewContainerFilled
+    let container = DataProvider.previewContainerFilled
     let context = ModelContext(container)
     let fetch = FetchDescriptor<Video>()
     let videos = try? context.fetch(fetch)

@@ -18,7 +18,6 @@ struct BrowserView: View, KeyboardReadable {
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
 
-    var container: ModelContainer
     var refresher: RefreshManager
     // workaround: ^ when using @Environment with either of these
     // + this view inside a sheet, the app crashes on "My Mac (Designed for iPad)"
@@ -69,8 +68,7 @@ struct BrowserView: View, KeyboardReadable {
                                     Spacer()
                                 }
 
-                                AddVideoButton(container: container,
-                                               youtubeUrl: browserManager.videoUrl,
+                                AddVideoButton(youtubeUrl: browserManager.videoUrl,
                                                size: size)
                                     .padding(size)
                             }
@@ -105,7 +103,6 @@ struct BrowserView: View, KeyboardReadable {
             isKeyboardVisible = newIsKeyboardVisible
         }
         .onAppear {
-            subscribeManager.container = container
             Task {
                 await subscribeManager.setIsSubscribed(browserManager.info)
             }
@@ -150,25 +147,21 @@ struct BrowserView: View, KeyboardReadable {
             Logger.log.info("no subscriptionInfo after change")
             return
         }
-        let container = container
         let task = SubscriptionService.isSubscribed(channelId: info.channelId,
                                                     playlistId: info.playlistId,
-                                                    updateSubscriptionInfo: info,
-                                                    container: container)
+                                                    updateSubscriptionInfo: info)
         clearCache(info, after: task)
     }
 
     func clearCache(_ info: SubscriptionInfo, after task: Task<(Bool), Never>) {
-        let container = container
         Task {
             var sub: Subscription?
 
             if let channelId = info.channelId {
                 _ = await task.value
-                sub = SubscriptionService.getRegularChannel(channelId, container: container)
+                sub = SubscriptionService.getRegularChannel(channelId)
             } else if let userName = info.userName {
-                sub = SubscriptionService.getRegularChannel(userName: userName,
-                                                            container: container)
+                sub = SubscriptionService.getRegularChannel(userName: userName)
             } else {
                 Logger.log.info("Neither channelId nor userName to update values")
             }
@@ -207,10 +200,9 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(container: DataController.previewContainer,
-                refresher: RefreshManager(),
+    BrowserView(refresher: RefreshManager(),
                 startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(ImageCacheManager())
         .environment(PlayerManager())
         .environment(NavigationManager())

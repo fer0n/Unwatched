@@ -57,7 +57,6 @@ struct MenuView: View {
                             tag: NavigationTab.browser,
                             show: browserAsTab) {
                     BrowserView(
-                        container: modelContext.container,
                         refresher: refresher,
                         url: $navManager.openTabBrowserUrl,
                         showHeader: false,
@@ -143,7 +142,7 @@ extension TabView {
 
 #Preview {
     MenuView(showCancelButton: false)
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(RefreshManager())
         .environment(Alerter())

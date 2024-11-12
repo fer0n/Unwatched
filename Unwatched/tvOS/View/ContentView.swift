@@ -26,5 +26,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environment(ImageCacheManager())
-        .modelContainer(DataController.previewContainerFilled)
+        .modelContainer(DataProvider.previewContainerFilled)
 }

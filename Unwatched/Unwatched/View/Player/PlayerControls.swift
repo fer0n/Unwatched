@@ -16,7 +16,6 @@ struct PlayerControls: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(RefreshManager.self) var refresher
-    @Environment(\.modelContext) var modelContext
 
     @State var browserUrl: BrowserUrl?
 
@@ -130,8 +129,7 @@ struct PlayerControls: View {
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
         }
         .sheet(item: $browserUrl) { browserUrl in
-            BrowserView(container: modelContext.container,
-                        refresher: refresher,
+            BrowserView(refresher: refresher,
                         startUrl: browserUrl)
                 .environment(\.colorScheme, colorScheme)
         }
@@ -183,7 +181,7 @@ struct PlayerControls: View {
                    setShowMenu: { },
                    markVideoWatched: { _, _ in },
                    sleepTimerVM: SleepTimerViewModel())
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
         .environment(SheetPositionReader())

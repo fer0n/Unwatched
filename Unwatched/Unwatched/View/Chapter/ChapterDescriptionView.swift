@@ -132,7 +132,7 @@ struct HorizontalDragGestureModifier: ViewModifier {
 
 #Preview {
     ChapterDescriptionView(video: Video.getDummy(), page: .constant(.chapters))
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(RefreshManager())
         .environment(SubscribeManager())

@@ -9,9 +9,7 @@ import UnwatchedShared
 
 @main
 struct UnwatchedTVApp: App {
-    @State var sharedModelContainer: ModelContainer = DataController.getModelContainer(
-        enableIcloudSync: true
-    )
+    @State var sharedModelContainer: ModelContainer = DataProvider.shared.container
 
     var body: some Scene {
         WindowGroup {

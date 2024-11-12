@@ -54,7 +54,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
             }
 
             // fetch from DB
-            let container = DataController.getCachedImageContainer
+            let container = DataProvider.getCachedImageContainer
             let context = ModelContext(container)
             if let model = ImageService.getCachedImage(for: url, context),
                let imageData = model.imageData {

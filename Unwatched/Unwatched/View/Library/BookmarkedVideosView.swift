@@ -41,7 +41,7 @@ struct BookmarkedVideosView: View {
 
 #Preview {
     BookmarkedVideosView()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(RefreshManager())
         .environment(PlayerManager())

@@ -42,6 +42,6 @@ struct CombinedPlaybackSpeedSetting: View {
 
 #Preview {
     CombinedPlaybackSpeedSetting()
-        .modelContainer(DataController.previewContainer)
+        .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager())
 }
