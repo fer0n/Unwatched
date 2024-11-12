@@ -396,6 +396,8 @@
 		88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */; };
 		88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
 		88CBE34B2BB7711500B5722F /* SpeedContolViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */; };
+		88CC8FD82CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */; };
+		88CC8FD92CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */; };
 		88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AE62B751B6900BDBFDF /* VideoSorting.swift */; };
 		88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */; };
 		88D29AEF2B757E7300BDBFDF /* SearchableVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */; };
@@ -696,6 +698,7 @@
 		88CAEC372BA49D63000202D9 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlViewModelTests.swift; sourceTree = "<group>"; };
 		88CBE3492BB76FAE00B5722F /* SpeedContolViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedContolViewModel.swift; sourceTree = "<group>"; };
+		88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SponsorBlockSettingsView.swift; sourceTree = "<group>"; };
 		88CD5B8A2C99A54D00B34DE6 /* UnwatchedShared.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = UnwatchedShared.xcodeproj; sourceTree = "<group>"; };
 		88D29AE62B751B6900BDBFDF /* VideoSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSorting.swift; sourceTree = "<group>"; };
 		88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
@@ -1100,6 +1103,7 @@
 				888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */,
 				88017FD62B96161B00192AEA /* DebugView.swift */,
 				888F74A82BA1FD8400B94822 /* VideoSettingsView.swift */,
+				88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */,
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
 				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
 				880505112C836882005F0972 /* FaqView.swift */,
@@ -1709,6 +1713,7 @@
 				889AF8F42C50ECC5001CEDE6 /* String.swift in Sources */,
 				889AF8F52C50ECC5001CEDE6 /* PresentationDetent.swift in Sources */,
 				889AF8DA2C50ECA9001CEDE6 /* DebouncedText.swift in Sources */,
+				88CC8FD92CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */,
 				889AF8DB2C50ECA9001CEDE6 /* SubscriptionInfo.swift in Sources */,
 				889AF8DC2C50ECA9001CEDE6 /* InboxTip.swift in Sources */,
 				8805050D2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */,
@@ -2016,6 +2021,7 @@
 				881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */,
 				88F1EE502B5D31D6009866A0 /* BrowserManager.swift in Sources */,
 				883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */,
+				88CC8FD82CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */,
 				88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
 				88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,
 				88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */,
@@ -2265,7 +2271,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 165;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2310,7 +2316,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 165;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -344,6 +344,7 @@ extension ChapterService {
             && sendable.endTime == chapter.endTime
             && sendable.category == chapter.category
             && sendable.title == chapter.title
+            && sendable.isActive == chapter.isActive
     }
 
     static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
@@ -358,7 +359,7 @@ extension ChapterService {
             let oldChapter = index < oldChapters.count
                 ? oldChapters[index]
                 : nil
-            if !chapterEqual(newChapter, oldChapter) {
+            if !chapterEqual(newChapter, oldChapter) || (!newChapter.isActive && oldChapter?.isActive ?? false) {
                 Logger.log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
                 hasChanges = true
                 if let oldChapter {
@@ -416,5 +417,31 @@ extension ChapterService {
         mergedChapters.append(currentChapter)
 
         return mergedChapters
+    }
+
+    static var skipActive: Bool {
+        if UserDefaults.standard.bool(forKey: Const.skipSponsorSegments) {
+            return true
+        }
+        Logger.log.info("SponsorBlock: skipping sponsor segments is disabled")
+        return false
+    }
+
+    static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
+        if !skipActive { return }
+
+        for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
+            Logger.log.info("skipping: \(chapter)")
+            chapters[index].isActive = false
+        }
+    }
+
+    static func skipSponsorSegments(in chapters: [Chapter]) {
+        if !skipActive { return }
+
+        for chapter in chapters where chapter.category == .sponsor {
+            Logger.log.info("skipping: \(chapter)")
+            chapter.isActive = false
+        }
     }
 }

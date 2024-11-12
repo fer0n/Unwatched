@@ -1291,6 +1291,22 @@
         }
       }
     },
+    "considerGettingYoutubePremium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte abonniere  [YouTube Premium](https://www.youtube.com/premium), um YouTube Kanäle zu unterstützen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please consider getting [YouTube Premium](https://www.youtube.com/premium) to support creators"
+          }
+        }
+      }
+    },
     "contactUs" : {
       "localizations" : {
         "de" : {
@@ -4643,6 +4659,38 @@
         }
       }
     },
+    "skipSponsorSegments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sponsor-Abschnitte überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Skip Sponsor Segments"
+          }
+        }
+      }
+    },
+    "skipSponsorSegmentsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfordert SponsorBlock Kapitel. Stelle sicher dass der YouTube Premium Account angemeldet ist und der YouTube Verlauf angeschaltet ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requires SponsorBlock chapters. Make sure you’re signed into your YouTube Premium account and watch history is turned on."
+          }
+        }
+      }
+    },
     "sleepTimer" : {
       "localizations" : {
         "de" : {
@@ -5744,6 +5792,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube"
+          }
+        }
+      }
+    },
+    "youtubePremium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Premium bestätigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm YouTube Premium"
+          }
+        }
+      }
+    },
+    "youtubePremiumConfirm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich habe Premium"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I have Premium"
+          }
+        }
+      }
+    },
+    "youtubePremiumDecline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ich habe kein Premium"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I don’t have Premium"
+          }
+        }
+      }
+    },
+    "youtubePremiumTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hast du YouTube Premium?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you have YouTube Premium?"
           }
         }
       }

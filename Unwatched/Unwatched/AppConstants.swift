@@ -25,6 +25,8 @@ extension Const {
         Const.enableYtWatchHistory: true,
         Const.autoRefresh: true,
         Const.enableQueueContextMenu: false,
+        Const.youtubePremium: false,
+        Const.skipSponsorSegments: false,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,

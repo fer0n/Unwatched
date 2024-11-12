@@ -12,7 +12,6 @@ struct VideoSettingsView: View {
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
-    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
@@ -58,11 +57,7 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                MySection("sponsorBlockSettings", footer: "sponsorBlockSettingsHelper") {
-                    Toggle(isOn: $mergeSponsorBlockChapters) {
-                        Text("sponsorBlockChapters")
-                    }
-                }
+                SponsorBlockSettingsView()
             }
             .myNavigationTitle("videoSettings")
         }
