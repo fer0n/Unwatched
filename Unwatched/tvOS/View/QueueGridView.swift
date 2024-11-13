@@ -71,11 +71,11 @@ struct QueueGridView: View {
             print("Invalid YouTube URL: \(id)")
             return
         }
-        if UIApplication.shared.canOpenURL(appURL) {
-            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-        } else {
-            showAlert = true
-        }
+        UIApplication.shared.open(appURL, options: [:], completionHandler: { success in
+            if !success {
+                showAlert = true
+            }
+        })
     }
 
     func beforeRemove(_ entry: QueueEntry) {
