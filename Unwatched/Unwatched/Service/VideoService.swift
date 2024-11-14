@@ -203,14 +203,11 @@ extension VideoService {
         return nil
     }
 
-    static func getNextVideoInQueue(_ modelContext: ModelContext) -> Video? {
+    static func getNextVideoInQueue(_ modelContext: ModelContext) -> (first: Video?, second: Video?) {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
         fetch.fetchLimit = 2
         let videos = try? modelContext.fetch(fetch)
-        if let nextVideo = videos?.last {
-            return nextVideo.video
-        }
-        return nil
+        return (videos?.first?.video, videos?.last?.video)
     }
 
     static func deleteEverything() async {
