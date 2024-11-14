@@ -28,14 +28,15 @@ struct EmptyEntry<Entry: PersistentModel>: View {
     }
 
     func clearEntry() {
-        if let queueEntry = entry as? QueueEntry {
-            VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
-            return
-        }
-
-        if let inboxEntry = entry as? InboxEntry {
-            VideoService.deleteInboxEntry(inboxEntry, modelContext: modelContext)
-            return
+        withAnimation {
+            if let queueEntry = entry as? QueueEntry {
+                VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
+                return
+            }
+            if let inboxEntry = entry as? InboxEntry {
+                VideoService.deleteInboxEntry(inboxEntry, modelContext: modelContext)
+                return
+            }
         }
     }
 }
