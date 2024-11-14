@@ -85,7 +85,8 @@ import UnwatchedShared
 
     @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
-        let next = VideoService.getNextVideoInQueue(modelContext)
+        let (first, second) = VideoService.getNextVideoInQueue(modelContext)
+        let next = first != self.video ? first : second
         withAnimation {
             setNextVideo(next, source)
         }
