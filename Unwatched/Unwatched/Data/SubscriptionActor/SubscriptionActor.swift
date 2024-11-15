@@ -27,7 +27,7 @@ actor SubscriptionActor {
 
     func subscribeTo(_ info: SubscriptionInfo?, _ subsciptionId: PersistentIdentifier?) async throws {
         // check if it already exists, if it does, subscribe
-        if let id = subsciptionId, let sub = modelContext.model(for: id) as? Subscription {
+        if let id = subsciptionId, let sub = self[id, as: Subscription.self] {
             unarchive(sub)
             Logger.log.info("successfully subscribed via subId")
             try modelContext.save()
@@ -176,7 +176,7 @@ actor SubscriptionActor {
     }
 
     func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier]) throws {
-        let subs = subscriptionIds.compactMap { modelContext.model(for: $0) as? Subscription }
+        let subs = subscriptionIds.compactMap { self[$0, as: Subscription.self] }
         try deleteSubscriptions(subs)
         try modelContext.save()
     }

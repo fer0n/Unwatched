@@ -14,9 +14,10 @@ extension VideoActor {
 
     /// Fetch the existing Subscription via SendableSubscription's persistentId
     func getSubscription(via sub: SendableSubscription) -> Subscription? {
-        if let subid = sub.persistentId, let modelSub = modelContext.model(for: subid) as? Subscription {
+        if let subId = sub.persistentId, let modelSub = self[subId, as: Subscription.self] {
             return modelSub
         }
+        Logger.log.info("subscription does not exist: \(sub.title)")
         return nil
     }
 
@@ -42,7 +43,7 @@ extension VideoActor {
         var subs = [Subscription]()
         if let ids = subscriptionIds {
             for id in ids {
-                if let loadedSub = modelContext.model(for: id) as? Subscription {
+                if let loadedSub = self[id, as: Subscription.self] {
                     subs.append(loadedSub)
                 } else {
                     Logger.log.warning("Subscription not found for id: \(id.hashValue)")
