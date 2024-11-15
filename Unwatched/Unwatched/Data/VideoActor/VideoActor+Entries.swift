@@ -211,7 +211,7 @@ extension VideoActor {
     }
 
     func clearEntries(from videoId: PersistentIdentifier, updateCleared: Bool = false) throws {
-        if let video = modelContext.model(for: videoId) as? Video {
+        if let video = self[videoId, as: Video.self] {
             VideoActor.clearEntries(
                 from: video,
                 updateCleared: updateCleared,
@@ -236,14 +236,14 @@ extension VideoActor {
     }
 
     func moveVideoToInbox(_ videoId: PersistentIdentifier) throws {
-        if let video = modelContext.model(for: videoId) as? Video {
+        if let video = self[videoId, as: Video.self] {
             VideoService.moveVideoToInbox(video, modelContext: modelContext)
             try modelContext.save()
         }
     }
 
     func addToBottomQueue(videoId: PersistentIdentifier) throws {
-        if let video = modelContext.model(for: videoId) as? Video {
+        if let video = self[videoId, as: Video.self] {
             try VideoActor.addToBottomQueue(video: video, modelContext: modelContext)
         }
     }
@@ -268,7 +268,7 @@ extension VideoActor {
     func insertQueueEntries(at startIndex: Int = 0, videoIds: [PersistentIdentifier]) throws {
         var videos = [Video]()
         for videoId in videoIds {
-            if let video = modelContext.model(for: videoId) as? Video {
+            if let video = self[videoId, as: Video.self] {
                 videos.append(video)
             }
         }
@@ -368,7 +368,7 @@ extension VideoActor {
     }
 
     func setVideoWatched(_ videoId: PersistentIdentifier, watched: Bool = true) throws {
-        if let video = modelContext.model(for: videoId) as? Video {
+        if let video = self[videoId, as: Video.self] {
             VideoService.setVideoWatched(video, watched: watched, modelContext: modelContext)
             try modelContext.save()
         }
