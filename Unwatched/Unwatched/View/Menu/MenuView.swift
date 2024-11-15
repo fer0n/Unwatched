@@ -21,6 +21,7 @@ struct MenuView: View {
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
 
     var showCancelButton: Bool = false
+    var isSidebar: Bool = false
 
     var shouldShowCancelButton: Bool {
         if showCancelButton, #unavailable(iOS 18.1) {
@@ -100,6 +101,7 @@ struct MenuView: View {
 
             UITabBar.appearance().standardAppearance = appearance
         }
+        transparentTabBarWorkaround(appearance)
 
         if reload {
             UIApplication
@@ -107,6 +109,13 @@ struct MenuView: View {
                 .connectedScenes
                 .compactMap { ($0 as? UIWindowScene)?.keyWindow }
                 .reload()
+        }
+    }
+
+    func transparentTabBarWorkaround(_ appearance: UITabBarAppearance) {
+        if isSidebar {
+            // workaround: occasional transparent tab bar on iPad
+            UITabBar.appearance().scrollEdgeAppearance = appearance
         }
     }
 

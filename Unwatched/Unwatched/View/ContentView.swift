@@ -45,7 +45,7 @@ struct ContentView: View {
                     .frame(maxHeight: .infinity)
 
                     if bigScreen && !hideControlsFullscreen {
-                        MenuView()
+                        MenuView(isSidebar: true)
                             .frame(maxWidth: isLandscape
                                     ? min(proxy.size.width * 0.4, sidebarWidth)
                                     : nil)
