@@ -97,8 +97,7 @@ struct SubscriptionDetailView: View {
     func handleOnDisappear() {
         if subscription.isArchived && requiresUnsubscribe {
             let subId = subscription.persistentModelID
-            let container = modelContext.container
-            SubscriptionService.deleteSubscriptions([subId])
+            _ = SubscriptionService.deleteSubscriptions([subId])
         }
         if navManager.tab == .library {
             navManager.lastLibrarySubscriptionId = nil
@@ -108,7 +107,6 @@ struct SubscriptionDetailView: View {
     func loadNewVideos() {
         if isLoading { return }
         isLoading = true
-        let container = modelContext.container
         let subId = subscription.persistentModelID
         loadNewVideosTask = Task {
             let task = VideoService.loadNewVideosInBg(

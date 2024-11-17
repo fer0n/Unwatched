@@ -26,6 +26,7 @@ import OSLog
         }
     }
 
+    @MainActor
     func persistCache() async {
         let cache = cache
         await ImageService.persistImages(

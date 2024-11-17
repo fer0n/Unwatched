@@ -94,7 +94,6 @@ struct SetupView: View {
     }
 
     func addAndPlay(_ url: URL) {
-        let container = modelContext.container
         let task = VideoService.addForeignUrls(
             [url],
             in: .queue,
