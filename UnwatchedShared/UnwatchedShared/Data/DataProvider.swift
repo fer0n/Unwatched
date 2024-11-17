@@ -4,13 +4,16 @@
 //
 
 import SwiftData
+import OSLog
 
-public class DataProvider {
+public final class DataProvider: Sendable {
     public static let shared = DataProvider()
     
-    public let container: ModelContainer = {
-        getModelContainer()
-    }()
+    public let container: ModelContainer
+    
+    init() {
+        container = DataProvider.getModelContainer()
+    }
     
     public static func newContext() -> ModelContext {
         ModelContext(shared.container)
@@ -61,6 +64,7 @@ public class DataProvider {
     }()
 
     public static func getModelContainer() -> ModelContainer {
+        Logger.log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
             enableIcloudSync = true
