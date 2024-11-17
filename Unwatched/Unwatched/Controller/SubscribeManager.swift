@@ -9,6 +9,7 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
+@MainActor
 @Observable class SubscribeManager {
     var isSubscribedSuccess: Bool?
     var isLoading: Bool

@@ -15,16 +15,19 @@ class DebouncedText {
     }
 
     var debounced = ""
+
+    @MainActor
     var val = "" {
         didSet {
             handleDidSet()
         }
     }
 
+    @MainActor
     func handleDidSet() {
         let value = val
         let delay = self.delay
-        Task { @MainActor in
+        Task {
             let newValue = value
             task?.cancel()
             task = Task.detached {

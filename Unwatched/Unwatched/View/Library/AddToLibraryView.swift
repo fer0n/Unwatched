@@ -200,7 +200,6 @@ struct AddToLibraryView: View {
         if !urls.isEmpty {
             videoUrls = []
             isLoadingVideos = true
-            let container = modelContext.container
             let task = VideoService.addForeignUrls(urls, in: .queue)
             do {
                 try await task.value

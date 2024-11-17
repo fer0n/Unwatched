@@ -132,7 +132,6 @@ struct SubscriptionInfoDetails: View {
                         .font(.title2)
                         .foregroundStyle(.primary)
                         .onTapGesture {
-                            let container = modelContext.container
                             if let channelId = subscription.youtubeChannelId,
                                let regularChannel = SubscriptionService.getRegularChannel(channelId) {
                                 navManager.pushSubscription(

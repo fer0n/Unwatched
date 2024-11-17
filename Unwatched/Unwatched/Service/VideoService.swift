@@ -24,7 +24,7 @@ extension VideoService {
     static func clearEntriesAsync(from videoId: PersistentIdentifier,
                                   except model: (any PersistentModel.Type)? = nil,
                                   updateCleared: Bool) -> Task<Void, Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
         }
@@ -37,7 +37,7 @@ extension VideoService {
         _ skip: Int = 0,
         _ limit: Int? = nil
     ) async -> [SendableVideo] {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return await repo.getSendableVideos(filter, sort, skip, limit)
         }
@@ -58,7 +58,7 @@ extension VideoService {
     }
 
     static func moveVideoToInboxAsync(_ videoId: PersistentIdentifier) -> Task<Void, Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             return try await repo.moveVideoToInbox(videoId)
         }

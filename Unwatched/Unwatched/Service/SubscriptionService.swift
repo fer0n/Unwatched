@@ -6,7 +6,7 @@ import UnwatchedShared
 struct SubscriptionService {
     static func getActiveSubscriptions() async -> [SendableSubscription] {
         let container = DataProvider.shared.container
-        let task = Task {
+        let task = Task.detached {
             let repo = SubscriptionActor(modelContainer: container)
             return await repo.getActiveSubscriptions()
         }
@@ -44,14 +44,14 @@ struct SubscriptionService {
     static func deleteSubscriptions(
         _ subscriptionIds: [PersistentIdentifier]
     ) -> Task<(), Error> {
-        return Task {
+        return Task.detached {
             let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.deleteSubscriptions(subscriptionIds)
         }
     }
 
     static func unsubscribe(_ info: SubscriptionInfo) -> Task<(), Error> {
-        return Task {
+        return Task.detached {
             let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.unsubscribe(info.channelId, playlistId: info.playlistId)
         }
@@ -72,7 +72,7 @@ struct SubscriptionService {
     }
 
     static func cleanupArchivedSubscriptions() {
-        Task {
+        Task.detached {
             let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             return try await repo.cleanupArchivedSubscriptions()
         }
@@ -85,7 +85,7 @@ struct SubscriptionService {
     static func isSubscribed(channelId: String? = nil,
                              playlistId: String? = nil,
                              updateSubscriptionInfo: SubscriptionInfo? = nil) -> Task<(Bool), Never> {
-        return Task {
+        return Task.detached {
             let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
             let isSubscribed = await repo.isSubscribed(channelId: channelId,
                                                        playlistId: playlistId,

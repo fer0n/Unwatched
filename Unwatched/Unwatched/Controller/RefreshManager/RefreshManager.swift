@@ -129,7 +129,6 @@ actor RefreshActor {
             return
         }
 
-        let container = DataProvider.shared.container
         let task = UserDataService.saveToIcloud(deviceName)
         Task {
             try await task.value

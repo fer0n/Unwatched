@@ -179,7 +179,6 @@ struct ImportSubscriptionsView: View {
             isLoading = true
         }
 
-        let container = modelContext.container
         let subs = Array(selection)
         loadSubStatesTask = Task {
             return try await SubscriptionService.addSubscriptions(
