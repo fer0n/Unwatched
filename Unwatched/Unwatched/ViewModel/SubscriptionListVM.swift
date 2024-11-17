@@ -10,7 +10,11 @@ import UnwatchedShared
 
 @Observable
 class SubscriptionListVM: TransactionVM<Subscription> {
+
+    @MainActor
     var subscriptions = [SendableSubscription]()
+
+    @MainActor
     var isLoading = true
 
     var adjusted = [SendableSubscription]()
@@ -18,6 +22,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     var filter: ((SendableSubscription) -> Bool)?
     var sort: ((SendableSubscription, SendableSubscription) -> Bool)?
 
+    @MainActor
     private func fetchSubscriptions() async {
         let subs = await SubscriptionService.getActiveSubscriptions()
         withAnimation {
@@ -26,6 +31,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         }
     }
 
+    @MainActor
     var processedSubs: [SendableSubscription] {
         var subs = subscriptions
         if let filter = filter {
@@ -68,6 +74,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         }
     }
 
+    @MainActor
     var countText: String {
         if isLoading {
             return ""
@@ -75,6 +82,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         return "(\(subscriptions.count))"
     }
 
+    @MainActor
     func updateData() async {
         var loaded = false
         if subscriptions.isEmpty {
@@ -92,6 +100,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         }
     }
 
+    @MainActor
     func updateSubscriptions(_ ids: Set<PersistentIdentifier>) {
         print("updateSubscriptions: \(ids.count)")
         let modelContext = DataProvider.newContext()
