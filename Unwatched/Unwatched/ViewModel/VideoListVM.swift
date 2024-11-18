@@ -12,16 +12,21 @@ import OSLog
     @ObservationIgnored private let initialBatchSize: Int = 150
     @ObservationIgnored private let pageSize: Int = 250
 
+    @MainActor
     var videos = [SendableVideo]()
+
+    @MainActor
     var isLoading = true
 
     var filter: Predicate<Video>?
     private var sort: [SortDescriptor<Video>] = []
 
+    @MainActor
     var hasNoVideos: Bool {
         videos.isEmpty && !isLoading
     }
 
+    @MainActor
     func setSearchText(_ searchText: String) {
         let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
         filter = VideoListView.getVideoFilter(showShorts: !hideShorts, searchText: searchText)
@@ -30,6 +35,7 @@ import OSLog
         }
     }
 
+    @MainActor
     private func fetchVideos(skip: Int = 0, limit: Int? = nil) async {
         Logger.log.info("VideoListVM: fetchVideos")
         isLoading = true
@@ -50,6 +56,7 @@ import OSLog
         }
     }
 
+    @MainActor
     func setSorting(_ sorting: [SortDescriptor<Video>], refresh: Bool = false) {
         sort = sorting
         if refresh {
@@ -59,12 +66,14 @@ import OSLog
         }
     }
 
+    @MainActor
     func updateVideo(_ video: SendableVideo) {
         if let id = video.persistentId {
             updateVideos([id])
         }
     }
 
+    @MainActor
     func updateVideos(_ ids: Set<PersistentIdentifier>) {
         Logger.log.info("updateVideos: \(ids.count)")
         let modelContext = DataProvider.newContext()
@@ -86,6 +95,7 @@ import OSLog
         }
     }
 
+    @MainActor
     func updateData(force: Bool = false) async {
         var loaded = false
         if videos.isEmpty || force {
@@ -103,6 +113,7 @@ import OSLog
         }
     }
 
+    @MainActor
     func loadMoreContentIfNeeded(currentItem: SendableVideo) {
         let thresholdIndex = videos.index(videos.endIndex, offsetBy: -5)
         if videos.firstIndex(of: currentItem) == thresholdIndex {
@@ -110,6 +121,7 @@ import OSLog
         }
     }
 
+    @MainActor
     private func loadMoreContent() {
         guard !isLoading else {
             return
