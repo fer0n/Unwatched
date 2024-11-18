@@ -13,7 +13,7 @@ struct ImageService {
     static func persistImages(
         cache: [String: ImageCacheInfo]
     ) async {
-        let container = await DataProvider.getCachedImageContainer
+        let container = DataProvider.shared.imageContainer
         let context = ModelContext(container)
 
         for info in cache.values {
@@ -41,7 +41,7 @@ struct ImageService {
 
     static func storeImages(_ images: [(url: URL, data: Data)]) {
         Task.detached {
-            let container = await DataProvider.getCachedImageContainer
+            let container = DataProvider.shared.imageContainer
             let context = ModelContext(container)
 
             for (url, data) in images {
@@ -54,7 +54,7 @@ struct ImageService {
 
     static func deleteImages(_ urls: [URL]) {
         Task {
-            let imageContainer = await DataProvider.getCachedImageContainer
+            let imageContainer = DataProvider.shared.imageContainer
             let context = ModelContext(imageContainer)
             for url in urls {
                 if let image = getCachedImage(for: url, context) {
@@ -75,7 +75,7 @@ struct ImageService {
 
     static func deleteAllImages() -> Task<(), Error> {
         return Task {
-            let imageContainer = await DataProvider.getCachedImageContainer
+            let imageContainer = DataProvider.shared.imageContainer
             let context = ModelContext(imageContainer)
             let fetch = FetchDescriptor<CachedImage>()
             let images = try context.fetch(fetch)
@@ -143,14 +143,17 @@ struct ImageService {
         return ZStack { }
     }
     let isShort = ImageService.isYtShort(data)
+    let isShortText = isShort == true ? "YES" : isShort == nil ? "UNKNOWN" : "NO"
 
     let color = myImage.pixelColors(at: [CGPoint(x: 200, y: 200)])
+
     let isBlack = color[0].isBlack()
+    let isBlackText = isBlack == true ? "YES" : "NO"
 
     return VStack {
         Image(uiImage: myImage)
-        Text(verbatim: "IS BLACK: \(isBlack)")
-        Text(verbatim: "IS BLACK: \(color)")
-        Text(verbatim: "IS SHORT: \(isShort)")
+        Text(verbatim: "IS BLACK: \(isBlackText)")
+        Text(verbatim: "IS BLACK: \(color.debugDescription)")
+        Text(verbatim: "IS SHORT: \(isShortText)")
     }
 }

@@ -198,6 +198,14 @@ import UnwatchedShared
         }
     }
 
+    func handleRequestReview(_ requestReview: @escaping () -> Void) {
+        askForReviewPoints += 1
+        if askForReviewPoints >= Const.askForReviewPointThreashold {
+            askForReviewPoints = -40
+            requestReview()
+        }
+    }
+
     static func getDummy() -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = true

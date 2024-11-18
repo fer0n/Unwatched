@@ -333,6 +333,8 @@ extension VideoActor {
             clearInbox(direction, date: date)
         case .queue:
             clearQueue(direction, index: index)
+        @unknown default:
+            Logger.log.warning("Clear list value not implemented")
         }
         try modelContext.save()
     }

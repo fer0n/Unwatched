@@ -124,7 +124,6 @@ struct SleepTimer: View {
         }
         .environment(\.colorScheme, colorScheme)
     }
-
 }
 
 #Preview {
