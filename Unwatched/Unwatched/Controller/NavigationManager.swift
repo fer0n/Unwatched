@@ -59,6 +59,9 @@ import UnwatchedShared
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
         tab = try container.decode(NavigationTab.self, forKey: .tab)
         askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
+        if let value = try? container.decodeIfPresent(ChapterDescriptionPage.self, forKey: .videoDetailPage) {
+            videoDetailPage = value
+        }
 
         let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
         presentedLibrary = NavigationPath(decoded)
@@ -75,6 +78,7 @@ import UnwatchedShared
         try container.encode(showMenu, forKey: .showMenu)
         try container.encode(tab, forKey: .tab)
         try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
+        try container.encode(videoDetailPage, forKey: .videoDetailPage)
 
         if let representation = presentedLibrary.codable {
             try container.encode(representation, forKey: .presentedLibrary)
@@ -219,7 +223,8 @@ enum NavManagerCodingKeys: CodingKey {
          askForReviewPoints,
          presentedLibrary,
          presentedSubscriptionInbox,
-         presentedSubscriptionQueue
+         presentedSubscriptionQueue,
+         videoDetailPage
 }
 
 enum NavigationTab: String, Codable {

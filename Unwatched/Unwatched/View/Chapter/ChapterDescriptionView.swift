@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-enum ChapterDescriptionPage {
+enum ChapterDescriptionPage: Codable {
     case description
     case chapters
 }
