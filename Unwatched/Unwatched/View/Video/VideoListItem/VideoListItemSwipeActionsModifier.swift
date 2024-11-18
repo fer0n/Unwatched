@@ -105,6 +105,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             }
             order = order ?? video.queueEntry?.order
             syncAction?(video)
+            try? modelContext.save()
             config.onChange?()
         }
         handlePotentialQueueChange(after: task, order: order)

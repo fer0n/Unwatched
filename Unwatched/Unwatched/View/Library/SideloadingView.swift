@@ -11,7 +11,6 @@ struct SideloadingView: View {
     let sortingOptions: [VideoSorting] = [.createdDate, .publishedDate]
 
     var body: some View {
-
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
