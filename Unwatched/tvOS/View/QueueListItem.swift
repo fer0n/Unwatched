@@ -11,7 +11,7 @@ struct QueueEntryListItem: View {
     var entry: QueueEntry
     let width: Double
 
-    var openYouTube: (String) -> Void
+    var openYouTube: (String?) -> Void
     var beforeRemove: (QueueEntry) -> Void
 
     @State var toBeWatched: Video?
@@ -20,7 +20,7 @@ struct QueueEntryListItem: View {
     init(
         _ entry: QueueEntry,
         width: Double,
-        openYouTube: @escaping (String) -> Void,
+        openYouTube: @escaping (String?) -> Void,
         beforeRemove: @escaping (QueueEntry) -> Void
     ) {
         self.entry = entry
@@ -31,47 +31,49 @@ struct QueueEntryListItem: View {
 
     var body: some View {
         ZStack {
-            if let video = entry.video {
-                Menu {
-                    Button(
-                        "markWatched",
-                        systemImage: Const.checkmarkSF,
-                        action: { toBeWatched = entry.video }
-                    )
-                    Button(
-                        "clear",
-                        systemImage: Const.clearNoFillSF,
-                        action: { toBeCleared = entry.video }
-                    )
-                } label: {
-                    VideoGridItem(video: video, width: width)
-                } primaryAction: {
-                    openYouTube(video.youtubeId)
-                }
-                .buttonStyle(FocusButtonStyle())
-            } else {
-                ZStack {
-                    VStack {
-                        ThumbnailPlaceholder(width)
-                            .aspectRatio(contentMode: .fill)
-                            .frame(
-                                width: width,
-                                height: width / (16/9)
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 35))
-                            .aspectRatio(contentMode: .fit)
-
-                        Text(verbatim: "\n\n")
-                    }
-                    ProgressView()
-                }
+            Menu {
+                Button(
+                    "markWatched",
+                    systemImage: Const.checkmarkSF,
+                    action: { toBeWatched = entry.video }
+                )
+                Button(
+                    "clear",
+                    systemImage: Const.clearNoFillSF,
+                    action: { toBeCleared = entry.video }
+                )
+            } label: {
+                label
+            } primaryAction: {
+                openYouTube(entry.video?.youtubeId)
             }
+            .buttonStyle(FocusButtonStyle())
         }
         .task(id: toBeWatched) {
             await handleTask(for: toBeWatched, action: markWatched)
         }
         .task(id: toBeCleared) {
             await handleTask(for: toBeCleared, action: clearVideo)
+        }
+    }
+
+    @ViewBuilder
+    var label: some View {
+        if let video = entry.video {
+            VideoGridItem(video: video, width: width)
+        } else {
+            VStack {
+                ThumbnailPlaceholder(width)
+                    .aspectRatio(contentMode: .fill)
+                    .frame(
+                        width: width,
+                        height: width / (16/9)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 35))
+                    .aspectRatio(contentMode: .fit)
+
+                Text(verbatim: "\n\n")
+            }
         }
     }
 

@@ -55,6 +55,7 @@ struct ThumbnailPlaceholder: View {
 
     var body: some View {
         Rectangle()
+            .fill(Color.black)
             .background(.thinMaterial)
             .frame(
                 width: width,
