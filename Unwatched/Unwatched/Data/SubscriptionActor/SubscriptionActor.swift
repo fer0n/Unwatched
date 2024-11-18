@@ -12,10 +12,16 @@ import UnwatchedShared
 actor SubscriptionActor {
     var imageUrlsToBeDeleted = [URL]()
 
-    func getActiveSubscriptions() -> [SendableSubscription] {
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            $0.isArchived == false
-        })
+    func getActiveSubscriptions(
+        _ searchText: String,
+        _ sort: [SortDescriptor<Subscription>]
+    ) -> [SendableSubscription] {
+        let fetch = FetchDescriptor<Subscription>(
+            predicate: #Predicate {
+                $0.isArchived == false && (searchText.isEmpty || $0.title.localizedStandardContains(searchText))
+            },
+            sortBy: sort
+        )
         let subs = try? modelContext.fetch(fetch)
         return subs?.compactMap { $0.toExport } ?? []
     }

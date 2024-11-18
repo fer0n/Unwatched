@@ -92,7 +92,7 @@ import OSLog
             await fetchVideos()
             loaded = true
         }
-        let ids = modelsHaveChangesUpdateToken()
+        let ids = await modelsHaveChangesUpdateToken()
         if loaded {
             return
         }

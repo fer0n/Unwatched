@@ -10,21 +10,18 @@ import UnwatchedShared
 
 @Observable
 class SubscriptionListVM: TransactionVM<Subscription> {
-
     @MainActor
     var subscriptions = [SendableSubscription]()
 
     @MainActor
     var isLoading = true
 
-    var adjusted = [SendableSubscription]()
-
-    var filter: ((SendableSubscription) -> Bool)?
-    var sort: ((SendableSubscription, SendableSubscription) -> Bool)?
+    @ObservationIgnored var searchText: String?
+    private var sort = [SortDescriptor<Subscription>]()
 
     @MainActor
     private func fetchSubscriptions() async {
-        let subs = await SubscriptionService.getActiveSubscriptions()
+        let subs = await SubscriptionService.getActiveSubscriptions(searchText, sort)
         withAnimation {
             subscriptions = subs
             isLoading = false
@@ -32,18 +29,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     }
 
     @MainActor
-    var processedSubs: [SendableSubscription] {
-        var subs = subscriptions
-        if let filter = filter {
-            subs = subs.filter(filter)
-        }
-        if let sort = sort {
-            subs.sort(by: sort)
-        }
-        return subs
-    }
-
-    func setSorting(_ sorting: SubscriptionSorting? = nil) {
+    func setSorting(_ sorting: SubscriptionSorting? = nil, refresh: Bool = false) {
         let sorting = {
             if let sorting = sorting {
                 return sorting
@@ -54,24 +40,23 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         }()
         switch sorting {
         case .title:
-            self.sort = { $0.displayTitle < $1.displayTitle }
+            self.sort = [SortDescriptor<Subscription>(\.title)]
         case .recentlyAdded:
-            self.sort = {
-                (
-                    $0.subscribedDate ?? Date.distantPast
-                ) > (
-                    $1.subscribedDate ?? Date.distantPast
-                )
-            }
+            self.sort = [SortDescriptor<Subscription>(\.subscribedDate, order: .reverse)]
         case .mostRecentVideo:
-            self.sort = {
-                (
-                    $0.mostRecentVideoDate ?? Date.distantPast
-                ) > (
-                    $1.mostRecentVideoDate ?? Date.distantPast
-                )
+            self.sort = [SortDescriptor<Subscription>(\.mostRecentVideoDate, order: .reverse)]
+        }
+        if refresh {
+            Task {
+                await updateData(force: true)
             }
         }
+    }
+
+    @MainActor
+    func setSearchText(_ searchText: String) async {
+        self.searchText = searchText
+        await updateData(force: true)
     }
 
     @MainActor
@@ -83,13 +68,13 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     }
 
     @MainActor
-    func updateData() async {
+    func updateData(force: Bool = false) async {
         var loaded = false
-        if subscriptions.isEmpty {
+        if subscriptions.isEmpty || force {
             await fetchSubscriptions()
             loaded = true
         }
-        let ids = modelsHaveChangesUpdateToken()
+        let ids = await modelsHaveChangesUpdateToken()
         if loaded {
             return
         }
@@ -102,15 +87,12 @@ class SubscriptionListVM: TransactionVM<Subscription> {
 
     @MainActor
     func updateSubscriptions(_ ids: Set<PersistentIdentifier>) {
-        print("updateSubscriptions: \(ids.count)")
         let modelContext = DataProvider.newContext()
         for persistentId in ids {
             guard let updatedSub = modelContext.model(for: persistentId) as? Subscription else {
                 Logger.log.warning("updateSubscription failed: no model found")
                 return
             }
-
-            print("updatedSub", updatedSub)
 
             if let index = subscriptions.firstIndex(where: { $0.persistentId == persistentId }) {
                 withAnimation {

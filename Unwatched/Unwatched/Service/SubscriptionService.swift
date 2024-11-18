@@ -4,11 +4,13 @@ import OSLog
 import UnwatchedShared
 
 struct SubscriptionService {
-    static func getActiveSubscriptions() async -> [SendableSubscription] {
+    static func getActiveSubscriptions(
+        _ searchText: String?,
+        _ sort: [SortDescriptor<Subscription>]
+    ) async -> [SendableSubscription] {
         let task = Task.detached {
-            let container = DataProvider.shared.container
-            let repo = SubscriptionActor(modelContainer: container)
-            return await repo.getActiveSubscriptions()
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            return await repo.getActiveSubscriptions(searchText ?? "", sort)
         }
         let subs = await task.value
         return subs

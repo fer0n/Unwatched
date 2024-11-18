@@ -17,7 +17,7 @@ struct SubscriptionListView: View {
     }
 
     var body: some View {
-        ForEach(subscriptionsVM.processedSubs, id: \.persistentId) { sub in
+        ForEach(subscriptionsVM.subscriptions, id: \.persistentId) { sub in
             NavigationLink(value: sub, label: {
                 SubscriptionListItem(subscription: sub, onDelete: onDelete)
             })
