@@ -12,14 +12,15 @@ import UnwatchedShared
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State var player: PlayerManager
-    @State var refresher = RefreshManager.shared
+    @State var refresher: RefreshManager
     @State var imageCacheManager: ImageCacheManager
 
     @State var sharedModelContainer: ModelContainer
 
     init() {
-        player = PlayerManager()
         sharedModelContainer = DataProvider.shared.container
+        refresher = RefreshManager.shared
+        player = PlayerManager()
         imageCacheManager = ImageCacheManager()
     }
 

@@ -5,8 +5,8 @@ import UnwatchedShared
 
 struct SubscriptionService {
     static func getActiveSubscriptions() async -> [SendableSubscription] {
-        let container = DataProvider.shared.container
         let task = Task.detached {
+            let container = DataProvider.shared.container
             let repo = SubscriptionActor(modelContainer: container)
             return await repo.getActiveSubscriptions()
         }
