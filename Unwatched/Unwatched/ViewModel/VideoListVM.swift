@@ -90,6 +90,12 @@ import OSLog
                     } else if let sendable = updatedVideo.toExportWithSubscription {
                         videos[index] = sendable
                     }
+                } else {
+                    // item not found in list, update all
+                    Task {
+                        await updateData(force: true)
+                    }
+                    return
                 }
             }
         }

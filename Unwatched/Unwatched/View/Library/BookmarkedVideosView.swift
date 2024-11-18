@@ -4,34 +4,22 @@ import UnwatchedShared
 
 struct BookmarkedVideosView: View {
 
-    @Query(filter: #Predicate<Video> { $0.bookmarkedDate != nil },
-           sort: \Video.bookmarkedDate, order: .reverse,
-           animation: .default)
-    var videos: [Video]
+    @State var videoListVM = VideoListVM()
 
     var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
-            if videos.isEmpty {
+            if videoListVM.hasNoVideos {
                 ContentUnavailableView("noBookmarkedVideosYet",
                                        systemImage: "bookmark.slash.fill",
                                        description: Text("noBookmarkedVideosYetDescription"))
             } else {
-                List {
-                    ForEach(videos) { video in
-                        VideoListItem(
-                            video,
-                            config: VideoListItemConfig(
-                                showVideoStatus: true,
-                                hasInboxEntry: video.inboxEntry != nil,
-                                hasQueueEntry: video.queueEntry != nil,
-                                watched: video.watchedDate != nil
-                            )
-                        )
-                    }
-                    .listRowBackground(Color.backgroundColor)
-                }
+                VideosViewAsync(
+                    videoListVM: $videoListVM,
+                    sorting: [SortDescriptor<Video>(\.bookmarkedDate, order: .reverse)],
+                    filter: #Predicate<Video> { $0.bookmarkedDate != nil }
+                )
                 .listStyle(.plain)
             }
         }
