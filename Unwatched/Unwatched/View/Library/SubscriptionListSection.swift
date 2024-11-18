@@ -112,16 +112,13 @@ struct SearchableSubscriptions: View {
                               subscriptionSorting: $subscriptionSorting)
 
         SubscriptionListView(subscriptionsVM, onDelete: onDelete)
-            .task(id: text.debounced) {
-                subscriptionsVM.filter = filter
+            .onChange(of: text.debounced) {
+                Task {
+                    await subscriptionsVM.setSearchText(text.debounced)
+                }
             }
             .onChange(of: subscriptionSorting) {
-                subscriptionsVM.setSorting(subscriptionSorting)
-            }
-            .task(id: refresher.isLoading) {
-                if !refresher.isLoading {
-                    await subscriptionsVM.updateData()
-                }
+                subscriptionsVM.setSorting(subscriptionSorting, refresh: true)
             }
     }
 

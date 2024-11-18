@@ -22,7 +22,7 @@ import OSLog
     private var localhistoryToken: Any?
 
     @available(iOS 18, *)
-    func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
+    static func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
         var historyDescriptor = HistoryDescriptor<DefaultHistoryTransaction>()
         if let token {
             historyDescriptor.predicate = #Predicate { transaction in
@@ -42,7 +42,7 @@ import OSLog
     }
 
     @available(iOS 18.0, *)
-    func getModelUpdates(_ transactions: [DefaultHistoryTransaction]) -> Set<PersistentIdentifier>? {
+    static func getModelUpdates(_ transactions: [DefaultHistoryTransaction]) -> Set<PersistentIdentifier>? {
         var result: Set<PersistentIdentifier> = []
         for transaction in transactions {
             for change in transaction.changes {
@@ -62,17 +62,28 @@ import OSLog
         return result
     }
 
-    func modelsHaveChangesUpdateToken() -> Set<PersistentIdentifier>? {
+    @MainActor
+    func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18, *) {
-            let transactions = findTransactions(after: historyToken)
-            if let last = transactions.last?.token {
-                historyToken = last
+            let token = historyToken
+            let task = Task.detached {
+                var newToken: DefaultHistoryToken?
+                var modelUpdates: Set<PersistentIdentifier>?
+
+                let transactions = TransactionVM.findTransactions(after: token)
+                if let last = transactions.last?.token {
+                    newToken = last
+                }
+                Logger.log.info("modelsHaveChanges: \(transactions.count)")
+                if transactions.count <= 20 {
+                    // if there's more than 20 changes, simply fetch everything
+                    modelUpdates = TransactionVM.getModelUpdates(transactions)
+                }
+                return (newToken, modelUpdates)
             }
-            Logger.log.info("modelsHaveChanges: \(transactions.count)")
-            if transactions.count <= 20 {
-                // if there's more than 20 changes, simply fetch everything
-                return getModelUpdates(transactions)
-            }
+            let (newToken, modelUpdates) = await task.value
+            historyToken = newToken
+            return modelUpdates
         }
         // history api unavailable, always assume there are changes
         return nil
