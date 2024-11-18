@@ -66,9 +66,9 @@ struct QueueGridView: View {
         }
     }
 
-    func openYouTube(_ id: String) {
-        guard let appURL = URL(string: "youtube://watch/\(id)") else {
-            print("Invalid YouTube URL: \(id)")
+    func openYouTube(_ id: String?) {
+        guard let id, let appURL = URL(string: "youtube://watch/\(id)") else {
+            print("Invalid YouTube URL: \(id ?? "NIL")")
             return
         }
         UIApplication.shared.open(appURL, options: [:], completionHandler: { success in
