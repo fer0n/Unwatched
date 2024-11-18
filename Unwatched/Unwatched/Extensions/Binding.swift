@@ -7,7 +7,8 @@ import Foundation
 import SwiftUI
 
 extension Binding {
-    func onUpdate(_ closure: @escaping @Sendable (Value) -> Void) -> Binding<Value> {
+    @MainActor
+    func onUpdate(_ closure: @escaping (Value) -> Void) -> Binding<Value> {
         Binding(get: {
             wrappedValue
         }, set: { newValue in

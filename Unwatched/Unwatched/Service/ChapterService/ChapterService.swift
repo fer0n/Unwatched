@@ -140,4 +140,72 @@ struct ChapterService {
             try? context.save()
         }
     }
+
+    static func chapterEqual(_ sendable: SendableChapter, _ chapter: Chapter?) -> Bool {
+        guard let chapter else { return false }
+
+        return sendable.startTime == chapter.startTime
+            && sendable.endTime == chapter.endTime
+            && sendable.category == chapter.category
+            && sendable.title == chapter.title
+            && sendable.isActive == chapter.isActive
+    }
+
+    static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
+        Logger.log.info("updateIfNeeded")
+        var newChapters = [Chapter]()
+        let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
+        newChapters.reserveCapacity(chapters.count)
+
+        var hasChanges = false
+        chapters.indices.forEach { index in
+            let newChapter = chapters[index]
+            let oldChapter = index < oldChapters.count
+                ? oldChapters[index]
+                : nil
+            if !chapterEqual(newChapter, oldChapter) || (!newChapter.isActive && oldChapter?.isActive ?? false) {
+                Logger.log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
+                hasChanges = true
+                if let oldChapter {
+                    modelContext.delete(oldChapter)
+                }
+                let newChapterModel = newChapter.getChapter
+                modelContext.insert(newChapterModel)
+
+                newChapters.append(newChapterModel)
+            } else if let oldChapter {
+                newChapters.append(oldChapter)
+            }
+        }
+
+        if hasChanges {
+            video?.mergedChapters = newChapters
+        }
+    }
+
+    private static var skipActive: Bool {
+        if UserDefaults.standard.bool(forKey: Const.skipSponsorSegments) {
+            return true
+        }
+        Logger.log.info("SponsorBlock: skipping sponsor segments is disabled")
+        return false
+    }
+
+    static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
+        if !skipActive { return }
+
+        for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
+            Logger.log.info("skipping: \(chapter)")
+            chapters[index].isActive = false
+        }
+    }
+
+    static func skipSponsorSegments(in chapters: [Chapter]) {
+        if !skipActive { return }
+
+        for chapter in chapters where chapter.category == .sponsor {
+            Logger.log.info("skipping: \(chapter)")
+            chapter.isActive = false
+        }
+    }
 }

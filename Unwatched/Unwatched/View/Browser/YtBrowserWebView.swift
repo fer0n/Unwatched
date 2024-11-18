@@ -67,7 +67,8 @@ struct YtBrowserWebView: UIViewRepresentable {
         }
 
         deinit {
-            stopObserving()
+            observation?.invalidate()
+            observation = nil
         }
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -237,11 +238,6 @@ struct YtBrowserWebView: UIViewRepresentable {
             var image = document.querySelector('link[rel="image_src"]')?.getAttribute('href');
             [channelId, description, rssFeed, title, image];
             """
-
-        func stopObserving() {
-            observation?.invalidate()
-            observation = nil
-        }
     }
 }
 

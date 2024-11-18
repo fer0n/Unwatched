@@ -30,25 +30,13 @@ struct PlayerView: View {
     var setShowMenu: (() -> Void)?
     var enableHideControls: Bool
 
-    var hideMiniPlayer: Bool {
-        ((navManager.showMenu || navManager.showDescriptionDetail)
-            && sheetPos.swipedBelow && navManager.videoDetail == nil)
-            || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
-            || landscapeFullscreen
-    }
-
-    var showFullscreenControls: Bool {
-        fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
-    }
-
-    var wideAspect: Bool {
-        (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
-            && landscapeFullscreen
-    }
-
     var body: some View {
         ZStack(alignment: .top) {
-            videoPlaceholder
+            VideoPlaceholder(
+                autoHideVM: autoHideVM,
+                fullscreenControlsSetting: fullscreenControlsSetting,
+                landscapeFullscreen: landscapeFullscreen
+            )
 
             if player.video != nil {
                 HStack(spacing: 0) {
@@ -104,19 +92,25 @@ struct PlayerView: View {
         .statusBarHidden(controlsHidden)
     }
 
-    var controlsHidden: Bool {
-        !(
-            fullscreenControlsSetting == .enabled || autoHideVM.showControls
-        ) && hideControlsFullscreen
+    var hideMiniPlayer: Bool {
+        ((navManager.showMenu || navManager.showDescriptionDetail)
+            && sheetPos.swipedBelow && navManager.videoDetail == nil)
+            || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
+            || landscapeFullscreen
     }
 
-    var videoPlaceholder: some View {
-        Rectangle()
-            .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
-            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-            .background(backgroundTapRecognizer)
-            .animation(.default, value: player.videoAspectRatio)
+    var showFullscreenControls: Bool {
+        fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
+    }
+
+    var wideAspect: Bool {
+        (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
+            && landscapeFullscreen
+    }
+
+    var controlsHidden: Bool {
+        !(fullscreenControlsSetting == .enabled || autoHideVM.showControls)
+            && hideControlsFullscreen
     }
 
     @MainActor
@@ -215,20 +209,6 @@ struct PlayerView: View {
         }
     }
 
-    var backgroundTapRecognizer: some View {
-        HStack {
-            Color.black
-                .onTapGesture {
-                    autoHideVM.setShowControls(positionLeft: true)
-                }
-            Color.black
-                .onTapGesture {
-                    autoHideVM.setShowControls(positionLeft: false)
-                }
-        }
-        .disabled(fullscreenControlsSetting != .autoHide)
-    }
-
     var thumbnailPlaceholder: some View {
         CachedImageView(imageUrl: player.video?.thumbnailUrl) { image in
             image
@@ -247,9 +227,7 @@ struct PlayerView: View {
 
     @MainActor
     func handleRequestReview() {
-        navManager.askForReviewPoints += 1
-        if navManager.askForReviewPoints >= Const.askForReviewPointThreashold {
-            navManager.askForReviewPoints = -40
+        navManager.handleRequestReview {
             requestReview()
         }
     }

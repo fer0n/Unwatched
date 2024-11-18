@@ -72,6 +72,7 @@ struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewCo
 }
 
 extension DynamicViewContent {
+    @MainActor
     func handleDynamicVideoURLDrop(_ placement: VideoPlacement) -> some DynamicViewContent {
         HandleDynamicVideoURLDropView(placement: placement) {
             self

@@ -101,4 +101,36 @@ extension VideoActor {
         modelContext.insert(sub)
         sub.videos?.append(video)
     }
+
+    /// Fetches all videos for the specified subscription
+    func fetchVideos(_ sub: SendableSubscription) async throws -> (SendableSubscription, [SendableVideo]) {
+        guard let url = sub.link else {
+            Logger.log.info("sub has no url: \(sub.title)")
+            return (sub, [])
+        }
+        do {
+            let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+            return (sub, videos)
+        } catch {
+            Logger.log.error(
+                "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
+            )
+            throw error
+        }
+    }
+
+    /// Returns specified Subscriptions and returns them as Sendable.
+    /// If none are specified, returns all active subscriptions.
+    func getSubscriptions(_ subscriptionIds: [PersistentIdentifier]?) throws -> [SendableSubscription] {
+        var subs = [Subscription]()
+        if subscriptionIds == nil {
+            subs = try getAllActiveSubscriptions()
+            Logger.log.info("all subs \(subs)")
+        } else {
+            Logger.log.info("found some, fetching")
+            subs = try fetchSubscriptions(subscriptionIds)
+        }
+        let sendableSubs: [SendableSubscription] = subs.compactMap { $0.toExport }
+        return sendableSubs
+    }
 }

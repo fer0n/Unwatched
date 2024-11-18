@@ -10,9 +10,11 @@ public final class DataProvider: Sendable {
     public static let shared = DataProvider()
     
     public let container: ModelContainer
+    public let imageContainer: ModelContainer
     
     init() {
         container = DataProvider.getModelContainer()
+        imageContainer = DataProvider.getCachedImageContainer
     }
     
     public static func newContext() -> ModelContext {
@@ -37,7 +39,7 @@ public final class DataProvider: Sendable {
         )
     }
 
-    public static var getCachedImageContainer: ModelContainer = {
+    private static var getCachedImageContainer: ModelContainer = {
         let schema = Schema([CachedImage.self])
         
         #if os(tvOS)
