@@ -58,10 +58,6 @@ actor RefreshActor {
         setupCloudKitListener()
     }
 
-    deinit {
-        //
-    }
-
     func refreshAll(hardRefresh: Bool = false) async {
         await refresh(hardRefresh: hardRefresh)
     }
@@ -84,7 +80,8 @@ actor RefreshActor {
     }
 
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
-        if isSyncingIcloud {
+        let allowRefreshDuringSync = UserDefaults.standard.bool(forKey: Const.allowRefreshDuringSync)
+        if isSyncingIcloud && !allowRefreshDuringSync {
             Logger.log.info("currently syncing iCloud, stopping now")
             return
         }
