@@ -9,37 +9,63 @@ import OSLog
 public final class DataProvider: Sendable {
     public static let shared = DataProvider()
     
-    public let container: ModelContainer
-    public let imageContainer: ModelContainer
-    
-    init() {
-        container = DataProvider.getModelContainer()
-        imageContainer = DataProvider.getCachedImageContainer
-    }
-    
-    public static func newContext() -> ModelContext {
-        ModelContext(shared.container)
-    }
-    
-    public static let dbEntries: [any PersistentModel.Type] = [
-        Video.self,
-        Subscription.self,
-        QueueEntry.self,
-        InboxEntry.self,
-        Chapter.self
-    ]
+    public let container: ModelContainer = {
+        Logger.log.info("getModelContainer")
+        var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+        #if os(tvOS)
+            enableIcloudSync = true
+        #endif
 
-    static let schema = Schema(DataProvider.dbEntries)
+        #if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            return DataProvider.previewContainer
+        }
+        #endif
 
-    public static func modelConfig(_ isStoredInMemoryOnly: Bool = false) -> ModelConfiguration {
-        ModelConfiguration(
+        let config = ModelConfiguration(
             schema: DataProvider.schema,
-            isStoredInMemoryOnly: isStoredInMemoryOnly,
-            cloudKitDatabase: .none
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
-    }
+        
+        Logger.log.info("getModelContainer: config set")
 
-    private static var getCachedImageContainer: ModelContainer = {
+        do {
+            if let container = try? ModelContainer(
+                for: DataProvider.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
+                configurations: [config]
+            ) {
+                Logger.log.info("getModelContainer: setting UndoManager")
+                Task { @MainActor in
+                    container.mainContext.undoManager = UndoManager()
+                }
+                return container
+            }
+
+            // workaround for migration (disable sync for initial launch)
+            Logger.log.info("getModelContainer: fallback")
+            let config = ModelConfiguration(
+                schema: DataProvider.schema,
+                isStoredInMemoryOnly: false,
+                cloudKitDatabase: .none
+            )
+            let container = try ModelContainer(
+                for: DataProvider.schema,
+                migrationPlan: UnwatchedMigrationPlan.self,
+                configurations: [config]
+            )
+            Task { @MainActor in
+                container.mainContext.undoManager = UndoManager()
+            }
+            return container
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
+    
+    public let imageContainer: ModelContainer = {
         let schema = Schema([CachedImage.self])
         
         #if os(tvOS)
@@ -64,57 +90,22 @@ public final class DataProvider: Sendable {
             fatalError("Could not create CachedImage ModelContainer: \(error)")
         }
     }()
-
-    public static func getModelContainer() -> ModelContainer {
-        Logger.log.info("getModelContainer")
-        var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
-        #if os(tvOS)
-            enableIcloudSync = true
-        #endif
-
-        #if DEBUG
-        if CommandLine.arguments.contains("enable-testing") {
-            return DataProvider.previewContainer
-        }
-        #endif
-
-        let config = ModelConfiguration(
-            schema: DataProvider.schema,
-            isStoredInMemoryOnly: false,
-            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
-        )
-
-        do {
-            if let container = try? ModelContainer(
-                for: DataProvider.schema,
-                migrationPlan: UnwatchedMigrationPlan.self,
-                configurations: [config]
-            ) {
-                Task { @MainActor in
-                    container.mainContext.undoManager = UndoManager()
-                }
-                return container
-            }
-
-            // workaround for migration (disable sync for initial launch)
-            let config = ModelConfiguration(
-                schema: DataProvider.schema,
-                isStoredInMemoryOnly: false,
-                cloudKitDatabase: .none
-            )
-            let container = try ModelContainer(
-                for: DataProvider.schema,
-                migrationPlan: UnwatchedMigrationPlan.self,
-                configurations: [config]
-            )
-            Task { @MainActor in
-                container.mainContext.undoManager = UndoManager()
-            }
-            return container
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
+    
+    init() {}
+    
+    public static func newContext() -> ModelContext {
+        ModelContext(shared.container)
     }
+    
+    public static let dbEntries: [any PersistentModel.Type] = [
+        Video.self,
+        Subscription.self,
+        QueueEntry.self,
+        InboxEntry.self,
+        Chapter.self
+    ]
+
+    static let schema = Schema(DataProvider.dbEntries)
 
     public static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {

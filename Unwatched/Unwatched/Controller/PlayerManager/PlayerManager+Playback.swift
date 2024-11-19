@@ -26,6 +26,7 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     var currentRemaining: Double? {
         if let end = currentEndTime, let current = currentTime {
             return max(end - current, 0)
@@ -33,6 +34,7 @@ extension PlayerManager {
         return nil
     }
 
+    @MainActor
     var currentRemainingText: String? {
         if let remaining = currentRemaining,
            let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
@@ -59,6 +61,7 @@ extension PlayerManager {
         handleRotateOnPlay()
     }
 
+    @MainActor
     func pause() {
         if self.isPlaying {
             self.isPlaying = false

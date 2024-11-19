@@ -16,9 +16,9 @@ struct SetupView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(PlayerManager.self) var player
     @Environment(RefreshManager.self) var refresher
-    @Environment(ImageCacheManager.self) var imageCacheManager
     @Environment(\.colorScheme) var colorScheme
 
+    @State var imageCacheManager = ImageCacheManager()
     @State var sheetPos = SheetPositionReader.load()
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.load()
@@ -32,6 +32,7 @@ struct SetupView: View {
             .environment(alerter)
             .environment(navManager)
             .environment(\.originalColorScheme, colorScheme)
+            .environment(imageCacheManager)
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }

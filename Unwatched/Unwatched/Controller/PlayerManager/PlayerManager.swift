@@ -5,10 +5,20 @@ import UnwatchedShared
 
 /// Manages the current video, queuing, and chapters
 @Observable class PlayerManager {
+
+    @MainActor
     var isPlaying: Bool = false
+
+    @MainActor
     var currentTime: Double?
+
+    @MainActor
     var currentChapter: Chapter?
+
+    @MainActor
     var previousChapter: Chapter?
+
+    @MainActor
     var nextChapter: Chapter?
 
     var seekPosition: Double?

@@ -15,7 +15,7 @@ final class DataSpeedTests: XCTestCase {
 
         let videoListVM = VideoListVM()
         let sorting = SortDescriptor<Video>(\.publishedDate)
-        videoListVM.setSorting([sorting])
+        await videoListVM.setSorting([sorting])
 
         measure {
             let exp = expectation(description: "Async task finished")
