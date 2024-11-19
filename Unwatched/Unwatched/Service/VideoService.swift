@@ -106,7 +106,7 @@ extension VideoService {
         _ videoId: PersistentIdentifier,
         watched: Bool = true
     ) -> Task<Void, Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.setVideoWatched(videoId, watched: watched)
         }
@@ -114,7 +114,7 @@ extension VideoService {
     }
 
     static func clearFromEverywhere(_ youtubeId: String) {
-        _ = Task {
+        _ = Task.detached {
             let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
                 let repo = VideoActor(modelContainer: DataProvider.shared.container)
@@ -157,7 +157,7 @@ extension VideoService {
 
     static func insertQueueEntriesAsync(at index: Int = 0,
                                         videoIds: [PersistentIdentifier]) -> Task<(), Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)
         }
@@ -165,7 +165,7 @@ extension VideoService {
     }
 
     static func addToBottomQueueAsync(videoId: PersistentIdentifier) -> Task<(), Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.addToBottomQueue(videoId: videoId)
         }
@@ -242,7 +242,7 @@ extension VideoService {
                           _ direction: ClearDirection,
                           index: Int?,
                           date: Date?) -> Task<(), Error> {
-        let task = Task {
+        let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.clearList(list, direction, index: index, date: date)
         }

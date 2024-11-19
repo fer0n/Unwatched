@@ -11,18 +11,10 @@ import UnwatchedShared
 @main
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State var player: PlayerManager
-    @State var refresher: RefreshManager
-    @State var imageCacheManager: ImageCacheManager
+    @State var player = PlayerManager()
+    @State var refresher = RefreshManager.shared
 
-    @State var sharedModelContainer: ModelContainer
-
-    init() {
-        sharedModelContainer = DataProvider.shared.container
-        refresher = RefreshManager.shared
-        player = PlayerManager()
-        imageCacheManager = ImageCacheManager()
-    }
+    @State var sharedModelContainer: ModelContainer = DataProvider.shared.container
 
     var body: some Scene {
         WindowGroup {
@@ -36,7 +28,6 @@ struct UnwatchedApp: App {
                 .modelContainer(sharedModelContainer)
                 .environment(player)
                 .environment(refresher)
-                .environment(imageCacheManager)
                 .onAppear {
                     if refresher.consumeTriggerPasteAction() {
                         NotificationCenter.default.post(name: .pasteAndWatch, object: nil)

@@ -12,6 +12,9 @@ import UnwatchedShared
     private var keepVisibleDict = Set<String>()
     var positionLeft = false
 
+    init() {}
+
+    @MainActor
     private var showControlsLocal = false {
         didSet {
             if showControlsLocal {
@@ -28,15 +31,18 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     var showControls: Bool {
         showControlsLocal || !keepVisibleDict.isEmpty
     }
 
+    @MainActor
     func reset() {
         showControlsLocal = false
         keepVisibleDict.removeAll()
     }
 
+    @MainActor
     func setShowControls(positionLeft: Bool? = nil) {
         if let positionLeft {
             self.positionLeft = positionLeft

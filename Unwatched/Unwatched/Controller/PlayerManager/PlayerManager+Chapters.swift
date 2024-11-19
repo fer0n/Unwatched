@@ -11,6 +11,7 @@ import UnwatchedShared
 
 extension PlayerManager {
 
+    @MainActor
     var previousChapterDisabled: Bool {
         previousChapter == nil && currentChapter == nil
     }
@@ -169,9 +170,7 @@ extension PlayerManager {
             } catch {
                 Logger.log.error("Error while merging chapters: \(error)")
             }
-            await MainActor.run {
-                self.handleChapterChange()
-            }
+            self.handleChapterChange()
         }
     }
 
