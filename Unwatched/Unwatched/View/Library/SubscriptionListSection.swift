@@ -20,7 +20,7 @@ struct SubscriptionListSection: View {
     var body: some View {
         MySection("subscriptions") {
             if !subscriptionsVM.isLoading {
-                if subscriptionsVM.subscriptions.isEmpty {
+                if subscriptionsVM.hasNoSubscriptions {
                     dropArea
                         .listRowInsets(EdgeInsets())
                 } else {

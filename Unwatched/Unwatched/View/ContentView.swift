@@ -48,7 +48,10 @@ struct ContentView: View {
                         MenuView(isSidebar: true)
                             .frame(maxWidth: isLandscape
                                     ? min(proxy.size.width * 0.4, sidebarWidth)
-                                    : nil)
+                                    : nil,
+                                   maxHeight: isLandscape
+                                    ? nil
+                                    : proxy.size.height * 0.4)
                             .setColorScheme()
                             .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
                             .edgesIgnoringSafeArea(.all)
@@ -66,26 +69,23 @@ struct ContentView: View {
             }
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 if let video = player.video {
-                    ChapterDescriptionView(
-                        video: video,
-                        page: $navManager.selectedDetailPage
-                    )
-                    .presentationDetents(bigScreen ? [] : chapterViewDetent)
-                    .presentationBackgroundInteraction(
-                        bigScreen
-                            ? .disabled
-                            :
-                            .enabled(upThrough: .height(sheetPos.playerControlHeight))
-                    )
-                    .presentationDragIndicator(.visible)
-                    .environment(\.colorScheme, colorScheme)
+                    ChapterDescriptionView(video: video)
+                        .presentationDetents(bigScreen ? [] : chapterViewDetent)
+                        .presentationBackgroundInteraction(
+                            bigScreen
+                                ? .disabled
+                                :
+                                .enabled(upThrough: .height(sheetPos.playerControlHeight))
+                        )
+                        .presentationDragIndicator(.visible)
+                        .environment(\.colorScheme, colorScheme)
                 }
             }
             .menuViewSheet(
                 allowMaxSheetHeight: videoExists && !navManager.searchFocused,
                 allowPlayerControlHeight: !player.embeddingDisabled
                     && player.videoAspectRatio > Const.tallestAspectRatio,
-                showCancelButton: landscapeFullscreen,
+                landscapeFullscreen: landscapeFullscreen,
                 disableSheet: bigScreen
             )
         }
@@ -98,16 +98,13 @@ struct ContentView: View {
 }
 
 #Preview {
-    let player = PlayerManager()
-    player.video = Video.getDummy()
-
-    return ContentView(hideControlsFullscreen: false)
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager.getDummy())
+    ContentView(hideControlsFullscreen: false)
+        .modelContainer(DataProvider.previewContainerFilled)
+        .environment(NavigationManager.getDummy(true))
         .environment(Alerter())
-        .environment(player)
+        .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())
         .environment(RefreshManager())
-        .environment(SheetPositionReader())
+        .environment(SheetPositionReader.shared)
     // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
 }

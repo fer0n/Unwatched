@@ -18,18 +18,19 @@ public struct Const {
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"
     
     public static let themeColor = "themeColor"
-    
+
     // MARK: - SF Symbols
     public static let watchedSF = "checkmark.circle.fill"
     public static let clearNoFillSF = "xmark"
     public static let checkmarkSF = "checkmark"
-    
+
     public static let bundleId = "com.pentlandFirth.Unwatched"
 
     public static let dotString = "•"
     public static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     public static let playerAboveSheetHeight: CGFloat = 60
+    public static let minSheetDetent: CGFloat = 56
     public static let playerControlPadding: CGFloat = 2
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
@@ -132,7 +133,7 @@ public struct Const {
     public static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
     public static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
 
-    public static let reloadSF = "arrow.circlepath"
+    public static let reloadSF = "arrow.clockwise"
 
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"
@@ -191,4 +192,5 @@ public struct Const {
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
 
     public static let videoListFormat = "videoListFormat"
+    public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
 }

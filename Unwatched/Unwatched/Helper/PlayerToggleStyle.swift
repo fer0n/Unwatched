@@ -42,13 +42,13 @@ struct PlayerToggleModifier: ViewModifier {
             .font(isSmall ? .subheadline : .headline)
             .fontWeight(.regular)
             .frame(width: size, height: size)
+            .foregroundStyle(isOn ? Color.backgroundColor : Color.automaticBlack)
+            .opacity(isEnabled ? 1 : 0.4)
             .background(isOn
                             ? Color.neutralAccentColor
-                            : Color.myBackgroundGray2
+                            : Color.backgroundColor
             )
-            .foregroundStyle(isOn ? Color.backgroundColor : Color.automaticBlack)
             .clipShape(Circle())
-            .opacity(isEnabled ? 1 : 0.4)
     }
 }
 

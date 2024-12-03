@@ -101,7 +101,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             return
         }
         let play = payload == "play"
-        parent.overlayVM.show(play ? .play : .pause)
+        parent.overlayVM.show(play ? .pause : .play)
     }
 
     func handleSwipe(_ payload: String?) {

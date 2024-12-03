@@ -87,6 +87,16 @@ import UnwatchedShared
         return video.watchedDate != nil && noQueueEntry && noInboxEntry
     }
 
+    @MainActor
+    var isCompactHeight: Bool {
+        videoAspectRatio <= Const.consideredTallAspectRatio
+    }
+
+    @MainActor
+    var isAnyCompactHeight: Bool {
+        embeddingDisabled || isCompactHeight
+    }
+
     var isContinuousPlay: Bool {
         UserDefaults.standard.bool(forKey: Const.continuousPlay)
     }
@@ -96,7 +106,7 @@ import UnwatchedShared
     @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
         let (first, second) = VideoService.getNextVideoInQueue(modelContext)
-        let next = first != self.video ? first : second
+        let next = first?.youtubeId != self.video?.youtubeId ? first : second
         withAnimation {
             setNextVideo(next, source)
         }

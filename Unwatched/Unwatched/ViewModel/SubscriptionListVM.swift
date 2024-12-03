@@ -29,6 +29,11 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     }
 
     @MainActor
+    var hasNoSubscriptions: Bool {
+        subscriptions.isEmpty && !isLoading && (searchText?.isEmpty ?? true)
+    }
+
+    @MainActor
     func setSorting(_ sorting: SubscriptionSorting? = nil, refresh: Bool = false) {
         let sorting = {
             if let sorting = sorting {

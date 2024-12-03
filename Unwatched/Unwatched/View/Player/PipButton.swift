@@ -15,7 +15,7 @@ struct PipButton: View {
             hapticToggle.toggle()
             player.pipEnabled.toggle()
         } label: {
-            Image(systemName: "pip")
+            Image(systemName: "pip.fill")
                 .playerToggleModifier(isOn: player.pipEnabled, isSmall: true)
         }
         .disabled(!player.canSetPip)

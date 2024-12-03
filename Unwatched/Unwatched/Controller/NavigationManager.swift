@@ -15,11 +15,11 @@ import UnwatchedShared
     var openTabBrowserUrl: BrowserUrl?
 
     var videoDetail: Video?
-    var videoDetailPage: ChapterDescriptionPage = .description
+    var playerTab: ControlNavigationTab = .controls
+    @ObservationIgnored var scrollToCurrentChapter = false
 
     var tab = NavigationTab.queue
     var showDescriptionDetail = false
-    var selectedDetailPage: ChapterDescriptionPage = .description
     var searchFocused = false
 
     var askForReviewPoints = 0
@@ -59,9 +59,6 @@ import UnwatchedShared
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
         tab = try container.decode(NavigationTab.self, forKey: .tab)
         askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
-        if let value = try? container.decodeIfPresent(ChapterDescriptionPage.self, forKey: .videoDetailPage) {
-            videoDetailPage = value
-        }
 
         let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
         presentedLibrary = NavigationPath(decoded)
@@ -78,7 +75,6 @@ import UnwatchedShared
         try container.encode(showMenu, forKey: .showMenu)
         try container.encode(tab, forKey: .tab)
         try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
-        try container.encode(videoDetailPage, forKey: .videoDetailPage)
 
         if let representation = presentedLibrary.codable {
             try container.encode(representation, forKey: .presentedLibrary)
@@ -178,6 +174,7 @@ import UnwatchedShared
 
     func openUrlInApp(_ url: BrowserUrl) {
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
+            SheetPositionReader.shared.setDetentMiniPlayer()
             openTabBrowserUrl = url
             tab = .browser
             showMenu = true
@@ -186,6 +183,7 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     func handlePlay() {
         let hideMenuOnPlay = UserDefaults.standard.value(forKey: Const.hideMenuOnPlay) as? Bool ?? true
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
@@ -193,8 +191,12 @@ import UnwatchedShared
 
         if hideMenuOnPlay || rotateOnPlay {
             withAnimation {
-                showMenu = false
+                SheetPositionReader.shared.setDetentMinimumSheet()
             }
+        }
+
+        if SheetPositionReader.shared.landscapeFullscreen {
+            showMenu = false
         }
 
         if returnToQueue {
@@ -210,9 +212,16 @@ import UnwatchedShared
         }
     }
 
-    static func getDummy() -> NavigationManager {
+    func handleVideoDetail(scrollToCurrentChapter: Bool = false) {
+        self.scrollToCurrentChapter = scrollToCurrentChapter
+        withAnimation {
+            playerTab = .chapterDescription
+        }
+    }
+
+    static func getDummy(_ showMenu: Bool = true) -> NavigationManager {
         let navManager = NavigationManager()
-        navManager.showMenu = true
+        navManager.showMenu = showMenu
         return navManager
     }
 }
@@ -223,13 +232,43 @@ enum NavManagerCodingKeys: CodingKey {
          askForReviewPoints,
          presentedLibrary,
          presentedSubscriptionInbox,
-         presentedSubscriptionQueue,
-         videoDetailPage
+         presentedSubscriptionQueue
 }
 
-enum NavigationTab: String, Codable {
+enum NavigationTab: String, Codable, CustomStringConvertible {
     case inbox
     case queue
     case library
     case browser
+
+    var description: String {
+        switch self {
+        case .inbox:
+            return String(localized: "inbox")
+        case .queue:
+            return String(localized: "queue")
+        case .library:
+            return String(localized: "library")
+        case .browser:
+            return String(localized: "browserShort")
+        }
+    }
+
+    var stringKey: LocalizedStringKey {
+        switch self {
+        case .inbox:
+            return "inbox"
+        case .queue:
+            return "queue"
+        case .library:
+            return "library"
+        case .browser:
+            return "browserShort"
+        }
+    }
+}
+
+enum ControlNavigationTab: Int {
+    case controls
+    case chapterDescription
 }

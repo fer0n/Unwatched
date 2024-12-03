@@ -7,32 +7,17 @@ import SwiftUI
 import UnwatchedShared
 
 @Observable class OverlayFullscreenVM {
-    @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
-    @ObservationIgnored var landscapeFullscreen: Bool = false
-
     var icon: OverlayIcon = .play
 
     @MainActor
-    var show = false {
-        didSet {
-            if show {
-                hideControlsTask?.cancel()
-                hideControlsTask = Task { @MainActor in
-                    do {
-                        try await Task.sleep(s: 0.2)
-                    } catch {}
-                    show = false
-                }
-            }
-        }
-    }
+    var show = false
 
     init() {}
 
     @MainActor
     func show(_ icon: OverlayIcon) {
         self.icon = icon
-        show = true
+        show.toggle()
     }
 }
 
@@ -48,15 +33,18 @@ struct FullscreenOverlayControls: View {
         ZStack {
             Image(systemName: overlayVM.icon.systemName)
                 .resizable()
-                .frame(width: 90, height: 90)
                 .animation(nil, value: overlayVM.show)
+                .frame(width: 90, height: 90)
+                .phaseAnimator([0, 1, 0], trigger: overlayVM.show) { view, phase in
+                    view
+                        .scaleEffect(phase == 1 ? 1 : 0.75)
+                        .opacity(phase == 1 ? 0.8 : 0)
+                } animation: { _ in
+                    .easeInOut(duration: 0.2)
+                }
                 .fontWeight(.black)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.black, .white)
-                .opacity(overlayVM.show && show ? 1 : 0)
-                .scaleEffect(overlayVM.show && show ? 1 : 0.7)
-                .animation(.bouncy, value: overlayVM.show)
-                .accessibilityLabel("playPause")
                 .allowsHitTesting(false)
 
             if player.videoEnded {
@@ -96,7 +84,7 @@ enum OverlayIcon {
 
 #Preview {
     let player = PlayerManager()
-    player.videoEnded = true
+    player.videoEnded = false
 
     return FullscreenOverlayControls(
         overlayVM: .constant(OverlayFullscreenVM()),

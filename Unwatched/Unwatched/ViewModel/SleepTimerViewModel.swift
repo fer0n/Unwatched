@@ -28,6 +28,10 @@ import OSLog
         timer?.invalidate()
     }
 
+    var isOn: Bool {
+        remainingSeconds > 0
+    }
+
     var remainingText: String? {
         if remainingSeconds > 0 {
             let remaining = Double(remainingSeconds)
@@ -40,9 +44,8 @@ import OSLog
     }
 
     var titleText: String {
-        return remainingSeconds != 0
-            ? "\(timeString(time: remainingSeconds))"
-            : String(localized: "sleepTimer")
+        let time = remainingSeconds != 0 ? "(\(timeString(time: remainingSeconds)))" : ""
+        return String(localized: "sleepTimer\(time)")
     }
 
     func timeString(time: Int) -> String {
@@ -73,9 +76,7 @@ import OSLog
     func handleTimerUpdate() {
         handleAudioFadeOut()
         if remainingSeconds == 1 {
-            withAnimation {
-                remainingSeconds = 0
-            }
+            remainingSeconds = 0
         } else if remainingSeconds > 0 {
             remainingSeconds -= 1
         } else {

@@ -201,4 +201,14 @@ extension PlayerManager {
             pipEnabled = value
         }
     }
+
+    @MainActor
+    func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
+        var seconds = currentTime ?? 0
+        pause()
+        if let fadeOutSeconds = fadeOutSeconds, fadeOutSeconds > seconds {
+            seconds -= fadeOutSeconds
+        }
+        updateElapsedTime(seconds)
+    }
 }

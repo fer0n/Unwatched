@@ -11,6 +11,7 @@ import UnwatchedShared
 struct VideoNotAvailableView: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(SheetPositionReader.self) var sheetPos
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
@@ -149,6 +150,7 @@ struct VideoNotAvailableView: View {
     func showMenu() {
         if sizeClass == .compact {
             navManager.showMenu = true
+            sheetPos.setDetentVideoPlayer()
         }
     }
 

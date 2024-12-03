@@ -13,19 +13,16 @@ struct TabItemView<Content: View>: View {
     var content: Content
 
     var image: Image
-    var text: LocalizedStringKey
     var tag: NavigationTab
     var showBadge: Bool = false
     var show: Bool = true
 
     init(image: Image,
-         text: LocalizedStringKey,
          tag: NavigationTab,
          showBadge: Bool = false,
          show: Bool = true,
          @ViewBuilder content: () -> Content) {
         self.image = image
-        self.text = text
         self.tag = tag
         self.showBadge = showBadge
         self.show = show
@@ -42,7 +39,7 @@ struct TabItemView<Content: View>: View {
                     if showBadge {
                         Text(verbatim: "●")
                     } else if showTabBarLabels {
-                        Text(text)
+                        Text(tag.description)
                     } else {
                         Text(verbatim: "")
                     }

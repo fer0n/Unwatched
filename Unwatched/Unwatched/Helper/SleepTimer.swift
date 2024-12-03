@@ -12,7 +12,6 @@ struct SleepTimer: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    @State private var showPopover = false
     @State var slider: UISlider?
     @State var hapticToggle: Bool = false
     var viewModel: SleepTimerViewModel
@@ -31,18 +30,25 @@ struct SleepTimer: View {
     }
 
     var body: some View {
-        Button {
-            showPopover.toggle()
+        Menu {
+            addTimeButton(5)
+            addTimeButton(30)
+
+            Button {
+                viewModel.stopTimer()
+                hapticToggle.toggle()
+            } label: {
+                Text("sleepTimerOff")
+            }
+            .disabled(viewModel.remainingSeconds <= 0)
         } label: {
             HStack(alignment: .center, spacing: 2) {
-                Image(systemName: viewModel.remainingSeconds <= 0 ? "moon.zzz" : "moon.zzz.fill")
+                Text(viewModel.titleText)
+                Image(systemName: viewModel.remainingSeconds <= 0 ? "moon.zzz.fill" : "moon.zzz.fill")
                     .contentTransition(.symbolEffect(.replace))
-                if let text = viewModel.remainingText {
-                    Text(text)
-                        .font(.system(.body).monospacedDigit())
-                }
             }
         }
+        .menuActionDismissBehavior(.disabled)
         .accessibilityLabel(accessibilityLabel)
         .onAppear {
             slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
@@ -60,11 +66,6 @@ struct SleepTimer: View {
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .popover(isPresented: $showPopover, arrowEdge: .bottom) {
-            sleepControl
-                .padding()
-                .presentationCompactAdaptation(.popover)
-        }
         .onChange(of: player.isPlaying) {
             handleTimerPause()
         }
@@ -91,38 +92,10 @@ struct SleepTimer: View {
             handleTimerPause()
             hapticToggle.toggle()
         } label: {
-            Label("\(minutes)", systemImage: "plus")
+            Label("\(minutes) min", systemImage: "plus")
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(theme.contrastColor)
         }
-    }
-
-    var sleepControl: some View {
-        ZStack {
-            Color.sheetBackground
-                .scaleEffect(1.5)
-
-            VStack {
-                Label(viewModel.titleText, systemImage: "moon.zzz.fill")
-                    .font(.system(.body).monospacedDigit())
-
-                HStack {
-                    addTimeButton(5)
-                    addTimeButton(30)
-                }
-                .buttonStyle(.borderedProminent)
-                Button {
-                    viewModel.stopTimer()
-                    hapticToggle.toggle()
-                } label: {
-                    Text("sleepTimerOff")
-                }
-                .disabled(viewModel.remainingSeconds <= 0)
-                .padding()
-            }
-            .tint(theme.color)
-        }
-        .environment(\.colorScheme, colorScheme)
     }
 }
 

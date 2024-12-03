@@ -97,6 +97,9 @@ extension VideoService {
     }
 
     static func updateDuration(_ video: Video, duration: Double) {
+        if video.duration == duration {
+            return
+        }
         withAnimation {
             video.duration = duration
         }
@@ -146,7 +149,7 @@ extension VideoService {
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
                                    modelContext: ModelContext) {
-        // workaround: update queue on main thread, animaitons don't work in iOS 18 otherwise
+        // workaround: update queue on main thread, animaitons don't work on iOS 18 otherwise
         VideoActor.insertQueueEntries(
             at: index,
             videos: videos,

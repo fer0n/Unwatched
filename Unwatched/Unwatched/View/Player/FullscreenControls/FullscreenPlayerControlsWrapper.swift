@@ -13,6 +13,7 @@ struct FullscreenPlayerControlsWrapper: View {
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     @Binding var autoHideVM: AutoHideVM
+    var sleepTimerVM: SleepTimerViewModel
 
     var body: some View {
         let nonEmbedding = player.embeddingDisabled
@@ -23,7 +24,8 @@ struct FullscreenPlayerControlsWrapper: View {
             FullscreenPlayerControls(
                 menuOpen: $autoHideVM.keepVisible,
                 markVideoWatched: markVideoWatched,
-                arrowEdge: arrowEdge
+                arrowEdge: arrowEdge,
+                sleepTimerVM: sleepTimerVM
             )
             .offset(x: nonEmbedding ? -5 : left ? -20 : 20)
             .frame(width: 60)

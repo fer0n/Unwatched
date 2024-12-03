@@ -19,7 +19,7 @@ struct SetupView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @State var imageCacheManager = ImageCacheManager()
-    @State var sheetPos = SheetPositionReader.load()
+    @State var sheetPos = SheetPositionReader.shared
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.load()
 
