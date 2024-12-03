@@ -29,6 +29,7 @@ struct PlayerView: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var setShowMenu: (() -> Void)?
     var enableHideControls: Bool
+    var sleepTimerVM: SleepTimerViewModel
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -53,7 +54,8 @@ struct PlayerView: View {
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControlsWrapper(
                             markVideoWatched: markVideoWatched,
-                            autoHideVM: $autoHideVM)
+                            autoHideVM: $autoHideVM,
+                            sleepTimerVM: sleepTimerVM)
                             .environment(\.layoutDirection, .leftToRight)
                     }
                 }
@@ -79,8 +81,8 @@ struct PlayerView: View {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
-                .onChange(of: landscapeFullscreen) {
-                    overlayVM.landscapeFullscreen = landscapeFullscreen
+                .onChange(of: landscapeFullscreen, initial: true) {
+                    sheetPos.landscapeFullscreen = landscapeFullscreen
                 }
             }
         }
@@ -93,10 +95,14 @@ struct PlayerView: View {
     }
 
     var hideMiniPlayer: Bool {
-        ((navManager.showMenu || navManager.showDescriptionDetail)
-            && sheetPos.swipedBelow && navManager.videoDetail == nil)
-            || (navManager.showMenu == false && navManager.showDescriptionDetail == false)
-            || landscapeFullscreen
+        !(
+            navManager.showMenu
+                && !sheetPos.swipedBelow
+                && navManager.videoDetail == nil
+                && navManager.showDescriptionDetail == false
+                && !landscapeFullscreen
+                && navManager.openBrowserUrl == nil
+        )
     }
 
     var showFullscreenControls: Bool {
@@ -129,7 +135,7 @@ struct PlayerView: View {
                 FullscreenOverlayControls(
                     overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
-                    show: landscapeFullscreen || navManager.showMenu,
+                    show: landscapeFullscreen || (!sheetPos.isMinimumSheet && navManager.showMenu),
                     markVideoWatched: markVideoWatched
                 )
 
@@ -253,13 +259,12 @@ struct PlayerView: View {
     }
 
     func handleMiniPlayerTap() {
-        navManager.showMenu = false
-        navManager.showDescriptionDetail = false
+        sheetPos.setDetentMinimumSheet()
     }
 
     func handleSwipe(_ direction: SwipeDirecton) {
         // workaround: when using landscapeFullscreen directly, it captures the initial value
-        let landscapeFullscreen = overlayVM.landscapeFullscreen
+        let landscapeFullscreen = SheetPositionReader.shared.landscapeFullscreen
         switch direction {
         case .up:
             if enableHideControls {
@@ -310,7 +315,8 @@ struct PlayerView: View {
 
     return PlayerView(landscapeFullscreen: false,
                       markVideoWatched: { _, _ in },
-                      enableHideControls: false)
+                      enableHideControls: false,
+                      sleepTimerVM: SleepTimerViewModel())
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

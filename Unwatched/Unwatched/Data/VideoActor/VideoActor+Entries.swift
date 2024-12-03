@@ -319,7 +319,7 @@ extension VideoActor {
                     }
                 }
             }
-            for (index, queueEntry) in queue.enumerated() {
+            for (index, queueEntry) in queue.enumerated() where queueEntry.order != index {
                 queueEntry.order = index
             }
         } catch {

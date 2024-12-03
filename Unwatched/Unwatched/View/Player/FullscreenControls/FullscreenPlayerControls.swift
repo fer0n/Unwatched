@@ -12,11 +12,25 @@ struct FullscreenPlayerControls: View {
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var arrowEdge: Edge
+    var sleepTimerVM: SleepTimerViewModel
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
 
         VStack {
+            ZStack {
+                PlayerMoreMenuButton(
+                    sleepTimerVM: sleepTimerVM,
+                    markVideoWatched: markVideoWatched,
+                    extended: true
+                ) { image in
+                    image
+                        .modifier(PlayerControlButtonStyle(isOn: sleepTimerVM.isOn))
+                        .fontWeight(.bold)
+                }
+            }
+            .frame(maxHeight: .infinity)
+
             ZStack {
                 if hasChapters {
                     NextChapterButton { image in
@@ -41,18 +55,6 @@ struct FullscreenPlayerControls: View {
                 }
             }
             .frame(maxHeight: .infinity)
-
-            ZStack {
-                if hasChapters {
-                    PreviousChapterButton { image in
-                        image
-                            .modifier(PlayerControlButtonStyle())
-                    }
-                    .fontWeight(.bold)
-                }
-            }
-            .frame(maxHeight: .infinity)
-            .disabled(player.previousChapterDisabled)
 
             ZStack {
                 FullscreenSpeedControl(menuOpen: $menuOpen, arrowEdge: arrowEdge)
@@ -104,7 +106,8 @@ struct FullscreenPlayerControls: View {
         FullscreenPlayerControls(
             menuOpen: .constant(false),
             markVideoWatched: { _, _ in },
-            arrowEdge: .trailing)
+            arrowEdge: .trailing,
+            sleepTimerVM: SleepTimerViewModel())
             .padding()
     }
     .ignoresSafeArea(.all)

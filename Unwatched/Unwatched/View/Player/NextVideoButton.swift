@@ -57,16 +57,6 @@ struct CoreNextButton<Content>: View where Content: View {
         .help(label)
         .padding(3)
         .contextMenu {
-            if extendedContextMenu {
-                Button("markWatched", systemImage: "checkmark") {
-                    markVideoWatched(true, .nextUp)
-                }
-                Button("clearVideo", systemImage: Const.clearNoFillSF) {
-                    player.clearVideo(modelContext)
-                }
-                Divider()
-            }
-
             if manualNext {
                 let text = continuousPlay
                     ? String(localized: "continuousPlayOn")
@@ -88,7 +78,9 @@ struct CoreNextButton<Content>: View where Content: View {
             }
 
             if extendedContextMenu {
-                PlayButtonContextMenu()
+                Button("restartVideo", systemImage: "restart") {
+                    player.restartVideo()
+                }
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)

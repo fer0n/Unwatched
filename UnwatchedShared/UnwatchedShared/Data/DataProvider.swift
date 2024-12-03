@@ -6,22 +6,28 @@
 import SwiftData
 import OSLog
 
+public extension ProcessInfo {
+    var isXcodePreview: Bool {
+        environment[ "XCODE_RUNNING_FOR_PREVIEWS" ] == "1"
+    }
+}
+
 public final class DataProvider: Sendable {
     public static let shared = DataProvider()
     
-    public let container: ModelContainer = {
+    public let container: ModelContainer = {        
         Logger.log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
             enableIcloudSync = true
         #endif
-
+        
         #if DEBUG
-        if CommandLine.arguments.contains("enable-testing") {
+        if CommandLine.arguments.contains("enable-testing") || ProcessInfo.processInfo.isXcodePreview {
             return DataProvider.previewContainer
         }
         #endif
-
+        
         let config = ModelConfiguration(
             schema: DataProvider.schema,
             isStoredInMemoryOnly: false,

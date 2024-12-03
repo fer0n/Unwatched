@@ -8,7 +8,8 @@ import UIKit
 
 struct PageControl: UIViewRepresentable {
     @Binding var currentPage: Int?
-    var numberOfPages: Int
+    let numberOfPages: Int
+    var normalColor: UIColor = .white.withAlphaComponent(0.4)
 
     func makeCoordinator() -> Coordinator {
         return Coordinator(currentPage: $currentPage)
@@ -17,7 +18,7 @@ struct PageControl: UIViewRepresentable {
     func makeUIView(context: Context) -> UIPageControl {
         let control = UIPageControl()
         control.numberOfPages = 1
-        control.pageIndicatorTintColor = UIColor(.white.opacity(0.3))
+        control.pageIndicatorTintColor = normalColor
         control.currentPageIndicatorTintColor = UIColor(.white)
         control.translatesAutoresizingMaskIntoConstraints = false
         control.setContentHuggingPriority(.required, for: .horizontal)
@@ -43,7 +44,7 @@ struct PageControl: UIViewRepresentable {
             self.currentPage = currentPage
         }
 
-        @objc
+        @MainActor @objc
         func pageControlDidFire(_ control: UIPageControl) {
             currentPage.wrappedValue = control.currentPage
         }

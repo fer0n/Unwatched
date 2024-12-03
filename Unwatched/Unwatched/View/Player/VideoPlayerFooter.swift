@@ -15,12 +15,11 @@ struct VideoPlayerFooter: View {
     var openBrowserUrl: (BrowserUrl) -> Void
     var setShowMenu: (() -> Void)?
     var sleepTimerVM: SleepTimerViewModel
-    var onSleepTimerEnded: (Double?) -> Void
 
     var body: some View {
         HStack {
             if let video = player.video {
-                SleepTimer(viewModel: sleepTimerVM, onEnded: onSleepTimerEnded)
+                SleepTimer(viewModel: sleepTimerVM, onEnded: player.onSleepTimerEnded)
                     .frame(maxWidth: .infinity)
 
                 Button(action: toggleBookmark) {
@@ -30,25 +29,6 @@ struct VideoPlayerFooter: View {
                         .contentTransition(.symbolEffect(.replace))
                 }
 
-                .frame(maxWidth: .infinity)
-            }
-
-            if let setShowMenu = setShowMenu {
-                Button {
-                    setShowMenu()
-                } label: {
-                    VStack {
-                        Image(systemName: "chevron.up")
-                            .font(.system(size: 30))
-                            .fontWeight(.regular)
-                        Text("showMenu")
-                            .font(.caption)
-                            .textCase(.uppercase)
-                            .padding(.bottom, 3)
-                            .fixedSize()
-                            .fontWeight(.bold)
-                    }
-                }
                 .frame(maxWidth: .infinity)
             }
 
@@ -96,8 +76,7 @@ struct VideoPlayerFooter: View {
     VideoPlayerFooter(
         openBrowserUrl: { _ in },
         setShowMenu: { },
-        sleepTimerVM: SleepTimerViewModel(),
-        onSleepTimerEnded: { _ in })
+        sleepTimerVM: SleepTimerViewModel())
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())

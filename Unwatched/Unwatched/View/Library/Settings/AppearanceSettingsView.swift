@@ -14,6 +14,7 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
+    @AppStorage(Const.hidePlayerPageIndicator) var hidePlayerPageIndicator: Bool = false
 
     @AppStorage(Const.lightModeTheme) var lightModeTheme = AppAppearance.unwatched
     @AppStorage(Const.darkModeTheme) var darkModeTheme = AppAppearance.dark
@@ -41,6 +42,9 @@ struct AppearanceSettingsView: View {
                     }
                     Toggle(isOn: $sheetOpacity) {
                         Text("sheetOpacity")
+                    }
+                    Toggle(isOn: $hidePlayerPageIndicator) {
+                        Text("hidePlayerPageIndicator")
                     }
                 }
 
