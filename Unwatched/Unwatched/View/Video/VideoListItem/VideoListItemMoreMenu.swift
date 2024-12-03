@@ -67,7 +67,7 @@ struct VideoListItemMoreMenuView: View {
             }
 
             if let url = videoData.url {
-                Button("openInApp", systemImage: Const.appBrowserSF) {
+                Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
                     openUrlInApp(url.absoluteString)
                 }
                 ShareLink(item: url)

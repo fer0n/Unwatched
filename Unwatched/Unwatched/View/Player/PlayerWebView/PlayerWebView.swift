@@ -164,18 +164,23 @@ struct PreviousState {
     var pipEnabled: Bool = false
 }
 
-// #Preview {
-//    let video = Video.getDummy()
-//    let player = PlayerManager()
-//    player.video = video
-//
-//    (
-//        PlayerWebView(
-//            autoHideVM: AutoHideVM(),
-//            playerType: .youtubeEmbedded,
-//            onVideoEnded: {
-//
-//            })
-//            .environment(player)
-//    )
-// }
+#Preview {
+    let video = Video.getDummy()
+    let player = PlayerManager()
+    player.video = video
+
+    return (
+        PlayerWebView(
+            overlayVM: .constant(OverlayFullscreenVM()),
+            autoHideVM: .constant(AutoHideVM()),
+            playerType: .youtubeEmbedded,
+            onVideoEnded: {
+
+            },
+            handleSwipe: { _ in
+
+            })
+            .environment(player)
+            .modelContainer(DataProvider.previewContainerFilled)
+    )
+}

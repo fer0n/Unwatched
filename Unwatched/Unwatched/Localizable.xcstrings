@@ -43,18 +43,12 @@
         }
       }
     },
-    "%lld" : {
+    "%lld min" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
+            "value" : "%lld min"
           }
         }
       }
@@ -971,6 +965,22 @@
         }
       }
     },
+    "chapterDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videobeschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Description"
+          }
+        }
+      }
+    },
     "chapterOff" : {
       "localizations" : {
         "de" : {
@@ -1371,6 +1381,22 @@
         }
       }
     },
+    "controls" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Controls"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Controls"
+          }
+        }
+      }
+    },
     "copyAnswer" : {
       "localizations" : {
         "de" : {
@@ -1383,6 +1409,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy Answer"
+          }
+        }
+      }
+    },
+    "copyUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy URL"
           }
         }
       }
@@ -1607,22 +1649,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete Image Cache"
-          }
-        }
-      }
-    },
-    "description" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Description"
           }
         }
       }
@@ -2445,6 +2471,22 @@
         }
       }
     },
+    "hidePlayerPageIndicator" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Seitenanzeige ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Player Page Indicator"
+          }
+        }
+      }
+    },
     "hideShortsEverywhere" : {
       "localizations" : {
         "de" : {
@@ -2931,13 +2973,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Im Player den YouTube-Symbol unten rechts antippen, um das Video auf YouTube zu öffnen. Von dort aus kann angemeldet, geliked und abonniert werden."
+            "value" : "Im Player den “…”-Button antippen, dann “Auf YouTube ansehen” auswählen. Von dort aus kann man sich anmelden, liken und abonniert."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In the player, tap the YouTube symbol at the bottom right to open the video on YouTube. From there, you can sign in and like/subscribe."
+            "value" : "In the player, tap on the “…”-button and then “View on YouTube”. From there, you can sign in and like/subscribe."
           }
         }
       }
@@ -3651,34 +3693,18 @@
         }
       }
     },
-    "openInApp" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Im Browser öffnen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open in Browser"
-          }
-        }
-      }
-    },
     "openInAppBrowser" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Im in-App Browser öffnen"
+            "value" : "Auf YouTube anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open in in-App Browser"
+            "value" : "View on YouTube"
           }
         }
       }
@@ -3704,13 +3730,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mit einem langen drücken auf die „Play“-Taste unter „Player neu laden“ (im Querformat „nächstes Video“-Taste), kann das Problem behoben werden. Alternativ kann der native iOS-Vollbildmodus aktiviert werden, oder in den Einstellungen automatisch eingeschaltet werden.\n\nDies tritt auf, wenn der Player ein „Touch Down“ ohne „Touch Up“ erkennt (z. B. beim Hochwischen zum Home-Bildschirm, während das Video berührt wird). Leider ist dies ein Problem von YouTube, das ich nicht beheben kann."
+            "value" : "Auf den “…”-Button tippen und „Player neu laden“ wählen sollte das Problem beheben. Alternativ kann der native iOS-Vollbildmodus aktiviert werden, oder in den Einstellungen automatisch eingeschaltet werden.\n\nDies tritt auf, wenn der Player ein „Touch Down“ ohne „Touch Up“ erkennt (z. B. beim Hochwischen zum Home-Bildschirm, während das Video berührt wird). Leider ist dies ein Problem von YouTube, das ich nicht beheben kann."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Long press the “play” button and select “reload player” (in horizontal mode, long press the “next” button) to resolve the issue. You can also enable native iOS fullscreen, which can be set to turn on automatically in Settings.\n\nThis issue occurs when the player detects a \"touch down\" without a corresponding \"touch up\" (e.g., swiping up to return to the home screen when the swipe happens over the video). Unfortunately, this is a YouTube issue I cannot resolve."
+            "value" : "Tap the “…”-Button and select “Reload Player” to resolve the issue. You can also enable native iOS fullscreen, which can be set to turn on automatically in Settings.\n\nThis issue occurs when the player detects a \"touch down\" without a corresponding \"touch up\" (e.g., swiping up to return to the home screen when the swipe happens over the video). Unfortunately, this is a YouTube issue I cannot resolve."
           }
         }
       }
@@ -3743,22 +3769,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Overlays Stuck"
-          }
-        }
-      }
-    },
-    "page" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seite"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Page"
           }
         }
       }
@@ -3919,22 +3929,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Website in Player"
-          }
-        }
-      }
-    },
-    "playPause" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play/Pause"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Play/Pause"
           }
         }
       }
@@ -4728,13 +4722,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sleep Timer Aus"
+            "value" : "Timer stoppen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sleep Timer Off"
+            "value" : "Off"
           }
         }
       }

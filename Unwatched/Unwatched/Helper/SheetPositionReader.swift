@@ -9,32 +9,33 @@ import OSLog
 import UnwatchedShared
 
 @Observable class SheetPositionReader {
+    static let shared: SheetPositionReader = {
+        let sheetPos = SheetPositionReader()
+
+        if let savedDetent = UserDefaults.standard.data(forKey: Const.selectedDetent),
+           let loadedDetentEncoding = try? JSONDecoder().decode(PresentationDetentEncoding.self, from: savedDetent) {
+            if let detent = loadedDetentEncoding.toPresentationDetent() {
+                sheetPos.selectedDetent = detent
+            }
+        }
+        return sheetPos
+    }()
 
     // Sheet animation and height detection
     var swipedBelow: Bool = true
     var playerControlHeight: CGFloat = .zero
+    @ObservationIgnored var landscapeFullscreen: Bool = false
     @ObservationIgnored var debouncedPlayerControlHeight: CGFloat = .zero
-    @ObservationIgnored var selectedDetent: PresentationDetent? {
+    var selectedDetent: PresentationDetent = .height(Const.minSheetDetent) {
         didSet {
-            if isMiniPlayer {
+            if !isVideoPlayer {
                 updatePlayerControlHeight()
             }
         }
     }
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
-    @ObservationIgnored var hadMenuOpen: Bool = false
-
-    static func load() -> SheetPositionReader {
-        let sheetPos = SheetPositionReader()
-
-        if let savedDetent = UserDefaults.standard.data(forKey: Const.selectedDetent),
-           let loadedDetentEncoding = try? JSONDecoder().decode(PresentationDetentEncoding.self, from: savedDetent) {
-            let detent = loadedDetentEncoding.toPresentationDetent()
-            sheetPos.selectedDetent = detent
-        }
-        return sheetPos
-    }
+    @ObservationIgnored var playerContentViewHeight: CGFloat?
 
     func setPlayerControlHeight(_ height: CGFloat) {
         debouncedPlayerControlHeight = height
@@ -51,7 +52,7 @@ import UnwatchedShared
 
     func save() {
         let encoder = JSONEncoder()
-        let detent = selectedDetent?.encode(playerControlHeight)
+        let detent = selectedDetent.encode(playerControlHeight)
 
         if let encoded = try? encoder.encode(detent) {
             UserDefaults.standard.set(encoded, forKey: Const.selectedDetent)
@@ -70,6 +71,10 @@ import UnwatchedShared
         selectedDetent == .height(playerControlHeight)
     }
 
+    var isMinimumSheet: Bool {
+        selectedDetent == .height(Const.minSheetDetent)
+    }
+
     func setTopSafeArea(_ topSafeArea: CGFloat) {
         sheetDistanceToTop = topSafeArea + Const.playerAboveSheetHeight
     }
@@ -82,6 +87,11 @@ import UnwatchedShared
     func setDetentVideoPlayer() {
         Logger.log.info("setDetentVideoPlayer()")
         selectedDetent = .height(playerControlHeight)
+    }
+
+    func setDetentMinimumSheet() {
+        Logger.log.info("setDetentMinimumSheet()")
+        selectedDetent = .height(Const.minSheetDetent)
     }
 
     // global position changes

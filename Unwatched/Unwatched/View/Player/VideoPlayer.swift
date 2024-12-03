@@ -32,19 +32,18 @@ struct VideoPlayer: View {
             PlayerView(landscapeFullscreen: landscapeFullscreen,
                        markVideoWatched: markVideoWatched,
                        setShowMenu: setShowMenu,
-                       enableHideControls: enableHideControls)
+                       enableHideControls: enableHideControls,
+                       sleepTimerVM: sleepTimerVM)
                 .layoutPriority(1)
 
             if !landscapeFullscreen {
-                PlayerControls(compactSize: compactSize,
-                               showInfo: showInfo && !tallestAspectRatio,
-                               horizontalLayout: horizontalLayout,
-                               enableHideControls: enableHideControls,
-                               setShowMenu: setShowMenu,
-                               markVideoWatched: markVideoWatched,
-                               sleepTimerVM: sleepTimerVM)
-                    .padding(.vertical, compactSize ? 5 : 0)
-                    .showMenuGesture(disableGesture: compactSize, setShowMenu: setShowMenu)
+                PlayerContentView(compactSize: compactSize,
+                                  showInfo: showInfo && !tallestAspectRatio,
+                                  horizontalLayout: horizontalLayout,
+                                  enableHideControls: enableHideControls,
+                                  setShowMenu: setShowMenu,
+                                  markVideoWatched: markVideoWatched,
+                                  sleepTimerVM: sleepTimerVM)
             }
         }
         .tint(.neutralAccentColor)
@@ -61,11 +60,10 @@ struct VideoPlayer: View {
         }
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
         .onChange(of: landscapeFullscreen) {
-            if landscapeFullscreen && player.isPlaying && navManager.showMenu && sheetPos.isVideoPlayer {
+            if landscapeFullscreen && navManager.showMenu
+                && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
                 navManager.showMenu = false
-                sheetPos.hadMenuOpen = true
-            } else if !landscapeFullscreen && sheetPos.hadMenuOpen {
-                sheetPos.hadMenuOpen = false
+            } else if !landscapeFullscreen {
                 navManager.showMenu = true
             }
         }
@@ -75,16 +73,19 @@ struct VideoPlayer: View {
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
         Logger.log.info(">markVideoWatched")
         if let video = player.video {
+            try? modelContext.save()
+
             if showMenu {
                 setShowMenu()
                 if returnToQueue {
                     navManager.navigateToQueue()
                 }
             }
-            player.autoSetNextVideo(source, modelContext)
 
             // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
             VideoService.setVideoWatched(video, modelContext: modelContext)
+
+            player.autoSetNextVideo(source, modelContext)
 
             // attempts clearing a second time in the background, as it's so unreliable
             let videoId = video.id
@@ -95,8 +96,11 @@ struct VideoPlayer: View {
 
     func setShowMenu() {
         player.updateElapsedTime()
+
+        print("player.isCompactHeight", player.isCompactHeight)
+
         if player.video != nil {
-            if !player.isPlaying || player.embeddingDisabled {
+            if player.isAnyCompactHeight {
                 sheetPos.setDetentMiniPlayer()
             } else {
                 sheetPos.setDetentVideoPlayer()
@@ -107,36 +111,16 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    let container = DataProvider.previewContainer
-    let context = ModelContext(container)
-    let player = PlayerManager()
-    let video = Video.getDummy()
-
-    let ch1 = Chapter(title: "hi", time: 1)
-    context.insert(ch1)
-    video.chapters = [ch1]
-
-    context.insert(video)
-    player.video = video
-
-    let sub = Subscription.getDummy()
-    // sub.customAspectRatio = 18/9
-
-    context.insert(sub)
-    sub.videos = [video]
-
-    try? context.save()
-
-    return VideoPlayer(compactSize: false,
-                       showInfo: true,
-                       horizontalLayout: false,
-                       landscapeFullscreen: false)
-        .modelContainer(container)
+    VideoPlayer(compactSize: false,
+                showInfo: true,
+                horizontalLayout: false,
+                landscapeFullscreen: false)
+        .modelContainer(DataProvider.previewContainerFilled)
         .environment(NavigationManager.getDummy())
-        .environment(player)
-        .environment(SheetPositionReader())
-        .environment(RefreshManager())
+        .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader())
         .tint(Color.neutralAccentColor)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

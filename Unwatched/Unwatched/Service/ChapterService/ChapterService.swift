@@ -135,9 +135,11 @@ struct ChapterService {
 
         if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
             let context = DataProvider.newContext()
-            fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
-            video.mergedChapters = chapters
-            try? context.save()
+            let hasChanges = fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
+            if hasChanges {
+                video.mergedChapters = chapters
+                try? context.save()
+            }
         }
     }
 

@@ -10,6 +10,8 @@ import UnwatchedShared
 struct ChapterMiniControlView: View {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
+    @Environment(SheetPositionReader.self) var sheetPos
+
     @State var triggerFeedback = false
 
     var setShowMenu: () -> Void
@@ -34,11 +36,12 @@ struct ChapterMiniControlView: View {
                     }
 
                     Button {
-                        let val: ChapterDescriptionPage = (player.video?.sortedChapters ?? []).isEmpty
-                            ? .description
-                            : .chapters
-                        navManager.selectedDetailPage = val
-                        navManager.showDescriptionDetail = true
+                        if player.isAnyCompactHeight || (sheetPos.playerContentViewHeight ?? .infinity) < 300 {
+                            // open dedicated sheet when there's not enough space
+                            navManager.videoDetail = player.video
+                        } else {
+                            navManager.handleVideoDetail(scrollToCurrentChapter: true)
+                        }
                     } label: {
                         ZStack {
                             if let chapt = player.currentChapter {
@@ -110,8 +113,10 @@ struct ChapterMiniControlView: View {
                 .multilineTextAlignment(.center)
                 .contextMenu(menuItems: {
                     if let url = player.video?.url {
-                        ShareLink(item: url) {
-                            Label("shareVideo", systemImage: "square.and.arrow.up.fill")
+                        Button {
+                            UIPasteboard.general.string = url.absoluteString
+                        } label: {
+                            Label("copyUrl", systemImage: "document.on.document.fill")
                         }
                     }
                 })
@@ -125,7 +130,8 @@ struct BackgroundProgressBar: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.backgroundGray
+                Color.clear
+                    .background(Color.backgroundColor)
 
                 if let elapsed = player.currentTime,
                    let total = player.video?.duration {
@@ -136,6 +142,7 @@ struct BackgroundProgressBar: View {
                             .opacity(0.2)
                             .frame(width: width)
                             .animation(.default, value: width)
+                            .clipShape(Capsule())
                         Color.clear
                     }
                 }

@@ -21,16 +21,18 @@ struct SpeedControlView: View {
     let frameHeight: CGFloat = 25
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
 
+    var midY: CGFloat {
+        maxHeight / 2
+    }
+
     var body: some View {
         let highlighted: [Double] = viewModel.showDecimalHighlights
             ? Const.highlightedPlaybackSpeeds
             : Const.highlightedSpeedsInt
 
         ZStack {
-            let midY: CGFloat = maxHeight / 2
-
             Capsule()
-                .fill(Color.myBackgroundGray2)
+                .fill(Color.backgroundColor)
                 .frame(height: frameHeight)
                 .frame(maxWidth: .infinity)
 
@@ -47,6 +49,7 @@ struct SpeedControlView: View {
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
                             .frame(maxWidth: .infinity, maxHeight: maxHeight)
+                            .frame(minWidth: frameSize + 6)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
@@ -76,22 +79,7 @@ struct SpeedControlView: View {
             }
             .padding(.horizontal, SpeedControlView.padding)
 
-            if let controlMinX = controlMinX {
-                let floatingText = getFloatingText()
-                ZStack {
-                    Circle()
-                        .fill()
-                        .frame(width: maxHeight, height: maxHeight)
-                    Text(floatingText)
-                        .foregroundStyle(.automaticWhite)
-                        .font(.system(size: selectedFontSize, weight: .bold))
-                        .sensoryFeedback(Const.sensoryFeedback, trigger: floatingText)
-                }
-                .position(x: dragState ?? controlMinX, y: midY)
-                .frame(maxHeight: maxHeight)
-                .animation(.bouncy(duration: 0.4), value: controlMinX)
-                .transition(.identity)
-            }
+            thumb
         }
         .onChange(of: selectedSpeed) {
             controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
@@ -103,28 +91,52 @@ struct SpeedControlView: View {
                 }
             }
         }
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
-                .onChanged { gesture in
-                    let dragPosition = (controlMinX ?? 0) + gesture.translation.width
-                    let cappedMax = max(dragPosition, SpeedControlView.padding + (viewModel.itemWidth / 2))
-                    dragState = min(cappedMax, viewModel.width + SpeedControlView.padding - (viewModel.itemWidth / 2))
-                }
-                .onEnded { state in
-                    let value = state.translation.width
-                    let currentPos = (controlMinX ?? 0) + value
-                    let selected = viewModel.getSpeedFromPos(currentPos)
-                    controlMinX = currentPos
-                    selectedSpeed = selected
-
-                    withAnimation {
-                        controlMinX = viewModel.getXPos(viewModel.width, selected)
-                        dragState = nil
-                    }
-                }
-        )
         .coordinateSpace(.named("speed"))
         .padding(.horizontal, 5)
+    }
+
+    @ViewBuilder var thumb: some View {
+        if let controlMinXLocal = controlMinX {
+            let floatingText = getFloatingText()
+            ZStack {
+                Circle()
+                    .fill()
+                    .frame(width: maxHeight, height: maxHeight)
+                Text(floatingText)
+                    .foregroundStyle(.automaticWhite)
+                    .font(.system(size: selectedFontSize, weight: .bold))
+                    .sensoryFeedback(Const.sensoryFeedback, trigger: floatingText)
+            }
+            .position(x: dragState ?? controlMinXLocal, y: midY)
+            .frame(maxHeight: maxHeight)
+            .animation(.bouncy(duration: 0.4), value: controlMinX)
+            .transition(.identity)
+            .gesture(dragThumbGesture)
+        }
+    }
+
+    var dragThumbGesture: some Gesture {
+        DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
+            .onChanged { gesture in
+                let dragPosition = (controlMinX ?? 0) + gesture.translation.width
+                let cappedMax = max(dragPosition, SpeedControlView.padding + (viewModel.itemWidth / 2))
+                dragState = min(
+                    cappedMax,
+                    viewModel.width + SpeedControlView.padding - (viewModel.itemWidth / 2)
+                )
+            }
+            .onEnded { state in
+                let value = state.translation.width
+                let currentPos = (controlMinX ?? 0) + value
+                let selected = viewModel.getSpeedFromPos(currentPos)
+                controlMinX = currentPos
+                selectedSpeed = selected
+
+                withAnimation {
+                    controlMinX = viewModel.getXPos(viewModel.width, selected)
+                    dragState = nil
+                }
+            }
     }
 
     func getFloatingText() -> String {
@@ -165,6 +177,6 @@ struct SpeedControlViewPreview: View {
 
 #Preview {
     SpeedControlViewPreview()
-        .frame(width: 250)
+        .frame(width: 80)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

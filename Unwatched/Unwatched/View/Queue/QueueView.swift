@@ -30,7 +30,7 @@ struct QueueView: View {
                 Color.backgroundColor.ignoresSafeArea(.all)
 
                 if queue.isEmpty {
-                    contentUnavailable
+                    QueueViewUnavailable()
                     InboxHasEntriesTip()
                 }
                 // Potential Workaround: always showing the list might avoid a crash
@@ -86,26 +86,6 @@ struct QueueView: View {
         .onDisappear {
             newQueueItemsCount = 0
         }
-    }
-
-    var contentUnavailable: some View {
-        ContentUnavailableView {
-            Label("noQueueItems", systemImage: "rectangle.stack.badge.play.fill")
-        } description: {
-            Text("noQueueItemsDescription")
-        } actions: {
-            SetupShareSheetAction()
-                .buttonStyle(.borderedProminent)
-                .foregroundStyle(theme.contrastColor)
-                .tint(theme.color)
-
-            AddFeedsMenu()
-                .bold()
-                .foregroundStyle(theme.contrastColor)
-                .tint(theme.color)
-        }
-        .contentShape(Rectangle())
-        .handleVideoUrlDrop(.queue)
     }
 
     func handleVideoChange() {

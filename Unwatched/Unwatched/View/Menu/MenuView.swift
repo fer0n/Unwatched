@@ -14,14 +14,14 @@ struct MenuView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
 
-    @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
+    @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
-    @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
-    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
-    @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
+    @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
+    @AppStorage(Const.browserAsTab) var browserAsTab = false
 
-    var showCancelButton: Bool = false
-    var isSidebar: Bool = false
+    var showCancelButton = false
+    var showTabBar = true
+    var isSidebar = false
 
     var shouldShowCancelButton: Bool {
         if showCancelButton, #unavailable(iOS 18.1) {
@@ -38,7 +38,6 @@ struct MenuView: View {
                 handleTabChanged(newValue, proxy)
             }) {
                 TabItemView(image: Image(systemName: Const.queueTagSF),
-                            text: "queue",
                             tag: NavigationTab.queue,
                             showBadge: showTabBarBadge && newQueueItemsCount > 0) {
                     QueueView(showCancelButton: shouldShowCancelButton)
@@ -48,13 +47,11 @@ struct MenuView: View {
                                  showBadge: showTabBarBadge)
 
                 TabItemView(image: Image(systemName: "books.vertical"),
-                            text: "library",
                             tag: NavigationTab.library) {
                     LibraryView(showCancelButton: shouldShowCancelButton)
                 }
 
                 TabItemView(image: Image(systemName: Const.appBrowserSF),
-                            text: "browserShort",
                             tag: NavigationTab.browser,
                             show: browserAsTab) {
                     BrowserView(
@@ -67,12 +64,9 @@ struct MenuView: View {
             }
             .setTabViewStyle()
             .sheet(item: $navManager.videoDetail) { video in
-                ChapterDescriptionView(
-                    video: video,
-                    page: $navManager.videoDetailPage
-                )
-                .presentationDragIndicator(.visible)
-                .environment(\.colorScheme, colorScheme)
+                ChapterDescriptionView(video: video)
+                    .presentationDragIndicator(.visible)
+                    .environment(\.colorScheme, colorScheme)
             }
             .environment(\.horizontalSizeClass, .compact)
         }
@@ -80,43 +74,7 @@ struct MenuView: View {
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
-        .onAppear {
-            customizeTabBarAppearance()
-        }
-        .onChange(of: sheetOpacity) {
-            customizeTabBarAppearance(reload: true)
-        }
-    }
-
-    @MainActor
-    func customizeTabBarAppearance(reload: Bool = false) {
-        let appearance = UITabBarAppearance()
-        if sheetOpacity {
-            appearance.backgroundColor = UIColor(Color.backgroundColor).withAlphaComponent(Const.sheetOpacityValue)
-            UITabBar.appearance().standardAppearance = appearance
-        } else {
-            appearance.backgroundColor = UIColor(Color.backgroundColor)
-            appearance.backgroundImage = nil
-            appearance.shadowImage = nil
-
-            UITabBar.appearance().standardAppearance = appearance
-        }
-        transparentTabBarWorkaround(appearance)
-
-        if reload {
-            UIApplication
-                .shared
-                .connectedScenes
-                .compactMap { ($0 as? UIWindowScene)?.keyWindow }
-                .reload()
-        }
-    }
-
-    func transparentTabBarWorkaround(_ appearance: UITabBarAppearance) {
-        if isSidebar {
-            // workaround: occasional transparent tab bar on iPad
-            UITabBar.appearance().scrollEdgeAppearance = appearance
-        }
+        .setTabBarAppearance(disableScrollAppearance: isSidebar)
     }
 
     @MainActor
