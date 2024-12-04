@@ -988,6 +988,24 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Outro", startTime: 3600 + 51 * 60 + 27, endTime: nil)
                 ]
             ),
+            (
+                """
+                separators
+
+                0:00: Intro,
+                1:30 - Overview,
+                03:45 | Topic 1,
+                05:10| Topic 2,
+                07:25 Conclusion
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
+                    SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
+                    SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                ]
+            ),
         ]
 
         for (description, expected) in testValues {
