@@ -93,6 +93,10 @@ extension VideoActor {
             }
             video.chapters = newChapters
         }
+
+        if video.title != updatedVideo.title {
+            video.title = updatedVideo.title
+        }
         return deleteImage
     }
 
