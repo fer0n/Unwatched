@@ -60,11 +60,12 @@ extension View {
         allowPlayerControlHeight: Bool = false,
         landscapeFullscreen: Bool = false
     ) -> some View {
-        self.modifier(MenuSheetDetents(
-            allowMaxSheetHeight: allowMaxSheetHeight,
-            allowPlayerControlHeight: allowPlayerControlHeight,
-            landscapeFullscreen: landscapeFullscreen
-        )
+        self.modifier(
+            MenuSheetDetents(
+                allowMaxSheetHeight: allowMaxSheetHeight,
+                allowPlayerControlHeight: allowPlayerControlHeight,
+                landscapeFullscreen: landscapeFullscreen
+            )
         )
     }
 }
