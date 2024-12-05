@@ -32,7 +32,7 @@ final class ChapterServiceTests: XCTestCase {
                     .init(50,   to: 80,    category: .sponsor)
                 ],
                 exptected: [
-                    .init(0,    to: 30,     category: nil),
+                    .init(0,    to: 50,     category: nil),
                     .init(50,   to: 80,    category: .sponsor)
                 ]
             ),
@@ -123,13 +123,13 @@ final class ChapterServiceTests: XCTestCase {
             // different start, same end 2
             (
                 regular: [
-                    .init(10,    to: 80,     category: .sponsor),
-                ],
-                external: [
                     .init(30,   to: 80,    category: nil)
                 ],
+                external: [
+                    .init(10,    to: 80,     category: .sponsor),
+                ],
                 exptected: [
-                    .init(10,  to: 80,    category: nil),
+                    .init(10,  to: 80,    category: .sponsor),
                 ]
             ),
 
@@ -137,10 +137,9 @@ final class ChapterServiceTests: XCTestCase {
             (
                 regular: [
                     .init(10,    to: 80,     category: nil),
-                    .init(30,   to: 50,    category: .sponsor)
                 ],
                 external: [
-
+                    .init(30,   to: 50,    category: .sponsor)
                 ],
                 exptected: [
                     .init(10,    to: 30,     category: nil),
@@ -281,6 +280,43 @@ final class ChapterServiceTests: XCTestCase {
         }
     }
 
+    func testOneSponsorAcrossMultipleChapters() {
+        let chapters: [SendableChapter] = [
+            .init(0,    to: 250,     "Cool tech, no fluff!"),
+            .init(250,  to: 313,     "A sacred bag you must NEVER touch"),
+            .init(313,  to: 337,     "100W of POWAH!"),
+            .init(337,  to: 360,     "End-game wireless travel charger"),
+            .init(360,  to: 419,     "HUGE @SS BATTERY"),
+            .init(419,  to: 444,     "250W bedside charging station"),
+            .init(444,  to: 457,     "Laptop dock + charging station"),
+            .init(457,  to: 550,     "Cheapo handheld game consoles!"),
+            .init(550,  to: 608,     "The best controller, period")
+        ]
+        // TODO: make sure end time is always bigger than start time
+
+        let sponsorSegments: [SendableChapter] = [
+            .init(310.166, to: 457.5, category: .sponsor),
+        ]
+
+        // Skip everything
+        let expected: [SendableChapter] = [
+            .init(0,    to: 250,     "Cool tech, no fluff!"),
+            .init(250,  to: 310.166,     "A sacred bag you must NEVER touch"),
+
+            .init(310.166, to: 457.5, category: .sponsor),
+
+            .init(457.5,  to: 550,     "Cheapo handheld game consoles!"),
+            .init(550,     to: 608,     "The best controller, period")
+        ]
+
+        doChapterMergeTest(
+            chapters: chapters,
+            sponsorSegments: sponsorSegments,
+            duration: nil,
+            expected: expected
+        )
+    }
+
     func testOverride2() {
         let chapters: [SendableChapter] = [
             .init(0,    to: 81,     "Intro"),
@@ -330,10 +366,10 @@ final class ChapterServiceTests: XCTestCase {
 
     func testNestedChapter() {
         let chapters: [SendableChapter] = [
-            .init(0,    "ch1"),
-            .init(30,   "ch2"),
-            .init(100,  "ch3"),
-            .init(150,  "ch4")
+            .init(0,   to: 30,   "ch1"),
+            .init(30,  to: 100,  "ch2"),
+            .init(100, to: 150,  "ch3"),
+            .init(150,           "ch4")
         ]
 
         let sponsorSegments: [SendableChapter] = [
@@ -345,7 +381,7 @@ final class ChapterServiceTests: XCTestCase {
 
             .init(20, to: 110, category: .sponsor),
 
-            .init(120, to: 150,  "ch3"),
+            .init(110, to: 150,  "ch3"),
             .init(150,  "ch4")
         ]
 
@@ -712,7 +748,7 @@ final class ChapterServiceTests: XCTestCase {
         modelContext.insert(ch4)
         modelContext.insert(ch5)
 
-        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 70, context: modelContext)
+        _ = ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 70, context: modelContext)
 
         XCTAssertEqual(chapters[1].endTime, 20)
         XCTAssertEqual(chapters[3].endTime, 40)
@@ -722,7 +758,7 @@ final class ChapterServiceTests: XCTestCase {
     func testUpdateDurationOneChapter() async {
         let context = DataProvider.newContext()
         var chapters = [Chapter(title: "0", time: 0, endTime: 10, category: nil)]
-        ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, context: context)
+        _ = ChapterService.fillOutEmptyEndTimes(chapters: &chapters, duration: 40, context: context)
 
         XCTAssertEqual(chapters[0].endTime, 10)
         XCTAssertEqual(chapters[1].endTime, 40)
