@@ -261,38 +261,6 @@
         }
       }
     },
-    "addToQueue" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zur Queue hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add to Queue"
-          }
-        }
-      }
-    },
-    "addToQueueShort" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue"
-          }
-        }
-      }
-    },
     "addVideos" : {
       "localizations" : {
         "de" : {
@@ -337,38 +305,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enter a YouTube video (or channel) URL here directly, or by setting up and using the share sheet action (can also be done in Settings)."
-          }
-        }
-      }
-    },
-    "addVideoToBottomQueue" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ende der Queue"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue Last"
-          }
-        }
-      }
-    },
-    "addVideoToTopQueue" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anfang der Queue"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue Next"
           }
         }
       }
@@ -4034,7 +3970,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als letztes abspielen"
+            "value" : "Queue Ende"
           }
         },
         "en" : {
@@ -4050,7 +3986,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Als nächstes abspielen"
+            "value" : "Queue Anfang"
           }
         },
         "en" : {
