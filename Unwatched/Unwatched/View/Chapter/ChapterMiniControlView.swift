@@ -56,6 +56,12 @@ struct ChapterMiniControlView: View {
                         .lineLimit(1)
                         .frame(maxWidth: .infinity)
                     }
+                    .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
+                        if let url = player.video?.url {
+                            triggerFeedback.toggle()
+                            navManager.openUrlInApp(.url(url.absoluteString))
+                        }
+                    })
 
                     if hasChapters {
                         NextChapterButton { image in
@@ -111,15 +117,6 @@ struct ChapterMiniControlView: View {
             Text(player.video?.title ?? "")
                 .font(.title3)
                 .multilineTextAlignment(.center)
-                .contextMenu(menuItems: {
-                    if let url = player.video?.url {
-                        Button {
-                            UIPasteboard.general.string = url.absoluteString
-                        } label: {
-                            Label("copyUrl", systemImage: "document.on.document.fill")
-                        }
-                    }
-                })
         }
     }
 }

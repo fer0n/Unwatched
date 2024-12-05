@@ -39,9 +39,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                 }
 
                 Button {
-                    navManager.openUrlInApp(.url(url.absoluteString))
-                    navManager.showMenu = true
-                    UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
+                    openUrl(url)
                 } label: {
                     Text("openInAppBrowser")
                     Image(systemName: Const.appBrowserSF)
@@ -103,10 +101,15 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         }
     }
 
+    func openUrl(_ url: URL) {
+        navManager.openUrlInApp(.url(url.absoluteString))
+        hapticToggle.toggle()
+    }
+
     func toggleBookmark() {
         if let video = player.video {
             if video.bookmarkedDate != nil {
-                flashSymbol = "bookmark.slash"
+                flashSymbol = "bookmark.slash.fill"
             } else {
                 flashSymbol = "bookmark.fill"
             }
