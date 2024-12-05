@@ -118,7 +118,7 @@ struct NotificationManager {
         }
     }
 
-    static func changeBadgeNumer(by number: Int, _ placement: VideoPlacement? = nil) {
+    static func changeBadgeNumer(by number: Int, _ placement: VideoPlacementArea? = nil) {
         let oldCount = UserDefaults.standard.integer(forKey: Const.badgeCount)
         let newValue = oldCount + number
 

@@ -27,7 +27,7 @@ struct NewVideosNotificationInfo {
         return .queue
     }
 
-    mutating func addVideo(_ video: SendableVideo, for subscription: String, in placement: VideoPlacement) {
+    mutating func addVideo(_ video: SendableVideo, for subscription: String, in placement: VideoPlacementArea) {
         if placement == .inbox {
             inbox[subscription, default: []].append(video)
         } else if placement == .queue {
@@ -123,7 +123,7 @@ struct NewVideosNotificationInfo {
         return result
     }
 
-    private func getText(from dict: [String: [SendableVideo]], placement: VideoPlacement) -> NotificationInfo? {
+    private func getText(from dict: [String: [SendableVideo]], placement: VideoPlacementArea) -> NotificationInfo? {
         let newVideosCount = dict.values.flatMap { $0 }.count
         let prefix = placement == .inbox ? "" : "→ "
         if newVideosCount == 0 {

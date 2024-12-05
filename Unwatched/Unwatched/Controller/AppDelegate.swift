@@ -79,7 +79,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             }
             return nil
         }()
-        let placement: VideoPlacement? = tab == .queue ? .queue : tab == .inbox ? .inbox : nil
+        let placement: VideoPlacementArea? = tab == .queue ? .queue : tab == .inbox ? .inbox : nil
 
         guard let youtubeId = userInfo[Const.notificationVideoId] as? String else {
             Logger.log.warning("Notification action cannot function")

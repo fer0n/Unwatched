@@ -149,9 +149,23 @@ extension VideoActor {
             )
             return count
         } else {
-            addVideosTo(videos: videosToAdd, placement: placement, index: 1)
+            handleVideoPlacement(videosToAdd, placement: placement)
         }
         return videosToAdd.count
+    }
+
+    func handleVideoPlacement(_ videos: [Video], placement: VideoPlacement) {
+        Logger.log.info("handleVideoPlacement")
+        switch placement {
+        case .inbox:
+            addVideosTo(videos, placement: .inbox)
+        case .queueNext:
+            addVideosTo(videos, placement: .queue, index: 1)
+        case .queueLast:
+            addVideosTo(videos, placement: .queue, index: -1)
+        default:
+            break
+        }
     }
 
     private func addSingleVideoTo(
@@ -165,13 +179,13 @@ extension VideoActor {
             let placement: VideoPlacement = (video.isYtShort == true && defaultPlacement.hideShorts)
                 ? VideoPlacement.nothing
                 : videoPlacement
-            addVideosTo(videos: [video], placement: placement, index: 1)
+            handleVideoPlacement([video], placement: placement)
             addedVideosCount += 1
         }
         return addedVideosCount
     }
 
-    func addVideosTo(videos: [Video], placement: VideoPlacement, index: Int = 1) {
+    func addVideosTo(_ videos: [Video], placement: VideoPlacementArea, index: Int = 1) {
         if placement == .inbox {
             addVideosToInbox(videos)
         } else if placement == .queue {
@@ -312,7 +326,7 @@ extension VideoActor {
                     queueEntry = newQueueEntry
                 }
 
-                if queueWasEmpty {
+                if queueWasEmpty || startIndex == -1 {
                     queue.append(queueEntry)
                 } else {
                     let targetIndex = startIndex + index
