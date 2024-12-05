@@ -131,6 +131,20 @@ extension ChapterService {
            abs(context.chapter.startTime - context.last.startTime) <= context.tolerance &&
             abs(chapterEndTime - context.lastEndTime) > context.tolerance {
 
+            // longer one has priority: keep that one, discard the other
+            if (context.chapter.endTime ?? 0) > context.lastEndTime
+                && context.chapter.hasPriority
+                && !context.last.hasPriority {
+                // current one replaces last one
+                context.newChapters[context.index] = context.chapter
+                return true
+            } else if context.lastEndTime > chapterEndTime
+                        && !context.chapter.hasPriority
+                        && context.last.hasPriority {
+                // last one stays
+                return true
+            }
+
             if context.lastEndTime < chapterEndTime {
                 context.chapter.startTime = context.lastEndTime
                 context.newChapters.append(context.chapter)
@@ -167,7 +181,7 @@ extension ChapterService {
 
             if !context.chapter.hasPriority && context.last.hasPriority {
                 // skip chapter if the outer one is a e.g. sponsor segment and the inner one is a subset
-                return false
+                return true
             }
 
             var firstPart = context.last
