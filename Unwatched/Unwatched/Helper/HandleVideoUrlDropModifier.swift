@@ -13,7 +13,7 @@ import UnwatchedShared
 struct HandleVideoUrlDropModifier: ViewModifier {
     @Environment(PlayerManager.self) private var player
 
-    var placement: VideoPlacement
+    var placement: VideoPlacementArea
     var isTargeted: ((_ targeted: Bool) -> Void)?
 
     func body(content: Content) -> some View {
@@ -34,7 +34,7 @@ struct HandleVideoUrlDropModifier: ViewModifier {
 }
 
 extension View {
-    func handleVideoUrlDrop(_ placement: VideoPlacement, isTargeted: ((_ targeted: Bool) -> Void)? = nil) -> some View {
+    func handleVideoUrlDrop(_ placement: VideoPlacementArea, isTargeted: ((_ targeted: Bool) -> Void)? = nil) -> some View {
         self.modifier(HandleVideoUrlDropModifier(placement: placement, isTargeted: isTargeted))
     }
 }
@@ -44,10 +44,10 @@ extension View {
 struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewContent {
     @Environment(PlayerManager.self) private var player
 
-    var placement: VideoPlacement
+    var placement: VideoPlacementArea
     let content: Content
 
-    init(placement: VideoPlacement, @ViewBuilder content: () -> Content) {
+    init(placement: VideoPlacementArea, @ViewBuilder content: () -> Content) {
         self.content = content()
         self.placement = placement
     }
@@ -73,7 +73,7 @@ struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewCo
 
 extension DynamicViewContent {
     @MainActor
-    func handleDynamicVideoURLDrop(_ placement: VideoPlacement) -> some DynamicViewContent {
+    func handleDynamicVideoURLDrop(_ placement: VideoPlacementArea) -> some DynamicViewContent {
         HandleDynamicVideoURLDropView(placement: placement) {
             self
         }

@@ -23,12 +23,12 @@ struct VideoListItemMoreMenuView: View {
         ControlGroup {
             Button("markWatched", systemImage: "checkmark", action: { setWatched(true) })
 
-            Button("addVideoToTopQueue",
+            Button("queueNext",
                    systemImage: Const.queueTopSF,
                    action: addVideoToTopQueue
             )
 
-            Button("addVideoToBottomQueue",
+            Button("queueLast",
                    systemImage: Const.queueBottomSF,
                    action: addVideoToBottomQueue
             )

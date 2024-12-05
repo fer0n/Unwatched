@@ -180,7 +180,7 @@ extension VideoService {
     }
 
     static func addForeignUrls(_ urls: [URL],
-                               in videoPlacement: VideoPlacement,
+                               in videoPlacement: VideoPlacementArea,
                                at index: Int = 1) -> Task<(), Error> {
         Logger.log.info("addForeignUrls")
 

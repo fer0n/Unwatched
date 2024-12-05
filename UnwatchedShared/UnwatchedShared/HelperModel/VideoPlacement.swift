@@ -5,11 +5,21 @@
 
 import Foundation
 
-public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
+public enum VideoPlacementArea {
     case inbox
     case queue
-    case nothing
-    case defaultPlacement
+}
+
+public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
+    case inbox = 0
+    case queueNext = 1
+    case queueLast = 4
+    case nothing = 2
+    case defaultPlacement = 3
+    
+    public static func isQueue(_ placement: VideoPlacement?) -> Bool {
+        placement == .queueLast || placement == .queueNext
+    }
 }
 
 public struct DefaultVideoPlacement {

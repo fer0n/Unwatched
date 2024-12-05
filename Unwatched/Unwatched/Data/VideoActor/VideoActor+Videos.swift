@@ -9,7 +9,7 @@ import UnwatchedShared
     var newVideos = NewVideosNotificationInfo()
 
     func addForeignUrls(_ urls: [URL],
-                        in videoplacement: VideoPlacement,
+                        in videoplacement: VideoPlacementArea,
                         at index: Int) async throws {
         var videoIds = [String]()
         var playlistIds = [String]()
@@ -41,7 +41,7 @@ import UnwatchedShared
     }
 
     private func addForeignPlaylist(playlistId: String,
-                                    in videoplacement: VideoPlacement,
+                                    in videoplacement: VideoPlacementArea,
                                     at index: Int) async throws {
         Logger.log.info("addForeignPlaylist")
         var videos = [Video]()
@@ -58,7 +58,7 @@ import UnwatchedShared
                 }
             }
         }
-        addVideosTo(videos: videos, placement: videoplacement, index: index)
+        addVideosTo(videos, placement: videoplacement, index: index)
     }
 
     private func handleNewForeignVideo(_ video: Video, feedTitle: String? = nil) async throws {
@@ -66,7 +66,7 @@ import UnwatchedShared
     }
 
     private func addForeignVideos(videoIds: [String],
-                                  in videoplacement: VideoPlacement,
+                                  in videoplacement: VideoPlacementArea,
                                   at index: Int) async throws {
         Logger.log.info("addForeignVideos?")
         var videos = [Video]()
@@ -81,7 +81,7 @@ import UnwatchedShared
                 }
             }
         }
-        addVideosTo(videos: videos, placement: videoplacement, index: index)
+        addVideosTo(videos, placement: videoplacement, index: index)
     }
 
     private func videoAlreadyExists(_ youtubeId: String) -> Video? {
