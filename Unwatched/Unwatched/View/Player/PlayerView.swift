@@ -23,7 +23,7 @@ struct PlayerView: View {
     @Environment(\.requestReview) var requestReview
 
     @State var autoHideVM = AutoHideVM()
-    @State var overlayVM = OverlayFullscreenVM()
+    @State var overlayVM = OverlayFullscreenVM.shared
 
     var landscapeFullscreen = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -253,7 +253,7 @@ struct PlayerView: View {
             player.autoSetNextVideo(.continuousPlay, modelContext)
         } else {
             player.pause()
-            player.seekPosition = nil
+            player.seekAbsolute = nil
             player.setVideoEnded(true)
         }
     }

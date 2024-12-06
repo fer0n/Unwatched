@@ -31,7 +31,6 @@ struct CombinedPlaybackSpeedSetting: View {
                 }
                 .help("toggleTemporarySpeed")
                 .accessibilityLabel("toggleTemporarySpeed")
-                .keyboardShortcut("s", modifiers: [])
             }
         }
         .onChange(of: player.video?.subscription) {

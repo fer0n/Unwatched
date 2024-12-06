@@ -21,7 +21,8 @@ import UnwatchedShared
     @MainActor
     var nextChapter: Chapter?
 
-    var seekPosition: Double?
+    var seekAbsolute: Double?
+    var seekRelative: Double?
     var embeddingDisabled: Bool = false
     var pipEnabled: Bool = false
     var videoSource: VideoSource?
@@ -51,6 +52,8 @@ import UnwatchedShared
         currentTime = video?.elapsedSeconds ?? 0
         isPlaying = false
         currentChapter = nil
+        nextChapter = nil
+        previousChapter = nil
         setVideoEnded(false)
         pipEnabled = false
         handleChapterChange()

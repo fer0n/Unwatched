@@ -36,11 +36,6 @@ struct UserTipsView: View {
             "tipChapters",
             "tipChaptersMessage",
             "checkmark.circle.fill"
-        ),
-        UserTip(
-            "tipKeyboardShortcuts",
-            "tipKeyboardShortcutsMessage",
-            "keyboard.fill"
         )
     ]
 
