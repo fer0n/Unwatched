@@ -47,7 +47,6 @@ struct CorePlayButton<Content>: View where Content: View {
             .foregroundStyle(Color.neutralAccentColor)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
-        .keyboardShortcut(.space, modifiers: [])
         .accessibilityLabel(player.isPlaying ? "pause" : "play")
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .contextMenu {

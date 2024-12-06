@@ -6,7 +6,12 @@
 import SwiftUI
 import UnwatchedShared
 
+@MainActor
 @Observable class OverlayFullscreenVM {
+    static let shared: OverlayFullscreenVM = {
+        OverlayFullscreenVM()
+    }()
+
     var icon: OverlayIcon = .play
 
     @MainActor
@@ -31,7 +36,7 @@ struct FullscreenOverlayControls: View {
 
     var body: some View {
         ZStack {
-            Image(systemName: overlayVM.icon.systemName)
+            image
                 .resizable()
                 .animation(nil, value: overlayVM.show)
                 .frame(width: 90, height: 90)
@@ -42,7 +47,7 @@ struct FullscreenOverlayControls: View {
                 } animation: { _ in
                     .easeInOut(duration: 0.2)
                 }
-                .fontWeight(.black)
+                .fontWeight(overlayVM.icon.fontWeight)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.black, .white)
                 .allowsHitTesting(false)
@@ -64,6 +69,16 @@ struct FullscreenOverlayControls: View {
             }
         }
     }
+
+    var image: Image {
+        if let systemName = overlayVM.icon.systemName {
+            return Image(systemName: systemName)
+        }
+        if let customImageName = overlayVM.icon.customImageName {
+            return Image(customImageName)
+        }
+        return Image(systemName: "circle.fill")
+    }
 }
 
 enum OverlayIcon {
@@ -71,13 +86,35 @@ enum OverlayIcon {
     case pause
     case next
     case previous
+    case seekForward
+    case seekBackward
+    case watched
+    case nextVideo
 
-    var systemName: String {
+    var systemName: String? {
         switch self {
         case .play: return "play.circle.fill"
         case .pause: return "pause.circle.fill"
         case .next: return "forward.end.circle.fill"
         case .previous: return "backward.end.circle.fill"
+        case .watched: return "checkmark.circle.fill"
+        case .nextVideo: return "forward.circle.fill"
+        default: return nil
+        }
+    }
+
+    var customImageName: String? {
+        switch self {
+        case .seekForward: return "custom.arrow.trianglehead.clockwise.circle.fill"
+        case .seekBackward: return "custom.arrow.trianglehead.counterclockwise.circle.fill"
+        default: return nil
+        }
+    }
+
+    var fontWeight: Font.Weight {
+        switch self {
+        case .play, .pause: return .black
+        default: return .regular
         }
     }
 }

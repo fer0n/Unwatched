@@ -83,8 +83,27 @@ extension PlayerManager {
 
     @MainActor
     func restartVideo() {
-        seekPosition = 0
+        seekAbsolute = 0
         play()
+    }
+
+    @MainActor
+    func seekForward() -> Bool {
+        seek(backward: false)
+    }
+
+    @MainActor
+    func seekBackward() -> Bool {
+        seek(backward: true)
+    }
+
+    @MainActor
+    func seek(backward: Bool) -> Bool {
+        if video != nil && unstarted == false {
+            seekRelative = backward ? -Const.seekSeconds : Const.seekSeconds
+            return true
+        }
+        return false
     }
 
     @MainActor

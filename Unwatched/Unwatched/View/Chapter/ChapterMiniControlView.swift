@@ -28,7 +28,6 @@ struct ChapterMiniControlView: View {
                             image
                                 .font(.system(size: 15))
                         }
-                        .keyboardShortcut(.leftArrow)
                         .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapterDisabled)
                     } else {
@@ -72,7 +71,6 @@ struct ChapterMiniControlView: View {
                             chapter: player.currentChapter,
                             remainingTime: player.currentRemaining
                         ))
-                        .keyboardShortcut(.rightArrow)
                         .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()

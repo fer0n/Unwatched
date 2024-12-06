@@ -54,10 +54,6 @@ struct PlayerWebView: UIViewRepresentable {
             }
         }
 
-        DispatchQueue.main.async {
-            webView.becomeFirstResponder()
-        }
-
         loadWebContent(webView)
         return webView
     }
@@ -99,10 +95,16 @@ struct PlayerWebView: UIViewRepresentable {
             player.previousState.pipEnabled = player.pipEnabled
         }
 
-        if let seekTo = player.seekPosition {
-            Logger.log.info("SEEK")
-            uiView.evaluateJavaScript(getSeekToScript(seekTo))
-            player.seekPosition = nil
+        if let seekAbs = player.seekAbsolute {
+            Logger.log.info("SEEK ABS")
+            uiView.evaluateJavaScript(getSeekToScript(seekAbs))
+            player.seekAbsolute = nil
+        }
+
+        if let seekRel = player.seekRelative {
+            Logger.log.info("SEEK REL")
+            uiView.evaluateJavaScript(getSeekRelScript(seekRel))
+            player.seekRelative = nil
         }
 
         if prev.videoId != player.video?.youtubeId {
@@ -171,7 +173,7 @@ struct PreviousState {
 
     return (
         PlayerWebView(
-            overlayVM: .constant(OverlayFullscreenVM()),
+            overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
             playerType: .youtubeEmbedded,
             onVideoEnded: {

@@ -33,24 +33,31 @@ struct RotateOrientationButton: View {
 
 struct HideControlsButton: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+    var textOnly: Bool = false
+    var enableEscapeButton: Bool = true
 
     var body: some View {
         Button {
             handlePress()
         } label: {
-            Image(systemName: hideControlsFullscreen
-                    ? Const.disableFullscreenSF
-                    : Const.enableFullscreenSF)
-                .playerToggleModifier(isOn: hideControlsFullscreen)
+            if textOnly {
+                Text("toggleFullscreen")
+            } else {
+                Image(systemName: hideControlsFullscreen
+                        ? Const.disableFullscreenSF
+                        : Const.enableFullscreenSF)
+                    .playerToggleModifier(isOn: hideControlsFullscreen)
+            }
         }
-        .accessibilityLabel("enterFullscreen")
-        .keyboardShortcut("f", modifiers: [])
+        .help("toggleFullscreen")
         .background {
             // workaround: enable esc press to exit video
-            Button {
-                handlePress()
-            } label: { }
-            .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
+            if enableEscapeButton {
+                Button {
+                    handlePress()
+                } label: { }
+                .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
+            }
         }
     }
 

@@ -1957,22 +1957,6 @@
         }
       }
     },
-    "enterFullscreen" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vollbild an"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter Fullscreen"
-          }
-        }
-      }
-    },
     "enterPip" : {
       "localizations" : {
         "de" : {
@@ -3075,7 +3059,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Watched"
+            "value" : "Mark Watched"
           }
         }
       }
@@ -3268,7 +3252,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next"
+            "value" : "Next Video"
           }
         }
       }
@@ -3853,6 +3837,22 @@
         }
       }
     },
+    "playerMenu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player"
+          }
+        }
+      }
+    },
     "playerShowsWebsiteFaqA" : {
       "localizations" : {
         "de" : {
@@ -3897,6 +3897,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Website in Player"
+          }
+        }
+      }
+    },
+    "playPause" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play/Pause"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play/Pause"
           }
         }
       }
@@ -4297,6 +4313,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        }
+      }
+    },
+    "seekBackward" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück springen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seek Backward"
+          }
+        }
+      }
+    },
+    "seekForward" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorwärts springen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seek Forward"
           }
         }
       }
@@ -5086,38 +5134,6 @@
         }
       }
     },
-    "tipKeyboardShortcuts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tastenkürzel"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keyboard shortcuts"
-          }
-        }
-      }
-    },
-    "tipKeyboardShortcutsMessage" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• **n**: Nächstes Video\n• **d**: Als gesehen markieren\n• **f**: Vollbild an/aus\n• **space**: Play/pause\n• **cmd + links/rechts**: Kapitel wechseln"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "• **n**: next video\n• **d**: mark video as watched\n• **f**: toggle fullscreen\n• **space**: play/pause\n• **cmd + left/right**: change chapter"
-          }
-        }
-      }
-    },
     "tipPlaybackSpeed" : {
       "localizations" : {
         "de" : {
@@ -5210,6 +5226,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today, %@"
+          }
+        }
+      }
+    },
+    "toggleFullscreen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vollbild Umschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle Fullscreen"
           }
         }
       }
