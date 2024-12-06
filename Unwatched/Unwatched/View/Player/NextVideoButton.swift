@@ -84,7 +84,6 @@ struct CoreNextButton<Content>: View where Content: View {
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .keyboardShortcut("n", modifiers: [])
     }
 }
 

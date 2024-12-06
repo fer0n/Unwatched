@@ -28,7 +28,7 @@ struct NextChapterButton<Content>: View where Content: View {
             )
             .symbolEffect(.bounce.down, value: actionToggle)
         }
-        .accessibilityLabel("nextChapter")
+        .help("nextChapter")
         .sensoryFeedback(Const.sensoryFeedback, trigger: actionToggle)
     }
 }

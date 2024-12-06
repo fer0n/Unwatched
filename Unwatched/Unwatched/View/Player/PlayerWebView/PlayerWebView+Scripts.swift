@@ -45,6 +45,10 @@ extension PlayerWebView {
         "video.currentTime = \(seekTo);"
     }
 
+    func getSeekRelScript(_ seekRel: Double) -> String {
+        "video.currentTime += \(seekRel);"
+    }
+
     func getSetPlaybackRateScript() -> String {
         "video.playbackRate = \(player.playbackSpeed);"
     }
