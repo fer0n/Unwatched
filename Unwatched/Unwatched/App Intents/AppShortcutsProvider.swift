@@ -16,6 +16,12 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             systemImageName: "play.rectangle.fill"
         )
         AppShortcut(
+            intent: AddSubscription(),
+            phrases: ["addSubscription"],
+            shortTitle: "addSubscription",
+            systemImageName: "person.fill.badge.plus"
+        )
+        AppShortcut(
             intent: GetCurrentVideo(),
             phrases: ["getCurrentVideo"],
             shortTitle: "getCurrentVideo",

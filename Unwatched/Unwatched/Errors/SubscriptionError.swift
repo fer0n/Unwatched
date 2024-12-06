@@ -5,39 +5,40 @@
 
 import SwiftUI
 
-enum SubscriptionError: LocalizedError {
+enum SubscriptionError: Error, CustomLocalizedStringResourceConvertible {
     case notSupported
     case failedGettingChannelIdFromUsername(_ message: String?)
     case failedGettingVideoInfo
     case httpRequestFailed(_ message: String)
     case notAnUrl(_ noUrl: String)
     case noInfoFoundToSubscribeTo
-    case noInfoFoundToUnsibscribe
+    case noInfoFoundToUnsubscribe
     case couldNotSubscribe(_ message: String)
 
-    var errorDescription: String? {
+    var localizedStringResource: LocalizedStringResource {
         switch self {
         case .notSupported:
-            return String(localized: "notSupported")
+            return "notSupported"
         case .failedGettingChannelIdFromUsername(let message):
             let msg = """
             Failed to get channel ID from username.
             Try adding the RSS feed directly (instead of the channel URL).
             \(message != nil ? "Error: \(message!)" : "" )")
             """
-            return String(localized: "failedGettingChannelIdFromUsername\(msg)")
+            return "failedGettingChannelIdFromUsername\(msg)"
         case .failedGettingVideoInfo:
-            return String(localized: "failedGettingVideoInfo")
+            return "failedGettingVideoInfo"
         case .httpRequestFailed(let message):
-            return String(localized: "HTTP request failed: \(message)")
+            return "HTTP request failed: \(message)"
         case .notAnUrl(let noUrl):
-            return String(localized: "Couldn't convert to URL: \(noUrl)")
+            return "Couldn't convert to URL: \(noUrl)"
         case .noInfoFoundToSubscribeTo:
-            return String(localized: "noInfoFoundToSubscribeTo")
+            return "noInfoFoundToSubscribeTo"
         case .couldNotSubscribe(let message):
-            return String(localized: "Could not subscribe: \(message)")
-        case .noInfoFoundToUnsibscribe:
-            return String(localized: "noInfoFoundToUnsibscribe")
+            return "Could not subscribe: \(message)"
+        case .noInfoFoundToUnsubscribe:
+            return "noInfoFoundToUnsibscribe"
         }
     }
+
 }
