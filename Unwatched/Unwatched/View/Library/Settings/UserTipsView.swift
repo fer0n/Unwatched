@@ -36,6 +36,11 @@ struct UserTipsView: View {
             "tipChapters",
             "tipChaptersMessage",
             "checkmark.circle.fill"
+        ),
+        UserTip(
+            "tipTitleLongPress",
+            "tipTitleLongPressMessage",
+            "hand.tap.fill"
         )
     ]
 

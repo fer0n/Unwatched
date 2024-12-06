@@ -5198,6 +5198,38 @@
         }
       }
     },
+    "tipTitleLongPress" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf YouTube ansehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View on YouTube"
+          }
+        }
+      }
+    },
+    "tipTitleLongPressMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus dem “…”-Button Menü im Player kann “Auf YouTube ansehen” ausgewählt werden. Das gleiche ist durch tippen und halten auf den Video Titel/das aktuelle Kapitel möglich."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can select “View on YouTube” from the “…”-menu inside the player, or you can long press the video title/current chapter."
+          }
+        }
+      }
+    },
     "Today" : {
       "localizations" : {
         "de" : {
@@ -5267,13 +5299,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ja, aber Unwatched unterstützt keinen eigenen Player auf tvOS und öffnet stattdessen die YouTube App.  Alternativ kann AirPlay verwendet werden. Dazu muss im Player unten rechts der native iOS Vollbild-Modus gestartet werden. Von dort kann AirPlay ausgewählt werden."
+            "value" : "Ja, aber Unwatched unterstützt keinen eigenen Player auf tvOS und öffnet stattdessen die YouTube App. Ein eigener Player ist leider aufgrund von technischen & rechtlichen Einschränkungen nicht möglich.  Alternativ kann AirPlay verwendet werden. Dazu muss im Player unten rechts der native iOS Vollbild-Modus gestartet werden. Von dort kann AirPlay ausgewählt werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Yes, but it doesn't support a custom player and opens the YouTube app instead.   You can also use AirPlay to cast from Unwatched to Apple TV. Enter fullscreen by tapping the fullscreen button on the video player (bottom right, not on macOS), then choose AirPlay."
+            "value" : "Yes, but it doesn't support a custom player and opens the YouTube app instead. A custom player is sadly not possible due to technical & legal restrictions.  You can also use AirPlay to cast from Unwatched to Apple TV. Enter fullscreen by tapping the fullscreen button on the video player (bottom right, not on macOS), then choose AirPlay."
           }
         }
       }
