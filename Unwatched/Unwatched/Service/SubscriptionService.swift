@@ -30,12 +30,12 @@ struct SubscriptionService {
     }
 
     static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
-                                subsciptionId: PersistentIdentifier? = nil) async throws {
-        guard subscriptionInfo != nil || subsciptionId != nil else {
+                                subscriptionId: PersistentIdentifier? = nil) async throws {
+        guard subscriptionInfo != nil || subscriptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
         let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
-        return try await repo.subscribeTo(subscriptionInfo, subsciptionId)
+        return try await repo.subscribeTo(subscriptionInfo, subscriptionId)
     }
 
     static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {

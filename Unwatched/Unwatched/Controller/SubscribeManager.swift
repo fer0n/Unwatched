@@ -89,7 +89,7 @@ import UnwatchedShared
         isLoading = true
         do {
             try await SubscriptionService.addSubscription(subscriptionInfo: subscriptionInfo,
-                                                          subsciptionId: subscriptionId)
+                                                          subscriptionId: subscriptionId)
             isSubscribedSuccess = true
             hasNewSubscriptions = true
         } catch {
@@ -127,7 +127,7 @@ import UnwatchedShared
             do {
                 try await SubscriptionService.addSubscription(
                     subscriptionInfo: subscriptionInfo,
-                    subsciptionId: subId)
+                    subscriptionId: subId)
                 isSubscribedSuccess = true
             } catch {
                 Logger.log.error("error subscribing: \(error)")

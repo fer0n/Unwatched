@@ -38,13 +38,13 @@ struct SubscriptionInfo {
 
     init(
         _ url: URL?,
-        _ channelId: String?,
-        _ description: String?,
-        _ rssFeed: String?,
-        _ title: String?,
-        _ userName: String?,
-        _ playlistId: String?,
-        _ imageUrl: String?
+        _ channelId: String? = nil,
+        _ description: String? = nil,
+        _ rssFeed: String? = nil,
+        _ title: String? = nil,
+        _ userName: String? = nil,
+        _ playlistId: String? = nil,
+        _ imageUrl: String? = nil
     ) {
         self.url = url
         self.channelId = channelId

@@ -165,6 +165,22 @@
         }
       }
     },
+    "addSubscription ${youtubeUrl}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${youtubeUrl} abonnieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe to ${youtubeUrl}"
+          }
+        }
+      }
+    },
     "addSubscriptionButtonTip" : {
       "localizations" : {
         "de" : {
@@ -193,6 +209,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Always use this button to add a channel to this App. The YouTube \"subscribe\" button only works for the YouTube website/App."
+          }
+        }
+      }
+    },
+    "addSubscriptionDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonniert den YouTube Kanal/Playlist in Unwatched der unter der gegebenen URL."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds a subscription in Unwatched for the YouTube channel at the given channel or playlist URL."
           }
         }
       }
@@ -5722,6 +5754,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube"
+          }
+        }
+      }
+    },
+    "youtubeChannelUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Kanal URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Channel URL"
           }
         }
       }
