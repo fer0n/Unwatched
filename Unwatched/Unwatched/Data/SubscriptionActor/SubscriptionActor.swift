@@ -88,7 +88,7 @@ actor SubscriptionActor {
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
                 for info in subscriptionInfo {
-                    if let url = info.rssFeedUrl {
+                    if let url = info.rssFeedUrl ?? info.url {
                         group.addTask {
                             var (subState, sendableSub) = await self.loadSubscriptionInfo(
                                 from: url,
@@ -171,7 +171,7 @@ actor SubscriptionActor {
 
     func unsubscribe(_ channelId: String?, playlistId: String?) throws {
         if channelId == nil && playlistId == nil {
-            throw SubscriptionError.noInfoFoundToUnsibscribe
+            throw SubscriptionError.noInfoFoundToUnsubscribe
         }
         let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
             (channelId != nil && $0.youtubeChannelId == channelId)
