@@ -13,6 +13,7 @@ struct MenuView: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
@@ -67,6 +68,8 @@ struct MenuView: View {
                 ChapterDescriptionView(video: video)
                     .presentationDragIndicator(.visible)
                     .environment(\.colorScheme, colorScheme)
+                    .environment(player)
+                    .environment(navManager)
             }
             .environment(\.horizontalSizeClass, .compact)
         }
