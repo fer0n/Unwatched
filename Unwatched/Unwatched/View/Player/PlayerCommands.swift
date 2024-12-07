@@ -16,33 +16,55 @@ struct PlayerCommands: Commands {
             }
             .keyboardShortcut(.space, modifiers: [])
 
-            Button("seekForward") {
-                if player.seekForward() {
-                    OverlayFullscreenVM.shared.show(.seekForward)
+            if UIDevice.isMac {
+                Button("seekBackward") {
+                    seekBackward()
                 }
-            }
-            .keyboardShortcut(.rightArrow, modifiers: [])
+                .keyboardShortcut(.leftArrow, modifiers: [])
 
-            Button("seekBackward") {
-                if player.seekBackward() {
-                    OverlayFullscreenVM.shared.show(.seekBackward)
+                Button("seekForward") {
+                    seekForward()
                 }
+                .keyboardShortcut(.rightArrow, modifiers: [])
+
+                Button("previousChapter") {
+                    goToPreviousChapter()
+                }
+                .keyboardShortcut(.leftArrow)
+
+                Button("nextChapter") {
+                    goToNextChapter()
+                }
+                .keyboardShortcut(.rightArrow)
+
+                Divider()
             }
-            .keyboardShortcut(.leftArrow, modifiers: [])
+
+            Button("playPause") {
+                player.handlePlayButton()
+            }
+            .keyboardShortcut("k", modifiers: [])
+
+            // workaround: same commands without arrow keys (for iPad, arrow keys don't work there)
+            Button("seekBackward") {
+                seekBackward()
+            }
+            .keyboardShortcut("j", modifiers: [])
+
+            Button("seekForward") {
+                seekForward()
+            }
+            .keyboardShortcut("l", modifiers: [])
 
             Button("previousChapter") {
-                if player.goToPreviousChapter() {
-                    OverlayFullscreenVM.shared.show(.previous)
-                }
+                goToPreviousChapter()
             }
-            .keyboardShortcut(.leftArrow)
+            .keyboardShortcut("j")
 
             Button("nextChapter") {
-                if player.goToNextChapter() {
-                    OverlayFullscreenVM.shared.show(.next)
-                }
+                goToNextChapter()
             }
-            .keyboardShortcut(.rightArrow)
+            .keyboardShortcut("l")
 
             Divider()
 
@@ -67,6 +89,30 @@ struct PlayerCommands: Commands {
                 OverlayFullscreenVM.shared.show(.nextVideo)
             }
             .keyboardShortcut("n", modifiers: [.shift])
+        }
+    }
+
+    func seekForward() {
+        if player.seekForward() {
+            OverlayFullscreenVM.shared.show(.seekForward)
+        }
+    }
+
+    func seekBackward() {
+        if player.seekBackward() {
+            OverlayFullscreenVM.shared.show(.seekBackward)
+        }
+    }
+
+    func goToPreviousChapter() {
+        if player.goToPreviousChapter() {
+            OverlayFullscreenVM.shared.show(.previous)
+        }
+    }
+
+    func goToNextChapter() {
+        if player.goToNextChapter() {
+            OverlayFullscreenVM.shared.show(.next)
         }
     }
 
