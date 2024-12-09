@@ -78,9 +78,11 @@ struct CoreNextButton<Content>: View where Content: View {
             }
 
             if extendedContextMenu {
+                Divider()
                 Button("restartVideo", systemImage: "restart") {
                     player.restartVideo()
                 }
+                ExtendedPlayerActions(markVideoWatched: markVideoWatched)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
