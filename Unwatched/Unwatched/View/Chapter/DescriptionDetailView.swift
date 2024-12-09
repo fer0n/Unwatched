@@ -28,6 +28,7 @@ struct DescriptionDetailView: View {
 struct DescriptionDetailHeaderView: View {
     let video: Video
     let onTitleTap: () -> Void
+    let setShowMenu: (() -> Void)?
 
     var body: some View {
         Button {
@@ -49,9 +50,11 @@ struct DescriptionDetailHeaderView: View {
         }
 
         VStack(alignment: .leading) {
-            if let subTitle = video.subscription?.displayTitle {
-                Text(verbatim: subTitle)
-            }
+            InteractiveSubscriptionTitle(
+                video: video,
+                subscription: video.subscription,
+                setShowMenu: setShowMenu
+            )
             if let published = video.publishedDate {
                 Text(verbatim: "\(published.formattedExtensive)")
             }

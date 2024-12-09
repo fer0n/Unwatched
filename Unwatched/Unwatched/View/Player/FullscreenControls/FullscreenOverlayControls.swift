@@ -95,10 +95,10 @@ enum OverlayIcon {
         switch self {
         case .play: return "play.circle.fill"
         case .pause: return "pause.circle.fill"
-        case .next: return "forward.end.circle.fill"
-        case .previous: return "backward.end.circle.fill"
+        case .next: return "chevron.right.circle.fill"
+        case .previous: return "chevron.left.circle.fill"
         case .watched: return "checkmark.circle.fill"
-        case .nextVideo: return "forward.circle.fill"
+        case .nextVideo: return "\(Const.nextVideoSF).circle.fill"
         default: return nil
         }
     }
@@ -114,6 +114,7 @@ enum OverlayIcon {
     var fontWeight: Font.Weight {
         switch self {
         case .play, .pause: return .black
+        case .next, .previous: return .bold
         default: return .regular
         }
     }

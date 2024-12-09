@@ -28,6 +28,33 @@ extension PlayerManager {
     }
 
     @MainActor
+    func extractCurrentChapter(at time: Double) -> Chapter? {
+        return video?.sortedChapters.first(where: { chapter in
+            return chapter.startTime <= time && time < (chapter.endTime ?? 0)
+        })
+    }
+
+    @MainActor
+    func setCurrentChapterPreview(at time: Double) {
+        guard let video = video else {
+            currentChapterPreview = nil
+            return
+        }
+
+        let newChapter = extractCurrentChapter(at: time) ?? {
+            if time <= 0 {
+                return video.sortedChapters.first
+            } else {
+                return video.sortedChapters.last
+            }
+        }()
+
+        if newChapter?.startTime != currentChapterPreview?.startTime {
+            currentChapterPreview = newChapter
+        }
+    }
+
+    @MainActor
     func handleChapterChange() {
         Logger.log.info("handleChapterChange")
         guard let time = currentTime,
@@ -44,9 +71,7 @@ extension PlayerManager {
         }
 
         // current chapter
-        guard let current = chapters.first(where: { chapter in
-            return chapter.startTime <= time && time < (chapter.endTime ?? 0)
-        }) else {
+        guard let current = extractCurrentChapter(at: time) else {
             currentEndTime = nil
             return
         }

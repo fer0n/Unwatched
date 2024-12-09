@@ -54,7 +54,8 @@ struct PlayerContentView: View {
                 if let video = player.video {
                     ChapterDescriptionView(
                         video: video,
-                        bottomSpacer: fadeOutHeight + Const.minSheetDetent
+                        bottomSpacer: fadeOutHeight + Const.minSheetDetent,
+                        setShowMenu: setShowMenu
                     )
                     .tabItem {
                         Image(systemName: "checklist")

@@ -13,15 +13,8 @@ struct DescriptionMiniProgressBar: View {
 
     var body: some View {
         if !player.embeddingDisabled {
-            Spacer()
-                .frame(height: 6)
+            PlayerScrubber()
                 .frame(maxWidth: .infinity)
-                .background {
-                    BackgroundProgressBar()
-                }
-                .foregroundStyle(Color.automaticBlack.opacity(0.8))
-                .clipShape(Capsule())
-                .font(.footnote)
         }
     }
 }
