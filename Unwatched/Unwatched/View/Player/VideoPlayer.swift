@@ -112,7 +112,7 @@ struct VideoPlayer: View {
                 showInfo: true,
                 horizontalLayout: false,
                 landscapeFullscreen: false)
-        .modelContainer(DataProvider.previewContainerFilled)
+        .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())

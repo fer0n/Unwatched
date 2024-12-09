@@ -13,6 +13,7 @@ struct ChapterDescriptionView: View {
 
     let video: Video
     var bottomSpacer: CGFloat = 0
+    var setShowMenu: (() -> Void)?
 
     var body: some View {
         let hasChapters = video.sortedChapters.isEmpty == false
@@ -23,8 +24,9 @@ struct ChapterDescriptionView: View {
                     DescriptionDetailHeaderView(video: video, onTitleTap: {
                         if let url = video.url?.absoluteString {
                             navManager.openUrlInApp(.url(url))
+                            navManager.videoDetail = nil
                         }
-                    })
+                    }, setShowMenu: setShowMenu)
 
                     if hasChapters {
                         ChapterList(video: video)

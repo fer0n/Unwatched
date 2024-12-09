@@ -25,16 +25,17 @@ extension DataProvider {
 
         let chapters = [
             Chapter(title: "Chapter 1", time: 0, duration: 10),
-            Chapter(title: "Chapter 2", time: 10, duration: 10),
+            Chapter(title: "Chapter 2", time: 10, duration: 20),
             Chapter(title: "Chapter 3", time: 30, duration: 10),
             Chapter(title: "Chapter 4", time: 40, duration: 10),
-            Chapter(title: "Chapter 5", time: 50, duration: 146)
+            Chapter(title: "Chapter 5", time: 50, duration: 10)
         ]
 
         for chapter in chapters {
             container.mainContext.insert(chapter)
         }
         video.chapters = chapters
+        video.duration = 60
 
         try? container.mainContext.save()
 
@@ -51,7 +52,7 @@ extension PlayerManager {
     static func getDummy() -> PlayerManager {
         let player = PlayerManager()
         player.video = DataProvider.dummyVideo
-        //        player.currentTime = 10
+        player.currentTime = 10
         player.currentChapter = Chapter.getDummy()
         //        player.embeddingDisabled = true
         return player

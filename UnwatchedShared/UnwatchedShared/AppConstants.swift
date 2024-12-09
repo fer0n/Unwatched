@@ -128,9 +128,9 @@ public struct Const {
 
     public static let appBrowserSF = "play.rectangle.fill"
 
-    public static let nextChapterSF = "forward.end.fill"
-    public static let previousChapterSF = "backward.end.fill"
-    public static let nextVideoSF = "forward.fill"
+    public static let nextChapterSF = "chevron.right.2"
+    public static let previousChapterSF = "chevron.left.2"
+    public static let nextVideoSF = "forward.end.fill"
     public static let continuousPlaySF = "text.line.first.and.arrowtriangle.forward"
 
     public static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"

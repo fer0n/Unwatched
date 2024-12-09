@@ -20,13 +20,16 @@ struct ChapterMiniControlView: View {
         let hasChapters = player.currentChapter != nil
         let hasAnyChapters = player.video?.chapters?.isEmpty
 
-        VStack(spacing: 20) {
+        VStack(spacing: 10) {
+            DescriptionMiniProgressBar()
+                .frame(maxWidth: .infinity)
+
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
                 GridRow {
                     if hasChapters {
                         PreviousChapterButton { image in
                             image
-                                .font(.system(size: 15))
+                                .font(.system(size: 20))
                         }
                         .buttonStyle(ChangeChapterButtonStyle())
                         .disabled(player.previousChapterDisabled)
@@ -43,7 +46,7 @@ struct ChapterMiniControlView: View {
                         }
                     } label: {
                         ZStack {
-                            if let chapt = player.currentChapter {
+                            if let chapt = player.currentChapterPreview ?? player.currentChapter {
                                 Text(chapt.titleTextForced)
                             } else {
                                 title
@@ -54,6 +57,10 @@ struct ChapterMiniControlView: View {
                         .fontWeight(.black)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity)
+                        .animation(nil, value: UUID())
+                        .sensoryFeedback(Const.sensoryFeedback, trigger: player.currentChapterPreview) { old, new in
+                            old != nil && new != nil
+                        }
                     }
                     .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
                         if let url = player.video?.url {
@@ -65,11 +72,11 @@ struct ChapterMiniControlView: View {
                     if hasChapters {
                         NextChapterButton { image in
                             image
-                                .font(.system(size: 15))
+                                .font(.system(size: 20))
                         }
                         .buttonStyle(ChangeChapterButtonStyle(
                             chapter: player.currentChapter,
-                            remainingTime: player.currentRemaining
+                            text: player.currentRemainingText
                         ))
                         .disabled(player.nextChapter == nil)
                     } else {
@@ -79,13 +86,11 @@ struct ChapterMiniControlView: View {
 
                 GridRow {
                     Color.clear.fixedSize()
-
-                    InteractiveSubscriptionTitle(video: player.video,
-                                                 subscription: player.video?.subscription,
-                                                 openSubscription: openSubscription)
+                    Color.clear.fixedSize().frame(maxWidth: .infinity)
 
                     if hasChapters {
                         ChapterMiniControlRemainingText()
+                            .padding(.top, -10)
                     } else {
                         EmptyView()
                     }
@@ -119,40 +124,13 @@ struct ChapterMiniControlView: View {
     }
 }
 
-struct BackgroundProgressBar: View {
-    @Environment(PlayerManager.self) var player
-
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Color.clear
-                    .background(Color.backgroundColor)
-
-                if let elapsed = player.currentTime,
-                   let total = player.video?.duration {
-                    let width = (elapsed / total) * geometry.size.width
-
-                    HStack(spacing: 0) {
-                        Color.foregroundGray
-                            .opacity(0.2)
-                            .frame(width: width)
-                            .animation(.default, value: width)
-                            .clipShape(Capsule())
-                        Color.clear
-                    }
-                }
-            }
-        }
-    }
-}
-
 struct ChapterMiniControlRemainingText: View {
     @Environment(PlayerManager.self) var player
 
     var body: some View {
         if let remaining = player.currentRemainingText {
             Text(remaining)
-                .font(.system(size: 14).monospacedDigit())
+                .font(.system(size: 12).monospacedDigit())
                 .animation(.default, value: player.currentRemainingText)
                 .contentTransition(.numericText(countsDown: true))
                 .foregroundStyle(Color.foregroundGray)
