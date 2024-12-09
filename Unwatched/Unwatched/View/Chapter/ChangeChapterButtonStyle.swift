@@ -9,17 +9,15 @@ import UnwatchedShared
 struct ChangeChapterButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
     var chapter: Chapter?
-    var remainingTime: Double?
+    var text: String?
 
     func makeBody(configuration: Configuration) -> some View {
-        ZStack {
-            Circle()
-                .foregroundStyle(Color.backgroundColor)
-                .progressCircleModifier(remaining: remainingTime, total: chapter?.duration)
+        VStack(spacing: 3) {
             configuration.label
         }
-        .opacity(isEnabled ? 1 : 0.5)
+        .fontWeight(.bold)
         .frame(width: 40, height: 40)
+        .opacity(isEnabled ? 1 : 0.5)
     }
 }
 

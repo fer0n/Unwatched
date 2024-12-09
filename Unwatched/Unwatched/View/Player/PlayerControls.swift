@@ -44,17 +44,24 @@ struct PlayerControls: View {
 
         ZStack {
             outerLayout {
-                VStack(spacing: 0) {
-                    if showInfo && !compactSize {
-                        DescriptionMiniProgressBar()
-                            .padding(.horizontal, 2)
-                            .padding(10)
-                    }
+                if showRotateFullscreen && !player.embeddingDisabled && !player.isCompactHeight {
+                    HStack {
+                        InteractiveSubscriptionTitle(
+                            video: player.video,
+                            subscription: player.video?.subscription,
+                            setShowMenu: setShowMenu,
+                            showImage: true
+                        )
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .lineLimit(1)
+                        .padding(.horizontal)
+                        .foregroundStyle(.secondary)
 
-                    if showRotateFullscreen && !player.embeddingDisabled && !player.isCompactHeight {
-                        RotateOrientationButton()
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(.trailing)
+                        CoreRotateOrientationButton {
+                            $0.padding()
+                        }
                     }
                 }
 

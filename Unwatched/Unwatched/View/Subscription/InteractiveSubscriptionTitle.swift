@@ -7,12 +7,14 @@ import SwiftUI
 import UnwatchedShared
 
 struct InteractiveSubscriptionTitle: View {
+    @Environment(NavigationManager.self) var navManager
     @Environment(\.modelContext) var modelContext
     @State var subscribeManager = SubscribeManager()
 
     let video: Video?
     let subscription: Subscription?
-    let openSubscription: (Subscription) -> Void
+    let setShowMenu: (() -> Void)?
+    var showImage = false
 
     var body: some View {
         if let sub = subscription {
@@ -20,6 +22,18 @@ struct InteractiveSubscriptionTitle: View {
                 openSubscription(sub)
             } label: {
                 HStack {
+                    if showImage, let thumbnailUrl = sub.thumbnailUrl {
+                        CachedImageView(imageUrl: thumbnailUrl) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } placeholder: {
+                            Color.clear
+                        }
+                        .id(sub)
+                        .frame(width: 30, height: 30)
+                        .clipShape(Circle())
+                    }
                     Text(sub.displayTitle)
                     if let icon = subscribeManager.getSubscriptionSystemName(video: video) {
                         Image(systemName: icon)
@@ -27,9 +41,6 @@ struct InteractiveSubscriptionTitle: View {
                             .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
                     }
                 }
-                .padding(5)
-                .foregroundStyle(.secondary)
-                .fontWeight(.medium)
             }
             .contextMenu {
                 Button {
@@ -49,8 +60,15 @@ struct InteractiveSubscriptionTitle: View {
                         }
                     }
                 }
+                .textCase(.none)
                 .disabled(subscribeManager.isLoading)
             }
         }
+    }
+
+    func openSubscription(_ sub: Subscription) {
+        navManager.videoDetail = nil
+        navManager.pushSubscription(subscription: sub)
+        setShowMenu?()
     }
 }

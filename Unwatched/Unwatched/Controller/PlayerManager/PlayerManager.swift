@@ -16,6 +16,9 @@ import UnwatchedShared
     var currentChapter: Chapter?
 
     @MainActor
+    var currentChapterPreview: Chapter?
+
+    @MainActor
     var previousChapter: Chapter?
 
     @MainActor

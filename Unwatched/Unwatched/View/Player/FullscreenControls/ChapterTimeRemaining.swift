@@ -13,7 +13,7 @@ struct ChapterTimeRemaining: View {
             Text(remaining)
                 .animation(.default, value: remaining)
                 .contentTransition(.numericText(countsDown: true))
-                .font(.system(size: 12).monospacedDigit())
+                .font(.system(size: 13).monospacedDigit())
                 .lineLimit(1)
                 .opacity(0.8)
         }
