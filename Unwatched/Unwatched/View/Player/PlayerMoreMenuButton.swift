@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct PlayerMoreMenuButton<Content>: View where Content: View {
-    @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
@@ -29,13 +28,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             if let video = player.video, let url = video.url {
                 Divider()
                 if extended {
-                    Button("markWatched", systemImage: "checkmark") {
-                        markVideoWatched(true, .nextUp)
-                    }
-
-                    Button("clearVideo", systemImage: Const.clearNoFillSF) {
-                        player.clearVideo(modelContext)
-                    }
+                    ExtendedPlayerActions(markVideoWatched: markVideoWatched)
                 }
 
                 Button {

@@ -440,6 +440,8 @@
 		88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
 		88E589B32D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */; };
 		88E589B42D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */; };
+		88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
+		88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
@@ -756,6 +758,7 @@
 		88DFC0C52B448C01001895C8 /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
 		88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawler.swift; sourceTree = "<group>"; };
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
+		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
@@ -968,6 +971,7 @@
 				886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */,
 				8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */,
 				8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */,
+				88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */,
 				889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */,
 				887E72932B91F6D400928946 /* NextVideoButton.swift */,
 				88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */,
@@ -1633,6 +1637,7 @@
 				889AF9512C50ED05001CEDE6 /* VideoListItemMoreMenu.swift in Sources */,
 				889AF9522C50ED05001CEDE6 /* SetupView.swift in Sources */,
 				889AF9532C50ED05001CEDE6 /* VideoListItemStatus.swift in Sources */,
+				88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
 				889AF9552C50ED05001CEDE6 /* CachedImageView.swift in Sources */,
 				889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */,
@@ -1903,6 +1908,7 @@
 				888CDF792C997A20007A8A54 /* FullscreenControls.swift in Sources */,
 				8891AAEE2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */,
 				886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */,
+				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
