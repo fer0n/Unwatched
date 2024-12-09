@@ -90,6 +90,7 @@ struct ChapterMiniControlView: View {
 
                     if hasChapters {
                         ChapterMiniControlRemainingText()
+                            .allowsHitTesting(false)
                             .padding(.top, -10)
                     } else {
                         EmptyView()

@@ -29,12 +29,13 @@ struct PlayerScrubber: View {
             HStack {
                 Text(formattedCurrentTime)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .animation(.default, value: formattedCurrentTime == " ")
 
                 if let duration = player.video?.duration?.formattedSecondsColon {
                     Text(duration)
+                        .opacity(formattedCurrentTime == " " ? 0 : 1)
                 }
             }
+            .animation(.default, value: formattedCurrentTime == " ")
             .padding(.horizontal, scrubbingPadding)
             .foregroundStyle(.secondary)
             .font(.caption)

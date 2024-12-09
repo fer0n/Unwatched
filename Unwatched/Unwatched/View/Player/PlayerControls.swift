@@ -70,6 +70,7 @@ struct PlayerControls: View {
                 }
 
                 ChapterMiniControlView(setShowMenu: setShowMenu)
+                    .contentShape(Rectangle())
                     .padding(.horizontal)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
@@ -159,6 +160,9 @@ struct PlayerControls: View {
             }
             .opacity(showControls ? 1 : 0)
         }
+        .background {
+            BackgroundSeekRecognizer()
+        }
         .padding(.bottom, 5)
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
@@ -194,6 +198,32 @@ struct PlayerControls: View {
             || fullscreenControlsSetting != .autoHide
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
             || player.videoIsCloseToEnd
+    }
+}
+
+struct BackgroundSeekRecognizer: View {
+    @Environment(PlayerManager.self) var player
+
+    @State var hapticToggle: Bool = false
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Color.playerBackground
+                .onTapGesture(count: 2) {
+                    if player.seekBackward() {
+                        hapticToggle.toggle()
+                        OverlayFullscreenVM.shared.show(.seekBackward)
+                    }
+                }
+            Color.playerBackground
+                .onTapGesture(count: 2) {
+                    if player.seekForward() {
+                        hapticToggle.toggle()
+                        OverlayFullscreenVM.shared.show(.seekForward)
+                    }
+                }
+        }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 }
 

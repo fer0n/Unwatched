@@ -30,7 +30,7 @@ struct InteractiveSubscriptionTitle: View {
                         } placeholder: {
                             Color.clear
                         }
-                        .id(sub)
+                        .id("subImage-\(sub.youtubeChannelId ?? "")")
                         .frame(width: 30, height: 30)
                         .clipShape(Circle())
                     }
