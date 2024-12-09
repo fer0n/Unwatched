@@ -36,7 +36,7 @@ struct FullscreenOverlayControls: View {
 
     var body: some View {
         ZStack {
-            image
+            Image(systemName: overlayVM.icon.systemName)
                 .resizable()
                 .animation(nil, value: overlayVM.show)
                 .frame(width: 90, height: 90)
@@ -69,16 +69,6 @@ struct FullscreenOverlayControls: View {
             }
         }
     }
-
-    var image: Image {
-        if let systemName = overlayVM.icon.systemName {
-            return Image(systemName: systemName)
-        }
-        if let customImageName = overlayVM.icon.customImageName {
-            return Image(customImageName)
-        }
-        return Image(systemName: "circle.fill")
-    }
 }
 
 enum OverlayIcon {
@@ -91,7 +81,7 @@ enum OverlayIcon {
     case watched
     case nextVideo
 
-    var systemName: String? {
+    var systemName: String {
         switch self {
         case .play: return "play.circle.fill"
         case .pause: return "pause.circle.fill"
@@ -99,15 +89,8 @@ enum OverlayIcon {
         case .previous: return "chevron.left.circle.fill"
         case .watched: return "checkmark.circle.fill"
         case .nextVideo: return "\(Const.nextVideoSF).circle.fill"
-        default: return nil
-        }
-    }
-
-    var customImageName: String? {
-        switch self {
-        case .seekForward: return "custom.arrow.trianglehead.clockwise.circle.fill"
-        case .seekBackward: return "custom.arrow.trianglehead.counterclockwise.circle.fill"
-        default: return nil
+        case .seekBackward: return "arrow.counterclockwise.circle.fill"
+        case .seekForward: return "arrow.clockwise.circle.fill"
         }
     }
 
