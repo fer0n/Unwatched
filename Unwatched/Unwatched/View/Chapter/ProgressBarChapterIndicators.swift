@@ -23,6 +23,24 @@ struct ProgressBarChapterIndicators: View {
                         y: height / 2
                     )
             }
+            if !chapter.isActive {
+                inactive(chapter)
+                    .opacity(0.3)
+            }
+        }
+    }
+
+    @ViewBuilder
+    func inactive(_ chapter: Chapter) -> some View {
+        if let chapterDuration = chapter.duration {
+            let inactiveWidth = (chapterDuration / duration) * width
+
+            Color.playerBackgroundColor
+                .frame(width: inactiveWidth)
+                .position(
+                    x: (chapter.startTime / duration) * width + (inactiveWidth / 2),
+                    y: height / 2
+                )
         }
     }
 }
