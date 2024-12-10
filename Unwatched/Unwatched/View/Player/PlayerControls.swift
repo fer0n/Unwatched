@@ -40,7 +40,7 @@ struct PlayerControls: View {
 
         let outerLayout = horizontalLayout
             ? AnyLayout(HStackLayout(spacing: 10))
-            : AnyLayout(VStackLayout(spacing: player.isCompactHeight ? 7 : 10))
+            : AnyLayout(VStackLayout(spacing: 0))
 
         ZStack {
             outerLayout {
@@ -74,7 +74,6 @@ struct PlayerControls: View {
                     .padding(.horizontal)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
-                    Spacer()
                     Spacer()
                 }
 
@@ -133,7 +132,6 @@ struct PlayerControls: View {
                 .frame(maxWidth: 1000)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
-                    Spacer()
                     Spacer()
                 }
                 if !compactSize {
