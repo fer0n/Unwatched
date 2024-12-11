@@ -8,6 +8,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct CapsulePicker<T: Hashable>: View {
+    @Environment(\.modelContext) var modelContext
+
     @Binding var selection: T
     var options: [T]
     var label: (T) -> (text: String, image: String)
@@ -20,6 +22,7 @@ struct CapsulePicker<T: Hashable>: View {
                     withAnimation {
                         selection = option
                     }
+                    try? modelContext.save()
                 } label: {
                     let (text, image) = label(option)
                     Label(text, systemImage: image)

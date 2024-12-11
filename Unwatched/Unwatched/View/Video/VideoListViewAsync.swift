@@ -44,8 +44,6 @@ struct VideosViewAsync: View {
 }
 
 struct VideoListViewAsync: View {
-    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
-
     @Binding var videoListVM: VideoListVM
 
     var body: some View {

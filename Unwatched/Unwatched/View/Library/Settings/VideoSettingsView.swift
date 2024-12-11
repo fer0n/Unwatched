@@ -8,7 +8,8 @@ import UnwatchedShared
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
+    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
@@ -33,6 +34,15 @@ struct VideoSettingsView: View {
                     }
                 }
 
+                MySection("shortsSettings", footer: "shortsSettingsFooter") {
+                    Picker("shortsSetting", selection: $defaultShortsSetting) {
+                        ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
+                            Text($0.description(defaultSetting: ""))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+
                 MySection("videoTriage") {
                     Toggle(isOn: $requireClearConfirmation) {
                         Text("requireClearConfirmation")
@@ -48,12 +58,6 @@ struct VideoSettingsView: View {
                     }
                     Toggle(isOn: $enableQueueContextMenu) {
                         Text("enableQueueContextMenu")
-                    }
-                }
-
-                MySection("shortsSettings") {
-                    Toggle(isOn: $hideShorts) {
-                        Text("hideShortsEverywhere")
                     }
                 }
 

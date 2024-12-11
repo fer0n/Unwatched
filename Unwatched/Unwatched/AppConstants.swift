@@ -17,7 +17,7 @@ extension Const {
 
         // Videos
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
-        Const.hideShorts: false,
+        Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,

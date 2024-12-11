@@ -138,7 +138,7 @@ import UnwatchedShared
         videos = await getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
 
-        cacheImages(for: videos)
+        cacheImages(for: videos, subModel)
 
         let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
@@ -169,11 +169,9 @@ import UnwatchedShared
         return videoModels
     }
 
-    private func cacheImages(for videos: [SendableVideo]) {
-        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
-
+    private func cacheImages(for videos: [SendableVideo], _ subscription: Subscription) {
         let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort == true && hideShorts
+            let discardImage = vid.isYtShort == true && subscription.shortsSetting.shouldHide()
             if !discardImage,
                let url = vid.thumbnailUrl,
                let data = vid.thumbnailData {
@@ -229,11 +227,13 @@ import UnwatchedShared
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
+        let shortsSettingRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsSetting)
+        let shortsSetting = ShortsSetting(rawValue: shortsSettingRaw) ?? .show
+        let showShorts = shortsSetting != .hide
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            hideShorts: hideShorts
+            hideShorts: !showShorts
         )
         return info
     }
