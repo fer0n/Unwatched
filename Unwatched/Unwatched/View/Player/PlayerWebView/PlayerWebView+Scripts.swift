@@ -108,7 +108,7 @@ extension PlayerWebView {
                 sendMessage('updateTitle', document.title);
             }
             video.currentTime = startAtTime;
-        });
+        }, { once: true });
         video.addEventListener('loadeddata', function() {
             sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);
         });

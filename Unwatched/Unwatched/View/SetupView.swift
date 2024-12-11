@@ -42,7 +42,6 @@ struct SetupView: View {
             .onChange(of: scenePhase) {
                 switch scenePhase {
                 case .active:
-                    player.isInBackground = false
                     NotificationManager.clearNotifications()
                     Logger.log.info("active")
                     Task {
@@ -51,7 +50,6 @@ struct SetupView: View {
                     }
                 case .background:
                     Logger.log.info("background")
-                    player.isInBackground = true
                     NotificationManager.clearNotifications()
                     Task {
                         await saveData()

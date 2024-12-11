@@ -153,10 +153,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handlePause(_ payload: String?) {
-        if !parent.player.isInBackground {
-            // workaround: hard pause when entering background (resumes playing otherwise when coming back)
-            parent.player.previousState.isPlaying = false
-        }
         parent.player.pause()
         handleTimeUpdate(payload, persist: true)
     }
