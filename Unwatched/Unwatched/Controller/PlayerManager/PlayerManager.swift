@@ -35,9 +35,7 @@ import UnwatchedShared
     var temporaryPlaybackSpeed: Double?
     private(set) var aspectRatio: Double?
 
-    @ObservationIgnored  var isInBackground: Bool = false
     @ObservationIgnored var previousIsPlaying = false
-
     @ObservationIgnored var previousState = PreviousState()
 
     init() {}
