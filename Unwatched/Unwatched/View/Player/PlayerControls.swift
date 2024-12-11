@@ -129,6 +129,7 @@ struct PlayerControls: View {
                     }
                 }
                 .padding(.horizontal)
+                .padding(.bottom, 20)
                 .frame(maxWidth: 1000)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
