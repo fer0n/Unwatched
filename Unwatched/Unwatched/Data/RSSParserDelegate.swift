@@ -13,47 +13,15 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     var limitVideos: Int?
 
     var currentElement = ""
-    var currentTitle: String = "" {
-        didSet {
-            currentTitle = currentTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var currentLink: String = "" {
-        didSet {
-            currentLink = currentLink.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var thumbnailUrl: String = "" {
-        didSet {
-            thumbnailUrl = thumbnailUrl.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var currentYoutubeId: String = "" {
-        didSet {
-            currentYoutubeId = currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var currentPublishedDate: String = "" {
-        didSet {
-            currentPublishedDate = currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var currentUpdatedDate: String = "" {
-        didSet {
-            currentUpdatedDate = currentUpdatedDate.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
+    var currentTitle: String = ""
+    var currentLink: String = ""
+    var thumbnailUrl: String = ""
+    var currentYoutubeId: String = ""
+    var currentPublishedDate: String = ""
+    var currentUpdatedDate: String = ""
     var currentDescription: String = ""
-    var currentUri: String = "" {
-        didSet {
-            currentUri = currentUri.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-    var currentAuthor: String = "" {
-        didSet {
-            currentAuthor = currentAuthor.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
+    var currentUri: String = ""
+    var currentAuthor: String = ""
 
     init(limitVideos: Int?) {
         self.limitVideos = limitVideos
@@ -74,12 +42,12 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             thumbnailUrl = attributeDict["url"] ?? ""
         } else if elementName == "entry",
                   subscriptionInfo == nil {
-            let url = URL(string: currentLink)
-            let channelId = getChannelIdFromAuthorUri(currentUri)
+            let url = URL(string: currentLink.trimmingCharacters(in: .whitespacesAndNewlines))
+            let channelId = getChannelIdFromAuthorUri(currentUri.trimmingCharacters(in: .whitespacesAndNewlines))
             subscriptionInfo = SendableSubscription(
                 link: url,
-                title: currentTitle,
-                author: currentAuthor,
+                title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+                author: currentAuthor.trimmingCharacters(in: .whitespacesAndNewlines),
                 youtubeChannelId: channelId)
             currentTitle = ""
             currentLink = ""
@@ -115,23 +83,32 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 qualifiedName qName: String?) {
         if elementName == "entry" {
 
-            if let publishedDate = try? Date(currentPublishedDate, strategy: .iso8601),
-               let updatedDate =  try? Date(currentUpdatedDate, strategy: .iso8601),
-               let url = URL(string: currentLink),
-               let thumbnailUrl = URL(string: thumbnailUrl) {
-                let chapters = ChapterService.extractChapters(from: currentDescription, videoDuration: nil)
+            if let publishedDate = try? Date(
+                currentPublishedDate.trimmingCharacters(in: .whitespacesAndNewlines),
+                strategy: .iso8601
+            ),
+            let updatedDate =  try? Date(
+                currentUpdatedDate.trimmingCharacters(in: .whitespacesAndNewlines),
+                strategy: .iso8601
+            ),
+            let url = URL(string: currentLink.trimmingCharacters(in: .whitespacesAndNewlines)),
+            let thumbnailUrl = URL(string: thumbnailUrl.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                let description = currentDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+                let chapters = ChapterService.extractChapters(from: description, videoDuration: nil)
 
-                let video = SendableVideo(youtubeId: currentYoutubeId,
-                                          title: currentTitle,
+                let video = SendableVideo(youtubeId: currentYoutubeId.trimmingCharacters(in: .whitespacesAndNewlines),
+                                          title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
                                           url: url,
                                           thumbnailUrl: thumbnailUrl,
                                           chapters: chapters,
                                           publishedDate: publishedDate,
                                           updatedDate: updatedDate,
-                                          videoDescription: currentDescription)
+                                          videoDescription: description)
 
                 if limitVideos != nil && videos.count >= limitVideos! {
-                    let channelId = getChannelIdFromAuthorUri(currentUri)
+                    let channelId = getChannelIdFromAuthorUri(
+                        currentUri.trimmingCharacters(in: .whitespacesAndNewlines)
+                    )
                     subscriptionInfo?.youtubeChannelId = channelId
                     parser.abortParsing()
                     return
