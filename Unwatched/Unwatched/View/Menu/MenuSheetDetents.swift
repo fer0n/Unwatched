@@ -9,6 +9,7 @@ import UnwatchedShared
 struct MenuSheetDetents: ViewModifier {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
 
     var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
@@ -27,7 +28,8 @@ struct MenuSheetDetents: ViewModifier {
                 navManager.searchFocused
                     ? .hidden
                     : .visible)
-            .interactiveDismissDisabled(!landscapeFullscreen) // no cancel button shown
+            // no cancel button shown in landscape
+            .interactiveDismissDisabled(!landscapeFullscreen && player.video != nil)
             .disabled(
                 sheetPos.isMinimumSheet
                     && navManager.openBrowserUrl == nil
@@ -35,7 +37,7 @@ struct MenuSheetDetents: ViewModifier {
                     && navManager.videoDetail == nil
                     && !landscapeFullscreen
             )
-            .onChange(of: detents) {
+            .onChange(of: detents, initial: true) {
                 if !detents.contains(sheetPos.selectedDetent) {
                     sheetPos.selectedDetent = detents.first ?? .large
                 }
