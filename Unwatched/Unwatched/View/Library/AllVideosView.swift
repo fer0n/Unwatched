@@ -4,7 +4,6 @@ import UnwatchedShared
 
 struct AllVideosView: View {
     @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
-    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
     @State var videoListVM = VideoListVM()
 
     @State var text = DebouncedText(0.5)
@@ -25,9 +24,7 @@ struct AllVideosView: View {
                 sorting: VideoListView.getVideoSorting(
                     allVideosSortOrder
                 ),
-                filter: VideoListView.getVideoFilter(
-                    showShorts: !hideShorts
-                )
+                filter: VideoListView.getVideoFilter()
             )
             .opacity(videoListVM.hasNoVideos ? 0 : 1)
         }

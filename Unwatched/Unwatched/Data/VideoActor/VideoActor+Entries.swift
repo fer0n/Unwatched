@@ -62,7 +62,7 @@ extension VideoActor {
         Logger.log.info("detectShortAndAdjustEntries: \(video.title)")
         let (isYtShort, _) = await VideoActor.isYtShort(video.thumbnailUrl)
         video.isYtShort = isYtShort
-        if isYtShort == true && UserDefaults.standard.bool(forKey: Const.hideShorts) {
+        if isYtShort == true && (video.subscription?.shortsSetting.shouldHide() ?? false) {
             VideoService.clearEntries(
                 from: video,
                 updateCleared: false,
@@ -141,17 +141,16 @@ extension VideoActor {
         if sub.placeVideosIn == .defaultPlacement {
             placement = defaultPlacement.videoPlacement
         }
-        if defaultPlacement.hideShorts {
-            let count = addSingleVideoTo(
-                videosToAdd,
-                videoPlacement: placement,
-                defaultPlacement: defaultPlacement
-            )
-            return count
-        } else {
-            handleVideoPlacement(videosToAdd, placement: placement)
-        }
-        return videosToAdd.count
+        let hideShorts = sub.shortsSetting.shouldHide(
+            defaultPlacement.hideShorts
+        )
+
+        let count = addSingleVideoTo(
+            videosToAdd,
+            videoPlacement: placement,
+            hideShorts: hideShorts
+        )
+        return count
     }
 
     func handleVideoPlacement(_ videos: [Video], placement: VideoPlacement) {
@@ -171,12 +170,12 @@ extension VideoActor {
     private func addSingleVideoTo(
         _ videos: [Video],
         videoPlacement: VideoPlacement,
-        defaultPlacement: DefaultVideoPlacement
+        hideShorts: Bool
     ) -> Int {
         var addedVideosCount = 0
         // check setting for ytShort, use individual setting in that case
         for video in videos {
-            let placement: VideoPlacement = (video.isYtShort == true && defaultPlacement.hideShorts)
+            let placement: VideoPlacement = (video.isYtShort == true && hideShorts)
                 ? VideoPlacement.nothing
                 : videoPlacement
             handleVideoPlacement([video], placement: placement)

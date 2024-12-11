@@ -12,6 +12,7 @@ struct SubscriptionInfoDetails: View {
     @Environment(\.modelContext) var modelContext
 
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
+    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
@@ -87,6 +88,18 @@ struct SubscriptionInfoDetails: View {
                                 return (text, img)
                             },
                             menuLabel: "videoPlacement")
+
+                        CapsulePicker(
+                            selection: $subscription.shortsSetting,
+                            options: ShortsSetting.allCases,
+                            label: {
+                                let text = $0.description(defaultSetting: defaultShortsSetting.description)
+                                let img = $0.systemName
+                                    ?? defaultShortsSetting.systemName
+                                    ?? "questionmark"
+                                return (text, img)
+                            },
+                            menuLabel: "shortsSetting")
 
                         Spacer()
                     }

@@ -9,6 +9,7 @@ import UnwatchedShared
 
 struct CoreRefreshButton: View {
     @AppStorage(Const.allowRefreshDuringSync) var allowRefreshDuringSync: Bool = false
+    @Environment(\.modelContext) var modelContext
 
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
@@ -23,6 +24,7 @@ struct CoreRefreshButton: View {
                 .animation(.default, value: refresher.isSyncingIcloud)
 
             Button {
+                try? modelContext.save()
                 Task { @MainActor in
                     await refresh()
                 }

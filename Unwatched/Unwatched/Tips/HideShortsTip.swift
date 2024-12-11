@@ -39,13 +39,13 @@ struct HideShortsTip: Tip {
 }
 
 struct HideShortsTipView: View {
-    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
+    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @Environment(\.modelContext) var modelContext
 
     var hideShortsTip = HideShortsTip()
 
     var body: some View {
-        if !hideShorts {
+        if defaultShortsSetting != .show {
             hideShortsTipView
         }
     }
@@ -53,7 +53,7 @@ struct HideShortsTipView: View {
     var hideShortsTipView: some View {
         TipView(hideShortsTip) { _ in
             VideoService.clearAllYtShortsFromInbox(modelContext)
-            hideShorts = true
+            defaultShortsSetting = .hide
         }
         .tipBackground(Color.insetBackgroundColor)
         .listRowBackground(Color.backgroundColor)

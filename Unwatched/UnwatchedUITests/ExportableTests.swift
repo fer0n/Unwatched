@@ -175,7 +175,7 @@ class ExportableTests: XCTestCase {
 
                 // Videos
                 Const.defaultVideoPlacement: VideoPlacement.queueNext.rawValue,
-                Const.hideShorts: false,
+                Const.defaultShortsSetting: ShortsSetting.hide.rawValue,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,
                 Const.showAddToQueueButton: true,

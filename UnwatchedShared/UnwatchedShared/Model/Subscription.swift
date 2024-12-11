@@ -24,6 +24,21 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var subscribedDate: Date?
     public var placeVideosIn = VideoPlacement.defaultPlacement
     public var isArchived: Bool = false
+    
+    // workaround: SwiftData filter don't work with enums; migration issues if non-nill
+    public var _shortsSetting: Int? = ShortsSetting.defaultSetting.rawValue
+    public var shortsSetting: ShortsSetting {
+        get {
+            if let raw = _shortsSetting {
+                ShortsSetting(rawValue: raw) ?? ShortsSetting.defaultSetting
+            } else {
+                ShortsSetting.defaultSetting
+            }
+        }
+        set {
+            _shortsSetting = newValue.rawValue
+        }
+    }
 
     public var customSpeedSetting: Double?
     public var customAspectRatio: Double?

@@ -150,7 +150,11 @@ public struct Const {
     public static let continuousPlay = "continuousPlay"
     public static let autoRefresh = "refreshOnStartup"
 
+    
+    /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"
+    public static let defaultShortsSetting = "defaultShortsSetting"
+    
     public static let navigationManager = "NavigationManager"
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"
     public static let showTabBarLabels = "showTabBarLabels"

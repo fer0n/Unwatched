@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum VideoPlacementArea {
+public enum VideoPlacementArea: Sendable {
     case inbox
     case queue
 }
