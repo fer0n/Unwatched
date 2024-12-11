@@ -8,13 +8,12 @@ import SwiftData
 import UnwatchedShared
 
 struct VideoListView: View {
-    @AppStorage(Const.hideShorts) var hideShorts: Bool = false
     @Query var videos: [Video]
 
     init(subscriptionId: PersistentIdentifier? = nil,
          sort: VideoSorting? = nil,
          searchText: String = "") {
-        let filter = VideoListView.getVideoFilter(showShorts: !hideShorts, subscriptionId, searchText: searchText)
+        let filter = VideoListView.getVideoFilter(subscriptionId, searchText: searchText)
         let sorting = VideoListView.getVideoSorting(sort)
         _videos = Query(filter: filter, sort: sorting, animation: .default)
     }
@@ -46,24 +45,34 @@ struct VideoListView: View {
         }
     }
 
-    nonisolated static func getVideoFilter(showShorts: Bool,
-                                           _ subscriptionId: PersistentIdentifier? = nil,
+    nonisolated static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,
                                            searchText: String = "") -> Predicate<Video>? {
         var filter: Predicate<Video>?
         let allSubscriptions = subscriptionId == nil
 
+        let shortsSettingRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsSetting)
+        let show = ShortsSetting.show.rawValue
+        let defaultSetting = ShortsSetting.defaultSetting.rawValue
+
         if allSubscriptions {
             filter = #Predicate<Video> { video in
-                (showShorts || !(video.isYtShort ?? false))
+                (!(video.isYtShort ?? false) ||
+                    (video.subscription?._shortsSetting == defaultSetting
+                        ? shortsSettingRaw
+                        : video.subscription?._shortsSetting) == show)
                     && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         } else {
             filter = #Predicate<Video> { video in
                 video.subscription?.persistentModelID == subscriptionId
-                    && (showShorts || !(video.isYtShort ?? false))
+                    && (!(video.isYtShort ?? false) ||
+                            (video.subscription?._shortsSetting == defaultSetting
+                                ? shortsSettingRaw
+                                : video.subscription?._shortsSetting) == show)
                     && (searchText.isEmpty || video.title.localizedStandardContains(searchText))
             }
         }
+
         return filter
     }
 }

@@ -28,8 +28,7 @@ import OSLog
 
     @MainActor
     func setSearchText(_ searchText: String) {
-        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
-        filter = VideoListView.getVideoFilter(showShorts: !hideShorts, searchText: searchText)
+        filter = VideoListView.getVideoFilter(searchText: searchText)
         Task {
             await updateData(force: true)
         }

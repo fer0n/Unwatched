@@ -50,6 +50,12 @@
             "state" : "translated",
             "value" : "%lld min"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
         }
       }
     },
@@ -1557,6 +1563,22 @@
         }
       }
     },
+    "defaultShortsSetting %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard (%@)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default (%@)"
+          }
+        }
+      }
+    },
     "defaultSpeed%@" : {
       "localizations" : {
         "de" : {
@@ -2439,18 +2461,18 @@
         }
       }
     },
-    "hideShortsEverywhere" : {
+    "hideShorts" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "#Shorts ausblenden"
+            "value" : "Ausblenden"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide #Shorts"
+            "value" : "Hide"
           }
         }
       }
@@ -4477,6 +4499,22 @@
         }
       }
     },
+    "shortsSetting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#Shorts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#Shorts"
+          }
+        }
+      }
+    },
     "shortsSettings" : {
       "localizations" : {
         "de" : {
@@ -4489,6 +4527,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Shorts"
+          }
+        }
+      }
+    },
+    "shortsSettingsFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardverhalten für YouTube-#Shorts; kann für einzelne Kanäle überschrieben werden. Betrifft neue Videos und Listen – es hat keinen Einfluss auf die aktuelle Queue, die aktuelle Inbox oder den Wiedergabeverlauf."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default behavior for YouTube #shorts; can be overwritten for individual channels. This affects new videos and lists – it does not affect the current Queue, current Inbox, or watch history."
           }
         }
       }
@@ -4569,6 +4623,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Icon Badge for new Videos"
+          }
+        }
+      }
+    },
+    "showShorts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
           }
         }
       }
