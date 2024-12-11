@@ -247,10 +247,10 @@ struct CleanupService {
                 return sec0 > sec1
             }
 
-            let queue0 = vid0.queueEntry != nil
-            let queue1 = vid1.queueEntry != nil
+            let queue0 = vid0.queueEntry?.order ?? Int.max
+            let queue1 = vid1.queueEntry?.order ?? Int.max
             if queue0 != queue1 {
-                return queue0
+                return queue0 < queue1
             }
 
             let inbox0 = vid0.inboxEntry != nil
