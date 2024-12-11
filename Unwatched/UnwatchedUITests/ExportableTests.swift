@@ -174,7 +174,7 @@ class ExportableTests: XCTestCase {
                 Const.showNotificationBadge: true,
 
                 // Videos
-                Const.defaultVideoPlacement: VideoPlacement.queue.rawValue,
+                Const.defaultVideoPlacement: VideoPlacement.queueNext.rawValue,
                 Const.hideShorts: false,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,

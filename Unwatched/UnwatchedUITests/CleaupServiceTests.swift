@@ -54,6 +54,19 @@ class CleanupServiceTests: XCTestCase {
         let queueDiffDup = Video(title: "queueDiffDup", url: URL(string: "queueDiffUrl"), youtubeId: "queueDiffYoutubeId")
         context.insert(queueDiffDup)
 
+        // queue entry order
+        let queueOrderDiff = Video(title: "queueOrderDiff", url: URL(string: "queueOrderDiffUrl"), youtubeId: "queueOrderDiffYoutubeId")
+        context.insert(queueOrderDiff)
+        let queueEntryOrder = QueueEntry(video: queueOrderDiff, order: 0)
+        context.insert(queueEntryOrder)
+        queueOrderDiff.queueEntry = queueEntryOrder
+
+        let queueOrderDiffDup = Video(title: "queueOrderDiffDup", url: URL(string: "queueOrderDiffUrl"), youtubeId: "queueOrderDiffYoutubeId")
+        context.insert(queueOrderDiffDup)
+        let queueEntryOrderDup = QueueEntry(video: queueOrderDiffDup, order: 1)
+        context.insert(queueEntryOrderDup)
+        queueOrderDiffDup.queueEntry = queueEntryOrderDup
+
         // inbox entry difference
         let inboxDiff = Video(title: "inboxDiff", url: URL(string: "inboxDiffUrl"), youtubeId: "inboxDiffYoutubeId")
         context.insert(inboxDiff)
@@ -104,6 +117,9 @@ class CleanupServiceTests: XCTestCase {
 
             let containsQueueDiff = videos.contains(where: { $0.title == "queueDiff" })
             XCTAssertTrue(containsQueueDiff, "queue entry difference: kept wrong duplicate")
+
+            let containsQueueOrderDiff = videos.contains(where: { $0.title == "queueOrderDiff" })
+            XCTAssertTrue(containsQueueOrderDiff, "queue entry order: kept wrong duplicate")
 
             let containsInboxDiff = videos.contains(where: { $0.title == "inboxDiff" })
             XCTAssertTrue(containsInboxDiff, "inbox entry difference: kept wrong duplicate")
