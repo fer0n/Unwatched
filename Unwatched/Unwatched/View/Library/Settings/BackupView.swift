@@ -107,6 +107,7 @@ struct BackupView: View {
             ActionSheet(title: Text("restoreThisBackup?"),
                         message: Text("restoreThisBackupMessage"),
                         buttons: [
+                            .default(Text("restoreSettingsFromBackup")) { restoreSettingsFromBackup(restoreFile.url )},
                             .destructive(Text("restoreBackup")) { restoreBackup(restoreFile.url) },
                             .cancel()
                         ])
@@ -191,7 +192,15 @@ struct BackupView: View {
 
     func restoreBackup(_ file: URL) {
         let task = deleteEverything()
-        importFile(file, after: task)
+        doWithFileData(file, after: task) { data in
+            UserDataService.importBackup(data)
+        }
+    }
+
+    func restoreSettingsFromBackup(_ file: URL) {
+        doWithFileData(file) { data in
+            UserDataService.importBackup(data, settingsOnly: true)
+        }
     }
 
     func getAllIcloudFiles() {
@@ -231,7 +240,9 @@ struct BackupView: View {
         return task
     }
 
-    func importFile(_ filePath: URL, after: Task<(), Never>? = nil) {
+    func doWithFileData(_ filePath: URL,
+                        after: Task<(), Never>? = nil,
+                        action: @escaping (Data) -> Void) {
         Logger.log.info("importFile: \(filePath)")
         let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
@@ -241,7 +252,7 @@ struct BackupView: View {
             do {
                 let data = try Data(contentsOf: filePath)
                 Logger.log.info("data is there")
-                UserDataService.importBackup(data)
+                action(data)
             } catch {
                 Logger.log.error("error when importing: \(error)")
             }

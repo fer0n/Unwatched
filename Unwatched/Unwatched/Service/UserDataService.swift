@@ -75,41 +75,46 @@ struct UserDataService {
         return nil
     }
 
-    // loads user data from .unwatchedbackup files
-    static func importBackup(_ data: Data) {
-        Logger.log.info("importBackup, userdataservice")
+    static func restoreVideoData(from backup: UnwatchedBackup) throws {
         var videoIdDict = [Int: Video]()
         let context = DataProvider.newContext()
+
+        // Videos, get id mapping
+        for video in backup.videos {
+            let videoModel = video.createVideo(extractChapters: ChapterService.extractChapters)
+            context.insert(videoModel)
+            if let id = video.videoId {
+                videoIdDict[id] = videoModel
+            }
+        }
+
+        // Use the extracted functions
+        insertModelsFor(backup.queueEntries, videoIdDict: videoIdDict, context: context)
+        insertModelsFor(backup.inboxEntries, videoIdDict: videoIdDict, context: context)
+        migrateWatchEntries(backup.watchEntries, videoIdDict: &videoIdDict)
+
+        // Subscriptions
+        for subscription in backup.subscriptions {
+            let subscriptionModel = subscription.toModel
+            context.insert(subscriptionModel)
+            let videos = subscription.videosIds.compactMap { videoIdDict[$0] }
+            subscriptionModel.videos = videos
+        }
+
+        try context.save()
+    }
+
+    // loads user data from .unwatchedbackup files
+    static func importBackup(_ data: Data, settingsOnly: Bool = false) {
+        Logger.log.info("importBackup, userdataservice")
         let decoder = JSONDecoder()
 
         do {
             let backup = try decoder.decode(UnwatchedBackup.self, from: data)
             restoreSettings(backup.settings)
-
-            // Videos, get id mapping
-            for video in backup.videos {
-                let videoModel = video.createVideo(extractChapters: ChapterService.extractChapters)
-                context.insert(videoModel)
-                if let id = video.videoId {
-                    videoIdDict[id] = videoModel
-                }
+            if !settingsOnly {
+                try restoreVideoData(from: backup)
             }
-
-            // Use the extracted functions
-            insertModelsFor(backup.queueEntries, videoIdDict: videoIdDict, context: context)
-            insertModelsFor(backup.inboxEntries, videoIdDict: videoIdDict, context: context)
-            migrateWatchEntries(backup.watchEntries, videoIdDict: &videoIdDict)
-
-            // Subscriptions
-            for subscription in backup.subscriptions {
-                let subscriptionModel = subscription.toModel
-                context.insert(subscriptionModel)
-                let videos = subscription.videosIds.compactMap { videoIdDict[$0] }
-                subscriptionModel.videos = videos
-            }
-
-            try context.save()
-
         } catch {
             Logger.log.error("error decoding: \(error)")
         }
@@ -290,10 +295,29 @@ struct UserDataService {
         guard let settings else {
             return
         }
+        resetDefaultSettingsIfNeeded()
         for (key, value) in settings {
             UserDefaults.standard.setValue(value.value, forKey: key)
         }
+        setAppIconIfNeeded(settings)
         NotificationManager.ensurePermissionsAreGivenForSettings()
+    }
+
+    static private func setAppIconIfNeeded(_ settings: [String: AnyCodable]?) {
+        if let item = settings?.first(where: { $0.key == Const.themeColor }),
+           let oldValue = item.value.value as? Int,
+           let theme = ThemeColor(rawValue: oldValue) {
+            theme.setAppIcon()
+        }
+    }
+
+    static private func resetDefaultSettingsIfNeeded() {
+        for (key, value) in Const.settingsDefaults {
+            let oldValue = UserDefaults.standard.object(forKey: key)
+            if oldValue != nil {
+                UserDefaults.standard.setValue(value, forKey: key)
+            }
+        }
     }
 }
 

@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UnwatchedShared
+import OSLog
 
 extension ThemeColor {
     var description: String {
@@ -61,6 +62,14 @@ extension ThemeColor {
             return "IconBlackWhite" + suffix
         @unknown default:
             return "IconTeal" + suffix
+        }
+    }
+
+    func setAppIcon() {
+        Task { @MainActor in
+            UIApplication.shared.setAlternateIconName(self.appIconName) { error in
+                Logger.log.error("\(error)")
+            }
         }
     }
 }

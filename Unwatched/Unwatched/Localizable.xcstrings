@@ -4259,6 +4259,22 @@
         }
       }
     },
+    "restoreSettingsFromBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Einstellungen wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Settings Only"
+          }
+        }
+      }
+    },
     "restoreThisBackup?" : {
       "localizations" : {
         "de" : {
