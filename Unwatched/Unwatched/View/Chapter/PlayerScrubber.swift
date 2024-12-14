@@ -192,10 +192,10 @@ struct PlayerScrubber: View {
                     : Color.automaticBlack
             )
             .frame(
-                width: thumbWidth * (!isGestureActive ? 1 : 1.8),
-                height: scrubberHeight * (!isGestureActive ? 1 : 1.2)
+                width: thumbWidth * (!isGestureActive ? 1 : 1.4),
+                height: scrubberHeight * (!isGestureActive ? 1 : 1.3)
             )
-            .animation(.default, value: isGestureActive)
+            .animation(.default.speed(2), value: isGestureActive)
             .sensoryFeedback(
                 Const.sensoryFeedback,
                 trigger: initialDragPosition
