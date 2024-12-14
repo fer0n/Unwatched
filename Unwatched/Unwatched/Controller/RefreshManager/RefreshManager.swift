@@ -10,6 +10,7 @@ import CoreData
 import BackgroundTasks
 import OSLog
 import UnwatchedShared
+import Network
 
 actor RefreshActor {
     private var isLoading: Bool = false
@@ -153,7 +154,11 @@ actor RefreshActor {
                     try await Task.sleep(s: 3)
                     autoRefreshTask?.cancel()
                     autoRefreshTask = Task { @MainActor in
-                        self.isSyncingIcloud = false
+                        if await !isNetworkConnected() {
+                            // workaround: sync event could be long, but they also happen offline
+                            // this stops the sync indicator only when there's no connection
+                            self.isSyncingIcloud = false
+                        }
                         await executeAutoRefresh()
                     }
                 } catch {
@@ -165,6 +170,17 @@ actor RefreshActor {
             autoRefreshTask = Task {
                 await executeAutoRefresh()
             }
+        }
+    }
+
+    func isNetworkConnected() async -> Bool {
+        return await withUnsafeContinuation { continuation in
+            let monitor = NWPathMonitor()
+            monitor.pathUpdateHandler = { path in
+                monitor.cancel()
+                continuation.resume(returning: path.status == .satisfied)
+            }
+            monitor.start(queue: DispatchQueue.global())
         }
     }
 
