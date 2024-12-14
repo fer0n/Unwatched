@@ -71,7 +71,7 @@ struct AppearanceSettingsView: View {
                     ForEach(ThemeColor.allCases, id: \.self) { theme in
                         Button {
                             themeColor = theme
-                            setAppIcon(theme)
+                            theme.setAppIcon()
                         } label: {
                             HStack {
                                 Label {
@@ -98,7 +98,7 @@ struct AppearanceSettingsView: View {
                         Text("lightAppIcon")
                     }
                     .onChange(of: lightAppIcon) {
-                        setAppIcon(themeColor)
+                        themeColor.setAppIcon()
                     }
                 }
             }
@@ -119,12 +119,6 @@ struct AppearanceSettingsView: View {
             } else {
                 return LocalizedStringKey("lightMode")
             }
-        }
-    }
-
-    @MainActor func setAppIcon(_ theme: ThemeColor) {
-        UIApplication.shared.setAlternateIconName(theme.appIconName) { error in
-            Logger.log.error("\(error)")
         }
     }
 }

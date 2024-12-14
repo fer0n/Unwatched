@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum ThemeColor: Int, CaseIterable {
+public enum ThemeColor: Int, CaseIterable, Sendable {
     case red
     case orange
     case yellow
