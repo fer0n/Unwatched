@@ -116,7 +116,7 @@ struct PlayerContentView: View {
                 ), startPoint: .bottom, endPoint: .top))
 
             Color.black
-                .frame(height: compactSize ? -10 : Const.minSheetDetent - 10)
+                .frame(height: compactSize ? 0 : Const.minSheetDetent - 10)
         }
     }
 }
