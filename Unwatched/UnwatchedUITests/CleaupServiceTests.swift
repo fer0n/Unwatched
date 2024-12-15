@@ -70,7 +70,7 @@ class CleanupServiceTests: XCTestCase {
         // inbox entry difference
         let inboxDiff = Video(title: "inboxDiff", url: URL(string: "inboxDiffUrl"), youtubeId: "inboxDiffYoutubeId")
         context.insert(inboxDiff)
-        let inboxEntry = InboxEntry(inboxDiff, .now)
+        let inboxEntry = InboxEntry(inboxDiff)
         context.insert(inboxEntry)
         inboxDiff.inboxEntry = inboxEntry
 
@@ -91,7 +91,7 @@ class CleanupServiceTests: XCTestCase {
             XCTFail("Fetching failed: \(error)")
         }
 
-        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+        let task = CleanupService.cleanupDuplicates(quickCheck: false)
         _ = await task.value
 
         do {
