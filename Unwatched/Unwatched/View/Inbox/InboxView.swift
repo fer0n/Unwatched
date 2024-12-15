@@ -64,7 +64,7 @@ struct InboxView: View {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "inbox"))
+                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.inbox.rawValue))
                     }
                     .handleDynamicVideoURLDrop(.inbox)
                     .listRowBackground(Color.backgroundColor)
