@@ -3,7 +3,7 @@
 //  UnwatchedShared
 //
 
-public enum ClearList: Sendable {
+public enum ClearList: String, Sendable {
     case queue
     case inbox
 }

@@ -53,7 +53,7 @@ struct QueueView: View {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, "queue"))
+                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                     }
                     .onMove(perform: moveQueueEntry)
                     .handleDynamicVideoURLDrop(.queue)
