@@ -115,7 +115,7 @@ struct ClearAboveBelowButtons: View {
             }
         }
     }
-    
+
     func clearAbove(_ list: ClearList) {
         withAnimation {
             clearList(list, .above)
@@ -130,7 +130,7 @@ struct ClearAboveBelowButtons: View {
             }
         }
     }
-    
+
     func clearBelow(_ list: ClearList) {
         withAnimation {
             clearList(list, .below)

@@ -18,7 +18,7 @@ struct ChapterService {
                 options: [.anchorsMatchLines]
             )
             let regexTitleThenTime = try NSRegularExpression(
-                pattern: #"^(.+?)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)$"#,
+                pattern: #"^[-–:•]?\h*(.+?)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)\s*$"#,
                 options: [.anchorsMatchLines]
             )
 

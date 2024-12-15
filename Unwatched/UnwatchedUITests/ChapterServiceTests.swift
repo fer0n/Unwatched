@@ -898,6 +898,66 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Chapter 3", startTime: 30 * 60 + 22, endTime: nil)
                 ]
             ),
+            (
+                """
+                Links From Todays Video:
+                https://blog.google/technology/google...
+
+                • Gemini 2.0 Intro: 0:00:00
+                • Gemini in Action (Astra): 0:02:43
+                • Chrome AI Agent (Marianna): 0:07:15
+                • Marianna: Web Shopping: 0:09:31
+                • Gemini Live Stream: 0:13:33
+                • Gemini Image Output: 0:16:08
+                • Gemini Spatial: 0:19:44
+                • Gemini Audio: 0:22:48
+                • Gemini Tool Use: 0:26:24
+                • AI Plays Squad Busters: 0:29:36
+                """,
+                [
+                    SendableChapter(title: "Gemini 2.0 Intro", startTime: 0, endTime: 2 * 60 + 43),
+                    SendableChapter(title: "Gemini in Action (Astra)", startTime: 2 * 60 + 43, endTime: 7 * 60 + 15),
+                    SendableChapter(title: "Chrome AI Agent (Marianna)", startTime: 7 * 60 + 15, endTime: 9 * 60 + 31),
+                    SendableChapter(title: "Marianna: Web Shopping", startTime: 9 * 60 + 31, endTime: 13 * 60 + 33),
+                    SendableChapter(title: "Gemini Live Stream", startTime: 13 * 60 + 33, endTime: 16 * 60 + 8),
+                    SendableChapter(title: "Gemini Image Output", startTime: 16 * 60 + 8, endTime: 19 * 60 + 44),
+                    SendableChapter(title: "Gemini Spatial", startTime: 19 * 60 + 44, endTime: 22 * 60 + 48),
+                    SendableChapter(title: "Gemini Audio", startTime: 22 * 60 + 48, endTime: 26 * 60 + 24),
+                    SendableChapter(title: "Gemini Tool Use", startTime: 26 * 60 + 24, endTime: 29 * 60 + 36),
+                    SendableChapter(title: "AI Plays Squad Busters", startTime: 29 * 60 + 36, endTime: nil)
+                ]
+            ),
+            (
+                """
+                Timestamps:
+                Intro: 0:00
+                Iron Rebellion Sponsor: 0:35
+                Quest 3S Giveaway: 1:46
+                Behemoth Fix: 2:11
+                AndroidXR: 3:32
+                New Quest Features: 5:02
+                Metallica Beatsaber: 8:00
+                Smash Drums 2000's: 8:27
+                SING Mental Health: 8:42
+                Panic Room MR: 9:15
+                X8 Contra: 9:45
+                Outro: 10:15
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 35),
+                    SendableChapter(title: "Iron Rebellion Sponsor", startTime: 35, endTime: 1 * 60 + 46),
+                    SendableChapter(title: "Quest 3S Giveaway", startTime: 1 * 60 + 46, endTime: 2 * 60 + 11),
+                    SendableChapter(title: "Behemoth Fix", startTime: 2 * 60 + 11, endTime: 3 * 60 + 32),
+                    SendableChapter(title: "AndroidXR", startTime: 3 * 60 + 32, endTime: 5 * 60 + 02),
+                    SendableChapter(title: "New Quest Features", startTime: 5 * 60 + 02, endTime: 8 * 60 + 00),
+                    SendableChapter(title: "Metallica Beatsaber", startTime: 8 * 60 + 00, endTime: 8 * 60 + 27),
+                    SendableChapter(title: "Smash Drums 2000's", startTime: 8 * 60 + 27, endTime: 8 * 60 + 42),
+                    SendableChapter(title: "SING Mental Health", startTime: 8 * 60 + 42, endTime: 9 * 60 + 15),
+                    SendableChapter(title: "Panic Room MR", startTime: 9 * 60 + 15, endTime: 9 * 60 + 45),
+                    SendableChapter(title: "X8 Contra", startTime: 9 * 60 + 45, endTime: 10 * 60 + 15),
+                    SendableChapter(title: "Outro", startTime: 10 * 60 + 15),
+                ]
+            ),
 
             // time then title
             (
@@ -1041,7 +1101,7 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
                     SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
                 ]
-            ),
+            )
         ]
 
         for (description, expected) in testValues {
