@@ -220,6 +220,10 @@ import UnwatchedShared
         }
     }
 
+    var hasSheetOpen: Bool {
+        videoDetail != nil || openBrowserUrl != nil
+    }
+
     static func getDummy(_ showMenu: Bool = true) -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = showMenu

@@ -32,13 +32,13 @@ struct MenuSheetDetents: ViewModifier {
             .interactiveDismissDisabled(!landscapeFullscreen && player.video != nil)
             .disabled(
                 sheetPos.isMinimumSheet
-                    && navManager.openBrowserUrl == nil
+                    && !navManager.hasSheetOpen
                     && navManager.openTabBrowserUrl == nil
-                    && navManager.videoDetail == nil
                     && !landscapeFullscreen
             )
             .onChange(of: detents, initial: true) {
-                if !detents.contains(sheetPos.selectedDetent) {
+                if !detents.contains(sheetPos.selectedDetent)
+                    && !(navManager.hasSheetOpen || navManager.tab == .browser) {
                     sheetPos.selectedDetent = detents.first ?? .large
                 }
             }
