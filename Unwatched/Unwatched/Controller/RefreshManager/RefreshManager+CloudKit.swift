@@ -68,7 +68,7 @@ extension RefreshManager {
         hardRefresh: Bool
     ) async {
         if hardRefresh {
-            let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+            let task = CleanupService.cleanupDuplicates(quickCheck: false)
             _ = await task.value
         } else {
             await quickCleanup()
@@ -82,7 +82,7 @@ extension RefreshManager {
         }
         Logger.log.info("quickCleanup")
 
-        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: true)
+        let task = CleanupService.cleanupDuplicates(quickCheck: true)
         _ = await task.value
     }
 }

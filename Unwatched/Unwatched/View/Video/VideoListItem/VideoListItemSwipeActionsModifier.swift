@@ -237,7 +237,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             list,
             direction,
             index: video.queueEntry?.order,
-            date: video.inboxEntry?.date)
+            date: video.inboxEntry?.video?.publishedDate)
         if list == .queue && direction == .above {
             player.loadTopmostVideoFromQueue(after: task)
         }

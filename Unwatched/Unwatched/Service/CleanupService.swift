@@ -9,7 +9,7 @@ import OSLog
 import UnwatchedShared
 
 struct CleanupService {
-    static func cleanupDuplicatesAndInboxDate(
+    static func cleanupDuplicates(
         quickCheck: Bool = false,
         videoOnly: Bool = true
     ) -> Task<
@@ -23,7 +23,6 @@ struct CleanupService {
                 quickCheck: quickCheck,
                 videoOnly: videoOnly
             )
-            await repo.cleanupInboxEntryDates()
             return info
         }
     }
@@ -52,18 +51,6 @@ struct CleanupService {
 
 @ModelActor actor CleanupActor {
     var duplicateInfo = RemovedDuplicatesInfo()
-
-    func cleanupInboxEntryDates() {
-        let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
-        guard let entries = try? modelContext.fetch(fetch) else {
-            Logger.log.info("No inbox entries to cleanup dates")
-            return
-        }
-        for entry in entries {
-            entry.date = entry.video?.publishedDate
-        }
-        try? modelContext.save()
-    }
 
     func removeDuplicates(
         quickCheck: Bool = false,
