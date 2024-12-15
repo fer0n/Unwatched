@@ -74,42 +74,66 @@ struct VideoListItemMoreMenuView: View {
             }
         }
         .controlGroupStyle(.compactMenu)
-        ClearAboveBelowButtons(clearList: clearList, config: config)
+        ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
     }
 }
 
 struct ClearAboveBelowButtons: View {
+    @Environment(NavigationManager.self) var navManager
+    @Environment(\.scrollViewProxy) var scrollProxy
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
 
     var clearList: (ClearList, ClearDirection) -> Void
     var config: VideoListItemConfig
+    var videoId: String
 
     var body: some View {
         if let list = config.clearAboveBelowList {
             if requireClearConfirmation {
                 ConfirmableMenuButton {
-                    clearList(list, .above)
+                    clearAbove(list)
                 } label: {
                     Label("clearAbove", systemImage: "arrowtriangle.up.fill")
                 }
 
                 ConfirmableMenuButton {
-                    clearList(list, .below)
+                    clearBelow(list)
                 } label: {
                     Label("clearBelow", systemImage: "arrowtriangle.down.fill")
                 }
             } else {
                 Button(role: .destructive) {
-                    clearList(list, .above)
+                    clearAbove(list)
                 } label: {
                     Label("clearAbove", systemImage: "arrowtriangle.up.fill")
                 }
                 Button(role: .destructive) {
-                    clearList(list, .below)
+                    clearBelow(list)
                 } label: {
                     Label("clearBelow", systemImage: "arrowtriangle.down.fill")
                 }
             }
+        }
+    }
+    
+    func clearAbove(_ list: ClearList) {
+        withAnimation {
+            clearList(list, .above)
+        }
+        navManager.setScrollId(videoId, list.rawValue)
+        if let topElementId = navManager.topListItemId {
+            Task {
+                try? await Task.sleep(s: 0.3)
+                withAnimation {
+                    scrollProxy?.scrollTo(topElementId, anchor: .top)
+                }
+            }
+        }
+    }
+    
+    func clearBelow(_ list: ClearList) {
+        withAnimation {
+            clearList(list, .below)
         }
     }
 }

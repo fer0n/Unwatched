@@ -72,6 +72,7 @@ struct MenuView: View {
                     .environment(navManager)
             }
             .environment(\.horizontalSizeClass, .compact)
+            .environment(\.scrollViewProxy, proxy)
         }
         .browserViewSheet(navManager: $navManager)
         .background {
