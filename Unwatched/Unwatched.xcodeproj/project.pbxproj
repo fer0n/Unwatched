@@ -448,6 +448,8 @@
 		88E589B42D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */; };
 		88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
 		88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
+		88E779162D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
+		88E779172D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
@@ -768,6 +770,7 @@
 		88E1132B2D0EE22D00076DF2 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
 		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
+		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
@@ -882,6 +885,7 @@
 			isa = PBXGroup;
 			children = (
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
+				88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */,
 				88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */,
 				888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */,
 				88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */,
@@ -1854,6 +1858,7 @@
 				889AF91D2C50ECE7001CEDE6 /* SearchableVideos.swift in Sources */,
 				889AF91E2C50ECE7001CEDE6 /* DeleteImageCacheButton.swift in Sources */,
 				88373C1A2C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */,
+				88E779162D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */,
 				889AF91F2C50ECE7001CEDE6 /* VideoSettingsView.swift in Sources */,
 				889AF9202C50ECE7001CEDE6 /* AllVideosView.swift in Sources */,
 				889AF9212C50ECE7001CEDE6 /* NotificationSettingsView.swift in Sources */,
@@ -1975,6 +1980,7 @@
 				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */,
 				88373C222C8C2A9200ACBB3B /* HelpView.swift in Sources */,
+				88E779172D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */,
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
 				88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */,
 				88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */,
