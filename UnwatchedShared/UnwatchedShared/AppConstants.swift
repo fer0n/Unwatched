@@ -156,6 +156,7 @@ public struct Const {
     public static let defaultShortsSetting = "defaultShortsSetting"
     
     public static let navigationManager = "NavigationManager"
+    public static let playerManager = "PlayerManager"
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"
     public static let showTabBarLabels = "showTabBarLabels"
     public static let requireClearConfirmation = "requireClearConfirmation"

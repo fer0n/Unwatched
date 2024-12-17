@@ -84,7 +84,7 @@ struct PlayerWebView: UIViewRepresentable {
             player.previousState.isPlaying = player.isPlaying
         }
 
-        if prev.pipEnabled != player.pipEnabled {
+        if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
             if player.pipEnabled {
                 Logger.log.info("PIP ON")
                 uiView.evaluateJavaScript(getEnterPipScript())
@@ -92,7 +92,9 @@ struct PlayerWebView: UIViewRepresentable {
                 Logger.log.info("PIP OFF")
                 uiView.evaluateJavaScript(getExitPipScript())
             }
-            player.previousState.pipEnabled = player.pipEnabled
+            if !player.pipEnabled {
+                player.previousState.pipEnabled = false
+            }
         }
 
         if let seekAbs = player.seekAbsolute {

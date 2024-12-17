@@ -15,6 +15,7 @@ struct SetupView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(RefreshManager.self) var refresher
     @Environment(\.colorScheme) var colorScheme
+    @Environment(PlayerManager.self) var player
 
     @State var imageCacheManager = ImageCacheManager()
     @State var sheetPos = SheetPositionReader.shared
@@ -64,6 +65,7 @@ struct SetupView: View {
     func saveData() async {
         navManager.save()
         sheetPos.save()
+        player.save()
         await imageCacheManager.persistCache()
         Logger.log.info("saved state")
     }

@@ -18,7 +18,6 @@ struct PipButton: View {
             Image(systemName: "pip.fill")
                 .playerToggleModifier(isOn: player.pipEnabled, isSmall: true)
         }
-        .disabled(!player.canSetPip)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
 }
