@@ -11,7 +11,7 @@ import UnwatchedShared
 @main
 struct UnwatchedApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State var player = PlayerManager()
+    @State var player = PlayerManager.load()
     @State var refresher = RefreshManager.shared
 
     @State var sharedModelContainer: ModelContainer = DataProvider.shared.container

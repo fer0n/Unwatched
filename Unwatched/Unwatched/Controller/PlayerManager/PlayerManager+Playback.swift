@@ -212,14 +212,7 @@ extension PlayerManager {
         }
     }
 
-    var canSetPip: Bool {
-        !unstarted
-    }
-
     func setPip(_ value: Bool) {
-        if !canSetPip {
-            return
-        }
         if pipEnabled != value {
             pipEnabled = value
         }

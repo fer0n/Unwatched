@@ -320,6 +320,9 @@ extension PlayerWebView {
 
 
         // Pip
+        video.addEventListener("canplay", function() {
+            sendMessage("pip", "canplay");
+        }, { once: true });
         video.addEventListener("enterpictureinpicture", function(event) {
             sendMessage("pip", "enter");
         });
@@ -331,6 +334,8 @@ extension PlayerWebView {
                 video.requestPictureInPicture().catch(error => {
                     sendMessage('pip', error);
                 });
+            } else {
+                sendMessage('pip', "not even trying")
             }
         }
 
