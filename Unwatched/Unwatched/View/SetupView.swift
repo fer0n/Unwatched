@@ -11,10 +11,8 @@ import UnwatchedShared
 
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
-    @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
-    @Environment(PlayerManager.self) var player
     @Environment(RefreshManager.self) var refresher
     @Environment(\.colorScheme) var colorScheme
 
@@ -30,6 +28,7 @@ struct SetupView: View {
             .tint(theme.color)
             .environment(sheetPos)
             .environment(alerter)
+            .watchNotificationHandler()
             .environment(navManager)
             .environment(\.originalColorScheme, colorScheme)
             .environment(imageCacheManager)
@@ -60,12 +59,6 @@ struct SetupView: View {
                     break
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: .watchInUnwatched)) {
-                handleWatchInUnwatched($0)
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
-                handlePasteAndPlay()
-            }
     }
 
     func saveData() async {
@@ -73,33 +66,6 @@ struct SetupView: View {
         sheetPos.save()
         await imageCacheManager.persistCache()
         Logger.log.info("saved state")
-    }
-
-    func handlePasteAndPlay() {
-        Logger.log.info("handlePasteAndPlay")
-        let pasteboard = UIPasteboard.general
-        guard let string = pasteboard.string, let url = URL(string: string) else {
-            Logger.log.warning("handlePasteAndPlay: no valid url pasted")
-            return
-        }
-        addAndPlay(url)
-    }
-
-    func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
-        Logger.log.info("handleWatchInUnwatched")
-        if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
-            addAndPlay(youtubeUrl)
-        }
-    }
-
-    func addAndPlay(_ url: URL) {
-        let task = VideoService.addForeignUrls(
-            [url],
-            in: .queue,
-            at: 0
-        )
-        player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .userInteraction)
-        navManager.handlePlay()
     }
 }
 
