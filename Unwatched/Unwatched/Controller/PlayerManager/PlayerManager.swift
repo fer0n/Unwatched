@@ -4,7 +4,7 @@ import OSLog
 import UnwatchedShared
 
 /// Manages the current video, queuing, and chapters
-@Observable class PlayerManager {
+@Observable class PlayerManager: Codable {
 
     @MainActor
     var isPlaying: Bool = false
@@ -28,6 +28,7 @@ import UnwatchedShared
     var seekRelative: Double?
     var embeddingDisabled: Bool = false
     var pipEnabled: Bool = false
+    var canPlayPip: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
     var unstarted: Bool = true
@@ -39,6 +40,33 @@ import UnwatchedShared
     @ObservationIgnored var previousState = PreviousState()
 
     init() {}
+
+    static func load() -> PlayerManager {
+        if let savedPlayer = UserDefaults.standard.data(forKey: Const.playerManager),
+           let loadedPlayer = try? JSONDecoder().decode(PlayerManager.self, from: savedPlayer) {
+            return loadedPlayer
+        } else {
+            Logger.log.info("player not found")
+            return PlayerManager()
+        }
+    }
+
+    func save() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self) {
+            UserDefaults.standard.set(encoded, forKey: Const.playerManager)
+        }
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PlayerCodingKeys.self)
+        pipEnabled = try container.decode(Bool.self, forKey: .pipEnabled)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: PlayerCodingKeys.self)
+        try container.encode(pipEnabled, forKey: .pipEnabled)
+    }
 
     @MainActor
     var video: Video? {
@@ -56,7 +84,6 @@ import UnwatchedShared
         nextChapter = nil
         previousChapter = nil
         setVideoEnded(false)
-        pipEnabled = false
         handleChapterChange()
         guard let video = video else {
             return
@@ -69,7 +96,7 @@ import UnwatchedShared
             return
         }
         unstarted = true
-
+        previousState.pipEnabled = false
         handleChapterRefresh()
         withAnimation {
             embeddingDisabled = false
@@ -289,4 +316,8 @@ import UnwatchedShared
             }
         }
     }
+}
+
+enum PlayerCodingKeys: CodingKey {
+    case pipEnabled
 }

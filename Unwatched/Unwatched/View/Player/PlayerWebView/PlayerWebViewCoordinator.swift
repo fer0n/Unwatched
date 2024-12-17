@@ -93,6 +93,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         } else if payload == "exit" {
             parent.player.previousState.pipEnabled = false
             parent.player.setPip(false)
+        } else if payload == "canplay" {
+            parent.player.previousState.pipEnabled = false
+            parent.player.canPlayPip = true
         }
     }
 
