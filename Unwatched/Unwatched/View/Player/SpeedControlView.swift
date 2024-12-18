@@ -49,7 +49,7 @@ struct SpeedControlView: View {
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
                             .frame(maxWidth: .infinity, maxHeight: maxHeight)
-                            .frame(minWidth: frameSize + 6)
+                            .frame(minWidth: frameSize + 4)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
