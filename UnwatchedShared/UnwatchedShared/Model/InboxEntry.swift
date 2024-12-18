@@ -10,14 +10,17 @@ import SwiftData
 public final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
     public typealias ExportType = SendableInboxEntry
 
-    public var video: Video?
-    
+    public var video: Video? {
+        didSet {
+            date = video?.publishedDate
+        }
+    }
     // workaround: sorting via optional relationship "video.publishedDate" lead to crash
-    // currently inactive, seems to be not necessary anymore
     public var date: Date?
 
-    public init(_ video: Video?) {
+    public init(_ video: Video?, _ videoDate: Date? = nil) {
         self.video = video
+        self.date = video?.publishedDate
     }
 
     public var description: String {
