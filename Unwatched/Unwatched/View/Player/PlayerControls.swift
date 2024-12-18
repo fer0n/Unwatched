@@ -13,7 +13,7 @@ struct PlayerControls: View {
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
 
-    @ScaledMetric var speedSpacing = 10
+    @ScaledMetric var speedSpacingScaled = 8
 
     let compactSize: Bool
     let showInfo: Bool
@@ -26,6 +26,10 @@ struct PlayerControls: View {
 
     @Binding var minHeight: CGFloat?
     @State var autoHideVM = AutoHideVM()
+
+    var speedSpacing: CGFloat {
+        speedSpacingScaled + (showRotateFullscreen ? 0 : 2)
+    }
 
     var showRotateFullscreen: Bool {
         fullscreenControlsSetting != .disabled
