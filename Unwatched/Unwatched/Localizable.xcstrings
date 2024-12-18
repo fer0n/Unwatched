@@ -107,18 +107,34 @@
         }
       }
     },
-    "addAsVideos %lld" : {
+    "addAsVideosToInbox" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlist Videos zur Queue hinzufügen (max. %lld)"
+            "value" : "Playlist Videos zur Inbox hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add Playlist Videos to Queue (max %lld)"
+            "value" : "Add Playlist Videos to Inbox"
+          }
+        }
+      }
+    },
+    "addAsVideosToQueue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist oben in die Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue Playlist Next"
           }
         }
       }
@@ -5172,18 +5188,18 @@
         }
       }
     },
-    "textContainsPlaylistMessage" : {
+    "textContainsPlaylistMessage %lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wie soll mit der Playlist umgegangen werden?"
+            "value" : "Wie soll mit der Playlist umgegangen werden?\nBeim hinzufügen zur Queue/Inbox besteht ein limit von %lld Videos."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How should the playlist be handled?"
+            "value" : "How should the playlist be handled?\nAdding the playlist to the Queue/Inbox is limited to %lld videos."
           }
         }
       }
