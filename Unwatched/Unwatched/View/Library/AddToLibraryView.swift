@@ -19,7 +19,6 @@ struct AddToLibraryView: View {
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
     @State var isLoadingVideos = false
-    @State var videoUrls = [URL]()
     @State var addSubscriptionFromText: String?
     @State var textContainingPlaylist: IdentifiableString?
 
@@ -84,9 +83,6 @@ struct AddToLibraryView: View {
         .task(id: subManager.isSubscribedSuccess) {
             await delayedSubscriptionCheckmarkReset()
         }
-        .task(id: videoUrls) {
-            await addVideoUrls(videoUrls)
-        }
         .task(id: addSubscriptionFromText) {
             await handleAddSubscriptionFromText()
         }
@@ -95,13 +91,16 @@ struct AddToLibraryView: View {
         }
         .actionSheet(item: $textContainingPlaylist) { text in
             ActionSheet(title: Text("textContainsPlaylist"),
-                        message: Text("textContainsPlaylistMessage"),
+                        message: Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)"),
                         buttons: [
                             .default(Text("addAsPlaylist")) {
                                 addUrlsFromText(text.str)
                             },
-                            .default(Text("addAsVideos \(Const.playlistPageRequestLimit * 50)")) {
-                                addUrlsFromText(text.str, playListAsVideos: true)
+                            .default(Text("addAsVideosToQueue")) {
+                                addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
+                            },
+                            .default(Text("addAsVideosToInbox")) {
+                                addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
                             },
                             .cancel()
                         ])
@@ -148,7 +147,9 @@ struct AddToLibraryView: View {
         }
     }
 
-    func addUrlsFromText(_ text: String, playListAsVideos: Bool = false) {
+    func addUrlsFromText(_ text: String,
+                         playListAsVideos: Bool = false,
+                         target: VideoPlacementArea = .queue) {
         print("handlePlaylistUrlText", text)
         var (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
 
@@ -159,7 +160,9 @@ struct AddToLibraryView: View {
         }
 
         addSubscriptionFromText = rest
-        videoUrls = videoUrlsLocal
+        Task {
+            await addVideoUrls(videoUrlsLocal, target)
+        }
     }
 
     func containsPlaylistUrl(_ str: String) -> Bool {
@@ -196,11 +199,10 @@ struct AddToLibraryView: View {
         subManager.isSubscribedSuccess = nil
     }
 
-    func addVideoUrls(_ urls: [URL]) async {
+    func addVideoUrls(_ urls: [URL], _ target: VideoPlacementArea) async {
         if !urls.isEmpty {
-            videoUrls = []
             isLoadingVideos = true
-            let task = VideoService.addForeignUrls(urls, in: .queue)
+            let task = VideoService.addForeignUrls(urls, in: target)
             do {
                 try await task.value
                 isLoadingVideos = false
@@ -219,5 +221,5 @@ struct AddToLibraryView: View {
     AddToLibraryView(subManager: .constant(SubscribeManager()), showBrowser: true)
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
-        .environment(RefreshManager())
+        .environment(RefreshManager.shared)
 }
