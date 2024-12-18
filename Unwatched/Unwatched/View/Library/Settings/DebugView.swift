@@ -52,7 +52,7 @@ struct DebugView: View {
                         Text("allowRefreshDuringSync")
                     }
                     AsyncButton {
-                        let task = CleanupService.cleanupDuplicates(videoOnly: false)
+                        let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)
                         cleanupInfo = await task.value
                     } label: {
                         Text("removeDuplicates")
