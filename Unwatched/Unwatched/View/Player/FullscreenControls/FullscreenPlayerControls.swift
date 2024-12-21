@@ -70,21 +70,7 @@ struct FullscreenPlayerControls: View {
             .frame(maxHeight: .infinity)
 
             ZStack {
-                Button {
-                    OrientationManager.changeOrientation(to: .portrait)
-                } label: {
-                    Image(systemName: Const.disableFullscreenSF)
-                        .modifier(PlayerControlButtonStyle())
-                }
-                .accessibilityLabel("exitFullscreen")
-                .contextMenu {
-                    Button {
-                        player.pipEnabled.toggle()
-                    } label: {
-                        Text(player.pipEnabled ? "exitPip" : "enterPip")
-                        Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
-                    }
-                }
+                FullscreenChangeOrientationButton()
             }
             .font(.system(size: 18))
             .fontWeight(.bold)
