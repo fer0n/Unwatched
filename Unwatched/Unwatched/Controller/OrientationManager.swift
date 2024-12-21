@@ -5,7 +5,30 @@
 
 import SwiftUI
 
-struct OrientationManager {
+@Observable class OrientationManager {
+    var isLandscapeLeft: Bool = false
+    var isLandscapeRight: Bool = false
+
+    init() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didChangeOrientation),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil
+        )
+        updateOrientation()
+    }
+
+    @objc private func didChangeOrientation() {
+        updateOrientation()
+    }
+
+    private func updateOrientation() {
+        let orientation = UIDevice.current.orientation
+        isLandscapeLeft = orientation == .landscapeLeft
+        isLandscapeRight = orientation == .landscapeRight
+    }
+
     @MainActor
     static func changeOrientation(to orientation: UIInterfaceOrientationMask) {
         guard UIDevice.isIphone,
