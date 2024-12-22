@@ -30,7 +30,7 @@ public struct Const {
     public static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     public static let playerAboveSheetHeight: CGFloat = 60
-    public static let minSheetDetent: CGFloat = 56
+    public static let minSheetDetent: CGFloat = 50
     public static let playerControlPadding: CGFloat = 2
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 

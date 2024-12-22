@@ -100,7 +100,7 @@ struct ContentView: View {
 #Preview {
     ContentView(hideControlsFullscreen: false)
         .modelContainer(DataProvider.previewContainerFilled)
-        .environment(NavigationManager.getDummy(false))
+        .environment(NavigationManager.getDummy(true))
         .environment(Alerter())
         .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())
