@@ -24,6 +24,7 @@ struct MenuViewSheet: ViewModifier {
                     Color.backgroundColor.ignoresSafeArea(.all)
 
                     MenuView(showCancelButton: landscapeFullscreen)
+                        .transparentNavBarWorkaround()
                         .menuSheetDetents(allowMaxSheetHeight: allowMaxSheetHeight,
                                           allowPlayerControlHeight: allowPlayerControlHeight,
                                           landscapeFullscreen: landscapeFullscreen)

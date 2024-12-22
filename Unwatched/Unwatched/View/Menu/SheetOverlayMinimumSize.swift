@@ -30,6 +30,7 @@ struct SheetOverlayMinimumSize: View {
                 sheetPos.setDetentVideoPlayer()
             }
         }
+        .transparentNavBarWorkaround()
         .opacity(sheetPos.isMinimumSheet ? 1 : 0)
         .animation(.bouncy(duration: 0.3), value: sheetPos.isMinimumSheet)
     }
