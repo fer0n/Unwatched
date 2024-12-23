@@ -190,6 +190,10 @@ import UnwatchedShared
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
         let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
 
+        if searchFocused {
+            searchFocused = false
+        }
+
         if hideMenuOnPlay || rotateOnPlay {
             withAnimation {
                 SheetPositionReader.shared.setDetentMinimumSheet()
