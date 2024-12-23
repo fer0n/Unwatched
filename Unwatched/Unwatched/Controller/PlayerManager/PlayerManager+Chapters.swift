@@ -102,7 +102,9 @@ extension PlayerManager {
         withAnimation {
             currentChapter = current
         }
-        currentEndTime = next?.startTime
+        if let nextStart = next?.startTime {
+            currentEndTime = max(nextStart, current.endTime ?? 0)
+        }
     }
 
     @MainActor
