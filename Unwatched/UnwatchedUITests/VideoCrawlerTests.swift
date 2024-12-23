@@ -51,7 +51,7 @@ class VideoCrawlerTests: XCTestCase {
             let countVids1 = (try? context.fetchCount(fetchVids)) ?? 0
             print("count: \(countVids1)")
 
-            let task = CleanupService.cleanupDuplicates(
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(
                 quickCheck: false,
                 videoOnly: false
             )
