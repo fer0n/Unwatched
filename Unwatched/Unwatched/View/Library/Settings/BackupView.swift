@@ -221,7 +221,7 @@ struct BackupView: View {
         if isDeletingEverythingTask != nil { return nil }
         let container = modelContext.container
         withAnimation {
-            player.clearVideo()
+            player.clearVideo(modelContext)
         }
         let task = Task {
             await VideoService.deleteEverything(container)

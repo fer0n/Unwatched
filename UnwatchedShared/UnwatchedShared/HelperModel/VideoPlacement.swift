@@ -13,11 +13,11 @@ public enum VideoPlacement: Int, Codable, CaseIterable {
 }
 
 public struct DefaultVideoPlacement {
-    public init(videoPlacement: VideoPlacement, shortsPlacement: ShortsPlacement) {
+    public init(videoPlacement: VideoPlacement, hideShorts: Bool) {
         self.videoPlacement = videoPlacement
-        self.shortsPlacement = shortsPlacement
+        self.hideShorts = hideShorts
     }
 
     public var videoPlacement: VideoPlacement
-    public var shortsPlacement: ShortsPlacement
+    public var hideShorts: Bool
 }

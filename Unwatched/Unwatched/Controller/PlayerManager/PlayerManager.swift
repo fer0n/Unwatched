@@ -129,22 +129,19 @@ import UnwatchedShared
         UserDefaults.standard.set(nil, forKey: Const.nowPlayingVideo)
     }
 
-    func clearVideo() {
-        guard let video = video,
-              let container = container else {
+    func clearVideo(_ modelContext: ModelContext) {
+        guard let video = video else {
+            Logger.log.warning("No container when trying to clear video")
             return
         }
-        let modelContext = ModelContext(container)
-        VideoService
-            .clearEntries(
-                from: video,
-                updateCleared: true,
-                modelContext: modelContext
-            )
-        loadTopmostVideoFromQueue()
+        VideoService.clearEntries(from: video,
+                                  updateCleared: true,
+                                  modelContext: modelContext)
+        loadTopmostVideoFromQueue(modelContext: modelContext)
     }
 
-    func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil) {
+    func loadTopmostVideoFromQueue(after task: (Task<(), Error>)? = nil, modelContext: ModelContext? = nil) {
+        Logger.log.info("loadTopmostVideoFromQueue")
         guard let container = container else {
             Logger.log.error("loadTopmostVideoFromQueue: no container")
             return
@@ -164,7 +161,7 @@ import UnwatchedShared
                 }
             }
         } else {
-            let context = ModelContext(container)
+            let context = modelContext ?? ModelContext(container)
             let topVideo = VideoService.getTopVideoInQueue(context)
             if topVideo != video {
                 self.setNextVideo(topVideo, .nextUp)
@@ -216,6 +213,7 @@ import UnwatchedShared
         Logger.log.info("handleHotSwap")
         isLoading = true
         previousIsPlaying = isPlaying
+        previousState.isPlaying = false
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()

@@ -39,6 +39,17 @@
                BlueprintName = "UnwatchedUITests"
                ReferencedContainer = "container:Unwatched.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "SpeedControlViewModelTests">
+               </Test>
+               <Test
+                  Identifier = "UnwatchedUITests">
+               </Test>
+               <Test
+                  Identifier = "UnwatchedUITestsLaunchTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

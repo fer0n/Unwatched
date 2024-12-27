@@ -45,10 +45,10 @@ struct OverlayFullscreenButton: View {
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.black, .white)
                 .opacity(overlayVM.show && landscapeFullscreen ? 1 : 0)
-
                 .scaleEffect(overlayVM.show && landscapeFullscreen ? 1 : 0.7)
                 .animation(.bouncy, value: overlayVM.show)
                 .accessibilityLabel("playPause")
+                .allowsHitTesting(false)
 
             if player.videoEnded {
                 PlayButton(size: 90)

@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct CoreNextButton<Content>: View where Content: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.swapNextAndContinuous) var swapNextAndContinuous: Bool = false
@@ -61,7 +62,7 @@ struct CoreNextButton<Content>: View where Content: View {
                     markVideoWatched(true, .nextUp)
                 }
                 Button("clearVideo", systemImage: Const.clearNoFillSF) {
-                    player.clearVideo()
+                    player.clearVideo(modelContext)
                 }
                 Divider()
             }

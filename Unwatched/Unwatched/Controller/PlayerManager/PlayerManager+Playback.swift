@@ -80,7 +80,11 @@ extension PlayerManager {
     }
 
     func temporarySlowDown() {
-        temporaryPlaybackSpeed = 1
+        if actualPlaybackSpeed == 1 {
+            temporaryPlaybackSpeed = 0.5
+        } else {
+            temporaryPlaybackSpeed = 1
+        }
     }
 
     func resetTemporaryPlaybackSpeed() {
@@ -121,6 +125,13 @@ extension PlayerManager {
         if videoEnded {
             setVideoEnded(false)
         }
+    }
+
+    var videoIsCloseToEnd: Bool {
+        guard let duration = video?.duration, let time = currentTime else {
+            return false
+        }
+        return duration - time <= Const.secondsConsideredCloseToEnd
     }
 
     func setVideoEnded(_ value: Bool) {

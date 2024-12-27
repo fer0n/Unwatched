@@ -61,10 +61,10 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handlePlaybackSpeed(payload)
         case "longTouch":
             handleLongTouchStart(payload)
-            parent.autoHideVM.keepVisible = true
+            parent.autoHideVM.setKeepVisible(true, "longTouch")
         case "longTouchEnd":
             handleLongTouchEnd()
-            parent.autoHideVM.keepVisible = false
+            parent.autoHideVM.setKeepVisible(false, "longTouch")
         case "interaction":
             handleInteraction()
         case "aspectRatio":
