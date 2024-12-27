@@ -96,7 +96,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
     }
     
     @Model
-    public final class Subscription: SubscriptionData, CustomStringConvertible, Exportable {
+    public final class Subscription {
         public typealias ExportType = SendableSubscription
 
         @Relationship(deleteRule: .nullify, inverse: \Video.subscription)
@@ -187,7 +187,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
     }
     
     @Model
-    public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportable {
+    public final class QueueEntry {
         public typealias ExportType = SendableQueueEntry
 
         public var video: Video?
