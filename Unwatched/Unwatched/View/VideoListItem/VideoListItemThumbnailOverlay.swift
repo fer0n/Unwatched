@@ -29,7 +29,7 @@ struct VideoListItemThumbnailOverlay: View {
             return nil
         }()
         let hasDuration = showDuration
-            && (roughDuration != nil || total != nil || video.isYtShort)
+            && (roughDuration != nil || total != nil || video.isYtShort == true)
 
         ZStack {
             if let elapsed = elapsed, let total = total {
@@ -50,7 +50,7 @@ struct VideoListItemThumbnailOverlay: View {
 
             if hasDuration {
                 ZStack {
-                    if video.isYtShort {
+                    if video.isYtShort == true {
                         Text(verbatim: "#s")
                     } else if let text = total?.formattedSecondsColon {
                         Text(text)

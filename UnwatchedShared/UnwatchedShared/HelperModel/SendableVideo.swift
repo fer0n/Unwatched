@@ -22,7 +22,7 @@ public struct SendableVideo: Sendable, Codable {
     public var publishedDate: Date?
     public var updatedDate: Date?
     public var watchedDate: Date?
-    public var isYtShort: Bool = false
+    public var isYtShort: Bool?
 
     public var videoDescription: String?
     public var bookmarkedDate: Date?
@@ -82,7 +82,7 @@ public struct SendableVideo: Sendable, Codable {
         publishedDate: Date? = nil,
         updatedDate: Date? = nil,
         watchedDate: Date? = nil,
-        isYtShort: Bool = false,
+        isYtShort: Bool? = nil,
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
         clearedInboxDate: Date? = nil,

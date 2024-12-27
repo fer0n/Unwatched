@@ -56,7 +56,7 @@ struct QueueView: View {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
-    
+
     func beforeRemove(_ entry: QueueEntry) {
         if let currentIndex = queue.firstIndex(of: entry) {
             let nextIndex = queue.index(after: currentIndex)

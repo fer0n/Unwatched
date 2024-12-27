@@ -1307,6 +1307,22 @@
         }
       }
     },
+    "copyAnswer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antwort kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Answer"
+          }
+        }
+      }
+    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -4387,13 +4403,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos ohne Abo"
+            "value" : "Ohne Abo"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unsubscribed Videos"
+            "value" : "Unsubscribed"
           }
         }
       }

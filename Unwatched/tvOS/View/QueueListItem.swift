@@ -13,7 +13,7 @@ struct QueueEntryListItem: View {
 
     var openYouTube: (String) -> Void
     var beforeRemove: (QueueEntry) -> Void
-    
+
     @State var toBeWatched: Video?
     @State var toBeCleared: Video?
 
@@ -82,15 +82,14 @@ struct QueueEntryListItem: View {
         try? await Task.sleep(nanoseconds: 700_000_000)
         action(video)
     }
-    
+
     func markWatched(_ video: Video) {
         withAnimation {
             beforeRemove(entry)
             VideoService.markVideoWatched(video, modelContext: modelContext)
         }
     }
-    
-    
+
     func clearVideo(_ video: Video) {
         withAnimation {
             beforeRemove(entry)

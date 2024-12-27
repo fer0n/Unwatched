@@ -21,8 +21,9 @@ struct FullscreenSafeArea: ViewModifier {
 
     var offset: (edge: CGFloat, x: CGFloat) {
         switch device {
-        case _ where device.contains("iPhone 16"),
-             _ where device.contains("iPhone 15"),
+        case _ where device.contains("iPhone 16"):
+            return (7.3, 0)
+        case _ where device.contains("iPhone 15"),
              _ where device.contains("iPhone 14 Pro"):
             return (7.8, 0)
         case _ where device.contains("iPhone 14"),
