@@ -108,11 +108,15 @@ import UnwatchedShared
             }
 
             for try await (sub, videos) in group {
-                await handleNewVideos(
+                let countNewVideos = await handleNewVideosGetCount(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
+                if countNewVideos > 0 {
+                    // save sooner if videos got added
+                    try modelContext.save()
+                }
             }
         }
 
@@ -120,14 +124,14 @@ import UnwatchedShared
         return newVideos
     }
 
-    func handleNewVideos(
+    public func handleNewVideosGetCount(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async {
+    ) async -> Int {
         guard let subModel = getSubscription(via: sub) else {
             Logger.log.info("missing info when trying to load videos")
-            return
+            return 0
         }
         let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
@@ -135,15 +139,15 @@ import UnwatchedShared
         videos = await self.addShortsDetectionAndImageData(to: videos)
         cacheImages(for: videos)
 
-        let videoModels = insertVideoModels(from: videos, defaultPlacement)
+        let videoModels = insertVideoModels(from: videos)
         subModel.videos?.append(contentsOf: videoModels)
 
-        triageSubscriptionVideos(subModel,
-                                 videos: videoModels,
-                                 defaultPlacement: defaultPlacement)
+        let addedVideoCount = triageSubscriptionVideos(subModel,
+                                                       videos: videoModels,
+                                                       defaultPlacement: defaultPlacement)
         subModel.mostRecentVideoDate = mostRecentDate
         updateRecentVideoDate(subModel, mostRecentDate)
-        return
+        return addedVideoCount
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {
@@ -154,15 +158,9 @@ import UnwatchedShared
         }
     }
 
-    private func insertVideoModels(
-        from videos: [SendableVideo],
-        _ placementInfo: DefaultVideoPlacement
-    ) -> [Video] {
+    private func insertVideoModels(from videos: [SendableVideo]) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
-            if vid.isYtShort && placementInfo.shortsPlacement == .discard {
-                continue
-            }
             let video = vid.createVideo(extractChapters: ChapterService.extractChapters)
             videoModels.append(video)
             modelContext.insert(video)
@@ -191,16 +189,20 @@ import UnwatchedShared
             Logger.log.info("sub has no url: \(sub.title)")
             return (sub, [])
         }
-        let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-        return (sub, videos)
+        do {
+            let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
+            return (sub, videos)
+        } catch {
+            Logger.log.error("Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)")
+            throw error
+        }
     }
 
     private func cacheImages(for videos: [SendableVideo]) {
-        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
-        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue)
+        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
 
         let imagesToBeSaved = videos.compactMap { vid in
-            let discardImage = vid.isYtShort && shortsPlacement != .show
+            let discardImage = vid.isYtShort && hideShorts
             if !discardImage,
                let url = vid.thumbnailUrl,
                let data = vid.thumbnailData {
@@ -245,12 +247,11 @@ import UnwatchedShared
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let shortsPlacementRaw = UserDefaults.standard.value(forKey: Const.shortsPlacement) as? ShortsPlacement.RawValue
-        let shortsPlacement = ShortsPlacement(rawValue: shortsPlacementRaw ?? ShortsPlacement.show.rawValue) ?? .show
+        let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            shortsPlacement: shortsPlacement
+            hideShorts: hideShorts
         )
         return info
     }

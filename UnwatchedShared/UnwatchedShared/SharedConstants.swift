@@ -9,7 +9,6 @@ import SwiftUI
 
 public struct Const {
     public static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
-    public static let shortsPlacement = "shortsPlacement"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
     

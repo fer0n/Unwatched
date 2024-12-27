@@ -124,7 +124,7 @@ struct PlayerControls: View {
             }
         }
         .onHover { over in
-            autoHideVM.keepVisible = over
+            autoHideVM.setKeepVisible(over, "hover")
         }
     }
 
@@ -151,6 +151,7 @@ struct PlayerControls: View {
         !hideControlsFullscreen
             || fullscreenControlsSetting != .autoHide
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
+            || player.videoIsCloseToEnd
     }
 }
 

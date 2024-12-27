@@ -35,8 +35,6 @@
 		8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9182B95116A004D7CE2 /* NewVideosNotificationInfo.swift */; };
 		8808D8232B4AF9FF00B4FF11 /* OutlineToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */; };
 		8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */; };
-		8811C93A2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */; };
-		8811C93B2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */; };
 		8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */; };
 		88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
 		88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
@@ -404,8 +402,6 @@
 		88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */; };
 		88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA802C99870F0030B2EA /* Chapter.swift */; };
 		88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA802C99870F0030B2EA /* Chapter.swift */; };
-		88F3AA852C9987B20030B2EA /* ShortsPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA842C9987B20030B2EA /* ShortsPlacement.swift */; };
-		88F3AA862C9987B20030B2EA /* ShortsPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA842C9987B20030B2EA /* ShortsPlacement.swift */; };
 		88F3AA882C99887E0030B2EA /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA872C99887E0030B2EA /* ThemeColor.swift */; };
 		88F3AA892C99887E0030B2EA /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA872C99887E0030B2EA /* ThemeColor.swift */; };
 		88F3AA8B2C998B040030B2EA /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AA8A2C998B040030B2EA /* Color.swift */; };
@@ -509,7 +505,6 @@
 		8808A9182B95116A004D7CE2 /* NewVideosNotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewVideosNotificationInfo.swift; sourceTree = "<group>"; };
 		8808D8222B4AF9FF00B4FF11 /* OutlineToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineToggleStyle.swift; sourceTree = "<group>"; };
 		8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlView.swift; sourceTree = "<group>"; };
-		8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsPlacementView.swift; sourceTree = "<group>"; };
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
@@ -694,7 +689,6 @@
 		88F1EE522B5D3211009866A0 /* BrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserView.swift; sourceTree = "<group>"; };
 		88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropUrlArea.swift; sourceTree = "<group>"; };
 		88F3AA802C99870F0030B2EA /* Chapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
-		88F3AA842C9987B20030B2EA /* ShortsPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsPlacement.swift; sourceTree = "<group>"; };
 		88F3AA872C99887E0030B2EA /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
 		88F3AA8A2C998B040030B2EA /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		88F3AA8D2C998B840030B2EA /* VideoListFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFormat.swift; sourceTree = "<group>"; };
@@ -874,7 +868,6 @@
 				88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */,
 				88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */,
 				88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */,
-				8811C9392C8E2FD000A1A78E /* ShortsPlacementView.swift */,
 			);
 			path = AppearanceSelection;
 			sourceTree = "<group>";
@@ -993,7 +986,6 @@
 				88F3AA902C998BFC0030B2EA /* VideoPlacement.swift */,
 				88F3AA8D2C998B840030B2EA /* VideoListFormat.swift */,
 				88F3AA872C99887E0030B2EA /* ThemeColor.swift */,
-				88F3AA842C9987B20030B2EA /* ShortsPlacement.swift */,
 				88F3AA802C99870F0030B2EA /* Chapter.swift */,
 				8847D6C62C99865400BFA12F /* ChapterCategory.swift */,
 				88F3AA8A2C998B040030B2EA /* Color.swift */,
@@ -1507,7 +1499,6 @@
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
 				889AF9552C50ED05001CEDE6 /* CachedImageView.swift in Sources */,
 				889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */,
-				8811C93B2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */,
 				8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */,
 				889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */,
 				889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */,
@@ -1696,7 +1687,6 @@
 				88415BEA2C50E1D50072778F /* ExportableTests.swift in Sources */,
 				889AF96A2C50ED6C001CEDE6 /* apiKey.swift in Sources */,
 				889AF90E2C50ECE2001CEDE6 /* InboxView.swift in Sources */,
-				88F3AA852C9987B20030B2EA /* ShortsPlacement.swift in Sources */,
 				88415BF92C50EAD40072778F /* AspectRatioPicker.swift in Sources */,
 				881942A22C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				880505042C83016B005F0972 /* QueueVideoButton.swift in Sources */,
@@ -1781,7 +1771,6 @@
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
 				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
-				88F3AA862C9987B20030B2EA /* ShortsPlacement.swift in Sources */,
 				8891F0B02B4E9F330098A3FB /* String.swift in Sources */,
 				88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */,
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
@@ -1859,7 +1848,6 @@
 				88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
-				8811C93A2C8E2FD000A1A78E /* ShortsPlacementView.swift in Sources */,
 				88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
@@ -2164,7 +2152,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 143;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2210,7 +2198,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 139;
+				CURRENT_PROJECT_VERSION = 143;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_HARDENED_RUNTIME = YES;

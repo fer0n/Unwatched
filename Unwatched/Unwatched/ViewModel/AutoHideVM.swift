@@ -9,7 +9,7 @@ import UnwatchedShared
 @Observable class AutoHideVM {
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
-    private var keepVisibleCounter: Int = 0
+    private var keepVisibleDict = Set<String>()
     var positionLeft = false
 
     private var showControlsLocal = false {
@@ -31,12 +31,12 @@ import UnwatchedShared
     }
 
     var showControls: Bool {
-        showControlsLocal || keepVisibleCounter > 0
+        showControlsLocal || !keepVisibleDict.isEmpty
     }
 
     func reset() {
         showControlsLocal = false
-        keepVisibleCounter = 0
+        keepVisibleDict.removeAll()
     }
 
     func setShowControls(positionLeft: Bool? = nil) {
@@ -48,18 +48,20 @@ import UnwatchedShared
         }
     }
 
+    func setKeepVisible(_ value: Bool, _ source: String) {
+        if value {
+            keepVisibleDict.insert(source)
+        } else {
+            keepVisibleDict.remove(source)
+        }
+    }
+
     var keepVisible: Bool {
         get {
-            keepVisibleCounter > 0
+            !keepVisibleDict.isEmpty
         }
         set {
-            if newValue {
-                keepVisibleCounter += 1
-            } else {
-                if keepVisibleCounter > 0 {
-                    keepVisibleCounter -= 1
-                }
-            }
+            setKeepVisible(newValue, "binding")
         }
     }
 }

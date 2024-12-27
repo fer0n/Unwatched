@@ -154,7 +154,7 @@ extension PlayerWebView {
         const touchCountsAsLongPress = 300
         var touchStartTime;
         var touchTimeout;
-        var centerTouchSent = false;
+        var centerTouch = false;
         var longTouchSent = false;
         var touchStartEvent;
 
@@ -203,7 +203,7 @@ extension PlayerWebView {
             touchStartX = event.touches[0].clientX;
             touchStartY = event.touches[0].clientY;
             isSwiping = false;
-            centerTouchSent = false;
+            centerTouch = false;
             longTouchSent = false;
 
             const screenWidth = window.innerWidth;
@@ -213,10 +213,7 @@ extension PlayerWebView {
             const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < touchSize;
 
             if (isCenterTouch) {
-                sendMessage("centerTouch", video.paused ? "play" : "pause");
-                togglePlay();
-                centerTouchSent = true;
-                return;
+                centerTouch = true;
             }
 
             touchTimeout = setTimeout(function() {
@@ -229,7 +226,7 @@ extension PlayerWebView {
         }
 
         function handleTouchMove(event) {
-            if (isSwiping || longTouchSent || centerTouchSent) {
+            if (isSwiping || longTouchSent) {
                 return;
             }
             const touchMoveX = event.touches[0].clientX;
@@ -248,13 +245,16 @@ extension PlayerWebView {
             clearTimeout(touchTimeout);
             if (longTouchSent) {
                 sendMessage("longTouchEnd");
-            } else if (!centerTouchSent) {
+            } else if (isSwiping) {
                 handleSwipe(event);
+            } else if (centerTouch) {
+                togglePlay();
+                sendMessage("centerTouch", video.paused ? "play" : "pause");
             }
         }
 
         function triggerTouchEvent() {
-            if (isSwiping || longTouchSent || centerTouchSent) {
+            if (isSwiping || longTouchSent || centerTouch) {
                 return;
             }
             sendMessage("interaction");

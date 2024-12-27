@@ -25,6 +25,7 @@ extension Const {
     static let consideredYtShortAspectRatio: Double = 1
     static let maxYtShortsDuration: Double = 60
     static let aspectRatioTolerance: Double = 0.1
+    static let secondsConsideredCloseToEnd: CGFloat = 15
 
     /// Playback speeds that will be spelled out
     static let highlightedPlaybackSpeeds = [1, 1.5, 2]
@@ -68,10 +69,6 @@ extension Const {
     static let notificationActionQueue = "notificationActionQueue"
     static let notificationActionClear = "notificationActionClear"
     static let notificationVideoId = "notificationVideoId"
-
-    // MARK: - Tips
-    static let hideShortsTipAction = "hideShortsTipAction"
-    static let discardShortsTipAction = "discardShortsTipAction"
 
     // MARK: - SF Symbols
     static let queueTagSF = "rectangle.stack"
@@ -135,6 +132,7 @@ extension Const {
     static let continuousPlay = "continuousPlay"
     static let autoRefresh = "refreshOnStartup"
 
+    static let hideShorts = "hideShortsEverywhere"
     static let navigationManager = "NavigationManager"
     static let lastAutoRefreshDate = "lastAutoRefreshDate"
     static let showTabBarLabels = "showTabBarLabels"
@@ -187,7 +185,7 @@ extension Const {
 
         // Videos
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
-        Const.shortsPlacement: ShortsPlacement.show.rawValue,
+        Const.hideShorts: false,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,
