@@ -36,7 +36,7 @@ public final class Video: CustomStringConvertible, Exportable, CachedImageHolder
     public var watchedDate: Date?
     public var subscription: Subscription?
     public var youtubeChannelId: String?
-    public var isYtShort: Bool = false
+    public var isYtShort: Bool?
     public var bookmarkedDate: Date?
     public var clearedInboxDate: Date?
     public var createdDate: Date?
@@ -105,7 +105,7 @@ public final class Video: CustomStringConvertible, Exportable, CachedImageHolder
                 videoDescription: String? = nil,
                 chapters: [Chapter] = [],
                 watchedDate: Date? = nil,
-                isYtShort: Bool = false,
+                isYtShort: Bool? = nil,
                 bookmarkedDate: Date? = nil,
                 clearedInboxDate: Date? = nil,
                 createdDate: Date? = .now) {

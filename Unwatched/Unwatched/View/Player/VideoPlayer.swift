@@ -29,7 +29,8 @@ struct VideoPlayer: View {
     var body: some View {
         VStack(spacing: 0) {
             PlayerView(landscapeFullscreen: landscapeFullscreen,
-                       markVideoWatched: markVideoWatched)
+                       markVideoWatched: markVideoWatched,
+                       setShowMenu: setShowMenu)
 
             if !landscapeFullscreen {
                 PlayerControls(compactSize: compactSize,
@@ -39,11 +40,11 @@ struct VideoPlayer: View {
                                markVideoWatched: markVideoWatched,
                                sleepTimerVM: sleepTimerVM)
                     .padding(.vertical, compactSize ? 5 : 0)
+                    .showMenuGesture(disableGesture: compactSize, setShowMenu: setShowMenu)
             }
         }
         .tint(.neutralAccentColor)
         .contentShape(Rectangle())
-        .showMenuGesture(disableGesture: compactSize, setShowMenu: setShowMenu)
         .onChange(of: navManager.showMenu) {
             if navManager.showMenu == false {
                 sheetPos.updatePlayerControlHeight()

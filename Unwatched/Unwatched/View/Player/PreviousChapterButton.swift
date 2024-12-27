@@ -21,7 +21,7 @@ struct PreviousChapterButton<Content>: View where Content: View {
     var body: some View {
         Button {
             actionToggle.toggle()
-            player.goToPreviousChapter()
+            _ = player.goToPreviousChapter()
         } label: {
             contentImage(
                 Image(systemName: Const.previousChapterSF)

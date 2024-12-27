@@ -52,10 +52,18 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
     )
 
+    public static var migrateV1p2toV1p3 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p2.self,
+        toVersion: UnwatchedSchemaV1p3.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
+
     public static var stages: [MigrationStage] {
         [
             migrateV1toV1p1,
-            migrateV1p1toV1p2
+            migrateV1p1toV1p2,
+            migrateV1p2toV1p3
         ]
     }
 }

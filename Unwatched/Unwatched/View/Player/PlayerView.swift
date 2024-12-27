@@ -28,6 +28,7 @@ struct PlayerView: View {
     var landscapeFullscreen = true
     let hasWiderAspectRatio = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    var setShowMenu: (() -> Void)?
 
     var hideMiniPlayer: Bool {
         ((navManager.showMenu || navManager.showDescriptionDetail)
@@ -46,7 +47,8 @@ struct PlayerView: View {
     }
 
     var body: some View {
-        let wideAspect = videoAspectRatio >= Const.consideredWideAspectRatio && landscapeFullscreen
+        let wideAspect = (videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
+            && landscapeFullscreen
         ZStack(alignment: .top) {
             Rectangle()
                 .fill(landscapeFullscreen ? .black : Color.playerBackgroundColor)
@@ -119,7 +121,8 @@ struct PlayerView: View {
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 playerType: .youtubeEmbedded,
-                onVideoEnded: handleVideoEnded
+                onVideoEnded: handleVideoEnded,
+                setShowMenu: setShowMenu
             )
             .aspectRatio(videoAspectRatio, contentMode: .fit)
             .overlay {
