@@ -22,7 +22,7 @@ Available on the App Store for free: [Download](https://apps.apple.com/app/id647
 
 ### The Queue
 
-No autoplay, no alorithmic bottomless feed. Just the Videos queued up in the order you want to.
+No autoplay, no algorithmic bottomless feed. Just the Videos queued up in the order you want to.
 
 ### Follow Channels or Playlist
 
@@ -30,7 +30,7 @@ Automatically add new videos
 
 ### Triage
 
-Choose where new videos of from each channel should end up. Directly on top of the queue, or in your inbox to sort through them. Pick the best, leave the rest.
+Choose where new videos from each channel should end up. Directly on top of the queue, or in your inbox to sort through them. Pick the best, leave the rest.
 
 ### Sick of #shorts?
 
