@@ -9,6 +9,7 @@ import SwiftUI
     var isLandscapeLeft: Bool = false
     var isLandscapeRight: Bool = false
 
+    @MainActor
     init() {
         NotificationCenter.default.addObserver(
             self,
@@ -19,10 +20,12 @@ import SwiftUI
         updateOrientation()
     }
 
+    @MainActor
     @objc private func didChangeOrientation() {
         updateOrientation()
     }
 
+    @MainActor
     private func updateOrientation() {
         let orientation = UIDevice.current.orientation
         isLandscapeLeft = orientation == .landscapeLeft

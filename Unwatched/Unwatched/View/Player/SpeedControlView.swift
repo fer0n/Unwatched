@@ -73,9 +73,11 @@ struct SpeedControlView: View {
                 }
             }
             .onPreferenceChange(SpeedPreferenceKey.self) { minY in
-                viewModel.width = minY.width
-                viewModel.itemWidth = viewModel.width / CGFloat(Const.speeds.count)
-                controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
+                Task { @MainActor in
+                    viewModel.width = minY.width
+                    viewModel.itemWidth = viewModel.width / CGFloat(Const.speeds.count)
+                    controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
+                }
             }
             .padding(.horizontal, SpeedControlView.padding)
 

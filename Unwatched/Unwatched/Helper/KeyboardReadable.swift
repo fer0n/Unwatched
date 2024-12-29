@@ -12,7 +12,8 @@ protocol KeyboardReadable {
 }
 
 extension KeyboardReadable {
-    @MainActor var keyboardPublisher: AnyPublisher<Bool, Never> {
+    @MainActor
+    var keyboardPublisher: AnyPublisher<Bool, Never> {
         Publishers.Merge(
             NotificationCenter.default
                 .publisher(for: UIResponder.keyboardWillShowNotification)

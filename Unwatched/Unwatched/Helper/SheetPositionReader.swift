@@ -9,6 +9,7 @@ import OSLog
 import UnwatchedShared
 
 @Observable class SheetPositionReader {
+    @MainActor
     static let shared: SheetPositionReader = {
         let sheetPos = SheetPositionReader()
 

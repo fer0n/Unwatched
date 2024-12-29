@@ -12,6 +12,39 @@ import UnwatchedShared
 extension PlayerManager {
 
     @MainActor
+    func handleAutoStart() {
+        Logger.log.info("handleAutoStart")
+        isLoading = false
+
+        guard let source = videoSource else {
+            Logger.log.info("no source, stopping")
+            return
+        }
+        Logger.log.info("source: \(String(describing: source))")
+        switch source {
+        case .continuousPlay:
+            let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
+            if continuousPlay {
+                play()
+            }
+        case .nextUp:
+            break
+        case .userInteraction:
+            play()
+        case .playWhenReady:
+            previousState.isPlaying = false
+            play()
+        case .hotSwap, .errorSwap:
+            if previousIsPlaying {
+                play()
+            }
+        @unknown default:
+            break
+        }
+        videoSource = nil
+    }
+
+    @MainActor
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
