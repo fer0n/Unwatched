@@ -172,6 +172,7 @@ import UnwatchedShared
         }
     }
 
+    @MainActor
     func openUrlInApp(_ url: BrowserUrl) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {

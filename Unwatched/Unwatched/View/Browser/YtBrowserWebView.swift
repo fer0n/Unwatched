@@ -220,10 +220,11 @@ struct YtBrowserWebView: UIViewRepresentable {
             parent.browserManager.isMobileVersion = UrlService.isMobileYoutubePage(url)
         }
 
-        @MainActor
         func startObserving(webView: WKWebView) {
             observation = webView.observe(\.url, options: .new) { (webView, _) in
-                self.handleUrlChange(webView)
+                Task { @MainActor in
+                    self.handleUrlChange(webView)
+                }
             }
         }
 

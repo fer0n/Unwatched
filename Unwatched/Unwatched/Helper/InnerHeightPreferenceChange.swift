@@ -32,7 +32,9 @@ struct OnSizeChange: ViewModifier {
                     }
                 }
                 .onPreferenceChange(OnSizeChangePreferenceKey.self) { newSize in
-                    action(newSize)
+                    Task { @MainActor in
+                        action(newSize)
+                    }
                 }
         }
     }
@@ -72,7 +74,9 @@ struct OnGlobalMinYChange: ViewModifier {
                     }
                 }
                 .onPreferenceChange(OnGlobalMinYChangePreferenceKey.self) { minY in
-                    action(minY)
+                    Task { @MainActor in
+                        action(minY)
+                    }
                 }
         }
     }

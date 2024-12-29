@@ -34,7 +34,10 @@ struct HandleVideoUrlDropModifier: ViewModifier {
 }
 
 extension View {
-    func handleVideoUrlDrop(_ placement: VideoPlacementArea, isTargeted: ((_ targeted: Bool) -> Void)? = nil) -> some View {
+    func handleVideoUrlDrop(
+        _ placement: VideoPlacementArea,
+        isTargeted: ((_ targeted: Bool) -> Void)? = nil
+    ) -> some View {
         self.modifier(HandleVideoUrlDropModifier(placement: placement, isTargeted: isTargeted))
     }
 }
