@@ -66,13 +66,22 @@ struct PlayerWebView: UIViewRepresentable {
         }
 
         let prev = player.previousState
+        handlePlaybackSpeed(prev, uiView)
+        handlePlayPause(prev, uiView)
+        handlePip(prev, uiView)
+        handleSeek(prev, uiView)
+        handleQueueVideo(prev, uiView)
+    }
 
+    func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.playbackSpeed != (player.temporaryPlaybackSpeed ?? player.playbackSpeed) {
             Logger.log.info("SPEED")
             uiView.evaluateJavaScript(getSetPlaybackRateScript())
             player.previousState.playbackSpeed = player.playbackSpeed
         }
+    }
 
+    func handlePlayPause(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
                 Logger.log.info("PLAY")
@@ -83,7 +92,9 @@ struct PlayerWebView: UIViewRepresentable {
             }
             player.previousState.isPlaying = player.isPlaying
         }
+    }
 
+    func handlePip(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
             if player.pipEnabled {
                 Logger.log.info("PIP ON")
@@ -96,7 +107,9 @@ struct PlayerWebView: UIViewRepresentable {
                 player.previousState.pipEnabled = false
             }
         }
+    }
 
+    func handleSeek(_ prev: PreviousState, _ uiView: WKWebView) {
         if let seekAbs = player.seekAbsolute {
             Logger.log.info("SEEK ABS")
             uiView.evaluateJavaScript(getSeekToScript(seekAbs))
@@ -108,7 +121,9 @@ struct PlayerWebView: UIViewRepresentable {
             uiView.evaluateJavaScript(getSeekRelScript(seekRel))
             player.seekRelative = nil
         }
+    }
 
+    func handleQueueVideo(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.videoId != player.video?.youtubeId {
             Logger.log.info("CUE VIDEO: \(player.video?.title ?? "-")")
             print("\(playerType)")

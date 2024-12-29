@@ -8,11 +8,6 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-enum UserDataServiceError: Error {
-    case noDataToBackupFound
-    case directoryError
-}
-
 struct UserDataService {
 
     // saves user data as .unwatchedbackup
@@ -278,47 +273,6 @@ struct UserDataService {
         let dateString = Date().formatted(.iso8601)
         return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
-
-    static func getSettings() -> [String: AnyCodable] {
-        var result = [String: AnyCodable]()
-        for (key, _) in Const.settingsDefaults {
-            if let value = UserDefaults.standard.object(forKey: key) {
-                result[key] = AnyCodable(value)
-            } else {
-                Logger.log.warning("Encoding settings key not set/found: \(key)")
-            }
-        }
-        return result
-    }
-
-    static func restoreSettings(_ settings: [String: AnyCodable]?) {
-        guard let settings else {
-            return
-        }
-        resetDefaultSettingsIfNeeded()
-        for (key, value) in settings {
-            UserDefaults.standard.setValue(value.value, forKey: key)
-        }
-        setAppIconIfNeeded(settings)
-        NotificationManager.ensurePermissionsAreGivenForSettings()
-    }
-
-    static private func setAppIconIfNeeded(_ settings: [String: AnyCodable]?) {
-        if let item = settings?.first(where: { $0.key == Const.themeColor }),
-           let oldValue = item.value.value as? Int,
-           let theme = ThemeColor(rawValue: oldValue) {
-            theme.setAppIcon()
-        }
-    }
-
-    static private func resetDefaultSettingsIfNeeded() {
-        for (key, value) in Const.settingsDefaults {
-            let oldValue = UserDefaults.standard.object(forKey: key)
-            if oldValue != nil {
-                UserDefaults.standard.setValue(value, forKey: key)
-            }
-        }
-    }
 }
 
 struct UnwatchedBackup: Codable {
@@ -336,55 +290,5 @@ struct UnwatchedBackup: Codable {
             && inboxEntries.isEmpty
             && subscriptions.isEmpty
             && (settings?.isEmpty ?? true)
-    }
-}
-
-extension URL {
-    var creationDate: Date {
-        return (try? resourceValues(forKeys: [.creationDateKey]).creationDate) ?? Date()
-    }
-}
-
-struct AnyCodable: Codable {
-    let value: Any
-
-    init(_ value: Any) {
-        self.value = value
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let intValue = try? container.decode(Int.self) {
-            value = intValue
-        } else if let doubleValue = try? container.decode(Double.self) {
-            value = doubleValue
-        } else if let stringValue = try? container.decode(String.self) {
-            value = stringValue
-        } else if let boolValue = try? container.decode(Bool.self) {
-            value = boolValue
-        } else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
-        }
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        if let intValue = value as? Int {
-            try container.encode(intValue)
-        } else if let doubleValue = value as? Double {
-            try container.encode(doubleValue)
-        } else if let stringValue = value as? String {
-            try container.encode(stringValue)
-        } else if let boolValue = value as? Bool {
-            try container.encode(boolValue)
-        } else {
-            throw EncodingError.invalidValue(
-                value,
-                EncodingError.Context(
-                    codingPath: container.codingPath,
-                    debugDescription: "Unsupported type"
-                )
-            )
-        }
     }
 }

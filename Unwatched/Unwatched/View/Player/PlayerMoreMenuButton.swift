@@ -114,10 +114,11 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 }
 
 #Preview {
-    PlayerMoreMenuButton(
+    func doNothing(_ showMenu: Bool, _ source: VideoSource) {}
+
+    return PlayerMoreMenuButton(
         sleepTimerVM: SleepTimerViewModel(),
-        markVideoWatched: { _, _ in
-        }) { image in
+        markVideoWatched: doNothing) { image in
         image
     }
     .environment(PlayerManager.getDummy())

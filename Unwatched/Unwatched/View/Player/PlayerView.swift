@@ -68,14 +68,14 @@ struct PlayerView: View {
                 .fullscreenSafeArea(enable: wideAspect)
                 // force reload if value changed (requires settings update)
                 .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
+                .onChange(of: reloadVideoId) {
+                    autoHideVM.reset()
+                }
                 .onChange(of: playVideoFullscreen) {
                     player.handleHotSwap()
                 }
                 .onChange(of: playbackSpeed) {
                     // workaround: doesn't update otherwise
-                }
-                .onChange(of: reloadVideoId) {
-                    autoHideVM.reset()
                 }
                 .overlay {
                     PlayerLoadingTimeout()
