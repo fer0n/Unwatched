@@ -60,10 +60,22 @@ struct VideoPlayer: View {
         }
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
         .onChange(of: landscapeFullscreen) {
-            if landscapeFullscreen && navManager.showMenu
-                && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
-                navManager.showMenu = false
-            } else if !landscapeFullscreen {
+            handleLandscapeFullscreenChange(landscapeFullscreen)
+        }
+    }
+
+    @MainActor
+    func handleLandscapeFullscreenChange(_ landscapeFullscreen: Bool) {
+        if landscapeFullscreen && navManager.showMenu
+            && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
+            navManager.showMenu = false
+        } else if !landscapeFullscreen {
+            // switching back to portrait
+            if navManager.showMenu {
+                // menu was open in landscape mode -> show menu in portrait
+                sheetPos.setDetentVideoPlayer()
+            } else {
+                // show menu and keep previous detent
                 navManager.showMenu = true
             }
         }
