@@ -97,6 +97,7 @@ import UnwatchedShared
         }
         unstarted = true
         previousState.pipEnabled = false
+        canPlayPip = false
         handleChapterRefresh()
         withAnimation {
             embeddingDisabled = false
@@ -219,9 +220,10 @@ import UnwatchedShared
     func handleHotSwap() {
         Logger.log.info("handleHotSwap")
         isLoading = true
+        canPlayPip = false
+        previousState.pipEnabled = false
         previousIsPlaying = isPlaying
         previousState.isPlaying = false
-        pipEnabled = false
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()
