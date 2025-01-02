@@ -20,7 +20,6 @@ struct InboxView: View {
     var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
     var swipeTip = InboxSwipeTip()
-    var hideShortsTip = HideShortsTip()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -73,7 +72,6 @@ struct InboxView: View {
                         .opacity(showClear ? 1 : 0)
                         .disabled(!showClear)
                 }
-                .disabled(inboxEntries.isEmpty)
                 .listStyle(.plain)
             }
             .onAppear {

@@ -45,7 +45,7 @@ struct HideShortsTipView: View {
     var hideShortsTip = HideShortsTip()
 
     var body: some View {
-        if defaultShortsSetting != .show {
+        if defaultShortsSetting == .show {
             hideShortsTipView
         }
     }
@@ -54,6 +54,7 @@ struct HideShortsTipView: View {
         TipView(hideShortsTip) { _ in
             VideoService.clearAllYtShortsFromInbox(modelContext)
             defaultShortsSetting = .hide
+            hideShortsTip.invalidate(reason: .actionPerformed)
         }
         .tipBackground(Color.insetBackgroundColor)
         .listRowBackground(Color.backgroundColor)
