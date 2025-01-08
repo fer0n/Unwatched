@@ -76,10 +76,40 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleCenterTouch(payload)
         case "pip":
             handlePip(payload)
+        case "urlClicked":
+            handleUrlClicked(payload)
         case "error":
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func handleUrlClicked(_ payload: String?) {
+        guard let payload = payload,
+              let url = URL(string: payload),
+              UrlService.isYoutubeVideoUrl(url: url) else {
+            return
+        }
+        let task = VideoService.addForeignUrls([url], in: .queue)
+
+        let notification = AppNotificationData(
+            title: "addingVideo",
+            icon: Const.queueTopSF,
+            isLoading: true,
+            timeout: 0
+        )
+        parent.appNotificationVM.show(notification)
+        Task {
+            do {
+                try await task.value
+                let notification = AppNotificationData(
+                    title: "addedVideo",
+                    icon: Const.checkmarkSF,
+                    timeout: 1
+                )
+                parent.appNotificationVM.show(notification)
+            } catch { }
         }
     }
 

@@ -360,6 +360,20 @@ extension PlayerWebView {
         errorCheckTimers.push(setTimeout(checkError, 3000));
         errorCheckTimers.push(setTimeout(checkError, 5000));
         errorCheckTimers.push(setTimeout(checkError, 10000));
+
+        // Handle link clicks
+        document.addEventListener('click', function(event) {
+            sendMessage("click");
+            // Find if the clicked element is an <a> tag or is inside one
+            let target = event.target;
+            if (target.tagName === 'A' || target.parentNode?.tagName === 'A') {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const href = target.tagName === 'A' ? target.href : target.parentNode.href;
+                sendMessage("urlClicked", href);
+            }
+        }, true);
     """
     }
     // swiftlint:enable function_body_length

@@ -155,6 +155,22 @@
         }
       }
     },
+    "addedVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video erfolgreich gequeued"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queued Successfully"
+          }
+        }
+      }
+    },
     "addFeeds" : {
       "localizations" : {
         "de" : {
@@ -167,6 +183,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add YouTube Channels"
+          }
+        }
+      }
+    },
+    "addingVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zur Queue hinzufügen..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queueing Video…"
           }
         }
       }

@@ -24,6 +24,7 @@ struct PlayerView: View {
 
     @State var autoHideVM = AutoHideVM()
     @State var overlayVM = OverlayFullscreenVM.shared
+    @State var appNotificationVM = AppNotificationVM()
 
     var landscapeFullscreen = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -86,6 +87,7 @@ struct PlayerView: View {
                 }
             }
         }
+        .appNotificationOverlay($appNotificationVM)
         .persistentSystemOverlays(
             landscapeFullscreen || controlsHidden
                 ? .hidden
@@ -125,6 +127,7 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
+                appNotificationVM: $appNotificationVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
                 setShowMenu: setShowMenu,
@@ -171,6 +174,7 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
+                appNotificationVM: $appNotificationVM,
                 playerType: .youtube,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe

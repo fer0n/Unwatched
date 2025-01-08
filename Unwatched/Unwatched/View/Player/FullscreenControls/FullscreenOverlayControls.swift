@@ -80,6 +80,7 @@ enum OverlayIcon {
     case seekBackward
     case watched
     case nextVideo
+    case queued
 
     var systemName: String {
         switch self {
@@ -91,6 +92,7 @@ enum OverlayIcon {
         case .nextVideo: return "\(Const.nextVideoSF).circle.fill"
         case .seekBackward: return "arrow.counterclockwise.circle.fill"
         case .seekForward: return "arrow.clockwise.circle.fill"
+        case .queued: return "arrow.uturn.right.circle.fill"
         }
     }
 

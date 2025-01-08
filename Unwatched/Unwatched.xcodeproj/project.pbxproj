@@ -484,6 +484,10 @@
 		88F3AAA22C9990E60030B2EA /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AAA02C9990E60030B2EA /* TestData.swift */; };
 		88F4087F2C18F541009F90E6 /* fullscreenSafeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */; };
 		88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */; };
+		88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */; };
+		88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */; };
+		88F73D8F2D2EFD8900F61E99 /* AppNotificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */; };
+		88F73D902D2EFD8900F61E99 /* AppNotificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */; };
 		88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */; };
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
@@ -801,6 +805,8 @@
 		88F3AAA02C9990E60030B2EA /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fullscreenSafeArea.swift; sourceTree = "<group>"; };
 		88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlServiceTests.swift; sourceTree = "<group>"; };
+		88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationVM.swift; sourceTree = "<group>"; };
+		88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationData.swift; sourceTree = "<group>"; };
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
@@ -828,6 +834,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
+		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1303,6 +1310,7 @@
 		88CBE3482BB76F7800B5722F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */,
 				88C5EF892CCABA9300DA802F /* TransactionVM.swift */,
 				881964F22CCA449A0084ADE4 /* VideoListVM.swift */,
 				883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */,
@@ -1389,6 +1397,7 @@
 				88904B062C07428500F95C67 /* apiKey.swift.example */,
 				887E82A62CD8FBF600B196EA /* App Intents */,
 				8821B89A2CD1543C00B2704D /* Font */,
+				88F73D8D2D2EFD8000F61E99 /* HelperModel */,
 				88143EB52B4A7FEF00829E13 /* Helper */,
 				8802F8532C6950AC008A7778 /* Tips */,
 				8898B6802B48464000348D01 /* Errors */,
@@ -1414,6 +1423,7 @@
 		88DFC0C42B448ABF001895C8 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				887051762D2EE11B0000F4AB /* Notification */,
 				88BF358F2BC91ECE005FA53E /* Onboarding */,
 				883D5DFE2BE0B93F00989313 /* Menu */,
 				883CA80D2B5AFDBA00028D52 /* Queue */,
@@ -1454,6 +1464,14 @@
 			path = Browser;
 			sourceTree = "<group>";
 		};
+		88F73D8D2D2EFD8000F61E99 /* HelperModel */ = {
+			isa = PBXGroup;
+			children = (
+				88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */,
+			);
+			path = HelperModel;
+			sourceTree = "<group>";
+		};
 		CDA07A372C601F350009BFEC /* TestData */ = {
 			isa = PBXGroup;
 			children = (
@@ -1480,6 +1498,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				8847772B2D214FAE0044E812 /* UserDataService */,
+				887051762D2EE11B0000F4AB /* Notification */,
 			);
 			name = UnwatchedUITests;
 			productName = UnwatchedUITests;
@@ -1525,6 +1544,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				8847772B2D214FAE0044E812 /* UserDataService */,
+				887051762D2EE11B0000F4AB /* Notification */,
 			);
 			name = Unwatched;
 			productName = Unwatched;
@@ -1854,6 +1874,7 @@
 				88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
+				88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				88C5EF8A2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
 				88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */,
@@ -1864,6 +1885,7 @@
 				88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */,
 				885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */,
 				88F3AA9F2C998FFD0030B2EA /* PreviewData.swift in Sources */,
+				88F73D8F2D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
 				88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
 				889AF9102C50ECE7001CEDE6 /* SettingsView.swift in Sources */,
 				8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */,
@@ -1925,6 +1947,7 @@
 				88358A7D2C65561B00AF71F8 /* UIImage.swift in Sources */,
 				887DBB552BB6AC5A0012238A /* ClearAllVideosButton.swift in Sources */,
 				88BDC3AB2B79F0DE00656D63 /* SleepTimer.swift in Sources */,
+				88F73D902D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				88F3AA8E2C998B840030B2EA /* VideoListFormat.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
@@ -1950,6 +1973,7 @@
 				88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */,
+				88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */,
 				8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */,
 				8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */,
