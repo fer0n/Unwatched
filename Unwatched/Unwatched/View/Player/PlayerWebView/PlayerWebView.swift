@@ -16,6 +16,8 @@ struct PlayerWebView: UIViewRepresentable {
 
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
+    @Binding var appNotificationVM: AppNotificationVM
+
     let playerType: PlayerType
     let onVideoEnded: () -> Void
     var setShowMenu: (() -> Void)?
@@ -192,6 +194,7 @@ struct PreviousState {
         PlayerWebView(
             overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
+            appNotificationVM: .constant(AppNotificationVM()),
             playerType: .youtubeEmbedded,
             onVideoEnded: {
 

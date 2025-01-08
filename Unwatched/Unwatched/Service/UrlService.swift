@@ -65,6 +65,10 @@ struct UrlService {
         return res
     }
 
+    static func isYoutubeVideoUrl(url: URL) -> Bool {
+        self.getYoutubeIdFromUrl(url: url) != nil
+    }
+
     static func isYoutubeFeedUrl(url: URL) -> Bool {
         // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
         // https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg
