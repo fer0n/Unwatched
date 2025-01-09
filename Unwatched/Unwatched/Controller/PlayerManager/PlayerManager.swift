@@ -29,6 +29,7 @@ import UnwatchedShared
     var embeddingDisabled: Bool = false
     var pipEnabled: Bool = false
     var canPlayPip: Bool = false
+    var isRepeating: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
     var unstarted: Bool = true
