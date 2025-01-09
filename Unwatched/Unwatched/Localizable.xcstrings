@@ -3038,6 +3038,38 @@
         }
       }
     },
+    "loopVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loop Video"
+          }
+        }
+      }
+    },
+    "loopVideoEnabled" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen aktiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loop Video Enabled"
+          }
+        }
+      }
+    },
     "macOsFaqA" : {
       "localizations" : {
         "de" : {

@@ -48,7 +48,7 @@ struct CoreNextButton<Content>: View where Content: View {
                         ? Const.nextVideoSF
                         : Const.continuousPlaySF
                 ),
-                continuousPlay
+                continuousPlay || player.isRepeating
             )
             .symbolEffect(.bounce.down, value: player.video)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
@@ -74,6 +74,16 @@ struct CoreNextButton<Content>: View where Content: View {
             } else {
                 Button("nextVideo", systemImage: "forward.end.alt") {
                     markVideoWatched(false, .userInteraction)
+                }
+            }
+
+            if player.isRepeating {
+                Button("loopVideoEnabled", systemImage: "repeat.1") {
+                    player.isRepeating = false
+                }
+            } else {
+                Button("loopVideo", systemImage: "repeat") {
+                    player.isRepeating = true
                 }
             }
 

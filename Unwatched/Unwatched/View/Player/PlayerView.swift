@@ -244,6 +244,11 @@ struct PlayerView: View {
 
     @MainActor
     func handleVideoEnded() {
+        if player.isRepeating {
+            player.seekAbsolute = 0
+            return
+        }
+
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
         Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
         handleRequestReview()
