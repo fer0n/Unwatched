@@ -40,7 +40,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     toggleBookmark: toggleBookmark,
                     moveToInbox: moveToInbox,
                     clearList: clearList,
-                    canBeCleared: canBeCleared
+                    canBeCleared: canBeCleared,
+                    deleteVideo: deleteVideo
                 )
             }
             .contextMenu(
@@ -60,7 +61,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                 openUrlInApp: { urlString in
                                     navManager.openUrlInApp(.url(urlString))
                                 },
-                                clearList: clearList
+                                clearList: clearList,
+                                deleteVideo: deleteVideo
                             )
                         })
                     : nil
@@ -243,6 +245,17 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
         config.onChange?()
     }
+
+    func deleteVideo() {
+        if let video = getVideo() {
+            clearVideoEverywhere()
+            withAnimation {
+                CleanupService.deleteVideo(video, modelContext)
+                try? modelContext.save()
+                config.onChange?()
+            }
+        }
+    }
 }
 
 struct LeadingSwipeActionsView: View {
@@ -290,6 +303,7 @@ struct TrailingSwipeActionsView: View {
     var moveToInbox: () -> Void
     var clearList: (ClearList, ClearDirection) -> Void
     var canBeCleared: Bool
+    var deleteVideo: () -> Void
 
     var body: some View {
         Group {
@@ -318,7 +332,8 @@ struct TrailingSwipeActionsView: View {
                         openUrlInApp: { urlString in
                             navManager.openUrlInApp(.url(urlString))
                         },
-                        clearList: clearList
+                        clearList: clearList,
+                        deleteVideo: deleteVideo
                     )
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")

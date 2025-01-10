@@ -6,20 +6,21 @@
 import SwiftUI
 
 public struct VideoListItemConfig {
-    public var showVideoStatus: Bool
-    public var hasInboxEntry: Bool?
-    public var hasQueueEntry: Bool?
-    public var videoDuration: Double?
-    public var watched: Bool?
-    public var clearRole: ButtonRole?
-    public var queueRole: ButtonRole?
-    public var onChange: (() -> Void)?
-    public var clearAboveBelowList: ClearList?
-    public var videoSwipeActions: [VideoActions]
-    public var showQueueButton: Bool
-    public var showContextMenu: Bool
-    public var showVideoListOrder: Bool
-    public var async: Bool
+    public let showVideoStatus: Bool
+    public let hasInboxEntry: Bool?
+    public let hasQueueEntry: Bool?
+    public let videoDuration: Double?
+    public let watched: Bool?
+    public let clearRole: ButtonRole?
+    public let queueRole: ButtonRole?
+    public let onChange: (() -> Void)?
+    public let clearAboveBelowList: ClearList?
+    public let videoSwipeActions: [VideoActions]
+    public let showQueueButton: Bool
+    public let showContextMenu: Bool
+    public let showVideoListOrder: Bool
+    public let showDelete: Bool
+    public let async: Bool
 
     public init(
         showVideoStatus: Bool = false,
@@ -35,6 +36,7 @@ public struct VideoListItemConfig {
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
         showVideoListOrder: Bool = false,
+        showDelete: Bool = true,
         async: Bool = false
     ) {
         self.showVideoStatus = showVideoStatus
@@ -50,6 +52,7 @@ public struct VideoListItemConfig {
         self.showQueueButton = showQueueButton
         self.showContextMenu = showContextMenu
         self.showVideoListOrder = showVideoListOrder
+        self.showDelete = showDelete
         self.async = async
     }
 }

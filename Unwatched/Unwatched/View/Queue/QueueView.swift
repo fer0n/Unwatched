@@ -46,7 +46,8 @@ struct QueueView: View {
                                         onChange: handleVideoChange,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
-                                        showVideoListOrder: showVideoListOrder
+                                        showVideoListOrder: showVideoListOrder,
+                                        showDelete: false
                                     )
                                 )
                             } else {

@@ -18,6 +18,7 @@ struct VideoListItemMoreMenuView: View {
     var moveToInbox: () -> Void
     var openUrlInApp: (String) -> Void
     var clearList: (ClearList, ClearDirection) -> Void
+    var deleteVideo: () -> Void
 
     var body: some View {
         ControlGroup {
@@ -68,6 +69,17 @@ struct VideoListItemMoreMenuView: View {
         }
         .controlGroupStyle(.compactMenu)
         ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
+
+        if config.showDelete {
+            Divider()
+
+            ConfirmableMenuButton(helperText: "reallyDeleteVideo") {
+                deleteVideo()
+            } label: {
+                Label("delete", systemImage: "trash")
+                    .foregroundStyle(.red, .red, .red)
+            }
+        }
     }
 }
 
