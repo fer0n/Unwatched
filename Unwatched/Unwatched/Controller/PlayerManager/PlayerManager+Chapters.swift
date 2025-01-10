@@ -187,7 +187,7 @@ extension PlayerManager {
                 ChapterService.skipSponsorSegments(in: &newChapters)
 
                 let modelContext = DataProvider.newContext()
-                guard let video = modelContext.model(for: videoId) as? Video else {
+                guard let video: Video = modelContext.existingModel(for: videoId) else {
                     Logger.log.info("handleChapterRefresh: no video")
                     return
                 }

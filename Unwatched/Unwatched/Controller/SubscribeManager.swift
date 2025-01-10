@@ -102,7 +102,7 @@ import UnwatchedShared
 
     func handleSubscription(_ videoId: PersistentIdentifier) async {
         let context = DataProvider.newContext()
-        guard let video = context.model(for: videoId) as? Video else {
+        guard let video: Video = context.existingModel(for: videoId) else {
             Logger.log.info("handleSubscription: video not found")
             return
         }

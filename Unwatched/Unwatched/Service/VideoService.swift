@@ -230,7 +230,7 @@ extension VideoService {
     }
 
     static func toggleBookmarkFetch(_ videoId: PersistentIdentifier, _ context: ModelContext) -> (Task<(), Error>)? {
-        if let video = context.model(for: videoId) as? Video {
+        if let video: Video = context.existingModel(for: videoId) {
             video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
             try? context.save()
         }
@@ -284,7 +284,7 @@ extension VideoService {
             return video
         } else if let video = videoData as? SendableVideo,
                   let id = video.persistentId,
-                  let video = modelContext.model(for: id) as? Video {
+                  let video: Video = modelContext.existingModel(for: id) {
             return video
         }
         return nil
