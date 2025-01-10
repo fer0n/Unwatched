@@ -747,22 +747,6 @@
         }
       }
     },
-    "bookmarked" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gespeichert"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bookmarked"
-          }
-        }
-      }
-    },
     "bookmarkedVideos" : {
       "localizations" : {
         "de" : {
@@ -4223,6 +4207,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reload Player"
+          }
+        }
+      }
+    },
+    "removeBookmark" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Markierung entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Bookmark"
           }
         }
       }
