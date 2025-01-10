@@ -1643,6 +1643,22 @@
         }
       }
     },
+    "delete" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
     "deleteEverything" : {
       "localizations" : {
         "de" : {
@@ -4143,6 +4159,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rate Unwatched"
+          }
+        }
+      }
+    },
+    "reallyDeleteVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video wirklich löschen?\n\nDies kann nicht rückgängig gemacht werden. Wenn das Video noch existiert, zu einem aktiven Abo gehört und eines der 15 neuesten Videos ist, kann es nach der nächsten Aktualisierung wieder erscheinen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Really delete Video?\n\nThis cannot be undone. If the video still exists, belongs to an active subscription, and is one of the 15 most recent videos, it may reappear after the next refresh."
           }
         }
       }

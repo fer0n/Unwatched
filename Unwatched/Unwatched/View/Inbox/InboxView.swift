@@ -56,7 +56,8 @@ struct InboxView: View {
                                         queueRole: .destructive,
                                         onChange: handleVideoChange,
                                         clearAboveBelowList: .inbox,
-                                        showQueueButton: showAddToQueueButton
+                                        showQueueButton: showAddToQueueButton,
+                                        showDelete: false
                                     )
                                 )
                             } else {
