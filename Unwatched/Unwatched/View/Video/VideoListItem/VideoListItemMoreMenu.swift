@@ -40,17 +40,10 @@ struct VideoListItemMoreMenuView: View {
             .disabled(!canBeCleared)
 
             Button(action: toggleBookmark) {
-                let isBookmarked = videoData.bookmarkedDate != nil
-
-                Image(systemName: "bookmark")
-                    .environment(\.symbolVariants,
-                                 isBookmarked
-                                    ? .fill
-                                    : .slash.fill)
-                if isBookmarked {
-                    Text("bookmarked")
+                if videoData.bookmarkedDate != nil {
+                    Label("removeBookmark", systemImage: "bookmark.slash.fill")
                 } else {
-                    Text("addBookmark")
+                    Label("addBookmark", systemImage: "bookmark.fill")
                 }
             }
             if config.watched ?? (videoData.watchedDate != nil) {

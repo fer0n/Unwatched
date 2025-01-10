@@ -73,13 +73,13 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         Button(action: toggleBookmark) {
             let isBookmarked = player.video?.bookmarkedDate != nil
             if isBookmarked {
-                Text("bookmarked")
+                Text("removeBookmark")
             } else {
                 Text("addBookmark")
             }
             Image(systemName: isBookmarked
-                    ? "bookmark.fill"
-                    : "bookmark.slash.fill")
+                    ? "bookmark.slash.fill"
+                    : "bookmark.fill")
                 .contentTransition(.symbolEffect(.replace))
         }
     }
