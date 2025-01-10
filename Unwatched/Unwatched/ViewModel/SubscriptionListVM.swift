@@ -94,7 +94,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
     func updateSubscriptions(_ ids: Set<PersistentIdentifier>) {
         let modelContext = DataProvider.newContext()
         for persistentId in ids {
-            guard let updatedSub = modelContext.model(for: persistentId) as? Subscription else {
+            guard let updatedSub: Subscription = modelContext.existingModel(for: persistentId) else {
                 Logger.log.warning("updateSubscription failed: no model found")
                 return
             }

@@ -77,8 +77,13 @@ import OSLog
         Logger.log.info("updateVideos: \(ids.count)")
         let modelContext = DataProvider.newContext()
         for persistentId in ids {
-            guard let updatedVideo = modelContext.model(for: persistentId) as? Video else {
-                Logger.log.warning("updateVideo failed: no model found")
+            guard let updatedVideo: Video = modelContext.existingModel(for: persistentId) else {
+                Logger.log.warning("updateVideo failed: no model found; removing video")
+                withAnimation {
+                    if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
+                        videos.remove(at: index)
+                    }
+                }
                 return
             }
 
