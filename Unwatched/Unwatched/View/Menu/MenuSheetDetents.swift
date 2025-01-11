@@ -23,7 +23,6 @@ struct MenuSheetDetents: ViewModifier {
             .presentationDetents(detents, selection: $sheetPos.selectedDetent)
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
-            .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
             .presentationDragIndicator(
                 navManager.searchFocused
                     ? .hidden

@@ -19,6 +19,7 @@ struct MenuViewSheet: ViewModifier {
         @Bindable var navManager = navManager
 
         content
+            .sheetPosParent()
             .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
                 ZStack {
                     Color.backgroundColor.ignoresSafeArea(.all)
@@ -34,6 +35,7 @@ struct MenuViewSheet: ViewModifier {
                     )
                     .opacity(landscapeFullscreen ? 0 : 1)
                 }
+                .sheetPosContent()
                 .environment(\.colorScheme, colorScheme)
             }
     }

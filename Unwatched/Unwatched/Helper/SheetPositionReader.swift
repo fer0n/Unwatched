@@ -25,6 +25,7 @@ import UnwatchedShared
     // Sheet animation and height detection
     var swipedBelow: Bool = true
     var playerControlHeight: CGFloat = .zero
+    @ObservationIgnored var parentheight: CGFloat = .zero
     @ObservationIgnored var landscapeFullscreen: Bool = false
     @ObservationIgnored var debouncedPlayerControlHeight: CGFloat = .zero
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent) {
@@ -95,10 +96,9 @@ import UnwatchedShared
         selectedDetent = .height(Const.minSheetDetent)
     }
 
-    // global position changes
-    func handleSheetMinYUpdate(_ minY: CGFloat) {
-        let value = minY - sheetDistanceToTop
-        let newBelow = value > 50 || minY == 0 // after dismissing the sheet minY becomes 0
+    func handleSheetSizeUpdate(_ size: CGSize) {
+        let height = parentheight - size.height
+        let newBelow = height > Const.playerAboveSheetHeight + 50
         if newBelow != swipedBelow {
             swipedBelow = newBelow
         }
