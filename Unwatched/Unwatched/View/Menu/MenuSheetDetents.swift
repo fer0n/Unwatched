@@ -45,7 +45,9 @@ struct MenuSheetDetents: ViewModifier {
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))
             }
-            .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.swipedBelow)
+            .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.swipedBelow) { _, _ in
+                !landscapeFullscreen
+            }
     }
 
     var detents: Set<PresentationDetent> {
