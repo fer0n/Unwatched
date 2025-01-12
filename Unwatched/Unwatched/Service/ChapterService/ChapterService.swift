@@ -165,7 +165,7 @@ struct ChapterService {
             let oldChapter = index < oldChapters.count
                 ? oldChapters[index]
                 : nil
-            if !chapterEqual(newChapter, oldChapter) || (!newChapter.isActive && oldChapter?.isActive ?? false) {
+            if !chapterEqual(newChapter, oldChapter) {
                 Logger.log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
                 hasChanges = true
                 if let oldChapter {
@@ -185,7 +185,7 @@ struct ChapterService {
         }
     }
 
-    private static var skipActive: Bool {
+    private static var skipSponsorBlock: Bool {
         if UserDefaults.standard.bool(forKey: Const.skipSponsorSegments) {
             return true
         }
@@ -194,7 +194,7 @@ struct ChapterService {
     }
 
     static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
-        if !skipActive { return }
+        if !skipSponsorBlock { return }
 
         for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
             Logger.log.info("skipping: \(chapter)")
@@ -203,11 +203,30 @@ struct ChapterService {
     }
 
     static func skipSponsorSegments(in chapters: [Chapter]) {
-        if !skipActive { return }
-
+        guard skipSponsorBlock else { return }
         for chapter in chapters where chapter.category == .sponsor {
             Logger.log.info("skipping: \(chapter)")
             chapter.isActive = false
+        }
+    }
+
+    static func filterChapters(in video: Video?) {
+        guard let skipChapterText = UserDefaults.standard.string(forKey: Const.skipChapterText),
+              !skipChapterText.isEmpty else {
+            Logger.log.info("No skip chapter text")
+            return
+        }
+        let filterStrings = skipChapterText.split(separator: ",").map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        for chapter in (video?.chapters ?? []) {
+            guard let title = chapter.title else { continue }
+
+            if let matchingFilter = filterStrings.first(where: { title.localizedStandardContains($0) }) {
+                Logger.log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
+                chapter.isActive = false
+            }
         }
     }
 }

@@ -8,13 +8,14 @@ import UnwatchedShared
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
+    @AppStorage(Const.allowRefreshDuringSync) var allowRefreshDuringSync: Bool = false
+    @AppStorage(Const.enableYtWatchHistory) var enableYtWatchHistory: Bool = true
 
     var body: some View {
         ZStack {
@@ -28,19 +29,16 @@ struct VideoSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                }
 
+                MySection("refresh", footer: "allowRefreshDuringSyncFooter") {
                     Toggle(isOn: $autoRefresh) {
                         Text("autoRefresh")
                     }
-                }
 
-                MySection("shortsSettings", footer: "shortsSettingsFooter") {
-                    Picker("shortsSetting", selection: $defaultShortsSetting) {
-                        ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
-                            Text($0.description(defaultSetting: ""))
-                        }
+                    Toggle(isOn: $allowRefreshDuringSync) {
+                        Text("allowRefreshDuringSync")
                     }
-                    .pickerStyle(.menu)
                 }
 
                 MySection("videoTriage") {
@@ -61,7 +59,14 @@ struct VideoSettingsView: View {
                     }
                 }
 
-                SponsorBlockSettingsView()
+                MySection("youtube", footer: "enableYtWatchHistoryHelper") {
+                    Toggle(isOn: $enableYtWatchHistory) {
+                        Text("enableYtWatchHistory")
+                    }
+                    .onChange(of: enableYtWatchHistory) { _, _ in
+                        PlayerManager.reloadPlayer()
+                    }
+                }
             }
             .myNavigationTitle("videoSettings")
         }

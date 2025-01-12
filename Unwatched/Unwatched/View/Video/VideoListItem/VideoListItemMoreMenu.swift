@@ -35,7 +35,7 @@ struct VideoListItemMoreMenuView: View {
             )
             Button(
                 "clearVideo",
-                systemImage: "xmark",
+                systemImage: Const.clearNoFillSF,
                 action: clearVideoEverywhere
             )
             .disabled(!canBeCleared)
