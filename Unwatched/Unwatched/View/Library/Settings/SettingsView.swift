@@ -29,6 +29,10 @@ struct SettingsView: View {
                         Label("playback", systemImage: "play.fill")
                     }
 
+                    NavigationLink(value: LibraryDestination.filter) {
+                        Label("filterSettings", systemImage: "line.3.horizontal.decrease")
+                    }
+
                     NavigationLink(value: LibraryDestination.settingsAppearance) {
                         Label("appearance", systemImage: "paintbrush.fill")
                     }

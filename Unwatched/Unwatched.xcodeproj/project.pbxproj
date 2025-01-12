@@ -135,6 +135,8 @@
 		8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
 		885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
 		885249422D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
+		8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
+		8852B02C2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
 		8866B6942CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
@@ -649,6 +651,7 @@
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
 		8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChangeOrientationButton.swift; sourceTree = "<group>"; };
 		885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentNavBarWorkaround.swift; sourceTree = "<group>"; };
+		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
 		88632AF42B64FD8200C93F82 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreMenuButton.swift; sourceTree = "<group>"; };
 		8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDeleteBackupView.swift; sourceTree = "<group>"; };
@@ -1191,6 +1194,7 @@
 				888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */,
 				88017FD62B96161B00192AEA /* DebugView.swift */,
 				888F74A82BA1FD8400B94822 /* VideoSettingsView.swift */,
+				8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */,
 				88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */,
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
 				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
@@ -1882,6 +1886,7 @@
 				88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				88C5EF8A2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
+				8852B02C2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
 				88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */,
 				889AF9052C50ECD4001CEDE6 /* SetupShareSheetAction.swift in Sources */,
 				CDEB17722C5CCB5800E6FE66 /* VideoCrawlerTests.swift in Sources */,
@@ -2051,6 +2056,7 @@
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
+				8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
 				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,
 				883D5E002BE0B95800989313 /* TabItemView.swift in Sources */,
 				88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */,

@@ -459,6 +459,22 @@
         }
       }
     },
+    "allowRefreshDuringSyncFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Aktualisieren während der Synchronisierung kann zu Duplikaten führen. Diese sollten nach der Synchronisierung automatisch entfernt werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refreshing while the device is syncing may lead to duplicate videos. They should be automatically cleaned up after the sync is done."
+          }
+        }
+      }
+    },
     "allVideos" : {
       "localizations" : {
         "de" : {
@@ -983,6 +999,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video Description"
+          }
+        }
+      }
+    },
+    "chapterFilter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapters"
+          }
+        }
+      }
+    },
+    "chapterFilterFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn ein Video zum aktuellen Video wird, werden alle Kapitel mit diesem Schlüsselwort als inaktiv markiert. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sets chapters with matching keywords to inactive when the video becomes the current one. Use “,” to separate multiple keywords."
           }
         }
       }
@@ -2285,6 +2333,22 @@
         }
       }
     },
+    "filterSettings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter"
+          }
+        }
+      }
+    },
     "frequentlyAskedQuestions" : {
       "localizations" : {
         "de" : {
@@ -2482,13 +2546,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Menü beim Abspielen minimieren"
+            "value" : "Menü minimieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide Menu on Play"
+            "value" : "Hide Menu"
           }
         }
       }
@@ -3747,6 +3811,22 @@
         }
       }
     },
+    "onPlaySettings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Abspielen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On Play"
+          }
+        }
+      }
+    },
     "openInAppBrowser" : {
       "localizations" : {
         "de" : {
@@ -4424,13 +4504,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Queue beim Abspielen/Gesehen Markieren öffnen"
+            "value" : "Queue anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Return to Queue on Play/Watched"
+            "value" : "Return to Queue"
           }
         }
       }
@@ -4440,13 +4520,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Querformat-Vollbildmodus beim Abspielen starten"
+            "value" : "Querformat-Vollbildmodus starten"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter Horizontal Fullscreen on Play"
+            "value" : "Enter Horizontal Fullscreen"
           }
         }
       }
@@ -4643,22 +4723,6 @@
         }
       }
     },
-    "shortsSettings" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Shorts"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Shorts"
-          }
-        }
-      }
-    },
     "shortsSettingsFooter" : {
       "localizations" : {
         "de" : {
@@ -4710,15 +4774,39 @@
     "showFullscreenControlsHelper" : {
       "localizations" : {
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iPhone: Beim Abspielen von Videos iPhone horizontal halten, um den Vollbildmodus zu starten, in dem Steuerelemente links oder rechts vom Video angezeigt werden können. Für Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann.  iPad: Betrifft Steuerelemente nach dem aktivieren des Vollbild-modus."
+          "variations" : {
+            "device" : {
+              "iphone" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Beim Abspielen von Videos iPhone horizontal halten, um den Vollbildmodus zu starten, in dem Steuerelemente links oder rechts vom Video angezeigt werden können. Für Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Betrifft Steuerelemente nach dem aktivieren des Vollbild-modus."
+                }
+              }
+            }
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iPhone: While playing a video, hold your phone horizontal to enter a fullscreen that can show controls on the left or right side. If you wish to enter Picture-in-picture, tap the maximise button inside the video.  iPad: Affects controls after tapping the fullscreen button next to “play”."
+          "variations" : {
+            "device" : {
+              "iphone" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "While playing a video, hold your phone horizontal to enter a fullscreen that can show controls on the left or right side. If you wish to enter Picture-in-picture, tap the maximize button inside the video."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Affects controls after tapping the fullscreen button next to “play”."
+                }
+              }
+            }
           }
         }
       }
@@ -4863,6 +4951,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skip"
+          }
+        }
+      }
+    },
+    "skipChapterText" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlagwort 1, Schlagwort 2, …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyword 1, Keyword 2, …"
           }
         }
       }
@@ -5728,6 +5832,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video Description"
+          }
+        }
+      }
+    },
+    "videoFilter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
           }
         }
       }
