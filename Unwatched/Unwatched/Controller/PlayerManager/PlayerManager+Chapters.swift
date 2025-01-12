@@ -149,12 +149,13 @@ extension PlayerManager {
 
     @MainActor
     func handleChapterRefresh(forceRefresh: Bool = false) {
+        Logger.log.info("handleChapterRefresh")
+        ChapterService.filterChapters(in: video)
+
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
         }
-
-        Logger.log.info("handleChapterRefresh")
 
         guard let videoId = video?.persistentModelID,
               let youtubeId = video?.youtubeId else {

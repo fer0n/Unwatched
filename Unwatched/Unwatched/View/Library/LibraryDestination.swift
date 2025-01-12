@@ -43,6 +43,8 @@ struct LibraryDestinationModifier: ViewModifier {
                     PlaybackSettingsView()
                 case .help:
                     HelpView()
+                case .filter:
+                    FilterSettingsView()
                 }
             }
     }
@@ -69,4 +71,5 @@ enum LibraryDestination: Codable {
     case importSubscriptions
     case debug
     case help
+    case filter
 }

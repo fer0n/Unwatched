@@ -72,7 +72,6 @@ struct RightCheckboxToggleStyle: ToggleStyle {
             Image(systemName: "checkmark")
                 .opacity(configuration.isOn ? 1 : 0)
         }
-        //        .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation {
