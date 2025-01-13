@@ -1024,13 +1024,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn ein Video zum aktuellen Video wird, werden alle Kapitel mit diesem Schlüsselwort als inaktiv markiert. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
+            "value" : "Setzt Kapitel, die eines der Schlüsselwörter enthalten, beim Laden des Videos auf inaktiv. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sets chapters with matching keywords to inactive when the video becomes the current one. Use “,” to separate multiple keywords."
+            "value" : "Sets chapters that include any of the keywords to inactive when the video is loaded into the player. Use “,” to separate multiple keywords."
           }
         }
       }
@@ -4960,13 +4960,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schlagwort 1, Schlagwort 2, …"
+            "value" : "Schlagwort 1,Schlagwort 2,…"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keyword 1, Keyword 2, …"
+            "value" : "Keyword 1,Keyword 2,…"
           }
         }
       }

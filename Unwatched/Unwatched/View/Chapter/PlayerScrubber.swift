@@ -41,15 +41,14 @@ struct PlayerScrubber: View {
             .font(.caption)
 
             ZStack {
-                Color.clear
-                    .background(Color.backgroundColor)
+                Color.foregroundGray.opacity(0.25)
 
                 if let video = player.video,
                    let total = video.duration {
 
                     HStack(spacing: 0) {
                         Color.foregroundGray
-                            .opacity(0.2)
+                            .opacity(0.5)
                             .frame(width: currentScrubberPosition)
                         Color.clear
                     }
