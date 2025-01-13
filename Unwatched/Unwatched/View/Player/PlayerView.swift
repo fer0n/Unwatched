@@ -100,10 +100,7 @@ struct PlayerView: View {
         !(
             navManager.showMenu
                 && !sheetPos.swipedBelow
-                && navManager.videoDetail == nil
-                && navManager.showDescriptionDetail == false
                 && !landscapeFullscreen
-                && navManager.openBrowserUrl == nil
         )
     }
 
