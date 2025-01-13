@@ -116,7 +116,7 @@ extension PlayerManager {
 
     @MainActor
     func restartVideo() {
-        seekAbsolute = 0
+        seek(to: 0)
         play()
     }
 
@@ -141,6 +141,15 @@ extension PlayerManager {
             return true
         }
         return false
+    }
+
+    @MainActor
+    func seek(to time: CGFloat) {
+        if let duration = video?.duration, time >= duration {
+            seekAbsolute = duration - 0.3
+        } else {
+            seekAbsolute = time
+        }
     }
 
     @MainActor

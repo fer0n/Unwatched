@@ -87,9 +87,9 @@ extension PlayerManager {
         if !current.isActive {
             if let nextActive {
                 Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
-                seekAbsolute = nextActive.startTime
+                seek(to: nextActive.startTime)
             } else if let duration = video.duration {
-                seekAbsolute = duration - 0.5
+                seek(to: duration)
             }
         }
 
@@ -109,7 +109,7 @@ extension PlayerManager {
 
     @MainActor
     func setChapter(_ chapter: Chapter) {
-        seekAbsolute = chapter.startTime
+        seek(to: chapter.startTime)
         currentTime = chapter.startTime
         currentChapter = chapter
         handleChapterChange()
