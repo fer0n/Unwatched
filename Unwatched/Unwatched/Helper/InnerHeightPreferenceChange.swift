@@ -55,6 +55,7 @@ struct OnGlobalMinYChangePreferenceKey: PreferenceKey {
 }
 
 struct OnGlobalMinYChange: ViewModifier {
+    @Environment(NavigationManager.self) var navManager
     var action: (_ minY: CGFloat) -> Void
 
     func body(content: Content) -> some View {
@@ -63,7 +64,7 @@ struct OnGlobalMinYChange: ViewModifier {
                 .onGeometryChange(for: CGFloat.self) { proxy in
                     proxy.frame(in: .global).minY
                 } action: { newValue in
-                    action(newValue)
+                    performAction(newValue)
                 }
         } else {
             content
@@ -75,9 +76,15 @@ struct OnGlobalMinYChange: ViewModifier {
                 }
                 .onPreferenceChange(OnGlobalMinYChangePreferenceKey.self) { minY in
                     Task { @MainActor in
-                        action(minY)
+                        performAction(minY)
                     }
                 }
+        }
+    }
+
+    func performAction(_ minY: CGFloat) {
+        if !navManager.hasSheetOpen {
+            action(minY)
         }
     }
 }
@@ -85,12 +92,5 @@ struct OnGlobalMinYChange: ViewModifier {
 extension View {
     func onGlobalMinYChange(action: @escaping (_ minY: CGFloat) -> Void) -> some View {
         self.modifier(OnGlobalMinYChange(action: action))
-    }
-}
-
-struct HeightAndOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect { CGRect() }
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
-        value = nextValue()
     }
 }
