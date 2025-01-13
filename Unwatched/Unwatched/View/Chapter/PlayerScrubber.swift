@@ -147,7 +147,7 @@ struct PlayerScrubber: View {
            let newTime = getTimeFromPosition(initialDragPosition + dragOffset) {
             let floatDuration = CGFloat(duration)
             let cleanedTime = getWithinBounds(newTime, maxValue: floatDuration)
-            player.seekAbsolute = cleanedTime
+            player.seek(to: cleanedTime)
             player.currentTime = cleanedTime
             player.handleChapterChange()
         }

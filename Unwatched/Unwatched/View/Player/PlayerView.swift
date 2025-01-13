@@ -242,7 +242,7 @@ struct PlayerView: View {
     @MainActor
     func handleVideoEnded() {
         if player.isRepeating {
-            player.seekAbsolute = 0
+            player.seek(to: 0)
             return
         }
 
