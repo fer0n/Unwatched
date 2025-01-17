@@ -53,7 +53,11 @@ struct ContentView: View {
                                     ? nil
                                     : proxy.size.height * 0.4)
                             .setColorScheme()
-                            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+                            .if(isLandscape) { view in
+                                view.clipShape(RoundedRectangle(
+                                    cornerRadius: 9, style: .continuous
+                                ))
+                            }
                             .edgesIgnoringSafeArea(.all)
                     }
                 }
