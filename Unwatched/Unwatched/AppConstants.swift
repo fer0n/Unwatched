@@ -15,18 +15,21 @@ extension Const {
         Const.videoAddedToQueueNotification: false,
         Const.showNotificationBadge: false,
 
+        // Filter
+        Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
+        Const.skipChapterText: "",
+        Const.mergeSponsorBlockChapters: false,
+        Const.youtubePremium: false,
+        Const.skipSponsorSegments: false,
+
         // Videos
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
-        Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
         Const.requireClearConfirmation: true,
         Const.showClearQueueButton: true,
         Const.showAddToQueueButton: false,
-        Const.mergeSponsorBlockChapters: false,
         Const.enableYtWatchHistory: true,
         Const.autoRefresh: true,
         Const.enableQueueContextMenu: false,
-        Const.youtubePremium: false,
-        Const.skipSponsorSegments: false,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
