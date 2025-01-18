@@ -45,6 +45,7 @@ struct CachedImageView<Content, Content2>: View where Content: View, Content2: V
         }
     }
 
+    @MainActor
     func getUIImage(_ url: URL) -> Task<(UIImage?, ImageCacheInfo?), Error> {
         let cacheInfo = self.cacheManager[url.absoluteString]
 

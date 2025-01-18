@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 struct BrowserViewSheet: ViewModifier {
     var navManager: Bindable<NavigationManager>
