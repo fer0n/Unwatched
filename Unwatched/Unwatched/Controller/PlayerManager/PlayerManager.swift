@@ -79,7 +79,9 @@ import UnwatchedShared
     @MainActor
     private func handleNewVideoSet(_ oldValue: Video?) {
         currentEndTime = 0
-        currentTime = video?.elapsedSeconds ?? 0
+        withAnimation {
+            currentTime = video?.elapsedSeconds ?? 0
+        }
         isPlaying = false
         currentChapter = nil
         nextChapter = nil
