@@ -191,7 +191,7 @@ extension PlayerManager {
                 Logger.log.info("SponsorBlock: Refreshed")
                 ChapterService.skipSponsorSegments(in: &newChapters)
 
-                let modelContext = DataProvider.shared.container.mainContext
+                let modelContext = DataProvider.mainContext
                 ChapterService.updateIfNeeded(newChapters, video, modelContext)
                 try modelContext.save()
             } catch {

@@ -103,6 +103,11 @@ public final class DataProvider: Sendable {
         ModelContext(shared.container)
     }
     
+    @MainActor
+    public static var mainContext: ModelContext {
+        shared.container.mainContext
+    }
+    
     public static let dbEntries: [any PersistentModel.Type] = [
         Video.self,
         Subscription.self,

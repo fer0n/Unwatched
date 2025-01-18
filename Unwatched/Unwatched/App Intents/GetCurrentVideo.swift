@@ -14,7 +14,7 @@ struct GetCurrentVideo: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<VideoEntity> {
-        let context = DataProvider.newContext()
+        let context = DataProvider.mainContext
         let sort = SortDescriptor<QueueEntry>(\.order)
         let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
         let entries = try context.fetch(fetch)

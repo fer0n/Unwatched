@@ -75,7 +75,7 @@ import OSLog
     @MainActor
     func updateVideos(_ ids: Set<PersistentIdentifier>) {
         Logger.log.info("updateVideos: \(ids.count)")
-        let modelContext = DataProvider.newContext()
+        let modelContext = DataProvider.mainContext
         for persistentId in ids {
             guard let updatedVideo: Video = modelContext.existingModel(for: persistentId) else {
                 Logger.log.warning("updateVideo failed: no model found; removing video")
