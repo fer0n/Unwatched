@@ -18,7 +18,9 @@ extension PlayerManager {
 
     @MainActor
     func monitorChapters(time: Double) {
-        currentTime = time
+        withAnimation {
+            currentTime = time
+        }
         if let endTime = currentEndTime, time >= endTime {
             handleChapterChange()
         }
@@ -110,7 +112,9 @@ extension PlayerManager {
     @MainActor
     func setChapter(_ chapter: Chapter) {
         seek(to: chapter.startTime)
-        currentTime = chapter.startTime
+        withAnimation {
+            currentTime = chapter.startTime
+        }
         currentChapter = chapter
         handleChapterChange()
     }

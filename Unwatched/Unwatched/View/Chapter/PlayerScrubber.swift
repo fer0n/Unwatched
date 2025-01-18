@@ -80,7 +80,6 @@ struct PlayerScrubber: View {
                     )
             }
             .disabled(isDisabled)
-            .animation(.default, value: currentScrubberWidth)
             .animation(.default.speed(3), value: isInactive)
         }
     }
