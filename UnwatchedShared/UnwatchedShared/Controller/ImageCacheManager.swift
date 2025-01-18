@@ -13,10 +13,9 @@ import OSLog
 /// This avoids performance issues when saving data.
 @Observable public class ImageCacheManager {
     private var cache = [String: ImageCacheInfo]()
-    
     public init() { }
     
-    subscript(id: String?) -> ImageCacheInfo? {
+    public subscript(id: String?) -> ImageCacheInfo? {
         get {
             guard let id else { return nil }
             return cache[id]
@@ -46,7 +45,12 @@ import OSLog
     }
 }
 
-public struct ImageCacheInfo {
+public struct ImageCacheInfo: Sendable {
     public var url: URL
     public var data: Data
+    
+    public init(url: URL, data: Data) {
+        self.url = url
+        self.data = data
+    }
 }
