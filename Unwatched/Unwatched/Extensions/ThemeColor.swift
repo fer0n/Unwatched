@@ -68,7 +68,9 @@ extension ThemeColor {
     func setAppIcon() {
         Task { @MainActor in
             UIApplication.shared.setAlternateIconName(self.appIconName) { error in
-                Logger.log.error("\(error)")
+                if let error {
+                    Logger.log.error("Error setting alternate icon: \(error)")
+                }
             }
         }
     }
