@@ -17,6 +17,7 @@ struct UrlService {
     static let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6477287463?action=write-review")!
     static let githubUrl = URL(string: "https://github.com/fer0n/Unwatched")!
     static let mastodonUrl = URL(string: "https://indieapps.space/@unwatched")!
+    static let blueskyUrl = URL(string: "https://bsky.app/profile/unwatched.bsky.social")!
     static let releasesUrl = URL(string: "https://github.com/fer0n/Unwatched/releases")!
 
     static func getEmailUrl(body: String) -> URL {
