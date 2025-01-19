@@ -28,8 +28,8 @@ extension UserDataService {
         for (key, value) in settings {
             UserDefaults.standard.setValue(value.value, forKey: key)
         }
-        setAppIconIfNeeded(settings)
         NotificationManager.ensurePermissionsAreGivenForSettings()
+        setAppIconIfNeeded(settings)
     }
 
     static private func setAppIconIfNeeded(_ settings: [String: AnyCodable]?) {
