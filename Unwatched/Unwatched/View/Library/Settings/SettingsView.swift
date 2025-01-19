@@ -83,6 +83,9 @@ struct SettingsView: View {
                     Link(destination: UrlService.mastodonUrl) {
                         LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
+                    Link(destination: UrlService.blueskyUrl) {
+                        LibraryNavListItem("unwatchedOnBluesky", imageName: "bluesky_logo")
+                    }
                 }
 
                 Section {
