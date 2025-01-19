@@ -258,8 +258,8 @@ extension PlayerWebView {
             const screenWidth = window.innerWidth;
             const touch = event.touches[0];
 
-            const touchSize = screenWidth * 0.15;
-            const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < touchSize;
+            const maxTouchSize = Math.min(100, screenWidth * 0.13);
+            const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < maxTouchSize;
 
             if (isCenterTouch && !isPinching) {
                 centerTouch = true;
