@@ -37,7 +37,7 @@ struct ChapterDescriptionView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 30)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: 800, alignment: .leading)
 
                 Spacer()
                     .frame(height: bottomSpacer)

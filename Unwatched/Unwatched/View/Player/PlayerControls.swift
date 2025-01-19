@@ -177,11 +177,11 @@ struct PlayerControls: View {
         .animation(.default.speed(3), value: showControls)
         .animation(.default, value: player.isCompactHeight)
         .contentShape(Rectangle())
-        .onTapGesture {
+        .simultaneousGesture(TapGesture().onEnded {
             if !showControls {
                 autoHideVM.setShowControls()
             }
-        }
+        })
         .onHover { over in
             autoHideVM.setKeepVisible(over, "hover")
         }
