@@ -43,6 +43,7 @@ struct ChapterDescriptionView: View {
                     .frame(height: bottomSpacer)
 
                 Spacer()
+                    .frame(maxWidth: .infinity)
             }
             .onAppear {
                 if hasChapters && player.video == video && navManager.scrollToCurrentChapter {
