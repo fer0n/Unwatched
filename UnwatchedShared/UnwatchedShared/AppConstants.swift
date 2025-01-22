@@ -44,6 +44,7 @@ public struct Const {
     public static let maxYtShortsDuration: Double = 60 * 3
     public static let aspectRatioTolerance: Double = 0.1
     public static let secondsConsideredCloseToEnd: CGFloat = 18
+    public static let seekToEndBuffer: CGFloat = 0.3
     
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
