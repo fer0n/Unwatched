@@ -27,6 +27,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var publishedDate: Date?
     public var updatedDate: Date?
     public var watchedDate: Date?
+    public var deferDate: Date?
     public var isYtShort: Bool?
 
     public var videoDescription: String?
@@ -80,6 +81,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             videoDescription: description,
             chapters: newChapters.map { $0.getChapter },
             watchedDate: self.watchedDate,
+            deferDate: self.deferDate,
             isYtShort: self.isYtShort,
             bookmarkedDate: self.bookmarkedDate,
             clearedInboxDate: self.clearedInboxDate,
@@ -101,6 +103,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         publishedDate: Date? = nil,
         updatedDate: Date? = nil,
         watchedDate: Date? = nil,
+        deferDate: Date? = nil,
         isYtShort: Bool? = nil,
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
@@ -123,6 +126,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.publishedDate = publishedDate
         self.updatedDate = updatedDate
         self.watchedDate = watchedDate
+        self.deferDate = deferDate
         self.isYtShort = isYtShort
         self.videoDescription = videoDescription
         self.bookmarkedDate = bookmarkedDate
@@ -147,6 +151,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
         updatedDate = try container.decodeIfPresent(Date.self, forKey: .updatedDate)
         watchedDate = try container.decodeIfPresent(Date.self, forKey: .watchedDate)
+        deferDate = try container.decodeIfPresent(Date.self, forKey: .deferDate)
         isYtShort = try container.decodeIfPresent(Bool.self, forKey: .isYtShort) ?? false
         videoDescription = try container.decodeIfPresent(String.self, forKey: .videoDescription)
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
@@ -168,6 +173,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
         try container.encodeIfPresent(updatedDate, forKey: .updatedDate)
         try container.encodeIfPresent(watchedDate, forKey: .watchedDate)
+        try container.encodeIfPresent(deferDate, forKey: .deferDate)
         try container.encodeIfPresent(isYtShort, forKey: .isYtShort)
         try container.encodeIfPresent(videoDescription, forKey: .videoDescription)
         try container.encodeIfPresent(bookmarkedDate, forKey: .bookmarkedDate)
@@ -189,6 +195,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
     case publishedDate
     case updatedDate
     case watchedDate
+    case deferDate
     case isYtShort
     case videoDescription
     case bookmarkedDate

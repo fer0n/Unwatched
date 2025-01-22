@@ -20,6 +20,14 @@ public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
     public static func isQueue(_ placement: VideoPlacement?) -> Bool {
         placement == .queueLast || placement == .queueNext
     }
+    
+    public var resolvedPlacement: VideoPlacement {
+        if self == .defaultPlacement {
+            let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
+            return VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
+        }
+        return self
+    }
 }
 
 public struct DefaultVideoPlacement {

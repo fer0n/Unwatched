@@ -44,17 +44,28 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        Logger.log.info("Received in-App notification")
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        Logger.log.info("Received in-App notification: \(notification)")
+        handleDeferedNotification(notification)
         completionHandler([])
     }
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                             didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
+        handleDeferedNotification(response.notification)
         handleNotificationActions(response)
         handleTabDestination(response)
         completionHandler()
+    }
+
+    nonisolated func handleDeferedNotification(_ notification: UNNotification) {
+        let userInfo = notification.request.content.userInfo
+        let addEntriesOnReceive = userInfo[Const.addEntriesOnReceive] as? String == "true"
+        if addEntriesOnReceive {
+            VideoService.consumeDeferredVideos()
+        }
     }
 
     nonisolated func handleTabDestination(_ response: UNNotificationResponse) {
@@ -64,14 +75,19 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             Task { @MainActor in
                 navManager?.navigateTo(tab)
             }
-            Logger.log.info("Notification destination: \(destination))")
+            Logger.log.info("Notification destination: \(destination)")
         } else {
             Logger.log.info("Tap on notification without destination")
         }
     }
 
-    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {
-        let userInfo = response.notification.request.content.userInfo
+    nonisolated func getValuesFromNotification(
+        _ notification: UNNotification
+    ) -> (
+        youtubeId: String,
+        placement: VideoPlacementArea?
+    )? {
+        let userInfo = notification.request.content.userInfo
 
         let tab: NavigationTab? = {
             if let destination = userInfo[Const.tapDestination] as? NavigationTab.RawValue {
@@ -83,6 +99,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
         guard let youtubeId = userInfo[Const.notificationVideoId] as? String else {
             Logger.log.warning("Notification action cannot function")
+            return nil
+        }
+        return (youtubeId, placement)
+    }
+
+    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {
+        guard let (youtubeId, placement) = getValuesFromNotification(response.notification) else {
+            Logger.log.warning("handleNotificationActions: Cannot get values from notification")
             return
         }
 

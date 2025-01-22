@@ -78,10 +78,23 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handlePip(payload)
         case "urlClicked":
             handleUrlClicked(payload)
+        case "offline":
+            handleOffline(payload)
         case "error":
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func handleOffline(_ payload: String?) {
+        guard let payload, !payload.isEmpty else {
+            return
+        }
+        if let date = Date.parseYtOfflineDate(payload) {
+            Logger.log.info("handleOffline: defer video to: \(date)")
+            parent.deferVideoDate = IdentifiableDate(date)
+            parent.player.pause()
         }
     }
 

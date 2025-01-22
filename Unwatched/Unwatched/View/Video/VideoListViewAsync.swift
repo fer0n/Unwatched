@@ -53,6 +53,7 @@ struct VideoListViewAsync: View {
                 hasInboxEntry: video.hasInboxEntry,
                 hasQueueEntry: video.queueEntry != nil,
                 watched: video.watchedDate != nil,
+                deferred: video.deferDate != nil,
                 onChange: {
                     videoListVM.updateVideo(video)
                 },

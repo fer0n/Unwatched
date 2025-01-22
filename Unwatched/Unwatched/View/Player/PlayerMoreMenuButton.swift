@@ -7,10 +7,13 @@ import SwiftUI
 import UnwatchedShared
 
 struct PlayerMoreMenuButton<Content>: View where Content: View {
+    @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
     @State var flashSymbol: String?
+
+    @State var showDeferDateSelector: Bool = false
 
     var sleepTimerVM: SleepTimerViewModel
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -24,6 +27,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
             bookmarkButton
             copyUrlButton
+            deferDateButton
 
             if let video = player.video, let url = video.url {
                 Divider()
@@ -39,6 +43,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         .padding(5)
                 }
             }
+
         } label: {
             self.contentImage(Image(systemName: systemName))
                 .contentTransition(.symbolEffect(.replace))
@@ -53,6 +58,23 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         }
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .dateSelectorSheet(
+            show: $showDeferDateSelector,
+            video: player.video
+        ) {
+            player.loadTopmostVideoFromQueue(modelContext: modelContext)
+        }
+    }
+
+    var deferDateButton: some View {
+        Button {
+            navManager.showMenu = false
+            showDeferDateSelector = true
+        } label: {
+            Text("deferVideo")
+            Image(systemName: "clock.fill")
+                .padding(5)
+        }
     }
 
     @ViewBuilder

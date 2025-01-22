@@ -8,6 +8,15 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
+struct IdentifiableDate {
+    let date: Date?
+    let id = UUID()
+
+    init(_ date: Date?) {
+        self.date = date
+    }
+}
+
 struct PlayerWebView: UIViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.playbackSpeed) var playbackSpeed = 1.0
@@ -17,6 +26,7 @@ struct PlayerWebView: UIViewRepresentable {
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
     @Binding var appNotificationVM: AppNotificationVM
+    @Binding var deferVideoDate: IdentifiableDate?
 
     let playerType: PlayerType
     let onVideoEnded: () -> Void
@@ -195,6 +205,7 @@ struct PreviousState {
             overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
             appNotificationVM: .constant(AppNotificationVM()),
+            deferVideoDate: .constant(nil),
             playerType: .youtubeEmbedded,
             onVideoEnded: {
 

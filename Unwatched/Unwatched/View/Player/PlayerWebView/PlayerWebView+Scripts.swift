@@ -32,7 +32,21 @@ extension PlayerWebView {
     func getPlayScript() -> String {
         if player.unstarted {
             Logger.log.info("PLAY: unstarted")
-            return "document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2).click();"
+            return """
+                document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2).click();
+                setTimeout(() => checkOffline(0), 200);
+
+                function checkOffline(retries) {
+                    if (isNaN(video?.duration)) {
+                        const offlineElement = document.querySelector('.ytp-offline-slate-subtitle-text');
+                        if (offlineElement) {
+                            sendMessage("offline", offlineElement.innerText);
+                        } else if (retries < 2) {
+                            setTimeout(() => checkOffline(retries + 1), 500 * (retries + 1));
+                        }
+                    }
+                }
+            """
         }
         return "video.play();"
     }

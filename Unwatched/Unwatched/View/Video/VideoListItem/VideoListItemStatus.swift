@@ -13,6 +13,7 @@ struct VideoListItemStatus: View {
     var hasInboxEntry: Bool?
     var hasQueueEntry: Bool?
     var watched: Bool?
+    var deferred: Bool?
 
     @ScaledMetric var size = 23
 
@@ -39,6 +40,9 @@ struct VideoListItemStatus: View {
         if hasQueueEntry == true {
             return ("arrow.uturn.right.circle.fill", defaultColor)
         }
+        if deferred == true {
+            return ("clock.circle.fill", .orange)
+        }
         if watched == true {
             return (Const.watchedSF, defaultColor)
         }
@@ -49,8 +53,9 @@ struct VideoListItemStatus: View {
 #Preview {
     VideoListItemStatus(
         youtubeId: "id",
-        hasInboxEntry: true,
+        hasInboxEntry: false,
         hasQueueEntry: false,
-        watched: false
+        watched: false,
+        deferred: true
     )
 }

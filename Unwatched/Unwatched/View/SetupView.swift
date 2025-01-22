@@ -42,7 +42,7 @@ struct SetupView: View {
             .onChange(of: scenePhase) {
                 switch scenePhase {
                 case .active:
-                    NotificationManager.clearNotifications()
+                    NotificationManager.handleNotifications(checkDeferred: true)
                     Logger.log.info("active")
                     Task {
                         refresher.handleAutoBackup(UIDevice.current.name)
@@ -50,7 +50,7 @@ struct SetupView: View {
                     }
                 case .background:
                     Logger.log.info("background")
-                    NotificationManager.clearNotifications()
+                    NotificationManager.handleNotifications()
                     Task {
                         await saveData()
                     }

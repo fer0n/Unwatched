@@ -27,7 +27,8 @@ struct SideloadingView: View {
                                 showVideoStatus: true,
                                 hasInboxEntry: video.inboxEntry != nil,
                                 hasQueueEntry: video.queueEntry != nil,
-                                watched: video.watchedDate != nil
+                                watched: video.watchedDate != nil,
+                                deferred: video.deferDate != nil
                             )
                         )
                     }
