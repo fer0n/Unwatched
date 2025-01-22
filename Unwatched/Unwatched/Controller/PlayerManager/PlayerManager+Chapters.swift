@@ -90,7 +90,7 @@ extension PlayerManager {
             if let nextActive {
                 Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
                 seek(to: nextActive.startTime)
-            } else if let duration = video.duration {
+            } else if let duration = video.duration, time < duration - Const.seekToEndBuffer {
                 seek(to: duration)
             }
         }

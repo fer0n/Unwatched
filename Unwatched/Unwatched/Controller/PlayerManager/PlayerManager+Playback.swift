@@ -146,7 +146,7 @@ extension PlayerManager {
     @MainActor
     func seek(to time: CGFloat) {
         if let duration = video?.duration, time >= duration {
-            seekAbsolute = duration - 0.5
+            seekAbsolute = duration - Const.seekToEndBuffer
         } else {
             seekAbsolute = time
         }
