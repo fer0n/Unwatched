@@ -1787,6 +1787,22 @@
         }
       }
     },
+    "disableAsyncListRefresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asynchrones neu laden von Listen deaktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Async List Refresh"
+          }
+        }
+      }
+    },
     "dismiss" : {
       "localizations" : {
         "de" : {
