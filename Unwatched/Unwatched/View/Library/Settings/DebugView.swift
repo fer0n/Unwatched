@@ -16,6 +16,7 @@ struct DebugView: View {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
+    @AppStorage(Const.disableAsyncListRefresh) var disableAsyncListRefresh: Bool = false
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
@@ -65,6 +66,12 @@ struct DebugView: View {
                         \(info.countSubscriptions)
                         """)
                             .foregroundStyle(.secondary)
+                    }
+                }
+
+                MySection("subscriptions") {
+                    Toggle(isOn: $disableAsyncListRefresh) {
+                        Text("disableAsyncListRefresh")
                     }
                 }
             }
