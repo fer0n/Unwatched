@@ -1691,6 +1691,38 @@
         }
       }
     },
+    "deferDateHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos mit Aufschubdatum erscheinen zum festgelegten Datum entweder in der Inbox oder in der Queue, je nach Kanal-Einstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deferred videos will re-appear at the specified date in either Inbox or Queue per subscription settings."
+          }
+        }
+      }
+    },
+    "deferVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufschubdatum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Defer Date"
+          }
+        }
+      }
+    },
     "delete" : {
       "localizations" : {
         "de" : {
@@ -4355,6 +4387,22 @@
         }
       }
     },
+    "removeDeferDate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufschubdatum entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Defer Date"
+          }
+        }
+      }
+    },
     "removeDuplicates" : {
       "localizations" : {
         "de" : {
@@ -4591,6 +4639,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select All"
+          }
+        }
+      }
+    },
+    "selectDate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum auswählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Date"
           }
         }
       }
@@ -5592,6 +5656,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Temporary Playback Speed"
+          }
+        }
+      }
+    },
+    "tomorrow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morgen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow"
           }
         }
       }

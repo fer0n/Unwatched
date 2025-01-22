@@ -77,13 +77,21 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UserDefaults.standard.setValue(shortSetting.rawValue, forKey: Const.defaultShortsSetting)
         }
     }
+    
+    public static var migrateV1p4toV1p5 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p4.self,
+        toVersion: UnwatchedSchemaV1p5.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
 
     public static var stages: [MigrationStage] {
         [
             migrateV1toV1p1,
             migrateV1p1toV1p2,
             migrateV1p2toV1p3,
-            migrateV1p3toV1p4
+            migrateV1p3toV1p4,
+            migrateV1p4toV1p5
         ]
     }
 }

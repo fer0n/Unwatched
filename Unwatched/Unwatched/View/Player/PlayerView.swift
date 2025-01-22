@@ -25,6 +25,7 @@ struct PlayerView: View {
     @State var autoHideVM = AutoHideVM()
     @State var overlayVM = OverlayFullscreenVM.shared
     @State var appNotificationVM = AppNotificationVM()
+    @State var deferVideoDate: IdentifiableDate?
 
     var landscapeFullscreen = true
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -88,6 +89,9 @@ struct PlayerView: View {
             }
         }
         .appNotificationOverlay($appNotificationVM)
+        .dateSelectorSheet(video: player.video, detectedDate: $deferVideoDate) {
+            player.loadTopmostVideoFromQueue(modelContext: modelContext)
+        }
         .persistentSystemOverlays(
             landscapeFullscreen || controlsHidden
                 ? .hidden
@@ -125,6 +129,7 @@ struct PlayerView: View {
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 appNotificationVM: $appNotificationVM,
+                deferVideoDate: $deferVideoDate,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
                 setShowMenu: setShowMenu,
@@ -172,6 +177,7 @@ struct PlayerView: View {
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
                 appNotificationVM: $appNotificationVM,
+                deferVideoDate: $deferVideoDate,
                 playerType: .youtube,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe

@@ -169,6 +169,8 @@
 		887EB2DF2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */; };
 		887EB2E12CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */; };
 		887EB2E22CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */; };
+		888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888050C12D3E5576002D02EB /* DeferDateSelector.swift */; };
+		888050C32D3E5576002D02EB /* DeferDateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888050C12D3E5576002D02EB /* DeferDateSelector.swift */; };
 		8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */; };
 		888322522B872EE1004E2DE4 /* BrowserUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888322512B872EE1004E2DE4 /* BrowserUrl.swift */; };
 		8884ECFC2C58B7490085BD52 /* FullscreenPlayerControlsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */; };
@@ -674,6 +676,7 @@
 		887E82AF2CD8FD8500B196EA /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSheetDetents.swift; sourceTree = "<group>"; };
 		887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewUnavailable.swift; sourceTree = "<group>"; };
+		888050C12D3E5576002D02EB /* DeferDateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferDateSelector.swift; sourceTree = "<group>"; };
 		8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		888322512B872EE1004E2DE4 /* BrowserUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUrl.swift; sourceTree = "<group>"; };
 		888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserTip.swift; sourceTree = "<group>"; };
@@ -907,6 +910,7 @@
 		88143EB52B4A7FEF00829E13 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				888050C12D3E5576002D02EB /* DeferDateSelector.swift */,
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
 				88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */,
 				88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */,
@@ -1878,6 +1882,7 @@
 				88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
+				888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
 				88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				88C5EF8A2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
@@ -2075,6 +2080,7 @@
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
 				88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */,
+				888050C32D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
 				88373C0C2C8AF3EA00ACBB3B /* PreviousChapterButton.swift in Sources */,
 				888C49C52B5FA75700CDEC76 /* UrlService.swift in Sources */,
 				88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */,

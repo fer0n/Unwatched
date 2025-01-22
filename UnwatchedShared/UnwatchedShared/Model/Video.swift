@@ -29,6 +29,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
 
     public var thumbnailUrl: URL?
     public var publishedDate: Date?
+    public var deferDate: Date?
     public var updatedDate: Date?
     public var duration: Double?
     public var elapsedSeconds: Double?
@@ -112,6 +113,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             publishedDate: publishedDate,
             updatedDate: updatedDate,
             watchedDate: watchedDate,
+            deferDate: deferDate,
             isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
@@ -140,6 +142,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 videoDescription: String? = nil,
                 chapters: [Chapter] = [],
                 watchedDate: Date? = nil,
+                deferDate: Date? = nil,
                 isYtShort: Bool? = nil,
                 bookmarkedDate: Date? = nil,
                 clearedInboxDate: Date? = nil,
@@ -156,6 +159,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.videoDescription = videoDescription
         self.chapters = chapters
         self.watchedDate = watchedDate
+        self.deferDate = deferDate
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate

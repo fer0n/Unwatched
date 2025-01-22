@@ -388,4 +388,36 @@ extension VideoActor {
             try modelContext.save()
         }
     }
+
+    func consumeDeferredVideos() {
+        let past = Date.distantFuture
+        let now = Date.now
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.deferDate != nil && $0.deferDate ?? past <= now })
+        let videos = try? modelContext.fetch(fetch)
+
+        Logger.log.info("consumeDeferredVideos: \(videos?.count ?? 0)")
+
+        let defaultPlacement = getDefaultVideoPlacement()
+
+        for video in videos ?? [] {
+            video.deferDate = nil
+            guard video.inboxEntry == nil, video.queueEntry == nil else {
+                continue
+            }
+
+            let sub = video.subscription
+            var placement = sub?.placeVideosIn ?? .inbox
+            if sub?.placeVideosIn == .defaultPlacement {
+                placement = defaultPlacement.videoPlacement
+            }
+
+            _ = addSingleVideoTo(
+                [video],
+                videoPlacement: placement,
+                hideShorts: false
+            )
+        }
+
+        try? modelContext.save()
+    }
 }

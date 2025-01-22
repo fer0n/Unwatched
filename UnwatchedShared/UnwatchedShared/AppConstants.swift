@@ -90,6 +90,7 @@ public struct Const {
     public static let notificationActionQueue = "notificationActionQueue"
     public static let notificationActionClear = "notificationActionClear"
     public static let notificationVideoId = "notificationVideoId"
+    public static let addEntriesOnReceive = "addEntriesOnReceive"
     public static let shortcutItemPasteAndPlay = "PasteAndPlay"
 
     // MARK: - SF Symbols

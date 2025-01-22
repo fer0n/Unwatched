@@ -289,4 +289,49 @@ extension VideoService {
         }
         return nil
     }
+
+    @MainActor
+    static func deferVideo(_ videoId: PersistentIdentifier, deferDate: Date) {
+        Logger.log.info("deferVideo: \(deferDate)")
+        let context = DataProvider.mainContext
+        let video: Video? = context.existingModel(for: videoId)
+        guard let video else {
+            return
+        }
+        video.deferDate = deferDate
+        clearEntries(from: video, updateCleared: false, modelContext: context)
+        try? context.save()
+
+        scheduleDeferedVideoNotification(video, deferDate: deferDate)
+    }
+
+    @MainActor
+    static func scheduleDeferedVideoNotification(_ video: Video, deferDate: Date) {
+        var info = NotificationInfo(video.subscription?.title ?? "", video.title, video: video.toExport)
+        let imageUrl = video.thumbnailUrl
+
+        Task {
+            let userInfo = NotificationManager.getUserInfo(tab: nil, notificationInfo: info, addEntriesOnReceive: true)
+            if let imageUrl {
+                let data = try await ImageService.loadImageData(url: imageUrl)
+                info.video?.thumbnailData = data
+            }
+            NotificationManager.sendNotification(info, userInfo: userInfo, triggerDate: deferDate)
+        }
+    }
+
+    @MainActor
+    static func cancelDeferVideo(_ video: Video) {
+        video.deferDate = nil
+        Task {
+            await NotificationManager.cancelNotificationForVideo(video.youtubeId)
+        }
+    }
+
+    static func consumeDeferredVideos() {
+        Task.detached {
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            await repo.consumeDeferredVideos()
+        }
+    }
 }

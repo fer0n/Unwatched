@@ -12,27 +12,36 @@ import UnwatchedShared
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) async {
+        Logger.log.info("notifyNewVideos")
+
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
         let notificationInfos = await newVideoInfo.getNewVideoNotificationContent(
             includeInbox: notifyAboutInbox,
-            includeQueue: notifyAboutQueue)
+            includeQueue: notifyAboutQueue
+        )
 
         for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)
-            let userInfo = getUserInfo(tab: tabDestination, notificationInfo: notificationInfo)
+            let userInfo = getUserInfo(
+                tab: tabDestination,
+                notificationInfo: notificationInfo,
+                addEntriesOnReceive: newVideoInfo.addEntriesOnReceive
+            )
             sendNotification(notificationInfo, userInfo: userInfo)
         }
     }
 
-    private static func sendNotification(_ notificationInfo: NotificationInfo,
-                                         userInfo: [AnyHashable: Any]? = nil) {
+    static func sendNotification(_ notificationInfo: NotificationInfo,
+                                 userInfo: [AnyHashable: Any]? = nil,
+                                 triggerDate: Date? = nil) {
+        Logger.log.info("sendNotification: \(notificationInfo.title)")
         let content = UNMutableNotificationContent()
         content.title = notificationInfo.title
         content.body = notificationInfo.subtitle
         content.sound = UNNotificationSound.default
-        if let userInfo = userInfo {
+        if let userInfo {
             content.userInfo = userInfo
         }
 
@@ -44,12 +53,39 @@ struct NotificationManager {
             content.categoryIdentifier = categoryIdentifier
         }
 
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        let trigger: UNNotificationTrigger?
+        if let triggerDate {
+            let dateComponents = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute, .second],
+                from: triggerDate
+            )
+            Logger.log.info("Created trigger for: \(dateComponents)")
+            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        } else {
+            trigger = nil
+        }
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
                 Logger.log.error("Error scheduling notification: \(error)")
             }
         }
+    }
+
+    static func cancelNotificationForVideo(_ youtubeId: String) async {
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+
+        print("pending", pending)
+
+        let matchingRequests = pending.filter { request in
+            request.content.userInfo[Const.notificationVideoId] as? String == youtubeId
+        }
+
+        let identifiers = matchingRequests.map { $0.identifier }
+        Logger.log.info("cancelNotificationForVideo: \(identifiers)")
+        center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 
     private static func getNavigationTab(_ newVideoInfo: NewVideosNotificationInfo,
@@ -83,17 +119,24 @@ struct NotificationManager {
         }
     }
 
-    static func getUserInfo(tab: NavigationTab?, notificationInfo: NotificationInfo?) -> [AnyHashable: Any]? {
-        guard let tab = tab else {
-            return nil
+    static func getUserInfo(
+        tab: NavigationTab?,
+        notificationInfo: NotificationInfo?,
+        addEntriesOnReceive: Bool
+    ) -> [AnyHashable: Any]? {
+        var result = [AnyHashable: Any]()
+        if let tab {
+            result[Const.tapDestination] = tab.rawValue
         }
-        var result = [Const.tapDestination: tab.rawValue]
         if let youtubeId = notificationInfo?.video?.youtubeId {
             result[Const.notificationVideoId] = youtubeId
         } else {
             Logger.log.info("ModelId not present in notificationInfo")
         }
-        return result
+        if addEntriesOnReceive {
+            result[Const.addEntriesOnReceive] = "true"
+        }
+        return result.isEmpty ? nil : result
     }
 
     static func askNotificationPermission() async throws {
@@ -147,13 +190,33 @@ struct NotificationManager {
         }
     }
 
-    static func clearNotifications() {
+    static func handleNotifications(checkDeferred: Bool = false) {
         let center = UNUserNotificationCenter.current()
-        center.removeAllDeliveredNotifications()
-        center.removeAllPendingNotificationRequests()
 
         center.setBadgeCount(0)
         UserDefaults.standard.setValue(0, forKey: Const.badgeCount)
+
+        Task {
+            let delivered = await center.deliveredNotifications()
+            center.removeAllDeliveredNotifications()
+            if checkDeferred {
+                handleDeferredVideoNotifications(delivered)
+            }
+        }
+    }
+
+    static func handleDeferredVideoNotifications(_ notifications: [UNNotification]) {
+        var addEntriesOnReceive = false
+        for notification in notifications {
+            let userInfo = notification.request.content.userInfo
+            if userInfo[Const.addEntriesOnReceive] as? String == "true" {
+                addEntriesOnReceive = true
+                break
+            }
+        }
+        if addEntriesOnReceive {
+            VideoService.consumeDeferredVideos()
+        }
     }
 
     static func ensurePermissionsAreGivenForSettings() {

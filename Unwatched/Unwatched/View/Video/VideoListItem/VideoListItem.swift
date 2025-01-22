@@ -45,7 +45,8 @@ struct VideoListItem: View {
                     playingVideoId: player.video?.youtubeId,
                     hasInboxEntry: config.hasInboxEntry,
                     hasQueueEntry: config.hasQueueEntry,
-                    watched: config.watched
+                    watched: config.watched,
+                    deferred: config.deferred
                 )
                 .dynamicTypeSize(...DynamicTypeSize.accessibility2)
                 .opacity(config.showVideoStatus ? 1 : 0)

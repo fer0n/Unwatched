@@ -13,6 +13,8 @@ struct NewVideosNotificationInfo {
     var inbox = [String: [SendableVideo]]()
     var queue = [String: [SendableVideo]]()
 
+    var addEntriesOnReceive = false
+
     var videoCount: Int {
         inbox.values.flatMap { $0 }.count + queue.values.flatMap { $0 }.count
     }
@@ -65,7 +67,7 @@ struct NewVideosNotificationInfo {
         }
     }
 
-    private func getImageData(_ infos: [NotificationInfo]) async -> [NotificationInfo] {
+    func getImageData(_ infos: [NotificationInfo]) async -> [NotificationInfo] {
         var infoWithImageData = infos
 
         await withTaskGroup(of: (Int, Data?).self) { group in

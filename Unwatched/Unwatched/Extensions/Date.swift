@@ -98,6 +98,66 @@ extension Date {
             return "\(components.second ?? 0)s"
         }
     }
+
+    static func parseYtOfflineDate(_ dateString: String) -> Date? {
+        let locales = ["en_US", "de_DE"]
+        let dateFormats = [
+            "MMMM d 'at' h:mm a",      // "January 22 at 8:15 PM"
+            "d. MMMM 'um' HH:mm"       // "22. Januar um 20:15"
+        ]
+
+        // Get current date components to fill in missing parts
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: currentDate)
+
+        for locale in locales {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: locale)
+            dateFormatter.defaultDate = currentDate  // This sets default values for unspecified components
+
+            for format in dateFormats {
+                dateFormatter.dateFormat = format
+                if let date = dateFormatter.date(from: dateString) {
+                    // Ensure the year is set to current year if not specified
+                    let components = calendar.dateComponents([.month, .day, .hour, .minute], from: date)
+                    if let finalDate = calendar.date(from: DateComponents(
+                        year: currentYear,
+                        month: components.month,
+                        day: components.day,
+                        hour: components.hour,
+                        minute: components.minute
+                    )) {
+                        return finalDate
+                    }
+                    return date
+                }
+            }
+        }
+
+        return nil
+    }
+
+    /// Returns tomorrow at noon
+    static var tomorrow: Date {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: Date.now)
+
+        guard var day = components.day else {
+            return Date.now.addingTimeInterval(24 * 60 * 60)
+        }
+
+        // Add one day
+        day += 1
+        components.day = day
+
+        // Set to noon
+        components.hour = 12
+        components.minute = 0
+        components.second = 0
+
+        return calendar.date(from: components) ?? Date.now.addingTimeInterval(24 * 60 * 60)
+    }
 }
 
 extension Calendar {

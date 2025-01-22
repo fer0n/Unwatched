@@ -100,6 +100,10 @@ import UnwatchedShared
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()
 
+        let deferredVideosTask = Task {
+            consumeDeferredVideos()
+        }
+
         try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
             for sub in sendableSubs {
                 group.addTask {
@@ -119,6 +123,8 @@ import UnwatchedShared
                 }
             }
         }
+
+        await deferredVideosTask.value
 
         try modelContext.save()
         return newVideos
@@ -223,7 +229,7 @@ import UnwatchedShared
         return (nil, nil)
     }
 
-    private func getDefaultVideoPlacement() -> DefaultVideoPlacement {
+    func getDefaultVideoPlacement() -> DefaultVideoPlacement {
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 

@@ -11,6 +11,7 @@ public struct VideoListItemConfig {
     public let hasQueueEntry: Bool?
     public let videoDuration: Double?
     public let watched: Bool?
+    public let deferred: Bool?
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
     public let onChange: (() -> Void)?
@@ -28,6 +29,7 @@ public struct VideoListItemConfig {
         hasQueueEntry: Bool? = nil,
         videoDuration: Double? = nil,
         watched: Bool? = nil,
+        deferred: Bool? = nil,
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
         onChange: (() -> Void)? = nil,
@@ -44,6 +46,7 @@ public struct VideoListItemConfig {
         self.hasQueueEntry = hasQueueEntry
         self.videoDuration = videoDuration
         self.watched = watched
+        self.deferred = deferred
         self.clearRole = clearRole
         self.queueRole = queueRole
         self.onChange = onChange

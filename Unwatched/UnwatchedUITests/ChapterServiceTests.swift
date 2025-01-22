@@ -292,7 +292,6 @@ final class ChapterServiceTests: XCTestCase {
             .init(457,  to: 550,     "Cheapo handheld game consoles!"),
             .init(550,  to: 608,     "The best controller, period")
         ]
-        // TODO: make sure end time is always bigger than start time
 
         let sponsorSegments: [SendableChapter] = [
             .init(310.166, to: 457.5, category: .sponsor),
