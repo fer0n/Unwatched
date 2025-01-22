@@ -167,8 +167,10 @@ struct UrlService {
         // https://www.m.youtube.com/watch?v=epBbbysk5cU
         // https://youtu.be/dtp6b76pMak
         // https://m.youtube.com/shorts/jH_QIBtX1gY
+        // https://www.youtube.com/embed/QHpTxLM9opU
+
         // swiftlint:disable:next line_length
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/))[^\/\?\n]+|youtu.be\/[^\/\?\n]+))"#
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n]+|youtu.be\/[^\/\?\n]+))"#
         let matches = text.matchingMultiple(regex: regex)
         if let matches = matches {
             let urls = matches.compactMap { URL(string: $0) }
