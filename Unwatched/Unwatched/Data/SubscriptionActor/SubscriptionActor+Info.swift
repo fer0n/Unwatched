@@ -94,50 +94,67 @@ extension SubscriptionActor {
     }
 
     func isSubscribed(channelId: String?, playlistId: String?, updateInfo: SubscriptionInfo? = nil) -> Bool {
+        Logger.log.info("isSubscribed; channelId: \(channelId ?? ""), playlistId: \(playlistId ?? "")")
         var fetch: FetchDescriptor<Subscription>
-        if let playlistId = playlistId {
+        if let playlistId {
             fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
                 playlistId == $0.youtubePlaylistId
             })
-        } else if let channelId = channelId {
+            let subs = try? modelContext.fetch(fetch)
+            if let first = subs?.first {
+                updateSubscriptionInfo(first, info: updateInfo)
+                return !first.isArchived
+            }
+        } else if let channelId {
             fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-                $0.youtubePlaylistId == nil && channelId == $0.youtubeChannelId
+                channelId == $0.youtubeChannelId
             })
+            let subs = try? modelContext.fetch(fetch)
+            if let subs {
+                for sub in subs {
+                    // For playlist subscriptions, only update the image
+                    // playlist images are the same as the channel page
+                    if sub.youtubePlaylistId != nil {
+                        updateSubscriptionImage(sub, imageUrl: updateInfo?.imageUrl)
+                    } else {
+                        updateSubscriptionInfo(sub, info: updateInfo)
+                    }
+                }
+                return subs.contains { !$0.isArchived && $0.youtubePlaylistId == nil }
+            }
         } else {
             Logger.log.error("isSubscribed: Neither channelId nor playlistId given")
             return false
-        }
-
-        fetch.fetchLimit = 1
-        let subs = try? modelContext.fetch(fetch)
-        if let first = subs?.first {
-            updateSubscriptionInfo(first, info: updateInfo)
-            return !first.isArchived
         }
         return false
     }
 
     private func updateSubscriptionInfo(_ sub: Subscription, info: SubscriptionInfo?) {
         Logger.log.info("updateSubscriptionInfo: \(sub.title), \(info.debugDescription)")
-        guard let info = info else {
+        guard let info else {
             Logger.log.info("no info to update subscription with")
             return
         }
         sub.youtubeUserName = info.userName ?? sub.youtubeUserName
-        if let imageUrl = info.imageUrl,
-           sub.thumbnailUrl != imageUrl {
-            Logger.log.info("Updating thumbnail url")
-            sub.thumbnailUrl = imageUrl
-            if let url = sub.thumbnailUrl {
-                imageUrlsToBeDeleted.append(url)
-            }
-        }
+        updateSubscriptionImage(sub, imageUrl: info.imageUrl)
 
         if sub.title.isEmpty || info.title != sub.title,
            let title = info.title {
             sub.title = title
         }
         try? modelContext.save()
+    }
+
+    private func updateSubscriptionImage(_ sub: Subscription, imageUrl: URL?) {
+        if let imageUrl,
+           sub.thumbnailUrl != imageUrl {
+            Logger.log.info("Updating thumbnail url")
+            if let oldUrl = sub.thumbnailUrl {
+                imageUrlsToBeDeleted.append(oldUrl)
+            }
+            sub.thumbnailUrl = imageUrl
+            try? modelContext.save()
+        }
     }
 
     func getTitleIfSubscriptionExists(channelId: String? = nil,
