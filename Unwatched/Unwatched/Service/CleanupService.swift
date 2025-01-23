@@ -46,6 +46,7 @@ struct CleanupService {
                 modelContext.delete(chapter)
             }
         }
+        try? modelContext.save()
         modelContext.delete(video)
     }
 }
@@ -75,16 +76,16 @@ struct CleanupService {
             Logger.log.info("Has duplicate inbox entries")
             return duplicateInfo
         }
-        Logger.log.info("removing duplicates now")
+        Logger.log.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
 
         if !videoOnly {
             removeSubscriptionDuplicates()
             removeEmptySubscriptions()
             removeEmptyChapters()
+            removeEmptyInboxEntries()
+            removeEmptyQueueEntries()
         }
         removeVideoDuplicates()
-        // Keep empty queue/inbox entries
-        // they can be empty due to sync, don't remove them
         try? modelContext.save()
 
         return duplicateInfo
