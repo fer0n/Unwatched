@@ -64,11 +64,8 @@ import OSLog
 
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
-        if UserDefaults.standard.bool(forKey: Const.disableAsyncListRefresh) {
-            Logger.log.warning("disableAsyncListRefresh is on; lists may not be uptodate")
-            return nil
-        }
         if #available(iOS 18.3, *) {
+            Logger.log.warning("iOS 18.3 workaround: lists may not be uptodate")
             // crashes on iOS 18.3
             return nil
         }
