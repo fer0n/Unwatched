@@ -68,6 +68,10 @@ import OSLog
             Logger.log.warning("disableAsyncListRefresh is on; lists may not be uptodate")
             return nil
         }
+        if #available(iOS 18.3, *) {
+            // crashes on iOS 18.3
+            return nil
+        }
 
         if #available(iOS 18, *) {
             let token = historyToken
