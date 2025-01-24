@@ -195,7 +195,6 @@ public struct Const {
     public static let lightModeTheme = "lightModeTheme"
     public static let darkModeTheme = "darkModeTheme"
     public static let showTutorial = "showTutorial"
-    public static let disableAsyncListRefresh = "disableAsyncListRefresh"
     public static let lightAppIcon = "lightAppIcon"
     public static let allowRefreshDuringSync = "allowRefreshDuringSync"
 
