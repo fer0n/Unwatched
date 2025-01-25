@@ -42,6 +42,22 @@ import OSLog
     }
 
     @available(iOS 18.0, *)
+    static func deleteTransactions(before token: DefaultHistoryToken? = nil) {
+        do {
+            var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+            if let token {
+                descriptor.predicate = #Predicate {
+                    $0.token < token
+                }
+            }
+            let context = DataProvider.newContext()
+            try context.deleteHistory(descriptor)
+        } catch {
+            Logger.log.error("deleteTransactions: \(error)")
+        }
+    }
+
+    @available(iOS 18.0, *)
     static func getModelUpdates(_ transactions: [DefaultHistoryTransaction]) -> Set<PersistentIdentifier>? {
         var result: Set<PersistentIdentifier> = []
         for transaction in transactions {
@@ -65,9 +81,11 @@ import OSLog
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18.3, *) {
-            Logger.log.warning("iOS 18.3 workaround: lists may not be uptodate")
-            // crashes on iOS 18.3
-            return nil
+            if UserDefaults.standard.bool(forKey: Const.ios18p3Workaround) {
+                Logger.log.info("deleting all transactions once")
+                TransactionVM.deleteTransactions()
+                UserDefaults.standard.set(true, forKey: Const.ios18p3Workaround)
+            }
         }
 
         if #available(iOS 18, *) {

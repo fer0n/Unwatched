@@ -35,6 +35,8 @@ public struct Const {
     public static let playerControlPadding: CGFloat = 2
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
+    public static let ios18p3Workaround = "ios18p3Workaround"
+    
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
@@ -44,6 +46,8 @@ public struct Const {
     public static let maxYtShortsDuration: Double = 60 * 3
     public static let aspectRatioTolerance: Double = 0.1
     public static let secondsConsideredCloseToEnd: CGFloat = 18
+    
+    /// When seeking to the end, the video will seek to duraiton - thisBuffer
     public static let seekToEndBuffer: CGFloat = 0.5
     
     /// Default seconds to seek forward/back

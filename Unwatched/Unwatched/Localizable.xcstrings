@@ -1163,6 +1163,22 @@
         }
       }
     },
+    "clearAllTransactions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Transaktionen Löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear All Transactions"
+          }
+        }
+      }
+    },
     "clearAllVideos" : {
       "localizations" : {
         "de" : {
@@ -6158,6 +6174,12 @@
     },
     "watchInBrowser" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Browser ansehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
