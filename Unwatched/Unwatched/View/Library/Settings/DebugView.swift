@@ -47,6 +47,14 @@ struct DebugView: View {
                 }
 
                 MySection("userData") {
+                    if #available(iOS 18.3, *) {
+                        Button {
+                            TransactionVM<Subscription>.deleteTransactions()
+                        } label: {
+                            Text("clearAllTransactions")
+                        }
+                    }
+
                     AsyncButton {
                         let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)
                         cleanupInfo = await task.value
