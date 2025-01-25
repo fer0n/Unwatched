@@ -88,6 +88,7 @@ import OSLog
 
     func stopTimer() {
         timer?.invalidate()
+        timer = nil
         withAnimation {
             remainingSeconds = 0
         }
