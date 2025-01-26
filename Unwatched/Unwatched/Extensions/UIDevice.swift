@@ -23,6 +23,14 @@ public extension UIDevice {
         ProcessInfo.processInfo.isiOSAppOnMac
     }()
 
+    static let deviceName: String = {
+        if UIDevice.isMac {
+            "Mac"
+        } else {
+            UIDevice.current.name
+        }
+    }()
+
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)

@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 import OSLog
 import UnwatchedShared
 
@@ -158,9 +159,11 @@ struct UserDataService {
         }
     }
 
-    static func saveToIcloud(_ deviceName: String,
-                             manual: Bool = false) -> Task<(), Error> {
+    static func saveToIcloud(manual: Bool = false) -> Task<(), Error> {
         return Task {
+            let deviceName = await MainActor.run {
+                UIDevice.deviceName
+            }
             do {
                 let filename = getBackupsDirectory()?
                     .appendingPathComponent(self.getFileName(deviceName, manual: manual))
