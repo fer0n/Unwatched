@@ -110,7 +110,7 @@ actor RefreshActor {
         stopLoading()
     }
 
-    func handleAutoBackup(_ deviceName: String) {
+    func handleAutoBackup() {
         Logger.log.info("handleAutoBackup")
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
@@ -127,7 +127,7 @@ actor RefreshActor {
             return
         }
 
-        let task = UserDataService.saveToIcloud(deviceName)
+        let task = UserDataService.saveToIcloud()
         Task {
             try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)

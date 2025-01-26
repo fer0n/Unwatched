@@ -30,7 +30,7 @@ struct BackupView: View {
 
                 MySection {
                     AsyncButton {
-                        await saveToIcloud(deviceName)
+                        await saveToIcloud()
                     } label: {
                         Text("backupNow")
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -133,14 +133,6 @@ struct BackupView: View {
         }
     }
 
-    var deviceName: String {
-        if UIDevice.isMac {
-            "Mac"
-        } else {
-            UIDevice.current.name
-        }
-    }
-
     func deleteFile(at offsets: IndexSet) {
         guard let index = offsets.first else {
             Logger.log.error("deleteFile: offsets is empty")
@@ -180,9 +172,9 @@ struct BackupView: View {
                         isManual: isManual)
     }
 
-    func saveToIcloud(_ deviceName: String) async {
+    func saveToIcloud() async {
         do {
-            let task = UserDataService.saveToIcloud(deviceName, manual: true)
+            let task = UserDataService.saveToIcloud(manual: true)
             try await task.value
             self.getAllIcloudFiles()
         } catch {

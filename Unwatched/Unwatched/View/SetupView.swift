@@ -39,13 +39,13 @@ struct SetupView: View {
             .onAppear {
                 appDelegate.navManager = navManager
             }
-            .onChange(of: scenePhase) {
+            .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
                     NotificationManager.handleNotifications(checkDeferred: true)
                     Logger.log.info("active")
                     Task {
-                        refresher.handleAutoBackup(UIDevice.current.name)
+                        refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
                     }
                 case .background:
