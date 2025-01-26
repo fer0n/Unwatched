@@ -101,11 +101,15 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func handleUrlClicked(_ payload: String?) {
         guard let payload = payload,
               let url = URL(string: payload),
-              UrlService.isYoutubeVideoUrl(url: url) else {
+              let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
             return
         }
-        let task = VideoService.addForeignUrls([url], in: .queue)
+        if youtubeId == parent.player.video?.youtubeId {
+            Logger.log.info("handleUrlClicked: current video")
+            return
+        }
 
+        let task = VideoService.addForeignUrls([url], in: .queue)
         let notification = AppNotificationData(
             title: "addingVideo",
             icon: Const.queueTopSF,
