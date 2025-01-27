@@ -27,9 +27,18 @@ extension VideoActor {
         try modelContext.save()
     }
 
+    func getVideosFromSub(_ sub: Subscription) -> [Video]? {
+        let subId = sub.persistentModelID
+        var fetch = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.subscription?.persistentModelID == subId
+        })
+        var videos = try? modelContext.fetch(fetch)
+        return videos
+    }
+
     func getNewVideosAndUpdateExisting(sub: Subscription,
                                        videos: [SendableVideo]) async -> [SendableVideo] {
-        guard let subVideos = sub.videos else {
+        guard let subVideos = getVideosFromSub(sub) else {
             return videos
         }
         var subVideosDict = [String: Video]()
