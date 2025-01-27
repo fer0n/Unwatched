@@ -9,8 +9,6 @@ import SwiftUI
 import OSLog
 
 @Observable class TransactionVM<T: PersistentModel> {
-    var hasCleanedTransactions: Bool = false
-
     @ObservationIgnored
     @available(iOS 18.0, *)
     var historyToken: DefaultHistoryToken? {
@@ -83,12 +81,12 @@ import OSLog
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18.3, *) {
-            if !hasCleanedTransactions {
+            if UserDefaults.standard.bool(forKey: Const.ios18p3Workaround) {
                 Logger.log.info("deleting all transactions once")
                 // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
                 // because placeVideosIn is not a member of VideoPlacement"
                 TransactionVM.deleteTransactions()
-                hasCleanedTransactions = true
+                UserDefaults.standard.set(true, forKey: Const.ios18p3Workaround)
             }
         }
 
