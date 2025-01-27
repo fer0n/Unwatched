@@ -34,6 +34,8 @@ public struct Const {
     public static let minSheetDetent: CGFloat = 50
     public static let playerControlPadding: CGFloat = 2
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
+
+    public static let ios18p3Workaround = "ios18p3Workaround"
     
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
