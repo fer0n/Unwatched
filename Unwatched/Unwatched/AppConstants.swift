@@ -15,6 +15,24 @@ extension Const {
         Const.videoAddedToQueueNotification: false,
         Const.showNotificationBadge: false,
 
+        // Videos
+        Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
+        Const.autoRefresh: true,
+        Const.allowRefreshDuringSync: false,
+        Const.requireClearConfirmation: true,
+        Const.showAddToQueueButton: false,
+        Const.showClearQueueButton: true,
+        Const.enableQueueContextMenu: false,
+        Const.enableYtWatchHistory: true,
+
+        // Playback
+        Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
+        Const.hideMenuOnPlay: true,
+        Const.returnToQueue: false,
+        Const.rotateOnPlay: false,
+        Const.swapNextAndContinuous: false,
+        Const.playVideoFullscreen: false,
+
         // Filter
         Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
         Const.skipChapterText: "",
@@ -22,38 +40,24 @@ extension Const {
         Const.youtubePremium: false,
         Const.skipSponsorSegments: false,
 
-        // Videos
-        Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
-        Const.requireClearConfirmation: true,
-        Const.showClearQueueButton: true,
-        Const.showAddToQueueButton: false,
-        Const.enableYtWatchHistory: true,
-        Const.autoRefresh: true,
-        Const.enableQueueContextMenu: false,
-
-        // Playback
-        Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
-        Const.hideMenuOnPlay: true,
-        Const.playVideoFullscreen: false,
-        Const.returnToQueue: false,
-        Const.rotateOnPlay: false,
-        Const.swapNextAndContinuous: false,
-
         // Appearance
+        Const.browserAsTab: false,
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.themeColor: ThemeColor().rawValue,
-        Const.browserAsTab: false,
         Const.sheetOpacity: false,
+        Const.hidePlayerPageIndicator: false,
+        Const.videoListFormat: VideoListFormat.compact.rawValue,
         Const.lightModeTheme: AppAppearance.unwatched.rawValue,
         Const.darkModeTheme: AppAppearance.dark.rawValue,
-        Const.videoListFormat: VideoListFormat.compact.rawValue,
+        Const.themeColor: ThemeColor().rawValue,
+        Const.lightAppIcon: false,
 
         // User Data
-        Const.automaticBackups: true,
-        Const.minimalBackups: true,
         Const.enableIcloudSync: false,
+        Const.automaticBackups: true,
         Const.exludeWatchHistoryInBackup: false,
+        Const.minimalBackups: true,
+        Const.autoDeleteBackups: false,
 
         // Other Things
         Const.playbackSpeed: 1
