@@ -27,18 +27,20 @@ extension VideoActor {
         try modelContext.save()
     }
 
-    func getVideosFromSub(_ sub: Subscription) -> [Video]? {
+    func getVideosFromSub(_ sub: Subscription, oldestDate: Date) -> [Video]? {
         let subId = sub.persistentModelID
-        var fetch = FetchDescriptor<Video>(predicate: #Predicate {
-            $0.subscription?.persistentModelID == subId
+        let past = Date.distantPast
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.subscription?.persistentModelID == subId &&
+                ($0.publishedDate ?? past) >= oldestDate
         })
-        var videos = try? modelContext.fetch(fetch)
-        return videos
+        return try? modelContext.fetch(fetch)
     }
 
     func getNewVideosAndUpdateExisting(sub: Subscription,
                                        videos: [SendableVideo]) async -> [SendableVideo] {
-        guard let subVideos = getVideosFromSub(sub) else {
+        let oldestDate = videos.compactMap { $0.publishedDate }.min() ?? .distantPast
+        guard let subVideos = getVideosFromSub(sub, oldestDate: oldestDate) else {
             return videos
         }
         var subVideosDict = [String: Video]()
