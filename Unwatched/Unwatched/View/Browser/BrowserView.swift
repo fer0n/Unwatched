@@ -27,6 +27,7 @@ struct BrowserView: View, KeyboardReadable {
 
     var showHeader: Bool = true
     var safeArea: Bool = true
+    var dropAreaLeft: Bool = false
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -34,8 +35,6 @@ struct BrowserView: View, KeyboardReadable {
     let size: Double = 20
 
     var body: some View {
-        let subscriptionText = browserManager.channelTextRepresentation
-
         GeometryReader { geometry in
             VStack {
                 if showHeader {
@@ -69,6 +68,7 @@ struct BrowserView: View, KeyboardReadable {
                                                size: size)
                                     .padding(size)
                             }
+                            .environment(\.layoutDirection, dropAreaLeft ? .rightToLeft : .leftToRight)
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
 
@@ -195,6 +195,10 @@ struct BrowserView: View, KeyboardReadable {
         } else {
             await subscribeManager.addSubscription(subscriptionInfo)
         }
+    }
+
+    var subscriptionText: String? {
+        browserManager.channelTextRepresentation
     }
 
     var supportsSplitView: Bool {
