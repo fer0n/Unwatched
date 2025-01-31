@@ -41,11 +41,14 @@ struct UrlService {
     }
 
     static func getYoutubeIdFromUrl(url: URL) -> String? {
+        // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
-        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        if let id = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value {
-            return id
+        // https://piped.video/watch?v=VZIm_2MgdeA
+        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\?v=)|(?:shorts\/))([^\s\/\?\n]+))"#
+        if let res = url.absoluteString.matching(regex: regex) {
+            return res
         }
+
         // https://youtu.be/dtp6b76pMak
         let shortRegex = #"(?:https\:\/\/)?(?:www\.)?youtu\.be\/([^\s\/\?\n]+)"#
         if let res = url.absoluteString.matching(regex: shortRegex) {
@@ -54,15 +57,7 @@ struct UrlService {
 
         // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
         let embedRegex = #"(?:https\:\/\/)?(?:www\.)?youtube\.com\/embed\/([^\s\/\?\n]+)"#
-        if let res = url.absoluteString.matching(regex: embedRegex) {
-            return res
-        }
-
-        // https://m.youtube.com/shorts/jH_QIBtX1gY
-        // https://www.youtube.com/watch?v=epBbbysk5cU
-        // https://piped.video/watch?v=VZIm_2MgdeA
-        let regex = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\?v=)|(?:shorts\/))([^\s\/\?\n]+))"#
-        let res = url.absoluteString.matching(regex: regex)
+        let res = url.absoluteString.matching(regex: embedRegex)
         return res
     }
 
