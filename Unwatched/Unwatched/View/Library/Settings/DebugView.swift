@@ -16,6 +16,7 @@ struct DebugView: View {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
+    @AppStorage(Const.asyncListHistoryCheck) var asyncListHistoryCheck: Bool = false
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
@@ -52,6 +53,10 @@ struct DebugView: View {
                             TransactionVM<Subscription>.deleteTransactions()
                         } label: {
                             Text("clearAllTransactions")
+                        }
+
+                        Toggle(isOn: $asyncListHistoryCheck) {
+                            Text("asyncListHistoryCheck")
                         }
                     }
 

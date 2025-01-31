@@ -81,30 +81,30 @@ import OSLog
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18.3, *) {
-            //    // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
-            //    // because placeVideosIn is not a member of VideoPlacement"
-            return nil
+            // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
+            // because placeVideosIn is not a member of VideoPlacement"
+            if !UserDefaults.standard.bool(forKey: Const.asyncListHistoryCheck) {
+                Logger.log.info("Not comparing list history")
+                return nil
+            }
         }
 
         if #available(iOS 18, *) {
             let token = historyToken
             let task = Task.detached {
-                var newToken: DefaultHistoryToken?
                 var modelUpdates: Set<PersistentIdentifier>?
-
                 let transactions = TransactionVM.findTransactions(after: token)
-                if let last = transactions.last?.token {
-                    newToken = last
-                }
                 Logger.log.info("modelsHaveChanges: \(transactions.count)")
                 if transactions.count <= 20 {
                     // if there's more than 20 changes, simply fetch everything
                     modelUpdates = TransactionVM.getModelUpdates(transactions)
                 }
-                return (newToken, modelUpdates)
+                return (transactions.last?.token, modelUpdates)
             }
             let (newToken, modelUpdates) = await task.value
-            historyToken = newToken
+            if let newToken {
+                historyToken = newToken
+            }
             return modelUpdates
         }
         // history api unavailable, always assume there are changes

@@ -523,6 +523,22 @@
         }
       }
     },
+    "asyncListHistoryCheck" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Async List Historie vergleichen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Async List History Check"
+          }
+        }
+      }
+    },
     "autoDeleteBackups" : {
       "localizations" : {
         "de" : {
