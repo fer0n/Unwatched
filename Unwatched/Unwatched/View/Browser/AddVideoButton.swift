@@ -20,6 +20,7 @@ struct AddVideoButton: View {
     @State var hapticToggle = false
 
     var youtubeUrl: URL?
+    var isVideoUrl: Bool
     var size: Double = 20
 
     var body: some View {
@@ -139,13 +140,6 @@ struct AddVideoButton: View {
         avm.isDragOver ? 6 * size : 2 * size
     }
 
-    var isVideoUrl: Bool {
-        if let url = youtubeUrl {
-            return UrlService.getYoutubeIdFromUrl(url: url) != nil
-        }
-        return false
-    }
-
     var isPlaylistUrl: Bool {
         if let url = youtubeUrl {
             return UrlService.getPlaylistIdFromUrl(url) != nil
@@ -157,10 +151,9 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!)
+        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!, isVideoUrl: false)
             .padding(20)
     }
-    .environment(RefreshManager())
     .environment(PlayerManager())
     .environment(NavigationManager())
 }

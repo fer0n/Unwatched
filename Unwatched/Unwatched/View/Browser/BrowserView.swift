@@ -49,10 +49,6 @@ struct BrowserView: View, KeyboardReadable {
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
-                            if subscriptionText == nil && browserManager.firstPageLoaded {
-                                TipView(ytBrowserTip)
-                                    .padding(.horizontal)
-                            }
 
                             HStack(alignment: .center) {
                                 Spacer()
@@ -68,22 +64,29 @@ struct BrowserView: View, KeyboardReadable {
                                     Spacer()
                                 }
 
-                                AddVideoButton(youtubeUrl: browserManager.videoUrl,
+                                AddVideoButton(youtubeUrl: browserManager.currentUrl,
+                                               isVideoUrl: browserManager.isVideoUrl,
                                                size: size)
                                     .padding(size)
                             }
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
 
+                            if subscriptionText == nil && browserManager.firstPageLoaded {
+                                TipView(ytBrowserTip)
+                                    .padding(.horizontal)
+                            }
+
                             Spacer()
                                 .frame(height:
-                                        (browserManager.isMobileVersion ? 60 : 0)
+                                        (enableBottomPadding ? 60 : 0)
                                         + (safeArea ? geometry.safeAreaInsets.bottom : 0)
                                 )
                         }
                     }
                 }
             }
+            .animation(.default, value: enableBottomPadding)
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
         .background(Color.youtubeWebBackground)
@@ -196,6 +199,10 @@ struct BrowserView: View, KeyboardReadable {
 
     var supportsSplitView: Bool {
         return horizontalSizeClass == .regular
+    }
+
+    var enableBottomPadding: Bool {
+        browserManager.isMobileVersion && !browserManager.isVideoUrl
     }
 }
 

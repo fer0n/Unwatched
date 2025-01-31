@@ -13,30 +13,27 @@ struct AddFeedsMenu: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     @State var showImportSheet = false
+    var includeShareSheet = false
     var onSuccess: (() -> Void)?
 
     var body: some View {
-        Menu {
-            Button {
-                showImportSheet = true
+        HStack {
+            browseYoutubeButton
+            Menu {
+                if includeShareSheet {
+                    SetupShareSheetAction()
+                }
+                importSubscriptionsButton
+                AddVideosButton()
+                    .tint(theme.color)
+                    .foregroundStyle(theme.contrastColor)
             } label: {
-                Image(systemName: "square.and.arrow.down.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                Text("importFromYoutube")
+                Image(systemName: "ellipsis")
+                    .frame(maxHeight: .infinity)
             }
-            .accessibilityLabel("importFromYoutube")
-
-            Button("browser", systemImage: Const.appBrowserSF) {
-                navManager.showMenu = true
-                navManager.openUrlInApp(.youtubeStartPage)
-            }
-        } label: {
-            Label("addFeeds", systemImage: "plus")
-                .frame(maxWidth: .infinity)
+            .buttonStyle(.bordered)
         }
-        .buttonStyle(.borderedProminent)
+        .fixedSize()
         .sheet(isPresented: $showImportSheet) {
             NavigationStack {
                 ImportSubscriptionsView(onSuccess: {
@@ -53,6 +50,29 @@ struct AddFeedsMenu: View {
             }
             .environment(\.colorScheme, colorScheme)
         }
+    }
+
+    var browseYoutubeButton: some View {
+        Button {
+            navManager.showMenu = true
+            navManager.openUrlInApp(.youtubeStartPage)
+        } label: {
+            Text("browser")
+        }
+        .buttonStyle(.borderedProminent)
+    }
+
+    var importSubscriptionsButton: some View {
+        Button {
+            showImportSheet = true
+        } label: {
+            Label("importFromYoutube", systemImage: "square.and.arrow.down.fill")
+                .frame(maxWidth: .infinity)
+        }
+        .accessibilityLabel("importFromYoutube")
+        .tint(theme.color)
+        .foregroundStyle(theme.contrastColor)
+        .buttonStyle(.bordered)
     }
 }
 

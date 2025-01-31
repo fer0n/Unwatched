@@ -31,7 +31,7 @@ struct SheetOverlayMinimumSize: View {
             }
         }
         .transparentNavBarWorkaround()
-        .opacity(sheetPos.isMinimumSheet ? 1 : 0)
+        .opacity(sheetPos.isMinimumSheet && player.video != nil ? 1 : 0)
         .animation(.bouncy(duration: 0.3), value: sheetPos.isMinimumSheet)
     }
 }
