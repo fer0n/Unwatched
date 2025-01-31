@@ -59,7 +59,8 @@ struct MenuView: View {
                         refresher: refresher,
                         url: $navManager.openTabBrowserUrl,
                         showHeader: false,
-                        safeArea: false
+                        safeArea: false,
+                        dropAreaLeft: isSidebar
                     )
                 }
             }
