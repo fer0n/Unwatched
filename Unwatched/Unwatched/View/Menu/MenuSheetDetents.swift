@@ -37,6 +37,7 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
                     && !navManager.hasSheetOpen
                     && navManager.openTabBrowserUrl == nil
                     && !landscapeFullscreen
+                    && player.video != nil
             )
             .onReceive(keyboardPublisher) { newIsKeyboardVisible in
                 isKeyboardVisible = newIsKeyboardVisible

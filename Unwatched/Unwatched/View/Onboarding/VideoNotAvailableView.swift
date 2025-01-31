@@ -29,7 +29,7 @@ struct VideoNotAvailableView: View {
                 Image("unwatched-logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 70, height: 70)
+                    .frame(width: 80, height: 80)
                     .foregroundStyle(theme.color)
                     .accessibilityLabel("unwatchedLogo")
                 Spacer()
@@ -42,20 +42,13 @@ struct VideoNotAvailableView: View {
             Spacer()
 
             if showTutorial {
-                VStack {
-                    AddFeedsMenu(onSuccess: {
-                        navManager.navigateTo(.inbox)
-                    })
-                    .tint(Color.neutralAccentColor)
-                    .foregroundStyle(Color.backgroundColor)
-
-                    AddVideosButton()
-                        .tint(theme.color)
-                        .foregroundStyle(theme.contrastColor)
-                }
+                AddFeedsMenu(includeShareSheet: true, onSuccess: {
+                    navManager.navigateTo(.inbox)
+                })
+                .tint(Color.neutralAccentColor)
+                .foregroundStyle(Color.backgroundColor)
                 .fontWeight(.medium)
-                .frame(maxWidth: 300)
-                .padding()
+                .padding(.vertical, 40)
             } else {
                 Spacer()
                     .frame(height: 30)
@@ -167,5 +160,6 @@ struct VideoNotAvailable_Previews: PreviewProvider {
             .environment(NavigationManager.getDummy())
             .environment(PlayerManager())
             .environment(RefreshManager())
+            .environment(SheetPositionReader())
     }
 }

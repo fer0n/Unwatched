@@ -171,22 +171,6 @@
         }
       }
     },
-    "addFeeds" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Abos hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add YouTube Channels"
-          }
-        }
-      }
-    },
     "addingVideo" : {
       "localizations" : {
         "de" : {
@@ -1904,13 +1888,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos hier ablegen"
+            "value" : "Drag & drop Videos hier"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Drop videos here"
+            "value" : "Drag & drop videos here"
           }
         }
       }
@@ -2674,13 +2658,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wenn erwünscht, können ab sofort alle #shorts ausgeblendet werden.   Unter \"Bibliothek → Einstellungen → Videos\" kann dies rückgängig gemacht werden."
+            "value" : "Wenn erwünscht, können ab sofort alle #shorts ausgeblendet werden.   Unter \"Bibliothek → Einstellungen → Filter\" kann dies rückgängig gemacht werden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you wish, you can hide all #shorts from now on.  You can change this at any time under \"Library → Settings → Videos\""
+            "value" : "If you wish, you can hide all #shorts from now on.  You can change this at any time under \"Library → Settings → Filter”"
           }
         }
       }
@@ -2994,13 +2978,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Links wird das Video entfernen, rechts gibt dir die Option, es oben oder unten in die Warteschlange einzufügen."
+            "value" : "Nach links wischen löscht das Video, nach rechts wischen gibt dir die Möglichkeit, es oben oder unten in die Warteschlange einzufügen.\n\nTippen auf ein Video bewegt es an die Spitze der Warteschlange und startet die Wiedergabe."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Left will clear the video, right will give you the option to insert it at the top or bottom of the queue."
+            "value" : "Swiping left will clear the video, while swiping right will give you the option to insert it at the top or bottom of the Queue.\n\nTapping a video will move it to the top of the Queue and start playback."
           }
         }
       }

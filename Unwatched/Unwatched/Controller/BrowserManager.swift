@@ -8,11 +8,12 @@ import WebKit
 
 @Observable class BrowserManager {
     var info: SubscriptionInfo?
-    var videoUrl: URL?
+    var currentUrl: URL?
 
     var desktopUserName: String?
     var firstPageLoaded = false
     var isMobileVersion = true
+    var isVideoUrl = false
 
     var channelTextRepresentation: String? {
         if info?.playlistId != nil {
