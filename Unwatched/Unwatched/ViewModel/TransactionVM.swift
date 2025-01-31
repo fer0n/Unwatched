@@ -81,13 +81,9 @@ import OSLog
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18.3, *) {
-            if !UserDefaults.standard.bool(forKey: Const.ios18p3Workaround) {
-                Logger.log.info("deleting all transactions once")
-                // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
-                // because placeVideosIn is not a member of VideoPlacement"
-                TransactionVM.deleteTransactions()
-                UserDefaults.standard.set(true, forKey: Const.ios18p3Workaround)
-            }
+            //    // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
+            //    // because placeVideosIn is not a member of VideoPlacement"
+            return nil
         }
 
         if #available(iOS 18, *) {
