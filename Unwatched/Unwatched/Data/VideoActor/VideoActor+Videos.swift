@@ -146,8 +146,7 @@ import UnwatchedShared
 
         cacheImages(for: videos, subModel)
 
-        let videoModels = insertVideoModels(from: videos)
-        subModel.videos?.append(contentsOf: videoModels)
+        let videoModels = insertVideoModels(from: videos, to: subModel)
 
         let addedVideoCount = triageSubscriptionVideos(subModel,
                                                        videos: videoModels,
@@ -165,12 +164,13 @@ import UnwatchedShared
         }
     }
 
-    private func insertVideoModels(from videos: [SendableVideo]) -> [Video] {
+    private func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
             let video = vid.createVideo(extractChapters: ChapterService.extractChapters)
             videoModels.append(video)
             modelContext.insert(video)
+            video.subscription = sub
         }
         return videoModels
     }
