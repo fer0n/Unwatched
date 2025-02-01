@@ -49,12 +49,6 @@ struct DebugView: View {
 
                 MySection("userData") {
                     if #available(iOS 18.3, *) {
-                        Button {
-                            TransactionVM<Subscription>.deleteTransactions()
-                        } label: {
-                            Text("clearAllTransactions")
-                        }
-
                         Toggle(isOn: $asyncListHistoryCheck) {
                             Text("asyncListHistoryCheck")
                         }

@@ -1163,22 +1163,6 @@
         }
       }
     },
-    "clearAllTransactions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Transaktionen Löschen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear All Transactions"
-          }
-        }
-      }
-    },
     "clearAllVideos" : {
       "localizations" : {
         "de" : {
