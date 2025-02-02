@@ -77,7 +77,10 @@ import UnwatchedShared
     }
 
     func setTopSafeArea(_ topSafeArea: CGFloat) {
-        sheetDistanceToTop = topSafeArea + Const.playerAboveSheetHeight
+        let newValue = topSafeArea + Const.playerAboveSheetHeight
+        if newValue != sheetDistanceToTop {
+            sheetDistanceToTop = newValue
+        }
     }
 
     func setDetentMiniPlayer() {
