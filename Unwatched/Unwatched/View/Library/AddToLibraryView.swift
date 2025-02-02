@@ -159,7 +159,16 @@ struct AddToLibraryView: View {
             rest = newRest
         }
 
-        addSubscriptionFromText = rest
+        // fallback attempt: extract ID directly when nothing worked so far
+        if rest == text,
+           let url = URL(string: text),
+           let youtubeId = UrlService.getYoutubeIdFromUrl(url: url),
+           let youtubeUrl = URL(string: UrlService.getNonEmbeddedYoutubeUrl(youtubeId)) {
+            videoUrlsLocal.append(youtubeUrl)
+        } else {
+            addSubscriptionFromText = rest
+        }
+
         Task {
             await addVideoUrls(videoUrlsLocal, target)
         }
