@@ -68,8 +68,10 @@ struct ContentView: View {
             .animation(.default, value: hideControlsFullscreen)
             .background(Color.playerBackgroundColor)
             .setColorScheme(forPlayer: true)
-            .onAppear {
-                sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
+            .onChange(of: proxy.safeAreaInsets.top) {
+                if !landscapeFullscreen {
+                    sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
+                }
             }
             .sheet(isPresented: $navManager.showDescriptionDetail) {
                 if let video = player.video {
