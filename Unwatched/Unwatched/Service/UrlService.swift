@@ -24,8 +24,11 @@ struct UrlService {
         URL(string: "mailto:unwatched.app@gmail.com?body=\n\n\(body)")!
     }
 
-    static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
-        "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
+    static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double? = nil) -> String {
+        if let startAt = startAt {
+            return "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
+        }
+        return "https://www.youtube.com/watch?v=\(youtubeId)"
     }
 
     static func getEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
@@ -57,8 +60,23 @@ struct UrlService {
 
         // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
         let embedRegex = #"(?:https\:\/\/)?(?:www\.)?youtube\.com\/embed\/([^\s\/\?\n]+)"#
-        let res = url.absoluteString.matching(regex: embedRegex)
-        return res
+        if let res = url.absoluteString.matching(regex: embedRegex) {
+            return res
+        }
+
+        // swiftlint:disable:next line_length
+        // https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3D1K5oDtVAYzk&ved=2ahUKEwjTwKmPx6SLAxUHTDABHQ0WDRsQwqsBegQIYxAG&usg=AOvVaw2wqHdPMbGG4kUgVDx4nR-w
+        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        if let encodedUrl = urlComponents?.queryItems?.first(where: { $0.name == "url" })?.value,
+           let decodedUrl = encodedUrl.removingPercentEncoding,
+           let actualUrl = URL(string: decodedUrl) {
+            let urlComponents = URLComponents(url: actualUrl, resolvingAgainstBaseURL: false)
+            if let id = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value {
+                return id
+            }
+        }
+
+        return nil
     }
 
     static func isYoutubeVideoUrl(url: URL) -> Bool {
