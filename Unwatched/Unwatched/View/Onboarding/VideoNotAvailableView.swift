@@ -42,6 +42,10 @@ struct VideoNotAvailableView: View {
             Spacer()
 
             if showTutorial {
+                Text("tutorialHelper")
+                    .multilineTextAlignment(.center)
+                    .font(.headline)
+                    .padding()
                 AddFeedsMenu(includeShareSheet: true, onSuccess: {
                     navManager.navigateTo(.inbox)
                 })

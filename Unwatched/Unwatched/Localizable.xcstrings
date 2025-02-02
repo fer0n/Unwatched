@@ -5676,6 +5676,22 @@
         }
       }
     },
+    "tutorialHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchsuche YouTube, um deine \nLieblingskanäle zu Unwatched hinzuzufügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search YouTube to quickly add your\nfavorite channels to Unwatched"
+          }
+        }
+      }
+    },
     "tvOsFaqA" : {
       "localizations" : {
         "de" : {
