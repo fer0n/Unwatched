@@ -57,7 +57,9 @@ public struct Const {
 
     /// Playback speeds that can savely shown at smaller sizes without line break
     public static let highlightedSpeedsInt = [1.0, 2.0, 3.0]
-    public static let speeds = [0.5, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.5, 3]
+    public static let speeds = [0.4, 0.6, 0.8, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.2, 2.4, 2.6, 2.8, 3]
+    public static let speedMin: Double = 0.4
+    public static let speedMax: Double = 3
 
     /// The margin at which it will skip to the chapter start instead of the previous chapter
     public static let previousChapterDelaySeconds: Double = 4
@@ -73,7 +75,7 @@ public struct Const {
     public static let earliestBackgroundBeginSeconds: Double = 30 * 60
     public static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
-    public static let askForReviewPointThreashold = 30
+    public static let askForReviewPointThreshold = 20
     public static let sheetOpacityValue = 0.6
 
     /// Time difference within which it will be considered the same time between start/end of chapters
@@ -120,6 +122,7 @@ public struct Const {
     public static let addSF = "plus"
 
     public static let customPlaybackSpeedSF = "lock.fill"
+    public static let customPlaybackSpeedOffSF = "lock.open.fill"
 
     public static let alreadyInLibrarySF = "books.vertical.circle.fill"
 

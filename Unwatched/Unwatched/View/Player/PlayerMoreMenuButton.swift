@@ -60,6 +60,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     }
                 }
         }
+        .help("moreOptions")
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .dateSelectorSheet(

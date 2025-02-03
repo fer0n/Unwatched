@@ -1536,13 +1536,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Benutzerdefinierte Geschwindigkeit"
+            "value" : "Benutzerdefinierte für Kanal"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Custom Speed"
+            "value" : "Custom for Channel"
           }
         }
       }
@@ -3322,6 +3322,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Monitor Background Fetches"
+          }
+        }
+      }
+    },
+    "moreOptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mehr"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
           }
         }
       }
