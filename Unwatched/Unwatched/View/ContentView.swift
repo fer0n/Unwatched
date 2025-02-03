@@ -83,7 +83,7 @@ struct ContentView: View {
                                 :
                                 .enabled(upThrough: .height(sheetPos.playerControlHeight))
                         )
-                        .presentationDragIndicator(.visible)
+                        .presentationDragIndicator(.hidden)
                         .environment(\.colorScheme, colorScheme)
                 }
             }

@@ -31,6 +31,7 @@ struct SideloadingView: View {
                                 deferred: video.deferDate != nil
                             )
                         )
+                        .listRowSeparator(.hidden)
                     }
                     .listRowBackground(Color.backgroundColor)
                 }

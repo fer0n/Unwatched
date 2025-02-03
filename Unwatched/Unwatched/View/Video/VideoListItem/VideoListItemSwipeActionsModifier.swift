@@ -385,6 +385,7 @@ enum ClearDirection {
                 clearAboveBelowList: .inbox
             )
         )
+        .listRowSeparator(.hidden)
     }
     .listStyle(.plain)
     .modelContainer(container)

@@ -67,7 +67,7 @@ struct MenuView: View {
             .setTabViewStyle()
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video)
-                    .presentationDragIndicator(.visible)
+                    .presentationDragIndicator(.hidden)
                     .environment(\.colorScheme, colorScheme)
                     .environment(player)
                     .environment(navManager)

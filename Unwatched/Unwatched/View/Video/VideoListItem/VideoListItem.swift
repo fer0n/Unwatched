@@ -97,6 +97,7 @@ struct VideoListItem: View {
                 showQueueButton: true
             )
         )
+        .listRowSeparator(.hidden)
     }
     .listStyle(.plain)
     .modelContainer(container)
