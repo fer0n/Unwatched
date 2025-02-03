@@ -26,10 +26,7 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
             .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
-            .presentationDragIndicator(
-                navManager.searchFocused
-                    ? .hidden
-                    : .visible)
+            .presentationDragIndicator(.hidden)
             // no cancel button shown in landscape
             .interactiveDismissDisabled(!landscapeFullscreen && player.video != nil)
             .disabled(

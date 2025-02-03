@@ -55,6 +55,7 @@ struct QueueView: View {
                             }
                         }
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
+                        .listRowSeparator(.hidden)
                     }
                     .onMove(perform: moveQueueEntry)
                     .handleDynamicVideoURLDrop(.queue)
