@@ -177,18 +177,18 @@ extension PlayerManager {
         if temporarySlowDownThreshold {
             temporaryPlaybackSpeed = 1
         } else {
-            temporaryPlaybackSpeed = 3
+            temporaryPlaybackSpeed = Const.speedMax
         }
     }
 
     func temporarySpeedUp() {
-        temporaryPlaybackSpeed = 3
+        temporaryPlaybackSpeed = Const.speedMax
     }
 
     @MainActor
     func temporarySlowDown() {
         if actualPlaybackSpeed == 1 {
-            temporaryPlaybackSpeed = 0.5
+            temporaryPlaybackSpeed = Const.speedMin
         } else {
             temporaryPlaybackSpeed = 1
         }

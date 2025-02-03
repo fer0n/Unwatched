@@ -95,7 +95,7 @@ struct PlayerContentView: View {
                 }
             ),
             numberOfPages: 2,
-            normalColor: .foregroundGray
+            normalColor: .darkGray
         )
         .clipShape(Capsule())
     }

@@ -24,6 +24,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>SF-Compact-Display-Semibold.otf</string>
+		<string>SF-Compact-Display-Bold.otf</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>

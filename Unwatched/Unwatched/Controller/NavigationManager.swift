@@ -212,8 +212,8 @@ import UnwatchedShared
 
     func handleRequestReview(_ requestReview: @escaping () -> Void) {
         askForReviewPoints += 1
-        if askForReviewPoints >= Const.askForReviewPointThreashold {
-            askForReviewPoints = -40
+        if askForReviewPoints >= Const.askForReviewPointThreshold {
+            askForReviewPoints = -70
             requestReview()
         }
     }

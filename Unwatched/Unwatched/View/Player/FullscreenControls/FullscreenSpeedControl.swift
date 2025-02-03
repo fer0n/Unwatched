@@ -43,7 +43,7 @@ struct FullscreenSpeedControl: View {
                 Color.sheetBackground
                     .scaleEffect(1.5)
 
-                CombinedPlaybackSpeedSetting()
+                CombinedPlaybackSpeedSetting(isExpanded: true)
                     .padding(.horizontal)
                     .frame(width: 350)
             }

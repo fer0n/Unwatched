@@ -15,32 +15,31 @@ struct SpeedControlView: View {
 
     @Binding var selectedSpeed: Double
 
-    nonisolated static let padding: CGFloat = 8
-    @ScaledMetric var maxHeight: CGFloat = 40
+    @ScaledMetric var thumbSize: CGFloat = 35
     @ScaledMetric var selectedFontSize: CGFloat = 16
-    let frameHeight: CGFloat = 25
+    let frameHeight: CGFloat = 35
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
+    let borderWidth: CGFloat = 2
 
     var midY: CGFloat {
-        maxHeight / 2
+        thumbSize / 2
     }
 
     var body: some View {
         let highlighted: [Double] = viewModel.showDecimalHighlights
             ? Const.highlightedPlaybackSpeeds
             : Const.highlightedSpeedsInt
+        let frameSize: CGFloat = 3
 
         ZStack {
-            Capsule()
-                .fill(Color.backgroundColor)
+            Spacer()
                 .frame(height: frameHeight)
                 .frame(maxWidth: .infinity)
 
             HStack(spacing: 0) {
                 ForEach(Const.speeds, id: \.self) { speed in
                     let isHightlighted = highlighted.contains(speed)
-                    let frameSize: CGFloat = 5
-                    let foregroundColor: Color = .foregroundGray
+                    let foregroundColor: Color = .foregroundGray.opacity(0.3)
 
                     ZStack {
                         Circle()
@@ -48,13 +47,13 @@ struct SpeedControlView: View {
                             .stroke(isHightlighted ? .clear : foregroundColor, lineWidth: 1.5)
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
-                            .frame(maxWidth: .infinity, maxHeight: maxHeight)
+                            .frame(maxWidth: .infinity, maxHeight: thumbSize)
                             .frame(minWidth: frameSize + 4)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
                                     selectedSpeed = speed
-                                    controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
+                                    controlMinX = viewModel.getXPos(selectedSpeed)
                                     dragState = nil
                                 }
                             }
@@ -63,10 +62,12 @@ struct SpeedControlView: View {
                                 .fontWeight(.bold)
                                 .font(.custom("SFCompactDisplay-Semibold", size: 12))
                                 .foregroundStyle(foregroundColor)
+                                .allowsHitTesting(false)
                         }
                     }
                 }
             }
+            .padding(.horizontal, viewModel.padding)
             .overlay {
                 GeometryReader { geometry in
                     Color.clear.preference(key: SpeedPreferenceKey.self, value: geometry.frame(in: coordinateSpace))
@@ -75,16 +76,19 @@ struct SpeedControlView: View {
             .onPreferenceChange(SpeedPreferenceKey.self) { minY in
                 Task { @MainActor in
                     viewModel.width = minY.width
-                    viewModel.itemWidth = viewModel.width / CGFloat(Const.speeds.count)
-                    controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
+                    viewModel.itemWidth = (minY.width - thumbSize) / CGFloat(Const.speeds.count - 1)
+                    viewModel.padding = thumbSize / 2 - viewModel.itemWidth / 2
+                    controlMinX = viewModel.getXPos(selectedSpeed)
+                    if !viewModel.showContent {
+                        viewModel.showContent = true
+                    }
                 }
             }
-            .padding(.horizontal, SpeedControlView.padding)
 
             thumb
         }
         .onChange(of: selectedSpeed) {
-            controlMinX = viewModel.getXPos(viewModel.width, selectedSpeed)
+            controlMinX = viewModel.getXPos(selectedSpeed)
         }
         .onChange(of: navManager.showMenu) {
             if dragState != nil {
@@ -94,7 +98,13 @@ struct SpeedControlView: View {
             }
         }
         .coordinateSpace(.named("speed"))
-        .padding(.horizontal, 5)
+        .opacity(viewModel.showContent ? 1 : 0)
+        .animation(.default, value: viewModel.showContent)
+        .padding(borderWidth)
+        .background {
+            Capsule()
+                .fill(Color.backgroundColor)
+        }
     }
 
     @ViewBuilder var thumb: some View {
@@ -103,14 +113,14 @@ struct SpeedControlView: View {
             ZStack {
                 Circle()
                     .fill()
-                    .frame(width: maxHeight, height: maxHeight)
+                    .frame(width: thumbSize, height: thumbSize)
                 Text(floatingText)
                     .foregroundStyle(.automaticWhite)
-                    .font(.system(size: selectedFontSize, weight: .bold))
+                    .font(.custom("SFCompactDisplay-Bold", size: selectedFontSize))
                     .sensoryFeedback(Const.sensoryFeedback, trigger: floatingText)
             }
             .position(x: dragState ?? controlMinXLocal, y: midY)
-            .frame(maxHeight: maxHeight)
+            .frame(maxHeight: thumbSize)
             .animation(.bouncy(duration: 0.4), value: controlMinX)
             .transition(.identity)
             .gesture(dragThumbGesture)
@@ -121,10 +131,10 @@ struct SpeedControlView: View {
         DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
             .onChanged { gesture in
                 let dragPosition = (controlMinX ?? 0) + gesture.translation.width
-                let cappedMax = max(dragPosition, SpeedControlView.padding + (viewModel.itemWidth / 2))
+                let cappedMax = max(dragPosition, viewModel.padding + (viewModel.itemWidth / 2))
                 dragState = min(
                     cappedMax,
-                    viewModel.width + SpeedControlView.padding - (viewModel.itemWidth / 2)
+                    viewModel.width - (viewModel.padding + (viewModel.itemWidth / 2))
                 )
             }
             .onEnded { state in
@@ -135,7 +145,7 @@ struct SpeedControlView: View {
                 selectedSpeed = selected
 
                 withAnimation {
-                    controlMinX = viewModel.getXPos(viewModel.width, selected)
+                    controlMinX = viewModel.getXPos(selected)
                     dragState = nil
                 }
             }
@@ -146,7 +156,7 @@ struct SpeedControlView: View {
             ? selectedSpeed
             : viewModel.getSpeedFromPos(dragState ?? 0)
         let text = SpeedControlViewModel.formatSpeed(speed)
-        return text + (text.count <= 1 ? "×" : "")
+        return text + (text.count <= 2 ? "×" : "")
     }
 }
 
@@ -173,12 +183,12 @@ struct SpeedControlViewPreview: View {
         SpeedControlView(selectedSpeed: $selected)
             .modelContainer(DataProvider.previewContainer)
             .environment(NavigationManager())
-            .padding()
+        // .padding()
     }
 }
 
 #Preview {
     SpeedControlViewPreview()
-        .frame(width: 80)
+        .frame(width: 300)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

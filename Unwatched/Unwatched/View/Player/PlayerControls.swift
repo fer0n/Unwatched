@@ -220,5 +220,6 @@ struct PlayerControls: View {
         .environment(player)
         .environment(SheetPositionReader())
         .environment(RefreshManager())
+        .environment(NavigationManager())
         .tint(Color.neutralAccentColor)
 }

@@ -10,10 +10,11 @@ class SpeedControlViewModel {
     var width: CGFloat = 0
     var itemWidth: CGFloat = 0
     var fullWidth: CGFloat = 0
+    var padding: CGFloat = 0
+    var showContent = false
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
-        let itemWidth = width / CGFloat(Const.speeds.count)
-        let adjustedPos = pos - SpeedControlView.padding
+        let adjustedPos = pos - padding
         var calculatedIndex: Int {
             let res = round((adjustedPos / itemWidth) - 0.5)
             if res.isNaN || res.isInfinite {
@@ -26,11 +27,11 @@ class SpeedControlViewModel {
         return speed
     }
 
-    func getXPos(_ fullWidth: CGFloat, _ speed: Double) -> CGFloat {
+    func getXPos(_ speed: Double) -> CGFloat {
         let selectedSpeedIndex = Const.speeds.firstIndex(of: speed) ?? 0
         return (CGFloat(selectedSpeedIndex) * itemWidth)
             + (itemWidth / 2)
-            + SpeedControlView.padding
+            + padding
     }
 
     /// Only true when there's enough space
