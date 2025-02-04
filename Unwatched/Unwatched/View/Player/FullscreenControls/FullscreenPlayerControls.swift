@@ -16,31 +16,35 @@ struct FullscreenPlayerControls: View {
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
+        let size: CGFloat = 32
 
         VStack {
             ZStack {
                 PlayerMoreMenuButton(
                     sleepTimerVM: sleepTimerVM,
                     markVideoWatched: markVideoWatched,
-                    extended: true
+                    extended: true,
+                    isCircleVariant: true
                 ) { image in
                     image
+                        .resizable()
+                        .frame(width: size, height: size)
                         .modifier(PlayerControlButtonStyle(isOn: sleepTimerVM.isOn))
-                        .fontWeight(.bold)
                 }
             }
             .frame(maxHeight: .infinity)
 
             ZStack {
                 if hasChapters {
-                    NextChapterButton { image in
-                        VStack(spacing: 5) {
+                    NextChapterButton(isCircleVariant: true) { image in
+                        VStack(spacing: -1) {
                             image
+                                .resizable()
+                                .frame(width: size, height: size)
                             ChapterTimeRemaining()
                         }
                         .modifier(PlayerControlButtonStyle())
                     }
-                    .fontWeight(.bold)
                 }
             }
             .frame(maxHeight: .infinity)
@@ -52,35 +56,39 @@ struct FullscreenPlayerControls: View {
                         arrowEdge: arrowEdge,
                         menuOpen: $menuOpen
                     )
+                    .frame(width: size, height: size)
                 }
             }
             .frame(maxHeight: .infinity)
 
             ZStack {
-                FullscreenSpeedControl(menuOpen: $menuOpen, arrowEdge: arrowEdge)
+                FullscreenSpeedControl(
+                    menuOpen: $menuOpen,
+                    arrowEdge: arrowEdge,
+                    size: size
+                )
             }
             .frame(maxHeight: .infinity)
 
             CoreNextButton(markVideoWatched: markVideoWatched,
-                           extendedContextMenu: true) { image, isOn in
+                           extendedContextMenu: true,
+                           isCircleVariant: true) { image, isOn in
                 image
+                    .resizable()
+                    .frame(width: size, height: size)
                     .modifier(PlayerControlButtonStyle(isOn: isOn))
             }
-            .fontWeight(.bold)
             .frame(maxHeight: .infinity)
 
             ZStack {
-                FullscreenChangeOrientationButton()
+                FullscreenChangeOrientationButton(size: size)
             }
-            .font(.system(size: 18))
-            .fontWeight(.bold)
             .frame(maxHeight: .infinity)
         }
-        .environment(\.colorScheme, .dark)
-        .font(.system(size: 16))
-        .opacity(0.5)
-        .padding(.vertical)
         .foregroundStyle(Color.neutralAccentColor)
+        .fontWeight(.bold)
+        .environment(\.colorScheme, .dark)
+        .padding(.vertical)
         .frame(minWidth: 35)
     }
 }

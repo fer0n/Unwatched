@@ -30,7 +30,6 @@ extension Const {
         Const.hideMenuOnPlay: true,
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,
-        Const.swapNextAndContinuous: false,
         Const.playVideoFullscreen: false,
 
         // Filter

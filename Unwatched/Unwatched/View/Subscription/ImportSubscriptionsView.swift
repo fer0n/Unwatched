@@ -95,6 +95,9 @@ struct ImportSubscriptionsView: View {
                 }
             }
         }
+        .background {
+            Color.backgroundColor.ignoresSafeArea(.all)
+        }
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [.plainText], onCompletion: handleFileImport)
         .onDisappear {
@@ -122,8 +125,9 @@ struct ImportSubscriptionsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 5) {
                 Text("howToExportTitle")
-                    .font(.title2)
+                    .font(.title3)
                     .bold()
+                    .frame(maxWidth: .infinity, alignment: .center)
 
                 Link(destination: UrlService.youtubeTakeoutUrl) {
                     Text("googleTakeout")
@@ -137,8 +141,9 @@ struct ImportSubscriptionsView: View {
                     .padding(.bottom, 40)
 
                 Text("howToImportTitle")
-                    .font(.title2)
+                    .font(.title3)
                     .bold()
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.bottom, 10)
 
                 Text("howToImport1")
@@ -267,6 +272,6 @@ struct ImportSubscriptionsView: View {
         //    ]
     )
     .modelContainer(DataProvider.previewContainer)
-    .environment(RefreshManager())
-    .environment(NavigationManager())
+    .environment(NavigationManager.getDummy())
+    .environment(RefreshManager.shared)
 }

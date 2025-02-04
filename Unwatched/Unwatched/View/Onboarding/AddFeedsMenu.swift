@@ -40,6 +40,7 @@ struct AddFeedsMenu: View {
                     showImportSheet = false
                     onSuccess?()
                 })
+                .myNavigationTitle("importSubscriptions", showBack: false)
                 .toolbar {
                     DismissToolbarButton {
                         showImportSheet = false

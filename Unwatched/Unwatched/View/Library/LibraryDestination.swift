@@ -31,6 +31,7 @@ struct LibraryDestinationModifier: ViewModifier {
                     BookmarkedVideosView()
                 case .importSubscriptions:
                     ImportSubscriptionsView(importButtonPadding: true)
+                        .myNavigationTitle("importSubscriptions")
                 case .debug:
                     DebugView()
                 case .settingsNotifications:

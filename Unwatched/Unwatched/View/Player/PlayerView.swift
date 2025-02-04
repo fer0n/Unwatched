@@ -325,7 +325,7 @@ struct PlayerView: View {
 
     try? context.save()
 
-    return PlayerView(landscapeFullscreen: false,
+    return PlayerView(landscapeFullscreen: true,
                       markVideoWatched: { _, _ in },
                       enableHideControls: false,
                       sleepTimerVM: SleepTimerViewModel())

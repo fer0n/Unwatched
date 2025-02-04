@@ -57,6 +57,9 @@ struct SubscriptionDetailView: View {
                 VideoListView(subscriptionId: subscription.persistentModelID)
             }
         }
+        .background {
+            Color.backgroundColor.ignoresSafeArea(.all)
+        }
         .listStyle(.plain)
         .myNavigationTitle(showTitle ? LocalizedStringKey(subscription.title) : nil)
         .toolbar {

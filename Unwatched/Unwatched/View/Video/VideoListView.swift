@@ -30,7 +30,7 @@ struct VideoListView: View {
                     deferred: video.deferDate != nil
                 )
             )
-            .listRowSeparator(.hidden)
+            .videoListItemEntry()
         }
         .listRowBackground(Color.backgroundColor)
     }

@@ -19,13 +19,29 @@ struct FullscreenSpeedControl: View {
     @State var viewModel = FullscreenSpeedControlVM()
     var arrowEdge: Edge = .trailing
     @GestureState private var isDetectingLongPress = false
+    let size: CGFloat
 
     var body: some View {
-
         Button {
             // nothing
         } label: {
-            fullscreenControlLabel
+            ZStack {
+                if customSetting {
+                    Image(systemName: "circle.fill")
+                        .resizable()
+                        .frame(width: size, height: size)
+                        .foregroundStyle(Color.foregroundGray.opacity(0.5))
+                    fullscreenControlLabel
+                        .foregroundStyle(.black)
+                } else {
+                    Image(systemName: "circle.fill")
+                        .resizable()
+                        .frame(width: size, height: size)
+                        .foregroundStyle(Color.backgroundColor)
+                    fullscreenControlLabel
+                }
+            }
+            .modifier(PlayerControlButtonStyle(isOn: customSetting))
         }
         .highPriorityGesture(
             TapGesture()
@@ -37,13 +53,13 @@ struct FullscreenSpeedControl: View {
                 }
         )
         .frame(width: 35)
-        .fontWeight(.bold)
+        .fontWeight(.medium)
         .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             ZStack {
-                Color.sheetBackground
-                    .scaleEffect(1.5)
+                Color.black
+                    .scaleEffect(2)
 
-                CombinedPlaybackSpeedSetting(isExpanded: true)
+                CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                     .padding(.horizontal)
                     .frame(width: 350)
             }
@@ -52,13 +68,16 @@ struct FullscreenSpeedControl: View {
             .onDisappear {
                 menuOpen = false
             }
+            .fontWeight(nil)
         }
     }
 
-    var fullscreenControlLabel: some View {
-        let customSetting = player.video?.subscription?.customSpeedSetting != nil
+    var customSetting: Bool {
+        player.video?.subscription?.customSpeedSetting != nil
+    }
 
-        return HStack(spacing: 0) {
+    var fullscreenControlLabel: some View {
+        HStack(spacing: 0) {
             let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
             Text(verbatim: speedText)
                 .font(.custom("SFCompactDisplay-Semibold", size: 17))
@@ -68,7 +87,6 @@ struct FullscreenSpeedControl: View {
             }
         }
         .fixedSize()
-        .modifier(PlayerControlButtonStyle(isOn: customSetting))
         .animation(.default, value: customSetting)
         .onChange(of: playbackSpeed) {
             // workaround: refresh speed

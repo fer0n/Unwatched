@@ -83,7 +83,7 @@ struct PlayerControls: View {
 
                 layout {
                     HStack(spacing: speedSpacing) {
-                        CombinedPlaybackSpeedSetting(
+                        CombinedPlaybackSpeedSettingPlayer(
                             spacing: speedSpacing,
                             showTemporarySpeed: compactSize
                         )

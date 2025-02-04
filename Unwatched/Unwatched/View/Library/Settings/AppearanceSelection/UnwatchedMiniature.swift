@@ -61,7 +61,7 @@ struct UnwatchedMiniature: View {
                 .frame(height: height * 0.05)
                 .frame(height: 0)
             ZStack {
-                Color.sheetBackground
+                Color.backgroundColor
                 VStack(spacing: height * 0.05) {
                     dragHandle
                     listItem

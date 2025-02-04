@@ -12,7 +12,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
-    @AppStorage(Const.swapNextAndContinuous) var swapNextAndContinuous: Bool = false
 
     var body: some View {
         ZStack {
@@ -48,12 +47,6 @@ struct PlaybackSettingsView: View {
                         Toggle(isOn: $rotateOnPlay) {
                             Text("rotateOnPlay")
                         }
-                    }
-                }
-
-                MySection(footer: "swapNextAndContinuousHelper") {
-                    Toggle(isOn: $swapNextAndContinuous) {
-                        Text("swapNextAndContinuous")
                     }
                 }
 

@@ -10,11 +10,14 @@ struct NextChapterButton<Content>: View where Content: View {
     @Environment(PlayerManager.self) var player
     @State var actionToggle: Bool = false
 
+    let isCircleVariant: Bool
     private let contentImage: ((Image) -> Content)
 
     init(
+        isCircleVariant: Bool = false,
         @ViewBuilder content: @escaping (Image) -> Content = { $0 }
     ) {
+        self.isCircleVariant = isCircleVariant
         self.contentImage = content
     }
 
@@ -25,11 +28,19 @@ struct NextChapterButton<Content>: View where Content: View {
             }
         } label: {
             contentImage(
-                Image(systemName: Const.nextChapterSF)
+                innerImage
             )
             .symbolEffect(.bounce.down, value: actionToggle)
         }
         .help("nextChapter")
         .sensoryFeedback(Const.sensoryFeedback, trigger: actionToggle)
+    }
+
+    var innerImage: Image {
+        if isCircleVariant {
+            Image("custom.chevron.right.2.circle.fill")
+        } else {
+            Image(systemName: Const.nextChapterSF)
+        }
     }
 }
