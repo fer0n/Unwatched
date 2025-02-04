@@ -64,7 +64,7 @@ struct VideoListViewAsync: View {
                 video,
                 config: config
             )
-            .listRowSeparator(.hidden)
+            .videoListItemEntry()
             .onAppear {
                 videoListVM.loadMoreContentIfNeeded(currentItem: video)
             }

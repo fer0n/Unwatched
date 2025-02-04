@@ -1388,6 +1388,7 @@
       }
     },
     "continuousPlay" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5309,6 +5310,7 @@
       }
     },
     "swapNextAndContinuous" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5325,6 +5327,7 @@
       }
     },
     "swapNextAndContinuousHelper" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

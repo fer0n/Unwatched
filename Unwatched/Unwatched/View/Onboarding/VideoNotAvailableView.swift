@@ -161,7 +161,7 @@ struct VideoNotAvailable_Previews: PreviewProvider {
     static var previews: some View {
         VideoNotAvailableView()
             .modelContainer(DataProvider.previewContainer)
-            .environment(NavigationManager.getDummy())
+            .environment(NavigationManager())
             .environment(PlayerManager())
             .environment(RefreshManager())
             .environment(SheetPositionReader())

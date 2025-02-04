@@ -27,7 +27,7 @@ struct FullscreenPlayerControlsWrapper: View {
                 arrowEdge: arrowEdge,
                 sleepTimerVM: sleepTimerVM
             )
-            .offset(x: nonEmbedding ? -5 : left ? -20 : 20)
+            .offset(x: nonEmbedding ? -5 : left ? -22 : 22)
             .frame(width: 60)
             .fixedSize(horizontal: true, vertical: false)
             .simultaneousGesture(TapGesture().onEnded {

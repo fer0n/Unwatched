@@ -21,7 +21,8 @@ struct FullscreenChaptersButton: View {
                 menuOpen = true
             }
         } label: {
-            Image(systemName: Const.chaptersSF)
+            Image(systemName: "line.3.horizontal.circle.fill")
+                .resizable()
                 .modifier(PlayerControlButtonStyle())
         }
         .fontWeight(.bold)
@@ -49,6 +50,7 @@ struct FullscreenChaptersButton: View {
                 .onDisappear {
                     menuOpen = false
                 }
+                .fontWeight(nil)
             }
         }
     }

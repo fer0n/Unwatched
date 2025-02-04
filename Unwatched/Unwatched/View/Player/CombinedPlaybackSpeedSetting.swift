@@ -6,27 +6,67 @@
 import SwiftUI
 import UnwatchedShared
 
+struct CombinedPlaybackSpeedSettingPlayer: View {
+    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+    @Environment(PlayerManager.self) var player
+
+    @State var hapticToggle: Bool = false
+    var spacing: CGFloat = 10
+    var showTemporarySpeed = false
+    var isExpanded = false
+    var hasHaptics = true
+
+    var body: some View {
+        @Bindable var player = player
+        let isOn = Binding(get: {
+            player.video?.subscription?.customSpeedSetting != nil
+        }, set: { value in
+            player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
+            hapticToggle.toggle()
+        })
+
+        CombinedPlaybackSpeedSetting(
+            selectedSpeed: $player.playbackSpeed,
+            isOn: isOn,
+            hapticToggle: $hapticToggle,
+            hasHaptics: hasHaptics,
+            spacing: spacing,
+            showTemporarySpeed: showTemporarySpeed,
+            isExpanded: isExpanded
+        )
+        .disabled(player.video?.subscription == nil)
+        .onChange(of: player.video?.subscription) {
+            // workaround
+        }
+    }
+}
+
 struct CombinedPlaybackSpeedSetting: View {
     @Environment(PlayerManager.self) var player
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
+
+    @Binding var selectedSpeed: Double
+    @Binding var isOn: Bool
+    @Binding var hapticToggle: Bool
+    var hasHaptics = true
+
     var spacing: CGFloat = 10
     var showTemporarySpeed = false
     var isExpanded = false
 
     var body: some View {
-        @Bindable var player = player
-
         HStack(spacing: spacing) {
             if isExpanded {
                 VStack {
-                    SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                    CustomSettingsButton(playbackSpeed: $playbackSpeed, player: player, hasHaptics: false)
+                    SpeedControlView(selectedSpeed: $selectedSpeed)
+                    CustomSettingsButton(isOn: $isOn)
+                        .tint(Color.foregroundGray.opacity(0.5))
+                        .padding(.horizontal, 2)
                 }
                 .padding(.vertical)
             } else {
                 HStack(spacing: -6) {
-                    SpeedControlView(selectedSpeed: $player.playbackSpeed)
-                    CustomSettingsButton(playbackSpeed: $playbackSpeed, player: player)
+                    SpeedControlView(selectedSpeed: $selectedSpeed)
+                    CustomSettingsButton(isOn: $isOn)
                         .toggleStyle(
                             CustomSettingsToggleStyle(
                                 imageOn: Const.customPlaybackSpeedSF,
@@ -57,8 +97,8 @@ struct CombinedPlaybackSpeedSetting: View {
                 .accessibilityLabel("toggleTemporarySpeed")
             }
         }
-        .onChange(of: player.video?.subscription) {
-            // workaround
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in
+            return hasHaptics
         }
     }
 }
@@ -90,7 +130,10 @@ struct CustomSettingsToggleStyle: ToggleStyle {
 }
 
 #Preview {
-    CombinedPlaybackSpeedSetting(isExpanded: true)
+    @Previewable @State var isOn = false
+    @Previewable @State var selectedSpeed: Double = 1
+
+    CombinedPlaybackSpeedSetting(selectedSpeed: $selectedSpeed, isOn: $isOn, hapticToggle: .constant(true), isExpanded: true)
         .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager())

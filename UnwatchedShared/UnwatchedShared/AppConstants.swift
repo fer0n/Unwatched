@@ -140,6 +140,7 @@ public struct Const {
     public static let nextChapterSF = "chevron.right.2"
     public static let previousChapterSF = "chevron.left.2"
     public static let nextVideoSF = "forward.end.fill"
+    public static let nextVideoCircleSF = "forward.end.circle.fill"
     public static let continuousPlaySF = "text.line.first.and.arrowtriangle.forward"
 
     public static let enableFullscreenSF = "arrow.up.left.and.arrow.down.right"
@@ -153,7 +154,6 @@ public struct Const {
     public static let hideControlsFullscreen = "hideControlsFullscreen"
     public static let returnToQueue = "returnToQueue"
     public static let rotateOnPlay = "rotateOnPlay"
-    public static let swapNextAndContinuous = "swapNextAndContinuous"
     public static let defaultVideoPlacement = "defaultVideoPlacement"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"

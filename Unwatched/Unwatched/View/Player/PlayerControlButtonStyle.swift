@@ -10,17 +10,18 @@ struct PlayerControlButtonStyle: ViewModifier {
     var isOn: Bool = false
 
     func body(content: Content) -> some View {
-
-        VStack(spacing: 5) {
+        if isOn {
             content
-            if isOn {
-                Circle()
-                    .frame(width: 5, height: 5)
-            }
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.black, Color.foregroundGray.opacity(0.5))
+        } else {
+            content
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(
+                    Color.foregroundGray.opacity(0.5),
+                    Color.backgroundColor
+                )
+                .font(.system(size: 29))
         }
-        .opacity(isEnabled ? 1 : 0.3)
-        .padding(3)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.vertical, 5)
     }
 }

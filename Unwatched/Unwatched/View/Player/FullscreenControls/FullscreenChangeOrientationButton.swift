@@ -9,15 +9,19 @@ import UnwatchedShared
 struct FullscreenChangeOrientationButton: View {
     @Environment(PlayerManager.self) var player
     @State private var orientation = OrientationManager()
+    let size: CGFloat
 
     var body: some View {
         Button {
             OrientationManager.changeOrientation(to: .portrait)
         } label: {
-            Image(systemName: Const.disableFullscreenSF)
+            Image(systemName: "arrow.down.right.and.arrow.up.left.circle.fill")
+                .resizable()
+                .frame(width: size, height: size)
                 .modifier(PlayerControlButtonStyle())
         }
         .accessibilityLabel("exitFullscreen")
+        .contentShape(.contextMenuPreview, Circle())
         .contextMenu {
             Button {
                 player.pipEnabled.toggle()

@@ -26,38 +26,38 @@ struct SubscriptionSpeedSetting: View {
             }
             return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
         }
-        .popover(isPresented: $showSpeedControl) {
+        .popover(isPresented: $showSpeedControl, arrowEdge: .bottom) {
             ZStack {
                 Color.sheetBackground
                     .scaleEffect(1.5)
 
-                VStack {
-                    SpeedControlView(selectedSpeed: Binding(
-                                        get: {
-                                            subscription.customSpeedSetting ?? playbackSpeed
-                                        }, set: { value in
-                                            subscription.customSpeedSetting = value
-                                        }))
-                    Toggle(isOn: Binding(
-                        get: {
-                            subscription.customSpeedSetting != nil
-                        }, set: { value in
-                            withAnimation {
-                                if value {
-                                    subscription.customSpeedSetting = playbackSpeed
-                                } else {
-                                    subscription.customSpeedSetting = nil
-                                }
+                let selectedSpeed = Binding(
+                    get: {
+                        subscription.customSpeedSetting ?? playbackSpeed
+                    }, set: { value in
+                        subscription.customSpeedSetting = value
+                    })
+                let isOn = Binding(
+                    get: {
+                        subscription.customSpeedSetting != nil
+                    }, set: { value in
+                        withAnimation {
+                            if value {
+                                subscription.customSpeedSetting = playbackSpeed
+                            } else {
+                                subscription.customSpeedSetting = nil
                             }
                         }
-                    )) {
-                        Label(
-                            "customSpeedSetting",
-                            systemImage: Const.customPlaybackSpeedSF
-                        )
                     }
-                }
-                .padding()
+                )
+
+                CombinedPlaybackSpeedSetting(
+                    selectedSpeed: selectedSpeed,
+                    isOn: isOn,
+                    hapticToggle: .constant(false),
+                    isExpanded: true
+                )
+                .padding(.horizontal)
             }
             .presentationCompactAdaptation(.popover)
             .frame(minWidth: 300, maxWidth: .infinity)

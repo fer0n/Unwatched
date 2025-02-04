@@ -18,6 +18,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     var sleepTimerVM: SleepTimerViewModel
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var extended = false
+    var isCircleVariant = false
     let contentImage: ((Image) -> Content)
 
     var body: some View {
@@ -124,11 +125,15 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     var systemName: String {
         if let flashSymbol {
-            flashSymbol
+            return flashSymbol
         } else if sleepTimerVM.isOn {
-            "moon.zzz.fill"
+            return isCircleVariant
+                ? "moon.circle.fill"
+                : "moon.zzz.fill"
         } else {
-            "ellipsis"
+            return isCircleVariant
+                ? "ellipsis.circle.fill"
+                : "ellipsis"
         }
     }
 
@@ -140,9 +145,13 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     func toggleBookmark() {
         if let video = player.video {
             if video.bookmarkedDate != nil {
-                flashSymbol = "bookmark.slash.fill"
+                flashSymbol = isCircleVariant
+                    ? "bookmark.circle.fill"
+                    : "bookmark.slash.fill"
             } else {
-                flashSymbol = "bookmark.fill"
+                flashSymbol = isCircleVariant
+                    ? "bookmark.circle.fill"
+                    : "bookmark.fill"
             }
 
             VideoService.toggleBookmark(video)
