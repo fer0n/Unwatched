@@ -49,7 +49,7 @@ struct CoreNextButton<Content>: View where Content: View {
         }
         .accessibilityLabel(label)
         .help(label)
-        .contentShape(.contextMenuPreview, Circle())
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 5))
         .contextMenu {
             let text = continuousPlay
                 ? String(localized: "continuousPlayOn")

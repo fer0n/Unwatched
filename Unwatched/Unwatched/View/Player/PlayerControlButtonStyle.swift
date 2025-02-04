@@ -8,20 +8,28 @@ import SwiftUI
 struct PlayerControlButtonStyle: ViewModifier {
     @Environment(\.isEnabled) var isEnabled
     var isOn: Bool = false
+    let color = Color.foregroundGray.opacity(0.5)
+
+    let size: CGFloat = 13
+    let badgeSize: CGFloat = 8
 
     func body(content: Content) -> some View {
-        if isOn {
-            content
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.black, Color.foregroundGray.opacity(0.5))
-        } else {
-            content
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(
-                    Color.foregroundGray.opacity(0.5),
-                    Color.backgroundColor
-                )
-                .font(.system(size: 29))
-        }
+        content
+            .symbolRenderingMode(.palette)
+            .foregroundStyle(
+                color,
+                Color.backgroundColor
+            )
+            .overlay {
+                ZStack {
+                    Circle().fill(Color.playerBackground)
+                        .frame(width: size, height: size)
+                    Circle().fill(color)
+                        .frame(width: badgeSize, height: badgeSize)
+                }
+                .offset(x: 11, y: 10)
+                .opacity(isOn ? 1 : 0)
+                .animation(.default, value: isOn)
+            }
     }
 }
