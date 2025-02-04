@@ -18,37 +18,39 @@ struct FullscreenPlayerControls: View {
         let hasChapters = player.currentChapter != nil
         let size: CGFloat = 32
 
-        VStack {
-            ZStack {
-                PlayerMoreMenuButton(
-                    sleepTimerVM: sleepTimerVM,
-                    markVideoWatched: markVideoWatched,
-                    extended: true,
-                    isCircleVariant: true
-                ) { image in
+        VStack(spacing: 0) {
+            Spacer()
+
+            PlayerMoreMenuButton(
+                sleepTimerVM: sleepTimerVM,
+                markVideoWatched: markVideoWatched,
+                extended: true,
+                isCircleVariant: true
+            ) { image in
+                image
+                    .resizable()
+                    .frame(width: size, height: size)
+                    .modifier(PlayerControlButtonStyle(isOn: sleepTimerVM.isOn))
+            }
+
+            Spacer()
+            Spacer()
+
+            NextChapterButton(isCircleVariant: true) { image in
+                VStack(spacing: 0) {
                     image
                         .resizable()
                         .frame(width: size, height: size)
-                        .modifier(PlayerControlButtonStyle(isOn: sleepTimerVM.isOn))
+                    ChapterTimeRemaining()
+                        .fontWeight(.medium)
                 }
+                .modifier(PlayerControlButtonStyle())
             }
-            .frame(maxHeight: .infinity)
-
-            ZStack {
-                if hasChapters {
-                    NextChapterButton(isCircleVariant: true) { image in
-                        VStack(spacing: -1) {
-                            image
-                                .resizable()
-                                .frame(width: size, height: size)
-                            ChapterTimeRemaining()
-                        }
-                        .modifier(PlayerControlButtonStyle())
-                    }
-                }
-            }
-            .frame(maxHeight: .infinity)
+            .opacity(hasChapters ? 1 : 0)
             .disabled(player.nextChapter == nil)
+
+            Spacer()
+            Spacer()
 
             ZStack {
                 if hasChapters {
@@ -59,16 +61,19 @@ struct FullscreenPlayerControls: View {
                     .frame(width: size, height: size)
                 }
             }
-            .frame(maxHeight: .infinity)
+            .frame(minHeight: size)
 
-            ZStack {
-                FullscreenSpeedControl(
-                    menuOpen: $menuOpen,
-                    arrowEdge: arrowEdge,
-                    size: size
-                )
-            }
-            .frame(maxHeight: .infinity)
+            Spacer()
+            Spacer()
+
+            FullscreenSpeedControl(
+                menuOpen: $menuOpen,
+                arrowEdge: arrowEdge,
+                size: size
+            )
+
+            Spacer()
+            Spacer()
 
             CoreNextButton(markVideoWatched: markVideoWatched,
                            extendedContextMenu: true,
@@ -78,12 +83,13 @@ struct FullscreenPlayerControls: View {
                     .frame(width: size, height: size)
                     .modifier(PlayerControlButtonStyle(isOn: isOn))
             }
-            .frame(maxHeight: .infinity)
 
-            ZStack {
-                FullscreenChangeOrientationButton(size: size)
-            }
-            .frame(maxHeight: .infinity)
+            Spacer()
+            Spacer()
+
+            FullscreenChangeOrientationButton(size: size)
+
+            Spacer()
         }
         .foregroundStyle(Color.neutralAccentColor)
         .fontWeight(.bold)
