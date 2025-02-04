@@ -26,20 +26,12 @@ struct FullscreenSpeedControl: View {
             // nothing
         } label: {
             ZStack {
-                if customSetting {
-                    Image(systemName: "circle.fill")
-                        .resizable()
-                        .frame(width: size, height: size)
-                        .foregroundStyle(Color.foregroundGray.opacity(0.5))
-                    fullscreenControlLabel
-                        .foregroundStyle(.black)
-                } else {
-                    Image(systemName: "circle.fill")
-                        .resizable()
-                        .frame(width: size, height: size)
-                        .foregroundStyle(Color.backgroundColor)
-                    fullscreenControlLabel
-                }
+                Image(systemName: "circle.fill")
+                    .resizable()
+                    .frame(width: size, height: size)
+                    .foregroundStyle(Color.backgroundColor)
+                fullscreenControlLabel
+                    .foregroundStyle(Color.foregroundGray.opacity(0.5))
             }
             .modifier(PlayerControlButtonStyle(isOn: customSetting))
         }
@@ -80,10 +72,10 @@ struct FullscreenSpeedControl: View {
         HStack(spacing: 0) {
             let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
             Text(verbatim: speedText)
-                .font(.custom("SFCompactDisplay-Semibold", size: 17))
+                .font(.custom("SFCompactDisplay-Bold", size: 17))
             if speedText.count <= 1 {
                 Text(verbatim: "×")
-                    .font(Font.custom("SFCompactDisplay-Semibold", size: 14))
+                    .font(Font.custom("SFCompactDisplay-Bold", size: 14))
             }
         }
         .fixedSize()
