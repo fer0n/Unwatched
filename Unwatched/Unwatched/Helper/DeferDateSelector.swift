@@ -43,7 +43,11 @@ struct DeferDateSelector: View {
         self.onSuccess = onSuccess
 
         let fallbackDate = video?.deferDate
-            ?? Calendar.current.date(byAdding: .second, value: 20, to: Date.now)
+            ?? Calendar.current.nextDate(
+                after: Date.now,
+                matching: DateComponents(minute: 0),
+                matchingPolicy: .nextTime
+            )
             ?? .now
 
         _date = State(initialValue: detectedDate?.wrappedValue?.date ?? fallbackDate)
@@ -84,7 +88,7 @@ struct DeferDateSelector: View {
                 .padding(.horizontal)
 
                 DatePicker("selectDate", selection: $date)
-                    .datePickerStyle(GraphicalDatePickerStyle())
+                    .datePickerStyle(.graphical)
                     .myNavigationTitle("deferVideo", showBack: false)
                     .toolbar {
                         DismissToolbarButton()
