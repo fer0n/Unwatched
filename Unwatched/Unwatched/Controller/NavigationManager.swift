@@ -121,6 +121,11 @@ import UnwatchedShared
         if !showMenu {
             showMenu = true
         }
+        Task { @MainActor in
+            if SheetPositionReader.shared.isMinimumSheet {
+                SheetPositionReader.shared.setDetentVideoPlayer()
+            }
+        }
     }
 
     func navigateToQueue() {
