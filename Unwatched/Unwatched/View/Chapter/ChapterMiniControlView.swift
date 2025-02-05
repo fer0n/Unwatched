@@ -134,7 +134,7 @@ struct ChapterMiniControlRemainingText: View {
                 .font(.system(size: 12).monospacedDigit())
                 .animation(.default, value: player.currentRemainingText)
                 .contentTransition(.numericText(countsDown: true))
-                .foregroundStyle(Color.foregroundGray)
+                .foregroundStyle(.secondary)
                 .lineLimit(1)
         }
     }
