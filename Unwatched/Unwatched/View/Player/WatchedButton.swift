@@ -13,6 +13,7 @@ struct WatchedButton: View {
     @State var hapticToggle: Bool = false
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+    var indicateWatched: Bool = true
 
     var body: some View {
         Button {
@@ -23,7 +24,9 @@ struct WatchedButton: View {
                 .fontWeight(.bold)
         }
         .help("markWatched")
-        .playerToggleModifier(isOn: player.isConsideredWatched)
+        .playerToggleModifier(
+            isOn: indicateWatched ? player.isConsideredWatched : false
+        )
         .padding(3)
         .contextMenu {
             if player.video != nil {
@@ -37,4 +40,10 @@ struct WatchedButton: View {
         .fontWeight(.bold)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
     }
+}
+
+#Preview {
+    WatchedButton(markVideoWatched: { _, _ in })
+        .environment(PlayerManager())
+        .modelContainer(DataProvider.previewContainerFilled)
 }

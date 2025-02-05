@@ -54,8 +54,11 @@ struct FullscreenOverlayControls: View {
 
             if player.videoEnded {
                 HStack {
-                    WatchedButton(markVideoWatched: markVideoWatched)
-                        .frame(maxWidth: .infinity)
+                    WatchedButton(
+                        markVideoWatched: markVideoWatched,
+                        indicateWatched: false
+                    )
+                    .frame(maxWidth: .infinity)
 
                     PlayButton(size: 90)
 
@@ -107,7 +110,7 @@ enum OverlayIcon {
 
 #Preview {
     let player = PlayerManager()
-    player.videoEnded = false
+    player.videoEnded = true
 
     return FullscreenOverlayControls(
         overlayVM: .constant(OverlayFullscreenVM()),
