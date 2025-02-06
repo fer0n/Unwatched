@@ -655,8 +655,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Backup jetzt erstellen"
+            "state" : "translated",
+            "value" : "Backup auf iCloud Drive"
           }
         },
         "en" : {
@@ -2269,6 +2269,12 @@
     },
     "exportBackup" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup Exportieren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3531,6 +3537,12 @@
     },
     "noIcloudBackupWarning" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive nicht verfügbar"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
