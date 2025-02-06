@@ -56,9 +56,9 @@ struct FullscreenPlayerControls: View {
                 if hasChapters {
                     FullscreenChaptersButton(
                         arrowEdge: arrowEdge,
-                        menuOpen: $menuOpen
+                        menuOpen: $menuOpen,
+                        size: size
                     )
-                    .frame(width: size, height: size)
                 }
             }
             .frame(minHeight: size)
