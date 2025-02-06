@@ -18,6 +18,8 @@ struct BackupView: View {
     @State var fileToBeRestored: IdentifiableURL?
 
     @State var isDeletingEverythingTask: Task<(), Never>?
+    @State var hasicloudDirectory = true
+    @State var isExporting = false
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -29,18 +31,38 @@ struct BackupView: View {
                 BackupSettings()
 
                 MySection {
-                    AsyncButton {
-                        await saveToIcloud()
-                    } label: {
-                        Text("backupNow")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-
                     Button {
                         showFileImporter = true
                     } label: {
                         Text("importBackup")
                     }
+
+                    let item = AsyncSharableFile(
+                        getFile: exportFile,
+                        filename: UserDataService.getBackupFileName(
+                            manual: true
+                        ),
+                        isLoading: $isExporting
+                    )
+                    ShareLink(item: item, preview: SharePreview("backupNow")) {
+                        if isExporting {
+                            ProgressView()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        } else {
+                            Text("exportBackup")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+
+                MySection(footer: !hasicloudDirectory ? "noIcloudBackupWarning" : "") {
+                    AsyncButton {
+                        await saveBackupFile()
+                    } label: {
+                        Text("backupNow")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .disabled(!hasicloudDirectory)
                 }
 
                 if !fileNames.isEmpty {
@@ -172,7 +194,17 @@ struct BackupView: View {
                         isManual: isManual)
     }
 
-    func saveToIcloud() async {
+    func exportFile() -> Data? {
+        do {
+            let data = try UserDataService.exportUserData()
+            return data
+        } catch {
+            Logger.log.error("Export failed: \(error)")
+            return nil
+        }
+    }
+
+    func saveBackupFile() async {
         do {
             let task = UserDataService.saveToIcloud(manual: true)
             try await task.value
@@ -199,8 +231,10 @@ struct BackupView: View {
         let fileManager = FileManager.default
         guard let backupsUrl = UserDataService.getBackupsDirectory() else {
             Logger.log.warning("no documents url")
+            hasicloudDirectory = false
             return
         }
+        hasicloudDirectory = true
         withAnimation {
             do {
                 let fileUrls = try fileManager
@@ -252,6 +286,26 @@ struct BackupView: View {
                 filePath.stopAccessingSecurityScopedResource()
             }
         }
+    }
+}
+
+struct AsyncSharableFile: Transferable {
+    let getFile: () -> Data?
+    var filename: String
+    @Binding var isLoading: Bool
+
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .data) { item in
+            item.isLoading = true
+            if let data = item.getFile() {
+                item.isLoading = false
+                return data
+            } else {
+                item.isLoading = false
+                fatalError()
+            }
+        }
+        .suggestedFileName { $0.filename }
     }
 }
 

@@ -655,14 +655,14 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Backup jetzt erstellen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Backup Now"
+            "value" : "Backup to iCloud Drive"
           }
         }
       }
@@ -1383,23 +1383,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Email"
-          }
-        }
-      }
-    },
-    "continuousPlay" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fortlaufende Wiedergabe"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continuous Play"
           }
         }
       }
@@ -2280,6 +2263,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expansive"
+          }
+        }
+      }
+    },
+    "exportBackup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Backup"
           }
         }
       }
@@ -3532,6 +3525,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos marked as watched will appear here"
+          }
+        }
+      }
+    },
+    "noIcloudBackupWarning" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive is unavailable"
           }
         }
       }
@@ -5305,40 +5308,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
-          }
-        }
-      }
-    },
-    "swapNextAndContinuous" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Fortlaufende Wiedergabe\" mit \"Nächstes Video\" ersetzen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Replace \"Next\" With \"Continuous Play\""
-          }
-        }
-      }
-    },
-    "swapNextAndContinuousHelper" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die andere Option ist jeweils über das Kontextmenü zugänglich."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can always access the other option by long pressing on the button."
           }
         }
       }

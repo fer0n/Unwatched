@@ -160,19 +160,23 @@ struct UserDataService {
         }
     }
 
+    @MainActor
+    static func getBackupFileName(manual: Bool = false) -> String {
+        let deviceName = UIDevice.deviceName
+        return self.getFileName(deviceName, manual: manual)
+    }
+
     static func saveToIcloud(manual: Bool = false) -> Task<(), Error> {
         return Task {
-            let deviceName = await MainActor.run {
-                UIDevice.deviceName
+            let filename = await MainActor.run {
+                self.getBackupFileName(manual: manual)
             }
             do {
-                let filename = getBackupsDirectory()?
-                    .appendingPathComponent(self.getFileName(deviceName, manual: manual))
-                guard let filename = filename else {
+                guard let directory = getBackupsDirectory()?.appendingPathComponent(filename) else {
                     throw UserDataServiceError.directoryError
                 }
                 let data = try self.exportFile()
-                try data.write(to: filename)
+                try data.write(to: directory)
             } catch {
                 Logger.log.error("saveToIcloud: \(error)")
                 throw error
