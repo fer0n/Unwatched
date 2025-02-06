@@ -46,6 +46,7 @@ struct FullscreenSpeedControl: View {
         )
         .frame(width: 35)
         .fontWeight(.medium)
+        .padding(.horizontal) // workaround: safearea pushing content in pop over
         .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             ZStack {
                 Color.black

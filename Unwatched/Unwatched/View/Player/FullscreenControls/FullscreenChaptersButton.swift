@@ -11,8 +11,8 @@ struct FullscreenChaptersButton: View {
     @State var showChapters = false
 
     var arrowEdge: Edge
-
     @Binding var menuOpen: Bool
+    var size: CGFloat
 
     var body: some View {
         Button {
@@ -24,9 +24,11 @@ struct FullscreenChaptersButton: View {
             Image(systemName: "line.3.horizontal.circle.fill")
                 .resizable()
                 .modifier(PlayerControlButtonStyle())
+                .frame(width: size, height: size)
         }
         .fontWeight(.bold)
         .accessibilityLabel("chapters")
+        .padding(.horizontal) // workaround: safearea pushing content in pop over
         .popover(isPresented: $showChapters, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
