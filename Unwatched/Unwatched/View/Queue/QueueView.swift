@@ -102,6 +102,9 @@ struct QueueView: View {
         VideoService.moveQueueEntry(from: source,
                                     to: destination,
                                     modelContext: modelContext)
+        if source.count == 1 && source.first == destination {
+            return
+        }
         if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue()
         }
