@@ -15,6 +15,7 @@ struct ChapterMiniControlView: View {
     @State var triggerFeedback = false
 
     var setShowMenu: () -> Void
+    var handleTitleTap: () -> Void
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -38,12 +39,7 @@ struct ChapterMiniControlView: View {
                     }
 
                     Button {
-                        if player.isAnyCompactHeight || (sheetPos.playerContentViewHeight ?? .infinity) < 300 {
-                            // open dedicated sheet when there's not enough space
-                            navManager.videoDetail = player.video
-                        } else {
-                            navManager.handleVideoDetail(scrollToCurrentChapter: true)
-                        }
+                        handleTitleTap()
                     } label: {
                         ZStack {
                             if let chapt = player.currentChapterPreview ?? player.currentChapter {
@@ -141,7 +137,7 @@ struct ChapterMiniControlRemainingText: View {
 }
 
 #Preview {
-    ChapterMiniControlView(setShowMenu: {})
+    ChapterMiniControlView(setShowMenu: {}, handleTitleTap: {})
         .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager.getDummy())

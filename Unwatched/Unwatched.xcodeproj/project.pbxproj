@@ -450,6 +450,8 @@
 		88D8F03D2BB21135009B54FC /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 88D8F03C2BB21135009B54FC /* PrivacyInfo.xcprivacy */; };
 		88DA0EBA2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */; };
 		88DA0EBB2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */; };
+		88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
+		88DB36932D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
 		88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */; };
 		88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */; };
 		88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
@@ -785,6 +787,7 @@
 		88D858582B55AC820047E0E6 /* YtErrorResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtErrorResponseBody.swift; sourceTree = "<group>"; };
 		88D8F03C2BB21135009B54FC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewAsync.swift; sourceTree = "<group>"; };
+		88DB36912D561B55007CF5F8 /* DescriptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionButton.swift; sourceTree = "<group>"; };
 		88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemSwipeActionsModifier.swift; sourceTree = "<group>"; };
 		88DFC0AB2B44843A001895C8 /* Unwatched.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Unwatched.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedApp.swift; sourceTree = "<group>"; };
@@ -1025,6 +1028,7 @@
 				887E72932B91F6D400928946 /* NextVideoButton.swift */,
 				88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */,
 				881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */,
+				88DB36912D561B55007CF5F8 /* DescriptionButton.swift */,
 				8816A1FF2CCD0D19001FE63E /* PipButton.swift */,
 				8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */,
 				88FA62D72B8485EA00924959 /* PlayButton.swift */,
@@ -1827,6 +1831,7 @@
 				889AF8D82C50ECA9001CEDE6 /* PlayerToggleStyle.swift in Sources */,
 				889AF8D92C50ECA9001CEDE6 /* DateTimeConversion.swift in Sources */,
 				889AF9012C50ECD1001CEDE6 /* SleepTimerViewModel.swift in Sources */,
+				88DB36932D561B55007CF5F8 /* DescriptionButton.swift in Sources */,
 				889AF9022C50ECD1001CEDE6 /* AddVideoViewModel.swift in Sources */,
 				889AF8EE2C50ECC5001CEDE6 /* Collection.swift in Sources */,
 				889AF8EF2C50ECC5001CEDE6 /* Logger.swift in Sources */,
@@ -2126,6 +2131,7 @@
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
 				88BABAC02B629505001FA0A4 /* ImageService.swift in Sources */,
+				88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
@@ -2447,7 +2453,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 196;
+				CURRENT_PROJECT_VERSION = 197;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2472,7 +2478,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.5.3;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2493,7 +2499,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 196;
+				CURRENT_PROJECT_VERSION = 197;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2518,7 +2524,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				MARKETING_VERSION = 1.5.3;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;

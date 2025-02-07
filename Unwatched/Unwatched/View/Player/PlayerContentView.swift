@@ -23,8 +23,6 @@ struct PlayerContentView: View {
 
     let fadeOutHeight: CGFloat = 55
 
-    @State var minHeight: CGFloat?
-
     var body: some View {
         @Bindable var navManager = navManager
 
@@ -36,8 +34,7 @@ struct PlayerContentView: View {
                                enableHideControls: enableHideControls,
                                setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched,
-                               sleepTimerVM: sleepTimerVM,
-                               minHeight: $minHeight)
+                               sleepTimerVM: sleepTimerVM)
                     .padding(.vertical, compactSize ? 5 : 0)
                     .verticalSwipeGesture(
                         disableGesture: compactSize,
@@ -65,12 +62,8 @@ struct PlayerContentView: View {
                     .tag(ControlNavigationTab.chapterDescription)
                 }
             }
-            .frame(minHeight: minHeight)
             .tabViewStyle(.page(indexDisplayMode: .never))
             .sensoryFeedback(Const.sensoryFeedback, trigger: navManager.playerTab)
-            .onSizeChange { size in
-                SheetPositionReader.shared.playerContentViewHeight = size.height
-            }
 
             bottomShadow
                 .opacity(navManager.showMenu ? 1 : 0)
