@@ -36,7 +36,6 @@ import UnwatchedShared
     }
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
-    @ObservationIgnored var playerContentViewHeight: CGFloat?
 
     func setPlayerControlHeight(_ height: CGFloat) {
         debouncedPlayerControlHeight = height

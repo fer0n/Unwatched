@@ -12,6 +12,7 @@ struct PlayerControls: View {
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(NavigationManager.self) var navManager
 
     @ScaledMetric var speedSpacingScaled = 8
 
@@ -24,8 +25,8 @@ struct PlayerControls: View {
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
-    @Binding var minHeight: CGFloat?
     @State var autoHideVM = AutoHideVM()
+    @State var showDescriptionPopover: Bool = false
 
     var speedSpacing: CGFloat {
         speedSpacingScaled + (showRotateFullscreen ? 0 : 2)
@@ -73,7 +74,7 @@ struct PlayerControls: View {
                     Spacer()
                 }
 
-                ChapterMiniControlView(setShowMenu: setShowMenu)
+                ChapterMiniControlView(setShowMenu: setShowMenu, handleTitleTap: handleTitleTap)
                     .contentShape(Rectangle())
                     .padding(.horizontal)
 
@@ -90,6 +91,10 @@ struct PlayerControls: View {
 
                         if !UIDevice.isMac {
                             PipButton()
+                        }
+
+                        if compactSize {
+                            DescriptionButton(show: $showDescriptionPopover)
                         }
 
                         PlayerMoreMenuButton(
@@ -170,9 +175,6 @@ struct PlayerControls: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
-            if player.isAnyCompactHeight || compactSize {
-                minHeight = size.height
-            }
         }
         .animation(.default.speed(3), value: showControls)
         .animation(.default, value: player.isCompactHeight)
@@ -196,6 +198,14 @@ struct PlayerControls: View {
         player.updateElapsedTime(seconds)
     }
 
+    func handleTitleTap() {
+        if compactSize {
+            showDescriptionPopover = true
+        } else {
+            navManager.handleVideoDetail(scrollToCurrentChapter: true)
+        }
+    }
+
     var showControls: Bool {
         !hideControlsFullscreen
             || fullscreenControlsSetting != .autoHide
@@ -214,8 +224,7 @@ struct PlayerControls: View {
                           enableHideControls: false,
                           setShowMenu: { },
                           markVideoWatched: { _, _ in },
-                          sleepTimerVM: SleepTimerViewModel(),
-                          minHeight: .constant(0))
+                          sleepTimerVM: SleepTimerViewModel())
         .modelContainer(DataProvider.previewContainer)
         .environment(player)
         .environment(SheetPositionReader())

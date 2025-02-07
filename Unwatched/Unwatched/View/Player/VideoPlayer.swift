@@ -37,13 +37,24 @@ struct VideoPlayer: View {
                 .layoutPriority(1)
 
             if !landscapeFullscreen {
-                PlayerContentView(compactSize: compactSize,
-                                  showInfo: showInfo && !tallestAspectRatio,
-                                  horizontalLayout: horizontalLayout,
-                                  enableHideControls: enableHideControls,
-                                  setShowMenu: setShowMenu,
-                                  markVideoWatched: markVideoWatched,
-                                  sleepTimerVM: sleepTimerVM)
+                if compactSize {
+                    PlayerControls(compactSize: compactSize,
+                                   showInfo: showInfo,
+                                   horizontalLayout: horizontalLayout,
+                                   enableHideControls: enableHideControls,
+                                   setShowMenu: setShowMenu,
+                                   markVideoWatched: markVideoWatched,
+                                   sleepTimerVM: sleepTimerVM)
+                        .padding(.top, 3)
+                } else {
+                    PlayerContentView(compactSize: compactSize,
+                                      showInfo: showInfo && !tallestAspectRatio,
+                                      horizontalLayout: horizontalLayout,
+                                      enableHideControls: enableHideControls,
+                                      setShowMenu: setShowMenu,
+                                      markVideoWatched: markVideoWatched,
+                                      sleepTimerVM: sleepTimerVM)
+                }
             }
         }
         .tint(.neutralAccentColor)
