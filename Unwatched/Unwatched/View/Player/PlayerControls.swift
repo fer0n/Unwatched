@@ -25,6 +25,7 @@ struct PlayerControls: View {
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
+    @Binding var minHeight: CGFloat?
     @State var autoHideVM = AutoHideVM()
     @State var showDescriptionPopover: Bool = false
 
@@ -178,6 +179,9 @@ struct PlayerControls: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
+            if player.isAnyCompactHeight || compactSize {
+                minHeight = size.height
+            }
         }
         .animation(.default.speed(3), value: showControls)
         .animation(.default, value: player.isCompactHeight)
@@ -227,7 +231,8 @@ struct PlayerControls: View {
                           enableHideControls: false,
                           setShowMenu: { },
                           markVideoWatched: { _, _ in },
-                          sleepTimerVM: SleepTimerViewModel())
+                          sleepTimerVM: SleepTimerViewModel(),
+                          minHeight: .constant(0))
         .modelContainer(DataProvider.previewContainer)
         .environment(player)
         .environment(SheetPositionReader())
