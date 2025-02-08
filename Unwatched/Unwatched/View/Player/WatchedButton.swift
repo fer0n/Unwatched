@@ -23,6 +23,7 @@ struct WatchedButton: View {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)
         }
+        .symbolEffect(.bounce.down, value: hapticToggle)
         .help("markWatched")
         .playerToggleModifier(
             isOn: indicateWatched ? player.isConsideredWatched : false

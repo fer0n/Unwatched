@@ -112,8 +112,11 @@ struct PlayerControls: View {
                     }
 
                     HStack {
-                        WatchedButton(markVideoWatched: markVideoWatched)
-                            .frame(maxWidth: .infinity)
+                        WatchedButton(
+                            markVideoWatched: markVideoWatched,
+                            indicateWatched: false
+                        )
+                        .frame(maxWidth: .infinity)
 
                         PlayButton(size:
                                     (player.embeddingDisabled || compactSize)
