@@ -44,7 +44,8 @@ struct VideoPlayer: View {
                                    enableHideControls: enableHideControls,
                                    setShowMenu: setShowMenu,
                                    markVideoWatched: markVideoWatched,
-                                   sleepTimerVM: sleepTimerVM)
+                                   sleepTimerVM: sleepTimerVM,
+                                   minHeight: .constant(nil))
                         .padding(.top, 3)
                 } else {
                     PlayerContentView(compactSize: compactSize,
