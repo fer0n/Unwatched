@@ -25,7 +25,7 @@ struct AddVideoButton: View {
 
     var body: some View {
         addVideoButton
-            .overlay {
+            .background {
                 playNowButton
                     .opacity(isVideoUrl ? 1 : 0)
                     .animation(.default, value: isVideoUrl)
@@ -63,7 +63,6 @@ struct AddVideoButton: View {
         .background {
             Circle()
                 .fill(Color.neutralAccentColor)
-                .frame(width: backgroundSize, height: backgroundSize)
         }
     }
 
