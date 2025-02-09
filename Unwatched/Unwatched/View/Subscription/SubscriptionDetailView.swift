@@ -43,7 +43,7 @@ struct SubscriptionDetailView: View {
                         Color.clear
                     }
                     .overlay(Material.thin)
-                    .padding(.bottom, -100)
+                    .padding(.bottom, -225)
                     .mask(LinearGradient(gradient: Gradient(
                         stops: [
                             .init(color: .clear, location: 0),
@@ -125,7 +125,7 @@ struct SubscriptionDetailView: View {
     let subs = try? container.mainContext.fetch(fetch)
     let sub = subs?.first
 
-    if let sub = sub {
+    if let sub {
         return NavigationView {
             SubscriptionDetailView(subscription: sub)
                 .modelContainer(container)
