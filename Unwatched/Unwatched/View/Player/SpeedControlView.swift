@@ -29,7 +29,7 @@ struct SpeedControlView: View {
         let highlighted: [Double] = viewModel.showDecimalHighlights
             ? Const.highlightedPlaybackSpeeds
             : Const.highlightedSpeedsInt
-        let frameSize: CGFloat = 3
+        let frameSize: CGFloat = 4
 
         ZStack {
             Spacer()
@@ -43,8 +43,7 @@ struct SpeedControlView: View {
 
                     ZStack {
                         Circle()
-                            .fill()
-                            .stroke(isHightlighted ? .clear : foregroundColor, lineWidth: 1.5)
+                            .fill(isHightlighted ? .clear : foregroundColor)
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
                             .frame(maxWidth: .infinity, maxHeight: thumbSize)
