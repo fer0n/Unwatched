@@ -9,6 +9,7 @@ import UnwatchedShared
 struct DeferDateButtonStyle: ButtonStyle {
     var isSelected: Bool = false
     var color: Color
+    var contrastColor: Color
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -23,7 +24,7 @@ struct DeferDateButtonStyle: ButtonStyle {
                             .strokeBorder(color, lineWidth: 1)
                     )
             )
-            .foregroundColor(isSelected ? .white : color)
+            .foregroundStyle(isSelected ? contrastColor : color)
     }
 }
 
@@ -71,7 +72,8 @@ struct DeferDateSelector: View {
                         }
                         .buttonStyle(DeferDateButtonStyle(
                             isSelected: date == detectedDate,
-                            color: theme.color
+                            color: theme.color,
+                            contrastColor: theme.contrastColor
                         ))
                     }
 
@@ -82,7 +84,8 @@ struct DeferDateSelector: View {
                     }
                     .buttonStyle(DeferDateButtonStyle(
                         isSelected: date == Date.tomorrow,
-                        color: theme.color
+                        color: theme.color,
+                        contrastColor: theme.contrastColor
                     ))
                 }
                 .padding(.horizontal)
@@ -125,7 +128,7 @@ struct DeferDateSelector: View {
                             .frame(maxWidth: .infinity)
                     }
                     .contentShape(Rectangle())
-                    .buttonStyle(DeferDateButtonStyle(isSelected: false, color: .red))
+                    .buttonStyle(DeferDateButtonStyle(isSelected: false, color: .red, contrastColor: .white))
                     .padding()
                 }
             }
