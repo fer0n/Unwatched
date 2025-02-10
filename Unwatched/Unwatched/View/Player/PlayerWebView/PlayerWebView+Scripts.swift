@@ -33,16 +33,28 @@ extension PlayerWebView {
         if player.unstarted {
             Logger.log.info("PLAY: unstarted")
             return """
-                document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2).click();
-                setTimeout(() => checkOffline(0), 200);
+                function attemptClick() {
+                    document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
+                }
+                attemptClick();
 
-                function checkOffline(retries) {
+                setTimeout(() => checkResult(0), 50);
+                function checkResult(retries) {
+                    if (!video.paused) {
+                        return;
+                    }
                     if (isNaN(video?.duration)) {
                         const offlineElement = document.querySelector('.ytp-offline-slate-subtitle-text');
                         if (offlineElement) {
                             sendMessage("offline", offlineElement.innerText);
-                        } else if (retries < 2) {
-                            setTimeout(() => checkOffline(retries + 1), 500 * (retries + 1));
+                        } else {
+                            const element = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+                            if (element.classList.contains('ytp-button') || retries > 0) {
+                                attemptClick();
+                            }
+                            if (retries < 4) {
+                                setTimeout(() => checkResult(retries + 1), 50 * (retries + 1) * 2);
+                            }
                         }
                     }
                 }
@@ -74,7 +86,6 @@ extension PlayerWebView {
     }
 
     func getEnterPipScript() -> String {
-        // "document.querySelector('video').requestPictureInPicture();"
         "startPiP();"
     }
 
