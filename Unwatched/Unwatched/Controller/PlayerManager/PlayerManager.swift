@@ -264,13 +264,15 @@ import UnwatchedShared
         }
 
         let isTallAspectRatio = (aspectRatio - Const.aspectRatioTolerance) < Const.consideredTallAspectRatio
-        if isTallAspectRatio {
-            self.aspectRatio = aspectRatio
-            if video.isYtShort != true,
-               let duration = video.duration,
-               duration <= Const.maxYtShortsDuration {
-                video.isYtShort = true
+        if let duration = video.duration {
+            let isShortVideo = duration <= Const.maxYtShortsDuration
+            let isShort = isShortVideo && isTallAspectRatio
+            if video.isYtShort != isShort {
+                video.isYtShort = isShort
             }
+        }
+
+        if isTallAspectRatio {
             return
         }
         let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
