@@ -11,28 +11,21 @@ struct SetColorSchemeModifier: ViewModifier {
     @AppStorage(Const.lightModeTheme) var lightModeTheme = AppAppearance.unwatched
     @AppStorage(Const.darkModeTheme) var darkModeTheme = AppAppearance.dark
 
-    var forPlayer: Bool
-
     func body(content: Content) -> some View {
         content
             .environment(\.colorScheme, newColorScheme)
     }
 
     var newColorScheme: ColorScheme {
-        if originalColorScheme == .dark {
-            return forPlayer
-                ? darkModeTheme.playerColorScheme
-                : darkModeTheme.colorScheme
-        }
-        return forPlayer
-            ? lightModeTheme.playerColorScheme
+        originalColorScheme == .dark
+            ? darkModeTheme.colorScheme
             : lightModeTheme.colorScheme
     }
 }
 
 extension View {
-    func setColorScheme(forPlayer: Bool = false) -> some View {
-        self.modifier(SetColorSchemeModifier(forPlayer: forPlayer))
+    func setColorScheme() -> some View {
+        self.modifier(SetColorSchemeModifier())
     }
 }
 
