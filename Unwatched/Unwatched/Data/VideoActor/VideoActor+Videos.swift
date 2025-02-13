@@ -252,7 +252,7 @@ import UnwatchedShared
         }
 
         var videoData = sendableVideo
-        if videoData == nil, let youtubeId = youtubeId {
+        if videoData == nil, let youtubeId {
             do {
                 videoData = try await YoutubeDataAPI.getYtVideoInfo(youtubeId)
             } catch VideoError.faultyYoutubeVideoId(let videoId) {
