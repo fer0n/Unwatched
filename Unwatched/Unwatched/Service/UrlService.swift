@@ -34,8 +34,10 @@ struct UrlService {
     static func getEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
         let enableYtWatchHistory = (UserDefaults.standard.value(forKey: Const.enableYtWatchHistory) as? Bool) ?? true
         let cookieUrl = enableYtWatchHistory ? "" : "-nocookie"
+        let preferYtCaptions = UserDefaults.standard.bool(forKey: Const.preferYtCaptions)
+        let captionsUrl = "\(preferYtCaptions ? "1" : "0")"
         return  "https://www.youtube\(cookieUrl).com/embed/\(youtubeId)"
-            + "?t=\(startAt)s&enablejsapi=1&color=white&controls=1&iv_load_policy=3"
+            + "?t=\(startAt)s&enablejsapi=1&color=white&controls=1&iv_load_policy=3&cc_load_policy=\(captionsUrl)"
     }
 
     static func stringContainsUrl (_ text: String) -> Bool {
