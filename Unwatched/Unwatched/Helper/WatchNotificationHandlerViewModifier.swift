@@ -6,6 +6,7 @@
 import SwiftUI
 import OSLog
 import UnwatchedShared
+import AVKit
 
 struct WatchNotificationHandlerViewModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext
@@ -20,6 +21,32 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
             }
+            .onReceive(
+                NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)
+            ) { _ in
+                handleRouteChange()
+            }
+            .onAppear {
+                handleRouteChange()
+            }
+    }
+
+    private func handleRouteChange() {
+        guard UserDefaults.standard.bool(forKey: Const.autoAirplayHD) else {
+            Logger.log.info("autoAirplayHD off")
+            return
+        }
+        let currentRoute = getCurrentRoute()
+        Logger.log.info("Airplay route: \(currentRoute.rawValue)")
+        player.setAirplayHD(currentRoute == .airplay)
+    }
+
+    private func getCurrentRoute() -> AudioRoute {
+        let outputs = AVAudioSession.sharedInstance().currentRoute.outputs
+        guard let portType = outputs.first?.portType.rawValue else {
+            return .unknown
+        }
+        return AudioRoute(rawValue: portType) ?? .unknown
     }
 
     func handlePasteAndPlay() {
@@ -54,4 +81,11 @@ extension View {
     func watchNotificationHandler() -> some View {
         self.modifier(WatchNotificationHandlerViewModifier())
     }
+}
+
+enum AudioRoute: String {
+    case airplay = "AirPlay"
+    case bluetooth = "BluetoothA2DPOutput"
+    case speaker = "Speaker"
+    case unknown = "Unknown"
 }

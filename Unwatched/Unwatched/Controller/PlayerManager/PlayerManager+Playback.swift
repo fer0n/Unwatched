@@ -269,4 +269,14 @@ extension PlayerManager {
         }
         updateElapsedTime(seconds)
     }
+
+    @MainActor
+    func setAirplayHD(_ value: Bool) {
+        Logger.log.info("setAirplayHD: \(value)")
+        if airplayHD != value {
+            airplayHD = value
+            handleHotSwap()
+            PlayerManager.reloadPlayer()
+        }
+    }
 }

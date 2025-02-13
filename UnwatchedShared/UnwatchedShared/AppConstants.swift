@@ -154,6 +154,7 @@ public struct Const {
     public static let hideControlsFullscreen = "hideControlsFullscreen"
     public static let returnToQueue = "returnToQueue"
     public static let rotateOnPlay = "rotateOnPlay"
+    public static let autoAirplayHD = "autoAirplayHD"
     public static let defaultVideoPlacement = "defaultVideoPlacement"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"

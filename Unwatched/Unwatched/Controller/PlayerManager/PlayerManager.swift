@@ -5,7 +5,6 @@ import UnwatchedShared
 
 /// Manages the current video, queuing, and chapters
 @Observable class PlayerManager: Codable {
-
     @MainActor
     var isPlaying: Bool = false
 
@@ -27,6 +26,7 @@ import UnwatchedShared
     var seekAbsolute: Double?
     var seekRelative: Double?
     var embeddingDisabled: Bool = false
+    var airplayHD: Bool = false
     var pipEnabled: Bool = false
     var canPlayPip: Bool = false
     var isRepeating: Bool = false

@@ -31,6 +31,7 @@ extension Const {
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,
         Const.playVideoFullscreen: false,
+        Const.autoAirplayHD: false,
 
         // Filter
         Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,

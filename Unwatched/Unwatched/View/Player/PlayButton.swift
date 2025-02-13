@@ -55,21 +55,6 @@ struct CorePlayButton<Content>: View where Content: View {
     }
 }
 
-struct ReloadPlayerButton: View {
-    @Environment(PlayerManager.self) var player
-
-    var body: some View {
-        Button {
-            player.embeddingDisabled = false
-            player.handleHotSwap()
-            PlayerManager.reloadPlayer()
-            player.handleChapterRefresh(forceRefresh: true)
-        } label: {
-            Label("reloadVideo", systemImage: Const.reloadSF)
-        }
-    }
-}
-
 struct PlayButtonContextMenu: View {
     @Environment(PlayerManager.self) var player
 
