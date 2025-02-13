@@ -153,6 +153,9 @@ extension PlayerWebView {
                 .ytp-pause-overlay, .branding-img {
                     display: none !important;
                 }
+                .ytp-play-progress {
+                    background: white !important;
+                }
                 .videowall-endscreen {
                     opacity: 0.2;
                 }
