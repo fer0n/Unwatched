@@ -67,7 +67,7 @@ struct ContentView: View {
             }
             .animation(.default, value: hideControlsFullscreen)
             .background(Color.playerBackgroundColor)
-            .setColorScheme(forPlayer: true)
+            .environment(\.colorScheme, .dark)
             .onChange(of: proxy.safeAreaInsets.top, initial: true) {
                 if !landscapeFullscreen {
                     sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)

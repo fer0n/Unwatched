@@ -19,18 +19,20 @@ struct AppAppearanceSelection: View {
             Color.insetBackgroundColor
                 .scaleEffect(2)
 
-            HStack(spacing: spacing) {
+            HStack(spacing: 0) {
                 ForEach(AppAppearance.allCases, id: \.self) { appearance in
                     UnwatchedMiniature(
                         appearance,
                         width: (width / 3) - spacing,
                         selected: selection == appearance
                     )
+                    .frame(maxWidth: .infinity)
                     .onTapGesture {
                         selection = appearance
                     }
                 }
             }
+            .padding(.horizontal, spacing)
             .frame(maxWidth: .infinity)
             .onSizeChange { size in
                 width = size.width

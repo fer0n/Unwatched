@@ -589,6 +589,38 @@
         }
       }
     },
+    "airplayHDOff" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        }
+      }
+    },
+    "airplayHDOn" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD aktiviert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD enabled"
+          }
+        }
+      }
+    },
     "allowRefreshDuringSync": {
       "localizations": {
         "de": {
@@ -739,6 +771,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Asynchroniczne sprawdzanie historii list"
+          }
+        }
+      }
+    },
+    "autoAirplayHD" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD automatisch aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically turn on AirPlay HD"
+          }
+        }
+      }
+    },
+    "autoAirplayHDHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD versucht die AirPlay-Videoqualität zu verbessern, kann aber Vollbild und andere Funktionen beeinträchtigen.\n\nAirPlay HD aktiviert sich automatisch, wenn ein AirPlay-Gerät (inkl. Lautsprecher) über den AirPlay-Button im Player ausgewählt wird. Gilt nicht für das Kontrollzentrum."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button. Does not apply to control center."
+          }
+        }
+      }
+    },
+    "autoAirplayHDHelperShort" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mögliche Verbesserung der AirPlay-Videoqualität, kann aber Vollbild und andere Funktionen beeinträchtigen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attempts to enhance AirPlay video quality, but may affect fullscreen and other features."
           }
         }
       }

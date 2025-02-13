@@ -468,6 +468,12 @@
 		88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
 		88E779162D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
 		88E779172D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
+		88E83E4E2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
+		88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
+		88E83E512D5D484400F596A9 /* AirPlayHDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */; };
+		88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */; };
+		88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
+		88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
@@ -802,6 +808,9 @@
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
 		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
+		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
+		88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayHDButton.swift; sourceTree = "<group>"; };
+		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
@@ -1032,7 +1041,10 @@
 				8816A1FF2CCD0D19001FE63E /* PipButton.swift */,
 				8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */,
 				88FA62D72B8485EA00924959 /* PlayButton.swift */,
+				88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */,
+				88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */,
 				889924662C47F4A4001185A6 /* PlayerControls.swift */,
+				88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */,
 				88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */,
 				883D4CA92CF4791300BB2581 /* PlayerContentView.swift */,
 				889924682C47F4D4001185A6 /* VerticalSwipeGesture.swift */,
@@ -1705,6 +1717,7 @@
 			files = (
 				889AF8CB2C50ECA9001CEDE6 /* Task.swift in Sources */,
 				88BFA0EB2C871E8A0095EFBA /* AutoHideVM.swift in Sources */,
+				88E83E4E2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */,
 				889AF8CC2C50ECA9001CEDE6 /* YtBrowserTip.swift in Sources */,
 				889AF8CD2C50ECA9001CEDE6 /* myNavigationTitle.swift in Sources */,
 				889AF8EB2C50ECAE001CEDE6 /* SubscriptionError.swift in Sources */,
@@ -1768,6 +1781,7 @@
 				889AF9472C50ECF5001CEDE6 /* SubscriptionStateView.swift in Sources */,
 				889AF9482C50ECF5001CEDE6 /* ChapterDescriptionView.swift in Sources */,
 				889AF9632C50ED0D001CEDE6 /* YtChannelInfo.swift in Sources */,
+				88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */,
 				880505012C81E4BC005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				889AF9642C50ED0D001CEDE6 /* YtChannelId.swift in Sources */,
 				889AF9652C50ED0D001CEDE6 /* YtVideoInfo.swift in Sources */,
@@ -1870,6 +1884,7 @@
 				889AF8E22C50ECA9001CEDE6 /* BrowserUrl.swift in Sources */,
 				889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */,
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
+				88E83E512D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				889AF8E52C50ECA9001CEDE6 /* VideoSorting.swift in Sources */,
 				884777372D21509F0044E812 /* AnyCodable.swift in Sources */,
 				889AF8E62C50ECA9001CEDE6 /* CapsuleButtonStyle.swift in Sources */,
@@ -2009,10 +2024,12 @@
 				8898B67F2B483D6F00348D01 /* SubscriptionListItem.swift in Sources */,
 				888CDF792C997A20007A8A54 /* FullscreenControls.swift in Sources */,
 				8891AAEE2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */,
+				88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */,
 				886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */,
 				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
+				88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
 				8805050C2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */,
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
@@ -2128,6 +2145,7 @@
 				88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
+				88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */,
 				88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				88D858572B55AC3F0047E0E6 /* YtChannelId.swift in Sources */,
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
