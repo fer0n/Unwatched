@@ -51,7 +51,7 @@ struct PlayerControls: View {
         ZStack {
             outerLayout {
                 if showRotateFullscreen && !player.embeddingDisabled && !player.isCompactHeight {
-                    HStack {
+                    HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
                             video: player.video,
                             subscription: player.video?.subscription,
@@ -60,13 +60,15 @@ struct PlayerControls: View {
                         )
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
                         .foregroundStyle(.secondary)
 
-                        CoreRotateOrientationButton {
-                            $0.padding()
+                        CoreRotateOrientationButton { image in
+                            image
+                                .font(.system(size: 18, weight: .medium))
+                                .padding()
                         }
                     }
                 }
@@ -94,6 +96,8 @@ struct PlayerControls: View {
                             PipButton()
                         }
 
+                        AirPlayButton()
+
                         if compactSize {
                             DescriptionButton(show: $showDescriptionPopover)
                         }
@@ -103,7 +107,10 @@ struct PlayerControls: View {
                             markVideoWatched: markVideoWatched
                         ) { image in
                             image
-                                .playerToggleModifier(isOn: sleepTimerVM.isOn, isSmall: true)
+                                .playerToggleModifier(
+                                    isOn: sleepTimerVM.isOn,
+                                    isSmall: true
+                                )
                                 .fontWeight(.bold)
                         }
 

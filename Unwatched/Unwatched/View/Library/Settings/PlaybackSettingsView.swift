@@ -12,6 +12,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
+    @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
 
     var body: some View {
         ZStack {
@@ -56,6 +57,11 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
+                MySection(footer: "autoAirplayHDHelper") {
+                    Toggle(isOn: $autoAirplayHD) {
+                        Text("autoAirplayHD")
+                    }
+                }
             }
             .myNavigationTitle("playback")
         }

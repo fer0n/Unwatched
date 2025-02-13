@@ -54,12 +54,15 @@ struct PlayerWebView: UIViewRepresentable {
         webView.scrollView.contentInsetAdjustmentBehavior = .never
 
         let userAgent = webView.value(forKey: "userAgent") as? String
-        if ProcessInfo.processInfo.isiOSAppOnMac {
+        if player.airplayHD {
+            let newAgent = customAirPlayCompatibilityUserAgent(userAgent)
+            webView.customUserAgent = newAgent
+        } else if ProcessInfo.processInfo.isiOSAppOnMac {
             // workaround: enables higher quality on "Mac (Designed for iPad)",
             // but breaks fullscreen
-            webView.customUserAgent = createCustomMacOsUserAgent(userAgent)
+            webView.customUserAgent = customMacOsUserAgent(userAgent)
         } else if UIDevice.requiresFullscreenWebWorkaround {
-            if let userAgent = userAgent {
+            if let userAgent {
                 // workaround: fix "fullscreen" button being blocked on the iPad
                 let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
                 webView.customUserAgent = modifiedUserAgent
@@ -158,8 +161,8 @@ struct PlayerWebView: UIViewRepresentable {
         PlayerWebViewCoordinator(self)
     }
 
-    func createCustomMacOsUserAgent(_ userAgent: String?) -> String {
-        var osVersion = "17_5"
+    func customMacOsUserAgent(_ userAgent: String?) -> String {
+        var osVersion = "18_3"
         var webKitVersion = "605.1.15"
 
         if let userAgent = userAgent {
@@ -180,6 +183,34 @@ struct PlayerWebView: UIViewRepresentable {
 
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion)"
             + " (KHTML, like Gecko) Version/\(osVersion) Safari/\(webKitVersion)"
+    }
+
+    func customAirPlayCompatibilityUserAgent(_ userAgent: String?) -> String {
+        // user agent:
+        // Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1
+        // ---
+        // user agent request desktop:
+        // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15
+
+        var osVersion = "18_3"
+        var webKitVersion = "605.1.15"
+
+        if let userAgent = userAgent {
+            if let range = userAgent.range(of: "AppleWebKit/") {
+                let webKitVersionStart = userAgent[range.upperBound...]
+                if let endRange = webKitVersionStart.range(of: " ") {
+                    webKitVersion = String(webKitVersionStart[..<endRange.lowerBound])
+                }
+            }
+            if let range = userAgent.range(of: "OS ") {
+                let osVersionStart = userAgent[range.upperBound...]
+                if let endRange = osVersionStart.range(of: " ") {
+                    osVersion = String(osVersionStart[..<endRange.lowerBound])
+                }
+            }
+        }
+
+        return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacingOccurrences(of: "_", with: ".")) Safari/\(webKitVersion)"
     }
 }
 

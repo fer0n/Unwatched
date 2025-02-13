@@ -63,6 +63,8 @@ struct InteractiveSubscriptionTitle: View {
                 .textCase(.none)
                 .disabled(subscribeManager.isLoading)
             }
+        } else {
+            Spacer()
         }
     }
 
