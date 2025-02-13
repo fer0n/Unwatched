@@ -14,6 +14,12 @@
             "state" : "translated",
             "value" : "Cancel"
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anuluj"
+          }
         }
       }
     },
@@ -29,6 +35,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyczyść"
           }
         }
       }
@@ -46,6 +58,12 @@
             "state" : "translated",
             "value" : "Test Data"
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dane testowe"
+          }
         }
       }
     },
@@ -62,6 +80,12 @@
             "state" : "translated",
             "value" : "Watched"
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obejrzane"
+          }
         }
       }
     },
@@ -74,6 +98,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
+        "pl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Store"
@@ -94,6 +124,12 @@
             "state" : "translated",
             "value" : "Queue"
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolejka"
+          }
         }
       }
     },
@@ -109,6 +145,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Videos"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak filmów"
           }
         }
       }
@@ -126,6 +168,12 @@
             "state" : "translated",
             "value" : "To see videos, open Unwatched on your iOS/iPadOS device and add Videos to your Queue.  Make sure you have iCloud sync enabled (under Library → Settings → User Data)."
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aby zobaczyć filmy, otwórz Unwatched na swoim urządzeniu iOS/iPadOS i dodaj filmy do swojej kolejki.\n\nUpewnij się, że synchronizacja iCloud jest włączona (w Bibliotece → Ustawienia → Dane użytkownika)."
+          }
         }
       }
     },
@@ -141,6 +189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube App is required to watch videos"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikacja YouTube jest wymagana do oglądania filmów"
           }
         }
       }
