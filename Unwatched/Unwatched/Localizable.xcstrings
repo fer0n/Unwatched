@@ -4275,6 +4275,22 @@
         }
       }
     },
+    "preferYtCaptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Untertitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Captions"
+          }
+        }
+      }
+    },
     "previousChapter" : {
       "localizations" : {
         "de" : {
