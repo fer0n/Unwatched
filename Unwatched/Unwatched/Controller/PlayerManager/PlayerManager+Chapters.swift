@@ -106,6 +106,9 @@ extension PlayerManager {
         }
         if let nextStart = next?.startTime {
             currentEndTime = max(nextStart, current.endTime ?? 0)
+        } else {
+            // no more chapters
+            currentEndTime = nil
         }
     }
 
