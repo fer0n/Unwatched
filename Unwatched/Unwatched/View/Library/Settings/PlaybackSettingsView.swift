@@ -13,7 +13,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
-    @AppStorage(Const.preferYtCaptions) var preferYtCaptions: Bool = false
 
     var body: some View {
         ZStack {
@@ -56,9 +55,7 @@ struct PlaybackSettingsView: View {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
-                    Toggle(isOn: $preferYtCaptions) {
-                        Text("preferYtCaptions")
-                    }
+                    DisableCaptionsToggle()
                 }
 
                 MySection(footer: "autoAirplayHDHelper") {
@@ -68,6 +65,21 @@ struct PlaybackSettingsView: View {
                 }
             }
             .myNavigationTitle("playback")
+        }
+    }
+}
+
+struct DisableCaptionsToggle: View {
+    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
+    @Environment(PlayerManager.self) var player
+
+    var body: some View {
+        Toggle(isOn: $disableCaptions) {
+            Text("disableCaptions")
+        }
+        .onChange(of: disableCaptions) {
+            player.handleHotSwap()
+            PlayerManager.reloadPlayer()
         }
     }
 }
