@@ -61,7 +61,8 @@ extension PlayerManager {
 
     @MainActor
     var currentRemaining: Double? {
-        if let end = currentEndTime, let current = currentTime {
+        if let end = currentEndTime ?? video?.duration,
+           let current = currentTime {
             return max(end - current, 0)
         }
         return nil

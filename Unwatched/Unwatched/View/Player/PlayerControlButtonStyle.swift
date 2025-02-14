@@ -17,7 +17,7 @@ struct PlayerControlButtonStyle: ViewModifier {
         content
             .symbolRenderingMode(.palette)
             .foregroundStyle(
-                color,
+                color.opacity(isEnabled ? 1 : 0.5),
                 Color.backgroundColor
             )
             .overlay {
