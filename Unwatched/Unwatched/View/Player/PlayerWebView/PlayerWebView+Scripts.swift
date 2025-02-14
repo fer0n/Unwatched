@@ -154,7 +154,7 @@ extension PlayerWebView {
                     display: none !important;
                 }
                 .ytp-play-progress {
-                    background: white !important;
+                    background: #ddd !important;
                 }
                 .videowall-endscreen {
                     opacity: 0.2;
