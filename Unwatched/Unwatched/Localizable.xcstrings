@@ -210,7 +210,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zakładka"
+            "value" : "Dodaj do zakładek"
           }
         }
       }
@@ -672,7 +672,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odświeżanie podczas synchronizacji urządzenia może prowadzić do zduplikowanych filmów. Powinny one zostać automatycznie wyczyszczone po zakończeniu synchronizacji."
+            "value" : "Odświeżanie podczas synchronizacji może prowadzić do zduplikowania filmów. Duplikaty powinny zniknąć po zakończeniu synchronizacji."
           }
         }
       }
@@ -827,7 +827,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD próbuje poprawić jakość wideo AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania."
+            "value" : "AirPlay HD próbuje poprawić jakość wideo przesyłanego przez AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania."
           }
         }
       }
@@ -893,7 +893,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teraz usuń automatyczne kopie zapasowe"
+            "value" : "Usuń automatyczne kopie zapasowe"
           }
         }
       }
@@ -1223,7 +1223,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż przeglądarkę YouTube na pasku"
+            "value" : "Pokaż przeglądarkę YouTube na pasku nawigacji"
           }
         }
       }
@@ -1993,7 +1993,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Proszę rozważ zakup [YouTube Premium](https://www.youtube.com/premium), aby wesprzeć twórców"
+            "value" : "Proszę rozważ zakup [YouTube Premium](https://www.youtube.com/premium), aby wesprzeć twórców."
           }
         }
       }
@@ -2235,7 +2235,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ciemna zieleń"
+            "value" : "Ciemno zielony"
           }
         }
       }
@@ -2763,7 +2763,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeśli synchronizacja iCloud jest włączona, obecnie nie można uniknąć duplikatów. Powinny one jednak automatycznie wyczyścić się po odświeżeniu.\n\nJeśli nadal są widoczne, przytrzymaj przycisk odświeżania i wybierz “Przeładuj i usuń duplikaty”. Jeśli nadal pozostają, daj mi znać."
+            "value" : "Gdy synchronizacja iCloud jest włączona, duplikaty mogą się pojawiać, ale powinny zniknąć po odświeżeniu.\n\nJeśli nadal są widoczne, przytrzymaj przycisk odświeżania i wybierz “Przeładuj i usuń duplikaty“. Jeśli problem nie zniknie, daj mi znać."
           }
         }
       }
@@ -2873,7 +2873,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Brakująca długość"
+            "value" : "Brakująca długość filmu"
           }
         }
       }
@@ -2961,7 +2961,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Historia oglądania YouTube"
+            "value" : "Historia filmów na YouTube"
           }
         }
       }
@@ -3423,7 +3423,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sterowanie pełnym ekranem"
+            "value" : "Przyciski na pełnym ekranie"
           }
         }
       }
@@ -3841,7 +3841,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kliknij **Wybierz Plik** poniżej i przejdź do pobranego pliku **takeout[...].zip**:"
+            "value" : "Kliknij **Wybierz plik** poniżej i przejdź do pobranego pliku **takeout[...].zip**:"
           }
         }
       }
@@ -4017,7 +4017,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importuj subskrypcje YouTube"
+            "value" : "Importuj subskrypcje z YouTube"
           }
         }
       }
@@ -4303,7 +4303,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jasna wersja ikona aplikacji"
+            "value" : "Jasna wersja ikony aplikacji"
           }
         }
       }
@@ -4501,7 +4501,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy Unwatched będą dostępne na macOS?"
+            "value" : "Czy Unwatched będzie dostępny na macOS?"
           }
         }
       }
@@ -4677,7 +4677,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Monitoruj pobierania w tle"
+            "value" : "Śledź pobieranie w tle"
           }
         }
       }
@@ -5227,7 +5227,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nowe filmy będą pobierane w tle na urządzeniu i wywołają powiadomienie. Nie będzie to natychmiastowe."
+            "value" : "Informacje o nowych filmach będą aktualizowane w tle i wywołają powiadomienia, ale nie będzie to natychmiastowe."
           }
         }
       }
@@ -5513,7 +5513,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kliknij przycisk “…” i wybierz „Przeładuj odtwarzacz”, aby rozwiązać problem. Możesz również włączyć natywny pełny ekran iOS, który można ustawić na automatyczne włączanie w Ustawieniach.\n\nTen problem występuje, gdy odtwarzacz wykryje “dotknięcie w dół” bez odpowiadającego “dotknięcia w górę” (np. przesunięcie w górę, aby wrócić do ekranu głównego, gdy przesunięcie odbywa się nad filmem). Niestety, jest to problem YouTube, którego nie mogę rozwiązać."
+            "value" : "Kliknij przycisk \"…\" i wybierz \"Przeładuj odtwarzacz\", aby rozwiązać problem. Możesz też włączyć natywny tryb pełnoekranowy iOS, który można ustawić na automatyczne włączanie w Ustawieniach.\n\nTen problem występuje, gdy odtwarzacz wykryje \"dotknięcie bez zwolnienia\" (np. przesunięcie palcem do ekranu głównego, gdy palec znajduje się nad filmem). Niestety, to problem po stronie YouTube, którego nie mogę naprawić."
           }
         }
       }
@@ -5557,7 +5557,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nakładka YouTube zablokowana"
+            "value" : "Nakładka YouTube nie znika"
           }
         }
       }
@@ -5623,7 +5623,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jest kilka sposobów na rozpoczęcie trybu Picture-in-Picture:\n- Kliknij przycisk Pip pod filmem\n- Przesuń w dół na odtwarzanym filmie\n- Uruchom natywny pełny ekran iOS, klikając przycisk w prawym dolnym rogu wewnątrz filmu. Stamtąd kliknij przycisk \"Pip\" lub opuść aplikację, aby kontynuować odtwarzanie filmu."
+            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie."
           }
         }
       }
@@ -5755,7 +5755,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odtwarzacz zazwyczaj używa wbudowanego odtwarzacza YouTube, ale jeśli kanały wyłączą tę funkcję, zamiast tego zostanie wyświetlona strona YouTube.  Wszystkie kontrolki pozostają funkcjonalne, a możesz użyć przycisku pełnego ekranu YouTube, aby obejrzeć film w pełnym ekranie."
+            "value" : "Domyślnie odtwarzacz korzysta z wbudowanego odtwarzacza YouTube, ale jeśli kanały wyłączą tę opcję, zamiast niego zostanie wyświetlona strona YouTube.\n\nWszystkie funkcje sterowania pozostają aktywne, a przycisk pełnego ekranu YouTube pozwala oglądać filmy w trybie pełnoekranowym."
           }
         }
       }
@@ -5909,7 +5909,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zmiany napisów zaczną obowiązywać po ponownym załadowaniu filmu. YouTube może zachować twój poprzedni stan napisów."
+            "value" : "Ustawienia napisów zaczną obowiązywać po ponownym załadowaniu filmu. YouTube może zachować twój poprzedni stan napisów."
           }
         }
       }
@@ -6283,7 +6283,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wymagaj potwierdzenia czyszczenia"
+            "value" : "Wymagaj potwierdzenia wyczyszczenia"
           }
         }
       }
@@ -6349,7 +6349,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uruchom ponownie"
+            "value" : "Odtwórz ponownie"
           }
         }
       }
@@ -6481,7 +6481,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wejdź w pełny ekran poziomy"
+            "value" : "Włącz tryb pełnego ekranu"
           }
         }
       }
@@ -6679,7 +6679,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skonfiguruj akcję udostępniania"
+            "value" : "Skonfiguruj Skrót udostępniania"
           }
         }
       }
@@ -6701,7 +6701,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Akcja udostępniania"
+            "value" : "Skrót udostępniania"
           }
         }
       }
@@ -6745,7 +6745,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Półprzezroczysty pasek nawigacyjny"
+            "value" : "Półprzezroczysty pasek nawigacji"
           }
         }
       }
@@ -6811,7 +6811,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż przycisk “Następny w kolejce” na wpisach w skrzynce"
+            "value" : "Pokaż przycisk “Następny w kolejce” na filmach w skrzynce"
           }
         }
       }
@@ -6882,7 +6882,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Podczas odtwarzania obróć telefon poziomo, aby przejść do pełnego ekranu z kontrolkami po bokach. Aby włączyć Picture-in-Picture, kliknij przycisk maksymalizacji w filmie"
+                  "value" : "Podczas odtwarzania obróć telefon poziomo, aby przejść do pełnego ekranu z przyciskami po bokach. Aby włączyć Picture-in-Picture, kliknij przycisk maksymalizacji w filmie."
                 }
               },
               "other" : {
@@ -6979,7 +6979,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Etykieta na pasku zakładek dla nowych filmów"
+            "value" : "Znacznik na pasku nawigacji dla nowych filmów"
           }
         }
       }
@@ -7001,7 +7001,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż etykiety na pasku zakładek"
+            "value" : "Pokaż etykiety na pasku nawigacji"
           }
         }
       }
@@ -7045,7 +7045,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pokaż kolejność kolejki"
+            "value" : "Pokaż pozycję w kolejce"
           }
         }
       }
@@ -7265,7 +7265,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uwzględnij rozdziały SponsorBlock"
+            "value" : "Uwzględnij rozdziały z SponsorBlock"
           }
         }
       }
@@ -7309,7 +7309,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeśli dostępne, rozdziały SponsorBlock zostaną wyświetlone. Gdy film ma już rozdziały, tylko segmenty sponsorowane zostaną połączone. Jeśli film nie ma rozdziałów, wszystkie dostępne segmenty (jak wstęp, zakończenie itp.) zostaną utworzone jako rozdziały, z pustymi rozdziałami pomiędzy."
+            "value" : "Rozdziały SponsorBlock zostaną wyświetlone jeśli są dostępne. Gdy film ma już rozdziały, tylko segmenty sponsorowane zostaną dodane. Jeśli film nie ma rozdziałów, wszystkie dostępne segmenty (jak wstęp, zakończenie itp.) zostaną utworzone jako rozdziały z pustymi miejscami pomiędzy."
           }
         }
       }
@@ -7441,7 +7441,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tytuł subskrypcji"
+            "value" : "Alfabetycznie"
           }
         }
       }
@@ -7551,7 +7551,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jak mogę synchronizować między urządzeniami? To nie działa."
+            "value" : "Jak mogę synchronizować dane między urządzeniami? Synchronizacja nie działa."
           }
         }
       }
@@ -7683,7 +7683,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wstępnie wybierz rozdziały"
+            "value" : "Wybierz rozdziały"
           }
         }
       }
@@ -7705,7 +7705,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dla filmów, które dostarczają rozdziały, możesz odznaczyć rozdziały, które chcesz pominąć z góry. Jest to również możliwe dla filmów, które są w kolejce i nie są aktualnie odtwarzane."
+            "value" : "W filmach z rozdziałami możesz wcześniej odznaczyć rozdziały, które chcesz pominąć. Dotyczy to również filmów w kolejce, które nie są aktualnie odtwarzane."
           }
         }
       }
@@ -7727,7 +7727,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Niestandardowa prędkość"
+            "value" : "Dostosuj prędkość"
           }
         }
       }
@@ -7749,7 +7749,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kliknij ikonę “kłódki” wewnątrz odtwarzacza, aby ograniczyć wybraną prędkość odtwarzania do bieżącego kanału."
+            "value" : "Kliknij ikonę “kłódki” w odtwarzaczu, aby zastosować wybraną prędkość odtwarzania tylko na tym kanale."
           }
         }
       }
@@ -7771,7 +7771,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Akcje przesuwania"
+            "value" : "Akcje gestów"
           }
         }
       }
@@ -7793,7 +7793,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "**Obsługiwane gesty wideo:**\n• Przesuń w lewo/prawo: Przeskocz rozdziały\n• Kliknij środek: Odtwarzaj/pauza\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
+            "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Kliknij na środku: Odtwórz/Wstrzymaj\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
           }
         }
       }
@@ -7837,7 +7837,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Możesz wybrać “Zobacz na YouTube” z menu “…” wewnątrz odtwarzacza lub przytrzymać tytuł filmu/aktualny rozdział."
+            "value" : "Możesz wybrać “Zobacz na YouTube” z menu “…” w odtwarzaczu lub przytrzymać tytuł filmu/aktualny rozdział."
           }
         }
       }
@@ -7969,7 +7969,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Szukaj na YouTube, aby szybko dodać\nswoje ulubione kanały do Unwatched"
+            "value" : "Szukaj na YouTube, aby dodać\nswoje ulubione kanały do Unwatched"
           }
         }
       }
@@ -7991,7 +7991,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tak, ale nie obsługuje niestandardowego odtwarzacza i zamiast tego otwiera aplikację YouTube. Niestandardowy odtwarzacz jest niestety niedostępny z powodów technicznych i prawnych.  Możesz również użyć AirPlay do przesyłania z Unwatched na Apple TV. Wejdź w pełny ekran, klikając przycisk pełnego ekranu na odtwarzaczu wideo (prawy dolny róg, nie na macOS), a następnie wybierz AirPlay."
+            "value" : "Tak, ale nie obsługuje niestandardowego odtwarzacza i zamiast tego otwiera aplikację YouTube. Niestandardowy odtwarzacz jest niestety niedostępny z powodów technicznych i prawnych.  Możesz również użyć AirPlay do przesyłania z Unwatched na Apple TV. Uruchom tryb pełnoekranowy (prawy dolny róg, nie na macOS), a następnie wybierz AirPlay."
           }
         }
       }
@@ -8013,7 +8013,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czy Unwatched są dostępne na tvOS?"
+            "value" : "Czy Unwatched jest dostępny na tvOS?"
           }
         }
       }
@@ -8277,7 +8277,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy dodane do skrzynki"
+            "value" : "Nowe filmy w skrzynce"
           }
         }
       }
@@ -8299,7 +8299,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy dodane do kolejki"
+            "value" : "Nowe filmy w kolejce"
           }
         }
       }
@@ -8365,7 +8365,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Format listy filmów"
+            "value" : "Widok listy filmów"
           }
         }
       }
@@ -8585,7 +8585,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz “Ustawienia → Odtwarzanie → Historia oglądania YouTube”, aby upewnić się, że obejrzane filmy pojawią się na YouTube, i zaloguj się przez przeglądarkę w aplikacji."
+            "value" : "Włącz “Ustawienia → Odtwarzanie → Historia filmów na YouTube”, aby upewnić się, że obejrzane filmy pojawią się na YouTube, i zaloguj się przez przeglądarkę w aplikacji."
           }
         }
       }
@@ -8629,7 +8629,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Historia oglądania YouTube"
+            "value" : "Historia filmów na YouTube"
           }
         }
       }
