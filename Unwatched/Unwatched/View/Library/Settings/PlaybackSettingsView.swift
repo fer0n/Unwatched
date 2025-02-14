@@ -52,7 +52,7 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection {
+                MySection(footer: "preferYtCaptionsHelper") {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }

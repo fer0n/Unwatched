@@ -602,6 +602,12 @@
             "state" : "translated",
             "value" : "AirPlay HD"
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
         }
       }
     },
@@ -617,6 +623,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AirPlay HD enabled"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD włączony"
           }
         }
       }
@@ -776,6 +788,7 @@
       }
     },
     "autoAirplayHD" : {
+      "comment" : "A compatibility setting to increase quality when playing over AirPlay",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -787,6 +800,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatically turn on AirPlay HD"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie włącz AirPlay HD"
           }
         }
       }
@@ -804,6 +823,12 @@
             "state" : "translated",
             "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button. Does not apply to control center."
           }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD próbuje poprawić jakość wideo AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania."
+          }
         }
       }
     },
@@ -819,6 +844,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Attempts to enhance AirPlay video quality, but may affect fullscreen and other features."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próby poprawy jakości wideo AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje."
           }
         }
       }
@@ -5857,6 +5888,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Napisy do filmu"
+          }
+        }
+      }
+    },
+    "preferYtCaptionsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untertiteländerungen werden erst nach dem Neuladen des Videos wirksam. YouTube behält möglicherweise die vorherige Untertiteleinstellung beibehalten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Caption changes take effect after reloading the video. YouTube may retain your previous caption state."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmiany napisów zaczną obowiązywać po ponownym załadowaniu filmu. YouTube może zachować twój poprzedni stan napisów."
           }
         }
       }
