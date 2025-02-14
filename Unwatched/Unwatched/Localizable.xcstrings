@@ -2548,6 +2548,28 @@
         }
       }
     },
+    "disableCaptions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untertitel deaktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Captions"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz napisy"
+          }
+        }
+      }
+    },
     "dismiss" : {
       "localizations" : {
         "de" : {
@@ -5870,46 +5892,24 @@
         }
       }
     },
-    "preferYtCaptions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video Untertitel"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video Captions"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Napisy do filmu"
-          }
-        }
-      }
-    },
     "preferYtCaptionsHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Untertiteländerungen werden erst nach dem Neuladen des Videos wirksam. YouTube behält möglicherweise die vorherige Untertiteleinstellung beibehalten."
+            "value" : "Deaktiviert Untertitel im YouTube-Player ohne Möglichkeit, sie während der Wiedergabe wieder einzuschalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Caption changes take effect after reloading the video. YouTube may retain your previous caption state."
+            "value" : "Disables video captions in YouTube’s player with no option to re-enable them during playback."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zmiany napisów zaczną obowiązywać po ponownym załadowaniu filmu. YouTube może zachować twój poprzedni stan napisów."
+            "value" : "Wyłącza napisy w odtwarzaczu YouTube bez możliwości ich ponownego włączenia podczas odtwarzania."
           }
         }
       }

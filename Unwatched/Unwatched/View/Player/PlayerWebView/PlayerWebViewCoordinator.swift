@@ -288,10 +288,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+        let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
         let script = PlayerWebView.initScript(
             parent.player.playbackSpeed,
             parent.player.getStartPosition(),
-            parent.player.requiresFetchingVideoData()
+            parent.player.requiresFetchingVideoData(),
+            disableCaptions: disableCaptions
         )
         webView.evaluateJavaScript(script)
         withAnimation {
