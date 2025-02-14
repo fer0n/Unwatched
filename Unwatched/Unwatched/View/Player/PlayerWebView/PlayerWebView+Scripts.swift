@@ -97,13 +97,15 @@ extension PlayerWebView {
     static func initScript(
         _ playbackSpeed: Double,
         _ startAt: Double,
-        _ requiresFetchingVideoData: Bool?
+        _ requiresFetchingVideoData: Bool?,
+        disableCaptions: Bool
     ) -> String {
         """
         var video = document.querySelector('video');
         var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
         video.playbackRate = \(playbackSpeed);
         var startAtTime = \(startAt);
+        var disableCaptions = \(disableCaptions)
 
         video.muted = false;
 
@@ -163,7 +165,8 @@ extension PlayerWebView {
                     overflow: hidden !important;
                     touch-action: none !important;
                 }
-            `;
+                ${disableCaptions ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; };' : ''}
+                `;
             document.head.appendChild(style);
         }
 
