@@ -172,7 +172,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aby zobaczyć filmy, otwórz Unwatched na swoim urządzeniu iOS/iPadOS i dodaj filmy do swojej kolejki.\n\nUpewnij się, że synchronizacja iCloud jest włączona (w Bibliotece → Ustawienia → Dane użytkownika)."
+            "value" : "Aby zobaczyć filmy otwórz Unwatched na swoim urządzeniu iOS/iPadOS i dodaj filmy do kolejki.\n\nUpewnij się, że synchronizacja iCloud jest włączona (Biblioteka → Ustawienia → Dane użytkownika)."
           }
         }
       }
