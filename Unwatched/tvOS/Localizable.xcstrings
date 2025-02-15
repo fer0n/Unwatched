@@ -15,6 +15,12 @@
             "value" : "Cancel"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -35,6 +41,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer"
           }
         },
         "pl" : {
@@ -65,7 +77,8 @@
             "value" : "Dane testowe"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "markWatched" : {
       "localizations" : {
@@ -79,6 +92,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regardé"
           }
         },
         "pl" : {
@@ -109,7 +128,8 @@
             "value" : "App Store"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "queue" : {
       "localizations" : {
@@ -123,6 +143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queue"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File d'attente"
           }
         },
         "pl" : {
@@ -147,6 +173,12 @@
             "value" : "No Videos"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune vidéo"
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -169,6 +201,12 @@
             "value" : "To see videos, open Unwatched on your iOS/iPadOS device and add Videos to your Queue.  Make sure you have iCloud sync enabled (under Library → Settings → User Data)."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour voir les vidéos, ouvrez Unwatched sur votre appareil iOS/iPadOS et ajoutez des vidéos à votre file d'attente.\n\nAssurez-vous d'avoir activé la synchronisation iCloud (dans Bibliothèque → Paramètres → Données utilisateur)."
+          }
+        },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -189,6 +227,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube App is required to watch videos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'application YouTube est requise pour regarder les vidéos"
           }
         },
         "pl" : {

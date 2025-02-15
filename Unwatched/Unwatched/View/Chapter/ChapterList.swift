@@ -76,7 +76,7 @@ struct ChapterList: View {
             return chapter.duration?.formattedSeconds
         }
         let remaining = endTime - currentTime
-        return "\(remaining.formattedSeconds ?? "") remaining"
+        return String(localized: "\(remaining.formattedSeconds ?? "") remaining")
     }
 }
 
