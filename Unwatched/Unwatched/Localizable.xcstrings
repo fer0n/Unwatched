@@ -815,19 +815,19 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD versucht die AirPlay-Videoqualität zu verbessern, kann aber Vollbild und andere Funktionen beeinträchtigen.\n\nAirPlay HD aktiviert sich automatisch, wenn ein AirPlay-Gerät (inkl. Lautsprecher) über den AirPlay-Button im Player ausgewählt wird. Gilt nicht für das Kontrollzentrum."
+            "value" : "AirPlay HD versucht die AirPlay-Videoqualität zu verbessern, kann aber Vollbild und andere Funktionen beeinträchtigen.\n\nAirPlay HD aktiviert sich automatisch, wenn ein AirPlay-Gerät (inkl. Lautsprecher) über den AirPlay-Button im Player ausgewählt wird. Gilt nicht für das Kontrollzentrum.\n\nBei Problemen ist es ggf. notwendig, AirPlay HD manuell vor der AirPlay Geräte Auswahl zu aktivieren."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button. Does not apply to control center."
+            "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button (not Control Center).\n\nIf issues occur, try manually enabling AirPlay HD before connecting to your device."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AirPlay HD próbuje poprawić jakość wideo przesyłanego przez AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania."
+            "value" : "AirPlay HD próbuje poprawić jakość wideo przesyłanego przez AirPlay, ale może wpływać na tryb pełnoekranowy i inne funkcje.\n\nTryb AirPlay HD włączy się automatycznie po wybraniu urządzenia AirPlay (w tym głośników) przez przycisk AirPlay w odtwarzaczu. Nie dotyczy centrum sterowania.\n\nW razie problemów spróbuj ręcznie włączyć AirPlay HD przed połączeniem z urządzeniem."
           }
         }
       }

@@ -43,6 +43,7 @@ struct FullscreenPlayerControls: View {
                         .frame(width: size, height: size)
                     ChapterTimeRemaining()
                         .fontWeight(.medium)
+                        .foregroundStyle(Color.foregroundGray.opacity(0.5))
                 }
                 .modifier(PlayerControlButtonStyle())
             }

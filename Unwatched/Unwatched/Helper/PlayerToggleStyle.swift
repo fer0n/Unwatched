@@ -38,11 +38,14 @@ struct PlayerToggleModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         let size = isSmall ? smallSize : normalSize
+        let color = isOn ? Color.backgroundColor : Color.automaticBlack
+
         content
+            .symbolRenderingMode(.palette)
             .font(isSmall ? .subheadline : .headline)
             .fontWeight(.regular)
             .frame(width: size, height: size)
-            .foregroundStyle(isOn ? Color.backgroundColor : Color.automaticBlack)
+            .foregroundStyle(color, color.opacity(0.7))
             .opacity(isEnabled ? 1 : 0.4)
             .background(isOn
                             ? Color.neutralAccentColor
