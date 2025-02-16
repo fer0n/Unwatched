@@ -17,6 +17,7 @@ struct DescriptionButton: View {
             show = true
         } label: {
             Image(systemName: Const.videoDescriptionSF)
+                .symbolRenderingMode(.monochrome)
                 .playerToggleModifier(isOn: show, isSmall: true)
         }
         .popover(isPresented: $show) {
