@@ -30,7 +30,7 @@ struct PlayerControls: View {
     @State var showDescriptionPopover: Bool = false
 
     var speedSpacing: CGFloat {
-        speedSpacingScaled + (showRotateFullscreen ? 0 : 2)
+        speedSpacingScaled + (showRotateFullscreen ? -2 : 2)
     }
 
     var showRotateFullscreen: Bool {
@@ -89,7 +89,8 @@ struct PlayerControls: View {
                     HStack(spacing: speedSpacing) {
                         CombinedPlaybackSpeedSettingPlayer(
                             spacing: speedSpacing,
-                            showTemporarySpeed: compactSize
+                            showTemporarySpeed: compactSize,
+                            hasSmallestSize: player.embeddingDisabled
                         )
 
                         if !UIDevice.isMac {
@@ -128,7 +129,7 @@ struct PlayerControls: View {
 
                         PlayButton(size:
                                     (player.embeddingDisabled || compactSize)
-                                    ? 70
+                                    ? 80
                                     : 90
                         )
                         .fontWeight(.black)

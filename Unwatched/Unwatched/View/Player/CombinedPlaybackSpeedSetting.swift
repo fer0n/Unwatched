@@ -15,6 +15,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var showTemporarySpeed = false
     var isExpanded = false
     var hasHaptics = true
+    var hasSmallestSize: Bool = false
 
     var body: some View {
         @Bindable var player = player
@@ -32,7 +33,8 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             hasHaptics: hasHaptics,
             spacing: spacing,
             showTemporarySpeed: showTemporarySpeed,
-            isExpanded: isExpanded
+            isExpanded: isExpanded,
+            hasSmallestSize: hasSmallestSize
         )
         .disabled(player.video?.subscription == nil)
         .onChange(of: player.video?.subscription) {
@@ -52,12 +54,16 @@ struct CombinedPlaybackSpeedSetting: View {
     var spacing: CGFloat = 10
     var showTemporarySpeed = false
     var isExpanded = false
+    var hasSmallestSize: Bool = false
 
     var body: some View {
         HStack(spacing: spacing) {
             if isExpanded {
                 VStack {
-                    SpeedControlView(selectedSpeed: $selectedSpeed)
+                    SpeedControlView(
+                        selectedSpeed: $selectedSpeed,
+                        hasSmallestSize: hasSmallestSize
+                    )
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
                         .padding(.horizontal, 2)
@@ -65,7 +71,10 @@ struct CombinedPlaybackSpeedSetting: View {
                 .padding(.vertical)
             } else {
                 HStack(spacing: -6) {
-                    SpeedControlView(selectedSpeed: $selectedSpeed)
+                    SpeedControlView(
+                        selectedSpeed: $selectedSpeed,
+                        hasSmallestSize: hasSmallestSize
+                    )
                     CustomSettingsButton(isOn: $isOn)
                         .toggleStyle(
                             CustomSettingsToggleStyle(
