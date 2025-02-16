@@ -12,6 +12,8 @@ struct SheetOverlayMinimumSize: View {
     var currentTab: NavigationTab
 
     var body: some View {
+        let show = sheetPos.isMinimumSheet && player.video != nil
+
         NavigationStack {
             Color.backgroundColor
                 .ignoresSafeArea(.all)
@@ -31,7 +33,8 @@ struct SheetOverlayMinimumSize: View {
             }
         }
         .transparentNavBarWorkaround()
-        .opacity(sheetPos.isMinimumSheet && player.video != nil ? 1 : 0)
+        .opacity(show ? 1 : 0)
+        .presentationDragIndicator(show ? .visible : .hidden)
         .animation(.bouncy(duration: 0.3), value: sheetPos.isMinimumSheet)
     }
 }
