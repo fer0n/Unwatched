@@ -20,7 +20,7 @@ struct SpeedControlView: View {
     let frameHeight: CGFloat = 35
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
     let borderWidth: CGFloat = 2
-    var hasSmallestSize = false
+    var indicatorSpacing: CGFloat = 4
 
     var midY: CGFloat {
         thumbSize / 2
@@ -48,7 +48,7 @@ struct SpeedControlView: View {
                             .foregroundStyle(isHightlighted ? .clear : foregroundColor)
                             .frame(width: frameSize, height: frameSize)
                             .frame(maxWidth: .infinity, maxHeight: thumbSize)
-                            .frame(minWidth: frameSize + (hasSmallestSize ? 2 : 4))
+                            .frame(minWidth: frameSize + indicatorSpacing)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {

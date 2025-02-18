@@ -15,7 +15,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var showTemporarySpeed = false
     var isExpanded = false
     var hasHaptics = true
-    var hasSmallestSize: Bool = false
+    var indicatorSpacing: CGFloat = 4
 
     var body: some View {
         @Bindable var player = player
@@ -34,7 +34,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             spacing: spacing,
             showTemporarySpeed: showTemporarySpeed,
             isExpanded: isExpanded,
-            hasSmallestSize: hasSmallestSize
+            indicatorSpacing: indicatorSpacing
         )
         .disabled(player.video?.subscription == nil)
         .onChange(of: player.video?.subscription) {
@@ -54,7 +54,7 @@ struct CombinedPlaybackSpeedSetting: View {
     var spacing: CGFloat = 10
     var showTemporarySpeed = false
     var isExpanded = false
-    var hasSmallestSize: Bool = false
+    var indicatorSpacing: CGFloat = 4
 
     var body: some View {
         HStack(spacing: spacing) {
@@ -62,7 +62,7 @@ struct CombinedPlaybackSpeedSetting: View {
                 VStack {
                     SpeedControlView(
                         selectedSpeed: $selectedSpeed,
-                        hasSmallestSize: hasSmallestSize
+                        indicatorSpacing: indicatorSpacing
                     )
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
@@ -73,7 +73,7 @@ struct CombinedPlaybackSpeedSetting: View {
                 HStack(spacing: -6) {
                     SpeedControlView(
                         selectedSpeed: $selectedSpeed,
-                        hasSmallestSize: hasSmallestSize
+                        indicatorSpacing: indicatorSpacing
                     )
                     CustomSettingsButton(isOn: $isOn)
                         .toggleStyle(
@@ -83,27 +83,29 @@ struct CombinedPlaybackSpeedSetting: View {
                             )
                         )
                         .offset(x: -1)
+
+                    if showTemporarySpeed {
+                        Button {
+                            player.toggleTemporaryPlaybackSpeed()
+                        } label: {
+                            Image(systemName: "waveform")
+                                .font(.title3)
+                                .padding(8)
+                                .speedSettingsImageStyle(
+                                    isOn: player.temporaryPlaybackSpeed != nil,
+                                    imageOn: "gauge.with.needle.fill",
+                                    imageOff: "gauge.with.needle"
+                                )
+                        }
+                        .help("toggleTemporarySpeed")
+                        .accessibilityLabel("toggleTemporarySpeed")
+                    }
                 }
                 .background {
                     Capsule()
                         .fill(Color.backgroundColor)
                 }
                 .fixedSize(horizontal: false, vertical: true)
-            }
-
-            if showTemporarySpeed {
-                Button {
-                    player.toggleTemporaryPlaybackSpeed()
-                } label: {
-                    Image(systemName: "waveform")
-                        .font(.title3)
-                        .playerToggleModifier(
-                            isOn: player.temporaryPlaybackSpeed != nil,
-                            isSmall: true
-                        )
-                }
-                .help("toggleTemporarySpeed")
-                .accessibilityLabel("toggleTemporarySpeed")
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in
@@ -112,39 +114,21 @@ struct CombinedPlaybackSpeedSetting: View {
     }
 }
 
-struct CustomSettingsToggleStyle: ToggleStyle {
-    @ScaledMetric var size: CGFloat = 35
-    var imageOn: String
-    var imageOff: String
-
-    func makeBody(configuration: Configuration) -> some View {
-        let isOn = configuration.isOn
-
-        Button(
-            action: {
-                configuration.isOn.toggle()
-            },
-            label: {
-                Image(systemName: isOn ? imageOn : imageOff)
-                    .font(.headline)
-                    .fontWeight(isOn ? .bold : .regular)
-                    .frame(maxHeight: .infinity)
-                    .frame(width: size)
-                    .foregroundStyle(Color.automaticBlack)
-                    .opacity(isOn ? 1 : 0.4)
-                    .contentTransition(.symbolEffect(.replace))
-            }
-        )
-    }
-}
-
 #Preview {
     @Previewable @State var isOn = false
     @Previewable @State var selectedSpeed: Double = 1
 
-    CombinedPlaybackSpeedSetting(selectedSpeed: $selectedSpeed, isOn: $isOn, hapticToggle: .constant(true), isExpanded: true)
-        .modelContainer(DataProvider.previewContainer)
-        .environment(PlayerManager.getDummy())
-        .environment(NavigationManager())
-        .frame(width: 350)
+    CombinedPlaybackSpeedSetting(
+        selectedSpeed: $selectedSpeed,
+        isOn: $isOn,
+        hapticToggle: .constant(
+            true
+        ),
+        showTemporarySpeed: true,
+        isExpanded: false
+    )
+    .modelContainer(DataProvider.previewContainer)
+    .environment(PlayerManager.getDummy())
+    .environment(NavigationManager())
+    .frame(width: 350)
 }
