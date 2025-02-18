@@ -30,7 +30,7 @@ struct PlayerControls: View {
     @State var showDescriptionPopover: Bool = false
 
     var speedSpacing: CGFloat {
-        speedSpacingScaled + (showRotateFullscreen ? -2 : 2)
+        speedSpacingScaled + (showRotateFullscreen || compactSize ? -2 : 2)
     }
 
     var showRotateFullscreen: Bool {
@@ -90,7 +90,11 @@ struct PlayerControls: View {
                         CombinedPlaybackSpeedSettingPlayer(
                             spacing: speedSpacing,
                             showTemporarySpeed: compactSize,
-                            hasSmallestSize: player.embeddingDisabled
+                            indicatorSpacing: player.embeddingDisabled
+                                ? 2
+                                : compactSize
+                                ? 3
+                                : 4
                         )
 
                         if !UIDevice.isMac {

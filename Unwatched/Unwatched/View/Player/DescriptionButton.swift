@@ -23,6 +23,7 @@ struct DescriptionButton: View {
         .popover(isPresented: $show) {
             if let video = player.video {
                 ChapterDescriptionView(video: video)
+                    .presentationBackground(.black)
                     .environment(\.colorScheme, colorScheme)
                     .environment(player)
                     .environment(navManager)
