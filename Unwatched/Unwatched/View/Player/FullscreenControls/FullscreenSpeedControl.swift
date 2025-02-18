@@ -48,20 +48,16 @@ struct FullscreenSpeedControl: View {
         .fontWeight(.medium)
         .padding(.horizontal) // workaround: safearea pushing content in pop over
         .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
-            ZStack {
-                Color.black
-                    .scaleEffect(2)
-
-                CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
-                    .padding(.horizontal)
-                    .frame(width: 350)
-            }
-            .environment(\.colorScheme, .dark)
-            .presentationCompactAdaptation(.popover)
-            .onDisappear {
-                menuOpen = false
-            }
-            .fontWeight(nil)
+            CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
+                .padding(.horizontal)
+                .frame(width: 350)
+                .presentationBackground(.black)
+                .environment(\.colorScheme, .dark)
+                .presentationCompactAdaptation(.popover)
+                .onDisappear {
+                    menuOpen = false
+                }
+                .fontWeight(nil)
         }
     }
 
