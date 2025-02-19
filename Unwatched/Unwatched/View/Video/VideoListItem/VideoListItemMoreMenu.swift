@@ -64,8 +64,9 @@ struct VideoListItemMoreMenuView: View {
                 Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
                     openUrlInApp(url.absoluteString)
                 }
-                ShareLink(item: url)
             }
+
+            ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
         }
         .controlGroupStyle(.compactMenu)
         ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
