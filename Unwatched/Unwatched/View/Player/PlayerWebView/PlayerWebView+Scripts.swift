@@ -98,14 +98,16 @@ extension PlayerWebView {
         _ playbackSpeed: Double,
         _ startAt: Double,
         _ requiresFetchingVideoData: Bool?,
-        disableCaptions: Bool
+        disableCaptions: Bool,
+        minimalPlayerUI: Bool
     ) -> String {
         """
         var video = document.querySelector('video');
         var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
         video.playbackRate = \(playbackSpeed);
         var startAtTime = \(startAt);
-        var disableCaptions = \(disableCaptions)
+        var disableCaptions = \(disableCaptions);
+        var minimalPlayerUI = \(minimalPlayerUI);
 
         video.muted = false;
 
@@ -165,8 +167,14 @@ extension PlayerWebView {
                     overflow: hidden !important;
                     touch-action: none !important;
                 }
-                ${disableCaptions ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; };' : ''}
-                `;
+                ${disableCaptions
+                    ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; }'
+                    : ''}
+                ${minimalPlayerUI
+                    ? '.ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, ' +
+                      '.ytp-pip-button, .ytp-mute-button { display: none !important; } '
+                    : ''}
+            `;
             document.head.appendChild(style);
         }
 

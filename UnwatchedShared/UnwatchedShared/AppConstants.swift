@@ -175,6 +175,7 @@ public struct Const {
     public static let enableYtWatchHistory = "enableYtWatchHistory"
     public static let enableQueueContextMenu = "enableQueueContextMenu"
     public static let disableCaptions = "disableCaptions"
+    public static let minimalPlayerUI = "minimalPlayerUI"
 
     public static let automaticBackups = "automaticBackups"
     public static let lastAutoBackupDate = "lastAutoBackupDate"

@@ -32,6 +32,7 @@ extension Const {
         Const.rotateOnPlay: false,
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
+        Const.minimalPlayerUI: false,
         Const.autoAirplayHD: false,
 
         // Filter

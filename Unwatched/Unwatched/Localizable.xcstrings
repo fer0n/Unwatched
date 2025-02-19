@@ -54,6 +54,12 @@
             "value" : "%@ verblieben"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ remaining"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4689,6 +4695,34 @@
         }
       }
     },
+    "hideControls" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Controls"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player Controls"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commandes du lecteur"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontrolki odtwarzacza"
+          }
+        }
+      }
+    },
     "hideMenuOnPlay" : {
       "localizations" : {
         "de" : {
@@ -5945,6 +5979,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce i są starsze niż tydzień. Najlepiej pozostawić to włączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
+          }
+        }
+      }
+    },
+    "minimalPlayerUI" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player-Overlays minimieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimize Player Overlays"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimiser les superpositions du lecteur"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zminimalizuj nakładki odtwarzacza"
           }
         }
       }
@@ -7513,34 +7575,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube ID może być błędne: %@"
-          }
-        }
-      }
-    },
-    "preferYtCaptionsHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deaktiviert Untertitel im YouTube-Player ohne Möglichkeit, sie während der Wiedergabe wieder einzuschalten."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disables video captions in YouTube’s player with no option to re-enable them during playback."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactive les sous-titres vidéo dans le lecteur YouTube sans option pour les réactiver pendant la lecture."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyłącza napisy w odtwarzaczu YouTube bez możliwości ich ponownego włączenia podczas odtwarzania."
           }
         }
       }
