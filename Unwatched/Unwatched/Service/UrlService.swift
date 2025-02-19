@@ -20,6 +20,10 @@ struct UrlService {
     static let blueskyUrl = URL(string: "https://bsky.app/profile/unwatched.bsky.social")!
     static let releasesUrl = URL(string: "https://github.com/fer0n/Unwatched/releases")!
 
+    static func getShortenedUrl(_ youtubeId: String) -> String {
+        "https://youtu.be/\(youtubeId)"
+    }
+
     static func getEmailUrl(body: String) -> URL {
         URL(string: "mailto:unwatched.app@gmail.com?body=\n\n\(body)")!
     }

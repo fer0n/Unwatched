@@ -96,9 +96,9 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     @ViewBuilder
     var copyUrlButton: some View {
-        if let video = player.video, let url = video.url {
+        if let video = player.video {
             Button {
-                UIPasteboard.general.string = url.absoluteString
+                UIPasteboard.general.string = UrlService.getShortenedUrl(video.youtubeId)
                 flashSymbol = "checkmark"
                 hapticToggle.toggle()
             } label: {
