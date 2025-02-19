@@ -41,7 +41,7 @@ struct PlayerControls: View {
 
     var body: some View {
         let layout = compactSize
-            ? AnyLayout(HStackLayout(spacing: 25))
+            ? AnyLayout(HStackLayout(spacing: 20))
             : AnyLayout(VStackLayout(spacing: player.isCompactHeight ? 15 : 25))
 
         let outerLayout = horizontalLayout
@@ -93,7 +93,7 @@ struct PlayerControls: View {
                             indicatorSpacing: player.embeddingDisabled
                                 ? 2
                                 : compactSize
-                                ? 3
+                                ? 2.5
                                 : 4
                         )
 
@@ -129,7 +129,7 @@ struct PlayerControls: View {
                             markVideoWatched: markVideoWatched,
                             indicateWatched: false
                         )
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: compactSize ? nil : .infinity)
 
                         PlayButton(size:
                                     (player.embeddingDisabled || compactSize)
@@ -139,13 +139,13 @@ struct PlayerControls: View {
                         .fontWeight(.black)
 
                         NextVideoButton(markVideoWatched: markVideoWatched)
-                            .frame(maxWidth: .infinity)
+                            .frame(maxWidth: compactSize ? nil : .infinity)
 
                         if enableHideControls {
                             HideControlsButton()
                         }
                     }
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, compactSize ? 0 : 10)
 
                     if player.isCompactHeight {
                         // make sure play button vertical spacing is equal
@@ -153,9 +153,9 @@ struct PlayerControls: View {
                             .frame(height: 0)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 15)
                 .padding(.bottom, 20)
-                .frame(maxWidth: 1000)
+                .frame(maxWidth: 800)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
                     Spacer()
@@ -237,7 +237,7 @@ struct PlayerControls: View {
     let player = PlayerManager.getDummy()
     // player.embeddingDisabled = true
 
-    return PlayerControls(compactSize: false,
+    return PlayerControls(compactSize: true,
                           showInfo: false,
                           horizontalLayout: false,
                           enableHideControls: false,
