@@ -51,12 +51,13 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection(footer: "preferYtCaptionsHelper") {
+                MySection {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
-                    DisableCaptionsToggle()
                 }
+
+                HideControlsSettings()
 
                 MySection(footer: "autoAirplayHDHelper") {
                     Toggle(isOn: $autoAirplayHD) {
@@ -69,18 +70,32 @@ struct PlaybackSettingsView: View {
     }
 }
 
-struct DisableCaptionsToggle: View {
+struct HideControlsSettings: View {
     @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
+    @AppStorage(Const.minimalPlayerUI) var minimalPlayerUI: Bool = false
     @Environment(PlayerManager.self) var player
 
     var body: some View {
-        Toggle(isOn: $disableCaptions) {
-            Text("disableCaptions")
+        MySection("hideControls") {
+            Toggle(isOn: $disableCaptions) {
+                Text("disableCaptions")
+            }
+            .onChange(of: disableCaptions) {
+                reloadPlayer()
+            }
+
+            Toggle(isOn: $minimalPlayerUI) {
+                Text("minimalPlayerUI")
+            }
+            .onChange(of: minimalPlayerUI) {
+                reloadPlayer()
+            }
         }
-        .onChange(of: disableCaptions) {
-            player.handleHotSwap()
-            PlayerManager.reloadPlayer()
-        }
+    }
+
+    func reloadPlayer() {
+        player.handleHotSwap()
+        PlayerManager.reloadPlayer()
     }
 }
 

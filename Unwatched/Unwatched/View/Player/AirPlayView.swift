@@ -27,8 +27,6 @@ struct AirPlayView: View {
     let isOn: Bool
 
     var body: some View {
-        let color = isOn ? Color.backgroundColor : Color.automaticBlack
-
         Button {
             guard let button = routePickerView.subviews.first(where: { $0 is UIButton }) else {
                 Logger.log.info("AirPlay button not found")
