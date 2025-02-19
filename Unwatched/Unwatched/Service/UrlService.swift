@@ -100,7 +100,7 @@ struct UrlService {
     }
 
     static func getChannelUserNameFromUrl(_ url: URL, previousUserName: String? = nil) -> String? {
-        let urlString = url.absoluteString
+        let urlString = url.absoluteString.removingPercentEncoding ?? url.absoluteString
 
         // https://www.youtube.com/@GAMERTAGVR/videos
         if let userName = urlString.matching(regex: #"\/@([^\/#\?]*)"#) {
