@@ -80,7 +80,7 @@ struct BrowserView: View, KeyboardReadable {
                             Spacer()
                                 .frame(height:
                                         (enableBottomPadding ? 60 : 0)
-                                        + (safeArea ? geometry.safeAreaInsets.bottom : 0)
+                                        + (max(geometry.safeAreaInsets.bottom, 15))
                                 )
                         }
                     }
