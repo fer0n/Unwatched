@@ -171,7 +171,7 @@ extension PlayerWebView {
                     ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; }'
                     : ''}
                 ${minimalPlayerUI
-                    ? '.ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, ' +
+                    ? '.ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, .ytp-info-panel-preview, ' +
                       '.ytp-pip-button, .ytp-mute-button { display: none !important; } '
                     : ''}
             `;
