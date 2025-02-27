@@ -2,29 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIApplicationShortcutItems</key>
-	<array>
-		<dict>
-			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>play.rectangle.on.rectangle.fill</string>
-			<key>UIApplicationShortcutItemType</key>
-			<string>PasteAndPlay</string>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>UIApplicationShortcutIconType</string>
-			<key>UIApplicationShortcutItemTitle</key>
-			<string>Play</string>
-			<key>UIApplicationShortcutItemSubtitle</key>
-			<string>From Clipboard</string>
-		</dict>
-	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.pentlandFirth.Unwatched.refreshVideos</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>SF-Compact-Display-Semibold.otf</string>
-		<string>SF-Compact-Display-Bold.otf</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -56,6 +36,26 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>AddVideoIntent</string>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SF-Compact-Display-Semibold.otf</string>
+		<string>SF-Compact-Display-Bold.otf</string>
+	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>play.rectangle.on.rectangle.fill</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconType</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>From Clipboard</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Play</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>PasteAndPlay</string>
+		</dict>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

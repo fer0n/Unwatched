@@ -241,7 +241,7 @@ import UnwatchedShared
     func restoreNowPlayingVideo() {
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
-            return
+        return
         }
         #endif
         Logger.log.info("restoreVideo")
