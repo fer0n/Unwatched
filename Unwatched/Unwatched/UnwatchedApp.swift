@@ -40,8 +40,5 @@ struct UnwatchedApp: App {
         .commands {
             PlayerCommands(player: $player)
         }
-        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in
-            await refresher.handleBackgroundVideoRefresh()
-        }
     }
 }
