@@ -50,8 +50,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         case "ended":
             parent.player.previousState.isPlaying = false
             parent.onVideoEnded()
-        case "unstarted":
-            parent.player.handleAutoStart()
         case "currentTime":
             handleTimeUpdate(payload)
         case "updateTitle":
