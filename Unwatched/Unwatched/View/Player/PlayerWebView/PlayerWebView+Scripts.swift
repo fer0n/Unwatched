@@ -37,7 +37,7 @@ extension PlayerWebView {
                     document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
                 }
                 attemptClick();
-
+                const retryClicks = window.location.href.includes('youtube-nocookie');
                 setTimeout(() => checkResult(0), 50);
                 function checkResult(retries) {
                     if (!video.paused) {
@@ -48,9 +48,17 @@ extension PlayerWebView {
                         if (offlineElement) {
                             sendMessage("offline", offlineElement.innerText);
                         } else {
-                            const element = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
-                            if (element.classList.contains('ytp-button') || retries > 0) {
-                                attemptClick();
+                            if (retryClicks) {
+                                // workaround: click seems to happen too fast with nocookie url
+                                // no other way of awaiting loading worked. Using this sometimes led to the
+                                // regular player being stuck with YouTube's loading indicator
+                                const element = document.elementFromPoint(
+                                    window.innerWidth / 2,
+                                    window.innerHeight / 2
+                                );
+                                if (element.classList.contains('ytp-button') || retries > 0) {
+                                    attemptClick();
+                                }
                             }
                             if (retries < 4) {
                                 setTimeout(() => checkResult(retries + 1), 50 * (retries + 1) * 2);
