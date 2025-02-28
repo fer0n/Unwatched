@@ -219,9 +219,9 @@ actor RefreshActor {
 extension RefreshManager {
     func scheduleVideoRefresh() {
         Logger.log.info("scheduleVideoRefresh()")
-        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
+            let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
+            request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
             try BGTaskScheduler.shared.submit(request)
         } catch {
             Logger.log.info("Error scheduleVideoRefresh: \(error)")

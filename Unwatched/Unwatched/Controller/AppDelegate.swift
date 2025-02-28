@@ -8,6 +8,7 @@ import WebKit
 import SwiftData
 import OSLog
 import UnwatchedShared
+import BackgroundTasks
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     weak var navManager: NavigationManager?
@@ -150,6 +151,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                                    intentIdentifiers: [],
                                                    options: [])
         center.setNotificationCategories([category, clearCategory])
+
+        handleBackgroundRefresh()
+    }
+
+    nonisolated func handleBackgroundRefresh() {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Const.backgroundAppRefreshId, using: nil) { _ in
+            Task { @MainActor in
+                await RefreshManager.shared.handleBackgroundVideoRefresh()
+                // workaround: iOS 18.4 background crash when using .backgroundTask(.appRefresh ...)
+                // https://developer.apple.com/forums/thread/775182?login=true
+            }
+        }
     }
 }
 
