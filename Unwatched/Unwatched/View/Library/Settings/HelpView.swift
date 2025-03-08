@@ -9,13 +9,12 @@ import UnwatchedShared
 struct HelpView: View {
 
     var body: some View {
-
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
                 MySection(footer: "pleaseCheckFaq") {
-                    Link(destination: UrlService.getEmailUrl(body: versionInfo)) {
+                    Link(destination: UrlService.getEmailUrl(body: HelpView.versionInfo)) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
                 }
@@ -28,12 +27,11 @@ struct HelpView: View {
         .myNavigationTitle("emailAndFaq")
     }
 
-    var versionInfo: String {
+    static var versionInfo: String {
         """
-        iOS \(UIDevice.current.systemVersion)
+        \(Device.systemVersion)
         Unwatched \(VersionAndBuildNumber.both)
         """
-
     }
 }
 

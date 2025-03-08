@@ -16,6 +16,7 @@ struct AppNotificationOverlayModifier: ViewModifier {
                 )
                 .padding(.top, 2)
                 .offset(y: appNotificationVM.isPresented ? 0 : -150)
+                .opacity(appNotificationVM.isPresented ? 1 : 0)
             }
     }
 }

@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import UIKit
 import Foundation
 import SwiftUI
@@ -56,3 +57,5 @@ public extension UIImage {
     let croppedImage = myImage.croppedYtThumbnail()
     return Image(uiImage: croppedImage)
 }
+
+#endif

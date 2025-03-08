@@ -14,7 +14,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     var imageUrl: URL?
     private let contentImage: ((Image) -> Content)
     private let placeholder: (() -> Content2)
-    @State var image: UIImage?
+    @State var image: PlatformImage?
 
     public init(
         imageUrl: URL?,
@@ -27,13 +27,17 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     }
 
     public var body: some View {
-        if let uiImage = image {
-            self.contentImage(Image(uiImage: uiImage))
+        if let platformImage = image {
+            #if os(iOS)
+            self.contentImage(Image(uiImage: platformImage))
+            #elseif os(macOS)
+            self.contentImage(Image(nsImage: platformImage))
+            #endif
         } else {
             self.placeholder()
                 .task {
                     if image == nil, let url = imageUrl {
-                        let task = getUIImage(url)
+                        let task = getImage(url)
                         if let taskResult = try? await task.value {
                             let (taskImage, info) = taskResult
                             image = taskImage
@@ -44,13 +48,17 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         }
     }
 
-    func getUIImage(_ url: URL) -> Task<(UIImage?, ImageCacheInfo?), Error> {
+    func getImage(_ url: URL) -> Task<(PlatformImage?, ImageCacheInfo?), Error> {
         let cacheInfo = self.cacheManager[url.absoluteString]
 
         return Task {
             // load from memory
             if let cacheInfo = cacheInfo {
+                #if os(iOS)
                 return (UIImage(data: cacheInfo.data), nil)
+                #elseif os(macOS)
+                return (NSImage(data: cacheInfo.data), nil)
+                #endif
             }
 
             // fetch from DB
@@ -58,7 +66,11 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
             let context = ModelContext(container)
             if let model = ImageService.getCachedImage(for: url, context),
                let imageData = model.imageData {
+                #if os(iOS)
                 return (UIImage(data: imageData), nil)
+                #elseif os(macOS)
+                return (NSImage(data: imageData), nil)
+                #endif
             }
 
             // fetch online
@@ -68,7 +80,11 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
                 data: imageData
             )
 
+            #if os(iOS)
             return (UIImage(data: imageData), imageInfo)
+            #elseif os(macOS)
+            return (NSImage(data: imageData), imageInfo)
+            #endif
         }
     }
 }

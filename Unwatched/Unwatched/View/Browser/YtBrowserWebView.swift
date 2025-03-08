@@ -8,7 +8,7 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
-struct YtBrowserWebView: UIViewRepresentable {
+struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
     @Binding var url: BrowserUrl?
@@ -24,18 +24,44 @@ struct YtBrowserWebView: UIViewRepresentable {
         self.browserManager = browserManager
     }
 
+    #if os(macOS)
+    func makeNSView(context: Context) -> WKWebView {
+        makeView(context.coordinator)
+    }
+
+    func updateNSView(_ view: WKWebView, context: Context) {
+        updateView(view)
+    }
+    #elseif os(iOS)
+
     func makeUIView(context: Context) -> WKWebView {
+        makeView(context.coordinator)
+    }
+
+    func updateUIView(_ view: WKWebView, context: Context) {
+        updateView(view)
+    }
+    #endif
+
+    func makeView(_ coordinator: Coordinator) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
+
+        #if os(iOS)
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
+        #endif
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
-        webView.navigationDelegate = context.coordinator
+        webView.navigationDelegate = coordinator
+
+        #if os(iOS)
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
-        context.coordinator.startObserving(webView: webView)
+        #endif
+
+        coordinator.startObserving(webView: webView)
         if let requestUrl = (startUrl ?? url ?? BrowserUrl.youtubeStartPage).getUrl {
             let request = URLRequest(url: requestUrl)
             webView.load(request)
@@ -45,10 +71,10 @@ struct YtBrowserWebView: UIViewRepresentable {
 
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {
+    func updateView(_ view: WKWebView) {
         if url != nil, let requestUrl = url?.getUrl {
             let request = URLRequest(url: requestUrl)
-            uiView.load(request)
+            view.load(request)
             url = nil
         }
     }
@@ -231,15 +257,15 @@ struct YtBrowserWebView: UIViewRepresentable {
 
         var getSubscriptionInfoScript =
             """
-            var channelId = document.querySelector('meta[itemprop="identifier"]')?.getAttribute('content');
-            var description = document.querySelector('meta[name="description"]')?.getAttribute('content');
-            var rssFeed = document
-                .querySelector('link[rel="alternate"][type="application/rss+xml"]')
-                ?.getAttribute('href');
-            var title = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
-            var image = document.querySelector('link[rel="image_src"]')?.getAttribute('href');
-            [channelId, description, rssFeed, title, image];
-            """
+var channelId = document.querySelector('meta[itemprop="identifier"]')?.getAttribute('content');
+var description = document.querySelector('meta[name="description"]')?.getAttribute('content');
+var rssFeed = document
+.querySelector('link[rel="alternate"][type="application/rss+xml"]')
+?.getAttribute('href');
+var title = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
+var image = document.querySelector('link[rel="image_src"]')?.getAttribute('href');
+[channelId, description, rssFeed, title, image];
+"""
     }
 }
 

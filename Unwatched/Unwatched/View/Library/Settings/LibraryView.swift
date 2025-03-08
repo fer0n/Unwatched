@@ -26,7 +26,7 @@ struct LibraryView: View {
                 Color.backgroundColor.ignoresSafeArea(.all)
 
                 List {
-                    MySection {
+                    MySection(hasPadding: false) {
                         AddToLibraryView(subManager: $subManager,
                                          showBrowser: !browserAsTab)
                             .id(topListItemId)
@@ -45,19 +45,26 @@ struct LibraryView: View {
                     if showCancelButton {
                         DismissToolbarButton()
                     }
-                    ToolbarItem(placement: .topBarLeading) {
-                        NavigationLink(value: LibraryDestination.settings) {
-                            Image(systemName: Const.settingsViewSF)
-                                .fontWeight(.bold)
-                                .accessibilityLabel("settings")
-                        }
-                    }
+                    ToolbarSpacerWorkaround()
+                    #if os(iOS)
+                    settingsToolbarButton
+                    #endif
                     RefreshToolbarButton()
                 }
             }
             .tint(theme.color)
         }
         .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
+    }
+
+    var settingsToolbarButton: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            NavigationLink(value: LibraryDestination.settings) {
+                Image(systemName: Const.settingsViewSF)
+                    .fontWeight(.bold)
+                    .accessibilityLabel("settings")
+            }
+        }
     }
 }
 

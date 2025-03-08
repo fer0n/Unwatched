@@ -13,7 +13,9 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
     var body: some View {
         Button {
             hapticToggle.toggle()
+            #if os(iOS)
             OrientationManager.changeOrientation(to: .landscapeRight)
+            #endif
         } label: {
             contentImage(
                 Image(systemName: Const.enableFullscreenSF)
@@ -24,7 +26,9 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
         .padding(2)
         .contextMenu {
             Button {
+                #if os(iOS)
                 OrientationManager.changeOrientation(to: .landscapeLeft)
+                #endif
             } label: {
                 Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
             }

@@ -10,7 +10,9 @@ import UnwatchedShared
 
 @main
 struct UnwatchedApp: App {
+    #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
     @State var player = PlayerManager.load()
     @State var refresher = RefreshManager.shared
 
@@ -18,7 +20,7 @@ struct UnwatchedApp: App {
 
     var body: some Scene {
         WindowGroup {
-            SetupView(appDelegate: appDelegate)
+            SetupView()
                 .task {
                     try? Tips.configure([
                         .displayFrequency(.immediate),
@@ -36,9 +38,44 @@ struct UnwatchedApp: App {
                         player.restoreNowPlayingVideo()
                     }
                 }
+                #if os(macOS)
+                .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
+            #endif
         }
+        #if os(macOS)
+        .windowStyle(.hiddenTitleBar)
+        #endif
         .commands {
             PlayerCommands(player: $player)
+            AppCommands()
         }
+
+        #if os(macOS)
+        Settings {
+            SettingsWindowView()
+                .environment(player)
+                .environment(ImageCacheManager.shared)
+        }
+
+        Window("faq", id: Const.windowHelp) {
+            FaqWindow()
+        }
+        .windowResizability(.contentSize)
+
+        Window("importSubscriptions", id: Const.windowImportSubs) {
+            ImportSubscriptionsWindow()
+                .environment(refresher)
+        }
+        .windowResizability(.contentSize)
+
+        Window("browser", id: Const.windowBrowser) {
+            BrowserWindow()
+                .environment(refresher)
+                .environment(player)
+                // workaround: YouTube dark mode doesn't work on macOS & tips become invisible
+                .environment(\.colorScheme, .light)
+        }
+        .windowResizability(.contentSize)
+        #endif
     }
 }

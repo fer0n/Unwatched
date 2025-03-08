@@ -307,6 +307,7 @@ extension VideoService {
 
     @MainActor
     static func scheduleDeferedVideoNotification(_ video: Video, deferDate: Date) {
+        #if os(iOS)
         var info = NotificationInfo(video.subscription?.title ?? "", video.title, video: video.toExport)
         let imageUrl = video.thumbnailUrl
 
@@ -318,14 +319,17 @@ extension VideoService {
             }
             NotificationManager.sendNotification(info, userInfo: userInfo, triggerDate: deferDate)
         }
+        #endif
     }
 
     @MainActor
     static func cancelDeferVideo(_ video: Video) {
+        #if os(iOS)
         video.deferDate = nil
         Task {
             await NotificationManager.cancelNotificationForVideo(video.youtubeId)
         }
+        #endif
     }
 
     static func consumeDeferredVideos() {

@@ -18,7 +18,7 @@ struct SubscriptionListSection: View {
     @State var text = DebouncedText(0.3)
 
     var body: some View {
-        MySection("subscriptions") {
+        MySection("subscriptions", hasPadding: false) {
             if !subscriptionsVM.isLoading {
                 if subscriptionsVM.hasNoSubscriptions {
                     dropArea
@@ -61,7 +61,13 @@ struct SubscriptionListSection: View {
         // workaround: transparent tabbar in library tab otherwise due to async loading
         if subscriptionsVM.subscriptions.isEmpty && subscriptionsVM.isLoading {
             Spacer()
-                .frame(height: UIScreen.main.bounds.size.height)
+                .frame(height: {
+                    #if os(iOS)
+                    return UIScreen.main.bounds.size.height
+                    #else
+                    return NSScreen.main?.frame.size.height ?? 800
+                    #endif
+                }())
         }
     }
 
@@ -100,11 +106,10 @@ struct SubscriptionListSection: View {
 }
 
 struct SearchableSubscriptions: View {
-    var subscriptionsVM: SubscriptionListVM
     @Environment(RefreshManager.self) var refresher
-
     @AppStorage(Const.subscriptionSortOrder) var subscriptionSorting: SubscriptionSorting = .recentlyAdded
 
+    var subscriptionsVM: SubscriptionListVM
     @Binding var text: DebouncedText
 
     var body: some View {
@@ -120,13 +125,6 @@ struct SearchableSubscriptions: View {
             .onChange(of: subscriptionSorting) {
                 subscriptionsVM.setSorting(subscriptionSorting, refresh: true)
             }
-    }
-
-    var filter: (SendableSubscription) -> Bool {
-        {
-            text.debounced.isEmpty
-                || $0.displayTitle.localizedStandardContains(text.debounced)
-        }
     }
 
     @MainActor

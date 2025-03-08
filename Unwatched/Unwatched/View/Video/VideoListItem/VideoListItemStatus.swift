@@ -26,6 +26,9 @@ struct VideoListItemStatus: View {
                 .foregroundStyle(.white, statusInfo.color)
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
+                #if os(macOS)
+                .padding(2)
+            #endif
         }
     }
 

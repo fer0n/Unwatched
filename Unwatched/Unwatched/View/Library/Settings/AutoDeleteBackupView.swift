@@ -26,14 +26,15 @@ struct AutoDeleteBackupView: View {
                 Text("autoDeletedCount: \(count)")
             }
         }
-        .actionSheet(isPresented: $showDeleteConfirmation) {
-            ActionSheet(title: Text("confirmAutoDeleteBackup"),
-                        message: Text("autoDeleteHelper"),
-                        buttons: [
-                            .destructive(Text("autoDeleteBackupsNow")) { autoDeleteNow() },
-                            .cancel()
-                        ])
-        }
+        .confirmationDialog("confirmAutoDeleteBackup",
+                            isPresented: $showDeleteConfirmation,
+                            titleVisibility: .visible,
+                            actions: {
+                                Button("autoDeleteBackupsNow", role: .destructive) { autoDeleteNow() }
+                                Button("cancel", role: .cancel) { }
+                            }, message: {
+                                Text("autoDeleteHelper")
+                            })
     }
 
     func autoDeleteNow() {

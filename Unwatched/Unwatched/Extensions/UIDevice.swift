@@ -1,8 +1,66 @@
-//
-//  UIDevice.swift
-//  Unwatched
-//
+import Foundation
 
+struct Device {
+    #if os(iOS)
+    static let systemVersion = "iOS \(UIDevice.current.systemVersion)"
+
+    static let isIphone: Bool = {
+        UIDevice.modelName.contains("iPhone")
+    }()
+
+    static let supportsFullscreenControls: Bool = {
+        !UIDevice.modelName.contains("iPhone SE")
+    }()
+
+    static let requiresFullscreenWebWorkaround: Bool = {
+        !UIDevice.modelName.contains("iPhone")
+    }()
+
+    static let isMac: Bool = {
+        ProcessInfo.processInfo.isiOSAppOnMac
+    }()
+
+    static let deviceName: String = {
+        if isMac {
+            return "Mac"
+        } else {
+            return UIDevice.current.name
+        }
+    }()
+
+    #elseif os(macOS)
+    static let systemVersion = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
+    static let isIphone: Bool = false
+    static let supportsFullscreenControls: Bool = true
+    static let requiresFullscreenWebWorkaround: Bool = false
+    static let isMac: Bool = true
+
+    static let deviceName: String = {
+        Host.current().localizedName ?? "Mac"
+    }()
+    #endif
+
+    static let modelName: String = {
+        #if os(iOS)
+        return UIDevice.modelName
+        #elseif os(macOS)
+        let service = IOServiceGetMatchingService(kIOMainPortDefault,
+                                                  IOServiceMatching("IOPlatformExpertDevice"))
+        guard service != 0 else { return "Mac" }
+        defer { IOObjectRelease(service) }
+
+        if let modelData = IORegistryEntryCreateCFProperty(service,
+                                                           "model" as CFString,
+                                                           kCFAllocatorDefault, 0).takeRetainedValue() as? Data,
+           let modelName = String(data: modelData, encoding: .utf8)?.trimmingCharacters(in: .controlCharacters) {
+            return modelName
+        }
+        return "Mac"
+        #endif
+    }()
+}
+
+#if os(iOS)
 import UIKit
 
 public extension UIDevice {
@@ -152,5 +210,5 @@ public extension UIDevice {
 
         return mapToDevice(identifier: identifier)
     }()
-
 }
+#endif

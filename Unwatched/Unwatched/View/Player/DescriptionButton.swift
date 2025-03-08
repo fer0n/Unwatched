@@ -20,6 +20,7 @@ struct DescriptionButton: View {
                 .symbolRenderingMode(.monochrome)
                 .playerToggleModifier(isOn: show, isSmall: true)
         }
+        .buttonStyle(.plain)
         .popover(isPresented: $show) {
             if let video = player.video {
                 ChapterDescriptionView(video: video)
@@ -27,6 +28,7 @@ struct DescriptionButton: View {
                     .environment(\.colorScheme, colorScheme)
                     .environment(player)
                     .environment(navManager)
+                    .frame(maxWidth: 500, maxHeight: 600)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: show)

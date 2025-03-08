@@ -9,7 +9,10 @@ import UnwatchedShared
 struct DebugView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
+
+    #if os(iOS)
     @Environment(Alerter.self) var alerter
+    #endif
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
@@ -76,6 +79,7 @@ struct DebugView: View {
                 }
             }
         }
+        #if os(iOS)
         .task(id: monitorBackgroundFetches) {
             if monitorBackgroundFetches {
                 do {
@@ -85,6 +89,7 @@ struct DebugView: View {
                 }
             }
         }
+        #endif
         .myNavigationTitle("debug")
     }
 }

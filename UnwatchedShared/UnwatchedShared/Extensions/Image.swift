@@ -3,16 +3,14 @@
 //  UnwatchedShared
 //
 
-import UIKit
 
-public extension UIImage {
-    func pixelColors(at points: [CGPoint]) -> [UIColor] {
-        guard let cgImage = self.cgImage else {
-            return Array(repeating: .clear, count: points.count)
-        }
+import SwiftUI
 
-        let width = cgImage.width
-        let height = cgImage.height
+
+public extension CGImage {
+    func pixelColors(at points: [CGPoint]) -> [Color] {
+        let width = self.width
+        let height = self.height
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bytesPerPixel = 4
         let bytesPerRow = bytesPerPixel * width
@@ -29,9 +27,9 @@ public extension UIImage {
             return Array(repeating: .clear, count: points.count)
         }
 
-        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        context.draw(self, in: CGRect(x: 0, y: 0, width: width, height: height))
 
-        var colors = [UIColor]()
+        var colors = [Color]()
         for point in points {
             let xVal = Int(point.x)
             let yVal = Int(point.y)
@@ -40,11 +38,43 @@ public extension UIImage {
             let red = CGFloat(pixelData[pixelIndex]) / 255.0
             let green = CGFloat(pixelData[pixelIndex + 1]) / 255.0
             let blue = CGFloat(pixelData[pixelIndex + 2]) / 255.0
-            let alpha = CGFloat(pixelData[pixelIndex + 3]) / 255.0
-
-            colors.append(UIColor(red: red, green: green, blue: blue, alpha: alpha))
+            // let alpha = CGFloat(pixelData[pixelIndex + 3]) / 255.0
+            
+            let color = Color(red: red, green: green, blue: blue)
+            colors.append(color)
         }
-
+        
         return colors
     }
 }
+
+#if os(iOS)
+import UIKit
+public typealias PlatformImage = UIImage
+
+public extension UIImage {
+    func pixelColors(at points: [CGPoint]) -> [Color] {
+        guard let cgImage = self.cgImage else {
+            return Array(repeating: .clear, count: points.count)
+        }
+        
+        return cgImage.pixelColors(at: points)
+    }
+}
+#endif
+
+#if os(macOS)
+import AppKit
+public typealias PlatformImage = NSImage
+
+public extension NSImage {
+    func pixelColors(at points: [CGPoint]) -> [Color] {
+        guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return Array(repeating: .clear, count: points.count)
+        }
+        
+        return cgImage.pixelColors(at: points)
+    }
+}
+
+#endif

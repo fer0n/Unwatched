@@ -13,21 +13,17 @@ import UnwatchedShared
 struct BrowserView: View, KeyboardReadable {
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(RefreshManager.self) var refresher
 
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-
-    var refresher: RefreshManager
-    // workaround: ^ when using @Environment with either of these
-    // + this view inside a sheet, the app crashes on "My Mac (Designed for iPad)"
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
 
     var showHeader: Bool = true
     var safeArea: Bool = true
-    var dropAreaLeft: Bool = false
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -68,13 +64,15 @@ struct BrowserView: View, KeyboardReadable {
                                                size: size)
                                     .padding(size)
                             }
-                            .environment(\.layoutDirection, dropAreaLeft ? .rightToLeft : .leftToRight)
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
 
                             if subscriptionText == nil && browserManager.firstPageLoaded {
                                 TipView(ytBrowserTip)
                                     .padding(.horizontal)
+                                    #if os(macOS)
+                                    .tipBackground(Color.automaticWhite)
+                                #endif
                             }
 
                             Spacer()
@@ -102,9 +100,11 @@ struct BrowserView: View, KeyboardReadable {
         .onChange(of: browserManager.info?.userName) {
             handleSubscriptionInfoChanged(browserManager.info)
         }
+        #if os(iOS)
         .onReceive(keyboardPublisher) { newIsKeyboardVisible in
             isKeyboardVisible = newIsKeyboardVisible
         }
+        #endif
         .onAppear {
             Task {
                 await subscribeManager.setIsSubscribed(browserManager.info)
@@ -211,10 +211,10 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(refresher: RefreshManager(),
-                startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
+    BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
         .modelContainer(DataProvider.previewContainer)
         .environment(ImageCacheManager())
+        .environment(RefreshManager())
         .environment(PlayerManager())
         .environment(NavigationManager())
 }

@@ -8,7 +8,6 @@ import SwiftData
 import SwiftUI
 import OSLog
 
-
 public struct ImageService {
     public static func persistImages(
         cache: [String: ImageCacheInfo]
@@ -92,64 +91,77 @@ public struct ImageService {
     }
 
     public static func isYtShort(_ imageData: Data) -> Bool? {
-        guard let image = UIImage(data: imageData) else {
-            return nil
+        #if os(macOS)
+        guard let image = NSImage(data: imageData) else {
+        return nil
         }
+        #else
+        guard let image = UIImage(data: imageData) else {
+        return nil
+        }
+        #endif
 
         // check if every xth pixel at the bottom is black
         let size = image.size
 
         // top and bottom of a regular video thumbnail is a black bar
-        let width = size.width
-        let height = size.height
+        let width: Double = size.width
+        let height: Double = size.height
 
-        let topY = height / 30
-        let topBottomY = height / 12
+        let topY: Double = height / 40.0
+        let topBottomY: Double = height / 22.0
 
-        let centerX = width / 2
-        let xDist = width / 6
+        let centerX: Double = width / 2.0
+        let xDist: Double = width / 4.3
 
         let points: [CGPoint] = [
-            // top      ° . °
+            // edge pixels should be in the very corner
+            // top      . ° .
             // image
-            // bottom   . ° .
+            // bottom   ° . °
 
-            CGPoint(x: centerX, y: topBottomY),
-            CGPoint(x: centerX, y: height - topBottomY),
+            CGPoint(x: centerX, y: topY),
+            CGPoint(x: centerX, y: height - topY),
 
-            CGPoint(x: centerX + xDist, y: topY),
-            CGPoint(x: centerX - xDist, y: topY),
+            CGPoint(x: centerX + xDist, y: topBottomY),
+            CGPoint(x: centerX - xDist, y: topBottomY),
 
-            CGPoint(x: centerX + xDist, y: height - topY),
-            CGPoint(x: centerX - xDist, y: height - topY)
+            CGPoint(x: centerX + xDist, y: height - topBottomY),
+            CGPoint(x: centerX - xDist, y: height - topBottomY)
         ]
 
         let colors = image.pixelColors(at: points)
-        for color in colors where !color.isBlack() {
+        for color in colors where !color.isBlack {
             return true
         }
         return false
     }
 }
 
-//// shorts detection
+// shorts detection
+#if os(iOS)
 //#Preview {
-//    // let url = URL(string: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")!
-//    let url = URL(string: "https://i3.ytimg.com/vi/jxmXQcYY1Sw/hqdefault.jpg")! // short
+//// let url = URL(string: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")!
+//let url = URL(string: "https://i3.ytimg.com/vi/jxmXQcYY1Sw/hqdefault.jpg")! // short
 //
-//    guard let data = try? Data(contentsOf: url),
-//          let myImage = UIImage(data: data) else {
-//        return ZStack { }
-//    }
-//    let isShort = ImageService.isYtShort(data)
-//
-//    let color = myImage.pixelColors(at: [CGPoint(x: 200, y: 200)])
-//    let isBlack = color[0].isBlack()
-//
-//    return VStack {
-//        Image(uiImage: myImage)
-//        Text(verbatim: "IS BLACK: \(isBlack)")
-//        Text(verbatim: "IS BLACK: \(color)")
-//        Text(verbatim: "IS SHORT: \(isShort)")
-//    }
+//guard let data = try? Data(contentsOf: url),
+//let myImage = UIImage(data: data) else {
+//return ZStack { }
 //}
+//
+//let isShort = ImageService.isYtShort(data)
+//let isShortText = isShort == true ? "YES" : isShort == nil ? "UNKNOWN" : "NO"
+//
+//let color = myImage.pixelColors(at: [CGPoint(x: 200, y: 200)])
+//
+//let isBlack = color[0].isBlack()
+//let isBlackText = isBlack == true ? "YES" : "NO"
+//
+//return VStack {
+//Image(uiImage: myImage)
+//Text(verbatim: "IS BLACK: \(isBlackText)")
+//Text(verbatim: "IS BLACK: \(color.debugDescription)")
+//Text(verbatim: "IS SHORT: \(isShortText)")
+//}
+//}
+#endif

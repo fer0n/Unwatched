@@ -58,6 +58,7 @@ struct ChapterMiniControlView: View {
                             old != nil && new != nil
                         }
                     }
+                    .buttonStyle(.plain)
                     .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
                         if let url = player.video?.url {
                             triggerFeedback.toggle()

@@ -96,11 +96,26 @@ struct RefreshToolbarButton: ToolbarContent {
     var refreshOnlySubscription: PersistentIdentifier?
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
+        ToolbarItem(placement: .confirmationAction) {
+            #if os(iOS)
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+            #else
+            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+                .buttonStyle(.borderless)
+            #endif
         }
     }
+}
 
+struct ToolbarSpacerWorkaround: ToolbarContent {
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .secondaryAction) {
+            #if os(macOS)
+            Button("") {}
+                .buttonStyle(.plain)
+            #endif
+        }
+    }
 }
 
 // #Preview {

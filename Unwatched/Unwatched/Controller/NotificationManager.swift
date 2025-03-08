@@ -9,6 +9,7 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
+#if os(iOS)
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) async {
@@ -241,3 +242,4 @@ struct NotificationManager {
         }
     }
 }
+#endif

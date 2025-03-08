@@ -23,6 +23,7 @@ struct ClearAllVideosButton: View {
                 Spacer()
             }.padding()
         }
+        .buttonStyle(.plain)
         .clearConfirmation(clearAll: clearAll, triggerAction: $triggerAction)
         .listRowSeparator(.hidden)
         .listRowBackground(Color.backgroundColor)

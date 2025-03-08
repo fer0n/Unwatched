@@ -34,11 +34,12 @@ struct AppearanceSettingsView: View {
                 }
 
                 MySection {
-                    Toggle(isOn: $showTabBarLabels) {
-                        Text("showTabBarLabels")
-                    }
                     Toggle(isOn: $showTabBarBadge) {
                         Text("showTabBarBadge")
+                    }
+                    #if os(iOS)
+                    Toggle(isOn: $showTabBarLabels) {
+                        Text("showTabBarLabels")
                     }
                     Toggle(isOn: $sheetOpacity) {
                         Text("sheetOpacity")
@@ -46,6 +47,7 @@ struct AppearanceSettingsView: View {
                     Toggle(isOn: $hidePlayerPageIndicator) {
                         Text("hidePlayerPageIndicator")
                     }
+                    #endif
                 }
 
                 MySection {
@@ -56,6 +58,12 @@ struct AppearanceSettingsView: View {
                     }
                     .pickerStyle(.menu)
                 }
+
+                #if os(macOS)
+                // workaround: app appearance seems to block interaction in a certain area
+                Spacer()
+                    .frame(height: 10)
+                #endif
 
                 MySection(getAppearanceTitle(.light)) {
                     AppAppearanceSelection(selection: $lightModeTheme)
@@ -89,20 +97,28 @@ struct AppearanceSettingsView: View {
                                     Image(systemName: "checkmark")
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                 }
 
-                MySection {
-                    Toggle(isOn: $lightAppIcon) {
-                        Text("lightAppIcon")
-                    }
-                    .onChange(of: lightAppIcon) {
-                        themeColor.setAppIcon()
-                    }
-                }
+                #if os(iOS)
+                lightAppIconToggle
+                #endif
             }
             .myNavigationTitle("appearance")
+        }
+    }
+
+    @ViewBuilder
+    var lightAppIconToggle: some View {
+        MySection {
+            Toggle(isOn: $lightAppIcon) {
+                Text("lightAppIcon")
+            }
+            .onChange(of: lightAppIcon) {
+                themeColor.setAppIcon()
+            }
         }
     }
 

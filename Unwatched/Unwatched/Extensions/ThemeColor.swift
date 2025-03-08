@@ -66,6 +66,7 @@ extension ThemeColor {
     }
 
     func setAppIcon() {
+        #if os(iOS)
         Task { @MainActor in
             UIApplication.shared.setAlternateIconName(self.appIconName) { error in
                 if let error {
@@ -73,5 +74,9 @@ extension ThemeColor {
                 }
             }
         }
+        #elseif os(macOS)
+        // macOS doesn't support programmatic app icon changes
+        Logger.log.debug("App icon changes not supported on macOS")
+        #endif
     }
 }

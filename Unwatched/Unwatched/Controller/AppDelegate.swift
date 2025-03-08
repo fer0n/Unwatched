@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import Foundation
 import WebKit
 import SwiftData
@@ -11,7 +12,6 @@ import UnwatchedShared
 import BackgroundTasks
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    weak var navManager: NavigationManager?
     let notificationCenter = UNUserNotificationCenter.current()
 
     func woraroundInitialWebViewDelay() {
@@ -74,7 +74,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         if let destination = userInfo[Const.tapDestination] as? NavigationTab.RawValue,
            let tab = NavigationTab(rawValue: destination) {
             Task { @MainActor in
-                navManager?.navigateTo(tab)
+                NavigationManager.shared.navigateTo(tab)
             }
             Logger.log.info("Notification destination: \(destination)")
         } else {
@@ -197,3 +197,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 }
+#endif

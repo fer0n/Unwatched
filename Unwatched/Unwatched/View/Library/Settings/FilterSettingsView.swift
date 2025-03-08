@@ -27,8 +27,10 @@ struct FilterSettingsView: View {
                 MySection("chapterFilter", footer: "chapterFilterFooter") {
                     TextField("skipChapterText", text: $skipChapterText)
                         .autocorrectionDisabled()
+                        #if os(iOS)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.done)
+                    #endif
                 }
 
                 SponsorBlockSettingsView()

@@ -6,12 +6,17 @@
 import Foundation
 import OSLog
 import UnwatchedShared
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 struct UrlService {
     static let youtubeStartPage = URL(string: "https://m.youtube.com?autoplay=0")
     static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
-    static let shareShortcutUrl = URL(string: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
+    static let shareShortcutUrl = URL(string: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")!
     static let youtubeTakeoutUrl = URL(string: "https://takeout.google.com/takeout/custom/youtube")!
 
     static let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6477287463?action=write-review")!
@@ -19,6 +24,8 @@ struct UrlService {
     static let mastodonUrl = URL(string: "https://indieapps.space/@unwatched")!
     static let blueskyUrl = URL(string: "https://bsky.app/profile/unwatched.bsky.social")!
     static let releasesUrl = URL(string: "https://github.com/fer0n/Unwatched/releases")!
+
+    static let issuesUrl = URL(string: "https://github.com/fer0n/Unwatched/issues")!
 
     static func getShortenedUrl(_ youtubeId: String) -> String {
         "https://youtu.be/\(youtubeId)"
@@ -228,5 +235,13 @@ struct UrlService {
         }
         Logger.log.warning("nothing to create a url from")
         return nil
+    }
+
+    static func open(_ url: URL) {
+        #if os(iOS)
+        UIApplication.shared.open(url)
+        #else
+        NSWorkspace.shared.open(url)
+        #endif
     }
 }

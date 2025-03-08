@@ -10,15 +10,17 @@ import UnwatchedShared
 
 struct MenuView: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(RefreshManager.self) var refresher
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
-    @Environment(PlayerManager.self) var player
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
     @AppStorage(Const.browserAsTab) var browserAsTab = false
+
+    #if os(macOS)
+    @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
+    #endif
 
     var showCancelButton = false
     var showTabBar = true
@@ -56,30 +58,30 @@ struct MenuView: View {
                             tag: NavigationTab.browser,
                             show: browserAsTab) {
                     BrowserView(
-                        refresher: refresher,
                         url: $navManager.openTabBrowserUrl,
                         showHeader: false,
-                        safeArea: false,
-                        dropAreaLeft: isSidebar
+                        safeArea: false
                     )
                 }
             }
-            .setTabViewStyle()
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video)
                     .presentationDragIndicator(.hidden)
                     .environment(\.colorScheme, colorScheme)
-                    .environment(player)
-                    .environment(navManager)
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
         }
+        #if os(macOS)
+        .id(videoListFormat == .compact) // workaround: expansive thumbnail size when switching setting
+        #endif
         .browserViewSheet(navManager: $navManager)
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
+        #if os(iOS)
         .setTabBarAppearance(disableScrollAppearance: isSidebar)
+        #endif
     }
 
     @MainActor
@@ -97,18 +99,6 @@ struct MenuView: View {
             UserDefaults.standard.set(0, forKey: Const.newInboxItemsCount)
         } else if newTab == .queue {
             UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
-        }
-    }
-}
-
-extension TabView {
-    @MainActor @ViewBuilder
-    /// Workaround: avoid tab view items in title bar on Mac
-    func setTabViewStyle() -> some View {
-        if #available(iOS 18.0, *), UIDevice.isMac {
-            self.tabViewStyle(.sidebarAdaptable)
-        } else {
-            self
         }
     }
 }

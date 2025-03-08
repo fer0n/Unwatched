@@ -8,64 +8,51 @@ import SwiftData
 import UnwatchedShared
 
 struct ContentView: View {
-    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
-
     @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @Environment(SheetPositionReader.self) var sheetPos
-    @Environment(\.dynamicTypeSize) var dynamicTypeSize
+
+    var videoExists: Bool {
+        player.video != nil
+    }
+
+    var bigScreen: Bool {
+        sizeClass == .regular && !Device.isIphone
+    }
 
     var body: some View {
         @Bindable var navManager = navManager
-        let videoExists = player.video != nil
-        let bigScreen = sizeClass == .regular && !UIDevice.isIphone
 
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
-            let layout = isLandscape
-                ? AnyLayout(HStackLayout())
-                : AnyLayout(VStackLayout())
             let landscapeFullscreen = !bigScreen && isLandscape
 
             let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
                 ? [.medium]
                 : [.height(sheetPos.playerControlHeight)]
-            let sidebarWidth: Double = dynamicTypeSize >= .accessibility1 ? 410 : 360
 
             ZStack {
-                layout {
-                    VideoPlayer(
-                        compactSize: bigScreen,
-                        showInfo: !bigScreen || (isLandscape && bigScreen) && !hideControlsFullscreen,
-                        horizontalLayout: hideControlsFullscreen,
-                        landscapeFullscreen: landscapeFullscreen
-                    )
-                    .frame(maxHeight: .infinity)
+                #if os(iOS)
+                IOSSPlitView(
+                    proxy: proxy,
+                    bigScreen: bigScreen,
+                    isLandscape: isLandscape,
+                    landscapeFullscreen: landscapeFullscreen
+                )
+                #else
+                MacOSSplitView(
+                    bigScreen: bigScreen,
+                    isLandscape: isLandscape,
+                    landscapeFullscreen: landscapeFullscreen
+                )
+                #endif
 
-                    if bigScreen && !hideControlsFullscreen {
-                        MenuView(isSidebar: true)
-                            .frame(maxWidth: isLandscape
-                                    ? min(proxy.size.width * 0.4, sidebarWidth)
-                                    : nil,
-                                   maxHeight: isLandscape
-                                    ? nil
-                                    : proxy.size.height * 0.4)
-                            .setColorScheme()
-                            .if(isLandscape) { view in
-                                view.clipShape(RoundedRectangle(
-                                    cornerRadius: 9, style: .continuous
-                                ))
-                            }
-                            .edgesIgnoringSafeArea(.all)
-                    }
-                }
                 if !bigScreen && !videoExists {
                     VideoNotAvailableView()
                 }
             }
-            .animation(.default, value: hideControlsFullscreen)
             .background(Color.playerBackgroundColor)
             .environment(\.colorScheme, .dark)
             .onChange(of: proxy.safeAreaInsets.top, initial: true) {
@@ -104,7 +91,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(hideControlsFullscreen: false)
+    ContentView()
         .modelContainer(DataProvider.previewContainerFilled)
         .environment(NavigationManager.getDummy(true))
         .environment(Alerter())

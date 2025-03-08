@@ -53,7 +53,11 @@ public struct VideoListItemConfig {
         self.clearAboveBelowList = clearAboveBelowList
         self.videoSwipeActions = videoSwipeActions
         self.showQueueButton = showQueueButton
+        #if os(iOS)
         self.showContextMenu = showContextMenu
+        #else
+        self.showContextMenu = true
+        #endif
         self.showVideoListOrder = showVideoListOrder
         self.showDelete = showDelete
         self.async = async

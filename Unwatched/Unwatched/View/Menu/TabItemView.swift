@@ -31,6 +31,17 @@ struct TabItemView<Content: View>: View {
 
     var body: some View {
         if show {
+            #if os(macOS)
+            content
+                .tabItem {
+                    image
+                        .environment(\.symbolVariants, .fill)
+                        .fontWeight(.black)
+                        .badge(showBadge ? 1 : 0)
+                    Text(tag.description)
+                }
+                .tag(tag)
+            #else
             content
                 .tabItem {
                     image
@@ -45,6 +56,7 @@ struct TabItemView<Content: View>: View {
                     }
                 }
                 .tag(tag)
+            #endif
         }
     }
 }

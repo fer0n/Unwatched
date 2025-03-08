@@ -10,7 +10,6 @@ import UnwatchedShared
 struct BackupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
-    @Environment(Alerter.self) private var alerter
 
     @State var showFileImporter = false
     @State var showDeleteConfirmation = false
@@ -35,6 +34,7 @@ struct BackupView: View {
                         showFileImporter = true
                     } label: {
                         Text("importBackup")
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
 
                     let item = AsyncSharableFile(
@@ -114,28 +114,44 @@ struct BackupView: View {
                             Text("deleteEverything")
                         }
                     })
-                    .actionSheet(isPresented: $showDeleteConfirmation) {
-                        ActionSheet(title: Text("confirmDeleteEverything"),
-                                    message: Text("confirmDeleteEverythingMessage"),
-                                    buttons: [
-                                        .destructive(Text("deleteEverything")) { _ = deleteEverything() },
-                                        .cancel()
-                                    ])
-                    }
+                    .confirmationDialog("confirmDeleteEverything",
+                                        isPresented: $showDeleteConfirmation,
+                                        titleVisibility: .visible,
+                                        actions: {
+                                            Button("deleteEverything", role: .destructive) {
+                                                _ = deleteEverything()
+                                            }
+                                            Button("cancel", role: .cancel) { }
+                                        },
+                                        message: {
+                                            Text("confirmDeleteEverythingMessage")
+                                        })
                 }
             }
         }
-        .actionSheet(item: $fileToBeRestored) { restoreFile in
-            ActionSheet(title: Text("restoreThisBackup?"),
-                        message: Text("restoreThisBackupMessage"),
-                        buttons: [
-                            .default(Text("restoreSettingsFromBackup")) { restoreSettingsFromBackup(restoreFile.url )},
-                            .destructive(Text("restoreBackup")) { restoreBackup(restoreFile.url) },
-                            .cancel()
-                        ])
+        .confirmationDialog("restoreThisBackup?",
+                            isPresented: .init(
+                                get: { fileToBeRestored != nil },
+                                set: { if !$0 { fileToBeRestored = nil } }
+                            ),
+                            titleVisibility: .visible
+        ) {
+            if let file = fileToBeRestored {
+                Button("restoreSettingsFromBackup") {
+                    restoreSettingsFromBackup(file.url)
+                }
+                Button("restoreBackup", role: .destructive) {
+                    restoreBackup(file.url)
+                }
+                Button("cancel", role: .cancel) { }
+            }
+        } message: {
+            Text("restoreThisBackupMessage")
         }
         .myNavigationTitle("userData")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [backupType]) { result in
             switch result {
@@ -210,7 +226,7 @@ struct BackupView: View {
             try await task.value
             self.getAllIcloudFiles()
         } catch {
-            alerter.showError(error)
+            Logger.log.error("\(error)")
         }
     }
 

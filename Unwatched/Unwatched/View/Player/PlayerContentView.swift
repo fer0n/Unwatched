@@ -16,6 +16,7 @@ struct PlayerContentView: View {
     let showInfo: Bool
     let horizontalLayout: Bool
     let enableHideControls: Bool
+    let hideControls: Bool
 
     let setShowMenu: () -> Void
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -34,6 +35,7 @@ struct PlayerContentView: View {
                                showInfo: showInfo,
                                horizontalLayout: horizontalLayout,
                                enableHideControls: enableHideControls,
+                               hideControls: hideControls,
                                setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched,
                                sleepTimerVM: sleepTimerVM,
@@ -66,7 +68,11 @@ struct PlayerContentView: View {
                 }
             }
             .frame(minHeight: minHeight)
+            #if os(iOS)
             .tabViewStyle(.page(indexDisplayMode: .never))
+            #else
+            .tabViewStyle(.automatic)
+            #endif
             .sensoryFeedback(Const.sensoryFeedback, trigger: navManager.playerTab)
             .onSizeChange { size in
                 SheetPositionReader.shared.playerContentViewHeight = size.height
@@ -95,7 +101,7 @@ struct PlayerContentView: View {
                 }
             ),
             numberOfPages: 2,
-            normalColor: .darkGray
+            normalColor: .automaticBlack
         )
         .clipShape(Capsule())
     }

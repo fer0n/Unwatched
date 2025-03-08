@@ -21,6 +21,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
             }
+            #if os(iOS)
             .onReceive(
                 NotificationCenter.default.publisher(for: AVAudioSession.routeChangeNotification)
             ) { _ in
@@ -29,8 +30,10 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onAppear {
                 handleRouteChange()
             }
+        #endif
     }
 
+    #if os(iOS)
     private func handleRouteChange() {
         guard UserDefaults.standard.bool(forKey: Const.autoAirplayHD) else {
             Logger.log.info("autoAirplayHD off")
@@ -48,11 +51,11 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         }
         return AudioRoute(rawValue: portType) ?? .unknown
     }
+    #endif
 
     func handlePasteAndPlay() {
         Logger.log.info("handlePasteAndPlay")
-        let pasteboard = UIPasteboard.general
-        guard let string = pasteboard.string, let url = URL(string: string) else {
+        guard let string = ClipboardService.get(), let url = URL(string: string) else {
             Logger.log.warning("handlePasteAndPlay: no valid url pasted")
             return
         }

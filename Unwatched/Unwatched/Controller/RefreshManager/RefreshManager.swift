@@ -218,6 +218,7 @@ actor RefreshActor {
 // Background Refresh
 extension RefreshManager {
     func scheduleVideoRefresh() {
+        #if os(iOS)
         Logger.log.info("scheduleVideoRefresh()")
         do {
             let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
@@ -233,6 +234,7 @@ extension RefreshManager {
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
+        #endif
     }
 
     func handleBackgroundVideoRefresh() async {
@@ -258,6 +260,7 @@ extension RefreshManager {
             if Task.isCancelled {
                 print("background task has been cancelled")
             }
+            #if os(iOS)
             if newVideos.videoCount == 0 {
                 print("notifyHasRun")
                 NotificationManager.notifyHasRun()
@@ -266,6 +269,7 @@ extension RefreshManager {
                 NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
                 await NotificationManager.notifyNewVideos(newVideos)
             }
+            #endif
         } catch {
             print("Error during background refresh: \(error)")
         }

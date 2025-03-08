@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import SwiftUI
 
 @Observable class OrientationManager {
@@ -41,3 +42,4 @@ import SwiftUI
         windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
     }
 }
+#endif

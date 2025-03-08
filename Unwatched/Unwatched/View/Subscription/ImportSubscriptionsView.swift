@@ -10,7 +10,6 @@ import UnwatchedShared
 struct ImportSubscriptionsView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
-    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     @State var showFileImporter = false
@@ -18,7 +17,11 @@ struct ImportSubscriptionsView: View {
     @State var subStates = [SubscriptionState]()
 
     @State private var selection = Set<SendableSubscription>()
+    #if os(iOS)
     @State var editMode = EditMode.active
+    #else
+    @State var editMode = NSTableView.SelectionHighlightStyle.regular
+    #endif
     @State var isLoading = false
     @State var searchString = ""
     @State var loadSubStatesTask: Task<[SubscriptionState], Error>?
@@ -45,7 +48,6 @@ struct ImportSubscriptionsView: View {
             } else {
                 ZStack {
                     List(selection: $selection) {
-
                         let filtered = sendableSubs.filter({
                             searchString.isEmpty
                                 || $0.title.localizedStandardContains(searchString)
@@ -59,9 +61,13 @@ struct ImportSubscriptionsView: View {
                                 .listRowSeparator(.hidden)
                         }
                     }
+                    .listRowBackground(Color.backgroundColor)
                     .searchable(text: $searchString)
                     .listStyle(.plain)
+                    #if os(iOS)
                     .environment(\.editMode, $editMode)
+                    // macOS doesn't need explicit edit mode for multi-selection
+                    #endif
                     .toolbar {
                         ToolbarItem {
                             Button(action: toggleSelection) {
@@ -87,14 +93,21 @@ struct ImportSubscriptionsView: View {
                                 localized: "importSubscriptions ^[\(selection.count) subscription](inflect: true)"
                             ).characters))
                         }
-
                         .padding(importButtonPadding ? 10 : 0)
                         .foregroundStyle(theme.contrastColor)
+                        #if os(iOS)
                         .buttonStyle(.borderedProminent)
+                        #else
+                        .buttonStyle(MyButtonStyle())
+                        .padding()
+                        #endif
                     }
                 }
             }
         }
+        #if os(macOS)
+        .frame(minWidth: 400, minHeight: 600)
+        #endif
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
@@ -245,33 +258,44 @@ struct ImportSubscriptionsView: View {
         let channelTitle = columns[2]
         return SendableSubscription(title: channelTitle, youtubeChannelId: channelId)
     }
+}
 
+struct MyButtonStyle: ButtonStyle {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+            .foregroundColor(theme.contrastColor)
+            .background(theme.color)
+            .cornerRadius(5)
+    }
 }
 
 #Preview {
     ImportSubscriptionsView(
-        //        sendableSubs: [
-        //        SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
-        //        SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
-        //        SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
-        //        SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
-        //        SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
-        //        SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ"),
-        //        SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
-        //        SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
-        //        SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
-        //        SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
-        //        SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
-        //        SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ"),
-        //        SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
-        //        SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
-        //        SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
-        //        SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
-        //        SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
-        //        SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ")
-        //    ]
+        sendableSubs: [
+            SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
+            SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
+            SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
+            SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
+            SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
+            SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ"),
+            SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
+            SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
+            SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
+            SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
+            SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
+            SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ"),
+            SendableSubscription(title: "habie147", youtubeChannelId: "UC-FHoOa_jNSZy3IFctMEq2w"),
+            SendableSubscription(title: "Broken Back", youtubeChannelId: "UC0q0O1XksvAATq_uH7IiEOA"),
+            SendableSubscription(title: "CGPGrey2", youtubeChannelId: "UC127Qy2ulgASLYvW4AuHJZQ"),
+            SendableSubscription(title: "CGP Grey", youtubeChannelId: "UC2C_jShtL725hvbm1arSV9w"),
+            SendableSubscription(title: "Auto Focus", youtubeChannelId: "UC2J-0g_nxlwcD9JBK1eTleQ"),
+            SendableSubscription(title: "LastWeekTonight", youtubeChannelId: "UC3XTzVzaHQEd30rQbuvCtTQ")
+        ]
     )
     .modelContainer(DataProvider.previewContainer)
-    .environment(NavigationManager.getDummy())
-    .environment(RefreshManager.shared)
+    .environment(RefreshManager())
 }

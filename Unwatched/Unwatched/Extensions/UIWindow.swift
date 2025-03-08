@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import UIKit
 
 public extension UIWindow {
@@ -26,3 +27,4 @@ public extension Array where Element == UIWindow {
         forEach { $0.reload() }
     }
 }
+#endif

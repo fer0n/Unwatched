@@ -4,12 +4,12 @@
 //
 
 import Combine
-import UIKit
 
 /// Publisher to read keyboard changes.
-protocol KeyboardReadable {
-    var keyboardPublisher: AnyPublisher<Bool, Never> { get }
-}
+protocol KeyboardReadable { }
+
+#if os(iOS)
+import UIKit
 
 extension KeyboardReadable {
     @MainActor
@@ -26,3 +26,4 @@ extension KeyboardReadable {
         .eraseToAnyPublisher()
     }
 }
+#endif

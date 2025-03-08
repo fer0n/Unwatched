@@ -47,9 +47,12 @@ struct CoreNextButton<Content>: View where Content: View {
             .symbolEffect(.bounce.down, value: player.video)
             .contentTransition(.symbolEffect(.replace, options: .speed(7)))
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(label)
         .help(label)
+        #if os(iOS)
         .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 5))
+        #endif
         .contextMenu {
             let text = continuousPlay
                 ? String(localized: "continuousPlayOn")

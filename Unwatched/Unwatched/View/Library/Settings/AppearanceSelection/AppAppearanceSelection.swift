@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct AppAppearanceSelection: View {
-    @Environment(\.colorScheme) var colorScheme
 
     @Binding var selection: AppAppearance
     @State var width: CGFloat = 100
@@ -38,6 +37,11 @@ struct AppAppearanceSelection: View {
                 width = size.width
             }
         }
+        #if os(macOS)
+        .frame(maxWidth: 250)
+        .frame(height: 120)
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        #endif
     }
 }
 

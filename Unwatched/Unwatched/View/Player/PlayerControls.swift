@@ -8,7 +8,6 @@ import UnwatchedShared
 
 struct PlayerControls: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
-    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
@@ -20,6 +19,7 @@ struct PlayerControls: View {
     let showInfo: Bool
     let horizontalLayout: Bool
     let enableHideControls: Bool
+    let hideControls: Bool
 
     let setShowMenu: () -> Void
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
@@ -35,7 +35,7 @@ struct PlayerControls: View {
 
     var showRotateFullscreen: Bool {
         fullscreenControlsSetting != .disabled
-            && !UIDevice.requiresFullscreenWebWorkaround
+            && !Device.requiresFullscreenWebWorkaround
             && !compactSize
     }
 
@@ -97,11 +97,13 @@ struct PlayerControls: View {
                                 : 4
                         )
 
-                        if !UIDevice.isMac {
+                        if !Device.isMac {
                             PipButton()
                         }
 
+                        #if os(iOS)
                         AirPlayButton()
+                        #endif
 
                         if compactSize {
                             DescriptionButton(show: $showDescriptionPopover)
@@ -226,7 +228,7 @@ struct PlayerControls: View {
     }
 
     var showControls: Bool {
-        !hideControlsFullscreen
+        !hideControls
             || fullscreenControlsSetting != .autoHide
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
             || player.videoIsCloseToEnd
@@ -241,6 +243,7 @@ struct PlayerControls: View {
                           showInfo: false,
                           horizontalLayout: false,
                           enableHideControls: false,
+                          hideControls: true,
                           setShowMenu: { },
                           markVideoWatched: { _, _ in },
                           sleepTimerVM: SleepTimerViewModel(),

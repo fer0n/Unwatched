@@ -1,11 +1,6 @@
-//
-//  PageControl.swift
-//  Unwatched
-//
-
 import SwiftUI
-import UIKit
 
+#if os(iOS)
 struct PageControl: UIViewRepresentable {
     @Binding var currentPage: Int?
     let numberOfPages: Int
@@ -48,5 +43,35 @@ struct PageControl: UIViewRepresentable {
         func pageControlDidFire(_ control: UIPageControl) {
             currentPage.wrappedValue = control.currentPage
         }
+    }
+}
+#else
+struct PageControl: View {
+    @Binding var currentPage: Int?
+    let numberOfPages: Int
+    var normalColor: Color = .white.opacity(0.4)
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<numberOfPages, id: \.self) { index in
+                Circle()
+                    .fill(currentPage == index ? Color.white : normalColor)
+                    .frame(width: 8, height: 8)
+                    .onTapGesture {
+                        currentPage = index
+                    }
+            }
+        }
+    }
+}
+#endif
+
+// Common interface for both platforms
+struct AnyPageControl: View {
+    @Binding var currentPage: Int?
+    let numberOfPages: Int
+
+    var body: some View {
+        PageControl(currentPage: $currentPage, numberOfPages: numberOfPages)
     }
 }

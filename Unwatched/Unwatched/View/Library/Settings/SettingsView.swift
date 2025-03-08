@@ -9,7 +9,6 @@ import UnwatchedShared
 
 struct SettingsView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @State var isExportingAll = false
 
     var body: some View {
         ZStack {
@@ -18,34 +17,32 @@ struct SettingsView: View {
             MyForm {
                 MySection("app") {
                     NavigationLink(value: LibraryDestination.settingsNotifications) {
-                        Label("notifications", systemImage: "app.badge")
+                        Label("notifications", systemImage: Const.notificationsSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsNewVideos) {
-                        Label("videoSettings", systemImage: "film.stack")
+                        Label("videoSettings", systemImage: Const.videoSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsPlayback) {
-                        Label("playback", systemImage: "play.fill")
+                        Label("playback", systemImage: Const.playbackSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.filter) {
-                        Label("filterSettings", systemImage: "line.3.horizontal.decrease")
+                        Label("filterSettings", systemImage: Const.filterSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsAppearance) {
-                        Label("appearance", systemImage: "paintbrush.fill")
+                        Label("appearance", systemImage: Const.appearanceSettingsSF)
                     }
                 }
 
-                if let url = UrlService.shareShortcutUrl {
-                    MySection("shareSheet") {
-                        Link(destination: url) {
-                            LibraryNavListItem(
-                                "setupShareSheetAction",
-                                systemName: "square.and.arrow.up.on.square.fill"
-                            )
-                        }
+                MySection("shareSheet") {
+                    Link(destination: UrlService.shareShortcutUrl) {
+                        LibraryNavListItem(
+                            "setupShareSheetAction",
+                            systemName: "square.and.arrow.up.on.square.fill"
+                        )
                     }
                 }
 
@@ -53,20 +50,11 @@ struct SettingsView: View {
                     NavigationLink(value: LibraryDestination.importSubscriptions) {
                         Label("importSubscriptions", systemImage: "square.and.arrow.down.fill")
                     }
-                    let feedUrls = AsyncSharableUrls(
-                        getUrls: exportAllSubscriptions,
-                        isLoading: $isExportingAll
-                    )
-                    ShareLink(item: feedUrls, preview: SharePreview("exportSubscriptions")) {
-                        if isExportingAll {
-                            ProgressView()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        } else {
-                            LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
-                        }
+                    ExportSubscriptionsShareLink {
+                        LibraryNavListItem("exportSubscriptions", systemName: "square.and.arrow.up.fill")
                     }
                     NavigationLink(value: LibraryDestination.userData) {
-                        Label("userData", systemImage: "opticaldiscdrive.fill")
+                        Label("userData", systemImage: Const.userDataSettingsSF)
                     }
                 }
 
@@ -99,7 +87,7 @@ struct SettingsView: View {
                 .foregroundStyle(theme.darkContrastColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
-                    Label("debug", systemImage: "ladybug.fill")
+                    Label("debug", systemImage: Const.debugSettingsSF)
                 }
                 .listRowBackground(Color.insetBackgroundColor)
 
@@ -110,34 +98,6 @@ struct SettingsView: View {
             }
             .myNavigationTitle("settings")
         }
-    }
-
-    func exportAllSubscriptions() async -> [(title: String, link: URL?)] {
-        let result = try? await SubscriptionService.getAllFeedUrls()
-        return result ?? []
-    }
-}
-
-struct LinkItemView<Content: View>: View {
-    let destination: URL
-    let label: LocalizedStringKey
-    let content: () -> Content
-
-    var body: some View {
-        Link(destination: destination) {
-            HStack(spacing: 20) {
-                content()
-                    .frame(width: 24, height: 24)
-                    .tint(.neutralAccentColor)
-                Text(label)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                Spacer()
-                Image(systemName: Const.listItemChevronSF)
-                    .tint(.neutralAccentColor)
-            }
-        }
-        .accessibilityLabel(label)
     }
 }
 

@@ -10,7 +10,7 @@ import UnwatchedShared
 struct LibraryVideoSection: View {
 
     var body: some View {
-        MySection("videos") {
+        MySection("videos", hasPadding: false) {
             NavigationLink(value: LibraryDestination.allVideos) {
                 LibraryNavListItem("allVideos",
                                    systemName: Const.allVideosViewSF)
@@ -30,4 +30,14 @@ struct LibraryVideoSection: View {
         }
         .symbolVariant(.fill)
     }
+}
+
+#Preview {
+    LibraryVideoSection()
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
+        .environment(ImageCacheManager())
+        .tint(.teal)
 }

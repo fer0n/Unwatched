@@ -39,10 +39,11 @@ struct DescriptionDetailHeaderView: View {
                 .fontWeight(.black)
                 .multilineTextAlignment(.leading)
         }
+        .buttonStyle(.plain)
         .contextMenu {
             if let url = video.url {
                 Button {
-                    UIPasteboard.general.string = url.absoluteString
+                    ClipboardService.set(url.absoluteString)
                 } label: {
                     Label("copyUrl", systemImage: "document.on.document.fill")
                 }

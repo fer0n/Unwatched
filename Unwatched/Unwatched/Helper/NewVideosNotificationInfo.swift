@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import UIKit
 import SwiftData
 import OSLog
 import UnwatchedShared

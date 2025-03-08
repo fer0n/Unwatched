@@ -15,15 +15,17 @@ struct QueueViewUnavailable: View {
         } description: {
             Text("noQueueItemsDescription")
         } actions: {
-            SetupShareSheetAction()
-                .buttonStyle(.borderedProminent)
-                .foregroundStyle(theme.contrastColor)
-                .tint(theme.color)
+            VStack {
+                SetupShareSheetAction()
+                    .buttonStyle(.borderedProminent)
+                    .foregroundStyle(theme.contrastColor)
+                    .tint(theme.color)
 
-            AddFeedsMenu()
-                .bold()
-                .foregroundStyle(theme.contrastColor)
-                .tint(theme.color)
+                AddFeedsMenu()
+                    .bold()
+                    .foregroundStyle(theme.contrastColor)
+                    .tint(theme.color)
+            }
         }
         .contentShape(Rectangle())
         .handleVideoUrlDrop(.queue)
