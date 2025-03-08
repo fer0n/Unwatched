@@ -162,7 +162,7 @@ struct UserDataService {
 
     @MainActor
     static func getBackupFileName(manual: Bool = false) -> String {
-        let deviceName = UIDevice.deviceName
+        let deviceName = Device.deviceName
         return self.getFileName(deviceName, manual: manual)
     }
 

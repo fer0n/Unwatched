@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import SwiftUI
 import UnwatchedShared
 
@@ -45,3 +46,4 @@ struct FullscreenChangeOrientationButton: View {
         }
     }
 }
+#endif

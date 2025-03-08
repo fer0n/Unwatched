@@ -4,8 +4,11 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 struct LibraryNavListItem: View {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
     var text: LocalizedStringKey
     var systemName: String?
     var imageName: String?
@@ -34,6 +37,7 @@ struct LibraryNavListItem: View {
                     .padding(1)
             }
         }
+        .foregroundStyle(theme.color)
     }
 }
 

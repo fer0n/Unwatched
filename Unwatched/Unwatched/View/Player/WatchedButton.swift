@@ -22,12 +22,13 @@ struct WatchedButton: View {
         } label: {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)
+                .playerToggleModifier(
+                    isOn: indicateWatched ? player.isConsideredWatched : false
+                )
         }
+        .buttonStyle(.plain)
         .symbolEffect(.bounce.down, value: hapticToggle)
         .help("markWatched")
-        .playerToggleModifier(
-            isOn: indicateWatched ? player.isConsideredWatched : false
-        )
         .padding(3)
         .contextMenu {
             if player.video != nil {

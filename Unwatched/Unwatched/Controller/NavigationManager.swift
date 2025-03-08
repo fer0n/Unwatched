@@ -10,9 +10,15 @@ import OSLog
 import UnwatchedShared
 
 @Observable class NavigationManager: Codable {
+    @MainActor
+    static let shared: NavigationManager = {
+        NavigationManager.load()
+    }()
+
     var showMenu = false
     var openBrowserUrl: BrowserUrl?
     var openTabBrowserUrl: BrowserUrl?
+    var openWindow: OpenWindowAction?
 
     var videoDetail: Video?
     var playerTab: ControlNavigationTab = .controls
@@ -187,6 +193,9 @@ import UnwatchedShared
             showMenu = true
         } else {
             openBrowserUrl = url
+            #if os(macOS)
+            openWindow?(id: Const.windowBrowser)
+            #endif
         }
     }
 

@@ -9,7 +9,7 @@ import SwiftUI
  Adjusts a fullscreen video in 18/9 to avoid cutting into the notch/dynamic island depending on the device
  */
 struct FullscreenSafeArea: ViewModifier {
-    let device = UIDevice.modelName
+    let device = Device.modelName
     var enable = true
 
     func body(content: Content) -> some View {

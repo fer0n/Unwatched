@@ -40,7 +40,7 @@ struct SideloadingView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Menu {
                     ForEach(sortingOptions, id: \.self) { sort in
                         Button(sort.description, systemImage: sort.systemName) {

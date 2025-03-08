@@ -39,24 +39,27 @@ struct AddToLibraryView: View {
                     Image(systemName: Const.appBrowserSF)
                         .tint(theme.color)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             })
+            .foregroundStyle(theme.color)
+            .buttonStyle(.plain)
         }
 
         HStack(spacing: 0) {
             TextField("enterUrls", text: $addText)
-                .keyboardType(.webSearch)
                 .autocorrectionDisabled(true)
+                #if os(iOS)
+                .keyboardType(.webSearch)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.send)
+            #endif
             TextFieldClearButton(text: $addText)
             pasteButton
                 .padding(.leading, 5)
         }
         .popoverTip(addVideosTip, arrowEdge: .top, action: { _ in
-            if let url = UrlService.shareShortcutUrl {
-                UIApplication.shared.open(url)
-                addVideosTip.invalidate(reason: .actionPerformed)
-            }
+            UrlService.open(UrlService.shareShortcutUrl)
+            addVideosTip.invalidate(reason: .actionPerformed)
         })
         .tint(theme.color)
         .onSubmit {
@@ -89,22 +92,32 @@ struct AddToLibraryView: View {
         .onDisappear {
             addVideosTip.invalidate(reason: .displayCountExceeded)
         }
-        .actionSheet(item: $textContainingPlaylist) { text in
-            ActionSheet(title: Text("textContainsPlaylist"),
-                        message: Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)"),
-                        buttons: [
-                            .default(Text("addAsPlaylist")) {
-                                addUrlsFromText(text.str)
+        .confirmationDialog("textContainsPlaylist",
+                            isPresented: Binding(
+                                get: { textContainingPlaylist != nil },
+                                set: { if !$0 { textContainingPlaylist = nil } }
+                            ),
+                            actions: {
+                                Button("addAsPlaylist") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str)
+                                    }
+                                }
+                                Button("addAsVideosToQueue") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
+                                    }
+                                }
+                                Button("addAsVideosToInbox") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
+                                    }
+                                }
+                                Button("cancel", role: .cancel) {
+                                    textContainingPlaylist = nil
+                                }
                             },
-                            .default(Text("addAsVideosToQueue")) {
-                                addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
-                            },
-                            .default(Text("addAsVideosToInbox")) {
-                                addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
-                            },
-                            .cancel()
-                        ])
-        }
+                            message: { Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)") })
     }
 
     @ViewBuilder var pasteButton: some View {
@@ -122,8 +135,8 @@ struct AddToLibraryView: View {
                 .accessibilityLabel("success")
         } else if addText.isEmpty {
             Button("paste") {
-                let text = UIPasteboard.general.string ?? ""
-                if !text.isEmpty {
+
+                if let text = ClipboardService.get(), !text.isEmpty {
                     handleTextFieldSubmit(text)
                 }
             }

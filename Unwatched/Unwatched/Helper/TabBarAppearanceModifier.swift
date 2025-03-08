@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import SwiftUI
 import UnwatchedShared
 
@@ -11,6 +12,7 @@ struct TabBarAppearanceModifier: ViewModifier {
     let disableScrollAppearance: Bool
 
     func body(content: Content) -> some View {
+
         content
             .onAppear {
                 customizeTabBarAppearance()
@@ -18,6 +20,7 @@ struct TabBarAppearanceModifier: ViewModifier {
             .onChange(of: sheetOpacity) {
                 customizeTabBarAppearance(reload: true)
             }
+
     }
 
     @MainActor
@@ -61,3 +64,4 @@ extension View {
         )
     }
 }
+#endif

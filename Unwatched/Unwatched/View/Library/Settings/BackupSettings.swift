@@ -23,16 +23,17 @@ struct BackupSettings: View {
                 showRestartOption = true
             }
         }
-        .actionSheet(isPresented: $showRestartOption) {
-            ActionSheet(title: Text("restartNow?"),
-                        message: Text("icloudSyncHelper"),
-                        buttons: [
-                            .destructive(Text("restartNow")) {
-                                exit(0)
-                            },
-                            .cancel()
-                        ])
-        }
+        .confirmationDialog("restartNow?",
+                            isPresented: $showRestartOption,
+                            titleVisibility: .visible,
+                            actions: {
+                                Button("restartNow", role: .destructive) {
+                                    exit(0)
+                                }
+                                Button("cancel", role: .cancel) { }
+                            }, message: {
+                                Text("icloudSyncHelper")
+                            })
 
         MySection("automaticBackups", footer: "automaticBackupsHelper") {
             Toggle(isOn: $automaticBackups) {

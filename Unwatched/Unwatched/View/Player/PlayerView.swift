@@ -97,7 +97,9 @@ struct PlayerView: View {
                 ? .hidden
                 : .visible
         )
+        #if os(iOS)
         .statusBarHidden(controlsHidden)
+        #endif
     }
 
     var hideMiniPlayer: Bool {
@@ -109,7 +111,7 @@ struct PlayerView: View {
     }
 
     var showFullscreenControls: Bool {
-        fullscreenControlsSetting != .disabled && UIDevice.supportsFullscreenControls
+        fullscreenControlsSetting != .disabled && Device.supportsFullscreenControls
     }
 
     var wideAspect: Bool {
@@ -279,18 +281,28 @@ struct PlayerView: View {
         let landscapeFullscreen = SheetPositionReader.shared.landscapeFullscreen
         switch direction {
         case .up:
+            #if os(macOS)
+            return
+            #endif
             if enableHideControls {
                 hideControlsFullscreen = true
             } else if !landscapeFullscreen {
+                #if os(iOS)
                 OrientationManager.changeOrientation(to: .landscapeRight)
+                #endif
             } else {
                 setShowMenu?()
             }
         case .down:
+            #if os(macOS)
+            return
+            #endif
             if enableHideControls && hideControlsFullscreen {
                 hideControlsFullscreen = false
             } else if landscapeFullscreen {
+                #if os(iOS)
                 OrientationManager.changeOrientation(to: .portrait)
+                #endif
             } else {
                 player.setPip(true)
             }

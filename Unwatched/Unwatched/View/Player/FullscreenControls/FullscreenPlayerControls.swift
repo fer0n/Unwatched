@@ -88,7 +88,9 @@ struct FullscreenPlayerControls: View {
             Spacer()
             Spacer()
 
+            #if os(iOS)
             FullscreenChangeOrientationButton(size: size)
+            #endif
 
             Spacer()
         }

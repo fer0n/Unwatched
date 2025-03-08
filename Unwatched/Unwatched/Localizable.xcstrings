@@ -4331,6 +4331,34 @@
         }
       }
     },
+    "faq" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Häufig gestellte Fragen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frequently Asked Questions"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questions fréquemment posées"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Często zadawane pytania"
+          }
+        }
+      }
+    },
     "filterSettings" : {
       "localizations" : {
         "de" : {
@@ -8027,6 +8055,34 @@
         }
       }
     },
+    "reportAnIssue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem melden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Report Issue"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signaler un problème"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgłoś problem"
+          }
+        }
+      }
+    },
     "requireClearConfirmation" : {
       "localizations" : {
         "de" : {
@@ -10371,6 +10427,34 @@
         }
       }
     },
+    "unwatchedHelp" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Hilfe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Help"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Aide"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Pomoc"
+          }
+        }
+      }
+    },
     "unwatchedLogo" : {
       "localizations" : {
         "de" : {
@@ -10927,6 +11011,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL"
+          }
+        }
+      }
+    },
+    "viewChannel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanal anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Channel"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la chaîne"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyświetl kanał"
           }
         }
       }

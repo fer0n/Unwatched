@@ -5,6 +5,7 @@
 
 import Foundation
 import XCTest
+import UnwatchedShared
 
 class ImageServiceTests: XCTestCase {
 

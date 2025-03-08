@@ -29,6 +29,7 @@ struct ConfirmableMenuButton<Content: View>: View {
         } label: {
             label
         }
+        .tint(.red)
     }
 
     @ViewBuilder
@@ -41,5 +42,6 @@ struct ConfirmableMenuButton<Content: View>: View {
         )
 
         Button("cancel", systemImage: Const.clearNoFillSF, action: { })
+            .tint(Color.automaticBlack)
     }
 }

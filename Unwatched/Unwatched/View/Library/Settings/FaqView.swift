@@ -89,32 +89,50 @@ struct FaqView: View {
         ForEach(faqContent.indices, id: \.self) { index in
             let faq = faqContent[index]
 
-            DisclosureGroup(faq.title) {
-                VStack(alignment: .leading) {
-                    Text(faq.question)
-                        .bold()
-                    Text(faq.answer)
-                        .padding(.vertical, 5)
-                        .foregroundStyle(.secondary)
-                        .textSelection(.enabled)
-                }
-            }
-            .contextMenu {
-                Button("copyAnswer") {
-                    copyFaqAnswer(faq.answer)
-                }
-            }
-            .padding(.vertical, 5)
+            #if os(iOS)
+            disclosureView(faq)
+            #else
+            listView(faq)
+            #endif
         }
         .listRowBackground(Color.insetBackgroundColor)
     }
 
+    func disclosureView(_ faq: FaqInfo) -> some View {
+        DisclosureGroup(faq.title) {
+            VStack(alignment: .leading) {
+                Text(faq.question)
+                    .bold()
+                Text(faq.answer)
+                    .padding(.vertical, 5)
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+            }
+        }
+        .contextMenu {
+            Button("copyAnswer") {
+                copyFaqAnswer(faq.answer)
+            }
+        }
+        .padding(.vertical, 5)
+    }
+
+    func listView(_ faq: FaqInfo) -> some View {
+        VStack(alignment: .leading) {
+            Text(faq.question)
+                .bold()
+            Text(faq.answer)
+                .padding(.vertical, 1)
+                .foregroundStyle(.secondary)
+                .textSelection(.enabled)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 15)
+    }
+
     func copyFaqAnswer(_ value: LocalizedStringKey) {
         let value = value.stringValue()
-        UIPasteboard.general.setValue(
-            value,
-            forPasteboardType: UTType.plainText.identifier
-        )
+        ClipboardService.set(value)
     }
 }
 

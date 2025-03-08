@@ -36,7 +36,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     ExtendedPlayerActions(markVideoWatched: markVideoWatched)
                 }
 
-                if UIDevice.isMac {
+                if Device.isMac {
                     watchInBrowserButton(url)
                 }
 
@@ -61,6 +61,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     }
                 }
         }
+        .menuIndicator(.hidden)
+        .buttonStyle(.plain)
         .help("moreOptions")
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
@@ -75,7 +77,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     func watchInBrowserButton(_ url: URL) -> some View {
         Button {
             markVideoWatched(false, .nextUp)
-            UIApplication.shared.open(url)
+            UrlService.open(url)
         } label: {
             Text("watchInBrowser")
             Image(systemName: "arrow.up.forward.app.fill")
@@ -98,7 +100,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     var copyUrlButton: some View {
         if let video = player.video {
             Button {
-                UIPasteboard.general.string = UrlService.getShortenedUrl(video.youtubeId)
+                let text = UrlService.getShortenedUrl(video.youtubeId)
+                ClipboardService.set(text)
                 flashSymbol = "checkmark"
                 hapticToggle.toggle()
             } label: {

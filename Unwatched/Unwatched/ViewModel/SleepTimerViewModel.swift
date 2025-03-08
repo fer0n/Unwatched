@@ -98,11 +98,13 @@ import OSLog
     }
 
     func setupFadeOut() {
+        #if os(iOS)
         startFadeOutTime = remainingSeconds
         let vol = AVAudioSession.sharedInstance().outputVolume
         oldVolume = vol
         let newValue = vol / Float(remainingSeconds)
         self.volumeStep = newValue
+        #endif
     }
 
     func handleAudioFadeOut() {

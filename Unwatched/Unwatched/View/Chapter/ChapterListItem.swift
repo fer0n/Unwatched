@@ -54,6 +54,7 @@ struct ChapterListItem: View {
             }
             .animation(nil, value: chapter.isActive)
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(chapter.isActive ? "chapterOn" : "chapterOff")
         .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
     }

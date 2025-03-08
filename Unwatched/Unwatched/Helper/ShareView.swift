@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import SwiftUI
 
 struct ShareView: UIViewControllerRepresentable {
@@ -17,3 +18,4 @@ struct ShareView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
     }
 }
+#endif

@@ -12,6 +12,11 @@ import OSLog
 ///
 /// This avoids performance issues when saving data.
 @Observable public class ImageCacheManager {
+    @MainActor
+    public static let shared: ImageCacheManager = {
+        ImageCacheManager()
+    }()
+    
     private var cache = [String: ImageCacheInfo]()
     public init() { }
     
@@ -28,6 +33,7 @@ import OSLog
         }
     }
 
+    @MainActor
     public func persistCache() async {
         let cache = cache
         await ImageService.persistImages(

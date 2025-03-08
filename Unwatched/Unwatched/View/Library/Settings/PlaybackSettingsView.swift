@@ -19,14 +19,14 @@ struct PlaybackSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                if UIDevice.supportsFullscreenControls {
+                if Device.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {
                         Picker("fullscreenControls", selection: $fullscreenControlsSetting) {
                             Text(FullscreenControls.autoHide.description)
                                 .tag(FullscreenControls.autoHide)
                             Text(FullscreenControls.enabled.description)
                                 .tag(FullscreenControls.enabled)
-                            if UIDevice.isIphone {
+                            if Device.isIphone {
                                 Text(FullscreenControls.disabled.description)
                                     .tag(FullscreenControls.disabled)
                             }
@@ -44,26 +44,30 @@ struct PlaybackSettingsView: View {
                         Text("returnToQueue")
                     }
 
-                    if UIDevice.isIphone {
+                    if Device.isIphone {
                         Toggle(isOn: $rotateOnPlay) {
                             Text("rotateOnPlay")
                         }
                     }
                 }
 
+                #if os(iOS)
                 MySection {
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
                 }
+                #endif
 
                 HideControlsSettings()
 
+                #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {
                     Toggle(isOn: $autoAirplayHD) {
                         Text("autoAirplayHD")
                     }
                 }
+                #endif
             }
             .myNavigationTitle("playback")
         }

@@ -16,13 +16,12 @@ struct SetupView: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.colorScheme) var colorScheme
     @Environment(PlayerManager.self) var player
+    @Environment(\.openWindow) var openWindow
 
-    @State var imageCacheManager = ImageCacheManager()
+    @State var imageCacheManager = ImageCacheManager.shared
     @State var sheetPos = SheetPositionReader.shared
     @State var alerter: Alerter = Alerter()
-    @State var navManager = NavigationManager.load()
-
-    let appDelegate: AppDelegate
+    @State var navManager = NavigationManager.shared
 
     var body: some View {
         ContentView()
@@ -36,13 +35,12 @@ struct SetupView: View {
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
-            .onAppear {
-                appDelegate.navManager = navManager
-            }
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
+                    #if os(iOS)
                     NotificationManager.handleNotifications(checkDeferred: true)
+                    #endif
                     Logger.log.info("active")
                     Task {
                         refresher.handleAutoBackup()
@@ -50,7 +48,9 @@ struct SetupView: View {
                     }
                 case .background:
                     Logger.log.info("background")
+                    #if os(iOS)
                     NotificationManager.handleNotifications()
+                    #endif
                     Task {
                         await saveData()
                     }
@@ -59,6 +59,9 @@ struct SetupView: View {
                 default:
                     break
                 }
+            }
+            .onAppear {
+                navManager.openWindow = openWindow
             }
     }
 
@@ -72,6 +75,11 @@ struct SetupView: View {
 }
 
 #Preview {
-    SetupView(appDelegate: AppDelegate())
+    #if os(iOS)
+    SetupView()
         .modelContainer(DataProvider.previewContainer)
+    #else
+    SetupView()
+        .modelContainer(DataProvider.previewContainer)
+    #endif
 }

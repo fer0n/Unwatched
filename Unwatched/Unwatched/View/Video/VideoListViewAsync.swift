@@ -19,6 +19,7 @@ struct VideosViewAsync: View {
             workaroundPlaceholder
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
         .task {
             videoListVM.filter = filter
             videoListVM.setSorting(sorting)
@@ -38,8 +39,13 @@ struct VideosViewAsync: View {
 
         if videoListVM.videos.isEmpty && videoListVM.isLoading {
             Spacer()
-                .frame(height: UIScreen.main.bounds.size.height)
-        }
+                .frame(height: {
+                    #if os(iOS)
+                    return UIScreen.main.bounds.size.height
+                    #else
+                    return NSScreen.main?.frame.size.height ?? 800
+                    #endif
+                }())        }
     }
 }
 

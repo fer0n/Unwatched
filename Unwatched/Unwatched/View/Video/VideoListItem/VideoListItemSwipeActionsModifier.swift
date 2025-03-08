@@ -62,13 +62,24 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                     navManager.openUrlInApp(.url(urlString))
                                 },
                                 clearList: clearList,
-                                deleteVideo: deleteVideo
+                                deleteVideo: deleteVideo,
+                                viewChannel: viewChannel
                             )
                         })
                     : nil
             )
+            #if os(iOS)
             .menuOrder(.priority) // <- not working inside lists
+            #endif
             .symbolVariant(.fill)
+    }
+
+    func viewChannel() {
+        // workaround: drag & tap gesture require workaround that breaks title tap to view channel
+        if let subChannelId = videoData.subscriptionData?.youtubeChannelId,
+           let sub = SubscriptionService.getRegularChannel(subChannelId) {
+            navManager.pushSubscription(subscription: sub)
+        }
     }
 
     func getVideo() -> Video? {
@@ -318,27 +329,9 @@ struct TrailingSwipeActionsView: View {
                 .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
             if config.videoSwipeActions.contains(.more) {
-                Menu {
-                    VideoListItemMoreMenuView(
-                        videoData: videoData,
-                        config: config,
-                        setWatched: setWatched,
-                        addVideoToTopQueue: addVideoToTopQueue,
-                        addVideoToBottomQueue: addVideoToBottomQueue,
-                        clearVideoEverywhere: clearVideoEverywhere,
-                        canBeCleared: canBeCleared,
-                        toggleBookmark: toggleBookmark,
-                        moveToInbox: moveToInbox,
-                        openUrlInApp: { urlString in
-                            navManager.openUrlInApp(.url(urlString))
-                        },
-                        clearList: clearList,
-                        deleteVideo: deleteVideo
-                    )
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.7))
+                #if os(iOS)
+                moreMenu
+                #endif
             }
             if config.videoSwipeActions.contains(.details) {
                 Button {
@@ -357,6 +350,30 @@ struct TrailingSwipeActionsView: View {
                 .accessibilityLabel("videoDescription")
             }
         }
+    }
+
+    var moreMenu: some View {
+        Menu {
+            VideoListItemMoreMenuView(
+                videoData: videoData,
+                config: config,
+                setWatched: setWatched,
+                addVideoToTopQueue: addVideoToTopQueue,
+                addVideoToBottomQueue: addVideoToBottomQueue,
+                clearVideoEverywhere: clearVideoEverywhere,
+                canBeCleared: canBeCleared,
+                toggleBookmark: toggleBookmark,
+                moveToInbox: moveToInbox,
+                openUrlInApp: { urlString in
+                    navManager.openUrlInApp(.url(urlString))
+                },
+                clearList: clearList,
+                deleteVideo: deleteVideo
+            )
+        } label: {
+            Image(systemName: "ellipsis.circle.fill")
+        }
+        .tint(theme.color.mix(with: Color.black, by: 0.7))
     }
 }
 

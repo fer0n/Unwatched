@@ -74,6 +74,7 @@ struct InboxView: View {
                         .opacity(showClear ? 1 : 0)
                         .disabled(!showClear)
                 }
+                .scrollContentBackground(.hidden)
                 .listStyle(.plain)
             }
             .onAppear {
@@ -87,6 +88,7 @@ struct InboxView: View {
                     DismissToolbarButton()
                 }
                 undoRedoToolbarButton
+                ToolbarSpacerWorkaround()
                 RefreshToolbarButton()
             }
             .myNavigationTitle("inbox", showBack: false)
@@ -101,7 +103,7 @@ struct InboxView: View {
     var undoRedoToolbarButton: some ToolbarContent {
         // Workaround: having this be its own view
         // doesn't work for some reason
-        ToolbarItem(placement: .topBarLeading) {
+        ToolbarItem(placement: .cancellationAction) {
             Button {
                 modelContext.undoManager?.undo()
             } label: {

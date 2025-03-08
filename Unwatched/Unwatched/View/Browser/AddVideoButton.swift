@@ -60,6 +60,7 @@ struct AddVideoButton: View {
                 .frame(width: size, height: size)
                 .padding(7)
         }
+        .buttonStyle(.plain)
         .background {
             Circle()
                 .fill(Color.neutralAccentColor)
@@ -96,6 +97,7 @@ struct AddVideoButton: View {
                     .frame(width: size, height: size)
                     .padding(7)
             }
+            .buttonStyle(.plain)
             .accessibilityLabel("dropVideoToQueue")
         }
         .background {

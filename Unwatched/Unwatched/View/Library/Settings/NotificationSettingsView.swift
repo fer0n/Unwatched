@@ -7,7 +7,9 @@ import SwiftUI
 import UnwatchedShared
 
 struct NotificationSettingsView: View {
+    #if os(iOS)
     @Environment(Alerter.self) var alerter
+    #endif
 
     @AppStorage(Const.videoAddedToInboxNotification) var videoAddedToInbox: Bool = false
     @AppStorage(Const.videoAddedToQueueNotification) var videoAddedToQueue: Bool = false
@@ -41,6 +43,7 @@ struct NotificationSettingsView: View {
             }
             .disabled(notificationsDisabled)
         }
+        #if os(iOS)
         .onAppear {
             Task {
                 notificationsDisabled = await NotificationManager.areNotificationsDisabled()
@@ -61,10 +64,12 @@ struct NotificationSettingsView: View {
                 handleNotificationPermission()
             }
         }
+        #endif
         .myNavigationTitle("notifications")
     }
 
     func handleNotificationPermission() {
+        #if os(iOS)
         Task {
             do {
                 try await NotificationManager.askNotificationPermission()
@@ -72,6 +77,7 @@ struct NotificationSettingsView: View {
                 alerter.showError(error)
             }
         }
+        #endif
     }
 }
 

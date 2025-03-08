@@ -10,35 +10,26 @@ struct BrowserViewSheet: ViewModifier {
     var navManager: Bindable<NavigationManager>
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
-    @Environment(RefreshManager.self) var refresher
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
-    @Environment(ImageCacheManager.self) var imageCacheManager
-    @Environment(PlayerManager.self) var player
 
     func body(content: Content) -> some View {
-        let bigScreen = sizeClass == .regular && !UIDevice.isIphone
+        let bigScreen = sizeClass == .regular && !Device.isIphone
 
         if bigScreen {
             content
+                #if os(iOS)
                 .fullScreenCover(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(refresher: refresher,
-                                startUrl: browserUrl)
-                        .environment(imageCacheManager)
-                        .environment(player)
-                        .environment(navManager.wrappedValue)
+                    BrowserView(startUrl: browserUrl)
                 }
             // workaround: at a certain width, the YouTube search bar doesn't work (can't be tapped)
             // on iPad, this is the regular ".sheet" width. It still happens with the fullScreenCover
             // but only when the app is not run in fullscreen
+            #endif
         } else {
             content
                 .sheet(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(refresher: refresher,
-                                startUrl: browserUrl)
-                        .environment(imageCacheManager)
+                    BrowserView(startUrl: browserUrl)
                         .environment(\.colorScheme, colorScheme)
-                        .environment(player)
-                        .environment(navManager.wrappedValue)
                 }
         }
     }

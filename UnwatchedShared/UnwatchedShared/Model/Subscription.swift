@@ -8,6 +8,7 @@ import SwiftData
 
 public protocol SubscriptionData: Hashable {
     var displayTitle: String { get }
+    var youtubeChannelId: String? { get }
 }
 
 @Model

@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import SwiftUI
 import AVKit
 import UnwatchedShared
@@ -56,3 +57,4 @@ struct UIKitRoutePickerView: UIViewRepresentable {
 
     func updateUIView(_ uiView: AVRoutePickerView, context: Context) {}
 }
+#endif

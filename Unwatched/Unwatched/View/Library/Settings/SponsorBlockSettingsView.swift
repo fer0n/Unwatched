@@ -37,20 +37,20 @@ struct SponsorBlockSettingsView: View {
                 }
             }
         }
-        .actionSheet(isPresented: $showAlert) {
-            ActionSheet(title: Text("youtubePremiumTitle"),
-                        message: Text("considerGettingYoutubePremium"),
-                        buttons: [
-                            .destructive(Text("youtubePremiumConfirm"), action: {
-                                youtubePremium = true
-                                showAlert = false
-                            }),
-                            .default(Text("youtubePremiumDecline"), action: {
-                                showAlert = false
-                            }),
-                            .cancel()
-                        ])
-        }
+        .confirmationDialog("youtubePremiumTitle",
+                            isPresented: $showAlert,
+                            titleVisibility: .visible,
+                            actions: {
+                                Button("youtubePremiumConfirm", role: .destructive) {
+                                    youtubePremium = true
+                                    showAlert = false
+                                }
+                                Button("youtubePremiumDecline") {
+                                    showAlert = false
+                                }
+                                Button("cancel", role: .cancel) {}
+                            },
+                            message: { Text("considerGettingYoutubePremium") })
 
         Section(footer: Text("skipSponsorSegmentsHelper")) {
             Toggle(isOn: $skipSponsorSegments) {

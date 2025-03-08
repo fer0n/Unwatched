@@ -9,10 +9,11 @@ import UnwatchedShared
 
 struct SleepTimer: View {
     @Environment(PlayerManager.self) var player
-    @Environment(\.colorScheme) var colorScheme
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
+    #if os(iOS)
     @State var slider: UISlider?
+    #endif
     @State var hapticToggle: Bool = false
     var viewModel: SleepTimerViewModel
 
@@ -48,8 +49,9 @@ struct SleepTimer: View {
                     .contentTransition(.symbolEffect(.replace))
             }
         }
-        .menuActionDismissBehavior(.disabled)
         .accessibilityLabel(accessibilityLabel)
+        #if os(iOS)
+        .menuActionDismissBehavior(.disabled)
         .onAppear {
             slider = MPVolumeView().subviews.first(where: { $0 is UISlider }) as? UISlider
         }
@@ -66,6 +68,7 @@ struct SleepTimer: View {
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        #endif
         .onChange(of: player.isPlaying) {
             handleTimerPause()
         }

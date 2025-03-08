@@ -16,7 +16,7 @@ struct PlayerCommands: Commands {
             }
             .keyboardShortcut(.space, modifiers: [])
 
-            if UIDevice.isMac {
+            if Device.isMac {
                 Button("seekBackward") {
                     seekBackward()
                 }
@@ -68,8 +68,10 @@ struct PlayerCommands: Commands {
 
             Divider()
 
+            #if os(iOS)
             HideControlsButton(textOnly: true, enableEscapeButton: false)
                 .keyboardShortcut("f", modifiers: [])
+            #endif
 
             Button("toggleTemporarySpeed") {
                 player.toggleTemporaryPlaybackSpeed()

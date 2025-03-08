@@ -147,6 +147,20 @@ public struct Const {
     public static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
 
     public static let reloadSF = "arrow.clockwise"
+    
+    // Settings
+    public static let notificationsSettingsSF = "app.badge"
+    public static let videoSettingsSF = "film.stack"
+    public static let playbackSettingsSF = "play.fill"
+    public static let filterSettingsSF = "line.3.horizontal.decrease"
+    public static let appearanceSettingsSF = "paintbrush.fill"
+    public static let userDataSettingsSF = "opticaldiscdrive.fill"
+    public static let debugSettingsSF = "ladybug.fill"
+    
+    // Windows
+    public static let windowHelp = "windowHelp"
+    public static let windowImportSubs = "windowImportSubs"
+    public static let windowBrowser = "windowBrowser"
 
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"

@@ -19,57 +19,55 @@ struct VideoListItemMoreMenuView: View {
     var openUrlInApp: (String) -> Void
     var clearList: (ClearList, ClearDirection) -> Void
     var deleteVideo: () -> Void
+    var viewChannel: (() -> Void)?
 
     var body: some View {
+        #if os(iOS)
         ControlGroup {
-            Button("markWatched", systemImage: "checkmark", action: { setWatched(true) })
-
-            Button("queueNext",
-                   systemImage: Const.queueTopSF,
-                   action: addVideoToTopQueue
-            )
-
-            Button("queueLast",
-                   systemImage: Const.queueBottomSF,
-                   action: addVideoToBottomQueue
-            )
-            Button(
-                "clearVideo",
-                systemImage: Const.clearNoFillSF,
-                action: clearVideoEverywhere
-            )
-            .disabled(!canBeCleared)
-
-            Button(action: toggleBookmark) {
-                if videoData.bookmarkedDate != nil {
-                    Label("removeBookmark", systemImage: "bookmark.slash.fill")
-                } else {
-                    Label("addBookmark", systemImage: "bookmark.fill")
-                }
-            }
-            if config.watched ?? (videoData.watchedDate != nil) {
-                Button {
-                    setWatched(false)
-                } label: {
-                    Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
-                }
-            }
-            Divider()
-
-            if videoData.hasInboxEntry != true {
-                Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
-            }
-
-            if let url = videoData.url {
-                Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
-                    openUrlInApp(url.absoluteString)
-                }
-            }
-
-            ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
+            videoActions
         }
-        .controlGroupStyle(.compactMenu)
+        .controlGroupStyle(.menu)
+        #else
+        videoActions
+        Divider()
+        Button("viewChannel") {
+            viewChannel?()
+        }
+        Divider()
+        #endif
+
+        Button(action: toggleBookmark) {
+            if videoData.bookmarkedDate != nil {
+                Label("removeBookmark", systemImage: "bookmark.slash.fill")
+            } else {
+                Label("addBookmark", systemImage: "bookmark.fill")
+            }
+        }
+        if config.watched ?? (videoData.watchedDate != nil) {
+            Button {
+                setWatched(false)
+            } label: {
+                Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
+            }
+        }
+        Divider()
+
+        if videoData.hasInboxEntry != true {
+            Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
+        }
+
+        if let url = videoData.url {
+            Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
+                openUrlInApp(url.absoluteString)
+            }
+        }
+
+        ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
+
+            .tint(Color.automaticBlack)
+
         ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
+            .tint(.red)
 
         if config.showDelete {
             Divider()
@@ -81,6 +79,27 @@ struct VideoListItemMoreMenuView: View {
                     .foregroundStyle(.red, .red, .red)
             }
         }
+    }
+
+    @ViewBuilder
+    var videoActions: some View {
+        Button("markWatched", systemImage: "checkmark", action: { setWatched(true) })
+
+        Button("queueNext",
+               systemImage: Const.queueTopSF,
+               action: addVideoToTopQueue
+        )
+
+        Button("queueLast",
+               systemImage: Const.queueBottomSF,
+               action: addVideoToBottomQueue
+        )
+        Button(
+            "clearVideo",
+            systemImage: Const.clearNoFillSF,
+            action: clearVideoEverywhere
+        )
+        .disabled(!canBeCleared)
     }
 }
 

@@ -65,6 +65,7 @@ struct QueueView: View {
                         ClearAllVideosButton(clearAll: clearAll)
                     }
                 }
+                .scrollContentBackground(.hidden)
                 .disabled(queue.isEmpty)
             }
             .myNavigationTitle("queue", showBack: false)
@@ -76,6 +77,7 @@ struct QueueView: View {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
+                ToolbarSpacerWorkaround()
                 RefreshToolbarButton()
             }
             .tint(theme.color)

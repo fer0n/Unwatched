@@ -23,10 +23,11 @@ struct VideoPlayer: View {
     var showInfo = true
     var horizontalLayout = false
     var landscapeFullscreen = true
+    let hideControls: Bool
 
     var body: some View {
         let tallestAspectRatio = player.videoAspectRatio <= Const.tallestAspectRatio + Const.aspectRatioTolerance
-        let enableHideControls = UIDevice.requiresFullscreenWebWorkaround && compactSize
+        let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
 
         VStack(spacing: 0) {
             PlayerView(landscapeFullscreen: landscapeFullscreen,
@@ -42,6 +43,7 @@ struct VideoPlayer: View {
                                    showInfo: showInfo,
                                    horizontalLayout: horizontalLayout,
                                    enableHideControls: enableHideControls,
+                                   hideControls: hideControls,
                                    setShowMenu: setShowMenu,
                                    markVideoWatched: markVideoWatched,
                                    sleepTimerVM: sleepTimerVM,
@@ -52,6 +54,7 @@ struct VideoPlayer: View {
                                       showInfo: showInfo && !tallestAspectRatio,
                                       horizontalLayout: horizontalLayout,
                                       enableHideControls: enableHideControls,
+                                      hideControls: hideControls,
                                       setShowMenu: setShowMenu,
                                       markVideoWatched: markVideoWatched,
                                       sleepTimerVM: sleepTimerVM)
@@ -135,7 +138,8 @@ struct VideoPlayer: View {
     VideoPlayer(compactSize: false,
                 showInfo: true,
                 horizontalLayout: false,
-                landscapeFullscreen: false)
+                landscapeFullscreen: false,
+                hideControls: false)
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.getDummy())
         .environment(PlayerManager.getDummy())

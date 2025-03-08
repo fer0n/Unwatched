@@ -12,6 +12,7 @@ struct SearchableVideos: View {
 
     var body: some View {
         EmptyView()
+            #if os(iOS)
             .searchable(text: $text.val,
                         isPresented: Binding(
                             get: {
@@ -26,5 +27,13 @@ struct SearchableVideos: View {
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)
             .keyboardType(.webSearch)
+        #endif
     }
+}
+
+#Preview {
+    @Previewable @State var text = DebouncedText()
+
+    SearchableVideos(text: $text)
+        .environment(NavigationManager())
 }

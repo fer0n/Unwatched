@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+#if os(iOS)
 import UserNotifications
 import Foundation
 import UIKit
@@ -48,3 +49,4 @@ extension UNNotificationAttachment {
         return nil
     }
 }
+#endif

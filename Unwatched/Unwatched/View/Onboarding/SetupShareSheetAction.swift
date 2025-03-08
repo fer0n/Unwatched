@@ -12,8 +12,8 @@ struct SetupShareSheetAction: View {
     @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
 
     var body: some View {
-        if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
-            Link(destination: url) {
+        if !shortcutHasBeenUsed {
+            Link(destination: UrlService.shareShortcutUrl) {
                 HStack {
                     Image(systemName: "square.and.arrow.up.on.square.fill")
                         .resizable()
@@ -34,10 +34,10 @@ struct ShareSheetTip: View {
     var setupShareSheetTip = AddVideosTip()
 
     var body: some View {
-        if !shortcutHasBeenUsed, let url = UrlService.shareShortcutUrl {
+        if !shortcutHasBeenUsed {
             TipView(setupShareSheetTip)
                 .onTapGesture {
-                    UIApplication.shared.open(url)
+                    UrlService.open(UrlService.shareShortcutUrl)
                 }
         }
     }

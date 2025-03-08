@@ -16,9 +16,11 @@ struct SubscriptionSearchBar: View {
                 .padding(.trailing, 5)
                 .foregroundStyle(.secondary)
             TextField("searchLibrary", text: $text.val)
-                .keyboardType(.webSearch)
                 .autocorrectionDisabled(true)
+                #if os(iOS)
+                .keyboardType(.webSearch)
                 .textInputAutocapitalization(.never)
+                #endif
                 .submitLabel(.done)
             TextFieldClearButton(text: $text.val)
                 .padding(.trailing, 10)
@@ -32,6 +34,7 @@ struct SubscriptionSearchBar: View {
             } label: {
                 Image(systemName: Const.filterSF)
             }
+            .buttonStyle(.plain)
         }
     }
 }

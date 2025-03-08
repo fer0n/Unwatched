@@ -54,9 +54,11 @@ struct VideoSettingsView: View {
                     Toggle(isOn: $showClearQueueButton) {
                         Text("showClearQueueButton")
                     }
+                    #if os(iOS)
                     Toggle(isOn: $enableQueueContextMenu) {
                         Text("enableQueueContextMenu")
                     }
+                    #endif
                 }
 
                 MySection("youtube", footer: "enableYtWatchHistoryHelper") {

@@ -225,12 +225,14 @@ extension PlayerManager {
 
     @MainActor
     private func handleRotateOnPlay() {
+        #if os(iOS)
         let isShort = video?.isYtShort ?? false
         Task {
             if !isShort && UserDefaults.standard.bool(forKey: Const.rotateOnPlay) {
                 OrientationManager.changeOrientation(to: .landscapeRight)
             }
         }
+        #endif
     }
 
     private func updateVideoEnded() {

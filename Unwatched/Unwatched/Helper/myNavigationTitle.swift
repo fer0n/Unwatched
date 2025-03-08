@@ -15,6 +15,7 @@ struct MyNavigationTitle: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Color.backgroundColor.opacity(sheetOpacity || opaque ? Const.sheetOpacityValue : 1),
                                for: .navigationBar)
@@ -30,6 +31,9 @@ struct MyNavigationTitle: ViewModifier {
                 }
             }
             .toolbarRole(showBack ? .editor : .automatic)
+        #else
+        .navigationTitle(title ?? "")
+        #endif
     }
 }
 

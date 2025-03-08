@@ -42,6 +42,7 @@ struct InteractiveSubscriptionTitle: View {
                     }
                 }
             }
+            .buttonStyle(.plain)
             .contextMenu {
                 Button {
                     Task {
