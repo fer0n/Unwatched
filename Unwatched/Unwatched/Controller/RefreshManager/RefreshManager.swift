@@ -103,6 +103,7 @@ actor RefreshActor {
             _ = try await task.value
         } catch {
             Logger.log.info("Error during refresh: \(error)")
+            stopLoading()
         }
 
         await cleanup(hardRefresh: hardRefresh)
@@ -163,6 +164,7 @@ actor RefreshActor {
                     }
                 } catch {
                     Logger.log.info("error: \(error)")
+                    stopLoading()
                 }
             }
         } else {
@@ -211,6 +213,7 @@ actor RefreshActor {
             await self.executeAutoRefresh()
         } catch {
             Logger.log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
+            stopLoading()
         }
     }
 }
