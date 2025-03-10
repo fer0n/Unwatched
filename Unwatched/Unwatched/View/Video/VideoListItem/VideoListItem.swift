@@ -97,6 +97,7 @@ struct VideoListItem: View {
                 showQueueButton: true
             )
         )
+        .tint(.teal)
         .listRowSeparator(.hidden)
     }
     .listStyle(.plain)
