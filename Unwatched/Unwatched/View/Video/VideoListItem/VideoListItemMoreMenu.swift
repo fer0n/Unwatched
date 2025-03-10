@@ -22,63 +22,64 @@ struct VideoListItemMoreMenuView: View {
     var viewChannel: (() -> Void)?
 
     var body: some View {
-        #if os(iOS)
-        ControlGroup {
+        VStack {
+            #if os(iOS)
+            ControlGroup {
+                videoActions
+            }
+            .controlGroupStyle(.compactMenu)
+            #else
             videoActions
-        }
-        .controlGroupStyle(.menu)
-        #else
-        videoActions
-        Divider()
-        Button("viewChannel") {
-            viewChannel?()
-        }
-        Divider()
-        #endif
-
-        Button(action: toggleBookmark) {
-            if videoData.bookmarkedDate != nil {
-                Label("removeBookmark", systemImage: "bookmark.slash.fill")
-            } else {
-                Label("addBookmark", systemImage: "bookmark.fill")
+            Divider()
+            Button("viewChannel") {
+                viewChannel?()
             }
-        }
-        if config.watched ?? (videoData.watchedDate != nil) {
-            Button {
-                setWatched(false)
-            } label: {
-                Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
+            Divider()
+            #endif
+
+            Button(action: toggleBookmark) {
+                if videoData.bookmarkedDate != nil {
+                    Label("removeBookmark", systemImage: "bookmark.slash.fill")
+                } else {
+                    Label("addBookmark", systemImage: "bookmark.fill")
+                }
             }
-        }
-        Divider()
-
-        if videoData.hasInboxEntry != true {
-            Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
-        }
-
-        if let url = videoData.url {
-            Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
-                openUrlInApp(url.absoluteString)
+            if config.watched ?? (videoData.watchedDate != nil) {
+                Button {
+                    setWatched(false)
+                } label: {
+                    Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
+                }
             }
-        }
-
-        ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
-
-            .tint(Color.automaticBlack)
-
-        ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
-            .tint(.red)
-
-        if config.showDelete {
             Divider()
 
-            ConfirmableMenuButton(helperText: "reallyDeleteVideo") {
-                deleteVideo()
-            } label: {
-                Label("delete", systemImage: "trash")
-                    .foregroundStyle(.red, .red, .red)
+            if videoData.hasInboxEntry != true {
+                Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
+            }
+
+            if let url = videoData.url {
+                Button("openInAppBrowser", systemImage: Const.appBrowserSF) {
+                    openUrlInApp(url.absoluteString)
+                }
+            }
+
+            ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
+
+            ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
+                .tint(.red)
+
+            if config.showDelete {
+                Divider()
+
+                ConfirmableMenuButton(helperText: "reallyDeleteVideo") {
+                    deleteVideo()
+                } label: {
+                    Label("delete", systemImage: "trash")
+                        .foregroundStyle(.red, .red, .red)
+                }
             }
         }
+        .tint(Color.automaticBlack)
     }
 
     @ViewBuilder
