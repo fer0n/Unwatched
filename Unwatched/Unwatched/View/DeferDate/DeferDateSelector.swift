@@ -80,7 +80,12 @@ struct DeferDateSelector: View {
             .padding(.horizontal)
 
             DatePicker("selectDate", selection: Binding<Date>(get: {self.date ?? Date()}, set: {self.date = $0}))
+                #if os(iOS)
                 .datePickerStyle(.wheel)
+                #else
+                .padding(.vertical)
+                .datePickerStyle(.graphical)
+                #endif
                 .labelsHidden()
                 .myNavigationTitle("deferVideo", showBack: false)
                 .padding(.horizontal)
