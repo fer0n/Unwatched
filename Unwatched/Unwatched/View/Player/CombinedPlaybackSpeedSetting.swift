@@ -106,20 +106,12 @@ struct CombinedPlaybackSpeedSetting: View {
                     Capsule()
                         .fill(Color.backgroundColor)
                 }
-                .fixedSize(horizontal: isHorizontalFixed, vertical: true)
+                .fixedSize(horizontal: false, vertical: true)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in
             return hasHaptics
         }
-    }
-
-    var isHorizontalFixed: Bool {
-        #if os(macOS)
-        return true
-        #else
-        return false
-        #endif
     }
 }
 
