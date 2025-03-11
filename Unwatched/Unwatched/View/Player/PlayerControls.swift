@@ -96,6 +96,7 @@ struct PlayerControls: View {
                                 ? 2.5
                                 : 4
                         )
+                        .fixedSize(horizontal: compactSize, vertical: false)
 
                         if !Device.isMac {
                             PipButton()
