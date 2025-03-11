@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct AppCommands: Commands {
     @Environment(\.openWindow) var openWindow
+    @State var navManager = NavigationManager.shared
 
     var body: some Commands {
         CommandGroup(after: .appInfo) {
@@ -15,6 +16,21 @@ struct AppCommands: Commands {
                 Link(destination: UrlService.writeReviewUrl) {
                     Text("rateUnwatched")
                 }
+            }
+        }
+
+        CommandGroup(after: .sidebar) {
+            Section {
+                Button("toggleSidebar") {
+                    withAnimation {
+                        if navManager.columnVisibility == .detailOnly {
+                            navManager.columnVisibility = .all
+                        } else {
+                            navManager.columnVisibility = .detailOnly
+                        }
+                    }
+                }
+                .keyboardShortcut("F", modifiers: [])
             }
         }
 

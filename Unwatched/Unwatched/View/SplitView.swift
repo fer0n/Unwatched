@@ -7,14 +7,16 @@ import SwiftUI
 import UnwatchedShared
 
 struct MacOSSplitView: View {
+    @Environment(NavigationManager.self) var navManager
+
     let bigScreen: Bool
     let isLandscape: Bool
     let landscapeFullscreen: Bool
 
-    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
-
     var body: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
+        @Bindable var navManager = navManager
+
+        NavigationSplitView(columnVisibility: $navManager.columnVisibility) {
             MenuView(isSidebar: true)
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
                 .setColorScheme()
@@ -30,7 +32,7 @@ struct MacOSSplitView: View {
     }
 
     var detailOnly: Bool {
-        columnVisibility == .detailOnly
+        navManager.columnVisibility == .detailOnly
     }
 }
 

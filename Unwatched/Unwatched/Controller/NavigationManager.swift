@@ -19,6 +19,7 @@ import UnwatchedShared
     var openBrowserUrl: BrowserUrl?
     var openTabBrowserUrl: BrowserUrl?
     var openWindow: OpenWindowAction?
+    var columnVisibility: NavigationSplitViewVisibility = .automatic
 
     var videoDetail: Video?
     var playerTab: ControlNavigationTab = .controls
@@ -256,7 +257,8 @@ enum NavManagerCodingKeys: CodingKey {
          askForReviewPoints,
          presentedLibrary,
          presentedSubscriptionInbox,
-         presentedSubscriptionQueue
+         presentedSubscriptionQueue,
+         columnVisibility
 }
 
 enum NavigationTab: String, Codable, CustomStringConvertible {
