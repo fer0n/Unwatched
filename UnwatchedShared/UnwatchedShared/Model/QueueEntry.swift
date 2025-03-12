@@ -17,9 +17,14 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
 
     public var video: Video?
     public var order: Int = Int.max
+    
+    // workaround: since iOS 18, connection to video is sometimes lost, somehow related to sync.
+    // This is used to repair that connection.
+    public var youtubeId: String?
 
     public init(video: Video?, order: Int) {
         self.video = video
+        self.youtubeId = video?.youtubeId
         self.order = order
     }
 
@@ -55,4 +60,5 @@ public protocol ModelConvertable where ModelType: PersistentModel & HasVideo {
 
 public protocol HasVideo {
     var video: Video? { get set }
+    var youtubeId: String? { get }
 }

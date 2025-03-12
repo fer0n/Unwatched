@@ -128,8 +128,8 @@ extension VideoService {
         }
     }
 
-    static func getVideo(for youtubeId: String) -> Video? {
-        let context = DataProvider.newContext()
+    static func getVideo(for youtubeId: String, modelContext: ModelContext? = nil) -> Video? {
+        let context = modelContext ?? DataProvider.newContext()
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
         let videos = try? context.fetch(fetch)
         return videos?.first
@@ -199,9 +199,9 @@ extension VideoService {
     static func getTopVideoInQueue(_ context: ModelContext) -> Video? {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
         fetch.fetchLimit = 1
-        let videos = try? context.fetch(fetch)
-        if let nextVideo = videos?.first {
-            return nextVideo.video
+        let entries = try? context.fetch(fetch)
+        if let nextVideo = entries?.first?.video {
+            return nextVideo
         }
         return nil
     }
@@ -209,8 +209,8 @@ extension VideoService {
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> (first: Video?, second: Video?) {
         var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
         fetch.fetchLimit = 2
-        let videos = try? modelContext.fetch(fetch)
-        return (videos?.first?.video, videos?.last?.video)
+        let entries = try? modelContext.fetch(fetch)
+        return (entries?.first?.video, entries?.last?.video)
     }
 
     static func deleteEverything() async {
