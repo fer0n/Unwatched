@@ -36,10 +36,6 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     ExtendedPlayerActions(markVideoWatched: markVideoWatched)
                 }
 
-                if Device.isMac {
-                    watchInBrowserButton(url)
-                }
-
                 Button {
                     openUrl(url)
                 } label: {
@@ -71,17 +67,6 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             video: player.video
         ) {
             player.loadTopmostVideoFromQueue(modelContext: modelContext)
-        }
-    }
-
-    func watchInBrowserButton(_ url: URL) -> some View {
-        Button {
-            markVideoWatched(false, .nextUp)
-            UrlService.open(url)
-        } label: {
-            Text("watchInBrowser")
-            Image(systemName: "arrow.up.forward.app.fill")
-                .padding(5)
         }
     }
 

@@ -98,11 +98,8 @@ struct PlayerControls: View {
                         )
                         .fixedSize(horizontal: compactSize, vertical: false)
 
-                        if !Device.isMac {
-                            PipButton()
-                        }
-
                         #if os(iOS)
+                        PipButton()
                         AirPlayButton()
                         #endif
 
