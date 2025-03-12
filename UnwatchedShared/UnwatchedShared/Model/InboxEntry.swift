@@ -15,11 +15,14 @@ public final class InboxEntry: CustomStringConvertible, Exportable, HasVideo {
             date = video?.publishedDate
         }
     }
+    public var youtubeId: String?
+
     // workaround: sorting via optional relationship "video.publishedDate" lead to crash
     public var date: Date?
 
     public init(_ video: Video?, _ videoDate: Date? = nil) {
         self.video = video
+        self.youtubeId = video?.youtubeId
         self.date = video?.publishedDate
     }
 

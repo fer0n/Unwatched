@@ -84,6 +84,13 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         willMigrate: nil,
         didMigrate: nil
     )
+    
+    public static var migrateV1p5toV1p6 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p5.self,
+        toVersion: UnwatchedSchemaV1p6.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
 
     public static var stages: [MigrationStage] {
         [
@@ -91,40 +98,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p1toV1p2,
             migrateV1p2toV1p3,
             migrateV1p3toV1p4,
-            migrateV1p4toV1p5
+            migrateV1p4toV1p5,
+            migrateV1p5toV1p6
         ]
-    }
-}
-
-// MARK: CachedImageSchema
-
-enum CachedImageSchemaV1p1: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 1, 0)
-
-    static var models: [any PersistentModel.Type] {
-        [CachedImage.self]
-    }
-}
-
-public enum CachedImageMigrationPlan: SchemaMigrationPlan {
-    public static var schemas: [any VersionedSchema.Type] {
-        [
-            CachedImageSchemaV1.self,
-            CachedImageSchemaV1p1.self
-        ]
-    }
-
-    static let migrateCachedImageV1toV1p1 = MigrationStage.custom(
-        fromVersion: CachedImageSchemaV1.self,
-        toVersion: CachedImageSchemaV1p1.self,
-        willMigrate: { context in
-            // clear cache
-            try? context.delete(model: CachedImageSchemaV1.CachedImage.self)
-            try? context.save()
-        }, didMigrate: nil
-    )
-
-    public static var stages: [MigrationStage] {
-        [migrateCachedImageV1toV1p1]
     }
 }
