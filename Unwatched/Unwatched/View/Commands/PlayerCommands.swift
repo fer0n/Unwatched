@@ -16,29 +16,29 @@ struct PlayerCommands: Commands {
             }
             .keyboardShortcut(.space, modifiers: [])
 
-            if Device.isMac {
-                Button("seekBackward") {
-                    seekBackward()
-                }
-                .keyboardShortcut(.leftArrow, modifiers: [])
-
-                Button("seekForward") {
-                    seekForward()
-                }
-                .keyboardShortcut(.rightArrow, modifiers: [])
-
-                Button("previousChapter") {
-                    goToPreviousChapter()
-                }
-                .keyboardShortcut(.leftArrow)
-
-                Button("nextChapter") {
-                    goToNextChapter()
-                }
-                .keyboardShortcut(.rightArrow)
-
-                Divider()
+            #if os(macOS)
+            Button("seekBackward") {
+                seekBackward()
             }
+            .keyboardShortcut(.leftArrow, modifiers: [])
+
+            Button("seekForward") {
+                seekForward()
+            }
+            .keyboardShortcut(.rightArrow, modifiers: [])
+
+            Button("previousChapter") {
+                goToPreviousChapter()
+            }
+            .keyboardShortcut(.leftArrow)
+
+            Button("nextChapter") {
+                goToNextChapter()
+            }
+            .keyboardShortcut(.rightArrow)
+
+            Divider()
+            #endif
 
             Button("playPause") {
                 player.handlePlayButton()

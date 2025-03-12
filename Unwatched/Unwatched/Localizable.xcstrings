@@ -11183,34 +11183,6 @@
         }
       }
     },
-    "watchInBrowser" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Im Browser ansehen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Watch in Browser"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Regarder dans le navigateur"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oglądaj w przeglądarce"
-          }
-        }
-      }
-    },
     "WatchInUnwatched" : {
       "localizations" : {
         "de" : {
