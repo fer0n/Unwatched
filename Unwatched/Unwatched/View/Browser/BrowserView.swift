@@ -22,8 +22,9 @@ struct BrowserView: View, KeyboardReadable {
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
 
-    var showHeader: Bool = true
-    var safeArea: Bool = true
+    var showHeader = true
+    var safeArea = true
+    var stopPlayback: Binding<Bool?> = .constant(nil)
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -39,6 +40,7 @@ struct BrowserView: View, KeyboardReadable {
 
                 ZStack {
                     YtBrowserWebView(url: url,
+                                     stopPlayback: stopPlayback,
                                      startUrl: startUrl,
                                      browserManager: browserManager)
                     if !isKeyboardVisible {

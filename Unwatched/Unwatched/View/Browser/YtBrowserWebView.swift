@@ -12,36 +12,27 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
     @Binding var url: BrowserUrl?
+    @Binding var stopPlayback: Bool?
+
     var startUrl: BrowserUrl?
     var browserManager: BrowserManager
 
-    init(url: Binding<BrowserUrl?> = .constant(nil), startUrl: BrowserUrl? = nil, browserManager: BrowserManager) {
+    init(
+        url: Binding<BrowserUrl?> = .constant(
+            nil
+        ),
+        stopPlayback: Binding<Bool?>,
+        startUrl: BrowserUrl? = nil,
+        browserManager: BrowserManager
+    ) {
         self._url = url
         self.startUrl = startUrl
         if startUrl == nil {
             self.startUrl = url.wrappedValue
         }
+        self._stopPlayback = stopPlayback
         self.browserManager = browserManager
     }
-
-    #if os(macOS)
-    func makeNSView(context: Context) -> WKWebView {
-        makeView(context.coordinator)
-    }
-
-    func updateNSView(_ view: WKWebView, context: Context) {
-        updateView(view)
-    }
-    #elseif os(iOS)
-
-    func makeUIView(context: Context) -> WKWebView {
-        makeView(context.coordinator)
-    }
-
-    func updateUIView(_ view: WKWebView, context: Context) {
-        updateView(view)
-    }
-    #endif
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
@@ -77,7 +68,31 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             view.load(request)
             url = nil
         }
+
+        if stopPlayback == true {
+            view.pauseAllMediaPlayback()
+            stopPlayback = false
+        }
     }
+
+    #if os(macOS)
+    func makeNSView(context: Context) -> WKWebView {
+        makeView(context.coordinator)
+    }
+
+    func updateNSView(_ view: WKWebView, context: Context) {
+        updateView(view)
+    }
+    #elseif os(iOS)
+
+    func makeUIView(context: Context) -> WKWebView {
+        makeView(context.coordinator)
+    }
+
+    func updateUIView(_ view: WKWebView, context: Context) {
+        updateView(view)
+    }
+    #endif
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
