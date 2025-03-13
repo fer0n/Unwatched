@@ -128,7 +128,7 @@ struct SpeedControlView: View {
     }
 
     var dragThumbGesture: some Gesture {
-        DragGesture(minimumDistance: 2, coordinateSpace: coordinateSpace)
+        DragGesture(minimumDistance: 0, coordinateSpace: coordinateSpace)
             .onChanged { gesture in
                 let dragPosition = (controlMinX ?? 0) + gesture.translation.width
                 let cappedMax = max(dragPosition, viewModel.padding + (viewModel.itemWidth / 2))
@@ -139,7 +139,12 @@ struct SpeedControlView: View {
             }
             .onEnded { state in
                 let value = state.translation.width
-                let currentPos = (controlMinX ?? 0) + value
+
+                // allow clicking "underneath" the thumb
+                let currentPos = abs(value) <= 3
+                    ? state.location.x
+                    : (controlMinX ?? 0) + value
+
                 let selected = viewModel.getSpeedFromPos(currentPos)
                 controlMinX = currentPos
                 selectedSpeed = selected
