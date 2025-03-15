@@ -76,7 +76,10 @@ extension PlayerWebView {
     }
 
     func getSeekToScript(_ seekTo: Double) -> String {
-        "video.currentTime = \(seekTo);"
+        """
+        video.currentTime = \(seekTo);
+        startAtTime = \(seekTo);
+        """
     }
 
     func getSeekRelScript(_ seekRel: Double) -> String {
