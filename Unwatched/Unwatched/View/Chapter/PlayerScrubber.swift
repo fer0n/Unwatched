@@ -19,6 +19,8 @@ struct PlayerScrubber: View {
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
 
+    let enableTapScrubbing: Bool = Device.isMac
+
     var scrubberHeight: CGFloat = 20
 
     var body: some View {
@@ -121,9 +123,26 @@ struct PlayerScrubber: View {
 
     func handleChanged(_ value: DragGesture.Value) {
         isGestureActive = true
-
-        if initialDragPosition == nil && value.translation.width.magnitude > 0 {
-            initialDragPosition = getCurrentPosition()
+        if initialDragPosition == nil {
+            if enableTapScrubbing {
+                if value.translation == .zero {
+                    // Initial click - move to clicked position
+                    let position = max(0, min(value.location.x - scrubbingPadding, scrubberWidth))
+                    if let duration = player.video?.duration,
+                       let newTime = getTimeFromPosition(position) {
+                        let floatDuration = CGFloat(duration)
+                        let cleanedTime = getWithinBounds(newTime, maxValue: floatDuration)
+                        player.seek(to: cleanedTime)
+                        player.currentTime = cleanedTime
+                        player.handleChapterChange()
+                    }
+                }
+                // Set initial position for dragging
+                let position = max(0, min(value.location.x - scrubbingPadding, scrubberWidth))
+                initialDragPosition = position
+            } else {
+                initialDragPosition = getCurrentPosition()
+            }
             isInactive = true
         } else {
             isInactive = value.translation.height.magnitude > inactiveHeight
@@ -193,7 +212,6 @@ struct PlayerScrubber: View {
                 width: thumbWidth * (!isGestureActive ? 1 : 1.4),
                 height: scrubberHeight * (!isGestureActive ? 1 : 1.3)
             )
-            .animation(.default.speed(2), value: isGestureActive)
             .sensoryFeedback(
                 Const.sensoryFeedback,
                 trigger: initialDragPosition
