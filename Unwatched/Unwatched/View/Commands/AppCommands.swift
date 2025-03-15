@@ -22,13 +22,7 @@ struct AppCommands: Commands {
         CommandGroup(after: .sidebar) {
             Section {
                 Button("toggleSidebar") {
-                    withAnimation {
-                        if navManager.columnVisibility == .detailOnly {
-                            navManager.columnVisibility = .all
-                        } else {
-                            navManager.columnVisibility = .detailOnly
-                        }
-                    }
+                    navManager.toggleSidebar()
                 }
                 .keyboardShortcut("F", modifiers: [])
             }
