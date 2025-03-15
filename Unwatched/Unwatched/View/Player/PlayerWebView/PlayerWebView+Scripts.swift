@@ -123,7 +123,6 @@ extension PlayerWebView {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
         }
 
-
         // play, pause, ended
         video.addEventListener('play', function() {
             startTimer();

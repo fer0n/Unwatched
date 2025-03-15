@@ -240,6 +240,16 @@ import UnwatchedShared
         }
     }
 
+    func toggleSidebar() {
+        withAnimation {
+            if columnVisibility == .detailOnly {
+                columnVisibility = .all
+            } else {
+                columnVisibility = .detailOnly
+            }
+        }
+    }
+
     var hasSheetOpen: Bool {
         videoDetail != nil || openBrowserUrl != nil
     }

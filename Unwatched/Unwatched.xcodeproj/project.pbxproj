@@ -124,6 +124,8 @@
 		883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */; };
 		883F41052BDECB5C00535952 /* InboxHasEntriesTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */; };
 		883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */; };
+		883FBC122D85769900980E89 /* DisableFocusModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883FBC112D85769900980E89 /* DisableFocusModifier.swift */; };
+		883FBC132D85769900980E89 /* DisableFocusModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883FBC112D85769900980E89 /* DisableFocusModifier.swift */; };
 		884069D72D7A290D00814A72 /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884069D62D7A290D00814A72 /* SearchField.swift */; };
 		884069D82D7A290D00814A72 /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884069D62D7A290D00814A72 /* SearchField.swift */; };
 		88415BEA2C50E1D50072778F /* ExportableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88415BE92C50E1D50072778F /* ExportableTests.swift */; };
@@ -685,6 +687,7 @@
 		883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSharableUrl.swift; sourceTree = "<group>"; };
 		883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxHasEntriesTip.swift; sourceTree = "<group>"; };
 		883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleVideoUrlDropModifier.swift; sourceTree = "<group>"; };
+		883FBC112D85769900980E89 /* DisableFocusModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableFocusModifier.swift; sourceTree = "<group>"; };
 		884069D62D7A290D00814A72 /* SearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchField.swift; sourceTree = "<group>"; };
 		88415BE92C50E1D50072778F /* ExportableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportableTests.swift; sourceTree = "<group>"; };
 		8843AE572C8843E7001A740A /* CleaupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaupServiceTests.swift; sourceTree = "<group>"; };
@@ -984,6 +987,7 @@
 			isa = PBXGroup;
 			children = (
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
+				883FBC112D85769900980E89 /* DisableFocusModifier.swift */,
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
 				884069D62D7A290D00814A72 /* SearchField.swift */,
 				88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */,
@@ -1977,6 +1981,7 @@
 				889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */,
 				889AF8E22C50ECA9001CEDE6 /* BrowserUrl.swift in Sources */,
 				889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */,
+				883FBC132D85769900980E89 /* DisableFocusModifier.swift in Sources */,
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
 				8868178C2D773BD300E06A0D /* FaqWindow.swift in Sources */,
 				88E83E512D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
@@ -2264,6 +2269,7 @@
 				88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */,
 				887EB2E12CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
 				882966F72CCE1F9400E96D3C /* View.swift in Sources */,
+				883FBC122D85769900980E89 /* DisableFocusModifier.swift in Sources */,
 				888E1E002B7000DA00608F99 /* BookmarkedVideosView.swift in Sources */,
 				88BE6C312B723B9900456777 /* PlayerWebView.swift in Sources */,
 				888F74AD2BA2009C00B94822 /* AppearanceSettingsView.swift in Sources */,
