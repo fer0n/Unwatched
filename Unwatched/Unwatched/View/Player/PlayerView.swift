@@ -162,7 +162,7 @@ struct PlayerView: View {
                     handleMiniPlayerTap()
                 }
             }
-            .padding(.leading, !hideMiniPlayer ? 2 : 0)
+            .padding(.leading, !hideMiniPlayer ? 5 : 0)
 
             if !hideMiniPlayer {
                 miniPlayerContent
@@ -200,6 +200,7 @@ struct PlayerView: View {
             HStack {
                 if !hideMiniPlayer {
                     thumbnailPlaceholder
+                        .padding(.leading, 5)
                     miniPlayerContent
                 }
             }
@@ -220,7 +221,7 @@ struct PlayerView: View {
 
             PlayButton(size: 30, enableHelper: false)
                 .fontWeight(.black)
-                .padding(.trailing, !hideMiniPlayer ? 1 : 0)
+                .padding(.trailing, 5)
         }
     }
 
