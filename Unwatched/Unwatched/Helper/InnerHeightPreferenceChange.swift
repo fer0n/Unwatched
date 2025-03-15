@@ -17,7 +17,7 @@ struct OnSizeChange: ViewModifier {
     var action: (CGSize) -> Void
 
     func body(content: Content) -> some View {
-        if useOnGeometryChange {
+        if #available(iOS 18, *) {
             content
                 .onGeometryChange(for: CGSize.self) { proxy in
                     proxy.size
@@ -37,19 +37,6 @@ struct OnSizeChange: ViewModifier {
                     }
                 }
         }
-    }
-
-    var useOnGeometryChange: Bool {
-        #if os(macOS)
-        // workaround: build error on release version due to SWIFT_OPTIMIZATION_LEVEL: [-O]
-        return false
-        #else
-        if #available(iOS 18, macOS 15, *) {
-            return false
-        } else {
-            return true
-        }
-        #endif
     }
 }
 
@@ -72,7 +59,7 @@ struct OnGlobalMinYChange: ViewModifier {
     var action: (_ minY: CGFloat) -> Void
 
     func body(content: Content) -> some View {
-        if useOnGeometryChange {
+        if #available(iOS 18, *) {
             content
                 .onGeometryChange(for: CGFloat.self) { proxy in
                     proxy.frame(in: .global).minY
@@ -99,19 +86,6 @@ struct OnGlobalMinYChange: ViewModifier {
         if !navManager.hasSheetOpen {
             action(minY)
         }
-    }
-
-    var useOnGeometryChange: Bool {
-        #if os(macOS)
-        // workaround: build error on release version due to SWIFT_OPTIMIZATION_LEVEL: [-O]
-        return false
-        #else
-        if #available(iOS 18, macOS 15, *) {
-            return false
-        } else {
-            return true
-        }
-        #endif
     }
 }
 
