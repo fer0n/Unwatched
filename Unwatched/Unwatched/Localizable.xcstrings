@@ -3384,25 +3384,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ziehe RSS-Feeds/Kanal-URLs hierher oder benutze den Browser um nach Kanälen zu suchen."
+            "value" : "Ziehe YouTube RSS-Feeds/Kanal-URLs hierher oder benutze den Browser um nach Kanälen zu suchen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Drop RSS feed/channel URLs here or use the Browser above to search for channels."
+            "value" : "Drop YouTube RSS feed/channel URLs here or use the Browser above to search for channels."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Déposez ici les URLs de flux RSS/chaînes ou utilisez le navigateur ci-dessus pour rechercher des chaînes."
+            "value" : "Déposez ici les URLs des flux/chaînes RSS YouTube ou utilisez le Navigateur ci-dessus pour rechercher des chaînes."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Upuść tutaj adresy URL kanałów/RSS lub użyj przeglądarki powyżej, aby wyszukać kanały."
+            "value" : "Umieść tutaj adresy URL kanałów/źródeł RSS YouTube lub użyj Przeglądarki powyżej, aby wyszukać kanały."
           }
         }
       }
@@ -3944,25 +3944,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls du eine YouTube Kanal-URL eingegeben hast, versuche den RSS feed direkt einzugeben."
+            "value" : "Falls du eine YouTube Kanal-URL eingegeben hast, versuche den YouTube RSS feed direkt einzugeben."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If you entered a YouTube channel URL, try adding the RSS feed directly."
+            "value" : "If you entered a YouTube channel URL, try adding the YouTube RSS feed directly."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si vous avez saisi l'URL d'une chaîne YouTube, essayez d'ajouter directement le flux RSS."
+            "value" : "Si vous avez entré une URL de chaîne YouTube, essayez d'ajouter directement le flux RSS YouTube."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jeśli wprowadziłeś adres URL kanału YouTube, spróbuj dodać bezpośrednio kanał RSS."
+            "value" : "Jeśli wprowadziłeś adres URL kanału YouTube, spróbuj dodać bezpośrednio kanał RSS YouTube."
           }
         }
       }
@@ -3978,7 +3978,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The channels may no longer exist or don't provide an RSS feed."
+            "value" : "The channels may no longer exist or may not provide an RSS feed."
           }
         },
         "fr" : {
