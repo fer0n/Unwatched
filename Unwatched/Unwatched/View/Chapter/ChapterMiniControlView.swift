@@ -16,12 +16,13 @@ struct ChapterMiniControlView: View {
 
     var setShowMenu: () -> Void
     var handleTitleTap: () -> Void
+    var limitHeight = false
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
         let hasAnyChapters = player.video?.chapters?.isEmpty
 
-        VStack(spacing: 10) {
+        VStack(spacing: limitHeight ? 0 : 10) {
             DescriptionMiniProgressBar()
                 .frame(maxWidth: .infinity)
 
@@ -46,6 +47,7 @@ struct ChapterMiniControlView: View {
                                 Text(chapt.titleTextForced)
                             } else {
                                 title
+                                    .padding(.vertical, 5)
                             }
                         }
                         .padding(.vertical, 2)
@@ -72,8 +74,7 @@ struct ChapterMiniControlView: View {
                                 .font(.system(size: 20))
                         }
                         .buttonStyle(ChangeChapterButtonStyle(
-                            chapter: player.currentChapter,
-                            text: player.currentRemainingText
+                            chapter: player.currentChapter
                         ))
                         .disabled(player.nextChapter == nil)
                     } else {
@@ -82,13 +83,19 @@ struct ChapterMiniControlView: View {
                 }
 
                 GridRow {
-                    Color.clear.fixedSize()
-                    Color.clear.fixedSize().frame(maxWidth: .infinity)
+                    Color.clear
+                        .fixedSize()
+                        .frame(height: 0)
+
+                    Color.clear
+                        .fixedSize()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 0)
 
                     if hasChapters {
                         ChapterMiniControlRemainingText()
                             .allowsHitTesting(false)
-                            .padding(.top, -10)
+                            .frame(height: 0)
                     } else {
                         EmptyView()
                     }

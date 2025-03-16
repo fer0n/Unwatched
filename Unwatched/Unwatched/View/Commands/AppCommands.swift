@@ -29,7 +29,6 @@ struct AppCommands: Commands {
             }
         }
 
-        
         CommandGroup(after: .windowList) {
             Section {
                 Button("browser") {
