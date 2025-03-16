@@ -77,9 +77,13 @@ struct PlayerControls: View {
                     Spacer()
                 }
 
-                ChapterMiniControlView(setShowMenu: setShowMenu, handleTitleTap: handleTitleTap)
-                    .contentShape(Rectangle())
-                    .padding(.horizontal)
+                ChapterMiniControlView(
+                    setShowMenu: setShowMenu,
+                    handleTitleTap: handleTitleTap,
+                    limitHeight: horizontalLayout
+                )
+                .contentShape(Rectangle())
+                .padding(.horizontal)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
                     Spacer()
@@ -132,8 +136,10 @@ struct PlayerControls: View {
                         .frame(maxWidth: compactSize ? nil : .infinity)
 
                         PlayButton(size:
-                                    (player.embeddingDisabled || compactSize)
+                                    (player.embeddingDisabled)
                                     ? 80
+                                    : horizontalLayout
+                                    ? 70
                                     : 90
                         )
                         .fontWeight(.black)
@@ -154,7 +160,8 @@ struct PlayerControls: View {
                     }
                 }
                 .padding(.horizontal, 15)
-                .padding(.bottom, 20)
+                .padding(.bottom, !compactSize ? 20 : 0)
+                .padding(.vertical, compactSize ? 5 : 0)
                 .frame(maxWidth: 800)
 
                 if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
@@ -239,13 +246,14 @@ struct PlayerControls: View {
 
     return PlayerControls(compactSize: true,
                           showInfo: false,
-                          horizontalLayout: false,
+                          horizontalLayout: true,
                           enableHideControls: false,
                           hideControls: true,
                           setShowMenu: { },
                           markVideoWatched: { _, _ in },
                           sleepTimerVM: SleepTimerViewModel(),
                           minHeight: .constant(0))
+        .frame(width: 800)
         .modelContainer(DataProvider.previewContainer)
         .environment(player)
         .environment(SheetPositionReader())

@@ -27,7 +27,7 @@ struct PlayerScrubber: View {
         let boundedPosition = getWithinBounds(draggedScrubberWidth, maxValue: scrubberWidth)
         let currentScrubberPosition = scrubbingPadding + boundedPosition
 
-        VStack(spacing: 5) {
+        VStack(spacing: 2) {
             HStack {
                 Text(formattedCurrentTime)
                     .frame(maxWidth: .infinity, alignment: .leading)

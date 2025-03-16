@@ -9,7 +9,6 @@ import UnwatchedShared
 struct ChangeChapterButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
     var chapter: Chapter?
-    var text: String?
 
     func makeBody(configuration: Configuration) -> some View {
         VStack(spacing: 3) {
