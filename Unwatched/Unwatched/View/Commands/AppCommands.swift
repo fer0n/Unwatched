@@ -19,6 +19,7 @@ struct AppCommands: Commands {
             }
         }
 
+        #if os(macOS)
         CommandGroup(after: .sidebar) {
             Section {
                 Button("toggleSidebar") {
@@ -28,7 +29,7 @@ struct AppCommands: Commands {
             }
         }
 
-        #if os(macOS)
+        
         CommandGroup(after: .windowList) {
             Section {
                 Button("browser") {
