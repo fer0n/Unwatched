@@ -24,6 +24,12 @@ struct AddSubscriptionView: View {
                 SubStateOverview(subStates: subManager.newSubs,
                                  importSource: .urlImport)
                     .padding(.horizontal)
+
+                Button("close") {
+                    dismiss()
+                }
+                .padding()
+                .buttonStyle(.borderedProminent)
             }
             .padding(.horizontal)
         }
