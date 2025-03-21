@@ -16,7 +16,8 @@ struct ReloadPlayerButton: View {
             PlayerManager.reloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
         } label: {
-            Label("reloadVideo", systemImage: Const.reloadSF)
+            Image(systemName: Const.reloadSF)
+            Text("reloadVideo")
         }
     }
 }
