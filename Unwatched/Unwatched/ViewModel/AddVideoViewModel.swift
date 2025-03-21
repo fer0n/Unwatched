@@ -15,6 +15,12 @@ import UnwatchedShared
 
     @MainActor func addUrls(_ urls: [URL], at index: Int = 1) async {
         Logger.log.info("handleUrlDrop inbox \(urls)")
+        if urls.count == 0 {
+            self.isSuccess = false
+            await handleSuccessChange()
+            return
+        }
+
         withAnimation {
             isLoading = true
         }
@@ -28,7 +34,7 @@ import UnwatchedShared
             self.isSuccess = success != nil
             self.isLoading = false
         }
-        if self.isSuccess == true {
+        if self.isSuccess != nil {
             await handleSuccessChange()
         }
     }
@@ -36,7 +42,7 @@ import UnwatchedShared
     @MainActor func handleSuccessChange() async {
         if isSuccess != nil {
             do {
-                try await Task.sleep(s: 1)
+                try await Task.sleep(s: 1.5)
                 withAnimation {
                     isSuccess = nil
                 }
