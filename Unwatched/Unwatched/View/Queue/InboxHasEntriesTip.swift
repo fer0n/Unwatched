@@ -17,11 +17,9 @@ struct InboxHasEntriesTip: View {
 
         ZStack {
             if inboxHasEntries {
-                VStack {
-                    Spacer()
-                    TipView(inboxTip, arrowEdge: .bottom)
-                        .fixedSize()
-                }
+                TipView(inboxTip, arrowEdge: arrowEdge)
+                    .fixedSize()
+                    .frame(maxHeight: .infinity, alignment: alignment)
             }
         }
         .onDisappear {
@@ -29,5 +27,21 @@ struct InboxHasEntriesTip: View {
                 inboxTip.invalidate(reason: .actionPerformed)
             }
         }
+    }
+
+    var alignment: Alignment {
+        #if os(macOS)
+        .top
+        #else
+        .bottom
+        #endif
+    }
+
+    var arrowEdge: Edge {
+        #if os(macOS)
+        .top
+        #else
+        .bottom
+        #endif
     }
 }
