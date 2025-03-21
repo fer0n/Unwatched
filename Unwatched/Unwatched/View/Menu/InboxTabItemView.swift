@@ -18,6 +18,7 @@ struct InboxTabItemView: View {
 
     let showCancelButton: Bool
     let showBadge: Bool
+    let horizontalpadding: CGFloat
 
     var body: some View {
         TabItemView(image: getInboxSymbol,
@@ -25,6 +26,7 @@ struct InboxTabItemView: View {
                     showBadge: showBadge && newInboxItemsCount > 0 && inboxEntries.count > 0) {
             InboxView(inboxEntries: inboxEntries,
                       showCancelButton: showCancelButton)
+                .padding(.horizontal, horizontalpadding)
         }
     }
 
