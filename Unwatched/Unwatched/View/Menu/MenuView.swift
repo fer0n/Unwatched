@@ -44,14 +44,19 @@ struct MenuView: View {
                             tag: NavigationTab.queue,
                             showBadge: showTabBarBadge && newQueueItemsCount > 0) {
                     QueueView(showCancelButton: shouldShowCancelButton)
+                        .padding(.horizontal, -padding)
                 }
 
-                InboxTabItemView(showCancelButton: shouldShowCancelButton,
-                                 showBadge: showTabBarBadge)
+                InboxTabItemView(
+                    showCancelButton: shouldShowCancelButton,
+                    showBadge: showTabBarBadge,
+                    horizontalpadding: -padding
+                )
 
                 TabItemView(image: Image(systemName: "books.vertical"),
                             tag: NavigationTab.library) {
                     LibraryView(showCancelButton: shouldShowCancelButton)
+                        .padding(.horizontal, -padding)
                 }
 
                 TabItemView(image: Image(systemName: Const.appBrowserSF),
@@ -62,8 +67,10 @@ struct MenuView: View {
                         showHeader: false,
                         safeArea: false
                     )
+                    .padding(.horizontal, -padding)
                 }
             }
+            .padding(.horizontal, padding)
             .sheet(item: $navManager.videoDetail) { video in
                 ChapterDescriptionView(video: video)
                     .presentationDragIndicator(.hidden)
@@ -100,6 +107,14 @@ struct MenuView: View {
         } else if newTab == .queue {
             UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
         }
+    }
+
+    var padding: CGFloat {
+        #if os(macOS)
+        15
+        #else
+        0
+        #endif
     }
 }
 
