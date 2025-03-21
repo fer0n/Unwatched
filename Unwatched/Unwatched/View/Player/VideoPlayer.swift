@@ -36,7 +36,6 @@ struct VideoPlayer: View {
                        enableHideControls: enableHideControls,
                        sleepTimerVM: sleepTimerVM)
                 .layoutPriority(1)
-                .disableFocus()
 
             if !landscapeFullscreen {
                 if compactSize {
