@@ -23,7 +23,7 @@ struct ChapterMiniControlView: View {
         let hasAnyChapters = player.video?.chapters?.isEmpty
 
         VStack(spacing: limitHeight ? 0 : 10) {
-            DescriptionMiniProgressBar()
+            DescriptionMiniProgressBar(limitHeight: limitHeight)
                 .frame(maxWidth: .infinity)
 
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
@@ -69,35 +69,44 @@ struct ChapterMiniControlView: View {
                     })
 
                     if hasChapters {
-                        NextChapterButton { image in
-                            image
-                                .font(.system(size: 20))
+                        HStack(spacing: -5) {
+                            NextChapterButton { image in
+                                image
+                                    .font(.system(size: 20))
+                            }
+                            .buttonStyle(ChangeChapterButtonStyle(
+                                chapter: player.currentChapter
+                            ))
+                            .disabled(player.nextChapter == nil)
+
+                            if limitHeight {
+                                ChapterMiniControlRemainingText()
+                                    .allowsHitTesting(false)
+                            }
                         }
-                        .buttonStyle(ChangeChapterButtonStyle(
-                            chapter: player.currentChapter
-                        ))
-                        .disabled(player.nextChapter == nil)
                     } else {
                         Color.clear.fixedSize()
                     }
                 }
 
-                GridRow {
-                    Color.clear
-                        .fixedSize()
-                        .frame(height: 0)
-
-                    Color.clear
-                        .fixedSize()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 0)
-
-                    if hasChapters {
-                        ChapterMiniControlRemainingText()
-                            .allowsHitTesting(false)
+                if !limitHeight {
+                    GridRow {
+                        Color.clear
+                            .fixedSize()
                             .frame(height: 0)
-                    } else {
-                        EmptyView()
+
+                        Color.clear
+                            .fixedSize()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 0)
+
+                        if hasChapters {
+                            ChapterMiniControlRemainingText()
+                                .allowsHitTesting(false)
+                                .frame(height: 0)
+                        } else {
+                            EmptyView()
+                        }
                     }
                 }
             }
