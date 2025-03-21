@@ -14,7 +14,6 @@ struct VideoSettingsView: View {
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
-    @AppStorage(Const.allowRefreshDuringSync) var allowRefreshDuringSync: Bool = false
     @AppStorage(Const.enableYtWatchHistory) var enableYtWatchHistory: Bool = true
 
     var body: some View {
@@ -34,10 +33,6 @@ struct VideoSettingsView: View {
                 MySection("refresh", footer: "allowRefreshDuringSyncFooter") {
                     Toggle(isOn: $autoRefresh) {
                         Text("autoRefresh")
-                    }
-
-                    Toggle(isOn: $allowRefreshDuringSync) {
-                        Text("allowRefreshDuringSync")
                     }
                 }
 

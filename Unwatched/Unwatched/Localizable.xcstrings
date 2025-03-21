@@ -830,34 +830,6 @@
         }
       }
     },
-    "allowRefreshDuringSync" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuladen während Synchronisation"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enable Refresh During Sync"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer l’actualisation pendant la synchronisation"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Włącz odświeżanie podczas synchronizacji"
-          }
-        }
-      }
-    },
     "allowRefreshDuringSyncFooter" : {
       "localizations" : {
         "de" : {

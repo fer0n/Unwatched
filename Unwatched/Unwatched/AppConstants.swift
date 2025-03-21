@@ -18,7 +18,6 @@ extension Const {
         // Videos
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
         Const.autoRefresh: true,
-        Const.allowRefreshDuringSync: false,
         Const.requireClearConfirmation: true,
         Const.showAddToQueueButton: false,
         Const.showClearQueueButton: true,
