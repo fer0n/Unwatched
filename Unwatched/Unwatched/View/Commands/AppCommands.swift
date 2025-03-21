@@ -20,15 +20,6 @@ struct AppCommands: Commands {
         }
 
         #if os(macOS)
-        CommandGroup(after: .sidebar) {
-            Section {
-                Button("toggleSidebar") {
-                    navManager.toggleSidebar()
-                }
-                .keyboardShortcut("F", modifiers: [])
-            }
-        }
-
         CommandGroup(after: .windowList) {
             Section {
                 Button("browser") {
