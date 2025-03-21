@@ -78,10 +78,45 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleUrlClicked(payload)
         case "offline":
             handleOffline(payload)
+        case "keyboardEvent":
+            handleKeyboard(payload)
         case "error":
             handleError(payload)
         default:
             break
+        }
+    }
+
+    func handleKeyboard(_ payload: String?) {
+        guard let payload, !payload.isEmpty else {
+            Logger.log.warning("handleKeyboard: Empty payload")
+            return
+        }
+
+        let components = payload.split(separator: ",")
+        guard components.count == 5 else { return }
+        let keyRaw = String(components[0])
+        guard let key = PlayerShortcut.parseKey(keyRaw) else {
+            Logger.log.warning("Key not recognized: \(keyRaw)")
+            return
+        }
+
+        let meta = components[1] == "true"
+        let ctrl = components[2] == "true"
+        let alt = components[3] == "true"
+        let shift = components[4] == "true"
+
+        var modifiers: EventModifiers = []
+        if meta { modifiers.insert(.command) }
+        if ctrl { modifiers.insert(.control) }
+        if alt { modifiers.insert(.option) }
+        if shift { modifiers.insert(.shift) }
+
+        if let shortcut = PlayerShortcut.fromKeyCombo(key: key, modifiers: modifiers) {
+            shortcut.trigger()
+        } else {
+            // Logger.log.warning("No shortcut found to trigger for: \(keyRaw) + modifier(?)")
+            print("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
         }
     }
 

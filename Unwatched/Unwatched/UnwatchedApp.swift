@@ -13,7 +13,7 @@ struct UnwatchedApp: App {
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
-    @State var player = PlayerManager.load()
+    @State var player = PlayerManager.shared
     @State var refresher = RefreshManager.shared
 
     @State var sharedModelContainer: ModelContainer = DataProvider.shared.container
@@ -46,7 +46,7 @@ struct UnwatchedApp: App {
         .windowStyle(.hiddenTitleBar)
         #endif
         .commands {
-            PlayerCommands(player: $player)
+            PlayerCommands()
             AppCommands()
         }
 

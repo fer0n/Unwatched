@@ -127,6 +127,37 @@ extension PlayerWebView {
         }
 
 
+        // Prevent keyboard shortcuts from being captured
+        document.addEventListener('keydown', function(event) {
+            // Allow only essential text input
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                return;
+            }
+            event.stopPropagation();
+            event.preventDefault();
+
+            // Filter out standalone modifier key presses
+            if (['Meta', 'Control', 'Alt', 'Shift'].includes(event.key)) {
+                return;
+            }
+
+            const payload = `${event.key},${event.metaKey},${event.ctrlKey},${event.altKey},${event.shiftKey}`;
+            sendMessage('keyboardEvent', payload);
+        }, true);
+
+
+        // Disable YouTube keyboard shortcuts
+        window.addEventListener('load', function() {
+            if (typeof ytplayer !== 'undefined') {
+                ytplayer.config = ytplayer.config || {};
+                ytplayer.config.keyboard = {
+                    preventDefault: true,
+                    defaultPrevented: true
+                };
+            }
+        });
+
+
         // play, pause, ended
         video.addEventListener('play', function() {
             startTimer();

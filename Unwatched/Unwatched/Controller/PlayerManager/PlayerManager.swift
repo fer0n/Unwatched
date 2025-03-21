@@ -6,6 +6,11 @@ import UnwatchedShared
 /// Manages the current video, queuing, and chapters
 @Observable class PlayerManager: Codable {
     @MainActor
+    static let shared: PlayerManager = {
+        PlayerManager.load()
+    }()
+
+    @MainActor
     var isPlaying: Bool = false
 
     @MainActor
