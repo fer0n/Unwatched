@@ -2931,34 +2931,6 @@
         }
       }
     },
-    "debugNoNewVideos" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: Keine Neuen Videos"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: No New Videos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Débogage : Pas de nouvelles vidéos"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debugowanie: Brak nowych filmów"
-          }
-        }
-      }
-    },
     "debugNoNewVideosSubtitle" : {
       "localizations" : {
         "de" : {
@@ -2983,6 +2955,62 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wyłącz to w Biblioteka → Ustawienia → Debugowanie"
+          }
+        }
+      }
+    },
+    "debugStartFetch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: Hintergrundaktualisierung gestartet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: background refresh started"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: actualisation en arrière-plan terminée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: odświeżanie w tle zakończone"
+          }
+        }
+      }
+    },
+    "debugStopFetch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: Hintergrundaktualisierung abgeschlossen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: background refresh done"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: actualisation en arrière-plan démarrée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug: odświeżanie w tle rozpoczęte"
           }
         }
       }
