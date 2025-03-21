@@ -46,11 +46,12 @@ struct SubscriptionInfoDetails: View {
                         .accessibilityLabel("browser")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
-                    if let url = UrlService.getYoutubeUrl(
+                    if let urlString = UrlService.getYoutubeUrl(
                         userName: subscription.youtubeUserName,
                         channelId: subscription.youtubeChannelId,
                         playlistId: subscription.youtubePlaylistId,
-                        mobile: false) {
+                        mobile: false),
+                       let url = URL(string: urlString) {
                         ShareLink(item: url) {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)

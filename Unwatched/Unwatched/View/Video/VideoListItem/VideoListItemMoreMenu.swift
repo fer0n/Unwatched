@@ -63,7 +63,9 @@ struct VideoListItemMoreMenuView: View {
                 }
             }
 
-            ShareLink(item: UrlService.getShortenedUrl(videoData.youtubeId))
+            if let shareUrl {
+                ShareLink(item: shareUrl)
+            }
 
             ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
                 .tint(.red)
@@ -101,6 +103,11 @@ struct VideoListItemMoreMenuView: View {
             action: clearVideoEverywhere
         )
         .disabled(!canBeCleared)
+    }
+
+    var shareUrl: URL? {
+        let url = UrlService.getShortenedUrl(videoData.youtubeId)
+        return URL(string: url)
     }
 }
 
