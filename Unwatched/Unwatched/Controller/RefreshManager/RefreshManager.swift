@@ -81,12 +81,6 @@ actor RefreshActor {
     }
 
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
-        let allowRefreshDuringSync = UserDefaults.standard.bool(forKey: Const.allowRefreshDuringSync)
-        if isSyncingIcloud && !allowRefreshDuringSync {
-            Logger.log.info("currently syncing iCloud, stopping now")
-            return
-        }
-
         let canStartLoading = await startLoading()
         guard canStartLoading else {
             Logger.log.info("currently refreshing, stopping now")
