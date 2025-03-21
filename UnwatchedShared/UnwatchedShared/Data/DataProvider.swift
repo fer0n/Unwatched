@@ -73,11 +73,14 @@ public final class DataProvider: Sendable {
     
     public let imageContainer: ModelContainer = {
         let schema = Schema([CachedImage.self])
+        let fileName = "imageCache.sqlite"
         
         #if os(tvOS)
-        let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("imageCache.sqlite")
+        let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
+        #elseif os(macOS)
+        let storeURL = URL.applicationSupportDirectory.appending(path: fileName)
         #else
-        let storeURL = URL.documentsDirectory.appending(path: "imageCache.sqlite")
+        let storeURL = URL.documentsDirectory.appending(path: fileName)
         #endif
 
         let config = ModelConfiguration(
