@@ -242,7 +242,7 @@ extension RefreshManager {
             #if os(iOS)
             NotificationManager.notifyRun(isStart: true)
             #endif
-            
+
             let canStartLoading = await refreshActor.startLoading()
             guard canStartLoading else {
                 Logger.log.info("Already refreshing")
