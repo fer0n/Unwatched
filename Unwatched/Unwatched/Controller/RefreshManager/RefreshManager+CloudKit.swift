@@ -68,7 +68,7 @@ extension RefreshManager {
         hardRefresh: Bool
     ) async {
         if hardRefresh {
-            let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+            let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false, videoOnly: false)
             _ = await task.value
         } else {
             await quickCleanup()
