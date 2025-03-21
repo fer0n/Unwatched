@@ -15,74 +15,97 @@ struct PlayerScrubber: View {
     @State private var isInactive: Bool = false
     @State private var isGestureActive = false
 
+    init(limitHeight: Bool = false) {
+        self.limitHeight = limitHeight
+        self.scrubberHeight = limitHeight ? 10 : 20
+    }
+
+    let limitHeight: Bool
     let thumbWidth: CGFloat = 4
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
 
     let enableTapScrubbing: Bool = Device.isMac
-
-    var scrubberHeight: CGFloat = 20
+    var scrubberHeight: CGFloat
 
     var body: some View {
         let boundedPosition = getWithinBounds(draggedScrubberWidth, maxValue: scrubberWidth)
         let currentScrubberPosition = scrubbingPadding + boundedPosition
 
         VStack(spacing: 2) {
-            HStack {
-                Text(formattedCurrentTime)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            if !limitHeight {
+                HStack {
+                    Text(formattedCurrentTime)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                if let duration = player.video?.duration?.formattedSecondsColon {
-                    Text(duration)
-                        .opacity(formattedCurrentTime == " " ? 0 : 1)
-                }
-            }
-            .animation(.default, value: formattedCurrentTime == " ")
-            .padding(.horizontal, scrubbingPadding)
-            .foregroundStyle(.secondary)
-            .font(.caption)
-
-            ZStack {
-                Color.foregroundGray.opacity(0.2)
-
-                if let video = player.video,
-                   let total = video.duration {
-
-                    HStack(spacing: 0) {
-                        Color.foregroundGray
-                            .opacity(0.3)
-                            .frame(width: currentScrubberPosition)
-                        Color.clear
+                    if let formattedDuration {
+                        Text(formattedDuration)
+                            .opacity(formattedCurrentTime == " " ? 0 : 1)
                     }
+                }
+                .animation(.default, value: formattedCurrentTime == " ")
+                .padding(.horizontal, scrubbingPadding)
+                .foregroundStyle(.secondary)
+                .font(.caption)
+            }
 
-                    ProgressBarChapterIndicators(
-                        video: player.video,
-                        height: scrubberHeight,
-                        width: scrubberWidth,
-                        duration: total
-                    )
-                    .padding(.horizontal, scrubbingPadding)
+            HStack {
+                if limitHeight {
+                    Text(formattedCurrentTime)
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline.monospacedDigit())
+                        .animation(.default, value: formattedCurrentTime == " ")
+                        .contentTransition(.numericText(countsDown: true))
+                }
+
+                ZStack {
+                    Color.foregroundGray.opacity(0.2)
+
+                    if let video = player.video,
+                       let total = video.duration {
+
+                        HStack(spacing: 0) {
+                            Color.foregroundGray
+                                .opacity(0.3)
+                                .frame(width: currentScrubberPosition)
+                            Color.clear
+                        }
+
+                        ProgressBarChapterIndicators(
+                            video: player.video,
+                            height: scrubberHeight,
+                            width: scrubberWidth,
+                            duration: total
+                        )
+                        .padding(.horizontal, scrubbingPadding)
+                    }
+                }
+                .onSizeChange { geometry in
+                    viewSize = geometry
+                }
+                .frame(height: scrubberHeight)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .gesture(
+                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                        .onChanged(handleChanged)
+                        .onEnded(handleEnded)
+                )
+                .overlay {
+                    thumb
+                        .position(
+                            x: currentScrubberPosition,
+                            y: scrubberHeight / 2
+                        )
+                }
+                .disabled(isDisabled)
+                .animation(.default.speed(3), value: isInactive)
+
+                if limitHeight {
+                    Text(formattedDuration ?? "")
+                        .foregroundStyle(.secondary)
+                        .font(.subheadline.monospacedDigit())
                 }
             }
-            .onSizeChange { geometry in
-                viewSize = geometry
-            }
-            .frame(height: scrubberHeight)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .gesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                    .onChanged(handleChanged)
-                    .onEnded(handleEnded)
-            )
-            .overlay {
-                thumb
-                    .position(
-                        x: currentScrubberPosition,
-                        y: scrubberHeight / 2
-                    )
-            }
-            .disabled(isDisabled)
-            .animation(.default.speed(3), value: isInactive)
         }
     }
 
@@ -103,7 +126,7 @@ struct PlayerScrubber: View {
     }
 
     var currentTime: Double? {
-        guard !player.isPlaying || initialDragPosition != nil || isGestureActive else {
+        guard limitHeight || (!player.isPlaying || initialDragPosition != nil || isGestureActive) else {
             return nil
         }
 
@@ -115,6 +138,10 @@ struct PlayerScrubber: View {
         }
 
         return player.currentTime
+    }
+
+    var formattedDuration: String? {
+        player.video?.duration?.formattedSecondsColon
     }
 
     var formattedCurrentTime: String {
@@ -221,7 +248,7 @@ struct PlayerScrubber: View {
 }
 
 #Preview {
-    PlayerScrubber()
+    PlayerScrubber(limitHeight: true)
         .frame(height: 150)
         .environment(PlayerManager.getDummy())
 }

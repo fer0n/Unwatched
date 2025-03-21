@@ -139,7 +139,7 @@ struct PlayerControls: View {
                                     (player.embeddingDisabled)
                                     ? 80
                                     : horizontalLayout
-                                    ? 70
+                                    ? 60
                                     : 90
                         )
                         .fontWeight(.black)
