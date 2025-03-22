@@ -2964,25 +2964,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: Hintergrundaktualisierung %@"
+            "value" : "Debug: refresh %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: background refresh %@"
+            "value" : "Debug: refresh %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: background refresh %@"
+            "value" : "Debug: refresh %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: background refresh %@"
+            "value" : "Debug: refresh %@"
           }
         }
       }
