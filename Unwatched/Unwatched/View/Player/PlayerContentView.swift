@@ -25,6 +25,7 @@ struct PlayerContentView: View {
     let fadeOutHeight: CGFloat = 55
 
     @State var minHeight: CGFloat?
+    @Binding var autoHideVM: AutoHideVM
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -39,7 +40,8 @@ struct PlayerContentView: View {
                                setShowMenu: setShowMenu,
                                markVideoWatched: markVideoWatched,
                                sleepTimerVM: sleepTimerVM,
-                               minHeight: $minHeight)
+                               minHeight: $minHeight,
+                               autoHideVM: $autoHideVM)
                     .padding(.vertical, compactSize ? 5 : 0)
                     .verticalSwipeGesture(
                         disableGesture: compactSize,

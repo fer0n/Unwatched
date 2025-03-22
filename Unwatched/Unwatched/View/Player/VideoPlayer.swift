@@ -16,8 +16,10 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @State var sleepTimerVM = SleepTimerViewModel()
+    @State var autoHideVM = AutoHideVM()
 
     var compactSize = false
     var showInfo = true
@@ -30,7 +32,8 @@ struct VideoPlayer: View {
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
 
         VStack(spacing: 0) {
-            PlayerView(landscapeFullscreen: landscapeFullscreen,
+            PlayerView(autoHideVM: $autoHideVM,
+                       landscapeFullscreen: landscapeFullscreen,
                        markVideoWatched: markVideoWatched,
                        setShowMenu: setShowMenu,
                        enableHideControls: enableHideControls,
@@ -47,7 +50,8 @@ struct VideoPlayer: View {
                                    setShowMenu: setShowMenu,
                                    markVideoWatched: markVideoWatched,
                                    sleepTimerVM: sleepTimerVM,
-                                   minHeight: .constant(nil))
+                                   minHeight: .constant(nil),
+                                   autoHideVM: $autoHideVM)
                         .padding(.top, 3)
                 } else {
                     PlayerContentView(compactSize: compactSize,
@@ -57,7 +61,7 @@ struct VideoPlayer: View {
                                       hideControls: hideControls,
                                       setShowMenu: setShowMenu,
                                       markVideoWatched: markVideoWatched,
-                                      sleepTimerVM: sleepTimerVM)
+                                      sleepTimerVM: sleepTimerVM, autoHideVM: $autoHideVM)
                 }
             }
         }
@@ -77,6 +81,13 @@ struct VideoPlayer: View {
         .onChange(of: landscapeFullscreen) {
             handleLandscapeFullscreenChange(landscapeFullscreen)
         }
+        .hideCursorOnInactive(
+            after: 2,
+            isEnabled: hideCursorEnabled,
+            onChange: { isVisible in
+                autoHideVM.setKeepVisible(isVisible, "hover")
+            }
+        )
     }
 
     @MainActor
@@ -131,6 +142,14 @@ struct VideoPlayer: View {
             }
         }
         navManager.showMenu = true
+    }
+
+    var hideCursorEnabled: Bool {
+        player.isPlaying
+            && (
+                Device.isMac && navManager.columnVisibility == .detailOnly
+                    || !Device.isIphone && hideControlsFullscreen
+            )
     }
 }
 
