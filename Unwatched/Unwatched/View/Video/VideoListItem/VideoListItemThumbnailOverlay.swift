@@ -32,7 +32,7 @@ struct VideoListItemThumbnailOverlay: View {
             && (roughDuration != nil || total != nil || video.isYtShort == true)
 
         ZStack {
-            if let elapsed = elapsed, let total = total {
+            if let elapsed, let total {
                 let progress = elapsed / total
                 // if the time is barely started, show a little bit of progress
                 let cleanedProgress = (progress > 0 && progress < 0.1)
@@ -43,6 +43,7 @@ struct VideoListItemThumbnailOverlay: View {
                     let progressWidth = geo.size.width * cleanedProgress
                     let cleanedProgressWidth = max(radius * 3, progressWidth)
                     progressBar(cleanedProgressWidth)
+                        .animation(.default, value: cleanedProgressWidth)
                 }
             } else if hasDuration {
                 progressBar()
