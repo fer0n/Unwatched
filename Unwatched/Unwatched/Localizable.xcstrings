@@ -2959,58 +2959,30 @@
         }
       }
     },
-    "debugStartFetch" : {
+    "debugStartFetch %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: Hintergrundaktualisierung gestartet"
+            "value" : "Debug: Hintergrundaktualisierung %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: background refresh started"
+            "value" : "Debug: background refresh %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: actualisation en arrière-plan terminée"
+            "value" : "Debug: background refresh %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: odświeżanie w tle zakończone"
-          }
-        }
-      }
-    },
-    "debugStopFetch" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: Hintergrundaktualisierung abgeschlossen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: background refresh done"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: actualisation en arrière-plan démarrée"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Debug: odświeżanie w tle rozpoczęte"
+            "value" : "Debug: background refresh %@"
           }
         }
       }
