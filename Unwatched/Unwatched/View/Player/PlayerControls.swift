@@ -26,7 +26,7 @@ struct PlayerControls: View {
     var sleepTimerVM: SleepTimerViewModel
 
     @Binding var minHeight: CGFloat?
-    @State var autoHideVM = AutoHideVM()
+    @Binding var autoHideVM: AutoHideVM
     @State var showDescriptionPopover: Bool = false
 
     var speedSpacing: CGFloat {
@@ -210,9 +210,6 @@ struct PlayerControls: View {
                 autoHideVM.setShowControls()
             }
         })
-        .onHover { over in
-            autoHideVM.setKeepVisible(over, "hover")
-        }
     }
 
     func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
@@ -252,7 +249,8 @@ struct PlayerControls: View {
                           setShowMenu: { },
                           markVideoWatched: { _, _ in },
                           sleepTimerVM: SleepTimerViewModel(),
-                          minHeight: .constant(0))
+                          minHeight: .constant(0),
+                          autoHideVM: .constant(AutoHideVM()))
         .frame(width: 800)
         .modelContainer(DataProvider.previewContainer)
         .environment(player)

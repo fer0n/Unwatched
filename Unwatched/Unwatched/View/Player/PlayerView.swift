@@ -22,7 +22,7 @@ struct PlayerView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.requestReview) var requestReview
 
-    @State var autoHideVM = AutoHideVM()
+    @Binding var autoHideVM: AutoHideVM
     @State var overlayVM = OverlayFullscreenVM.shared
     @State var appNotificationVM = AppNotificationVM()
     @State var deferVideoDate: IdentifiableDate?
@@ -97,9 +97,6 @@ struct PlayerView: View {
                 ? .hidden
                 : .visible
         )
-        #if os(iOS)
-        .statusBarHidden(controlsHidden)
-        #endif
     }
 
     var hideMiniPlayer: Bool {
@@ -338,7 +335,8 @@ struct PlayerView: View {
 
     try? context.save()
 
-    return PlayerView(landscapeFullscreen: true,
+    return PlayerView(autoHideVM: .constant(AutoHideVM()),
+                      landscapeFullscreen: true,
                       markVideoWatched: { _, _ in },
                       enableHideControls: false,
                       sleepTimerVM: SleepTimerViewModel())
