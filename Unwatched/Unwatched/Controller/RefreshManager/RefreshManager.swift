@@ -240,12 +240,15 @@ extension RefreshManager {
             scheduleVideoRefresh()
 
             #if os(iOS)
-            NotificationManager.notifyRun(isStart: true)
+            NotificationManager.notifyRun(.start)
             #endif
 
             let canStartLoading = await refreshActor.startLoading()
             guard canStartLoading else {
                 Logger.log.info("Already refreshing")
+                #if os(iOS)
+                NotificationManager.notifyRun(.abort)
+                #endif
                 return
             }
 
@@ -260,6 +263,9 @@ extension RefreshManager {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if Task.isCancelled {
                 print("background task has been cancelled")
+                #if os(iOS)
+                NotificationManager.notifyRun(.cancel)
+                #endif
             }
             #if os(iOS)
             if newVideos.videoCount > 0 {
@@ -267,7 +273,7 @@ extension RefreshManager {
                 NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
                 await NotificationManager.notifyNewVideos(newVideos)
             }
-            NotificationManager.notifyRun(isStart: false)
+            NotificationManager.notifyRun(.end)
             #endif
         } catch {
             print("Error during background refresh: \(error)")
