@@ -337,21 +337,23 @@ extension PlayerWebView {
             longTouchSent = false;
 
             const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
             const touch = event.touches[0];
 
-            const maxTouchSize = Math.min(100, screenWidth * 0.13);
-            const isCenterTouch = Math.abs(touch.clientX - screenWidth / 2) < maxTouchSize;
+            const maxTouchSize = Math.min(100, screenWidth * 0.15);
+            const isHorizontalCenter = Math.abs(touch.clientX - screenWidth / 2) < maxTouchSize;
+            const isVerticalCenter = Math.abs(touch.clientY - screenHeight / 2) < maxTouchSize;
 
-            if (isCenterTouch && !isPinching) {
+            if (isHorizontalCenter && isVerticalCenter && !isPinching) {
                 centerTouch = true;
             }
 
             touchTimeout = setTimeout(function() {
-                if (!isSwiping && !isPinching) {
-                    const side = touch.clientX < screenWidth / 2 ? "left" : "right";
-                    sendMessage("longTouch", side);
-                    longTouchSent = true;
-                }
+            if (!isSwiping && !isPinching) {
+                const side = touch.clientX < screenWidth / 2 ? "left" : "right";
+                sendMessage("longTouch", side);
+                longTouchSent = true;
+            }
             }, touchCountsAsLongPress);
         }
 
