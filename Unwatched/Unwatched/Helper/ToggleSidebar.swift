@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct ToggleSidebar: ViewModifier {
-    @Environment(\.originalColorScheme) var originalColorScheme
+    @Environment(\.colorScheme) var colorScheme
     @Environment(NavigationManager.self) var navManager
 
     func body(content: Content) -> some View {
@@ -19,7 +19,7 @@ struct ToggleSidebar: ViewModifier {
                     } label: {
                         Image(systemName: "sidebar.left")
                     }
-                    .environment(\.colorScheme, navManager.isSidebarHidden ? .dark : originalColorScheme ?? .light)
+                    .environment(\.colorScheme, navManager.isSidebarHidden ? .dark : colorScheme)
                 }
             }
     }

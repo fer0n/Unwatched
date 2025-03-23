@@ -53,8 +53,10 @@ struct ContentView: View {
                     VideoNotAvailableView()
                 }
             }
-            .background(Color.playerBackgroundColor)
+            #if os(iOS)
             .environment(\.colorScheme, .dark)
+            #endif
+            .background(Color.playerBackgroundColor)
             .onChange(of: proxy.safeAreaInsets.top, initial: true) {
                 if !landscapeFullscreen {
                     sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
