@@ -111,10 +111,10 @@ struct NotificationManager {
         return nil
     }
 
-    static func notifyRun(_ status: DebugNotificationStatus) {
+    static func notifyRun(_ status: DebugNotificationStatus, _ message: String? = nil) {
         if UserDefaults.standard.bool(forKey: Const.monitorBackgroundFetchesNotification) {
             let title = String(localized: "debugStartFetch \(status.rawValue)")
-            let body = String(localized: "debugNoNewVideosSubtitle")
+            let body = message ?? ""
             let info = NotificationInfo(title, body)
             sendNotification(info)
         }
@@ -245,8 +245,10 @@ struct NotificationManager {
 #endif
 
 enum DebugNotificationStatus: String {
-    case start,
+    case setup,
+         start,
          abort,
-         cancel,
-         end
+         stopLoading,
+         end,
+         error
 }

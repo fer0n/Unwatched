@@ -52,7 +52,7 @@ actor RefreshActor {
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
 
     @ObservationIgnored var autoRefreshTask: Task<(), Never>?
-
+    
     private let refreshActor = RefreshActor()
 
     init() {
@@ -87,6 +87,10 @@ actor RefreshActor {
             return
         }
 
+        defer {
+            stopLoading()
+        }
+
         if subscriptionIds?.isEmpty ?? true {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
         }
@@ -97,12 +101,9 @@ actor RefreshActor {
             _ = try await task.value
         } catch {
             Logger.log.info("Error during refresh: \(error)")
-            stopLoading()
         }
 
         await cleanup(hardRefresh: hardRefresh)
-
-        stopLoading()
     }
 
     func handleAutoBackup() {
@@ -158,7 +159,6 @@ actor RefreshActor {
                     }
                 } catch {
                     Logger.log.info("error: \(error)")
-                    stopLoading()
                 }
             }
         } else {
@@ -181,6 +181,8 @@ actor RefreshActor {
     }
 
     func handleBecameInactive() {
+        cancelCloudKitListener()
+        syncDoneTask?.cancel()
         autoRefreshTask?.cancel()
     }
 
@@ -207,7 +209,6 @@ actor RefreshActor {
             await self.executeAutoRefresh()
         } catch {
             Logger.log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
-            stopLoading()
         }
     }
 }
@@ -217,9 +218,9 @@ extension RefreshManager {
     func scheduleVideoRefresh() {
         #if os(iOS)
         Logger.log.info("scheduleVideoRefresh()")
+        let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
-            let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
-            request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
             try BGTaskScheduler.shared.submit(request)
         } catch {
             Logger.log.info("Error scheduleVideoRefresh: \(error)")
@@ -235,48 +236,42 @@ extension RefreshManager {
     }
 
     func handleBackgroundVideoRefresh() async {
+        #if os(iOS)
         print("Background task running now")
         do {
             scheduleVideoRefresh()
 
-            #if os(iOS)
-            NotificationManager.notifyRun(.start)
-            #endif
+            NotificationManager.notifyRun(.setup)
 
             let canStartLoading = await refreshActor.startLoading()
             guard canStartLoading else {
                 Logger.log.info("Already refreshing")
-                #if os(iOS)
                 NotificationManager.notifyRun(.abort)
-                #endif
                 return
             }
 
             defer {
                 Task {
                     await refreshActor.stopLoading()
+                    NotificationManager.notifyRun(.stopLoading)
                 }
             }
+
+            NotificationManager.notifyRun(.start)
 
             let task = VideoService.loadNewVideosInBg()
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
-            if Task.isCancelled {
-                print("background task has been cancelled")
-                #if os(iOS)
-                NotificationManager.notifyRun(.cancel)
-                #endif
-            }
-            #if os(iOS)
             if newVideos.videoCount > 0 {
                 print("notifyNewVideos")
                 NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
                 await NotificationManager.notifyNewVideos(newVideos)
             }
             NotificationManager.notifyRun(.end)
-            #endif
         } catch {
             print("Error during background refresh: \(error)")
+            NotificationManager.notifyRun(.error, error.localizedDescription)
         }
+        #endif
     }
 }

@@ -2931,58 +2931,30 @@
         }
       }
     },
-    "debugNoNewVideosSubtitle" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deaktiviere diese Nachricht in Bibliothek → Einstellungen → Debug"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn this off under Library → Settings → Debug"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Désactivez ceci sous Bibliothèque → Paramètres → Débogage"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyłącz to w Biblioteka → Ustawienia → Debugowanie"
-          }
-        }
-      }
-    },
     "debugStartFetch %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: refresh %@"
+            "value" : "Debug: %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: refresh %@"
+            "value" : "Debug: %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: refresh %@"
+            "value" : "Debug: %@"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Debug: refresh %@"
+            "value" : "Debug: %@"
           }
         }
       }
