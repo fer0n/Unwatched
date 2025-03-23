@@ -147,7 +147,7 @@ struct VideoPlayer: View {
     var hideCursorEnabled: Bool {
         player.isPlaying
             && (
-                Device.isMac && navManager.columnVisibility == .detailOnly
+                Device.isMac && navManager.isSidebarHidden
                     || !Device.isIphone && hideControlsFullscreen
             )
     }
