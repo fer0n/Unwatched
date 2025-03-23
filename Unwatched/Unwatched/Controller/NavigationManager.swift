@@ -242,12 +242,16 @@ import UnwatchedShared
 
     func toggleSidebar() {
         withAnimation {
-            if columnVisibility == .detailOnly {
+            if isSidebarHidden {
                 columnVisibility = .all
             } else {
                 columnVisibility = .detailOnly
             }
         }
+    }
+
+    var isSidebarHidden: Bool {
+        columnVisibility == .detailOnly
     }
 
     var hasSheetOpen: Bool {
