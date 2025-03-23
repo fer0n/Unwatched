@@ -37,7 +37,7 @@ extension RefreshManager {
                         // print("iCloud sync: STOP: \(event.type)")
                         syncDoneTask = Task {
                             do {
-                                try await Task.sleep(s: 3)
+                                try await Task.sleep(for: .seconds(3))
                                 await self.handleIcloudSyncDone()
                             } catch {
                                 // task cancelled
