@@ -19,7 +19,6 @@ struct MacOSSplitView: View {
         NavigationSplitView(columnVisibility: $navManager.columnVisibility) {
             MenuView(isSidebar: true)
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
-                .setColorScheme()
                 .showSidebarToggle()
         } detail: {
             VideoPlayer(
@@ -29,6 +28,7 @@ struct MacOSSplitView: View {
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: detailOnly
             )
+            .environment(\.colorScheme, .dark)
         }
     }
 
