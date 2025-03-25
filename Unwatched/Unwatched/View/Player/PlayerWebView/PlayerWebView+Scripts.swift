@@ -127,35 +127,35 @@ extension PlayerWebView {
         }
 
 
-        // Prevent keyboard shortcuts from being captured
+        // Prevent specific keyboard shortcuts from being captured
         document.addEventListener('keydown', function(event) {
-            // Allow only essential text input
+            // Allow all input in text fields
             if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
                 return;
             }
-            event.stopPropagation();
-            event.preventDefault();
 
-            // Filter out standalone modifier key presses
-            if (['Meta', 'Control', 'Alt', 'Shift'].includes(event.key)) {
-                return;
+            const interceptKeys = \(PlayerShortcut.interceptKeysJS);
+
+            // Check if the current key combination matches any inside the intercept list
+            const currentModifiers = [];
+            if (event.metaKey) currentModifiers.push('Meta');
+            if (event.shiftKey) currentModifiers.push('Shift');
+            if (event.ctrlKey) currentModifiers.push('Control');
+            if (event.altKey) currentModifiers.push('Alt');
+
+            const shouldIntercept = interceptKeys.some(combo =>
+                combo.key === event.key &&
+                combo.modifiers.length === currentModifiers.length &&
+                combo.modifiers.every(mod => currentModifiers.includes(mod))
+            );
+
+            if (shouldIntercept) {
+                event.stopPropagation();
+                event.preventDefault();
+                const payload = `${event.key}|${event.metaKey}|${event.ctrlKey}|${event.altKey}|${event.shiftKey}`;
+                sendMessage('keyboardEvent', payload);
             }
-
-            const payload = `${event.key},${event.metaKey},${event.ctrlKey},${event.altKey},${event.shiftKey}`;
-            sendMessage('keyboardEvent', payload);
         }, true);
-
-
-        // Disable YouTube keyboard shortcuts
-        window.addEventListener('load', function() {
-            if (typeof ytplayer !== 'undefined') {
-                ytplayer.config = ytplayer.config || {};
-                ytplayer.config.keyboard = {
-                    preventDefault: true,
-                    defaultPrevented: true
-                };
-            }
-        });
 
 
         // play, pause, ended

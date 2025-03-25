@@ -93,7 +93,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             return
         }
 
-        let components = payload.split(separator: ",")
+        let components = payload.split(separator: "|")
         guard components.count == 5 else { return }
         let keyRaw = String(components[0])
         guard let key = PlayerShortcut.parseKey(keyRaw) else {
