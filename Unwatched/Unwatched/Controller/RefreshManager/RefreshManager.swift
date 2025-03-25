@@ -52,7 +52,7 @@ actor RefreshActor {
     @ObservationIgnored var syncDoneTask: Task<(), Never>?
 
     @ObservationIgnored var autoRefreshTask: Task<(), Never>?
-    
+
     private let refreshActor = RefreshActor()
 
     init() {
