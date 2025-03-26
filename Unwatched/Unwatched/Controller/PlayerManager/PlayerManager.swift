@@ -188,30 +188,28 @@ import UnwatchedShared
     ) {
         Logger.log.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
-        if task != nil {
-            let currentVideoId = video?.persistentModelID
-            Task { @MainActor in
-                let context = ModelContext(container)
-                try? await task?.value
-                let topVideo = VideoService.getTopVideoInQueue(context)
-                if let topVideo = topVideo {
-                    if topVideo.persistentModelID != currentVideoId {
-                        self.setNextVideo(topVideo, source)
-                    } else if playIfCurrent {
-                        self.setNextVideo(topVideo, source)
-                    }
-                } else {
-                    hardClearVideo()
-                }
-            }
-        } else {
-            let context = modelContext ?? ModelContext(container)
+        let currentVideoId = video?.youtubeId
+
+        func handleTopVideo(_ context: ModelContext) {
             let topVideo = VideoService.getTopVideoInQueue(context)
-            if topVideo != video {
-                self.setNextVideo(topVideo, source)
+            if let topVideo {
+                if topVideo.youtubeId != currentVideoId || playIfCurrent {
+                    self.setNextVideo(topVideo, source)
+                }
             } else {
                 hardClearVideo()
             }
+        }
+
+        if task != nil {
+            Task { @MainActor in
+                let context = ModelContext(container)
+                try? await task?.value
+                handleTopVideo(context)
+            }
+        } else {
+            let context = modelContext ?? ModelContext(container)
+            handleTopVideo(context)
         }
     }
 
