@@ -170,6 +170,8 @@
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886F020D2CA5B3B000EF2EEA /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; };
 		886F020E2CA5B3B000EF2EEA /* UnwatchedShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
+		887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
@@ -193,7 +195,7 @@
 		887EB2E22CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */; };
 		888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888050C12D3E5576002D02EB /* DeferDateSelector.swift */; };
 		888050C32D3E5576002D02EB /* DeferDateSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888050C12D3E5576002D02EB /* DeferDateSelector.swift */; };
-		8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */; };
+		8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* UIApplicationDelegate.swift */; };
 		888129AB2D60802500BE47E4 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 888129AA2D60802500BE47E4 /* InfoPlist.xcstrings */; };
 		888322522B872EE1004E2DE4 /* BrowserUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888322512B872EE1004E2DE4 /* BrowserUrl.swift */; };
 		8884ECFC2C58B7490085BD52 /* FullscreenPlayerControlsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */; };
@@ -306,7 +308,7 @@
 		889AF8F62C50ECCA001CEDE6 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
 		889AF8F72C50ECCA001CEDE6 /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
 		889AF8F92C50ECCA001CEDE6 /* PlayerManager+Chapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F62B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift */; };
-		889AF8FA2C50ECCA001CEDE6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */; };
+		889AF8FA2C50ECCA001CEDE6 /* UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8880D6CA2B95BEE900E76E20 /* UIApplicationDelegate.swift */; };
 		889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA81A2B5BC81600028D52 /* RefreshManager.swift */; };
 		889AF8FC2C50ECCD001CEDE6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */; };
 		889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
@@ -718,6 +720,7 @@
 		886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtPlaylistItems.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnwatchedTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationDelegate.swift; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
 		887AC8CD2B4988D000512852 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
@@ -736,7 +739,7 @@
 		887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuSheetDetents.swift; sourceTree = "<group>"; };
 		887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewUnavailable.swift; sourceTree = "<group>"; };
 		888050C12D3E5576002D02EB /* DeferDateSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferDateSelector.swift; sourceTree = "<group>"; };
-		8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8880D6CA2B95BEE900E76E20 /* UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationDelegate.swift; sourceTree = "<group>"; };
 		888129AA2D60802500BE47E4 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		888322512B872EE1004E2DE4 /* BrowserUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserUrl.swift; sourceTree = "<group>"; };
 		888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserTip.swift; sourceTree = "<group>"; };
@@ -1190,7 +1193,8 @@
 			isa = PBXGroup;
 			children = (
 				8804A3F52B8B96EA00D3F4F1 /* PlayerManager */,
-				8880D6CA2B95BEE900E76E20 /* AppDelegate.swift */,
+				8880D6CA2B95BEE900E76E20 /* UIApplicationDelegate.swift */,
+				887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */,
 				881DBDEB2B4D22770082BEFB /* NavigationManager.swift */,
 				88190E3A2B99D30300F048C3 /* RefreshManager */,
 				8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */,
@@ -1936,6 +1940,7 @@
 				889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */,
 				889AF9362C50ECEE001CEDE6 /* PlayerView.swift in Sources */,
 				88373C102C8AF60700ACBB3B /* NextChapterButton.swift in Sources */,
+				887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
 				88373C0D2C8AF3EA00ACBB3B /* PreviousChapterButton.swift in Sources */,
 				889AF9372C50ECEE001CEDE6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
 				88D127C22D927C370052F42D /* PlayerShortcut.swift in Sources */,
@@ -2008,7 +2013,7 @@
 				88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */,
 				889AF8F92C50ECCA001CEDE6 /* PlayerManager+Chapters.swift in Sources */,
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
-				889AF8FA2C50ECCA001CEDE6 /* AppDelegate.swift in Sources */,
+				889AF8FA2C50ECCA001CEDE6 /* UIApplicationDelegate.swift in Sources */,
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
 				889AF8E82C50ECA9001CEDE6 /* KeyboardReadable.swift in Sources */,
 				887EB2DE2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
@@ -2119,7 +2124,7 @@
 				889931DA2D731AC5009096AB /* PlayerType.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
-				8880D6CB2B95BEE900E76E20 /* AppDelegate.swift in Sources */,
+				8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
 				887E82B02CD8FD8800B196EA /* Notification.swift in Sources */,
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,
@@ -2268,6 +2273,7 @@
 				887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */,
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
 				88BFB6282D314B6100262103 /* ModelContext.swift in Sources */,
+				887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* VideoSettingsView.swift in Sources */,
 				88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
@@ -2608,7 +2614,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 220;
+				CURRENT_PROJECT_VERSION = 221;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2656,7 +2662,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 220;
+				CURRENT_PROJECT_VERSION = 221;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
