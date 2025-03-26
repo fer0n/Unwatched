@@ -169,6 +169,13 @@ actor RefreshActor {
         }
     }
 
+    func handleBecameInactive() {
+        Logger.log.info("handleBecameInactive")
+        cancelCloudKitListener()
+        syncDoneTask?.cancel()
+        autoRefreshTask?.cancel()
+    }
+
     func isNetworkConnected() async -> Bool {
         return await withUnsafeContinuation { continuation in
             let monitor = NWPathMonitor()
@@ -178,12 +185,6 @@ actor RefreshActor {
             }
             monitor.start(queue: DispatchQueue.global())
         }
-    }
-
-    func handleBecameInactive() {
-        cancelCloudKitListener()
-        syncDoneTask?.cancel()
-        autoRefreshTask?.cancel()
     }
 
     func executeAutoRefresh() async {
