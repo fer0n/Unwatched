@@ -12,7 +12,10 @@ import UnwatchedShared
 struct UnwatchedApp: App {
     #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #else
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
+
     @State var player = PlayerManager.shared
     @State var refresher = RefreshManager.shared
 

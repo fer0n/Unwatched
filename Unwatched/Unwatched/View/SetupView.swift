@@ -46,16 +46,10 @@ struct SetupView: View {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
                     }
+                #if os(iOS)
                 case .background:
-                    Logger.log.info("background")
-                    #if os(iOS)
-                    NotificationManager.handleNotifications()
-                    #endif
-                    Task {
-                        await saveData()
-                    }
-                    refresher.handleBecameInactive()
-                    refresher.scheduleVideoRefresh()
+                    SetupView.handleAppClosed()
+                #endif
                 default:
                     break
                 }
@@ -65,11 +59,23 @@ struct SetupView: View {
             }
     }
 
-    func saveData() async {
-        navManager.save()
-        sheetPos.save()
-        player.save()
-        await imageCacheManager.persistCache()
+    static func handleAppClosed() {
+        Logger.log.info("handleAppClosed")
+        #if os(iOS)
+        NotificationManager.handleNotifications()
+        #endif
+        Task {
+            await saveData()
+        }
+        RefreshManager.shared.handleBecameInactive()
+        RefreshManager.shared.scheduleVideoRefresh()
+    }
+
+    static func saveData() async {
+        NavigationManager.shared.save()
+        SheetPositionReader.shared.save()
+        PlayerManager.shared.save()
+        await ImageCacheManager.shared.persistCache()
         Logger.log.info("saved state")
     }
 }
