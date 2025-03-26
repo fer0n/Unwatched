@@ -23,7 +23,7 @@ public struct NotificationInfo: Sendable {
             categoryIdentifier = placement == .queue
                 ? Const.queueVideoAddedCategory
                 : placement == .inbox
-                ? Const.queueVideoAddedCategory
+                ? Const.inboxVideoAddedCategory
                 : nil
         }
         self.categoryIdentifier = categoryIdentifier
