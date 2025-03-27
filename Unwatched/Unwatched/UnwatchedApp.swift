@@ -52,11 +52,6 @@ struct UnwatchedApp: App {
             PlayerCommands()
             AppCommands()
         }
-        #if os(iOS)
-        .backgroundTask(.appRefresh(Const.backgroundAppRefreshId)) { @MainActor in
-            await refresher.handleBackgroundVideoRefresh()
-        }
-        #endif
 
         #if os(macOS)
         Settings {

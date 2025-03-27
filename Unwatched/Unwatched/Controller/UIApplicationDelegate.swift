@@ -9,6 +9,7 @@ import WebKit
 import SwiftData
 import OSLog
 import UnwatchedShared
+import BackgroundTasks
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     let notificationCenter = UNUserNotificationCenter.current()
@@ -39,6 +40,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         )
         sceneConfiguration.delegateClass = SceneDelegate.self
         return sceneConfiguration
+    }
+
+    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
+        Logger.log.warning("Memory warning received")
+        NotificationManager.notifyRun(.warning, "Memory Warning")
     }
 
     nonisolated func userNotificationCenter(
@@ -150,6 +156,27 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                                    intentIdentifiers: [],
                                                    options: [])
         center.setNotificationCategories([category, clearCategory])
+
+        handleBackgroundRefresh()
+    }
+
+    nonisolated func handleBackgroundRefresh() {
+        Logger.log.info("register handleBackgroundRefresh()")
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Const.backgroundAppRefreshId, using: nil) { task in
+            task.expirationHandler = {
+                Logger.log.info("experied")
+                NotificationManager.notifyRun(.error, "Experied")
+            }
+
+            Task { @MainActor in
+                Logger.log.info("handleBackgroundVideoRefresh")
+                await RefreshManager.shared.handleBackgroundVideoRefresh()
+
+                task.setTaskCompleted(success: true)
+                // workaround: iOS 18.4 background crash when using .backgroundTask(.appRefresh ...)
+                // https://developer.apple.com/forums/thread/775182?login=true
+            }
+        }
     }
 }
 

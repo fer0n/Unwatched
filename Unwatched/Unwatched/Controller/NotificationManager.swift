@@ -250,5 +250,6 @@ enum DebugNotificationStatus: String {
          abort,
          stopLoading,
          end,
-         error
+         error,
+         warning
 }
