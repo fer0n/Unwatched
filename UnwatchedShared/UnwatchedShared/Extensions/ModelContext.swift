@@ -6,7 +6,7 @@
 import SwiftData
 import SwiftUI
 
-extension ModelContext {
+public extension ModelContext {
     func existingModel<T>(for objectID: PersistentIdentifier) -> T? where T: PersistentModel {
         if let registered: T = registeredModel(for: objectID) {
             return registered

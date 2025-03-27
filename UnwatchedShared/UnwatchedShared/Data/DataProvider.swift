@@ -37,16 +37,19 @@ public final class DataProvider: Sendable {
         Logger.log.info("getModelContainer: config set")
 
         do {
-            if let container = try? ModelContainer(
-                for: DataProvider.schema,
-                migrationPlan: UnwatchedMigrationPlan.self,
-                configurations: [config]
-            ) {
+            do {
+                let container = try ModelContainer(
+                    for: DataProvider.schema,
+                    migrationPlan: UnwatchedMigrationPlan.self,
+                    configurations: [config]
+                )
                 Logger.log.info("getModelContainer: setting UndoManager")
                 Task { @MainActor in
                     container.mainContext.undoManager = UndoManager()
                 }
                 return container
+            } catch {
+                Logger.log.error("getModelContainer error: \(error)")
             }
 
             // workaround for migration (disable sync for initial launch)
@@ -63,6 +66,7 @@ public final class DataProvider: Sendable {
             )
             Task { @MainActor in
                 container.mainContext.undoManager = UndoManager()
+                DataProvider.migrationWorkaround(container.mainContext)
             }
             return container
         } catch {
@@ -70,6 +74,13 @@ public final class DataProvider: Sendable {
         }
     }()
     
+    private static func migrationWorkaround(_ context: ModelContext) {
+        // workaround: migration fails during willMigrate (https://developer.apple.com/forums/thread/775060)
+        let dict = UnwatchedMigrationPlan.subPlaceVideosIn
+        if !dict.isEmpty {
+            UnwatchedMigrationPlan.migrateV1p6toV1p7DidMigrate(context)
+        }
+    }
     
     public let imageContainer: ModelContainer = {
         let schema = Schema([CachedImage.self])

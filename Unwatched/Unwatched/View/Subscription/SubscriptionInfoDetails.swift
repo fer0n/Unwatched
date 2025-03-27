@@ -79,7 +79,7 @@ struct SubscriptionInfoDetails: View {
                             .buttonStyle(CapsuleButtonStyle(primary: false))
 
                         CapsulePicker(
-                            selection: $subscription.placeVideosIn,
+                            selection: $subscription.videoPlacement,
                             options: VideoPlacement.allCases,
                             label: {
                                 let text = $0.description(defaultPlacement: defaultVideoPlacement.shortDescription)

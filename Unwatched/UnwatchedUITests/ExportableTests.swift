@@ -89,7 +89,7 @@ class ExportableTests: XCTestCase {
 
         let repo = VideoActor(modelContainer: DataProvider.shared.container)
         let sub = TestData.subscription()
-        sub.placeVideosIn = .defaultPlacement
+        sub.videoPlacement = .defaultPlacement
         sub.mostRecentVideoDate = cutOffDate
         sub.youtubeChannelId = "channelId"
 
@@ -259,7 +259,7 @@ class ExportableTests: XCTestCase {
             XCTAssertEqual(importedSub.title, sub.title)
             XCTAssertEqual(importedSub.author, sub.author)
             XCTAssertEqual(importedSub.subscribedDate, sub.subscribedDate)
-            XCTAssertEqual(importedSub.placeVideosIn, sub.placeVideosIn)
+            XCTAssertEqual(importedSub.videoPlacement, sub.videoPlacement)
             XCTAssertEqual(importedSub.isArchived, sub.isArchived)
             XCTAssertEqual(importedSub.customSpeedSetting, sub.customSpeedSetting)
 

@@ -91,6 +91,40 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         willMigrate: nil,
         didMigrate: nil
     )
+    
+    static var subPlaceVideosIn = [String: Int]()
+    public static var migrateV1p6toV1p7 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p6.self,
+        toVersion: UnwatchedSchemaV1p7.self,
+        willMigrate: {
+            context in
+            let fetch = FetchDescriptor<UnwatchedSchemaV1p6.Subscription>()
+            UnwatchedMigrationPlan.subPlaceVideosIn = [:]
+            if let subs = try? context.fetch(fetch) {
+                for sub in subs {
+                    if let channelId = sub.youtubeChannelId {
+                        UnwatchedMigrationPlan.subPlaceVideosIn[channelId] = sub.placeVideosIn.rawValue
+                    }
+                }
+            }
+        },
+        didMigrate: { context in
+            migrateV1p6toV1p7DidMigrate(context)
+        }
+    )
+    public static func migrateV1p6toV1p7DidMigrate(_ context: ModelContext) {
+        let fetch = FetchDescriptor<Subscription>()
+        if let subs = try? context.fetch(fetch) {
+            for sub in subs {
+                if let channelId = sub.youtubeChannelId,
+                   let videoPlacement = UnwatchedMigrationPlan.subPlaceVideosIn[channelId] {
+                    sub._videoPlacement = videoPlacement
+                }
+            }
+        }
+        try? context.save()
+        UnwatchedMigrationPlan.subPlaceVideosIn = [:]
+    }
 
     public static var stages: [MigrationStage] {
         [
@@ -99,7 +133,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p2toV1p3,
             migrateV1p3toV1p4,
             migrateV1p4toV1p5,
-            migrateV1p5toV1p6
+            migrateV1p5toV1p6,
+            migrateV1p6toV1p7
         ]
     }
 }

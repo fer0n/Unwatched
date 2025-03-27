@@ -23,7 +23,22 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var title: String = "-"
     public var author: String?
     public var subscribedDate: Date?
-    public var placeVideosIn = VideoPlacement.defaultPlacement
+    
+    public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
+    public var videoPlacement: VideoPlacement {
+        get {
+            if let raw = _videoPlacement {
+                VideoPlacement(rawValue: raw) ?? VideoPlacement.defaultPlacement
+            } else {
+                VideoPlacement.defaultPlacement
+            }
+        }
+        set {
+            _videoPlacement = newValue.rawValue
+        }
+    }
+    
+    
     public var isArchived: Bool = false
     
     // workaround: SwiftData filter don't work with enums; migration issues if non-nill
@@ -84,7 +99,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.title = title
         self.author = author
         self.subscribedDate = subscribedDate
-        self.placeVideosIn = placeVideosIn
+        self.videoPlacement = placeVideosIn
         self.isArchived = isArchived
 
         self.customSpeedSetting = customSpeedSetting
@@ -104,7 +119,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             title: title,
             author: author,
             subscribedDate: subscribedDate,
-            placeVideosIn: placeVideosIn,
+            placeVideosIn: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
