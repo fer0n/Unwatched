@@ -144,8 +144,8 @@ extension VideoActor {
             videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
         }
 
-        var placement = sub.placeVideosIn
-        if sub.placeVideosIn == .defaultPlacement {
+        var placement = sub.videoPlacement
+        if sub.videoPlacement == .defaultPlacement {
             placement = defaultPlacement.videoPlacement
         }
         let hideShorts = sub.shortsSetting.shouldHide(
@@ -417,8 +417,8 @@ extension VideoActor {
             }
 
             let sub = video.subscription
-            var placement = sub?.placeVideosIn ?? .inbox
-            if sub?.placeVideosIn == .defaultPlacement {
+            var placement = sub?.videoPlacement ?? .inbox
+            if sub?.videoPlacement == .defaultPlacement {
                 placement = defaultPlacement.videoPlacement
             }
 
