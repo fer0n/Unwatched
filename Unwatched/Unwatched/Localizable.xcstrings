@@ -10063,6 +10063,110 @@
         }
       }
     },
+    "tipTitleNext" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabeoptionen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback Options"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options de lecture"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opcje odtwarzania"
+          }
+        }
+      }
+    },
+    "tipTitleNextMessage" : {
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Langes drücken auf den “nächstes Video”-Button im Player gibt Optionen zur kontinuierliche oder wiederholenden Wiedergabe. "
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ein Rechtsklick auf den “nächstes Video”-Button im Player gibt Optionen zur kontinuierliche oder wiederholenden Wiedergabe. "
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Right click the “next video” button inside the player to enable continuous play or play it on repeat."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Long press the “next video” button inside the player to enable continuous play or play it on repeat."
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Faites un clic droit sur le bouton \"vidéo suivante\" dans le lecteur pour activer la lecture continue ou la lecture en boucle."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Appuyez longuement sur le bouton \"vidéo suivante\" dans le lecteur pour activer la lecture continue ou la lecture en boucle."
+                }
+              }
+            }
+          }
+        },
+        "pl" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Kliknij prawym przyciskiem myszy przycisk \"następne wideo\" w odtwarzaczu, aby włączyć ciągłe odtwarzanie lub odtwarzanie w pętli."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Przytrzymaj przycisk \"następne wideo\" w odtwarzaczu, aby włączyć ciągłe odtwarzanie lub odtwarzanie w pętli."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Today" : {
       "localizations" : {
         "de" : {
