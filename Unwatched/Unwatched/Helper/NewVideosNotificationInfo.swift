@@ -52,17 +52,17 @@ struct NewVideosNotificationInfo {
         if !includeInbox && !includeQueue {
             return []
         }
-        let countInbox = inbox.values.flatMap { $0 }.count
-        let countQueue = queue.values.flatMap { $0 }.count
+
+        let countInbox = includeInbox ? inbox.values.flatMap { $0 }.count : 0
+        let countQueue = includeQueue ? queue.values.flatMap { $0 }.count : 0
         let count = countInbox + countQueue
 
         if count <= Const.simultaneousNotificationsLimit {
-            let info = sendOneNotificationPerVideo()
+            let info = sendOneNotificationPerVideo(includeInbox, includeQueue)
             let infoWithImages = await getImageData(info)
             return infoWithImages
-
         } else {
-            return sendOneQueueOneInboxNotification()
+            return sendOneQueueOneInboxNotification(includeInbox, includeQueue)
         }
     }
 
@@ -102,23 +102,31 @@ struct NewVideosNotificationInfo {
         return infoWithImageData
     }
 
-    private func sendOneQueueOneInboxNotification() -> [NotificationInfo] {
-        [
-            getText(from: inbox, placement: .inbox),
-            getText(from: queue, placement: .queue)
-        ].compactMap { $0 }
+    private func sendOneQueueOneInboxNotification(_ includeInbox: Bool, _ includeQueue: Bool) -> [NotificationInfo] {
+        var notifications = [NotificationInfo?]()
+        if includeInbox {
+            notifications.append(getText(from: inbox, placement: .inbox))
+        }
+        if includeQueue {
+            notifications.append(getText(from: queue, placement: .queue))
+        }
+        return notifications.compactMap { $0 }
     }
 
-    private func sendOneNotificationPerVideo() -> [NotificationInfo] {
+    private func sendOneNotificationPerVideo(_ includeInbox: Bool, _ includeQueue: Bool) -> [NotificationInfo] {
         var result = [NotificationInfo]()
-        for flat in flattenDicts(inbox) {
-            if let info = getText(from: flat, placement: .inbox) {
-                result.append(info)
+        if includeInbox {
+            for flat in flattenDicts(inbox) {
+                if let info = getText(from: flat, placement: .inbox) {
+                    result.append(info)
+                }
             }
         }
-        for flat in flattenDicts(queue) {
-            if let info = getText(from: flat, placement: .queue) {
-                result.append(info)
+        if includeQueue {
+            for flat in flattenDicts(queue) {
+                if let info = getText(from: flat, placement: .queue) {
+                    result.append(info)
+                }
             }
         }
         return result
