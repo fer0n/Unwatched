@@ -69,12 +69,18 @@ struct CoreNextButton<Content>: View where Content: View {
             }
 
             if player.isRepeating {
-                Button("loopVideoEnabled", systemImage: "repeat.1") {
+                Button {
                     player.isRepeating = false
+                } label: {
+                    Image(systemName: "repeat.1")
+                    Text("loopVideoEnabled")
                 }
             } else {
-                Button("loopVideo", systemImage: "repeat") {
+                Button {
                     player.isRepeating = true
+                } label: {
+                    Image(systemName: "repeat")
+                    Text("loopVideo")
                 }
             }
 
