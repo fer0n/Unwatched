@@ -35,7 +35,8 @@ struct WatchedButton: View {
                 Button {
                     player.clearVideo(modelContext)
                 } label: {
-                    Label("clearVideo", systemImage: Const.clearNoFillSF)
+                    Image(systemName: Const.clearNoFillSF)
+                    Text("clearVideo")
                 }
             }
         }

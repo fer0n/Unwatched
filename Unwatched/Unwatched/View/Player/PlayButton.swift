@@ -63,7 +63,8 @@ struct PlayButtonContextMenu: View {
         Button {
             player.restartVideo()
         } label: {
-            Label("restartVideo", systemImage: "restart")
+            Image(systemName: "restart")
+            Text("restartVideo")
         }
         Divider()
         ReloadPlayerButton()
