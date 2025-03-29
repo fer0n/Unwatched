@@ -18,10 +18,12 @@ struct NotificationManager {
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
 
-        let notificationInfos = await newVideoInfo.getNewVideoNotificationContent(
+        let (notificationInfos, count) = await newVideoInfo.getNewVideoNotificationContent(
             includeInbox: notifyAboutInbox,
             includeQueue: notifyAboutQueue
         )
+
+        NotificationManager.changeBadgeNumer(by: count)
 
         for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)

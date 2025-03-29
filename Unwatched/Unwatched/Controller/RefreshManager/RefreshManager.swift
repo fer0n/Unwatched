@@ -265,7 +265,6 @@ extension RefreshManager {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if newVideos.videoCount > 0 {
                 print("notifyNewVideos")
-                NotificationManager.changeBadgeNumer(by: newVideos.videoCount)
                 await NotificationManager.notifyNewVideos(newVideos)
             }
             NotificationManager.notifyRun(.end)
