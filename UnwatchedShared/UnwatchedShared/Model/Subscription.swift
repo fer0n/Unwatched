@@ -84,7 +84,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
                 title: String,
                 author: String? = nil,
                 subscribedDate: Date? = .now,
-                placeVideosIn: VideoPlacement = .defaultPlacement,
+                videoPlacement: VideoPlacement = .defaultPlacement,
                 isArchived: Bool = false,
 
                 customSpeedSetting: Double? = nil,
@@ -99,7 +99,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.title = title
         self.author = author
         self.subscribedDate = subscribedDate
-        self.videoPlacement = placeVideosIn
+        self.videoPlacement = videoPlacement
         self.isArchived = isArchived
 
         self.customSpeedSetting = customSpeedSetting
@@ -119,7 +119,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             title: title,
             author: author,
             subscribedDate: subscribedDate,
-            placeVideosIn: videoPlacement,
+            videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
@@ -140,7 +140,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var title: String
     public var author: String?
     public var subscribedDate: Date? = .now
-    public var placeVideosIn: VideoPlacement
+    public var videoPlacement: VideoPlacement
     public var isArchived: Bool
 
     public var customSpeedSetting: Double?
@@ -163,7 +163,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         title: String,
         author: String? = nil,
         subscribedDate: Date? = nil,
-        placeVideosIn: VideoPlacement = VideoPlacement.defaultPlacement,
+        videoPlacement: VideoPlacement = VideoPlacement.defaultPlacement,
         isArchived: Bool = false,
         customSpeedSetting: Double? = nil,
         customAspectRatio: Double? = nil,
@@ -179,7 +179,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.title = title
         self.author = author
         self.subscribedDate = subscribedDate
-        self.placeVideosIn = placeVideosIn
+        self.videoPlacement = videoPlacement
         self.isArchived = isArchived
         self.customSpeedSetting = customSpeedSetting
         self.customAspectRatio = customAspectRatio
@@ -208,7 +208,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             title: title,
             author: author,
             subscribedDate: subscribedDate,
-            placeVideosIn: placeVideosIn,
+            videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
             customAspectRatio: customAspectRatio,
@@ -226,7 +226,6 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              title,
              author,
              subscribedDate,
-             placeVideosIn,
              isArchived,
              customSpeedSetting,
              customAspectRatio,
@@ -236,6 +235,9 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              youtubeUserName,
              thumbnailUrl,
              persistentId
+        
+        // legacy property name
+        case videoPlacement = "placeVideosIn"
     }
 }
 
