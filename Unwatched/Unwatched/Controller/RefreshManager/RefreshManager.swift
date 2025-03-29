@@ -216,8 +216,8 @@ actor RefreshActor {
 
 // Background Refresh
 extension RefreshManager {
+    #if os(iOS)
     func scheduleVideoRefresh() {
-        #if os(iOS)
         Logger.log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
@@ -233,8 +233,8 @@ extension RefreshManager {
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
-        #endif
     }
+    #endif
 
     func handleBackgroundVideoRefresh() async {
         #if os(iOS)

@@ -68,7 +68,10 @@ struct SetupView: View {
             await saveData()
         }
         RefreshManager.shared.handleBecameInactive()
+
+        #if os(iOS)
         RefreshManager.shared.scheduleVideoRefresh()
+        #endif
     }
 
     static func saveData() async {
