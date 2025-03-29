@@ -188,7 +188,7 @@ enum UnwatchedSchemaV1p2: VersionedSchema {
                 title: title,
                 author: author,
                 subscribedDate: subscribedDate,
-                placeVideosIn: placeVideosIn,
+                videoPlacement: placeVideosIn,
                 isArchived: isArchived,
                 customSpeedSetting: customSpeedSetting,
                 customAspectRatio: customAspectRatio,

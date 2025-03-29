@@ -14,7 +14,7 @@ struct TestData {
             title: "TestData.subscription",
             author: "Author name",
             subscribedDate: Date(),
-            placeVideosIn: VideoPlacement.queueNext,
+            videoPlacement: VideoPlacement.queueNext,
             isArchived: false,
             customSpeedSetting: 1.5,
             customAspectRatio: customAspectRatio ?? 18/9,
