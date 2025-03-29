@@ -12,6 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     func applicationWillTerminate(_ notification: Notification) {
         Logger.log.info("applicationWillTerminate")
         SetupView.handleAppClosed()
+        Logger.log.info("applicationWillTerminate done")
     }
 }
 #endif
