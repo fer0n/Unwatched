@@ -41,6 +41,7 @@ struct InteractiveSubscriptionTitle: View {
                             .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
                     }
                 }
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .contextMenu {
