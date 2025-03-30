@@ -14,7 +14,9 @@ struct FullscreenSpeedControl: View {
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
-    @Binding var menuOpen: Bool
+    @Binding var autoHideVM: AutoHideVM
+
+    @State var isInteracting = false
 
     @State var viewModel = FullscreenSpeedControlVM()
     var arrowEdge: Edge = .trailing
@@ -30,17 +32,34 @@ struct FullscreenSpeedControl: View {
                     .resizable()
                     .frame(width: size, height: size)
                     .foregroundStyle(Color.backgroundColor)
-                fullscreenControlLabel
-                    .foregroundStyle(Color.foregroundGray.opacity(0.5))
+                FullscreenSpeedControlContent(
+                    value: player.playbackSpeed,
+                    onChange: { player.playbackSpeed = $0 },
+                    triggerInteraction: { autoHideVM.setShowControls() },
+                    isInteracting: Binding(
+                        get: { isInteracting },
+                        set: {
+                            isInteracting = $0
+                            autoHideVM.keepVisible = $0
+                        }
+                    )
+                )
+                .foregroundStyle(Color.foregroundGray.opacity(0.5))
             }
             .modifier(PlayerControlButtonStyle(isOn: customSetting))
+        }
+        .onChange(of: playbackSpeed) {
+            // workaround: refresh speed
+        }
+        .onChange(of: player.video?.subscription) {
+            // workaround: refresh speed
         }
         .highPriorityGesture(
             TapGesture()
                 .onEnded { _ in
-                    if !showSpeedControl {
+                    if !showSpeedControl && !isInteracting {
                         showSpeedControl = true
-                        menuOpen = true
+                        autoHideVM.keepVisible = true
                     }
                 }
         )
@@ -55,7 +74,7 @@ struct FullscreenSpeedControl: View {
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
                 .onDisappear {
-                    menuOpen = false
+                    autoHideVM.keepVisible = false
                 }
                 .fontWeight(nil)
         }
@@ -63,25 +82,5 @@ struct FullscreenSpeedControl: View {
 
     var customSetting: Bool {
         player.video?.subscription?.customSpeedSetting != nil
-    }
-
-    var fullscreenControlLabel: some View {
-        HStack(spacing: 0) {
-            let speedText = SpeedControlViewModel.formatSpeed(player.playbackSpeed)
-            Text(verbatim: speedText)
-                .font(.custom("SFCompactDisplay-Bold", size: 17))
-            if speedText.count <= 1 {
-                Text(verbatim: "×")
-                    .font(Font.custom("SFCompactDisplay-Bold", size: 14))
-            }
-        }
-        .fixedSize()
-        .animation(.default, value: customSetting)
-        .onChange(of: playbackSpeed) {
-            // workaround: refresh speed
-        }
-        .onChange(of: player.video?.subscription) {
-            // workaround: refresh speed
-        }
     }
 }

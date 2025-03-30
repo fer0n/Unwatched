@@ -12,7 +12,7 @@ struct VideoListItemEntryModifier: ViewModifier {
             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: 15))
             #if os(iOS)
             .padding(.vertical, -2)
-            #endif
+        #endif
     }
 }
 

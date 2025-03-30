@@ -228,6 +228,8 @@
 		8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B72B4F3E080098A3FB /* Collection.swift */; };
 		8891F0BA2B4F54940098A3FB /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B92B4F54940098A3FB /* Double.swift */; };
 		88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */; };
+		88974D232D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */; };
+		88974D242D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */; };
 		8897E94D2C599031006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
 		8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
 		8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8898B6762B480C3700348D01 /* AddSubscriptionView.swift */; };
@@ -766,6 +768,7 @@
 		8891F0B72B4F3E080098A3FB /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		8891F0B92B4F54940098A3FB /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmableMenuButton.swift; sourceTree = "<group>"; };
+		88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenSpeedControlContent.swift; sourceTree = "<group>"; };
 		8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenOverlayControls.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
@@ -1347,6 +1350,7 @@
 				8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */,
 				88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */,
 				889924742C484752001185A6 /* FullscreenSpeedControl.swift */,
+				88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */,
 				889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */,
 				88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */,
 				88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */,
@@ -2002,6 +2006,7 @@
 				88B6DE382D76F06200CB8E64 /* SettingsWindowView.swift in Sources */,
 				889AF8E52C50ECA9001CEDE6 /* VideoSorting.swift in Sources */,
 				884777372D21509F0044E812 /* AnyCodable.swift in Sources */,
+				88974D232D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */,
 				889AF8E62C50ECA9001CEDE6 /* CapsuleButtonStyle.swift in Sources */,
 				889AF8F62C50ECCA001CEDE6 /* NavigationManager.swift in Sources */,
 				8852493E2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */,
@@ -2135,6 +2140,7 @@
 				889924672C47F4A4001185A6 /* PlayerControls.swift in Sources */,
 				88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
+				88974D242D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */,
 				880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				889017A02D790C61008BC329 /* BrowserWindow.swift in Sources */,
