@@ -22,7 +22,7 @@ struct FullscreenPlayerControlsWrapper: View {
 
         if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(
-                menuOpen: $autoHideVM.keepVisible,
+                autoHideVM: $autoHideVM,
                 markVideoWatched: markVideoWatched,
                 arrowEdge: arrowEdge,
                 sleepTimerVM: sleepTimerVM

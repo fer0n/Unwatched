@@ -8,7 +8,7 @@ import UnwatchedShared
 
 struct FullscreenPlayerControls: View {
     @Environment(PlayerManager.self) var player
-    @Binding var menuOpen: Bool
+    @Binding var autoHideVM: AutoHideVM
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var arrowEdge: Edge
@@ -57,7 +57,7 @@ struct FullscreenPlayerControls: View {
                 if hasChapters {
                     FullscreenChaptersButton(
                         arrowEdge: arrowEdge,
-                        menuOpen: $menuOpen,
+                        menuOpen: $autoHideVM.keepVisible,
                         size: size
                     )
                 }
@@ -68,7 +68,7 @@ struct FullscreenPlayerControls: View {
             Spacer()
 
             FullscreenSpeedControl(
-                menuOpen: $menuOpen,
+                autoHideVM: $autoHideVM,
                 arrowEdge: arrowEdge,
                 size: size
             )
@@ -107,7 +107,7 @@ struct FullscreenPlayerControls: View {
         Rectangle()
             .fill(.gray)
         FullscreenPlayerControls(
-            menuOpen: .constant(false),
+            autoHideVM: .constant(AutoHideVM()),
             markVideoWatched: { _, _ in },
             arrowEdge: .trailing,
             sleepTimerVM: SleepTimerViewModel())
