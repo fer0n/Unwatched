@@ -10,8 +10,10 @@ struct VideoListItemEntryModifier: ViewModifier {
         content
             .listRowSeparator(.hidden)
             .contentShape(.dragPreview, RoundedRectangle(cornerRadius: 15))
-            #if os(iOS)
-            .padding(.vertical, -2)
+        #if os(iOS)
+        .padding(.vertical, -2)
+        #else
+        .padding(3)
         #endif
     }
 }
