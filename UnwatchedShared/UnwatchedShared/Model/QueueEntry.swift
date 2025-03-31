@@ -23,8 +23,8 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
     public var youtubeId: String?
 
     public init(video: Video?, order: Int) {
-        self.video = video
         self.youtubeId = video?.youtubeId
+        self.video = video
         self.order = order
     }
 

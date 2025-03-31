@@ -3715,6 +3715,62 @@
         }
       }
     },
+    "emptyEntry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung zum Video nicht gefunden. Möglicherweise wird auf Synchronisierung gewartet oder ein Fehler ist aufgetreten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection to video not found. Possibly waiting on sync or an error."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion à la vidéo non trouvée. En attente possible de synchronisation ou une erreur s'est produite."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono połączenia z filmem. Prawdopodobnie oczekiwanie na synchronizację lub wystąpił błąd."
+          }
+        }
+      }
+    },
+    "emptyEntryError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reparieren fehlgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to repair"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la réparation"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naprawa nie powiodła się"
+          }
+        }
+      }
+    },
     "emptyYoutubeId" : {
       "localizations" : {
         "de" : {
@@ -7943,6 +7999,34 @@
         }
       }
     },
+    "remove" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń"
+          }
+        }
+      }
+    },
     "removeBookmark" : {
       "localizations" : {
         "de" : {
@@ -8023,6 +8107,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wyczyść duplikaty i modele"
+          }
+        }
+      }
+    },
+    "repair" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reparieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repair"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réparer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Napraw"
           }
         }
       }
