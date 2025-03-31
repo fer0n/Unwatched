@@ -9,8 +9,13 @@ import UnwatchedShared
 import OSLog
 
 struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
+    @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+
+    @State var isVisible = false
+    @State var hasError = false
+    @State var isLoading = false
 
     let entry: Entry
 
@@ -20,23 +25,80 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
 
     var body: some View {
         Color.backgroundColor
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: clearEntry) {
-                    Image(systemName: Const.clearSF)
+
+        ZStack {
+            Color.insetBackground
+
+            VStack {
+                Text("emptyEntry")
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
+                    .font(.body)
+                    .opacity(hasError ? 0 : 1)
+                    .overlay {
+                        Text("emptyEntryError")
+                            .foregroundStyle(.red)
+                            .padding(.vertical, 3)
+                            .opacity(hasError ? 1 : 0)
+                    }
+
+                HStack {
+                    Button {
+                        reconnectVideo(force: true)
+                    } label: {
+                        if isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                                .tint(theme.darkContrastColor)
+                        } else {
+                            Text("repair")
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Button {
+                        clearEntry()
+                    } label: {
+                        Text("remove")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
-            .onAppear(perform: reconnectVideo)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 2)
+            .frame(maxWidth: .infinity)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .scaleEffect(isVisible ? 1 : 0.9)
+        .opacity(isVisible ? 1 : 0)
+        .task {
+            reconnectVideo()
+        }
+        .task {
+            do {
+                try await Task.sleep(for: .seconds(1))
+                withAnimation {
+                    isVisible = true
+                }
+            } catch { }
+        }
     }
 
-    func reconnectVideo() {
+    func reconnectVideo(force: Bool = false) {
+        if force {
+            hasError = false
+            isLoading = true
+        }
+
         if entry.video == nil, let youtubeId = entry.youtubeId {
             if let video = VideoService.getVideo(for: youtubeId, modelContext: modelContext) {
-                if let queueEntry = entry as? QueueEntry {
+                if let queueEntry = entry as? QueueEntry, (video.queueEntry == nil || force) {
                     video.queueEntry = queueEntry
                     Logger.log.info("Reconnected video to queue entry")
                 }
-                if let inboxEntry = entry as? InboxEntry {
+                if let inboxEntry = entry as? InboxEntry, (video.inboxEntry == nil || force) {
                     video.inboxEntry = inboxEntry
                     Logger.log.info("Reconnected video to inbox entry")
                 }
@@ -45,12 +107,34 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
         } else {
             Logger.log.info("Couldn't reconnect video to entry")
         }
+
+        if !force {
+            return
+        }
+
+        Task {
+            do {
+                try await Task.sleep(for: .seconds(1))
+                withAnimation {
+                    isLoading = false
+                    hasError = true
+                }
+                try await Task.sleep(for: .seconds(2))
+                withAnimation {
+                    hasError = false
+                }
+            } catch { }
+            isLoading = false
+        }
     }
 
     func clearEntry() {
         withAnimation {
             if let queueEntry = entry as? QueueEntry {
                 VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
+                if queueEntry.order == 0 {
+                    player.loadTopmostVideoFromQueue()
+                }
                 return
             }
             if let inboxEntry = entry as? InboxEntry {
