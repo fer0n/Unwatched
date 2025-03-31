@@ -1279,6 +1279,34 @@
         }
       }
     },
+    "autoRefreshIgnoresSync" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch aktualisieren ignoriert Sync"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Refresh Ignores Sync"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-actualisation ignore sync"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoodświeżanie ignoruje sync"
+          }
+        }
+      }
+    },
     "backupNow" : {
       "localizations" : {
         "de" : {
