@@ -15,6 +15,7 @@ struct VideoSettingsView: View {
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.enableYtWatchHistory) var enableYtWatchHistory: Bool = true
+    @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
 
     var body: some View {
         ZStack {
@@ -33,6 +34,9 @@ struct VideoSettingsView: View {
                 MySection("refresh", footer: "allowRefreshDuringSyncFooter") {
                     Toggle(isOn: $autoRefresh) {
                         Text("autoRefresh")
+                    }
+                    Toggle(isOn: $autoRefreshIgnoresSync) {
+                        Text("autoRefreshIgnoresSync")
                     }
                 }
 

@@ -61,7 +61,10 @@ extension RefreshManager {
             self.isSyncingIcloud = false
         }
         await task.value
-        await executeAutoRefresh()
+        let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
+        if !autoRefreshIgnoresSync {
+            await executeAutoRefresh()
+        }
     }
 
     func cleanup(

@@ -136,25 +136,43 @@ actor RefreshActor {
         }
     }
 
+    func stopSyncIndicatorIfNoNetwork() async {
+        if await !isNetworkConnected() {
+            // workaround: sync event could be long, but they also happen offline
+            // this stops the sync indicator only when there's no connection
+            self.isSyncingIcloud = false
+        }
+    }
+
     func handleBecameActive() async {
         if cancellables.isEmpty {
             setupCloudKitListener()
         }
         Logger.log.info("iCloud sync: refreshOnStartup started")
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
+        let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
+
         if enableIcloudSync {
+            let networkTimeout: CGFloat = 3
+            if autoRefreshIgnoresSync {
+                autoRefreshTask = Task {
+                    await executeAutoRefresh()
+                }
+                do {
+                    try await Task.sleep(s: networkTimeout)
+                    await stopSyncIndicatorIfNoNetwork()
+                } catch { }
+                return
+            }
+
             syncDoneTask?.cancel()
             syncDoneTask = Task {
                 do {
                     // timeout in case CloudKit sync doesn't start
-                    try await Task.sleep(s: 3)
+                    try await Task.sleep(s: networkTimeout)
                     autoRefreshTask?.cancel()
                     autoRefreshTask = Task { @MainActor in
-                        if await !isNetworkConnected() {
-                            // workaround: sync event could be long, but they also happen offline
-                            // this stops the sync indicator only when there's no connection
-                            self.isSyncingIcloud = false
-                        }
+                        await stopSyncIndicatorIfNoNetwork()
                         await executeAutoRefresh()
                     }
                 } catch {
