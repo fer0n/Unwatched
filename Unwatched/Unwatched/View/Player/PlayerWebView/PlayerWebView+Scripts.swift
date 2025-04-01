@@ -119,6 +119,7 @@ extension PlayerWebView {
         var startAtTime = \(startAt);
         var disableCaptions = \(disableCaptions);
         var minimalPlayerUI = \(minimalPlayerUI);
+        const interceptKeys = \(PlayerShortcut.interceptKeysJS);
 
         video.muted = false;
 
@@ -128,13 +129,11 @@ extension PlayerWebView {
 
 
         // Prevent specific keyboard shortcuts from being captured
-        document.addEventListener('keydown', function(event) {
+        function shouldInterceptKeys(event) {
             // Allow all input in text fields
             if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-                return;
+                return false;
             }
-
-            const interceptKeys = \(PlayerShortcut.interceptKeysJS);
 
             // Check if the current key combination matches any inside the intercept list
             const currentModifiers = [];
@@ -143,13 +142,20 @@ extension PlayerWebView {
             if (event.ctrlKey) currentModifiers.push('Control');
             if (event.altKey) currentModifiers.push('Alt');
 
-            const shouldIntercept = interceptKeys.some(combo =>
+            return interceptKeys.some(combo =>
                 combo.key === event.key &&
                 combo.modifiers.length === currentModifiers.length &&
                 combo.modifiers.every(mod => currentModifiers.includes(mod))
             );
-
-            if (shouldIntercept) {
+        }
+        document.addEventListener('keyup', function(event) {
+            if (shouldInterceptKeys(event)) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        }, true);
+        document.addEventListener('keydown', function(event) {
+            if (shouldInterceptKeys(event)) {
                 event.stopPropagation();
                 event.preventDefault();
                 const payload = `${event.key}|${event.metaKey}|${event.ctrlKey}|${event.altKey}|${event.shiftKey}`;
