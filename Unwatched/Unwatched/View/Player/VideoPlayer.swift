@@ -135,7 +135,7 @@ struct VideoPlayer: View {
     func setShowMenu() {
         player.updateElapsedTime()
         if player.video != nil && !sheetPos.landscapeFullscreen {
-            if player.isAnyCompactHeight {
+            if player.limitHeight {
                 sheetPos.setDetentMiniPlayer()
             } else {
                 sheetPos.setDetentVideoPlayer()

@@ -42,7 +42,7 @@ struct PlayerControls: View {
     var body: some View {
         let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 20))
-            : AnyLayout(VStackLayout(spacing: player.isCompactHeight ? 15 : 25))
+            : AnyLayout(VStackLayout(spacing: player.isTallAspectRatio ? 15 : 25))
 
         let outerLayout = horizontalLayout
             ? AnyLayout(HStackLayout(spacing: 10))
@@ -50,7 +50,7 @@ struct PlayerControls: View {
 
         ZStack {
             outerLayout {
-                if showRotateFullscreen && !player.embeddingDisabled && !player.isCompactHeight {
+                if showRotateFullscreen && !player.embeddingDisabled && !player.isTallAspectRatio {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
                             video: player.video,
@@ -73,19 +73,20 @@ struct PlayerControls: View {
                     }
                 }
 
-                if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
+                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     Spacer()
                 }
 
                 ChapterMiniControlView(
                     setShowMenu: setShowMenu,
                     handleTitleTap: handleTitleTap,
-                    limitHeight: horizontalLayout
+                    limitHeight: horizontalLayout || player.isTallAspectRatio,
+                    inlineTime: horizontalLayout
                 )
                 .contentShape(Rectangle())
                 .padding(.horizontal)
 
-                if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
+                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     Spacer()
                 }
 
@@ -153,7 +154,7 @@ struct PlayerControls: View {
                     }
                     .padding(.horizontal, compactSize ? 0 : 10)
 
-                    if player.isCompactHeight {
+                    if player.isTallAspectRatio {
                         // make sure play button vertical spacing is equal
                         Spacer()
                             .frame(height: 0)
@@ -164,7 +165,7 @@ struct PlayerControls: View {
                 .padding(.vertical, compactSize ? 5 : 0)
                 .frame(maxWidth: 800)
 
-                if !player.embeddingDisabled && !compactSize && !player.isCompactHeight {
+                if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     Spacer()
                 }
                 if !compactSize {
@@ -198,12 +199,12 @@ struct PlayerControls: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
-            if player.isAnyCompactHeight || compactSize {
+            if player.limitHeight || compactSize {
                 minHeight = size.height
             }
         }
         .animation(.default.speed(3), value: showControls)
-        .animation(.default, value: player.isCompactHeight)
+        .animation(.default, value: player.isTallAspectRatio)
         .contentShape(Rectangle())
         .simultaneousGesture(TapGesture().onEnded {
             if !showControls {

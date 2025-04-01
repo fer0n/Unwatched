@@ -15,12 +15,12 @@ struct PlayerScrubber: View {
     @State private var isInactive: Bool = false
     @State private var isGestureActive = false
 
-    init(limitHeight: Bool = false) {
-        self.limitHeight = limitHeight
+    init(limitHeight: Bool = false, inlineTime: Bool = false) {
+        self.inlineTime = inlineTime
         self.scrubberHeight = limitHeight ? 10 : 20
     }
 
-    let limitHeight: Bool
+    let inlineTime: Bool
     let thumbWidth: CGFloat = 4
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
@@ -33,7 +33,7 @@ struct PlayerScrubber: View {
         let currentScrubberPosition = scrubbingPadding + boundedPosition
 
         VStack(spacing: 2) {
-            if !limitHeight {
+            if !inlineTime {
                 HStack {
                     Text(formattedCurrentTime)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -50,7 +50,7 @@ struct PlayerScrubber: View {
             }
 
             HStack {
-                if limitHeight {
+                if inlineTime {
                     Text(formattedCurrentTime)
                         .foregroundStyle(.secondary)
                         .font(.subheadline.monospacedDigit())
@@ -100,7 +100,7 @@ struct PlayerScrubber: View {
                 .disabled(isDisabled)
                 .animation(.default.speed(3), value: isInactive)
 
-                if limitHeight {
+                if inlineTime {
                     Text(formattedDuration ?? "")
                         .foregroundStyle(.secondary)
                         .font(.subheadline.monospacedDigit())
@@ -126,7 +126,7 @@ struct PlayerScrubber: View {
     }
 
     var currentTime: Double? {
-        guard limitHeight || (!player.isPlaying || initialDragPosition != nil || isGestureActive) else {
+        guard inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive) else {
             return nil
         }
 
