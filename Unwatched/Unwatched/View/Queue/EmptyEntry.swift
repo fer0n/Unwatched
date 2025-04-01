@@ -95,23 +95,21 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
         if entry.video == nil, let youtubeId = entry.youtubeId {
             if let video = VideoService.getVideo(for: youtubeId, modelContext: modelContext) {
                 if let queueEntry = entry as? QueueEntry {
-                    if video.queueEntry == nil {
+                    if video.queueEntry == nil || force {
                         video.queueEntry = queueEntry
                         Logger.log.info("Reconnected video to queue entry")
                     } else {
                         // there already is an entry, but it's not this one
-                        // which means it's a duplicate
-                        clearEntry()
+                        // which means it's a duplicate or is still syncing
                     }
                 }
                 if let inboxEntry = entry as? InboxEntry {
-                    if video.inboxEntry == nil {
+                    if video.inboxEntry == nil || force {
                         video.inboxEntry = inboxEntry
                         Logger.log.info("Reconnected video to inbox entry")
                     } else {
                         // there already is an entry, but it's not this one
-                        // which means it's a duplicate
-                        clearEntry()
+                        // which means it's a duplicate or is still syncing
                     }
                 }
                 try? modelContext.save()
