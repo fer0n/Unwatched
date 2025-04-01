@@ -128,13 +128,13 @@ import UnwatchedShared
     }
 
     @MainActor
-    var isCompactHeight: Bool {
+    var isTallAspectRatio: Bool {
         videoAspectRatio <= Const.consideredTallAspectRatio
     }
 
     @MainActor
-    var isAnyCompactHeight: Bool {
-        embeddingDisabled || isCompactHeight
+    var limitHeight: Bool {
+        embeddingDisabled || isTallAspectRatio
     }
 
     var isContinuousPlay: Bool {
@@ -260,6 +260,7 @@ import UnwatchedShared
 
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
+        Logger.log.info("handleAspectRatio \(aspectRatio)")
         guard let video = video,
               let subscription = video.subscription else {
             Logger.log.info("No video/subscription to set aspect ratio for")
@@ -275,19 +276,17 @@ import UnwatchedShared
             }
         }
 
-        if isTallAspectRatio {
-            return
-        }
         let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
 
         withAnimation {
-            if subscription.customAspectRatio == nil {
+            if subscription.customAspectRatio == nil && !isTallAspectRatio {
                 if cleanedAspectRatio == Const.defaultVideoAspectRatio {
                     return
                 }
 
                 video.subscription?.customAspectRatio = cleanedAspectRatio
             }
+
             // video might be different than subscription aspect ratio → use custom one only for this video
             if aspectRatio != subscription.customAspectRatio {
                 self.aspectRatio = aspectRatio

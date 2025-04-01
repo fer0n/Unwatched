@@ -17,14 +17,18 @@ struct ChapterMiniControlView: View {
     var setShowMenu: () -> Void
     var handleTitleTap: () -> Void
     var limitHeight = false
+    var inlineTime = false
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
         let hasAnyChapters = player.video?.chapters?.isEmpty
 
         VStack(spacing: limitHeight ? 0 : 10) {
-            DescriptionMiniProgressBar(limitHeight: limitHeight)
-                .frame(maxWidth: .infinity)
+            DescriptionMiniProgressBar(
+                limitHeight: limitHeight,
+                inlineTime: inlineTime
+            )
+            .frame(maxWidth: .infinity)
 
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
                 GridRow {
@@ -79,7 +83,7 @@ struct ChapterMiniControlView: View {
                             ))
                             .disabled(player.nextChapter == nil)
 
-                            if limitHeight {
+                            if inlineTime {
                                 ChapterMiniControlRemainingText()
                                     .allowsHitTesting(false)
                             }
@@ -89,7 +93,7 @@ struct ChapterMiniControlView: View {
                     }
                 }
 
-                if !limitHeight {
+                if !inlineTime {
                     GridRow {
                         Color.clear
                             .fixedSize()

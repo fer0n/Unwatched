@@ -26,7 +26,7 @@ struct SheetOverlayMinimumSize: View {
         .overlay(Color.black.opacity(0.15))
         .background(Color.backgroundColor)
         .onTapGesture {
-            if player.embeddingDisabled {
+            if player.limitHeight {
                 sheetPos.setDetentMiniPlayer()
             } else {
                 sheetPos.setDetentVideoPlayer()
