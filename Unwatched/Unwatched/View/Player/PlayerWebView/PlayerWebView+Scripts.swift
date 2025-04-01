@@ -128,6 +128,16 @@ extension PlayerWebView {
         }
 
 
+        // theater mode
+        setTimeout(() => {
+            const theaterButton = document.querySelector(".ytp-size-button");
+            sendMessage("theaterButton", theaterButton);
+            if (theaterButton) {
+                theaterButton.click();
+            }
+        }, 1500);
+
+
         // Prevent specific keyboard shortcuts from being captured
         function shouldInterceptKeys(event) {
             // Allow all input in text fields
