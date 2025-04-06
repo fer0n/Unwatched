@@ -162,6 +162,7 @@ public struct Const {
     public static let windowHelp = "windowHelp"
     public static let windowImportSubs = "windowImportSubs"
     public static let windowBrowser = "windowBrowser"
+    public static let mainWindowFrame = "mainWindowFrame"
 
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"
