@@ -10,7 +10,7 @@ import UnwatchedShared
 class ImageServiceTests: XCTestCase {
 
     func testIsYtShortPerformanceShort() {
-        let url = URL(string: "https://i3.ytimg.com/vi/jxmXQcYY1Sw/hqdefault.jpg")!
+        let url = URL(staticString: "https://i3.ytimg.com/vi/jxmXQcYY1Sw/hqdefault.jpg")
 
         guard let data = try? Data(contentsOf: url) else {
             XCTFail("Failed to load image data for testing")
@@ -59,7 +59,7 @@ class ImageServiceTests: XCTestCase {
     }
 
     func testIsYtShortPerformanceRegular() {
-        let url = URL(string: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")!
+        let url = URL(staticString: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")
 
         guard let data = try? Data(contentsOf: url) else {
             XCTFail("Failed to load image data for testing")

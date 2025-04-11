@@ -48,7 +48,7 @@ public extension UIImage {
 }
 
 #Preview {
-    let url = URL(string: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")!
+    let url = URL(staticString: "https://i2.ytimg.com/vi/9pVd8_bjl1o/hqdefault.jpg")
     guard let data = try? Data(contentsOf: url),
           let myImage = UIImage(data: data) else {
         return ZStack { }
