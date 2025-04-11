@@ -26,7 +26,8 @@ class ImageServiceTests: XCTestCase {
     func testThumbnails() {
         let testData: [(String, Bool)] = [
             // basically impossible to detect
-            // ("https://i4.ytimg.com/vi/skdL0ePqErk/hqdefault.jpg", true),
+            ("https://i4.ytimg.com/vi/skdL0ePqErk/hqdefault.jpg", true),
+            ("https://i1.ytimg.com/vi/DW488vU0DfA/hqdefault.jpg", true),
 
             // v has color only on the very edge
             ("https://i.ytimg.com/vi/UXndgq_jEnk/hqdefault.jpg", true),
@@ -40,7 +41,8 @@ class ImageServiceTests: XCTestCase {
             ("https://i2.ytimg.com/vi/Ir1xi2zeuug/hqdefault.jpg", false),
             ("https://i4.ytimg.com/vi/WwjHonzRd4E/hqdefault.jpg", false),
             ("https://i3.ytimg.com/vi/FVwV5BxJ8M4/hqdefault.jpg", false),
-            ("https://i4.ytimg.com/vi/Wx-SSG0RVbY/hqdefault.jpg", false)
+            ("https://i4.ytimg.com/vi/Wx-SSG0RVbY/hqdefault.jpg", false),
+            ("https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg", false)
         ]
 
         for (url, expected) in testData {
