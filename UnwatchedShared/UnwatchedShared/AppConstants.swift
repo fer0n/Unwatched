@@ -70,7 +70,7 @@ public struct Const {
 
     /// Number of videos from new subscriptions that will be triaged
     public static let triageNewSubs = 5
-    public static let minListEntriesToShowClear = 2
+    public static let minListEntriesToShowClear = 1
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
     public static let earliestBackgroundBeginSeconds: Double = 30 * 60
