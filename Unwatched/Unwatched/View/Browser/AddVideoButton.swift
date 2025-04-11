@@ -64,6 +64,8 @@ struct AddVideoButton: View {
         .background {
             Circle()
                 .fill(Color.neutralAccentColor)
+                .frame(width: size * 2, height: size * 2)
+
         }
     }
 
