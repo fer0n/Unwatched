@@ -8,10 +8,12 @@ import UnwatchedShared
 
 struct PlayerControls: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
+    @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
+    @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
     @ScaledMetric var speedSpacingScaled = 8
 
@@ -29,6 +31,10 @@ struct PlayerControls: View {
     @Binding var autoHideVM: AutoHideVM
     @State var showDescriptionPopover: Bool = false
 
+    var hasLargeFont: Bool {
+        dynamicTypeSize > .large && !hideControlsFullscreen
+    }
+
     var speedSpacing: CGFloat {
         speedSpacingScaled + (showRotateFullscreen || compactSize ? -2 : 2)
     }
@@ -40,7 +46,7 @@ struct PlayerControls: View {
     }
 
     var body: some View {
-        let layout = compactSize
+        let layout = compactSize && !hasLargeFont
             ? AnyLayout(HStackLayout(spacing: 20))
             : AnyLayout(VStackLayout(spacing: player.isTallAspectRatio ? 15 : 25))
 
@@ -112,6 +118,10 @@ struct PlayerControls: View {
                             DescriptionButton(show: $showDescriptionPopover)
                         }
 
+                        if enableHideControls && hasLargeFont {
+                            HideControlsButton(isSmall: true)
+                        }
+
                         PlayerMoreMenuButton(
                             sleepTimerVM: sleepTimerVM,
                             markVideoWatched: markVideoWatched
@@ -148,7 +158,7 @@ struct PlayerControls: View {
                         NextVideoButton(markVideoWatched: markVideoWatched)
                             .frame(maxWidth: compactSize ? nil : .infinity)
 
-                        if enableHideControls {
+                        if enableHideControls && !hasLargeFont {
                             HideControlsButton()
                         }
                     }
