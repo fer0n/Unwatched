@@ -13,19 +13,19 @@ import UIKit
 #endif
 
 struct UrlService {
-    static let youtubeStartPage = URL(string: "https://m.youtube.com?autoplay=0")
+    static let youtubeStartPage = URL(staticString: "https://m.youtube.com?autoplay=0")
     static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
-    static let shareShortcutUrl = URL(string: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")!
-    static let youtubeTakeoutUrl = URL(string: "https://takeout.google.com/takeout/custom/youtube")!
+    static let shareShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
+    static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
 
-    static let writeReviewUrl = URL(string: "https://apps.apple.com/app/id6477287463?action=write-review")!
-    static let githubUrl = URL(string: "https://github.com/fer0n/Unwatched")!
-    static let mastodonUrl = URL(string: "https://indieapps.space/@unwatched")!
-    static let blueskyUrl = URL(string: "https://bsky.app/profile/unwatched.bsky.social")!
-    static let releasesUrl = URL(string: "https://github.com/fer0n/Unwatched/releases")!
+    static let writeReviewUrl = URL(staticString: "https://apps.apple.com/app/id6477287463?action=write-review")
+    static let githubUrl = URL(staticString: "https://github.com/fer0n/Unwatched")
+    static let mastodonUrl = URL(staticString: "https://indieapps.space/@unwatched")
+    static let blueskyUrl = URL(staticString: "https://bsky.app/profile/unwatched.bsky.social")
+    static let releasesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/releases")
 
-    static let issuesUrl = URL(string: "https://github.com/fer0n/Unwatched/issues")!
+    static let issuesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/issues")
 
     static func getShortenedUrl(_ youtubeId: String) -> String {
         "https://youtu.be/\(youtubeId)"

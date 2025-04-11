@@ -10,7 +10,7 @@ import UnwatchedShared
 struct TestData {
     static func subscription(customAspectRatio: Double? = nil) -> Subscription {
         Subscription(
-            link: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w")!,
+            link: URL(staticString: "https://www.youtube.com/feeds/videos.xml?channel_id=UCsmk8NDVMct75j_Bfb9Ah7w"),
             title: "TestData.subscription",
             author: "Author name",
             subscribedDate: Date(),

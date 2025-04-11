@@ -79,28 +79,28 @@ struct SubStateOverview: View {
 
 #Preview {
     SubStateOverview(subStates: [
-        SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
+        SubscriptionState(url: URL(staticString: "https://www.youtube.com/@TomScottGo")),
         SubscriptionState(
-            url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+            url: URL(staticString: "https://www.youtube.com/@TomScottGo"),
             title: "Gamertag VR",
             userName: "GamertagVR",
             success: true),
         SubscriptionState(
-            url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+            url: URL(staticString: "https://www.youtube.com/@TomScottGo"),
             title: "Gamertag VR",
             error: "Subscription already exists", alreadyAdded: true),
         SubscriptionState(
-            url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+            url: URL(staticString: "https://www.youtube.com/@TomScottGo"),
             title: "Gamertag VR",
             userName: "GamertagVR",
             success: true),
         SubscriptionState(
-            url: URL(string: "https://www.youtube.com/@TomScottGo")!,
+            url: URL(staticString: "https://www.youtube.com/@TomScottGo"),
             userName: "veritasium",
             error: "The request cannot be completed because you have exceeded" +
                 " your <a href=\"/youtube/v3/getting-started#quota\">quota</a>"
         ),
-        SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!),
-        SubscriptionState(url: URL(string: "https://www.youtube.com/@TomScottGo")!, userName: "TomScottGo")
+        SubscriptionState(url: URL(staticString: "https://www.youtube.com/@TomScottGo")),
+        SubscriptionState(url: URL(staticString: "https://www.youtube.com/@TomScottGo"), userName: "TomScottGo")
     ], importSource: .urlImport)
 }

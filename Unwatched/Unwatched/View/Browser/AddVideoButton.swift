@@ -152,7 +152,7 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(youtubeUrl: URL(string: "www.google.com")!, isVideoUrl: false)
+        AddVideoButton(youtubeUrl: URL(staticString: "www.google.com"), isVideoUrl: false)
             .padding(20)
     }
     .environment(PlayerManager())
