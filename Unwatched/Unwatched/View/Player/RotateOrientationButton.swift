@@ -51,6 +51,7 @@ struct HideControlsButton: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
     var textOnly: Bool = false
     var enableEscapeButton: Bool = true
+    var isSmall = false
 
     var body: some View {
         Button {
@@ -62,7 +63,7 @@ struct HideControlsButton: View {
                 Image(systemName: hideControlsFullscreen
                         ? Const.disableFullscreenSF
                         : Const.enableFullscreenSF)
-                    .playerToggleModifier(isOn: hideControlsFullscreen)
+                    .playerToggleModifier(isOn: hideControlsFullscreen, isSmall: isSmall)
             }
         }
         .help("toggleFullscreen")
