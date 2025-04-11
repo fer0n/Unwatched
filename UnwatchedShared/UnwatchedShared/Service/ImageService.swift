@@ -176,8 +176,13 @@ public struct ImageService {
        for i in 0..<4 where !colors[i].isBlack {
            return false
        }
-       for i in 4..<8 where colors[i].isBlack {
-           return false
+        
+        var allowBlackCount = 1
+        for i in 4..<8 where colors[i].isBlack {
+            allowBlackCount -= 1
+            if allowBlackCount < 0 {
+                return false
+            }
        }
        return true
     }
@@ -230,7 +235,8 @@ public struct ImageService {
     // let url = URL(staticString: "https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg")
     
     // no short
-    let url = URL(string: "https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg")!
+    // let url = URL(string: "https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg")!
+    let url = URL(string: "https://i1.ytimg.com/vi/Pt3dHmQPSCU/hqdefault.jpg")!
     
     // short
     // let url = URL(string: "https://i4.ytimg.com/vi/skdL0ePqErk/hqdefault.jpg")!
@@ -241,12 +247,12 @@ public struct ImageService {
     let data = try! Data(contentsOf: url)
     let myImage = UIImage(data: data)!
     let imgSize = myImage.size
-    let points = ImageService.blackHorizontalBarsPoints(imgSize)
+    let points = ImageService.blackContentBorderPoints(imgSize)
 
     let isShort = ImageService.isYtShort(data)
     let isShortText = isShort == true ? "YES" : isShort == nil ? "UNKNOWN" : "NO"
     
-    let point = points[5]
+    let point = points[7]
     
     let color = myImage.pixelColors(at: [point])
 

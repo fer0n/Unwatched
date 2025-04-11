@@ -31,18 +31,23 @@ class ImageServiceTests: XCTestCase {
 
             // v has color only on the very edge
             ("https://i.ytimg.com/vi/UXndgq_jEnk/hqdefault.jpg", true),
+            
+            // v short with partially black content
+            ("https://i1.ytimg.com/vi/Pt3dHmQPSCU/hqdefault.jpg", true),
 
             ("https://i4.ytimg.com/vi/wU_81A3-VzA/hqdefault.jpg", true),
             ("https://i2.ytimg.com/vi/QTIh1CYYKv0/hqdefault.jpg", true),
             ("https://i3.ytimg.com/vi/r1q3OY8StvU/hqdefault.jpg", true),
             ("https://i1.ytimg.com/vi/xM563h8tKuU/hqdefault.jpg", true),
             ("https://i1.ytimg.com/vi/4HF3njpOSsA/hqdefault.jpg", true),
+            
             ("https://i1.ytimg.com/vi/h3BKjZMGoIw/hqdefault.jpg", false),
             ("https://i2.ytimg.com/vi/Ir1xi2zeuug/hqdefault.jpg", false),
             ("https://i4.ytimg.com/vi/WwjHonzRd4E/hqdefault.jpg", false),
             ("https://i3.ytimg.com/vi/FVwV5BxJ8M4/hqdefault.jpg", false),
             ("https://i4.ytimg.com/vi/Wx-SSG0RVbY/hqdefault.jpg", false),
-            ("https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg", false)
+            ("https://i3.ytimg.com/vi/bexRHVRVc3s/hqdefault.jpg", false),
+            
         ]
 
         for (url, expected) in testData {
