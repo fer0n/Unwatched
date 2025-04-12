@@ -970,34 +970,6 @@
         }
       }
     },
-    "asyncListHistoryCheck" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Async List Historie vergleichen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Async List History Check"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérification de l'historique de la liste asynchrone"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Asynchroniczne sprawdzanie historii list"
-          }
-        }
-      }
-    },
     "autoAirplayHD" : {
       "comment" : "A compatibility setting to increase quality when playing over AirPlay",
       "localizations" : {

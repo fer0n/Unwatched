@@ -19,7 +19,6 @@ struct DebugView: View {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
-    @AppStorage(Const.asyncListHistoryCheck) var asyncListHistoryCheck: Bool = false
 
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
@@ -51,12 +50,6 @@ struct DebugView: View {
                 }
 
                 MySection("userData") {
-                    if #available(iOS 18.3, *) {
-                        Toggle(isOn: $asyncListHistoryCheck) {
-                            Text("asyncListHistoryCheck")
-                        }
-                    }
-
                     AsyncButton {
                         let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)
                         cleanupInfo = await task.value

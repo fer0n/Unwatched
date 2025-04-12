@@ -80,15 +80,6 @@ import OSLog
 
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
-        if #available(iOS 18.3, *) {
-            // workaround for issue: "Failed to validate placeVideosIn.placeVideosIn
-            // because placeVideosIn is not a member of VideoPlacement"
-            if !UserDefaults.standard.bool(forKey: Const.asyncListHistoryCheck) {
-                Logger.log.info("Not comparing list history")
-                return nil
-            }
-        }
-
         if #available(iOS 18, *) {
             let token = historyToken
             let task = Task.detached {
