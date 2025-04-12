@@ -32,6 +32,15 @@ struct ChapterListItem: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .animation(nil, value: chapter.isActive)
             .opacity(chapter.isActive ? 1 : 0.6)
+
+            if let link = chapter.link {
+                Link(destination: link, label: {
+                    Image(systemName: "link.circle.fill")
+                        .resizable()
+                        .frame(width: frameSize, height: frameSize)
+                })
+                .opacity(chapter.isActive ? 1 : 0.6)
+            }
         }
     }
 
