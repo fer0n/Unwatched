@@ -12,6 +12,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     public var duration: Double?
     public var isActive = true
     public var category: ChapterCategory?
+    public var link: URL?
 
     public init(
         title: String?,
@@ -19,7 +20,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         duration: Double? = nil,
         endTime: Double? = nil,
         isActive: Bool? = nil,
-        category: ChapterCategory? = nil
+        category: ChapterCategory? = nil,
+        link: URL? = nil
     ) {
         self.title = title
         self.startTime = time
@@ -27,6 +29,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
         self.endTime = endTime
         self.isActive = isActive ?? true
         self.category = category
+        self.link = link
     }
 
     public static func getDummy() -> Chapter {
@@ -39,7 +42,8 @@ public final class Chapter: ChapterData, CustomStringConvertible {
             startTime: startTime,
             endTime: endTime,
             duration: duration,
-            isActive: isActive
+            isActive: isActive,
+            link: link
         )
     }
 
@@ -55,7 +59,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var duration: Double?
     public var isActive: Bool = true
     public var category: ChapterCategory?
-    
+    public var link: URL?
+
     /// Chapter origin isn't the video directly
     public var isExternal: Bool {
         category?.isExternal ?? false
@@ -76,7 +81,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
             duration: duration,
             endTime: endTime,
             isActive: isActive,
-            category: category
+            category: category,
+            link: link
         )
     }
     
@@ -84,12 +90,14 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         _ startTime: Double,
         to endTime: Double? = nil,
         _ title: String? = nil,
-        category: ChapterCategory? = nil
+        category: ChapterCategory? = nil,
+        link: URL? = nil
     ) {
         self.startTime = startTime
         self.endTime = endTime
         self.title = title
         self.category = category
+        self.link = link
     }
 
     public init(
@@ -98,7 +106,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         endTime: Double? = nil,
         duration: Double? = nil,
         isActive: Bool? = nil,
-        category: ChapterCategory? = nil
+        category: ChapterCategory? = nil,
+        link: URL? = nil
     ) {
         self.title = title
         self.startTime = startTime
@@ -106,5 +115,6 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         self.duration = duration
         self.isActive = isActive ?? true
         self.category = category
+        self.link = link
     }
 }

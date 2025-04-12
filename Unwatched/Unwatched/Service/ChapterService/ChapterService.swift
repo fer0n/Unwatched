@@ -14,7 +14,7 @@ struct ChapterService {
         let input = description
         do {
             let regexTimeThenTitle = try NSRegularExpression(
-                pattern: #"^\s*\W*?(\d+(?:\:\d+)+)\s*\W?\s*(.+)(?<![,;\s])"#,
+                pattern: #"^\s*\W*?(\d+(?:\:\d+)+)\s*[^\[(a-zA-Z0-9_]?\s*(.+)(?<![,;\s])\n?(https?:\/\/[^\s)]+)?"#,
                 options: [.anchorsMatchLines]
             )
             let regexTitleThenTime = try NSRegularExpression(
@@ -53,12 +53,24 @@ struct ChapterService {
             if let match = match {
                 let timeRange = Range(match.range(at: timeIndex), in: input)!
                 let titleRange = Range(match.range(at: titleIndex), in: input)!
+                var link: URL?
+                if match.numberOfRanges > 3,
+                   let linkRange = Range(match.range(at: 3), in: input) {
+                    let linkText = String(input[linkRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                    link = URL(string: linkText)
+                }
 
                 let timeString = String(input[timeRange])
-                let title = String(input[titleRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+                var title = String(input[titleRange]).trimmingCharacters(in: .whitespacesAndNewlines)
+
+                if link == nil,
+                   let urlAndRest = title.extractURLAndRest() {
+                    title = urlAndRest.0
+                    link = urlAndRest.1
+                }
 
                 if let time = timeToSeconds(timeString) {
-                    let chapter = SendableChapter(title: title, startTime: time)
+                    let chapter = SendableChapter(title: title, startTime: time, link: link)
                     chapters.append(chapter)
                 }
             }

@@ -36,18 +36,23 @@ struct CleanupService {
         if let entry = video.queueEntry {
             modelContext.delete(entry)
         }
+
+        var chaptersToDelete: [Chapter] = []
         if let chapters = video.chapters {
-            for chapter in chapters {
-                modelContext.delete(chapter)
-            }
+            chaptersToDelete.append(contentsOf: chapters)
         }
-        if let chapters = video.mergedChapters {
-            for chapter in chapters {
-                modelContext.delete(chapter)
-            }
+        if let mergedChapters = video.mergedChapters {
+            chaptersToDelete.append(contentsOf: mergedChapters)
         }
-        try? modelContext.save()
+        video.chapters = []
+        video.mergedChapters = []
+
+        for chapter in chaptersToDelete {
+            modelContext.delete(chapter)
+        }
+
         modelContext.delete(video)
+        try? modelContext.save()
     }
 }
 

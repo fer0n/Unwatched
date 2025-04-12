@@ -43,34 +43,50 @@ struct ChapterMiniControlView: View {
                         Color.clear.fixedSize()
                     }
 
-                    Button {
-                        handleTitleTap()
-                    } label: {
-                        ZStack {
-                            if let chapt = player.currentChapterPreview ?? player.currentChapter {
-                                Text(chapt.titleTextForced)
-                            } else {
-                                title
-                                    .padding(.vertical, 5)
+                    let link = player.currentChapter?.link
+                    HStack(spacing: 5) {
+                        Button {
+                            handleTitleTap()
+                        } label: {
+                            ZStack {
+                                if let chapt = player.currentChapterPreview ?? player.currentChapter {
+                                    Text(chapt.titleTextForced)
+                                } else {
+                                    title
+                                        .padding(.vertical, 5)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                            .font(.system(.title2))
+                            .fontWeight(.black)
+                            .lineLimit(1)
+                            .frame(maxWidth: link == nil ? .infinity : nil)
+                            .animation(nil, value: UUID())
+                            .sensoryFeedback(Const.sensoryFeedback, trigger: player.currentChapterPreview) { old, new in
+                                old != nil && new != nil
                             }
                         }
-                        .padding(.vertical, 2)
-                        .font(.system(.title2))
-                        .fontWeight(.black)
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity)
-                        .animation(nil, value: UUID())
-                        .sensoryFeedback(Const.sensoryFeedback, trigger: player.currentChapterPreview) { old, new in
-                            old != nil && new != nil
+                        .buttonStyle(.plain)
+                        .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
+                            if let url = player.video?.url {
+                                triggerFeedback.toggle()
+                                navManager.openUrlInApp(.url(url.absoluteString))
+                            }
+                        })
+
+                        if let link {
+                            Link(destination: link, label: {
+                                Image(systemName: "link.circle.fill")
+                                    .font(.system(.title))
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(
+                                        Color.automaticBlack,
+                                        Color.backgroundColor
+                                    )
+                            })
                         }
                     }
-                    .buttonStyle(.plain)
-                    .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in
-                        if let url = player.video?.url {
-                            triggerFeedback.toggle()
-                            navManager.openUrlInApp(.url(url.absoluteString))
-                        }
-                    })
+                    .frame(maxWidth: link == nil ? nil : .infinity)
 
                     if hasChapters {
                         HStack(spacing: -5) {
