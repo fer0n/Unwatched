@@ -70,7 +70,7 @@ struct VideoListItemMoreMenuView: View {
             ClearAboveBelowButtons(clearList: clearList, config: config, videoId: videoData.youtubeId)
                 .tint(.red)
 
-            if config.showDelete {
+            if config.showDelete || videoData.subscriptionData == nil {
                 Divider()
 
                 ConfirmableMenuButton(helperText: "reallyDeleteVideo") {
