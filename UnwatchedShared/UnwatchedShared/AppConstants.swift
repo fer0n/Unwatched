@@ -187,7 +187,7 @@ public struct Const {
     public static let requireClearConfirmation = "requireClearConfirmation"
     public static let showClearQueueButton = "showClearQueueButton"
     public static let showAddToQueueButton = "showAddToQueueButton"
-    public static let enableYtWatchHistory = "enableYtWatchHistory"
+    public static let useNoCookieUrl = "useNoCookieUrl"
     public static let enableQueueContextMenu = "enableQueueContextMenu"
     public static let disableCaptions = "disableCaptions"
     public static let minimalPlayerUI = "minimalPlayerUI"

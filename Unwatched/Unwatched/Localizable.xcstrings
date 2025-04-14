@@ -3799,62 +3799,6 @@
         }
       }
     },
-    "enableYtWatchHistory" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Wiedergabeverlauf"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Watch History"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historique de Visionnage YouTube"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Historia filmów na YouTube"
-          }
-        }
-      }
-    },
-    "enableYtWatchHistoryHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erfordert angemeldeten YouTube Account im in-App Browser."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Make sure you're signed into your account in the in-app browser."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Assurez-vous d'être connecté à votre compte dans le navigateur intégré."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Upewnij się, że jesteś zalogowany na swoje konto w przeglądarce w aplikacji."
-          }
-        }
-      }
-    },
     "enterPip" : {
       "localizations" : {
         "de" : {
@@ -9332,25 +9276,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erfordert SponsorBlock Kapitel. Stelle sicher dass der YouTube Premium Account angemeldet ist und der YouTube Verlauf angeschaltet ist."
+            "value" : "Erfordert SponsorBlock Kapitel. Stelle sicher dass dein YouTube Premium Account angemeldet ist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Requires SponsorBlock chapters. Make sure you’re signed into your YouTube Premium account and watch history is turned on."
+            "value" : "Requires SponsorBlock chapters. Make sure you’re signed into your YouTube Premium account."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nécessite les chapitres SponsorBlock. Assurez-vous d'être connecté à votre compte YouTube Premium et que l'historique de visionnage est activé."
+            "value" : "Nécessite les chapitres SponsorBlock. Assurez-vous d’être connecté à votre compte YouTube Premium."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wymaga rozdziałów SponsorBlock. Upewnij się, że jesteś zalogowany na swoje konto YouTube Premium i historia oglądania jest włączona."
+            "value" : "Wymaga rozdziałów SponsorBlock. Upewnij się, że jesteś zalogowany na swoje konto YouTube Premium."
           }
         }
       }
@@ -10831,6 +10775,62 @@
         }
       }
     },
+    "useNoCookieUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Cookies Modus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Cookies Mode"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode sans cookies"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tryb bez ciasteczek"
+          }
+        }
+      }
+    },
+    "useNoCookieUrlHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwendet eine datenschutzfreundliche YouTube-URL. Der Wiedergabeverlauf wird nicht mit YouTube synchronisiert, und Sprach- oder Untertiteleinstellungen kann zwischen Videos verloren gehen.\n\nDas Nicht-Anmelden bei YouTube könnte die bessere Alternative sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses a privacy-friendly YouTube URL. Watch history won’t sync to YouTube, and language or subtitle settings may reset. \n\nNot logging into YouTube might be the better alternative."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise une URL YouTube respectueuse de la vie privée. L’historique de lecture ne sera pas synchronisé avec YouTube, et les paramètres de langue ou de sous-titres peuvent être réinitialisés.\n\nNe pas se connecter à YouTube pourrait être une meilleure alternative."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Używa przyjaznego dla prywatności adresu URL YouTube. Historia oglądania nie będzie synchronizowana z YouTube, a ustawienia języka lub napisów mogą zostać zresetowane.\n\nLepszą alternatywą może być nie logowanie się do YouTube."
+          }
+        }
+      }
+    },
     "userData" : {
       "localizations" : {
         "de" : {
@@ -11312,25 +11312,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Option \"Einstellungen → Wiedergabe → YouTube Wiedergabeverlauf\" muss aktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser mit deinem YouTube Account angemeldet bist."
+            "value" : "Die Option \"Einstellungen → Wiedergabe → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser mit deinem YouTube Account angemeldet bist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable “Settings → Playback → YouTube Watch History” to ensure watched videos appear on YouTube, and sign in through the in-app browser."
+            "value" : "Disable “Settings → Playback → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activez \"Paramètres → Lecture → Historique YouTube\" pour vous assurer que les vidéos visionnées apparaissent sur YouTube, et connectez-vous via le navigateur intégré."
+            "value" : "Désactivez « Paramètres → Lecture → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré.\n"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz “Ustawienia → Odtwarzanie → Historia filmów na YouTube”, aby upewnić się, że obejrzane filmy pojawią się na YouTube, i zaloguj się przez przeglądarkę w aplikacji."
+            "value" : "Wyłącz „Ustawienia → Odtwarzanie → Tryb bez ciasteczek”, aby oglądane filmy pojawiały się na YouTube, i zaloguj się przez wbudowaną przeglądarkę.\n"
           }
         }
       }

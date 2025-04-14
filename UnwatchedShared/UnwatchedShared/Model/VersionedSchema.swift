@@ -130,7 +130,10 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         fromVersion: UnwatchedSchemaV1p7.self,
         toVersion: UnwatchedSchemaV1p8.self,
         willMigrate: nil,
-        didMigrate: nil
+        didMigrate: { context in
+            let enableYtWatchHistory = (UserDefaults.standard.value(forKey: "enableYtWatchHistory") as? Bool) ?? true
+            UserDefaults.standard.setValue(!enableYtWatchHistory, forKeyPath: Const.useNoCookieUrl)
+        }
     )
 
     public static var stages: [MigrationStage] {
