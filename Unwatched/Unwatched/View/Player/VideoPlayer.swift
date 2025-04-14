@@ -113,12 +113,16 @@ struct VideoPlayer: View {
         if let video = player.video {
             try? modelContext.save()
 
+            #if os(macOS)
+            navManager.toggleSidebar(show: true)
+            #else
             if showMenu {
                 setShowMenu()
                 if returnToQueue {
                     navManager.navigateToQueue()
                 }
             }
+            #endif
 
             // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
             VideoService.setVideoWatched(video, modelContext: modelContext)
