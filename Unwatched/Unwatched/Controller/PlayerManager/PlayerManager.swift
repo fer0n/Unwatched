@@ -184,7 +184,8 @@ import UnwatchedShared
         after task: (Task<(), Error>)? = nil,
         modelContext: ModelContext? = nil,
         source: VideoSource = .nextUp,
-        playIfCurrent: Bool = false
+        playIfCurrent: Bool = false,
+        updateTime: Bool = false
     ) {
         Logger.log.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
@@ -195,6 +196,15 @@ import UnwatchedShared
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)
+                } else if updateTime && topVideo.youtubeId == currentVideoId,
+                          let seconds = topVideo.elapsedSeconds {
+                    if abs((currentTime ?? seconds) - seconds) <= 10 {
+                        Logger.log.info("updateTime: same video, same time: \(seconds)")
+                        return
+                    }
+                    currentTime = seconds
+                    self.seek(to: seconds)
+                    Logger.log.info("updateTime \(seconds)")
                 }
             } else {
                 hardClearVideo()
