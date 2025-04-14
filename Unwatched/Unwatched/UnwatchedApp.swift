@@ -40,6 +40,7 @@ struct UnwatchedApp: App {
                         // avoid fetching another video first
                         player.restoreNowPlayingVideo()
                     }
+                    migrateEnableYtWatchHistory()
                 }
                 #if os(macOS)
                 .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
@@ -80,5 +81,13 @@ struct UnwatchedApp: App {
         }
         .windowResizability(.contentSize)
         #endif
+    }
+
+    func migrateEnableYtWatchHistory() {
+        let useNoCookieUrl = UserDefaults.standard.value(forKey: Const.useNoCookieUrl) as? Bool
+        if useNoCookieUrl == nil,
+           let enableYtWatchHistory = UserDefaults.standard.value(forKey: "enableYtWatchHistory") as? Bool {
+            UserDefaults.standard.setValue(!enableYtWatchHistory, forKeyPath: Const.useNoCookieUrl)
+        }
     }
 }

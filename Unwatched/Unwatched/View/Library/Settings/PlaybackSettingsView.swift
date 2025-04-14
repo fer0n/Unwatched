@@ -69,7 +69,7 @@ struct PlaybackSettingsView: View {
                     }
                 }
                 #endif
-                
+
                 MySection("youtube", footer: "useNoCookieUrlHelper") {
                     Toggle(isOn: $useNoCookieUrl) {
                         Text("useNoCookieUrl")
