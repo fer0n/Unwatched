@@ -22,7 +22,7 @@ extension Const {
         Const.showAddToQueueButton: false,
         Const.showClearQueueButton: true,
         Const.enableQueueContextMenu: false,
-        Const.enableYtWatchHistory: true,
+        Const.useNoCookieUrl: false,
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,

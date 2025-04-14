@@ -8,13 +8,11 @@ import UnwatchedShared
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
-    @AppStorage(Const.enableYtWatchHistory) var enableYtWatchHistory: Bool = true
     @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
 
     var body: some View {
@@ -58,15 +56,6 @@ struct VideoSettingsView: View {
                         Text("enableQueueContextMenu")
                     }
                     #endif
-                }
-
-                MySection("youtube", footer: "enableYtWatchHistoryHelper") {
-                    Toggle(isOn: $enableYtWatchHistory) {
-                        Text("enableYtWatchHistory")
-                    }
-                    .onChange(of: enableYtWatchHistory) { _, _ in
-                        PlayerManager.reloadPlayer()
-                    }
                 }
             }
             .myNavigationTitle("videoSettings")
