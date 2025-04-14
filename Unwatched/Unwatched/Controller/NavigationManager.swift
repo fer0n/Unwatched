@@ -241,12 +241,10 @@ import UnwatchedShared
     }
 
     func toggleSidebar() {
-        withAnimation {
-            if isSidebarHidden {
-                columnVisibility = .all
-            } else {
-                columnVisibility = .detailOnly
-            }
+        if isSidebarHidden {
+            columnVisibility = .all
+        } else {
+            columnVisibility = .detailOnly
         }
     }
 
