@@ -151,6 +151,7 @@ extension PlayerManager {
         } else {
             seekAbsolute = time
         }
+        updateElapsedTime(time, videoId: video?.youtubeId)
     }
 
     @MainActor
@@ -281,5 +282,13 @@ extension PlayerManager {
             handleHotSwap()
             PlayerManager.reloadPlayer()
         }
+    }
+
+    @MainActor
+    func handlePotentialUpdate() {
+        guard !isPlaying else {
+            return
+        }
+        loadTopmostVideoFromQueue(updateTime: true)
     }
 }
