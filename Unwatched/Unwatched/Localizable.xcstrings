@@ -4754,27 +4754,75 @@
     "hideMenuOnPlay" : {
       "localizations" : {
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Menü minimieren"
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Seitenleiste ausblenden"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Menü minimieren"
+                }
+              }
+            }
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Menu"
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Hide Sidebar"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Hide Menu"
+                }
+              }
+            }
           }
         },
         "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Masquer le Menu"
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Masquer la barre latérale"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Masquer le Menu"
+                }
+              }
+            }
           }
         },
         "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ukryj menu"
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ukryj pasek boczny"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ukryj menu"
+                }
+              }
+            }
           }
         }
       }

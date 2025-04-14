@@ -211,9 +211,13 @@ import UnwatchedShared
         }
 
         if hideMenuOnPlay || rotateOnPlay {
+            #if os(macOS)
+            toggleSidebar(show: false)
+            #else
             withAnimation {
                 SheetPositionReader.shared.setDetentMinimumSheet()
             }
+            #endif
         }
 
         if SheetPositionReader.shared.landscapeFullscreen {
@@ -240,12 +244,9 @@ import UnwatchedShared
         }
     }
 
-    func toggleSidebar() {
-        if isSidebarHidden {
-            columnVisibility = .all
-        } else {
-            columnVisibility = .detailOnly
-        }
+    func toggleSidebar(show: Bool? = nil) {
+        let shouldShow = show ?? isSidebarHidden
+        columnVisibility = shouldShow ? .all : .detailOnly
     }
 
     var isSidebarHidden: Bool {
