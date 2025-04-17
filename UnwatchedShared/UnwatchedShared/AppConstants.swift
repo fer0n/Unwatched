@@ -51,6 +51,9 @@ public struct Const {
     
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
+    
+    /// Update the current time if it differens by x seconds
+    public static let updateTimeMinimum: Double = 10
 
     /// Playback speeds that will be spelled out
     public static let highlightedPlaybackSpeeds = [1, 1.5, 2, 3]

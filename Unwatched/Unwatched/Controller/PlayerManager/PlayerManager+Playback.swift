@@ -54,8 +54,24 @@ extension PlayerManager {
         Logger.log.info("updateElapsedTime")
 
         let newTime = time ?? currentTime
-        if let time = newTime, video?.elapsedSeconds != time {
-            video?.elapsedSeconds = time
+
+        guard let time = newTime,
+              video?.elapsedSeconds != time,
+              let modelId = video?.persistentModelID else {
+            Logger.log.info("updateElapsedTime: no change")
+            return
+        }
+
+        video?.elapsedSeconds = time
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
+            // workaround: avoid hiccups during seek, force update
+            // simply setting the video doesn't save immediately
+            let context = DataProvider.mainContext
+            let model: Video? = context.existingModel(for: modelId)
+            model?.elapsedSeconds = time
+            try? context.save()
         }
     }
 

@@ -197,14 +197,17 @@ import UnwatchedShared
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)
                 } else if updateTime && topVideo.youtubeId == currentVideoId,
-                          let seconds = topVideo.elapsedSeconds {
-                    if abs((currentTime ?? seconds) - seconds) <= 10 {
-                        Logger.log.info("updateTime: same video, same time: \(seconds)")
+                          let topVideoTime = topVideo.elapsedSeconds {
+                    let time = currentTime ?? topVideoTime
+                    let delta = topVideoTime - time
+
+                    if abs(delta) <= Const.updateTimeMinimum {
+                        Logger.log.info("updateTime: same video, same time: \(topVideoTime)")
                         return
                     }
-                    currentTime = seconds
-                    self.seek(to: seconds)
-                    Logger.log.info("updateTime \(seconds)")
+                    currentTime = topVideoTime
+                    self.seek(to: topVideoTime)
+                    Logger.log.info("updateTime \(topVideoTime)")
                 }
             } else {
                 hardClearVideo()
