@@ -57,6 +57,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         webView.underPageBackgroundColor = NSColor.backgroundGray
         #endif
 
+        #if os(iOS)
         let userAgent = webView.value(forKey: "userAgent") as? String
         if player.airplayHD {
             let newAgent = customAirPlayCompatibilityUserAgent(userAgent)
@@ -68,6 +69,7 @@ struct PlayerWebView: PlatformViewRepresentable {
                 webView.customUserAgent = modifiedUserAgent
             }
         }
+        #endif
 
         loadWebContent(webView)
         return webView
