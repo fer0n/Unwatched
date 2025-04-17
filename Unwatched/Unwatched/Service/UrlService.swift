@@ -36,7 +36,7 @@ struct UrlService {
     }
 
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double? = nil) -> String {
-        if let startAt = startAt {
+        if let startAt {
             return "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
         }
         return "https://www.youtube.com/watch?v=\(youtubeId)"
