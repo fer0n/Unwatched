@@ -32,6 +32,7 @@ struct PlayerLoadingTimeout: View {
                             .fill(.automaticBlack)
                     }
             }
+            .buttonStyle(.plain)
             .opacity(showReload ? 1 : 0)
         }
         .opacity(player.isLoading ? 1 : 0)

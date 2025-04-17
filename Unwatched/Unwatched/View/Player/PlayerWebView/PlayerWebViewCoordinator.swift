@@ -328,7 +328,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.player.getStartPosition(),
             parent.player.requiresFetchingVideoData(),
             disableCaptions: disableCaptions,
-            minimalPlayerUI: minimalPlayerUI
+            minimalPlayerUI: minimalPlayerUI,
+            isNonEmbedding: parent.player.embeddingDisabled
         )
         webView.evaluateJavaScript(script)
         withAnimation {

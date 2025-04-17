@@ -66,6 +66,15 @@ extension PlayerWebView {
                         }
                     }
                 }
+
+                // theater mode - workaround: using setTimeout on macOS leads to auto play in some cases
+                const isTheaterMode = video?.offsetWidth >= window.innerWidth * 0.98;
+                if (!isTheaterMode) {
+                    const theaterButton = document.querySelector(".ytp-size-button");
+                    if (theaterButton) {
+                        theaterButton.click();
+                    }
+                }
             """
         }
         return "video.play();"
@@ -110,7 +119,8 @@ extension PlayerWebView {
         _ startAt: Double,
         _ requiresFetchingVideoData: Bool?,
         disableCaptions: Bool,
-        minimalPlayerUI: Bool
+        minimalPlayerUI: Bool,
+        isNonEmbedding: Bool
     ) -> String {
         """
         var video = document.querySelector('video');
@@ -120,22 +130,13 @@ extension PlayerWebView {
         var disableCaptions = \(disableCaptions);
         var minimalPlayerUI = \(minimalPlayerUI);
         const interceptKeys = \(PlayerShortcut.interceptKeysJS);
+        const isNonEmbedding = \(isNonEmbedding);
 
         video.muted = false;
 
         function sendMessage(topic, payload) {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
         }
-
-
-        // theater mode
-        setTimeout(() => {
-            const theaterButton = document.querySelector(".ytp-size-button");
-            sendMessage("theaterButton", theaterButton);
-            if (theaterButton) {
-                theaterButton.click();
-            }
-        }, 1500);
 
 
         // Prevent specific keyboard shortcuts from being captured
@@ -215,9 +216,9 @@ extension PlayerWebView {
                 .ytp-pause-overlay, .branding-img {
                     display: none !important;
                 }
-                .ytp-play-progress {
-                    background: #ddd !important;
-                }
+                ${!isNonEmbedding
+                    ? '.ytp-play-progress { background: #ddd !important; }'
+                    : ''}
                 .videowall-endscreen {
                     opacity: 0.2;
                 }
@@ -446,25 +447,27 @@ extension PlayerWebView {
 
 
         // Error handling
-        var errorCheckTimers = [];
+        if (!isNonEmbedding) {
+            var errorCheckTimers = [];
 
-        function checkError() {
-            const errorContent = document.querySelector('.ytp-error-content')
-            if (errorContent) {
-                sendMessage("error", errorContent?.innerText);
+            function checkError() {
+                const errorContent = document.querySelector('.ytp-error-content')
+                if (errorContent) {
+                    sendMessage("error", errorContent?.innerText);
+                }
             }
-        }
-        function cancelErrorChecks() {
-            errorCheckTimers.forEach(clearTimeout);
-            errorCheckTimers = [];
-        }
+            function cancelErrorChecks() {
+                errorCheckTimers.forEach(clearTimeout);
+                errorCheckTimers = [];
+            }
 
-        // check for errors (could use improveming)
-        checkError()
-        errorCheckTimers.push(setTimeout(checkError, 1000));
-        errorCheckTimers.push(setTimeout(checkError, 3000));
-        errorCheckTimers.push(setTimeout(checkError, 5000));
-        errorCheckTimers.push(setTimeout(checkError, 10000));
+            // check for errors
+            checkError()
+            errorCheckTimers.push(setTimeout(checkError, 1000));
+            errorCheckTimers.push(setTimeout(checkError, 3000));
+            errorCheckTimers.push(setTimeout(checkError, 5000));
+            errorCheckTimers.push(setTimeout(checkError, 10000));
+        }
 
         // Handle link clicks
         document.addEventListener('click', function(event) {
