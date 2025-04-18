@@ -45,6 +45,9 @@ import UnwatchedShared
     @ObservationIgnored var previousIsPlaying = false
     @ObservationIgnored var previousState = PreviousState()
 
+    @ObservationIgnored var changeChapterTask: Task<Void, Never>?
+    @ObservationIgnored var earlyEndTime: Double?
+
     init() {}
 
     static func load() -> PlayerManager {

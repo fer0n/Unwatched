@@ -52,7 +52,7 @@ public struct Const {
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
     
-    /// Update the current time if it differens by x seconds
+    /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
 
     /// Playback speeds that will be spelled out
@@ -89,6 +89,9 @@ public struct Const {
     public static let recentVideoDedupeCheck: Int = 30
 
     public static let updateDbTimeSeconds: Int = 30
+    
+    /// Timer interval to monitor the current playback
+    public static let elapsedTimeMonitorSeconds: Double = 1
 
     /// Time in seconds before fullscreen controls are automatically hidden
     public static let controlsAutoHideDebounce: Double = 4
