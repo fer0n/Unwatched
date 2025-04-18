@@ -6,6 +6,7 @@
 import SwiftUI
 import WebKit
 import OSLog
+import UnwatchedShared
 
 extension PlayerWebView {
 
@@ -244,7 +245,7 @@ extension PlayerWebView {
             clearInterval(timer);
             timer = setInterval(function() {
                 sendMessage("currentTime", video.currentTime);
-            }, 1000);
+            }, \(Const.elapsedTimeMonitorSeconds * 1000));
         }
         function stopTimer() {
             clearInterval(timer);

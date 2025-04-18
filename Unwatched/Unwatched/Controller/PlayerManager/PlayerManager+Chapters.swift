@@ -21,10 +21,9 @@ extension PlayerManager {
         withAnimation {
             currentTime = time
         }
-        if let endTime = currentEndTime, time >= endTime {
+        if let endTime = earlyEndTime ?? currentEndTime, time >= endTime {
             handleChapterChange()
-        }
-        if let current = currentChapter, time < current.startTime {
+        } else if let current = currentChapter, time < current.startTime {
             handleChapterChange()
         }
     }
@@ -57,24 +56,42 @@ extension PlayerManager {
     }
 
     @MainActor
-    func handleChapterChange() {
+    func cancelTimeMonitoring() {
+        Logger.log.info("cancelTimeMonitoring")
+        currentEndTime = nil
+        earlyEndTime = nil
+        changeChapterTask?.cancel()
+    }
+
+    @MainActor
+    func handlePreciseChapterChangePlay() {
+        if let currentTime, let currentEndTime, let earlyEndTime,
+           earlyEndTime < currentTime, currentTime < currentEndTime {
+            handleChapterChange()
+        }
+    }
+
+    @MainActor
+    func handleChapterChange(for timeProp: Double? = nil) {
         Logger.log.info("handleChapterChange")
-        guard let time = currentTime,
+        guard let time = timeProp ?? currentTime,
               let video else {
             Logger.log.info("no time or video")
+            cancelTimeMonitoring()
             return
         }
 
         let chapters = video.sortedChapters
         guard !chapters.isEmpty else {
-            currentEndTime = nil // stop monitoring this video for chapters
+            cancelTimeMonitoring() // stop monitoring this video for chapters
             Logger.log.info("no info to check for chapters")
             return
         }
 
         // current chapter
         guard let current = extractCurrentChapter(at: time) else {
-            currentEndTime = nil
+            Logger.log.info("extractCurrentChapter failed")
+            cancelTimeMonitoring()
             return
         }
 
@@ -104,11 +121,42 @@ extension PlayerManager {
         withAnimation {
             currentChapter = current
         }
+
+        // set end time; prepare jump
         if let nextStart = next?.startTime {
-            currentEndTime = max(nextStart, current.endTime ?? 0)
+            let nextEndTime = max(nextStart, current.endTime ?? 0)
+            currentEndTime = nextEndTime
+
+            // use the max playback speed to avoid refreshing for every speed change
+            let nextEndTimeForPreciseJump = nextEndTime - (Const.elapsedTimeMonitorSeconds * Const.speedMax)
+
+            if time >= nextEndTimeForPreciseJump {
+                // we're getting close to the next chapter, now might be the last chance for the precise jump
+                let timeUntilChange = (nextEndTime - time) / playbackSpeed
+                if isPlaying {
+                    schedulePreciseChapterChange(delay: timeUntilChange, targetTime: nextEndTime)
+                    earlyEndTime = nil
+                }
+            } else {
+                earlyEndTime = nextEndTimeForPreciseJump
+                changeChapterTask?.cancel()
+            }
         } else {
             // no more chapters
-            currentEndTime = nil
+            Logger.log.info("no more chapters")
+            cancelTimeMonitoring()
+        }
+    }
+
+    @MainActor
+    func schedulePreciseChapterChange(delay: Double, targetTime: Double) {
+        Logger.log.info("schedulePreciseChapterChange time: \(targetTime)")
+        changeChapterTask?.cancel()
+        changeChapterTask = Task { @MainActor in
+            do {
+                try await Task.sleep(for: .seconds(delay))
+                handleChapterChange(for: targetTime)
+            } catch { }
         }
     }
 

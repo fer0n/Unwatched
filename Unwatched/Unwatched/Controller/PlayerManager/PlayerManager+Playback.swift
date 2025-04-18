@@ -109,6 +109,7 @@ extension PlayerManager {
         }
         updateVideoEnded()
         handleRotateOnPlay()
+        handlePreciseChapterChangePlay()
     }
 
     @MainActor
@@ -117,6 +118,7 @@ extension PlayerManager {
             self.isPlaying = false
         }
         updateVideoEnded()
+        changeChapterTask?.cancel()
     }
 
     /// Restarts, pauses or plays the current video
@@ -252,6 +254,7 @@ extension PlayerManager {
         #endif
     }
 
+    @MainActor
     private func updateVideoEnded() {
         if videoEnded {
             setVideoEnded(false)
@@ -266,7 +269,9 @@ extension PlayerManager {
         return duration - time <= Const.secondsConsideredCloseToEnd
     }
 
+    @MainActor
     func setVideoEnded(_ value: Bool) {
+        Logger.log.info("setVideoEnded")
         if value != videoEnded {
             withAnimation {
                 videoEnded = value
