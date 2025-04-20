@@ -8,8 +8,7 @@ import OSLog
 
 public extension ProcessInfo {
     var isXcodePreview: Bool {
-        // return true
-        environment[ "XCODE_RUNNING_FOR_PREVIEWS" ] == "1"
+        environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
     }
 }
 
