@@ -5,19 +5,20 @@ struct ChapterListItem: View {
     var chapter: Chapter
     var toggleChapter: (_ chapter: Chapter) -> Void
     var timeText: String?
+    var spacing: CGFloat = 5
 
     @ScaledMetric var frameSize = 30
     @State var toggleHaptic = false
 
     var body: some View {
-        HStack {
+        HStack(spacing: spacing) {
             toggleChapterButton
                 .opacity(chapter.isActive ? 1 : 0.6)
 
             VStack(alignment: .leading) {
                 if let title = chapter.titleText {
                     Text(title)
-                        .lineLimit(2)
+                        .lineLimit(3)
                         .multilineTextAlignment(.leading)
                 }
                 if let timeText {
