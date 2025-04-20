@@ -54,7 +54,8 @@ extension PlayerManager {
         player.video = DataProvider.dummyVideo
         player.currentTime = 5
         player.currentChapter = Chapter.getDummy()
-        //        player.embeddingDisabled = true
+        // player.embeddingDisabled = true
+        player.isPlaying = true
         return player
     }
 }
