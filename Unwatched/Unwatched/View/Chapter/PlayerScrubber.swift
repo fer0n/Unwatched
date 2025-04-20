@@ -37,13 +37,12 @@ struct PlayerScrubber: View {
                 HStack {
                     Text(formattedCurrentTime)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentTransition(.numericText(countsDown: false))
 
-                    if let formattedDuration {
-                        Text(formattedDuration)
-                            .opacity(formattedCurrentTime == " " ? 0 : 1)
-                    }
+                    Text(formattedCurrentTime == " " ? " " : formattedDuration)
+                        .contentTransition(.numericText(countsDown: false))
                 }
-                .animation(.default, value: formattedCurrentTime == " ")
+                .animation(.default.speed(1), value: formattedCurrentTime == " ")
                 .padding(.horizontal, scrubbingPadding)
                 .foregroundStyle(.secondary)
                 .font(.caption)
@@ -101,9 +100,10 @@ struct PlayerScrubber: View {
                 .animation(.default.speed(3), value: isInactive)
 
                 if inlineTime {
-                    Text(formattedDuration ?? "")
+                    Text(formattedDuration)
                         .foregroundStyle(.secondary)
                         .font(.subheadline.monospacedDigit())
+                        .contentTransition(.numericText(countsDown: true))
                 }
             }
         }
@@ -140,8 +140,8 @@ struct PlayerScrubber: View {
         return player.currentTime
     }
 
-    var formattedDuration: String? {
-        player.video?.duration?.formattedSecondsColon
+    var formattedDuration: String {
+        player.video?.duration?.formattedSecondsColon ?? " "
     }
 
     var formattedCurrentTime: String {
@@ -248,7 +248,7 @@ struct PlayerScrubber: View {
 }
 
 #Preview {
-    PlayerScrubber(limitHeight: true)
+    PlayerScrubber(limitHeight: false)
         .frame(height: 150)
         .environment(PlayerManager.getDummy())
 }
