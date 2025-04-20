@@ -14,6 +14,10 @@ struct ChapterList: View {
     var video: Video
     var isCompact: Bool = false
 
+    var padding: CGFloat {
+        isCompact ? 4 : 6
+    }
+
     var body: some View {
         if !chapters.isEmpty {
             VStack(spacing: isCompact ? 4 : 10) {
@@ -22,28 +26,32 @@ struct ChapterList: View {
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
-                    ChapterListItem(chapter: chapter,
-                                    toggleChapter: toggleChapter,
-                                    timeText: getTimeText(
-                                        chapter, isCurrent: isCurrent
-                                    ))
-                        .padding(isCompact ? 4 : 10)
-                        .padding(.trailing, 4)
-                        .background(
-                            backgroundColor
-                                .clipShape(.rect(cornerRadius: 15.0))
-                                .opacity(chapter.isActive ? 1 : 0.6)
-                        )
-                        .id(chapter.persistentModelID)
-                        .onTapGesture {
-                            if !chapter.isActive {
-                                toggleChapter(chapter)
-                            } else {
-                                setChapter(chapter)
-                            }
+                    ChapterListItem(
+                        chapter: chapter,
+                        toggleChapter: toggleChapter,
+                        timeText: getTimeText(
+                            chapter, isCurrent: isCurrent
+                        ),
+                        spacing: padding
+                    )
+                    .padding(.horizontal, padding + 2)
+                    .padding(.vertical, padding)
+                    .padding(.trailing, 4)
+                    .background(
+                        backgroundColor
+                            .clipShape(.rect(cornerRadius: 15.0))
+                            .opacity(chapter.isActive ? 1 : 0.6)
+                    )
+                    .id(chapter.persistentModelID)
+                    .onTapGesture {
+                        if !chapter.isActive {
+                            toggleChapter(chapter)
+                        } else {
+                            setChapter(chapter)
                         }
-                        .foregroundStyle(foregroundColor)
-                        .tint(foregroundColor)
+                    }
+                    .foregroundStyle(foregroundColor)
+                    .tint(foregroundColor)
                 }
             }
         }
