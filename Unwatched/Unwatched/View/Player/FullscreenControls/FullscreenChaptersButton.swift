@@ -45,7 +45,11 @@ struct FullscreenChaptersButton: View {
                         }
                         .scrollIndicators(.hidden)
                     }
-                    .frame(minWidth: 200, maxWidth: 350)
+                    .frame(
+                        minWidth: 200,
+                        idealWidth: 350,
+                        maxWidth: 350
+                    )
                 }
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
@@ -56,4 +60,13 @@ struct FullscreenChaptersButton: View {
             }
         }
     }
+}
+
+#Preview {
+    FullscreenChaptersButton(
+        arrowEdge: .bottom,
+        menuOpen: .constant(true),
+        size: 40
+    )
+    .environment(PlayerManager())
 }

@@ -86,3 +86,24 @@ struct ChapterListItem: View {
         .background(Color.gray)
     }
 }
+
+#Preview {
+    let texts = [
+        "Long long long long long long long long long long text",
+        "text",
+        "text",
+        "text",
+        "LAST"
+    ]
+
+    ZStack {}
+        .popover(isPresented: .constant(true), arrowEdge: .trailing) {
+            ForEach(texts, id: \.self) { text in
+                Text(text)
+                    .multilineTextAlignment(.leading)
+                    .frame(idealWidth: 300)
+                // .fixedSize(horizontal: false, vertical: true)
+            }
+            .presentationCompactAdaptation(.popover)
+        }
+}
