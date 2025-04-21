@@ -11,6 +11,12 @@ extension Date {
         return DateFormatter()
     }()
 
+    private static let relativeFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .short
+        return formatter
+    }()
+
     var formatted: String {
         let calendar = Calendar.current
         let formatter = Date.formatter
@@ -97,6 +103,10 @@ extension Date {
         } else {
             return "\(components.second ?? 0)s"
         }
+    }
+
+    var formattedRelativeVerbatim: String {
+        Date.relativeFormatter.localizedString(for: self, relativeTo: Date.now)
     }
 
     static func parseYtOfflineDate(_ dateString: String) -> Date? {

@@ -72,9 +72,13 @@ struct MenuView: View {
             }
             .padding(.horizontal, padding)
             .sheet(item: $navManager.videoDetail) { video in
-                ChapterDescriptionView(video: video)
-                    .presentationDragIndicator(.hidden)
-                    .environment(\.colorScheme, colorScheme)
+                ZStack {
+                    Color.backgroundColor.ignoresSafeArea(.all)
+
+                    ChapterDescriptionView(video: video)
+                        .presentationDragIndicator(.hidden)
+                        .environment(\.colorScheme, colorScheme)
+                }
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
