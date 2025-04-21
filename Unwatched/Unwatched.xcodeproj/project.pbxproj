@@ -432,6 +432,8 @@
 		88B6DE392D76F06200CB8E64 /* SettingsWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B6DE372D76F06200CB8E64 /* SettingsWindowView.swift */; };
 		88B7FFA22C99DE9600CD917E /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; };
 		88B7FFA32C99DE9600CD917E /* UnwatchedShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		88B9E3A22DB635B900B066BD /* CopyUrlOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */; };
+		88B9E3A32DB635B900B066BD /* CopyUrlOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */; };
 		88BB6D122D8C069200A90CCF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88BB6D112D8C069200A90CCF /* CloudKit.framework */; };
 		88BDC3A32B76A9BF00656D63 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3A22B76A9BF00656D63 /* SetupView.swift */; };
 		88BDC3A72B78172C00656D63 /* ImportSubscriptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3A62B78172C00656D63 /* ImportSubscriptionsView.swift */; };
@@ -805,6 +807,7 @@
 		88B0C1612C427940006D2423 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		88B6DE372D76F06200CB8E64 /* SettingsWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowView.swift; sourceTree = "<group>"; };
 		88B7FF572C99DE8F00CD917E /* UnwatchedShared.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UnwatchedShared.xcodeproj; path = ../UnwatchedShared/UnwatchedShared.xcodeproj; sourceTree = "<group>"; };
+		88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyUrlOptions.swift; sourceTree = "<group>"; };
 		88BB6D112D8C069200A90CCF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.2.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		88BDC3A22B76A9BF00656D63 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		88BDC3A62B78172C00656D63 /* ImportSubscriptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSubscriptionsView.swift; sourceTree = "<group>"; };
@@ -1108,6 +1111,7 @@
 				886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */,
 				8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */,
 				8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */,
+				88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */,
 				88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */,
 				889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */,
 				887E72932B91F6D400928946 /* NextVideoButton.swift */,
@@ -2039,6 +2043,7 @@
 				88C5EF8A2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				889931D82D731AB0009096AB /* PreviousState.swift in Sources */,
 				889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */,
+				88B9E3A22DB635B900B066BD /* CopyUrlOptions.swift in Sources */,
 				889931DB2D731AC5009096AB /* PlayerType.swift in Sources */,
 				8852B02C2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
 				88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */,
@@ -2215,6 +2220,7 @@
 				88F3AA8B2C998B040030B2EA /* Color.swift in Sources */,
 				88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */,
 				881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
+				88B9E3A32DB635B900B066BD /* CopyUrlOptions.swift in Sources */,
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,

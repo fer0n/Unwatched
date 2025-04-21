@@ -153,6 +153,9 @@ public struct Const {
     public static let disableFullscreenSF = "arrow.down.right.and.arrow.up.left"
 
     public static let reloadSF = "arrow.clockwise"
+    public static let shareSF = "square.and.arrow.up.fill"
+    public static let videoSF = "play.rectangle.fill"
+    public static let channelSF = "person.fill"
     
     // Settings
     public static let notificationsSettingsSF = "app.badge"
