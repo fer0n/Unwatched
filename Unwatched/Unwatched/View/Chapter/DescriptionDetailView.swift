@@ -26,6 +26,8 @@ struct DescriptionDetailView: View {
 }
 
 struct DescriptionDetailHeaderView: View {
+    @State var hapticToggle = false
+
     let video: Video
     let onTitleTap: () -> Void
     let setShowMenu: (() -> Void)?
@@ -41,14 +43,11 @@ struct DescriptionDetailHeaderView: View {
         }
         .buttonStyle(.plain)
         .contextMenu {
-            if let url = video.url {
-                Button {
-                    ClipboardService.set(url.absoluteString)
-                } label: {
-                    Label("copyUrl", systemImage: "document.on.document.fill")
-                }
+            CopyUrlOptions(asSection: true, video: video) {
+                hapticToggle.toggle()
             }
         }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
 
         VStack(alignment: .leading) {
             InteractiveSubscriptionTitle(

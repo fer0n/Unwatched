@@ -23,11 +23,21 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     var body: some View {
         Menu {
-            SleepTimer(viewModel: sleepTimerVM, onEnded: player.onSleepTimerEnded)
             ReloadPlayerButton()
+            Divider()
+
+            SleepTimer(viewModel: sleepTimerVM, onEnded: player.onSleepTimerEnded)
+            if let video = player.video {
+                CopyUrlOptions(
+                    video: video,
+                    timestamp: player.currentTime
+                ) {
+                    hapticToggle.toggle()
+                    flashSymbol = "checkmark"
+                }
+            }
 
             bookmarkButton
-            copyUrlButton
             deferDateButton
 
             if let video = player.video, let url = video.url {
@@ -78,21 +88,6 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             Text("deferVideo")
             Image(systemName: "clock.fill")
                 .padding(5)
-        }
-    }
-
-    @ViewBuilder
-    var copyUrlButton: some View {
-        if let video = player.video {
-            Button {
-                let text = UrlService.getShortenedUrl(video.youtubeId)
-                ClipboardService.set(text)
-                flashSymbol = "checkmark"
-                hapticToggle.toggle()
-            } label: {
-                Text("copyUrl")
-                Image(systemName: "document.on.document.fill")
-            }
         }
     }
 

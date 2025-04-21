@@ -27,8 +27,8 @@ struct UrlService {
 
     static let issuesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/issues")
 
-    static func getShortenedUrl(_ youtubeId: String) -> String {
-        "https://youtu.be/\(youtubeId)"
+    static func getShortenedUrl(_ youtubeId: String, timestamp: Double? = nil) -> String {
+        "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
     }
 
     static func getEmailUrl(body: String) -> URL {
@@ -222,21 +222,24 @@ struct UrlService {
     static func getYoutubeUrl(userName: String? = nil,
                               channelId: String? = nil,
                               playlistId: String? = nil,
-                              mobile: Bool = true) -> String? {
+                              mobile: Bool = true,
+                              videosSubPath: Bool = true) -> String? {
         let baseUrl = "https://\(mobile ? "m." : "")youtube.com"
         if let playlistId = playlistId {
             return "\(baseUrl)/playlist?list=\(playlistId)"
         }
-        if let userName = userName {
-            return "\(baseUrl)/@\(userName)/videos"
+        let subPath = videosSubPath ? "/videos" : ""
+        if let userName {
+            return "\(baseUrl)/@\(userName)\(subPath)"
         }
-        if let channelId = channelId {
-            return "\(baseUrl)/channel/\(channelId)/videos"
+        if let channelId {
+            return "\(baseUrl)/channel/\(channelId)\(subPath)"
         }
         Logger.log.warning("nothing to create a url from")
         return nil
     }
 
+    @MainActor
     static func open(_ url: URL) {
         #if os(iOS)
         UIApplication.shared.open(url)

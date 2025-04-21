@@ -1839,6 +1839,16 @@
         }
       }
     },
+    "channel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Channel"
+          }
+        }
+      }
+    },
     "channelTitle" : {
       "localizations" : {
         "de" : {
@@ -7543,6 +7553,16 @@
         }
       }
     },
+    "playlist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist"
+          }
+        }
+      }
+    },
     "playPause" : {
       "localizations" : {
         "de" : {
@@ -8407,6 +8427,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Włącz tryb pełnego ekranu"
+          }
+        }
+      }
+    },
+    "rssFeed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RSS Feed"
           }
         }
       }
@@ -10859,6 +10889,16 @@
         }
       }
     },
+    "video" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        }
+      }
+    },
     "Video" : {
       "localizations" : {
         "de" : {
@@ -10939,6 +10979,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nowe filmy w kolejce"
+          }
+        }
+      }
+    },
+    "videoAtTimestamp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timestamped Video"
           }
         }
       }
