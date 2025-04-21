@@ -62,20 +62,6 @@ struct ContentView: View {
                     sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
                 }
             }
-            .sheet(isPresented: $navManager.showDescriptionDetail) {
-                if let video = player.video {
-                    ChapterDescriptionView(video: video)
-                        .presentationDetents(bigScreen ? [] : chapterViewDetent)
-                        .presentationBackgroundInteraction(
-                            bigScreen
-                                ? .disabled
-                                :
-                                .enabled(upThrough: .height(sheetPos.playerControlHeight))
-                        )
-                        .presentationDragIndicator(.hidden)
-                        .environment(\.colorScheme, colorScheme)
-                }
-            }
             .menuViewSheet(
                 allowMaxSheetHeight: videoExists && !navManager.searchFocused,
                 allowPlayerControlHeight: !player.embeddingDisabled

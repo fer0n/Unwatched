@@ -56,7 +56,7 @@ struct DescriptionDetailHeaderView: View {
                 setShowMenu: setShowMenu
             )
             if let published = video.publishedDate {
-                Text(verbatim: "\(published.formattedExtensive)")
+                Text(verbatim: "\(published.formattedExtensive) (\(published.formattedRelativeVerbatim))")
             }
             if let timeString = video.duration?.formattedSeconds {
                 Text(verbatim: timeString)

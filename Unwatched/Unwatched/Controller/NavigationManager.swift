@@ -26,7 +26,6 @@ import UnwatchedShared
     @ObservationIgnored var scrollToCurrentChapter = false
 
     var tab = NavigationTab.queue
-    var showDescriptionDetail = false
     var searchFocused = false
 
     var askForReviewPoints = 0
