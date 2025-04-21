@@ -103,6 +103,35 @@ extension VideoService {
         withAnimation {
             video.duration = duration
         }
+
+        let modelId = video.persistentModelID
+        forceUpdateVideo(modelId, duration: duration)
+    }
+
+    static func forceUpdateVideo(
+        _ videoModelId: PersistentIdentifier,
+        duration: Double? = nil,
+        elapsedSeconds: Double? = nil
+    ) {
+        Task { @MainActor in
+            do {
+                try await Task.sleep(for: .milliseconds(200))
+                let context = DataProvider.mainContext
+                guard let model: Video = context.existingModel(for: videoModelId) else {
+                    Logger.log.warning("forceUpdateVideo: video not found")
+                    return
+                }
+                withAnimation {
+                    if let duration {
+                        model.duration = duration
+                    }
+                    if let elapsedSeconds {
+                        model.elapsedSeconds = elapsedSeconds
+                    }
+                }
+                try context.save()
+            } catch {}
+        }
     }
 
     static func setVideoWatchedAsync(
