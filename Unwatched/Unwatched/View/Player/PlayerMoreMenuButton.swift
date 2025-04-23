@@ -30,7 +30,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             if let video = player.video {
                 CopyUrlOptions(
                     video: video,
-                    timestamp: player.currentTime
+                    getTimestamp: getTimestamp
                 ) {
                     hapticToggle.toggle()
                     flashSymbol = "checkmark"
@@ -140,6 +140,10 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             VideoService.toggleBookmark(video)
             hapticToggle.toggle()
         }
+    }
+
+    func getTimestamp() -> Double {
+        player.currentTime ?? player.video?.elapsedSeconds ?? 0
     }
 }
 

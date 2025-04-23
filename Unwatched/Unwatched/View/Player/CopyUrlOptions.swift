@@ -9,7 +9,7 @@ import UnwatchedShared
 struct CopyUrlOptions: View {
     var asSection: Bool = false
     var video: Video
-    var timestamp: Double?
+    var getTimestamp: (() -> Double)?
     var onSuccess: (() -> Void)?
 
     var body: some View {
@@ -94,11 +94,11 @@ struct CopyUrlOptions: View {
 
     @ViewBuilder
     var copyUrlTimestampButton: some View {
-        if let timestamp = timestamp ?? video.elapsedSeconds {
+        if let getTimestamp {
             Button {
                 let text = UrlService.getShortenedUrl(
                     video.youtubeId,
-                    timestamp: timestamp
+                    timestamp: getTimestamp()
                 )
                 copyUrl(text)
             } label: {
