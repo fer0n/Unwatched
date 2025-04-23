@@ -198,7 +198,7 @@ extension PlayerManager {
 
     @MainActor
     func temporarySlowDown() {
-        if actualPlaybackSpeed == 1 {
+        if actualPlaybackSpeed <= 1 {
             temporaryPlaybackSpeed = Const.speedMin
         } else {
             temporaryPlaybackSpeed = 1
