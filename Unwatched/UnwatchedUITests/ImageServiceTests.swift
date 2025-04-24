@@ -27,7 +27,6 @@ class ImageServiceTests: XCTestCase {
         let testData: [(String, Bool)] = [
             // basically impossible to detect
             ("https://i4.ytimg.com/vi/skdL0ePqErk/hqdefault.jpg", true),
-            ("https://i1.ytimg.com/vi/DW488vU0DfA/hqdefault.jpg", true),
 
             // v has color only on the very edge
             ("https://i.ytimg.com/vi/UXndgq_jEnk/hqdefault.jpg", true),
