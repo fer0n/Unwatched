@@ -1722,6 +1722,7 @@
 				de,
 				pl,
 				fr,
+				es,
 			);
 			mainGroup = 88DFC0A22B44843A001895C8;
 			productRefGroup = 88DFC0AC2B44843A001895C8 /* Products */;

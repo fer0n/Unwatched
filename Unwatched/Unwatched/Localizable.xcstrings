@@ -32,6 +32,12 @@
             "value" : "%@ ago"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hace %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -58,6 +64,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ remaining"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ restante"
           }
         },
         "fr" : {
@@ -88,6 +100,12 @@
             "value" : "%1$@%2$lld New Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@%2$lld Videos Nuevos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -111,6 +129,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld min"
@@ -144,6 +168,12 @@
             "value" : "%lld New Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld videos nuevos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -170,6 +200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "^[%lld Video](inflect: true) Available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Video](inflect: true) Disponible"
           }
         },
         "fr" : {
@@ -200,6 +236,12 @@
             "value" : "Subscribe to Playlist"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscribirse a Lista de Reproducción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -226,6 +268,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Playlist Videos to Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir Videos de la Lista a la Bandeja de Entrada"
           }
         },
         "fr" : {
@@ -256,6 +304,12 @@
             "value" : "Queue Playlist Next"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poner Lista en Cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -282,6 +336,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bookmark"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcador"
           }
         },
         "fr" : {
@@ -312,6 +372,12 @@
             "value" : "Queued Successfully"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encolado con éxito"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -338,6 +404,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queueing Video…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encolando video…"
           }
         },
         "fr" : {
@@ -368,6 +440,12 @@
             "value" : "Add Subscription"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir suscripción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -394,6 +472,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subscribe to ${youtubeUrl}"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscribirse a ${youtubeUrl}"
           }
         },
         "fr" : {
@@ -424,6 +508,12 @@
             "value" : "Add Channel to Unwatched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir canal a Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -450,6 +540,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Always use this button to add a channel to this App. The YouTube \"subscribe\" button only works for the YouTube website/App."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siempre use este botón para añadir un canal a esta Aplicación. El botón \"suscribirse\" de YouTube solo funciona para el sitio web/Aplicación de YouTube.RetryClaude can make mistakes. Please double-check responses."
           }
         },
         "fr" : {
@@ -480,6 +576,12 @@
             "value" : "Adds a subscription in Unwatched for the YouTube channel at the given channel or playlist URL."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega una suscripción en No visto para el canal de YouTube en la URL del canal o lista de reproducción proporcionada."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -506,6 +608,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visit Any Channel Page"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visitar cualquier página de canal"
           }
         },
         "fr" : {
@@ -536,6 +644,12 @@
             "value" : "On all channel pages, an 'Add Channel'-Button will appear here. Use it to add the channel to Unwatched."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En todas las páginas de canal, aparecerá aquí un botón ‘Agregar canal’. Úsalo para agregar el canal a No visto."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -562,6 +676,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add to Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar a la bandeja de entrada"
           }
         },
         "fr" : {
@@ -592,6 +712,12 @@
             "value" : "Inbox"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -618,6 +744,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Videos Manually"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar videos manualmente"
           }
         },
         "fr" : {
@@ -648,6 +780,12 @@
             "value" : "Add Videos Manually"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar videos manualmente"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -674,6 +812,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enter a YouTube video (or channel) URL here directly, or by setting up and using the share sheet action (can also be done in Settings)."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ingresa una URL de video (o canal) de YouTube directamente aquí, o configurando y usando la acción de hoja para compartir (también se puede hacer en Configuración)."
           }
         },
         "fr" : {
@@ -704,6 +848,12 @@
             "value" : "Add YouTube URL"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar URL de YouTube"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -730,6 +880,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add video from ${youtubeUrl}"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar video desde ${youtubeUrl}"
           }
         },
         "fr" : {
@@ -760,6 +916,12 @@
             "value" : "Adds the video to the top of the Queue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega el video al principio de la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -783,6 +945,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "AirPlay HD"
@@ -816,6 +984,12 @@
             "value" : "AirPlay HD enabled"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD activado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -842,6 +1016,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refreshing while the device is syncing may lead to duplicate videos. They should be automatically cleaned up after the sync is done."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar mientras el dispositivo se está sincronizando puede llevar a videos duplicados. Deberían eliminarse automáticamente después de que finalice la sincronización."
           }
         },
         "fr" : {
@@ -872,6 +1052,12 @@
             "value" : "All Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos los videos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -895,6 +1081,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App"
@@ -928,6 +1120,12 @@
             "value" : "App Color"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color de la app"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -954,6 +1152,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Appearance"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apariencia"
           }
         },
         "fr" : {
@@ -985,6 +1189,12 @@
             "value" : "Automatically turn on AirPlay HD"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar automáticamente AirPlay HD"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1011,6 +1221,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "AirPlay HD attempts to enhance AirPlay video quality, but may affect fullscreen and other features.\n\nAirPlay HD mode will automatically turn on whenever an AirPlay destination (including speakers) is selected via the player’s AirPlay button (not Control Center).\n\nIf issues occur, try manually enabling AirPlay HD before connecting to your device."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPlay HD intenta mejorar la calidad de video por AirPlay, pero puede afectar la pantalla completa y otras funciones.\n\nEl modo AirPlay HD se activará automáticamente siempre que se seleccione un destino AirPlay (incluidos altavoces) mediante el botón de AirPlay del reproductor (no el Centro de Control).\n\nSi ocurren problemas, intenta activar AirPlay HD manualmente antes de conectar tu dispositivo."
           }
         },
         "fr" : {
@@ -1041,6 +1257,12 @@
             "value" : "Attempts to enhance AirPlay video quality, but may affect fullscreen and other features."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta mejorar la calidad de video por AirPlay, pero puede afectar la pantalla completa y otras funciones."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1067,6 +1289,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto Delete Backups"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar copias de seguridad automáticamente"
           }
         },
         "fr" : {
@@ -1097,6 +1325,12 @@
             "value" : "Auto Delete Backups Now"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar copias de seguridad ahora"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1123,6 +1357,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deleted Backups: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copias de seguridad eliminadas: %lld"
           }
         },
         "fr" : {
@@ -1153,6 +1393,12 @@
             "value" : "Auto delete will keep: - All manual backups - All backups within the last week - One backup per week within the last 6 months - One backup per month after that"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El borrado automático conservará:\n- Todas las copias de seguridad manuales\n- Todas las copias de seguridad de la última semana\n- Una copia de seguridad por semana durante los últimos 6 meses\n- Una copia de seguridad por mes después de eso"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1179,6 +1425,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatic Backups"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copias de seguridad automáticas"
           }
         },
         "fr" : {
@@ -1209,6 +1461,12 @@
             "value" : "Unwatched will automatically store a daily snapshot of your user data to iCloud Drive every day you open the app."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched guardará automáticamente una instantánea diaria de tus datos de usuario en iCloud Drive cada día que abras la app."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1235,6 +1493,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatically Refresh"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar automáticamente"
           }
         },
         "fr" : {
@@ -1265,6 +1529,12 @@
             "value" : "Auto Refresh Ignores Sync"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La actualización automática ignora la sincronización"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1291,6 +1561,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Backup to iCloud Drive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar en iCloud Drive"
           }
         },
         "fr" : {
@@ -1321,6 +1597,12 @@
             "value" : "Back Up To iCloud Drive"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar en iCloud Drive"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1347,6 +1629,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Black/White"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Negro/Blanco"
           }
         },
         "fr" : {
@@ -1377,6 +1665,12 @@
             "value" : "Ads aren’t showing up due to technical reasons; Unwatched isn’t actively blocking them.  If you’d like to support your channels, consider using Patreon or YouTube Premium."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los anuncios no se están mostrando por razones técnicas; Unwatched no los está bloqueando activamente. Si deseas apoyar a tus canales, considera usar Patreon o YouTube Premium."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1403,6 +1697,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are YouTube ads being blocked? I want to support creators."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Se están bloqueando los anuncios de YouTube? Quiero apoyar a los creadores."
           }
         },
         "fr" : {
@@ -1433,6 +1733,12 @@
             "value" : "Blocking Ads"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bloqueando anuncios"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1459,6 +1765,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azul"
           }
         },
         "fr" : {
@@ -1489,6 +1801,12 @@
             "value" : "Bookmarks"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcadores"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1515,6 +1833,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar en YouTube"
           }
         },
         "fr" : {
@@ -1545,6 +1869,12 @@
             "value" : "Show YouTube Browser in Tab bar"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar navegador de YouTube en la barra de pestañas"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1568,6 +1898,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube"
@@ -1601,6 +1937,12 @@
             "value" : "Cancel"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1627,6 +1969,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filler"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relleno"
           }
         },
         "fr" : {
@@ -1657,6 +2005,12 @@
             "value" : "Interaction"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interacción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1680,6 +2034,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intro"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intro"
@@ -1713,6 +2073,12 @@
             "value" : "Music offtopic"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Música sin relación"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1736,6 +2102,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outro"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Outro"
@@ -1769,6 +2141,12 @@
             "value" : "Preview"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vista previa"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1795,6 +2173,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "[Self promotion]"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Autopromoción]"
           }
         },
         "fr" : {
@@ -1825,6 +2209,12 @@
             "value" : "[Sponsor]"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "[Patrocinador]"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1841,10 +2231,34 @@
     },
     "channel" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanal"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Channel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaîne"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanał"
           }
         }
       }
@@ -1861,6 +2275,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Channel Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título del canal"
           }
         },
         "fr" : {
@@ -1891,6 +2311,12 @@
             "value" : "Video Description"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción del video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1917,6 +2343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulos"
           }
         },
         "fr" : {
@@ -1947,6 +2379,12 @@
             "value" : "Sets chapters that include any of the keywords to inactive when the video is loaded into the player. Use “,” to separate multiple keywords."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establece como inactivos los capítulos que incluyan cualquiera de las palabras clave cuando el video se cargue en el reproductor. Usa “,” para separar múltiples palabras clave."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1973,6 +2411,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapter Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulo desactivado"
           }
         },
         "fr" : {
@@ -2003,6 +2447,12 @@
             "value" : "Chapter On"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulo activado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2029,6 +2479,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulos"
           }
         },
         "fr" : {
@@ -2059,6 +2515,12 @@
             "value" : "Clear"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2085,6 +2547,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear Above"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar anteriores"
           }
         },
         "fr" : {
@@ -2115,6 +2583,12 @@
             "value" : "Clear from Inbox"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar de la bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2141,6 +2615,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear from Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar de la cola"
           }
         },
         "fr" : {
@@ -2171,6 +2651,12 @@
             "value" : "Clear All"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2197,6 +2683,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear all Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar todos los videos"
           }
         },
         "fr" : {
@@ -2227,6 +2719,12 @@
             "value" : "Clear Below"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar posteriores"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2253,6 +2751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last Cleared from Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última limpieza de la bandeja de entrada"
           }
         },
         "fr" : {
@@ -2283,6 +2787,12 @@
             "value" : "Clear Text"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar texto"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2309,6 +2819,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Clear"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
           }
         },
         "fr" : {
@@ -2339,6 +2855,12 @@
             "value" : "Close"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2365,6 +2887,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Compact"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compacto"
           }
         },
         "fr" : {
@@ -2395,6 +2923,12 @@
             "value" : "Confirm"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2421,6 +2955,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto Delete Backups?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Borrar copias de seguridad automáticamente?"
           }
         },
         "fr" : {
@@ -2451,6 +2991,12 @@
             "value" : "Confirm Clear All"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar borrar todo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2477,6 +3023,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Really Delete Everything?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Realmente deseas borrar todo?"
           }
         },
         "fr" : {
@@ -2507,6 +3059,12 @@
             "value" : "This cannot be undone. You can create a backup if you wish to restore the data in the future."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esto no se puede deshacer. Puede crear una copia de seguridad si desea restaurar los datos en el futuro."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2533,6 +3091,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please consider getting [YouTube Premium](https://www.youtube.com/premium) to support creators"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, considera obtener [YouTube Premium](https://www.youtube.com/premium) para apoyar a los creadores"
           }
         },
         "fr" : {
@@ -2563,6 +3127,12 @@
             "value" : "Email"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2589,6 +3159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Continuous Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar reproducción continua"
           }
         },
         "fr" : {
@@ -2619,6 +3195,12 @@
             "value" : "Continuous Play Enabled"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducción continua activada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2645,6 +3227,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Player Controls"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles del reproductor"
           }
         },
         "fr" : {
@@ -2675,6 +3263,12 @@
             "value" : "Copy Answer"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar respuesta"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2701,6 +3295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar URL"
           }
         },
         "fr" : {
@@ -2731,6 +3331,12 @@
             "value" : "Could not subscribe: %@"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo suscribir: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2757,6 +3363,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't convert to URL: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo convertir en URL: %@"
           }
         },
         "fr" : {
@@ -2787,6 +3399,12 @@
             "value" : "Added Date"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de agregado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2813,6 +3431,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom for Channel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalizado para el canal"
           }
         },
         "fr" : {
@@ -2843,6 +3467,12 @@
             "value" : "Dark Green"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde oscuro"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2869,6 +3499,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dark Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo oscuro"
           }
         },
         "fr" : {
@@ -2899,6 +3535,12 @@
             "value" : "Dark Mode (Active)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo oscuro (activo)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2925,6 +3567,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Debug"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuración"
           }
         },
         "fr" : {
@@ -2955,6 +3603,12 @@
             "value" : "Debug: %@"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuración: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2981,6 +3635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Default (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado (%@)"
           }
         },
         "fr" : {
@@ -3011,6 +3671,12 @@
             "value" : "Default (%@×)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado (%@×)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3037,6 +3703,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Default (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Predeterminado (%@)"
           }
         },
         "fr" : {
@@ -3067,6 +3739,12 @@
             "value" : "Deferred videos will re-appear at the specified date in either Inbox or Queue per subscription settings."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los videos aplazados volverán a aparecer en la fecha especificada, ya sea en la bandeja de entrada o en la cola, según la configuración de la suscripción."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3093,6 +3771,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Defer Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de aplazamiento"
           }
         },
         "fr" : {
@@ -3123,6 +3807,12 @@
             "value" : "Delete"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3149,6 +3839,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete Everything"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar todo"
           }
         },
         "fr" : {
@@ -3179,6 +3875,12 @@
             "value" : "Delete Image Cache"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar caché de imágenes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3205,6 +3907,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deselect All"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deseleccionar todo"
           }
         },
         "fr" : {
@@ -3235,6 +3943,12 @@
             "value" : "Disable Captions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar subtítulos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3261,6 +3975,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dismiss"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descartar"
           }
         },
         "fr" : {
@@ -3291,6 +4011,12 @@
             "value" : "Do Nothing"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hacer nada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3317,6 +4043,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nothing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada"
           }
         },
         "fr" : {
@@ -3347,6 +4079,12 @@
             "value" : "Drop YouTube RSS feed/channel URLs here or use the Browser above to search for channels."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suelta aquí URLs de feeds RSS/canales de YouTube o usa el navegador de arriba para buscar canales."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3373,6 +4111,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "It will be added to your Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se añadirá a tu cola"
           }
         },
         "fr" : {
@@ -3403,6 +4147,12 @@
             "value" : "Drop Video"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soltar video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3429,6 +4179,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drag & drop videos here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrastra y suelta videos aquí"
           }
         },
         "fr" : {
@@ -3459,6 +4215,12 @@
             "value" : "Drop Video to Queue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soltar video en la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3485,6 +4247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Videos To Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar videos a la cola"
           }
         },
         "fr" : {
@@ -3515,6 +4283,12 @@
             "value" : "If iCloud sync is enabled, duplicates can’t currently be avoided. However, they should automatically clean up after refresh.\n\nIf still visible, long press the refresh button and select “Reload & Dedupe.” If they remain, please let me know."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si la sincronización con iCloud está activada, actualmente no se pueden evitar los duplicados. Sin embargo, deberían eliminarse automáticamente después de actualizar.\n\nSi aún son visibles, mantén presionado el botón de actualizar y selecciona “Recargar y quitar duplicados”. Si siguen apareciendo, por favor avísame."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3541,6 +4315,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Why are there duplicate videos/subscriptions?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué hay videos/suscripciones duplicados?"
           }
         },
         "fr" : {
@@ -3571,6 +4351,12 @@
             "value" : "Duplicates"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicados"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3597,6 +4383,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los feeds RSS de YouTube no incluyen la duración de los videos. Una vez que el video se carga en el reproductor, la duración aparecerá.\n\nPara los videos con capítulos, se utiliza la hora de inicio del último capítulo como una duración aproximada, mostrada como el tiempo mínimo con “+”."
           }
         },
         "fr" : {
@@ -3627,6 +4419,12 @@
             "value" : "Why is the duration missing on some videos? What does \"+\" mean?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué falta la duración en algunos videos? ¿Qué significa “+”?"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3653,6 +4451,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Missing Duration"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración faltante"
           }
         },
         "fr" : {
@@ -3683,6 +4487,12 @@
             "value" : "Email & FAQ"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico y preguntas frecuentes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3709,6 +4519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connection to video not found. Possibly waiting on sync or an error."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexión al video no encontrada. Posiblemente esperando sincronización o un error."
           }
         },
         "fr" : {
@@ -3739,6 +4555,12 @@
             "value" : "Failed to repair"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo reparar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3765,6 +4587,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Couldn't parse YoutubeId from URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo analizar el YoutubeId desde la URL"
           }
         },
         "fr" : {
@@ -3795,6 +4623,12 @@
             "value" : "Enable Context Menu"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar menú contextual"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3821,6 +4655,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enable Pip"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilitar PIP"
           }
         },
         "fr" : {
@@ -3851,6 +4691,12 @@
             "value" : "Feed, Video, or Playlist URL"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de feed, video o lista de reproducción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3877,6 +4723,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Some subscriptions couldn't be imported"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algunas suscripciones no se pudieron importar"
           }
         },
         "fr" : {
@@ -3907,6 +4759,12 @@
             "value" : "If you entered a YouTube channel URL, try adding the YouTube RSS feed directly."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si ingresaste una URL de canal de YouTube, intenta agregar directamente el feed RSS de YouTube."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3933,6 +4791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The channels may no longer exist or may not provide an RSS feed."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es posible que los canales ya no existan o que no proporcionen un feed RSS."
           }
         },
         "fr" : {
@@ -3963,6 +4827,12 @@
             "value" : "You can try to search for the missing channel via the in-app Browser (Library → Browser)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes intentar buscar el canal faltante mediante el Navegador dentro de la app (Biblioteca → Navegador)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3989,6 +4859,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error occurred"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error"
           }
         },
         "fr" : {
@@ -4019,6 +4895,12 @@
             "value" : "Exit Fullscreen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salir de pantalla completa"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4045,6 +4927,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disable Pip"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshabilitar PIP"
           }
         },
         "fr" : {
@@ -4075,6 +4963,12 @@
             "value" : "Don't Backup all Watched Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No respaldar todos los videos vistos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4101,6 +4995,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expansive"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expansivo"
           }
         },
         "fr" : {
@@ -4131,6 +5031,12 @@
             "value" : "Export Backup"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar respaldo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4157,6 +5063,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Export Subscription RSS Feeds"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar feeds RSS de suscripción"
           }
         },
         "fr" : {
@@ -4187,6 +5099,12 @@
             "value" : "Failed"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fallido"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4213,6 +5131,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed getting channel ID from username %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo obtener el ID del canal a partir del nombre de usuario %@"
           }
         },
         "fr" : {
@@ -4243,6 +5167,12 @@
             "value" : "Failed to get video info"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo obtener la información del video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4269,6 +5199,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Failed to parse the data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron analizar los datos"
           }
         },
         "fr" : {
@@ -4299,6 +5235,12 @@
             "value" : "Frequently Asked Questions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntas frecuentes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4325,6 +5267,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filter"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrar"
           }
         },
         "fr" : {
@@ -4355,6 +5303,12 @@
             "value" : "FAQ & Suggestions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ y sugerencias"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4381,6 +5335,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fullscreen controls"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles de pantalla completa"
           }
         },
         "fr" : {
@@ -4411,6 +5371,12 @@
             "value" : "Auto hide"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar automáticamente"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4437,6 +5403,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagado"
           }
         },
         "fr" : {
@@ -4467,6 +5439,12 @@
             "value" : "On"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encendido"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4493,6 +5471,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fullscreen Left"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla completa izquierda"
           }
         },
         "fr" : {
@@ -4523,6 +5507,12 @@
             "value" : "Fullscreen Right"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pantalla completa derecha"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4549,6 +5539,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Get Current Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener video actual"
           }
         },
         "fr" : {
@@ -4579,6 +5575,12 @@
             "value" : "Gets the currently selected video"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtiene el video seleccionado actualmente"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4605,6 +5607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Google Takeout"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir Google Takeout"
           }
         },
         "fr" : {
@@ -4635,6 +5643,12 @@
             "value" : "Green"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4663,6 +5677,12 @@
             "value" : "Reload & Dedupe"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recargar y eliminar duplicados"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4689,6 +5709,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Player Controls"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controles del reproductor"
           }
         },
         "fr" : {
@@ -4738,6 +5764,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Hide Menu"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ocultar barra lateral"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Ocultar menú"
                 }
               }
             }
@@ -4795,6 +5839,12 @@
             "value" : "Hide Player Page Indicator"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar indicador de página del reproductor"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4821,6 +5871,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hide"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar"
           }
         },
         "fr" : {
@@ -4851,6 +5907,12 @@
             "value" : "Sick of #shorts?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cansado de los #shorts?"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4877,6 +5939,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hide #shorts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocultar #shorts"
           }
         },
         "fr" : {
@@ -4907,6 +5975,12 @@
             "value" : "If you wish, you can hide all #shorts from now on.  You can change this at any time under \"Library → Settings → Filter”"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si lo deseas, puedes ocultar todos los #shorts a partir de ahora.\nPuedes cambiar esto en cualquier momento en “Biblioteca → Configuración → Filtro”."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4933,6 +6007,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "• In **Google Takeout**, login & deselect everything except for **YouTube and YouTube Music**\n• Tap on **All YouTube data included** and only select **subscriptions**\n• Choose **Next step**, then under **Frequency** select **Export once**\n• Tap on **Create export**\n• You will receive an email with a link to your data, follow it and download the file"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• En **Google Takeout**, inicia sesión y desmarca todo excepto **YouTube y YouTube Music**\n• Toca en **Todos los datos de YouTube incluidos** y selecciona solo **suscripciones**\n• Elige **Siguiente paso**, luego en **Frecuencia** selecciona **Exportar una vez**\n• Toca en **Crear exportación**\n• Recibirás un correo electrónico con un enlace a tus datos, síguelo y descarga el archivo"
           }
         },
         "fr" : {
@@ -4963,6 +6043,12 @@
             "value" : "Export YouTube Subscriptions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar Suscripciones de YouTube"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4989,6 +6075,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap on **Select File** below and navigate to the downloaded **takeout[...].zip** file:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca en **Seleccionar Archivo** abajo y navega hasta el archivo descargado **takeout[...].zip**:"
           }
         },
         "fr" : {
@@ -5019,6 +6111,12 @@
             "value" : "• Tap the file to extract it\n• Navigate into **Takeout folder → YouTube and YouTube Music → subscriptions**\n• Select **subscriptions.csv**"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "• Toca el archivo para extraerlo\n• Navega a la carpeta Takeout → YouTube y YouTube Music → subscriptions\n• Selecciona subscriptions.csv"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5045,6 +6143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import Into Unwatched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar a Unwatched"
           }
         },
         "fr" : {
@@ -5075,6 +6179,12 @@
             "value" : "HTTP request failed: %@"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La solicitud HTTP falló: %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5101,6 +6211,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Sync"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización con iCloud"
           }
         },
         "fr" : {
@@ -5131,6 +6247,12 @@
             "value" : "Make sure to backup everything before enabling this. Requires app restart to take effect."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrate de hacer una copia de seguridad de todo antes de habilitar esto. Requiere reiniciar la aplicación para que surta efecto."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5157,6 +6279,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Subscriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir suscripciones"
           }
         },
         "fr" : {
@@ -5187,6 +6315,12 @@
             "value" : "Import Backup"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar copia de seguridad"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5213,6 +6347,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import YouTube Subscriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar suscripciones de YouTube"
           }
         },
         "fr" : {
@@ -5243,6 +6383,12 @@
             "value" : "Importing %lld subscriptions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importando %lld suscripciones"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5269,6 +6415,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Replace Existing Subscriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reemplazar suscripciones existentes"
           }
         },
         "fr" : {
@@ -5299,6 +6451,12 @@
             "value" : "Import Subscriptions"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar suscripciones"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5325,6 +6483,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import ^[%lld subscription](inflect: true)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importar ^[%lld suscripción](inflect: true)"
           }
         },
         "fr" : {
@@ -5355,6 +6519,12 @@
             "value" : "Inbox"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5381,6 +6551,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevos videos"
           }
         },
         "fr" : {
@@ -5411,6 +6587,12 @@
             "value" : "Tap here to view new videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca aquí para ver nuevos videos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5437,6 +6619,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swipe Left or Right"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desliza a la izquierda o derecha"
           }
         },
         "fr" : {
@@ -5467,6 +6655,12 @@
             "value" : "Swiping left will clear the video, while swiping right will give you the option to insert it at the top or bottom of the Queue.\n\nTapping a video will move it to the top of the Queue and start playback."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deslizar hacia la izquierda eliminará el video, mientras que deslizar hacia la derecha te dará la opción de insertarlo al principio o al final de la cola.\n\nTocar un video lo moverá al principio de la cola y comenzará la reproducción."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5493,6 +6687,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL no válida"
           }
         },
         "fr" : {
@@ -5523,6 +6723,12 @@
             "value" : "Latest Unwatched Backups"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Últimas copias de seguridad sin ver"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5549,6 +6755,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Library"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Biblioteca"
           }
         },
         "fr" : {
@@ -5579,6 +6791,12 @@
             "value" : "Light App Icon Alternative"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alternativa de icono de aplicación claro"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5605,6 +6823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Light Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo claro"
           }
         },
         "fr" : {
@@ -5635,6 +6859,12 @@
             "value" : "Light Mode (Active)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo claro (activo)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5661,6 +6891,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In the player, tap on the “…”-button and then “View on YouTube”. From there, you can sign in and like/subscribe."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En el reproductor, toca el botón “…” y luego “Ver en YouTube”. Desde allí, puedes iniciar sesión y dar me gusta/suscribirte."
           }
         },
         "fr" : {
@@ -5691,6 +6927,12 @@
             "value" : "How can I like videos or subscribe to channels on YouTube?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo puedo dar me gusta a los videos o suscribirme a canales en YouTube?"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5717,6 +6959,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Like & Subscribe on YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me gusta y suscríbete en YouTube"
           }
         },
         "fr" : {
@@ -5747,6 +6995,12 @@
             "value" : "Loop Video"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repetir video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5773,6 +7027,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Loop Video Enabled"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repetir video activado"
           }
         },
         "fr" : {
@@ -5803,6 +7063,12 @@
             "value" : "If you’re using an Apple Silicone Mac, you can already use the iPad version. Please let me know, if you’re running into any issues there.  Regarding a native macOS version: I'm a one-person team, and this app is a side project I work on during my free time. I want to focus on the platforms I'm currently supporting before exploring new ones."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si estás utilizando una Mac con chip de silicio de Apple, ya puedes usar la versión para iPad. Por favor, házmelo saber si tienes algún problema allí."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5829,6 +7095,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Will Unwatched be available on macOS?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con respecto a una versión nativa para macOS: soy un equipo de una sola persona y esta aplicación es un proyecto paralelo en el que trabajo durante mi tiempo libre. Quiero concentrarme en las plataformas que actualmente admito antes de explorar otras nuevas."
           }
         },
         "fr" : {
@@ -5859,6 +7131,12 @@
             "value" : "macOS Support"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compatibilidad con macOS"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5882,6 +7160,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manual"
@@ -5915,6 +7199,12 @@
             "value" : "Remove Watched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar vistos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5941,6 +7231,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mark Watched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar como visto"
           }
         },
         "fr" : {
@@ -5971,6 +7267,12 @@
             "value" : "Exclude unimportant videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir videos no importantes"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5997,6 +7299,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It is best to leave this on, as the backup files will likely be much smaller."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No importantes son videos que no se han visto, no están en la cola o en la bandeja de entrada y tienen más de una semana. Es mejor dejar esto activado, ya que los archivos de copia de seguridad probablemente serán mucho más pequeños."
           }
         },
         "fr" : {
@@ -6027,6 +7335,12 @@
             "value" : "Minimize Player Overlays"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimizar superposiciones del reproductor"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6053,6 +7367,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mint"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menta"
           }
         },
         "fr" : {
@@ -6083,6 +7403,12 @@
             "value" : "Monitor Background Fetches"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monitorear capturas en segundo plano"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6109,6 +7435,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "More"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más"
           }
         },
         "fr" : {
@@ -6139,6 +7471,12 @@
             "value" : "Unwatched is designed as a single queue with a player. For a more comprehensive organizer, consider using [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). It'll most like do everything you want and more!"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched está diseñado como una sola cola con un reproductor. Para un organizador más completo, considera usar [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). ¡Lo más probable es que haga todo lo que quieres y más!"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6165,6 +7503,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Will there be multiple playlists or a tagging system?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Habrá múltiples listas de reproducción o un sistema de etiquetas?"
           }
         },
         "fr" : {
@@ -6195,6 +7539,12 @@
             "value" : "Playlists & Tags"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listas de reproducción y etiquetas"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6221,6 +7571,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Most Recent Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video más reciente"
           }
         },
         "fr" : {
@@ -6251,6 +7607,12 @@
             "value" : "Move to Inbox"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mover a la bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6277,6 +7639,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos nuevos"
           }
         },
         "fr" : {
@@ -6307,6 +7675,12 @@
             "value" : "Next Chapter"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulo siguiente"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6333,6 +7707,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Next Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video siguiente"
           }
         },
         "fr" : {
@@ -6363,6 +7743,12 @@
             "value" : "No Bookmarked Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay videos marcados"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6389,6 +7775,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bookmarked videos will show up here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los videos marcados aparecerán aquí"
           }
         },
         "fr" : {
@@ -6419,6 +7811,12 @@
             "value" : "Nothing Watched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada visto"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6445,6 +7843,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos marked as watched will appear here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los videos marcados como vistos aparecerán aquí"
           }
         },
         "fr" : {
@@ -6475,6 +7879,12 @@
             "value" : "iCloud Drive is unavailable"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive no está disponible"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6501,6 +7911,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empty Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bandeja de entrada vacía"
           }
         },
         "fr" : {
@@ -6531,6 +7947,12 @@
             "value" : "New videos will show up here.\nGrab what you like, discard the rest."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los nuevos videos aparecerán aquí.\nCoge lo que te guste, descarta el resto."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6557,6 +7979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No info found to subscribe"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró información para suscribirse"
           }
         },
         "fr" : {
@@ -6587,6 +8015,12 @@
             "value" : "No info found to unsubscribe"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró información para cancelar la suscripción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6613,6 +8047,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "None"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninguno"
           }
         },
         "fr" : {
@@ -6643,6 +8083,12 @@
             "value" : "Empty Queue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cola vacía"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6669,6 +8115,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add videos manually or by adding subscriptions."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade videos manualmente o añadiendo suscripciones."
           }
         },
         "fr" : {
@@ -6699,6 +8151,12 @@
             "value" : "No Unsubscribed Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay videos sin suscribir"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6725,6 +8183,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos of channels you haven't subscribed to will show up here"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los videos de canales a los que no te has suscrito aparecerán aquí"
           }
         },
         "fr" : {
@@ -6755,6 +8219,12 @@
             "value" : "Notifications"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notificaciones"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6781,6 +8251,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications have been disabled for Unwatched. If you wish to receive notifications, you need to enable them in Settings first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las notificaciones se han desactivado para Unwatched. Si deseas recibir notificaciones, primero debes activarlas en Configuración."
           }
         },
         "fr" : {
@@ -6811,6 +8287,12 @@
             "value" : "New videos will be fetched in the background on device and trigger a notification. This will not be instant."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los nuevos videos se buscarán en segundo plano en el dispositivo y activarán una notificación. Esto no será instantáneo."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6837,6 +8319,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The URL is not supported"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La URL no es compatible"
           }
         },
         "fr" : {
@@ -6867,6 +8355,12 @@
             "value" : "No Video found"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6893,6 +8387,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Video info found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró información del video"
           }
         },
         "fr" : {
@@ -6923,6 +8423,12 @@
             "value" : "Playlist didn't contain any videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La lista de reproducción no contenía ningún video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6949,6 +8455,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Videos Found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron videos"
           }
         },
         "fr" : {
@@ -6979,6 +8491,12 @@
             "value" : "All available videos will be shown here, including manually added ones and videos from all subscriptions."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos los videos disponibles se mostrarán aquí, incluidos los añadidos manualmente y los videos de todas las suscripciones."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7005,6 +8523,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Video URL found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna URL de video"
           }
         },
         "fr" : {
@@ -7035,6 +8559,12 @@
             "value" : "No YouTube video ID found"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún ID de video de YouTube"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7061,6 +8591,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No YouTube playlist ID found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún ID de lista de reproducción de YouTube"
           }
         },
         "fr" : {
@@ -7091,6 +8627,12 @@
             "value" : "On Play"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al reproducir"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7117,6 +8659,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "View on YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver en YouTube"
           }
         },
         "fr" : {
@@ -7147,6 +8695,12 @@
             "value" : "Orange"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naranja"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7173,6 +8727,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap the “…”-Button and select “Reload Player” to resolve the issue. You can also enable native iOS fullscreen, which can be set to turn on automatically in Settings.\n\nThis issue occurs when the player detects a \"touch down\" without a corresponding \"touch up\" (e.g., swiping up to return to the home screen when the swipe happens over the video). Unfortunately, this is a YouTube issue I cannot resolve."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque el botón \"...\" y seleccione \"Recargar reproductor\" para resolver el problema. También puede habilitar la pantalla completa nativa de iOS, que se puede configurar para que se active automáticamente en Configuración.\n\nEste problema ocurre cuando el reproductor detecta un \"touch down\" sin un \"retoque\" correspondiente (por ejemplo, deslizando hacia arriba para volver a la pantalla de inicio cuando el deslizamiento se produce sobre el vídeo). Desafortunadamente, este es un problema de YouTube que no puedo resolver."
           }
         },
         "fr" : {
@@ -7203,6 +8763,12 @@
             "value" : "YouTube’s player controls are stuck and don’t disappear."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los controles del reproductor de YouTube están atascados y no desaparecen."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7229,6 +8795,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube Overlays Stuck"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Superposiciones de YouTube atascadas"
           }
         },
         "fr" : {
@@ -7259,6 +8831,12 @@
             "value" : "Paste"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pegar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7285,6 +8863,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pause"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausar"
           }
         },
         "fr" : {
@@ -7315,6 +8899,12 @@
             "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7341,6 +8931,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How can I continue playing in the background using Picture-in-Picture mode?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo puedo seguir reproduciendo en segundo plano usando el modo imagen dentro de otra?"
           }
         },
         "fr" : {
@@ -7371,6 +8967,12 @@
             "value" : "Picture-in-Picture & Background Play"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Picture-in-Picture y reproducción en segundo plano"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7397,6 +8999,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducir"
           }
         },
         "fr" : {
@@ -7427,6 +9035,12 @@
             "value" : "Playback"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7453,6 +9067,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Player"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproductor"
           }
         },
         "fr" : {
@@ -7483,6 +9103,12 @@
             "value" : "The player usually uses YouTube's embedded player, but if channels disable this feature, the YouTube website will be shown instead.   All controls remain functional, and you can use YouTube's fullscreen button to watch the video in fullscreen."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El reproductor generalmente usa el reproductor integrado de YouTube, pero si los canales desactivan esta función, se mostrará el sitio web de YouTube en su lugar. Todos los controles siguen funcionando y puedes usar el botón de pantalla completa de YouTube para ver el video en pantalla completa."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7509,6 +9135,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Why does the video player show the YouTube website?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué el reproductor de video muestra el sitio web de YouTube?"
           }
         },
         "fr" : {
@@ -7539,6 +9171,12 @@
             "value" : "Website in Player"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sitio web en el reproductor"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7555,10 +9193,34 @@
     },
     "playlist" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Playlist"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista de reproducción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista odtwarzania"
           }
         }
       }
@@ -7575,6 +9237,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Play/Pause"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducir/Pausar"
           }
         },
         "fr" : {
@@ -7605,6 +9273,12 @@
             "value" : "Please check the frequently asked questions (FAQ) and suggestions below to see if yours is already addressed."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor, consulta las preguntas frecuentes (FAQ) y las sugerencias a continuación para ver si la tuya ya está respondida."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7631,6 +9305,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube ID may be faulty: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El ID de YouTube puede ser defectuoso: %@"
           }
         },
         "fr" : {
@@ -7661,6 +9341,12 @@
             "value" : "Previous Chapter"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capítulo anterior"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7687,6 +9373,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Published Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha de publicación"
           }
         },
         "fr" : {
@@ -7717,6 +9409,12 @@
             "value" : "Purple"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7743,6 +9441,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cola"
           }
         },
         "fr" : {
@@ -7773,6 +9477,12 @@
             "value" : "Queue Last"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Último en la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7799,6 +9509,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queue Next"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siguiente en la cola"
           }
         },
         "fr" : {
@@ -7829,6 +9545,12 @@
             "value" : "Rate Unwatched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calificar Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7855,6 +9577,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Really delete Video?\n\nThis cannot be undone. If the video still exists, belongs to an active subscription, and is one of the 15 most recent videos, it may reappear after the next refresh."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Realmente quieres eliminar el video?\n\nEsto no se puede deshacer. Si el video aún existe, pertenece a una suscripción activa y es uno de los 15 videos más recientes, puede reaparecer después de la próxima actualización."
           }
         },
         "fr" : {
@@ -7885,6 +9613,12 @@
             "value" : "Recently Added"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recientemente añadido"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7911,6 +9645,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Red"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rojo"
           }
         },
         "fr" : {
@@ -7941,6 +9681,12 @@
             "value" : "Refresh"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7967,6 +9713,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reload Player"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recargar reproductor"
           }
         },
         "fr" : {
@@ -7997,6 +9749,12 @@
             "value" : "Remove"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8023,6 +9781,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove Bookmark"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar marcador"
           }
         },
         "fr" : {
@@ -8053,6 +9817,12 @@
             "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Chapters: %4$lld Subscriptions: %5$lld"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos: %1$lld\nElementos en cola: %2$lld\nElementos en la bandeja de entrada: %3$lld\nCapítulos: %4$lld\nSuscripciones: %5$lld"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8079,6 +9849,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cleanup Duplicates & Models"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpiar duplicados y modelos"
           }
         },
         "fr" : {
@@ -8109,6 +9885,12 @@
             "value" : "Repair"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reparar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8135,6 +9917,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Report Issue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reportar un problema"
           }
         },
         "fr" : {
@@ -8165,6 +9953,12 @@
             "value" : "Require Clear Confirmation"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requerir confirmación clara"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8191,6 +9985,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restart Now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar ahora"
           }
         },
         "fr" : {
@@ -8221,6 +10021,12 @@
             "value" : "Restart Required"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reinicio requerido"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8247,6 +10053,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restart"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiniciar"
           }
         },
         "fr" : {
@@ -8277,6 +10089,12 @@
             "value" : "Restore Backup"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar copia de seguridad"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8303,6 +10121,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restore Settings Only"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar solo la configuración"
           }
         },
         "fr" : {
@@ -8333,6 +10157,12 @@
             "value" : "Restore This Backup?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Restaurar esta copia de seguridad?"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8359,6 +10189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All your current data will be deleted and the selected backup will be restored."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos tus datos actuales serán eliminados y la copia de seguridad seleccionada será restaurada."
           }
         },
         "fr" : {
@@ -8389,6 +10225,12 @@
             "value" : "Return to Queue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8417,6 +10259,12 @@
             "value" : "Enter Horizontal Fullscreen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar en pantalla completa horizontal"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8433,10 +10281,34 @@
     },
     "rssFeed" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "RSS Feed"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "RSS Feed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fuente RSS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flux RSS"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanał RSS"
           }
         }
       }
@@ -8453,6 +10325,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
           }
         },
         "fr" : {
@@ -8483,6 +10361,12 @@
             "value" : "Seek Backward"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retroceder"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8509,6 +10393,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seek Forward"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avanzar"
           }
         },
         "fr" : {
@@ -8539,6 +10429,12 @@
             "value" : "Select All"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar todo"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8565,6 +10461,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar fecha"
           }
         },
         "fr" : {
@@ -8595,6 +10497,12 @@
             "value" : "Selected"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8621,6 +10529,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select File"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar archivo"
           }
         },
         "fr" : {
@@ -8651,6 +10565,12 @@
             "value" : "Feedback & Help"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comentarios y ayuda"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8677,6 +10597,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuración"
           }
         },
         "fr" : {
@@ -8707,6 +10633,12 @@
             "value" : "Setup Share Sheet"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurar hoja de compartir"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8733,6 +10665,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share Sheet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoja de compartir"
           }
         },
         "fr" : {
@@ -8763,6 +10701,12 @@
             "value" : "Share Video"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8791,6 +10735,12 @@
             "value" : "Translucent Navigationbar"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barra de navegación translúcida"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8814,6 +10764,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#Shorts"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "#Shorts"
@@ -8847,6 +10803,12 @@
             "value" : "Default behavior for YouTube #shorts; can be overwritten for individual channels. This affects new videos and lists – it does not affect the current Queue, current Inbox, or watch history."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comportamiento predeterminado para los #shorts de YouTube; se puede sobrescribir para canales individuales. Esto afecta a los videos y listas nuevos; no afecta a la cola actual, la bandeja de entrada actual ni el historial de reproducciones."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8875,6 +10837,12 @@
             "value" : "Show “Queue Next”-Button on Inbox Entries"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar el botón \"Siguiente en la cola\" en los elementos de la bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8901,6 +10869,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Clear Button"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar botón Borrar"
           }
         },
         "fr" : {
@@ -8950,6 +10924,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Affects controls after tapping the fullscreen button next to “play”."
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "device" : {
+              "iphone" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mientras reproduces un video, sostiene tu teléfono en posición horizontal para entrar en pantalla completa, donde los controles pueden aparecer a la izquierda o derecha. Si deseas activar Picture-in-Picture, toca el botón de maximizar dentro del video."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Afecta los controles después de tocar el botón de pantalla completa junto a “reproducir”."
                 }
               }
             }
@@ -9007,6 +10999,12 @@
             "value" : "Menu"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menú"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9033,6 +11031,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Icon Badge for new Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insignia de icono de la aplicación para nuevos videos"
           }
         },
         "fr" : {
@@ -9063,6 +11067,12 @@
             "value" : "Show"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9089,6 +11099,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tab Bar Badge for new Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insignia de la barra de pestañas para nuevos videos"
           }
         },
         "fr" : {
@@ -9119,6 +11135,12 @@
             "value" : "Show Tab Bar Labels"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar etiquetas de la barra de pestañas"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9145,6 +11167,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Tutorial"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar tutorial"
           }
         },
         "fr" : {
@@ -9175,6 +11203,12 @@
             "value" : "Show Queue Order"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar orden de la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9201,6 +11235,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unsubscribed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desuscrito"
           }
         },
         "fr" : {
@@ -9231,6 +11271,12 @@
             "value" : "Skip"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9257,6 +11303,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Keyword 1,Keyword 2,…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabra clave 1, Palabra clave 2,…"
           }
         },
         "fr" : {
@@ -9287,6 +11339,12 @@
             "value" : "Auto-Skip Sponsor Segments"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir automáticamente los segmentos de patrocinio"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9313,6 +11371,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Requires SponsorBlock chapters. Make sure you’re signed into your YouTube Premium account."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requiere capítulos de SponsorBlock. Asegúrate de haber iniciado sesión en tu cuenta de YouTube Premium."
           }
         },
         "fr" : {
@@ -9343,6 +11407,12 @@
             "value" : "Sleep Timer"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporizador de apagado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9369,6 +11439,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sleep Timer %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporizador de apagado %@"
           }
         },
         "fr" : {
@@ -9399,6 +11475,12 @@
             "value" : "Off"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9425,6 +11507,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad"
           }
         },
         "fr" : {
@@ -9455,6 +11543,12 @@
             "value" : "Include SponsorBlock Chapters"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir capítulos de SponsorBlock"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9478,6 +11572,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SponsorBlock"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "SponsorBlock"
@@ -9511,6 +11611,12 @@
             "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, only sponsor segments will be merged. If a video has no chapters, all available segments (like intro, outro, etc.) will be created as chapters, with empty chapters in between."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si están disponibles, se mostrarán los capítulos de SponsorBlock. Cuando un video ya tiene capítulos, solo se fusionarán los segmentos de patrocinio. Si un video no tiene capítulos, todos los segmentos disponibles (como intro, outro, etc.) se crearán como capítulos, con capítulos vacíos entre ellos."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9537,6 +11643,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Force Native Fullscreen Player"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forzar el reproductor de pantalla completa nativo"
           }
         },
         "fr" : {
@@ -9567,6 +11679,12 @@
             "value" : "Subscribe"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscribirse"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9593,6 +11711,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subscribed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscrito"
           }
         },
         "fr" : {
@@ -9623,6 +11747,12 @@
             "value" : "Subscription information not found"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró información de la suscripción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9649,6 +11779,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subscriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscripciones"
           }
         },
         "fr" : {
@@ -9679,6 +11815,12 @@
             "value" : "Subscription Title"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título de la suscripción"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9705,6 +11847,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éxito"
           }
         },
         "fr" : {
@@ -9735,6 +11883,12 @@
             "value" : "Swipe up"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deslizar hacia arriba"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9761,6 +11915,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Syncing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizando"
           }
         },
         "fr" : {
@@ -9791,6 +11951,12 @@
             "value" : "Enable iCloud sync in \"Settings → User Data.\" This feature is still experimental.  If you’re running into issues, you can try the troubleshooting steps here: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilita la sincronización con iCloud en \"Configuración → Datos de Usuario.\" Esta función aún es experimental. Si estás experimentando problemas, puedes probar los pasos de solución aquí: [Solución de problemas de sincronización con iCloud de Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9817,6 +11983,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "How can I sync across devices? It’s not working."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo puedo sincronizar entre dispositivos? No está funcionando."
           }
         },
         "fr" : {
@@ -9847,6 +12019,12 @@
             "value" : "iCloud Sync"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronización con iCloud"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9873,6 +12051,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sync via iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizar vía iCloud"
           }
         },
         "fr" : {
@@ -9903,6 +12087,12 @@
             "value" : "Teal"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verde azulado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9929,6 +12119,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Playlist URL detected"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se detectó una URL de lista de reproducción"
           }
         },
         "fr" : {
@@ -9959,6 +12155,12 @@
             "value" : "How should the playlist be handled?\nAdding the playlist to the Queue/Inbox is limited to %lld videos."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo debería manejarse la lista de reproducción?\nAñadir la lista de reproducción a la cola/bandeja de entrada está limitado a %lld videos."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9985,6 +12187,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pre-select Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preseleccionar capítulos"
           }
         },
         "fr" : {
@@ -10015,6 +12223,12 @@
             "value" : "For videos that provide chapters, you can untick chapters you want to skip in advance. This is also possible for videos that are queued up and not currently playing."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para los videos que proporcionan capítulos, puedes desmarcar los capítulos que quieras omitir por adelantado. Esto también es posible para los videos que están en cola y no se están reproduciendo actualmente."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10041,6 +12255,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom Speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad personalizada"
           }
         },
         "fr" : {
@@ -10071,6 +12291,12 @@
             "value" : "Tap the “lock” icon inside the player to restrict the selected playback speed to the current channel."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toca el icono de \"candado\" dentro del reproductor para restringir la velocidad de reproducción seleccionada al canal actual."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10097,6 +12323,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swipe Actions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acciones de deslizamiento"
           }
         },
         "fr" : {
@@ -10127,6 +12359,12 @@
             "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "**Gestos de video compatibles:**\n• Deslizar izquierda/derecha: Saltar capítulos\n• Tocar centro: Reproducir/pausar\n• Deslizar arriba/abajo: Entrar/salir de pantalla completa\n• Mantener pulsado derecha/izquierda: Acelerar/ralentizar reproducción\n• Deslizar hacia abajo en modo vertical: Entrar en PiP"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10153,6 +12391,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "View on YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver en YouTube"
           }
         },
         "fr" : {
@@ -10183,6 +12427,12 @@
             "value" : "You can select “View on YouTube” from the “…”-menu inside the player, or you can long press the video title/current chapter."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes seleccionar \"Ver en YouTube\" desde el menú \"…\" dentro del reproductor, o puedes mantener pulsado el título del video/capítulo actual."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10209,6 +12459,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Playback Options"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones de reproducción"
           }
         },
         "fr" : {
@@ -10258,6 +12514,24 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Long press the “next video” button inside the player to enable continuous play or play it on repeat."
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Haz clic derecho en el botón de “siguiente video” dentro del reproductor para activar la reproducción continua o repetirlo."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Mantén presionado el botón de “siguiente video” dentro del reproductor para activar la reproducción continua o repetirlo."
                 }
               }
             }
@@ -10315,6 +12589,12 @@
             "value" : "Today"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10341,6 +12621,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today, %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoy, %@"
           }
         },
         "fr" : {
@@ -10371,6 +12657,12 @@
             "value" : "Toggle Fullscreen"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alternar pantalla completa"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10397,6 +12689,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toggle Sidebar"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alternar barra lateral"
           }
         },
         "fr" : {
@@ -10427,6 +12725,12 @@
             "value" : "Temporary Playback Speed"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad de reproducción temporal"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10453,6 +12757,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search YouTube to quickly add your\nfavorite channels to Unwatched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busca en YouTube para añadir rápidamente tus\ncanales favoritos a Unwatched"
           }
         },
         "fr" : {
@@ -10483,6 +12793,12 @@
             "value" : "Yes, but it doesn't support a custom player and opens the YouTube app instead. A custom player is sadly not possible due to technical & legal restrictions.  You can also use AirPlay to cast from Unwatched to Apple TV. Enter fullscreen by tapping the fullscreen button on the video player (bottom right, not on macOS), then choose AirPlay."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí, pero no es compatible con un reproductor personalizado y abre la aplicación de YouTube en su lugar. Un reproductor personalizado lamentablemente no es posible debido a restricciones técnicas y legales. También puedes usar AirPlay para transmitir desde Unwatched a Apple TV. Entra en pantalla completa tocando el botón de pantalla completa en el reproductor de video (abajo a la derecha, no en macOS), luego elige AirPlay."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10509,6 +12825,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Is Unwatched available on tvOS?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Está Unwatched disponible en tvOS?"
           }
         },
         "fr" : {
@@ -10539,6 +12861,12 @@
             "value" : "tvOS Support"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compatibilidad con tvOS"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10565,6 +12893,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Undo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer"
           }
         },
         "fr" : {
@@ -10595,6 +12929,12 @@
             "value" : "Unsubscribe"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desuscribirse"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10618,6 +12958,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched"
@@ -10651,6 +12997,12 @@
             "value" : "Unwatched Help"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuda de Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10679,6 +13031,12 @@
             "value" : "Unwatched Logo"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logotipo de Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10702,6 +13060,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluesky"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bluesky"
@@ -10735,6 +13099,12 @@
             "value" : "GitHub"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10758,6 +13128,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mastodon"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mastodon"
@@ -10791,6 +13167,12 @@
             "value" : "Use Default"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar predeterminado"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10817,6 +13199,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Cookies Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo sin cookies"
           }
         },
         "fr" : {
@@ -10847,6 +13235,12 @@
             "value" : "Uses a privacy-friendly YouTube URL. Watch history won’t sync to YouTube, and language or subtitle settings may reset. \n\nNot logging into YouTube might be the better alternative."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliza una URL de YouTube que respeta la privacidad. El historial de visualización no se sincronizará con YouTube, y la configuración de idioma o subtítulos puede restablecerse.\nNo iniciar sesión en YouTube podría ser la mejor alternativa."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10875,6 +13269,12 @@
             "value" : "User Data"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos del usuario"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10891,10 +13291,34 @@
     },
     "video" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéo"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wideo"
           }
         }
       }
@@ -10908,6 +13332,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video"
@@ -10941,6 +13371,12 @@
             "value" : "Videos Added to Inbox"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos añadidos a la bandeja de entrada"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10969,6 +13405,12 @@
             "value" : "Videos Added to Queue"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos añadidos a la cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10985,10 +13427,34 @@
     },
     "videoAtTimestamp" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video mit Zeitstempel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Timestamped Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video con marca de tiempo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vidéo horodatée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wideo z oznaczonym czasem"
           }
         }
       }
@@ -11005,6 +13471,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video Description"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción del video"
           }
         },
         "fr" : {
@@ -11030,6 +13502,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos"
@@ -11063,6 +13541,12 @@
             "value" : "Video List Format"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato de lista de videos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11091,6 +13575,12 @@
             "value" : "Placement"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11114,6 +13604,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Videos"
@@ -11147,6 +13643,12 @@
             "value" : "Videos"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11173,6 +13675,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sorting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenación"
           }
         },
         "fr" : {
@@ -11203,6 +13711,12 @@
             "value" : "Video Status"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado del video"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11229,6 +13743,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
           }
         },
         "fr" : {
@@ -11259,6 +13779,12 @@
             "value" : "Triage"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clasificación"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11282,6 +13808,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL"
@@ -11315,6 +13847,12 @@
             "value" : "View Channel"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver canal"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11341,6 +13879,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visto"
           }
         },
         "fr" : {
@@ -11371,6 +13915,12 @@
             "value" : "Disable “Settings → Playback → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactiva \"Configuración → Reproducción → Modo Sin Cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador integrado en la aplicación."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11397,6 +13947,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Why don't my watched videos appear in my YouTube watch history?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué no aparecen mis videos vistos en mi historial de reproducciones de YouTube?"
           }
         },
         "fr" : {
@@ -11427,6 +13983,12 @@
             "value" : "YouTube Watch History"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial de reproducciones de YouTube"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11453,6 +14015,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watch in Unwatched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver en Unwatched"
           }
         },
         "fr" : {
@@ -11483,6 +14051,12 @@
             "value" : "Plays the video in and opens Unwatched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduce el video y abre Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11509,6 +14083,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Yellow"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amarillo"
           }
         },
         "fr" : {
@@ -11539,6 +14119,12 @@
             "value" : "Yesterday, %@"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayer, %@"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11562,6 +14148,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube"
@@ -11595,6 +14187,12 @@
             "value" : "YouTube Channel URL"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del canal de YouTube"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11621,6 +14219,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirm YouTube Premium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmar YouTube Premium"
           }
         },
         "fr" : {
@@ -11651,6 +14255,12 @@
             "value" : "I have Premium"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengo Premium"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11677,6 +14287,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "I don’t have Premium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tengo Premium"
           }
         },
         "fr" : {
@@ -11707,6 +14323,12 @@
             "value" : "Do you have YouTube Premium?"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Tienes YouTube Premium?"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11733,6 +14355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de YouTube"
           }
         },
         "fr" : {
