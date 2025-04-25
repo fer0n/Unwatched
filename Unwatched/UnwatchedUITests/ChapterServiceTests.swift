@@ -1091,14 +1091,16 @@ final class ChapterServiceTests: XCTestCase {
                 1:30 - Overview,
                 03:45 | Topic 1,
                 05:10| Topic 2,
-                07:25 Conclusion
+                07:25 Conclusion,
+                07:50 "Me at the zoo" turns 20
                 """,
                 [
                     SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
                     SendableChapter(title: "Overview", startTime: 1 * 60 + 30, endTime: 3 * 60 + 45),
                     SendableChapter(title: "Topic 1", startTime: 3 * 60 + 45, endTime: 5 * 60 + 10),
                     SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
-                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
+                    SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: 7 * 60 + 50),
+                    SendableChapter(title: #""Me at the zoo" turns 20"#, startTime: 7 * 60 + 50, endTime: nil)
                 ]
             ),
             (
