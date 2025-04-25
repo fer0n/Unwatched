@@ -6000,31 +6000,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Melde dich auf der **Google Datenexport** Seite an und de-selektiere alles außer **YouTube und YouTube Music**\n• Tippe auf **Alle YouTube-Daten eingeschlossen** und wähle nur **Abos** aus\n• Wähle **Nächster Schritt**, dann unter **Häufigkeit** wähle **Einmal exportieren**\n• Tippe auf **Export erstellen**\n• Du erhältst eine E-Mail mit einem Link zu deinen Daten. Folge dem Link und lade die Datei herunter"
+            "value" : "• Melde dich auf der **Google Datenexport** Seite an und de-selektiere alles außer **YouTube und YouTube Music**\n• Tippe auf **Alle YouTube-Daten eingeschlossen** und wähle nur **Abos** aus\n• Wähle **Nächster Schritt**, dann unter **Häufigkeit** wähle **Einmal exportieren**\n• Tippe auf **Export erstellen**\n• Du erhältst eine E-Mail mit einem Link zu deinen Daten. Folge dem Link und lade die Datei herunter\n• Öffne die heruntergeladene **takeout[...].zip**  Datei in der “Dateien”-App und tippe darauf, um den Inhalt zu extrahieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• In **Google Takeout**, login & deselect everything except for **YouTube and YouTube Music**\n• Tap on **All YouTube data included** and only select **subscriptions**\n• Choose **Next step**, then under **Frequency** select **Export once**\n• Tap on **Create export**\n• You will receive an email with a link to your data, follow it and download the file"
+            "value" : "• In **Google Takeout**, login & deselect everything except for **YouTube and YouTube Music**\n• Tap on **All YouTube data included** and only select **subscriptions**\n• Choose **Next step**, then under **Frequency** select **Export once**\n• Tap on **Create export**\n• You will receive an email with a link to your data, follow it and download the file\n• View the downloaded **takeout[...].zip** file in the “files”-App and tap it to extract its content"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• En **Google Takeout**, inicia sesión y desmarca todo excepto **YouTube y YouTube Music**\n• Toca en **Todos los datos de YouTube incluidos** y selecciona solo **suscripciones**\n• Elige **Siguiente paso**, luego en **Frecuencia** selecciona **Exportar una vez**\n• Toca en **Crear exportación**\n• Recibirás un correo electrónico con un enlace a tus datos, síguelo y descarga el archivo"
+            "value" : "• En **Google Takeout**, inicia sesión y desmarca todo excepto **YouTube y YouTube Music**\n• Toca en **Todos los datos de YouTube incluidos** y selecciona solo **suscripciones**\n• Elige **Siguiente paso**, luego en **Frecuencia** selecciona **Exportar una vez**\n• Toca en **Crear exportación**\n• Recibirás un correo electrónico con un enlace a tus datos, síguelo y descarga el archivo\n• Visualiza el archivo descargado **takeout[…].zip** en la app “Archivos” y tócala para extraer su contenido"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Dans **Google Takeout**, connectez-vous et désélectionnez tout sauf **YouTube et YouTube Music**\n• Appuyez sur **Toutes les données YouTube incluses** et sélectionnez uniquement **abonnements**\n• Choisissez **Étape suivante**, puis sous **Fréquence** sélectionnez **Exporter une fois**\n• Appuyez sur **Créer l'exportation**\n• Vous recevrez un email avec un lien vers vos données, suivez-le et téléchargez le fichier"
+            "value" : "• Dans **Google Takeout**, connectez-vous et désélectionnez tout sauf **YouTube et YouTube Music**\n• Appuyez sur **Toutes les données YouTube incluses** et sélectionnez uniquement **abonnements**\n• Choisissez **Étape suivante**, puis sous **Fréquence** sélectionnez **Exporter une fois**\n• Appuyez sur **Créer l'exportation**\n• Vous recevrez un email avec un lien vers vos données, suivez-le et téléchargez le fichier\n• Affichez le fichier téléchargé **takeout[…].zip** dans l’app « Fichiers » et touchez-le pour extraire son contenu"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• W **Google Takeout**, zaloguj się i odznacz wszystko oprócz **YouTube i YouTube Music**\n• Kliknij **Wybrałeś wszystkie dane z YouTube** i wybierz tylko **subskrypcje**\n• Wybierz **Następny krok**, a następnie w **Częstotliwość** wybierz **Eksportuj raz**\n• Kliknij **Utwórz eksport**\n• Otrzymasz e-mail z linkiem do swoich danych, kliknij go i pobierz plik"
+            "value" : "• W **Google Takeout**, zaloguj się i odznacz wszystko oprócz **YouTube i YouTube Music**\n• Kliknij **Wybrałeś wszystkie dane z YouTube** i wybierz tylko **subskrypcje**\n• Wybierz **Następny krok**, a następnie w **Częstotliwość** wybierz **Eksportuj raz**\n• Kliknij **Utwórz eksport**\n• Otrzymasz e-mail z linkiem do swoich danych, kliknij go i pobierz plik\n• Otwórz pobrany plik **takeout[…].zip** w aplikacji „Pliki” i stuknij go, aby rozpakować jego zawartość\n"
           }
         }
       }
@@ -6068,31 +6068,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tippe unten auf **Datei auswählen** und navigiere zu der heruntergeladenen takeout[...].zip Datei:"
+            "value" : "Tippe unten auf **Datei auswählen** und navigiere zu der extrahierten Datei:"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap on **Select File** below and navigate to the downloaded **takeout[...].zip** file:"
+            "value" : "Tap on **Select File** below and navigate to the extracted file:"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toca en **Seleccionar Archivo** abajo y navega hasta el archivo descargado **takeout[...].zip**:"
+            "value" : "Toca **Seleccionar archivo** abajo y navega hasta el archivo extraído:"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appuyez sur **Sélectionner un Fichier** ci-dessous et naviguez jusqu'au fichier **takeout[...].zip** téléchargé :"
+            "value" : "Touchez **Sélectionner un fichier** ci-dessous et accédez au fichier extrait:"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kliknij **Wybierz plik** poniżej i przejdź do pobranego pliku **takeout[...].zip**:"
+            "value" : "Stuknij **Wybierz plik** poniżej i przejdź do rozpakowanego pliku:"
           }
         }
       }
@@ -6102,31 +6102,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Tippe auf die Datei, um sie zu extrahieren\n• Navigiere in den **Takeout-Ordner → YouTube und YouTube Music → Abos**\n• Wähle **Abos.csv** aus"
+            "value" : "• Navigiere in den **Takeout-Ordner → YouTube und YouTube Music → Abos**\n• Wähle **Abos.csv** aus"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Tap the file to extract it\n• Navigate into **Takeout folder → YouTube and YouTube Music → subscriptions**\n• Select **subscriptions.csv**"
+            "value" : "• Navigate into **Takeout folder → YouTube and YouTube Music → subscriptions**\n• Select **subscriptions.csv**"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Toca el archivo para extraerlo\n• Navega a la carpeta Takeout → YouTube y YouTube Music → subscriptions\n• Selecciona subscriptions.csv"
+            "value" : "• Navega a la carpeta Takeout → YouTube y YouTube Music → subscriptions\n• Selecciona subscriptions.csv"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Appuyez sur le fichier pour l'extraire\n• Naviguez dans le **dossier Takeout → YouTube et YouTube Music → abonnements**\n• Sélectionnez **subscriptions.csv**"
+            "value" : "• Naviguez dans le **dossier Takeout → YouTube et YouTube Music → abonnements**\n• Sélectionnez **subscriptions.csv**"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Kliknij plik, aby go wypakować\n• Przejdź do **Folder Takeout → YouTube i YouTube Music → subscriptions**\n• Wybierz **subscriptions.csv**"
+            "value" : "• Przejdź do **Folder Takeout → YouTube i YouTube Music → subscriptions**\n• Wybierz **subscriptions.csv**"
           }
         }
       }
