@@ -77,8 +77,8 @@ struct MenuView: View {
 
                     ChapterDescriptionView(video: video)
                         .presentationDragIndicator(.hidden)
-                        .environment(\.colorScheme, colorScheme)
                 }
+                .environment(\.colorScheme, colorScheme)
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
