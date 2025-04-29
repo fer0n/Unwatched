@@ -46,6 +46,12 @@ struct CleanupService {
         }
         video.chapters = []
         video.mergedChapters = []
+        let youtubeId = video.youtubeId
+        #if os(iOS)
+        Task {
+            await NotificationManager.cancelNotificationForVideo(youtubeId)
+        }
+        #endif
 
         for chapter in chaptersToDelete {
             modelContext.delete(chapter)
