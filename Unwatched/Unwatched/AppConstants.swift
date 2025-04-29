@@ -22,6 +22,7 @@ extension Const {
         Const.showAddToQueueButton: false,
         Const.showClearQueueButton: true,
         Const.enableQueueContextMenu: false,
+        Const.autoRefreshIgnoresSync: false,
         Const.useNoCookieUrl: false,
 
         // Playback
