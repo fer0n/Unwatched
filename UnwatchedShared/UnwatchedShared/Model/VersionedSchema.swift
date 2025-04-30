@@ -109,7 +109,17 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             }
         },
         didMigrate: { context in
-            migrateV1p6toV1p7DidMigrate(context)
+            let fetch = FetchDescriptor<UnwatchedSchemaV1p7.Subscription>()
+            if let subs = try? context.fetch(fetch) {
+                for sub in subs {
+                    if let channelId = sub.youtubeChannelId,
+                       let videoPlacement = UnwatchedMigrationPlan.subPlaceVideosIn[channelId] {
+                        sub._videoPlacement = videoPlacement
+                    }
+                }
+            }
+            try? context.save()
+            UnwatchedMigrationPlan.subPlaceVideosIn = [:]
         }
     )
     public static func migrateV1p6toV1p7DidMigrate(_ context: ModelContext) {
