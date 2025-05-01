@@ -14,7 +14,6 @@ struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
-    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
     @AppStorage(Const.browserAsTab) var browserAsTab = false
 
@@ -40,12 +39,11 @@ struct MenuView: View {
             TabView(selection: $navManager.tab.onUpdate { newValue in
                 handleTabChanged(newValue, proxy)
             }) {
-                TabItemView(image: Image(systemName: Const.queueTagSF),
-                            tag: NavigationTab.queue,
-                            showBadge: showTabBarBadge && newQueueItemsCount > 0) {
-                    QueueView(showCancelButton: shouldShowCancelButton)
-                        .padding(.horizontal, -padding)
-                }
+                QueueTabItemView(
+                    showCancelButton: shouldShowCancelButton,
+                    showBadge: showTabBarBadge,
+                    horizontalpadding: -padding
+                )
 
                 InboxTabItemView(
                     showCancelButton: shouldShowCancelButton,
@@ -107,11 +105,6 @@ struct MenuView: View {
                     }
                 }
             }
-        }
-        if newTab == .inbox {
-            UserDefaults.standard.set(0, forKey: Const.newInboxItemsCount)
-        } else if newTab == .queue {
-            UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
         }
     }
 

@@ -141,9 +141,16 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         toVersion: UnwatchedSchemaV1p8.self,
         willMigrate: nil,
         didMigrate: { context in
-            let enableYtWatchHistory = (UserDefaults.standard.value(forKey: "enableYtWatchHistory") as? Bool) ?? true
+            let enableYtWatchHistory = "enableYtWatchHistory".bool ?? true
             UserDefaults.standard.setValue(!enableYtWatchHistory, forKeyPath: Const.useNoCookieUrl)
         }
+    )
+    
+    public static var migrateV1p7toV1p9 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p8.self,
+        toVersion: UnwatchedSchemaV1p9.self,
+        willMigrate: nil,
+        didMigrate: nil
     )
 
     public static var stages: [MigrationStage] {
@@ -156,6 +163,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p5toV1p6,
             migrateV1p6toV1p7,
             migrateV1p7toV1p8,
+            migrateV1p7toV1p9,
         ]
     }
 }

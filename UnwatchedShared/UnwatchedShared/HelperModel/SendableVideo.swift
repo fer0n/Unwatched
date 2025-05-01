@@ -34,6 +34,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var bookmarkedDate: Date?
     public var clearedInboxDate: Date?
     public var createdDate: Date?
+    public var isNew: Bool
     
     
     // relationship related values
@@ -85,7 +86,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             isYtShort: self.isYtShort,
             bookmarkedDate: self.bookmarkedDate,
             clearedInboxDate: self.clearedInboxDate,
-            createdDate: self.createdDate
+            createdDate: self.createdDate,
+            isNew: self.isNew,
         )
     }
 
@@ -111,7 +113,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         createdDate: Date? = .now,
         hasInboxEntry: Bool? = nil,
         queueEntry: SendableQueueEntry? = nil,
-        subscription: SendableSubscription? = nil
+        subscription: SendableSubscription? = nil,
+        isNew: Bool = false,
     ) {
         self.persistentId = persistentId
         self.youtubeId = youtubeId
@@ -135,6 +138,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.hasInboxEntry = hasInboxEntry
         self.queueEntry = queueEntry
         self.subscription = subscription
+        self.isNew = isNew
+        
     }
 
     public init(from decoder: Decoder) throws {
@@ -157,6 +162,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         bookmarkedDate = try container.decodeIfPresent(Date.self, forKey: .bookmarkedDate)
         clearedInboxDate = try container.decodeIfPresent(Date.self, forKey: .clearedInboxDate)
         createdDate = try container.decodeIfPresent(Date.self, forKey: .createdDate)
+        isNew = try container.decodeIfPresent(Bool.self, forKey: .isNew) ?? false
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -179,26 +185,28 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encodeIfPresent(bookmarkedDate, forKey: .bookmarkedDate)
         try container.encodeIfPresent(clearedInboxDate, forKey: .clearedInboxDate)
         try container.encodeIfPresent(createdDate, forKey: .createdDate)
+        try container.encode(isNew, forKey: .isNew)
     }
 }
 
 // MARK: - SendableVideoCodingKeys
 enum SendableVideoCodingKeys: String, CodingKey {
-    case persistendId
-    case youtubeId
-    case title
-    case url
-    case thumbnailUrl
-    case youtubeChannelId
-    case duration
-    case elapsedSeconds
-    case publishedDate
-    case updatedDate
-    case watchedDate
-    case deferDate
-    case isYtShort
-    case videoDescription
-    case bookmarkedDate
-    case clearedInboxDate
-    case createdDate
+    case persistendId,
+         youtubeId,
+         title,
+         url,
+         thumbnailUrl,
+         youtubeChannelId,
+         duration,
+         elapsedSeconds,
+         publishedDate,
+         updatedDate,
+         watchedDate,
+         deferDate,
+         isYtShort,
+         videoDescription,
+         bookmarkedDate,
+         clearedInboxDate,
+         createdDate,
+         isNew
 }

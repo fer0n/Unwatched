@@ -15,6 +15,7 @@ struct VideoListItemMoreMenuView: View {
     var clearVideoEverywhere: () -> Void
     var canBeCleared: Bool
     var toggleBookmark: () -> Void
+    var toggleIsNew: () -> Void
     var moveToInbox: () -> Void
     var openUrlInApp: (String) -> Void
     var clearList: (ClearList, ClearDirection) -> Void
@@ -42,6 +43,13 @@ struct VideoListItemMoreMenuView: View {
                     Label("removeBookmark", systemImage: "bookmark.slash.fill")
                 } else {
                     Label("addBookmark", systemImage: "bookmark.fill")
+                }
+            }
+            Button(action: toggleIsNew) {
+                if videoData.isNew == true {
+                    Label("removeIsNew", systemImage: "circle.slash.fill")
+                } else {
+                    Label("addIsNew", systemImage: "circle.fill")
                 }
             }
             if config.watched ?? (videoData.watchedDate != nil) {

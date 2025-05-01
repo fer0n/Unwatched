@@ -38,6 +38,7 @@ public struct Const {
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
+    public static let videoCornerRadius: CGFloat = 15
     public static let consideredWideAspectRatio: Double = 18/9
     public static let consideredTallAspectRatio: Double = 1
     public static let tallestAspectRatio: Double = 0.7
@@ -194,6 +195,7 @@ public struct Const {
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"
     public static let showTabBarLabels = "showTabBarLabels"
     public static let requireClearConfirmation = "requireClearConfirmation"
+    public static let autoRemoveNew = "autoRemoveNew"
     public static let showClearQueueButton = "showClearQueueButton"
     public static let showAddToQueueButton = "showAddToQueueButton"
     public static let useNoCookieUrl = "useNoCookieUrl"
@@ -210,8 +212,6 @@ public struct Const {
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     public static let allVideosSortOrder = "allVideosSortOrder"
     public static let sideloadingSortOrder = "sideloadingSortOrder"
-    public static let newInboxItemsCount = "newInboxItemsCount"
-    public static let newQueueItemsCount = "newQueueItemsCount"
     public static let showTabBarBadge = "showTabBarBadge"
     public static let browserAsTab = "browserAsTab"
 

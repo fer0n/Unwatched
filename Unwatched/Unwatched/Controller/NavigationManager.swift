@@ -201,7 +201,6 @@ import UnwatchedShared
 
     @MainActor
     func handlePlay() {
-        let hideMenuOnPlay = UserDefaults.standard.value(forKey: Const.hideMenuOnPlay) as? Bool ?? true
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
         let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
 
@@ -209,7 +208,7 @@ import UnwatchedShared
             searchFocused = false
         }
 
-        if hideMenuOnPlay || rotateOnPlay {
+        if (Const.hideMenuOnPlay.bool ?? true) || rotateOnPlay {
             #if os(macOS)
             toggleSidebar(show: false)
             #else

@@ -41,6 +41,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var bookmarkedDate: Date?
     public var clearedInboxDate: Date?
     public var createdDate: Date?
+    public var isNew: Bool = false
     
     public var subscriptionData: (any SubscriptionData)? {
         return subscription
@@ -120,7 +121,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             clearedInboxDate: clearedInboxDate,
             createdDate: createdDate,
             hasInboxEntry: inboxEntry != nil,
-            queueEntry: queueEntry?.toExport
+            queueEntry: queueEntry?.toExport,
+            isNew: isNew,
         )
     }
     
@@ -146,7 +148,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 isYtShort: Bool? = nil,
                 bookmarkedDate: Date? = nil,
                 clearedInboxDate: Date? = nil,
-                createdDate: Date? = .now) {
+                createdDate: Date? = .now,
+                isNew: Bool = false,
+    ) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId
@@ -160,9 +164,10 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.chapters = chapters
         self.watchedDate = watchedDate
         self.deferDate = deferDate
+        self.isYtShort = isYtShort
         self.bookmarkedDate = bookmarkedDate
         self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate
-        self.isYtShort = isYtShort
+        self.isNew = isNew
     }
 }

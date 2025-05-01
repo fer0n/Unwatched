@@ -119,10 +119,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         switch response.actionIdentifier {
         case Const.notificationActionQueue:
             VideoService.insertQueueEntriesAsync(at: 1, youtubeId: youtubeId)
-            NotificationManager.changeBadgeNumer(by: -1, placement)
+            NotificationManager.changeBadgeNumber(by: -1)
         case Const.notificationActionClear:
             VideoService.clearFromEverywhere(youtubeId)
-            NotificationManager.changeBadgeNumer(by: -1, placement)
+            NotificationManager.changeBadgeNumber(by: -1)
         default:
             break
         }

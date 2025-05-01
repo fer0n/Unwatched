@@ -10,7 +10,6 @@ import OSLog
 import UnwatchedShared
 
 struct InboxView: View {
-    @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount = 0
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
 
@@ -52,14 +51,15 @@ struct InboxView: View {
                                 VideoListItem(
                                     video,
                                     config: VideoListItemConfig(
+                                        isNew: video.isNew,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
-                                        onChange: handleVideoChange,
                                         clearAboveBelowList: .inbox,
                                         showQueueButton: showAddToQueueButton,
-                                        showDelete: false
-                                    )
+                                        showDelete: false,
+                                        )
                                 )
+                                .autoMarkSeen(video)
                             } else {
                                 EmptyEntry(entry)
                             }
@@ -79,9 +79,6 @@ struct InboxView: View {
             }
             .onAppear {
                 navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
-            }
-            .onDisappear {
-                newInboxItemsCount = 0
             }
             .toolbar {
                 if showCancelButton {
@@ -145,14 +142,6 @@ struct InboxView: View {
         swipeTip.invalidate(reason: .actionPerformed)
     }
 
-    func handleVideoChange() {
-        if newInboxItemsCount > 0 {
-            withAnimation {
-                newInboxItemsCount = 0
-            }
-        }
-    }
-
     func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
         for index in indexSet {
             let entry = inboxEntries[index]
@@ -166,7 +155,6 @@ struct InboxView: View {
 
     func clearAll() {
         VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
-        handleVideoChange()
     }
 }
 

@@ -8,7 +8,6 @@ import SwiftData
 import UnwatchedShared
 
 struct InboxTabItemView: View {
-    @AppStorage(Const.newInboxItemsCount) var newInboxItemsCount: Int = 0
     @Environment(RefreshManager.self) var refresher
     @Environment(NavigationManager.self) var navManager
     @Query(sort: \InboxEntry.date,
@@ -23,14 +22,13 @@ struct InboxTabItemView: View {
     var body: some View {
         TabItemView(image: getInboxSymbol,
                     tag: NavigationTab.inbox,
-                    showBadge: showBadge && newInboxItemsCount > 0 && inboxEntries.count > 0) {
+                    showBadge: showBadge && hasNewItems) {
             InboxView(inboxEntries: inboxEntries,
                       showCancelButton: showCancelButton)
                 .padding(.horizontal, horizontalpadding)
         }
     }
 
-    @MainActor
     var getInboxSymbol: Image {
         let isLoading = refresher.isLoading
         let isEmpty = inboxEntries.isEmpty
@@ -43,5 +41,9 @@ struct InboxTabItemView: View {
 
         let fill = currentTab ? ".fill" : ""
         return Image("custom.tray.loading\(fill)")
+    }
+
+    var hasNewItems: Bool {
+        inboxEntries.contains(where: { $0.video?.isNew == true })
     }
 }

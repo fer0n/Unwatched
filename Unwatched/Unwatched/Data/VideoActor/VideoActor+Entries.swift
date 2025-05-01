@@ -14,11 +14,24 @@ extension VideoActor {
     static func moveQueueEntry(
         from source: IndexSet,
         to destination: Int,
+        updateIsNew: Bool = false,
         modelContext: ModelContext
     ) throws {
         let fetchDescriptor = FetchDescriptor<QueueEntry>()
         let queue = try modelContext.fetch(fetchDescriptor)
         var orderedQueue = queue.sorted(by: { $0.order < $1.order })
+
+        if updateIsNew {
+            if Const.autoRemoveNew.bool ?? true {
+                for sourceIndex in source {
+                    let queueEntry = orderedQueue[sourceIndex]
+                    if queueEntry.video?.isNew == true {
+                        queueEntry.video?.isNew = false
+                    }
+                }
+            }
+        }
+
         orderedQueue.move(fromOffsets: source, toOffset: destination)
 
         for (index, queueEntry) in orderedQueue.enumerated() {
@@ -155,7 +168,8 @@ extension VideoActor {
         let count = addSingleVideoTo(
             videosToAdd,
             videoPlacement: placement,
-            hideShorts: hideShorts
+            hideShorts: hideShorts,
+            isNew: true
         )
         return count
     }
@@ -177,14 +191,18 @@ extension VideoActor {
     private func addSingleVideoTo(
         _ videos: [Video],
         videoPlacement: VideoPlacement,
-        hideShorts: Bool
-    ) -> Int {
+        hideShorts: Bool,
+        isNew: Bool,
+        ) -> Int {
         var addedVideosCount = 0
         // check setting for ytShort, use individual setting in that case
         for video in videos {
             let placement: VideoPlacement = (video.isYtShort == true && hideShorts)
                 ? VideoPlacement.nothing
                 : videoPlacement
+            if placement != .nothing {
+                video.isNew = isNew
+            }
             handleVideoPlacement([video], placement: placement)
             addedVideosCount += 1
         }
@@ -200,10 +218,6 @@ extension VideoActor {
                 videos: videos,
                 modelContext: modelContext
             )
-            if !videos.isEmpty {
-                let count = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
-                UserDefaults.standard.setValue(count + videos.count, forKey: Const.newQueueItemsCount)
-            }
         } else {
             return
         }
@@ -217,10 +231,6 @@ extension VideoActor {
     }
 
     private func addVideosToInbox(_ videos: [Video]) {
-        if !videos.isEmpty {
-            let count = UserDefaults.standard.integer(forKey: Const.newInboxItemsCount)
-            UserDefaults.standard.setValue(count + videos.count, forKey: Const.newInboxItemsCount)
-        }
         for video in videos {
             let inboxEntry = InboxEntry(video)
             modelContext.insert(inboxEntry)
@@ -239,8 +249,8 @@ extension VideoActor {
             VideoActor.clearEntries(
                 from: video,
                 updateCleared: updateCleared,
-                modelContext: modelContext
-            )
+                modelContext: modelContext,
+                )
             try modelContext.save()
         } else {
             Logger.log.info("clearEntries: model not found")
@@ -425,8 +435,9 @@ extension VideoActor {
             _ = addSingleVideoTo(
                 [video],
                 videoPlacement: placement,
-                hideShorts: false
-            )
+                hideShorts: false,
+                isNew: true,
+                )
         }
 
         try? modelContext.save()

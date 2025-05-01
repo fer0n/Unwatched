@@ -24,12 +24,12 @@ struct SideloadingView: View {
                         VideoListItem(
                             video,
                             config: VideoListItemConfig(
-                                showVideoStatus: true,
                                 hasInboxEntry: video.inboxEntry != nil,
                                 hasQueueEntry: video.queueEntry != nil,
                                 watched: video.watchedDate != nil,
-                                deferred: video.deferDate != nil
-                            )
+                                deferred: video.deferDate != nil,
+                                isNew: video.isNew,
+                                )
                         )
                         .videoListItemEntry()
                     }

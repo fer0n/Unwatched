@@ -34,7 +34,10 @@ public final class QueueEntry: QueueEntryData, CustomStringConvertible, Exportab
 
     public var toExport: SendableQueueEntry? {
         if let video = video {
-            return SendableQueueEntry(videoId: video.persistentModelID.hashValue, order: order)
+            return SendableQueueEntry(
+                videoId: video.persistentModelID.hashValue,
+                order: order
+            )
         }
         return nil
     }

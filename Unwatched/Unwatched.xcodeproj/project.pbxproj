@@ -143,6 +143,10 @@
 		884777372D21509F0044E812 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884777352D21509F0044E812 /* AnyCodable.swift */; };
 		8847D6C72C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
 		8847D6C82C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
+		884CC8892DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */; };
+		884CC88A2DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */; };
+		884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
+		884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		8852493E2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
 		8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
 		885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
@@ -707,6 +711,8 @@
 		884777322D2150850044E812 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		884777352D21509F0044E812 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
+		884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoMarkSeenViewModifier.swift; sourceTree = "<group>"; };
+		884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTabItemView.swift; sourceTree = "<group>"; };
 		8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChangeOrientationButton.swift; sourceTree = "<group>"; };
 		885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentNavBarWorkaround.swift; sourceTree = "<group>"; };
 		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
@@ -1002,6 +1008,7 @@
 			isa = PBXGroup;
 			children = (
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
+				884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */,
 				880F05412D90293D0049B902 /* ToggleSidebar.swift */,
 				880F03822D8EE73D0049B902 /* CursorHideModifier.swift */,
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
@@ -1161,6 +1168,7 @@
 			children = (
 				CD63640F2C6DD9C100C5DD43 /* EmptyEntry.swift */,
 				886E79B62B46E0F900554E1F /* QueueView.swift */,
+				884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */,
 				887EB2E02CFE676700F9D517 /* QueueViewUnavailable.swift */,
 				883F41042BDECB5C00535952 /* InboxHasEntriesTip.swift */,
 			);
@@ -1909,6 +1917,7 @@
 				889AF94C2C50ECF5001CEDE6 /* SubscriptionListItem.swift in Sources */,
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailView.swift in Sources */,
 				889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */,
+				884CC88A2DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */,
 				889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */,
 				884777302D2150060044E812 /* UserDataServiceError.swift in Sources */,
 				889AF8FF2C50ECCD001CEDE6 /* OrientationManager.swift in Sources */,
@@ -2088,6 +2097,7 @@
 				889AF9242C50ECE7001CEDE6 /* PlaybackSettingsView.swift in Sources */,
 				88F3AA8F2C998B840030B2EA /* VideoListFormat.swift in Sources */,
 				88415BEA2C50E1D50072778F /* ExportableTests.swift in Sources */,
+				884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */,
 				889AF96A2C50ED6C001CEDE6 /* apiKey.swift in Sources */,
 				889AF90E2C50ECE2001CEDE6 /* InboxView.swift in Sources */,
 				88BF31052CAE813400AE26EC /* LocalizedStringKey.swift in Sources */,
@@ -2162,6 +2172,7 @@
 				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
+				884CC8892DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */,
 				889931D72D731AB0009096AB /* PreviousState.swift in Sources */,
 				88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
@@ -2194,6 +2205,7 @@
 				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
 				8891F0B02B4E9F330098A3FB /* String.swift in Sources */,
+				884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */,
 				8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */,
 				884777362D21509F0044E812 /* AnyCodable.swift in Sources */,
 				88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */,
