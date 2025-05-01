@@ -6,12 +6,13 @@
 import SwiftUI
 
 public struct VideoListItemConfig {
-    public let showVideoStatus: Bool
     public let hasInboxEntry: Bool?
     public let hasQueueEntry: Bool?
     public let videoDuration: Double?
     public let watched: Bool?
     public let deferred: Bool?
+    public let isNew: Bool?
+    public let showPlayingStatus: Bool
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
     public let onChange: (() -> Void)?
@@ -24,12 +25,13 @@ public struct VideoListItemConfig {
     public let async: Bool
 
     public init(
-        showVideoStatus: Bool = false,
         hasInboxEntry: Bool? = nil,
         hasQueueEntry: Bool? = nil,
         videoDuration: Double? = nil,
         watched: Bool? = nil,
         deferred: Bool? = nil,
+        isNew: Bool = false,
+        showPlayingStatus: Bool = true,
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
         onChange: (() -> Void)? = nil,
@@ -41,12 +43,13 @@ public struct VideoListItemConfig {
         showDelete: Bool = true,
         async: Bool = false
     ) {
-        self.showVideoStatus = showVideoStatus
         self.hasInboxEntry = hasInboxEntry
         self.hasQueueEntry = hasQueueEntry
         self.videoDuration = videoDuration
         self.watched = watched
         self.deferred = deferred
+        self.isNew = isNew
+        self.showPlayingStatus = showPlayingStatus
         self.clearRole = clearRole
         self.queueRole = queueRole
         self.onChange = onChange

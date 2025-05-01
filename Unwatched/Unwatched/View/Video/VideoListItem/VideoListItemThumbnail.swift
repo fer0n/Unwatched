@@ -48,7 +48,7 @@ struct VideoListItemThumbnail: View {
                 videoDuration: config.videoDuration
             )
         }
-        .clipShape(RoundedRectangle(cornerRadius: 15.0))
+        .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
     }
 
     var height: CGFloat? {
@@ -64,10 +64,10 @@ struct VideoListItemThumbnail: View {
     VideoListItemThumbnail(
         Video.getDummy(),
         config: VideoListItemConfig(
-            showVideoStatus: true,
             hasInboxEntry: false,
             hasQueueEntry: true,
             watched: true,
+            isNew: true,
             showQueueButton: true
         ),
         size: nil

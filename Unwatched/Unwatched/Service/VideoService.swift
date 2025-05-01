@@ -47,12 +47,14 @@ extension VideoService {
     static func moveQueueEntry(
         from source: IndexSet,
         to destination: Int,
+        updateIsNew: Bool,
         modelContext: ModelContext
     ) {
         try? VideoActor
             .moveQueueEntry(
                 from: source,
                 to: destination,
+                updateIsNew: updateIsNew,
                 modelContext: modelContext
             )
     }
@@ -105,17 +107,19 @@ extension VideoService {
         }
 
         let modelId = video.persistentModelID
-        forceUpdateVideo(modelId, duration: duration)
+        _ = forceUpdateVideo(modelId, duration: duration)
     }
 
     static func forceUpdateVideo(
         _ videoModelId: PersistentIdentifier,
         duration: Double? = nil,
-        elapsedSeconds: Double? = nil
-    ) {
-        Task { @MainActor in
+        elapsedSeconds: Double? = nil,
+        isNew: Bool? = nil,
+        delay: Double = 200,
+        ) -> Task<Void, Error> {
+        return Task { @MainActor in
             do {
-                try await Task.sleep(for: .milliseconds(200))
+                try await Task.sleep(for: .milliseconds(delay))
                 let context = DataProvider.mainContext
                 guard let model: Video = context.existingModel(for: videoModelId) else {
                     Logger.log.warning("forceUpdateVideo: video not found")
@@ -127,6 +131,9 @@ extension VideoService {
                     }
                     if let elapsedSeconds {
                         model.elapsedSeconds = elapsedSeconds
+                    }
+                    if let isNew {
+                        model.isNew = isNew
                     }
                 }
                 try context.save()
@@ -260,7 +267,7 @@ extension VideoService {
 
     static func toggleBookmarkFetch(_ videoId: PersistentIdentifier, _ context: ModelContext) -> (Task<(), Error>)? {
         if let video: Video = context.existingModel(for: videoId) {
-            video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
+            toggleBookmark(video)
             try? context.save()
         }
         return nil
@@ -268,6 +275,10 @@ extension VideoService {
 
     static func toggleBookmark(_ video: Video) {
         video.bookmarkedDate = video.bookmarkedDate == nil ? .now : nil
+    }
+
+    static func setIsNew(_ videoId: PersistentIdentifier, _ value: Bool) -> Task<(), Error> {
+        return forceUpdateVideo(videoId, isNew: value, delay: 0)
     }
 
     static func clearList(_ list: ClearList,

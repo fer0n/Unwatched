@@ -23,7 +23,7 @@ struct NotificationManager {
             includeQueue: notifyAboutQueue
         )
 
-        NotificationManager.changeBadgeNumer(by: count)
+        NotificationManager.changeBadgeNumber(by: count)
 
         for notificationInfo in notificationInfos {
             let tabDestination = getNavigationTab(newVideoInfo, notifyAboutInbox, notifyAboutQueue)
@@ -164,7 +164,7 @@ struct NotificationManager {
         }
     }
 
-    static func changeBadgeNumer(by number: Int, _ placement: VideoPlacementArea? = nil) {
+    static func changeBadgeNumber(by number: Int) {
         let oldCount = UserDefaults.standard.integer(forKey: Const.badgeCount)
         let newValue = oldCount + number
 
@@ -178,18 +178,6 @@ struct NotificationManager {
             Logger.log.info("changeBadgeNumer: number is not negative.")
             // inbox/queue count is set while refreshing the videos
             return
-        }
-
-        if placement == .queue {
-            let queueCount = UserDefaults.standard.integer(forKey: Const.newQueueItemsCount)
-            let newQueueCount = queueCount + number
-            Logger.log.info("oldQueueCount: \(queueCount), newQueueCount: \(newQueueCount)")
-            UserDefaults.standard.set(max(0, newQueueCount), forKey: Const.newQueueItemsCount)
-        } else if placement == .inbox {
-            let inboxCount = UserDefaults.standard.integer(forKey: Const.newInboxItemsCount)
-            let newInboxCount = inboxCount + number
-            Logger.log.info("oldInboxCount: \(inboxCount), newInboxCount: \(newInboxCount)")
-            UserDefaults.standard.set(max(0, newInboxCount), forKey: Const.newInboxItemsCount)
         }
     }
 

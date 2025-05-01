@@ -55,11 +55,11 @@ struct VideoListViewAsync: View {
     var body: some View {
         ForEach(videoListVM.videos, id: \.persistentId) { video in
             let config = VideoListItemConfig(
-                showVideoStatus: true,
                 hasInboxEntry: video.hasInboxEntry,
                 hasQueueEntry: video.queueEntry != nil,
                 watched: video.watchedDate != nil,
                 deferred: video.deferDate != nil,
+                isNew: video.isNew,
                 onChange: {
                     videoListVM.updateVideo(video)
                 },

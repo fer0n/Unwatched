@@ -15,7 +15,6 @@ struct VideoPlayer: View {
     @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
-    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount: Int = 0
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @State var sleepTimerVM = SleepTimerViewModel()
@@ -73,8 +72,8 @@ struct VideoPlayer: View {
             }
         }
         .onChange(of: player.isPlaying) {
-            if newQueueItemsCount > 0 && navManager.showMenu && player.isPlaying && navManager.tab == .queue {
-                newQueueItemsCount = 0
+            if player.video?.isNew == true {
+                player.video?.isNew = false
             }
         }
         .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])

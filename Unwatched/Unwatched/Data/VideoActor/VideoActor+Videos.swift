@@ -58,6 +58,7 @@ import UnwatchedShared
                 }
             }
         }
+        setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
     }
 
@@ -81,7 +82,14 @@ import UnwatchedShared
                 }
             }
         }
+        setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
+    }
+
+    func setVideosNew(_ videos: [Video]) {
+        for video in videos where !video.isNew {
+            video.isNew = true
+        }
     }
 
     private func videoAlreadyExists(_ youtubeId: String) -> Video? {

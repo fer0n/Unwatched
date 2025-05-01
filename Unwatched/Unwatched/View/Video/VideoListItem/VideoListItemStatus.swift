@@ -9,11 +9,13 @@ import UnwatchedShared
 struct VideoListItemStatus: View {
     var youtubeId: String
     var playingVideoId: String?
+    var showPlayingStatus: Bool
 
     var hasInboxEntry: Bool?
     var hasQueueEntry: Bool?
     var watched: Bool?
     var deferred: Bool?
+    var isNew: Bool?
 
     @ScaledMetric var size = 23
 
@@ -34,14 +36,17 @@ struct VideoListItemStatus: View {
 
     var videoStatusSystemName: (status: String?, color: Color)? {
         let defaultColor = Color.green
-        if youtubeId == playingVideoId {
+        if showPlayingStatus && youtubeId == playingVideoId {
             return ("play.circle.fill", defaultColor)
         }
         if hasInboxEntry == true {
-            return ("circle.circle.fill", .mint)
+            return ("tray.circle.fill", .teal)
         }
         if hasQueueEntry == true {
             return ("arrow.uturn.right.circle.fill", defaultColor)
+        }
+        if isNew == true {
+            return ("circle.circle.fill", .mint)
         }
         if deferred == true {
             return ("clock.circle.fill", .orange)
@@ -56,9 +61,10 @@ struct VideoListItemStatus: View {
 #Preview {
     VideoListItemStatus(
         youtubeId: "id",
-        hasInboxEntry: false,
-        hasQueueEntry: false,
-        watched: false,
-        deferred: true
-    )
+        showPlayingStatus: true,
+        // hasInboxEntry: true,
+        // hasQueueEntry: true,
+        // watched: true,
+        deferred: true,
+        )
 }

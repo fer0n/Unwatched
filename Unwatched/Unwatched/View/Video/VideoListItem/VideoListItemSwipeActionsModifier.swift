@@ -38,6 +38,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     addVideoToTopQueue: addVideoToTopQueue,
                     addVideoToBottomQueue: addVideoToBottomQueue,
                     toggleBookmark: toggleBookmark,
+                    toggleIsNew: toggleIsNew,
                     moveToInbox: moveToInbox,
                     clearList: clearList,
                     canBeCleared: canBeCleared,
@@ -57,6 +58,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                 clearVideoEverywhere: clearVideoEverywhere,
                                 canBeCleared: canBeCleared,
                                 toggleBookmark: toggleBookmark,
+                                toggleIsNew: toggleIsNew,
                                 moveToInbox: moveToInbox,
                                 openUrlInApp: { urlString in
                                     navManager.openUrlInApp(.url(urlString))
@@ -92,12 +94,14 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     var canBeCleared: Bool {
         config.videoSwipeActions.contains(.clear) &&
             (config.hasInboxEntry == true
+                || config.isNew == true
                 || config.hasQueueEntry == true
                 || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
             )
     }
 
     func performVideoAction(
+        isNew: Bool? = nil,
         asyncAction: ((PersistentIdentifier) -> (Task<Void, Error>)?)?,
         syncAction: ((Video) -> Void)?
     ) {
@@ -106,9 +110,11 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         var order = videoData.queueEntryData?.order
         var task: Task<Void, Error>?
         if config.async, let videoId = videoData.persistentId {
+            let isNewTask = handleIsNewAsync(videoId, isNew)
             task = asyncAction?(videoId)
             Task {
                 try? await task?.value
+                try? await isNewTask?.value
                 config.onChange?()
             }
         } else {
@@ -116,6 +122,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 Logger.log.error("performVideoAction: no video")
                 return
             }
+            handleIsNew(video, isNew)
             order = order ?? video.queueEntry?.order
             syncAction?(video)
             try? modelContext.save()
@@ -124,9 +131,33 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         handlePotentialQueueChange(after: task, order: order)
     }
 
+    func handleIsNewAsync(_ videoId: PersistentIdentifier, _ isNew: Bool?) -> Task<Void, Error>? {
+        if let isNew, videoData.isNew != isNew {
+            return Task {
+                let context = DataProvider.mainContext
+                let video: Video? = context.existingModel(for: videoId)
+                if let video {
+                    handleIsNew(video, isNew)
+                    try? context.save()
+                }
+            }
+        }
+        return nil
+    }
+
+    func handleIsNew(_ video: Video, _ isNew: Bool?) {
+        if let isNew,
+           videoData.isNew != isNew {
+            withAnimation {
+                video.isNew = isNew
+            }
+        }
+    }
+
     func addVideoToTopQueue() {
         Logger.log.info("addVideoTop")
         performVideoAction(
+            isNew: false,
             asyncAction: { videoId in
                 VideoService.insertQueueEntriesAsync(
                     at: 1,
@@ -146,6 +177,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func addVideoToBottomQueue() {
         Logger.log.info("addVideoBottom")
         performVideoAction(
+            isNew: false,
             asyncAction: { videoId in
                 VideoService.addToBottomQueueAsync(
                     videoId: videoId
@@ -163,6 +195,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func moveToInbox() {
         Logger.log.info("moveToInbox")
         performVideoAction(
+            isNew: false,
             asyncAction: { videoId in
                 VideoService.moveVideoToInboxAsync(
                     videoId
@@ -178,7 +211,6 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func toggleBookmark() {
-        Logger.log.error("toggleBookmark: no video")
         performVideoAction(
             asyncAction: { videoId in
                 VideoService.toggleBookmarkFetch(
@@ -194,8 +226,20 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         )
     }
 
+    func toggleIsNew() {
+        if let videoId = videoData.persistentId {
+            let isNew = !(videoData.isNew == true)
+            let task = VideoService.setIsNew(videoId, isNew)
+            Task {
+                try? await task.value
+                config.onChange?()
+            }
+        }
+    }
+
     func setWatched(_ watched: Bool) {
         performVideoAction(
+            isNew: false,
             asyncAction: { videoId in
                 VideoService.setVideoWatchedAsync(
                     videoId,
@@ -214,6 +258,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func clearVideoEverywhere() {
         performVideoAction(
+            isNew: false,
             asyncAction: { videoId in
                 VideoService.clearEntriesAsync(
                     from: videoId,
@@ -311,6 +356,7 @@ struct TrailingSwipeActionsView: View {
     var addVideoToTopQueue: () -> Void
     var addVideoToBottomQueue: () -> Void
     var toggleBookmark: () -> Void
+    var toggleIsNew: () -> Void
     var moveToInbox: () -> Void
     var clearList: (ClearList, ClearDirection) -> Void
     var canBeCleared: Bool
@@ -363,6 +409,7 @@ struct TrailingSwipeActionsView: View {
                 clearVideoEverywhere: clearVideoEverywhere,
                 canBeCleared: canBeCleared,
                 toggleBookmark: toggleBookmark,
+                toggleIsNew: toggleIsNew,
                 moveToInbox: moveToInbox,
                 openUrlInApp: { urlString in
                     navManager.openUrlInApp(.url(urlString))
@@ -395,10 +442,10 @@ enum ClearDirection {
         VideoListItem(
             video,
             config: VideoListItemConfig(
-                showVideoStatus: true,
                 hasInboxEntry: true,
                 hasQueueEntry: true,
                 watched: true,
+                isNew: true,
                 clearAboveBelowList: .inbox
             )
         )

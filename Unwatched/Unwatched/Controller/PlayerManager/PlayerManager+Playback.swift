@@ -63,7 +63,7 @@ extension PlayerManager {
         }
 
         video?.elapsedSeconds = time
-        VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
+        _ = VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
     }
 
     @MainActor

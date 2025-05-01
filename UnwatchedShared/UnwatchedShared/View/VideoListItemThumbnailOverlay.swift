@@ -19,6 +19,7 @@ public protocol VideoData {
     var bookmarkedDate: Date? { get }
     var watchedDate: Date? { get }
     var deferDate: Date? { get }
+    var isNew: Bool { get }
     var url: URL? { get }
     var persistentId: PersistentIdentifier? { get }
     

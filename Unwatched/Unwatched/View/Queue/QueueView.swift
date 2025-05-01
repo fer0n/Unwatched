@@ -10,7 +10,6 @@ import UnwatchedShared
 
 struct QueueView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.newQueueItemsCount) var newQueueItemsCount = 0
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
@@ -18,8 +17,8 @@ struct QueueView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(PlayerManager.self) private var player
-    @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
+    var queue: [QueueEntry]
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -42,14 +41,16 @@ struct QueueView: View {
                                     video,
                                     config: VideoListItemConfig(
                                         videoDuration: video.duration,
+                                        isNew: video.isNew,
+                                        showPlayingStatus: false,
                                         clearRole: .destructive,
-                                        onChange: handleVideoChange,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
                                         showVideoListOrder: showVideoListOrder,
-                                        showDelete: false
-                                    )
+                                        showDelete: false,
+                                        )
                                 )
+                                .autoMarkSeen(video)
                             } else {
                                 EmptyEntry(entry)
                             }
@@ -87,22 +88,12 @@ struct QueueView: View {
         .onAppear {
             navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
         }
-        .onDisappear {
-            newQueueItemsCount = 0
-        }
-    }
-
-    func handleVideoChange() {
-        if newQueueItemsCount > 0 {
-            withAnimation {
-                newQueueItemsCount = 0
-            }
-        }
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
         VideoService.moveQueueEntry(from: source,
                                     to: destination,
+                                    updateIsNew: true,
                                     modelContext: modelContext)
         if source.count == 1 && source.first == destination {
             return
@@ -110,17 +101,17 @@ struct QueueView: View {
         if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue()
         }
-        handleVideoChange()
     }
 
     func clearAll() {
         VideoService.deleteQueueEntries(queue, modelContext: modelContext)
-        handleVideoChange()
     }
 }
 
 #Preview {
-    QueueView()
+    @Previewable @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
+
+    QueueView(queue: queue)
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())

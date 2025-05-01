@@ -277,8 +277,6 @@ struct BackupView: View {
             await VideoService.deleteEverything()
         }
         isDeletingEverythingTask = task
-        UserDefaults.standard.set(0, forKey: Const.newQueueItemsCount)
-        UserDefaults.standard.set(0, forKey: Const.newInboxItemsCount)
         return task
     }
 

@@ -38,18 +38,19 @@ struct VideoListItem: View {
                 config: config,
                 size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
             )
-            .padding([.vertical, .leading], config.showVideoStatus ? 5 : 0)
+            .padding([.vertical, .leading], 5)
             .overlay(alignment: .topLeading) {
                 VideoListItemStatus(
                     youtubeId: videoData.youtubeId,
                     playingVideoId: player.video?.youtubeId,
+                    showPlayingStatus: config.showPlayingStatus,
                     hasInboxEntry: config.hasInboxEntry,
                     hasQueueEntry: config.hasQueueEntry,
                     watched: config.watched,
-                    deferred: config.deferred
-                )
+                    deferred: config.deferred,
+                    isNew: config.isNew,
+                    )
                 .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-                .opacity(config.showVideoStatus ? 1 : 0)
             }
 
             VideoListItemDetails(
@@ -65,7 +66,7 @@ struct VideoListItem: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             }
         }
-        .padding([.vertical, .leading], config.showVideoStatus ? -5 : 0)
+        .padding([.vertical, .leading], -5)
         .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
             videoData: videoData,
@@ -90,10 +91,10 @@ struct VideoListItem: View {
         VideoListItem(
             video,
             config: VideoListItemConfig(
-                showVideoStatus: true,
                 hasInboxEntry: false,
                 hasQueueEntry: true,
                 watched: true,
+                isNew: true,
                 showQueueButton: true
             )
         )
