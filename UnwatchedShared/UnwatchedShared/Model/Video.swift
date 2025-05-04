@@ -39,6 +39,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var youtubeChannelId: String?
     public var isYtShort: Bool?
     public var bookmarkedDate: Date?
+    
+    @available(*, deprecated, message: "Remove with next data model update")
     public var clearedInboxDate: Date?
     public var createdDate: Date?
     public var isNew: Bool = false

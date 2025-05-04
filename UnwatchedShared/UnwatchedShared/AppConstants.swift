@@ -210,7 +210,6 @@ public struct Const {
     public static let autoDeleteBackups = "autoDeleteBackups"
 
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
-    public static let allVideosSortOrder = "allVideosSortOrder"
     public static let sideloadingSortOrder = "sideloadingSortOrder"
     public static let showTabBarBadge = "showTabBarBadge"
     public static let browserAsTab = "browserAsTab"

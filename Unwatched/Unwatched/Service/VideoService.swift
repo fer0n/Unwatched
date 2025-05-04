@@ -22,11 +22,10 @@ extension VideoService {
     }
 
     static func clearEntriesAsync(from videoId: PersistentIdentifier,
-                                  except model: (any PersistentModel.Type)? = nil,
-                                  updateCleared: Bool) -> Task<Void, Error> {
+                                  except model: (any PersistentModel.Type)? = nil) -> Task<Void, Error> {
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            return try await repo.clearEntries(from: videoId, updateCleared: updateCleared)
+            return try await repo.clearEntries(from: videoId)
         }
         return task
     }
@@ -72,13 +71,11 @@ extension VideoService {
             clearEntries(
                 from: video,
                 except: InboxEntry.self,
-                updateCleared: false,
                 modelContext: modelContext
             )
         } else {
             clearEntries(
                 from: video,
-                updateCleared: false,
                 modelContext: modelContext
             )
             let inboxEntry = InboxEntry(video)
@@ -157,7 +154,7 @@ extension VideoService {
             let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
                 let repo = VideoActor(modelContainer: DataProvider.shared.container)
-                try await repo.clearEntries(from: videoId, updateCleared: true)
+                try await repo.clearEntries(from: videoId)
             } else {
                 Logger.log.info("Video not found")
             }
@@ -339,7 +336,7 @@ extension VideoService {
             return
         }
         video.deferDate = deferDate
-        clearEntries(from: video, updateCleared: false, modelContext: context)
+        clearEntries(from: video, modelContext: context)
         try? context.save()
 
         scheduleDeferedVideoNotification(video, deferDate: deferDate)

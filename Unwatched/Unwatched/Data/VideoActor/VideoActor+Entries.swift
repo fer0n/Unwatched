@@ -89,7 +89,6 @@ extension VideoActor {
         if isYtShort == true && (video.subscription?.shortsSetting.shouldHide() ?? false) {
             VideoService.clearEntries(
                 from: video,
-                updateCleared: false,
                 modelContext: modelContext
             )
         }
@@ -238,17 +237,15 @@ extension VideoActor {
             VideoActor.clearEntries(
                 from: video,
                 except: InboxEntry.self,
-                updateCleared: false,
                 modelContext: modelContext
             )
         }
     }
 
-    func clearEntries(from videoId: PersistentIdentifier, updateCleared: Bool = false) throws {
+    func clearEntries(from videoId: PersistentIdentifier) throws {
         if let video = self[videoId, as: Video.self] {
             VideoActor.clearEntries(
                 from: video,
-                updateCleared: updateCleared,
                 modelContext: modelContext,
                 )
             try modelContext.save()
@@ -259,10 +256,9 @@ extension VideoActor {
 
     private static func clearEntries(from video: Video,
                                      except model: (any PersistentModel.Type)? = nil,
-                                     updateCleared: Bool,
                                      modelContext: ModelContext) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            VideoService.deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
+            VideoService.deleteInboxEntry(inboxEntry, modelContext: modelContext)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
             VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
@@ -325,7 +321,6 @@ extension VideoActor {
                 VideoActor.clearEntries(
                     from: video,
                     except: QueueEntry.self,
-                    updateCleared: false,
                     modelContext: modelContext
                 )
                 if let queueEntry = video.queueEntry {

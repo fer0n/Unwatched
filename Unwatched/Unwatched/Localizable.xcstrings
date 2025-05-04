@@ -2808,40 +2808,6 @@
         }
       }
     },
-    "clearedInboxDate" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zuletzt aus der Inbox entfernt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last Cleared from Inbox"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Última limpieza de la bandeja de entrada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dernière suppression de la boîte de réception"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ostatnio wyczyszczone ze skrzynki"
-          }
-        }
-      }
-    },
     "clearText" : {
       "localizations" : {
         "de" : {

@@ -14,7 +14,7 @@ struct VideoListView: View {
          sort: VideoSorting? = nil,
          searchText: String = "") {
         let filter = VideoListView.getVideoFilter(subscriptionId, searchText: searchText)
-        let sorting = VideoListView.getVideoSorting(sort)
+        let sorting = [SortDescriptor<Video>(\.publishedDate, order: .reverse)]
         _videos = Query(filter: filter, sort: sorting, animation: .default)
     }
 
@@ -33,18 +33,6 @@ struct VideoListView: View {
             .videoListItemEntry()
         }
         .listRowBackground(Color.backgroundColor)
-    }
-
-    static func getVideoSorting(_ sort: VideoSorting?) -> [SortDescriptor<Video>] {
-        switch sort {
-        case .clearedInboxDate:
-            return [
-                SortDescriptor<Video>(\.clearedInboxDate, order: .reverse),
-                SortDescriptor<Video>(\.publishedDate, order: .reverse)
-            ]
-        default:
-            return [SortDescriptor<Video>(\.publishedDate, order: .reverse)]
-        }
     }
 
     nonisolated static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,
