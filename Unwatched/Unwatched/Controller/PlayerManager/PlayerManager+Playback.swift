@@ -205,6 +205,39 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
+    func speedUp() {
+        let nextSpeed = Const.speeds.first(where: { $0 > playbackSpeed }) ?? Const.speeds.last
+        if let nextSpeed {
+            playbackSpeed = nextSpeed
+        }
+    }
+
+    @MainActor
+    func slowDown() {
+        let nextSpeed = Const.speeds.last(where: { $0 < playbackSpeed }) ?? Const.speeds.first
+        if let nextSpeed {
+            playbackSpeed = nextSpeed
+        }
+    }
+
+    @MainActor
+    func tempSpeedChange(faster: Bool = false) {
+        if faster {
+            if temporaryPlaybackSpeed == Const.speedMax {
+                temporaryPlaybackSpeed = nil
+            } else {
+                temporarySpeedUp()
+            }
+        } else {
+            if [1, Const.speedMin].contains(temporaryPlaybackSpeed) {
+                temporaryPlaybackSpeed = nil
+            } else {
+                temporarySlowDown()
+            }
+        }
+    }
+
     func resetTemporaryPlaybackSpeed() {
         temporaryPlaybackSpeed = nil
     }
@@ -291,8 +324,7 @@ extension PlayerManager {
         Logger.log.info("setAirplayHD: \(value)")
         if airplayHD != value {
             airplayHD = value
-            handleHotSwap()
-            PlayerManager.reloadPlayer()
+            hotReloadPlayer()
         }
     }
 

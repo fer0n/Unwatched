@@ -7,6 +7,11 @@ import SwiftUI
 import UnwatchedShared
 
 @Observable class AutoHideVM {
+    @MainActor
+    static let shared: AutoHideVM = {
+        AutoHideVM()
+    }()
+
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
     private var keepVisibleDict = Set<String>()

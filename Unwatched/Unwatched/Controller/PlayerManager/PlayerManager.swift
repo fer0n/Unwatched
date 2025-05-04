@@ -255,6 +255,13 @@ import UnwatchedShared
         UserDefaults.standard.set(reloadVideoId, forKey: Const.reloadVideoId)
     }
 
+    /// Attempts to keep playing as seamlessly as possible
+    @MainActor
+    func hotReloadPlayer() {
+        handleHotSwap()
+        PlayerManager.reloadPlayer()
+    }
+
     @MainActor
     func restoreNowPlayingVideo() {
         #if DEBUG

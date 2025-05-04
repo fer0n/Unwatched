@@ -12,12 +12,11 @@ struct ReloadPlayerButton: View {
     var body: some View {
         Button {
             player.embeddingDisabled = false
-            player.handleHotSwap()
-            PlayerManager.reloadPlayer()
+            player.hotReloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
         } label: {
             Image(systemName: Const.reloadSF)
-            Text("reloadVideo")
+            Text("reloadPlayer")
         }
     }
 }
