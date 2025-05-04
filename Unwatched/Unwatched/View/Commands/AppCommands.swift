@@ -19,6 +19,16 @@ struct AppCommands: Commands {
             }
         }
 
+        CommandGroup(after: .toolbar) {
+            Section {
+                PlayerShortcut.reloadPlayer.render()
+            }
+
+            Section {
+                PlayerShortcut.hideControls.render()
+            }
+        }
+
         #if os(macOS)
         CommandGroup(after: .windowList) {
             Section {

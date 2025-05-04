@@ -18,7 +18,7 @@ struct VideoPlayer: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
 
     @State var sleepTimerVM = SleepTimerViewModel()
-    @State var autoHideVM = AutoHideVM()
+    @State var autoHideVM = AutoHideVM.shared
 
     var compactSize = false
     var showInfo = true

@@ -108,8 +108,7 @@ struct HideControlsSettings: View {
     }
 
     func reloadPlayer() {
-        player.handleHotSwap()
-        PlayerManager.reloadPlayer()
+        player.hotReloadPlayer()
     }
 }
 

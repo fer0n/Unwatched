@@ -14,9 +14,13 @@ enum PlayerShortcut: String, CaseIterable {
     case nextChapter
     case previousChapter
     case hideControls
-    case temporarySpeed
+    case temporarySpeedUp
+    case temporarySlowDown
     case markWatched
     case nextVideo
+    case speedUp
+    case slowDown
+    case reloadPlayer
 
     var title: LocalizedStringKey {
         switch self {
@@ -26,9 +30,13 @@ enum PlayerShortcut: String, CaseIterable {
         case .nextChapter: return "nextChapter"
         case .previousChapter: return "previousChapter"
         case .hideControls: return "toggleSidebar"
-        case .temporarySpeed: return "toggleTemporarySpeed"
+        case .temporarySpeedUp: return "temporarySpeedUp"
+        case .temporarySlowDown: return "temporarySlowDown"
         case .markWatched: return "markWatched"
         case .nextVideo: return "nextVideo"
+        case .speedUp: return "speedUp"
+        case .slowDown: return "slowDown"
+        case .reloadPlayer: return "reloadPlayer"
         }
     }
 
@@ -40,9 +48,13 @@ enum PlayerShortcut: String, CaseIterable {
         case .nextChapter: return [(.rightArrow, .command), ("l", .command)]
         case .previousChapter: return [(.leftArrow, .command), ("j", .command)]
         case .hideControls: return [("f", [])]
-        case .temporarySpeed: return [("s", [])]
+        case .temporarySpeedUp: return [("d", [])]
+        case .temporarySlowDown: return [("s", [])]
         case .markWatched: return [("w", .shift)]
         case .nextVideo: return [("n", .shift)]
+        case .speedUp: return [(.upArrow, [])]
+        case .slowDown: return [(.downArrow, [])]
+        case .reloadPlayer: return [("r", [.command])]
         }
     }
 
@@ -77,6 +89,8 @@ enum PlayerShortcut: String, CaseIterable {
         switch key {
         case "ArrowLeft": return .leftArrow
         case "ArrowRight": return .rightArrow
+        case "ArrowUp": return .upArrow
+        case "ArrowDown": return .downArrow
         default: return nil
         }
     }
@@ -113,14 +127,24 @@ enum PlayerShortcut: String, CaseIterable {
             #else
             NavigationManager.shared.toggleSidebar()
             #endif
-        case .temporarySpeed:
-            player.toggleTemporaryPlaybackSpeed()
+        case .temporarySpeedUp:
+            player.tempSpeedChange(faster: true)
+        case .temporarySlowDown:
+            player.tempSpeedChange()
         case .markWatched:
             markVideoWatched()
             OverlayFullscreenVM.shared.show(.watched)
         case .nextVideo:
             markVideoWatched(playNext: true)
             OverlayFullscreenVM.shared.show(.nextVideo)
+        case .speedUp:
+            AutoHideVM.shared.setShowControls()
+            player.speedUp()
+        case .slowDown:
+            AutoHideVM.shared.setShowControls()
+            player.slowDown()
+        case .reloadPlayer:
+            player.hotReloadPlayer()
         }
     }
 
@@ -154,6 +178,8 @@ private extension KeyEquivalent {
         switch self {
         case .leftArrow: return "ArrowLeft"
         case .rightArrow: return "ArrowRight"
+        case .upArrow: return "ArrowUp"
+        case .downArrow: return "ArrowDown"
         case .space: return " "
         default: return "\(self.character)"
         }
