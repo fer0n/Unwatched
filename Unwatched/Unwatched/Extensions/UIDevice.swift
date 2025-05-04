@@ -2,24 +2,30 @@ import Foundation
 
 struct Device {
     #if os(iOS)
+    @MainActor
     static let systemVersion = "iOS \(UIDevice.current.systemVersion)"
 
+    @MainActor
     static let isIphone: Bool = {
         UIDevice.modelName.contains("iPhone")
     }()
 
+    @MainActor
     static let supportsFullscreenControls: Bool = {
         !UIDevice.modelName.contains("iPhone SE")
     }()
 
+    @MainActor
     static let requiresFullscreenWebWorkaround: Bool = {
         !UIDevice.modelName.contains("iPhone")
     }()
 
+    @MainActor
     static let isMac: Bool = {
         ProcessInfo.processInfo.isiOSAppOnMac
     }()
 
+    @MainActor
     static let deviceName: String = {
         if isMac {
             return "Mac"
@@ -40,6 +46,7 @@ struct Device {
     }()
     #endif
 
+    @MainActor
     static let modelName: String = {
         #if os(iOS)
         return UIDevice.modelName
