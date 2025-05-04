@@ -11,7 +11,6 @@ public struct VideoService {
         if watched {
             clearEntries(
                 from: video,
-                updateCleared: false,
                 modelContext: modelContext
             )
             video.watchedDate = .now
@@ -23,10 +22,9 @@ public struct VideoService {
     
     public static func clearEntries(from video: Video,
                              except model: (any PersistentModel.Type)? = nil,
-                             updateCleared: Bool,
                              modelContext: ModelContext) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            deleteInboxEntry(inboxEntry, updateCleared: updateCleared, modelContext: modelContext)
+            deleteInboxEntry(inboxEntry, modelContext: modelContext)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
             deleteQueueEntry(queueEntry, modelContext: modelContext)
@@ -40,10 +38,7 @@ public struct VideoService {
         updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
     }
 
-    public static func deleteInboxEntry(_ entry: InboxEntry, updateCleared: Bool = false, modelContext: ModelContext) {
-        if updateCleared {
-            entry.video?.clearedInboxDate = .now
-        }
+    public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
         modelContext.delete(entry)
     }
     

@@ -247,12 +247,6 @@ struct CleanupService {
                 return watched0
             }
 
-            let cleared0 = vid0.clearedInboxDate != nil
-            let cleared1 = vid1.clearedInboxDate != nil
-            if cleared0 != cleared1 {
-                return cleared0
-            }
-
             let sec0 = vid0.elapsedSeconds ?? 0
             let sec1 = vid1.elapsedSeconds ?? 0
             if sec0 != sec1 {

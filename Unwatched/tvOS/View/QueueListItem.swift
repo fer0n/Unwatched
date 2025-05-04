@@ -97,7 +97,6 @@ struct QueueEntryListItem: View {
             beforeRemove(entry)
             VideoService.clearEntries(
                 from: video,
-                updateCleared: false,
                 modelContext: modelContext
             )
         }

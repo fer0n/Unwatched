@@ -261,14 +261,12 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             isNew: false,
             asyncAction: { videoId in
                 VideoService.clearEntriesAsync(
-                    from: videoId,
-                    updateCleared: true
+                    from: videoId
                 )
             },
             syncAction: { video in
                 VideoService.clearEntries(
                     from: video,
-                    updateCleared: true,
                     modelContext: modelContext
                 )
             }

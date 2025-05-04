@@ -177,7 +177,6 @@ import UnwatchedShared
             return
         }
         VideoService.clearEntries(from: video,
-                                  updateCleared: true,
                                   modelContext: modelContext)
         loadTopmostVideoFromQueue(modelContext: modelContext)
     }

@@ -29,7 +29,7 @@ final class DataSpeedTests: XCTestCase {
 
     func testFilterShorts() async {
         let modelContext = await getModelContext()
-        let sort = SortDescriptor<Video>(\.clearedInboxDate, order: .reverse)
+        let sort = SortDescriptor<Video>(\.publishedDate, order: .reverse)
         let filter = VideoListView.getVideoFilter(nil)
         let fetch = FetchDescriptor<Video>(predicate: filter, sortBy: [sort])
 

@@ -3,12 +3,8 @@ import SwiftData
 import UnwatchedShared
 
 struct AllVideosView: View {
-    @AppStorage(Const.allVideosSortOrder) var allVideosSortOrder: VideoSorting = .publishedDate
     @State var videoListVM = VideoListVM()
-
     @State var text = DebouncedText(0.5)
-
-    let sortingOptions: [VideoSorting] = [.publishedDate, .clearedInboxDate]
 
     var body: some View {
         ZStack {
@@ -26,9 +22,7 @@ struct AllVideosView: View {
                 #endif
                 VideosViewAsync(
                     videoListVM: $videoListVM,
-                    sorting: VideoListView.getVideoSorting(
-                        allVideosSortOrder
-                    ),
+                    sorting: [SortDescriptor<Video>(\.publishedDate, order: .reverse)],
                     filter: VideoListView.getVideoFilter()
                 )
                 .opacity(videoListVM.hasNoVideos ? 0 : 1)
@@ -41,28 +35,6 @@ struct AllVideosView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Menu {
-                    ForEach(sortingOptions, id: \.self) { sort in
-                        Button {
-                            allVideosSortOrder = sort
-                        } label: {
-                            HStack {
-                                Image(systemName: sort.systemName)
-                                Text(sort.description)
-                            }
-                        }
-                        .disabled(allVideosSortOrder == sort)
-                    }
-                } label: {
-                    Image(systemName: allVideosSortOrder == .publishedDate
-                            ? Const.filterEmptySF
-                            : Const.filterSF)
-                }
-                .accessibilityLabel("videoSorting")
-            }
-        }
     }
 }
 

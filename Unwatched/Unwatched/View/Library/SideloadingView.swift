@@ -67,8 +67,6 @@ struct SideloadingView: View {
                                     > $1.createdDate ?? $1.publishedDate ?? past })
         case .publishedDate:
             return videos.sorted(by: { $0.publishedDate ?? past > $1.publishedDate ?? past })
-        case .clearedInboxDate:
-            return videos.sorted(by: { $0.clearedInboxDate ?? past > $1.clearedInboxDate ?? past })
         }
     }
 
