@@ -53,15 +53,11 @@ struct FullscreenPlayerControls: View {
             Spacer()
             Spacer()
 
-            ZStack {
-                if hasChapters {
-                    FullscreenChaptersButton(
-                        arrowEdge: arrowEdge,
-                        menuOpen: $autoHideVM.keepVisible,
-                        size: size
-                    )
-                }
-            }
+            FullscreenChaptersButton(
+                arrowEdge: arrowEdge,
+                menuOpen: $autoHideVM.keepVisible,
+                size: size
+            )
             .frame(minHeight: size)
 
             Spacer()
