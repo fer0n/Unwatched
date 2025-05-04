@@ -14,13 +14,15 @@ struct ChapterDescriptionView: View {
     let video: Video
     var bottomSpacer: CGFloat = 0
     var setShowMenu: (() -> Void)?
+    var isCompact = false
+    var scrollToCurrent = false
 
     var body: some View {
         let hasChapters = video.sortedChapters.isEmpty == false
 
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 15) {
+                VStack(alignment: .leading, spacing: isCompact ? 10 : 15) {
                     DescriptionDetailHeaderView(video: video, onTitleTap: {
                         if let url = video.url?.absoluteString {
                             navManager.openUrlInApp(.url(url))
@@ -29,14 +31,14 @@ struct ChapterDescriptionView: View {
                     }, setShowMenu: setShowMenu)
 
                     if hasChapters {
-                        ChapterList(video: video)
+                        ChapterList(video: video, isCompact: isCompact)
                             .padding(.vertical)
                     }
 
                     DescriptionDetailView(video: video)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 30)
+                .padding(.horizontal, isCompact ? 10 : 20)
+                .padding(.top, isCompact ? 10 : 30)
                 .frame(maxWidth: 800, alignment: .leading)
 
                 Spacer()
@@ -46,12 +48,20 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .onAppear {
-                if hasChapters && player.video == video && navManager.scrollToCurrentChapter {
+                if hasChapters && player.video == video {
+                    let anchor: UnitPoint?
+                    if scrollToCurrent {
+                        anchor = .center
+                    } else if navManager.scrollToCurrentChapter {
+                        navManager.scrollToCurrentChapter = false
+                        anchor = .top
+                    } else {
+                        return
+                    }
                     proxy.scrollTo(
                         player.currentChapter?.persistentModelID,
-                        anchor: .top
+                        anchor: anchor
                     )
-                    navManager.scrollToCurrentChapter = false
                 }
             }
         }

@@ -2536,6 +2536,7 @@
       }
     },
     "chapters" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

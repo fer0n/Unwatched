@@ -8,7 +8,7 @@ import UnwatchedShared
 
 struct FullscreenChaptersButton: View {
     @Environment(PlayerManager.self) var player
-    @State var showChapters = false
+    @State var show = false
 
     var arrowEdge: Edge
     @Binding var menuOpen: Bool
@@ -16,8 +16,8 @@ struct FullscreenChaptersButton: View {
 
     var body: some View {
         Button {
-            if !showChapters {
-                showChapters = true
+            if !show {
+                show = true
                 menuOpen = true
             }
         } label: {
@@ -27,29 +27,21 @@ struct FullscreenChaptersButton: View {
                 .frame(width: size, height: size)
         }
         .fontWeight(.bold)
-        .accessibilityLabel("chapters")
+        .accessibilityLabel("videoDescription")
         .padding(.horizontal) // workaround: safearea pushing content in pop over
-        .popover(isPresented: $showChapters, arrowEdge: arrowEdge) {
+        .popover(isPresented: $show, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
                     Color.sheetBackground
                         .scaleEffect(1.5)
 
-                    ScrollViewReader { proxy in
-                        ScrollView {
-                            ChapterList(video: video, isCompact: true)
-                                .padding(6)
-                        }
-                        .onAppear {
-                            proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
-                        }
+                    ChapterDescriptionView(video: video, isCompact: true, scrollToCurrent: true)
                         .scrollIndicators(.hidden)
-                    }
-                    .frame(
-                        minWidth: 200,
-                        idealWidth: 350,
-                        maxWidth: 350
-                    )
+                        .frame(
+                            minWidth: 200,
+                            idealWidth: 350,
+                            maxWidth: 350
+                        )
                 }
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)

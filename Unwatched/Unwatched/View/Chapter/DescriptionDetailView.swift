@@ -15,7 +15,7 @@ struct DescriptionDetailView: View {
         VStack(alignment: .leading, spacing: 0) {
             if let desc = video.videoDescription {
                 let texts = desc.split(separator: "\n", omittingEmptySubsequences: false)
-                ForEach(texts, id: \.self) { text in
+                ForEach(Array(texts.enumerated()), id: \.offset) { _, text in
                     Text(LocalizedStringKey(String(text)))
                 }
             }
@@ -43,9 +43,9 @@ struct DescriptionDetailHeaderView: View {
         }
         .buttonStyle(.plain)
         .contextMenu {
-            CopyUrlOptions(asSection: true, video: video) {
+            CopyUrlOptions(asSection: true, video: video, onSuccess: {
                 hapticToggle.toggle()
-            }
+            })
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
 
