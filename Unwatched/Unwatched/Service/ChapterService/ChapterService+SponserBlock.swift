@@ -371,16 +371,8 @@ extension ChapterService {
         var currentChapter = sortedChapters[0]
 
         for chapter in sortedChapters.dropFirst() {
-            // only compare if it's the same category, otherwise just add it
-            if currentChapter.category != chapter.category {
-                mergedChapters.append(currentChapter)
-                currentChapter = chapter
-                continue
-            }
-
             // Check if chapters are overlapping or continuous
             if let currentEndTime = currentChapter.endTime, let chapterEndTime = chapter.endTime,
-               currentChapter.category == chapter.category,
                currentEndTime >= chapter.startTime {
 
                 // Merge chapters by extending the endTime of the current chapter if needed
