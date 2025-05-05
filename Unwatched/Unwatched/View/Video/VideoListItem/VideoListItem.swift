@@ -10,60 +10,65 @@ import UnwatchedShared
 
 struct VideoListItem: View {
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
-
     @Environment(PlayerManager.self) private var player
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-
     @ScaledMetric var queueButtonSize = 30
 
     let videoData: any VideoData
     let config: VideoListItemConfig
 
-    init(_ videoData: any VideoData,
-         config: VideoListItemConfig) {
+    init(_ videoData: any VideoData, config: VideoListItemConfig) {
         self.videoData = videoData
         self.config = config
     }
 
-    var body: some View {
-        let normalSize = dynamicTypeSize <= .large
-        let compactFormat = dynamicTypeSize <= .xxxLarge && videoListFormat == .compact
-        let layout = compactFormat
+    private var normalSize: Bool {
+        dynamicTypeSize <= .large
+    }
+
+    private var compactFormat: Bool {
+        dynamicTypeSize <= .xxxLarge && videoListFormat == .compact
+    }
+
+    private var layout: AnyLayout {
+        compactFormat
             ? AnyLayout(HStackLayout(alignment: normalSize ? .center : .top, spacing: 8))
             : AnyLayout(VStackLayout(spacing: 8))
+    }
 
-        layout {
-            VideoListItemThumbnail(
-                videoData,
-                config: config,
-                size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
-            )
-            .padding([.vertical, .leading], 5)
-            .overlay(alignment: .topLeading) {
-                VideoListItemStatus(
-                    youtubeId: videoData.youtubeId,
-                    playingVideoId: player.video?.youtubeId,
-                    showPlayingStatus: config.showPlayingStatus,
-                    hasInboxEntry: config.hasInboxEntry,
-                    hasQueueEntry: config.hasQueueEntry,
-                    watched: config.watched,
-                    deferred: config.deferred,
-                    isNew: config.isNew,
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            layout {
+                VideoListItemThumbnail(
+                    videoData,
+                    config: config,
+                    size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
+                )
+                .padding([.vertical, .leading], 5)
+                .overlay(alignment: .topLeading) {
+                    VideoListItemStatus(
+                        youtubeId: videoData.youtubeId,
+                        playingVideoId: player.video?.youtubeId,
+                        showPlayingStatus: config.showPlayingStatus,
+                        hasInboxEntry: config.hasInboxEntry,
+                        hasQueueEntry: config.hasQueueEntry,
+                        watched: config.watched,
+                        deferred: config.deferred,
+                        isNew: config.isNew
                     )
-                .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+                    .limitDynamicType()
+                }
+
+                VideoListItemDetails(
+                    video: videoData,
+                    queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
+                    showVideoListOrder: config.showVideoListOrder
+                )
             }
 
-            VideoListItemDetails(
-                video: videoData,
-                queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
-                showVideoListOrder: config.showVideoListOrder
-            )
-        }
-        .overlay {
             if config.showQueueButton {
                 QueueVideoButton(videoData, size: queueButtonSize)
                     .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
             }
         }
         .padding([.vertical, .leading], -5)
@@ -72,6 +77,12 @@ struct VideoListItem: View {
             videoData: videoData,
             config: config
         ))
+    }
+}
+
+extension View {
+    func limitDynamicType() -> some View {
+        self.dynamicTypeSize(...DynamicTypeSize.accessibility2)
     }
 }
 

@@ -17,12 +17,14 @@ struct VideoListItemDetails: View {
     @ScaledMetric var subSize   = 14
     @ScaledMetric var timeSize  = 12
 
+    private var videoTitle: String {
+        video.title.isEmpty ? video.youtubeId : video.title
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            let videoTitle = !video.title.isEmpty ? video.title : video.youtubeId
             Text(videoTitle)
                 .font(.system(size: titleSize, weight: .semibold))
-                .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(3)
                 .foregroundStyle(.primary)
@@ -31,21 +33,10 @@ struct VideoListItemDetails: View {
                 if let subTitle = video.subscriptionData?.displayTitle {
                     Text(subTitle)
                         .font(.system(size: subSize))
-                        .fontWeight(.regular)
                         .lineLimit(1)
                         .textCase(.uppercase)
                         .onTapGesture {
-                            if let sub = video.subscriptionData {
-                                if let sendable = sub as? SendableSubscription {
-                                    navManager.pushSubscription(
-                                        sendableSubscription: sendable
-                                    )
-                                } else if let subscription = sub as? Subscription {
-                                    navManager.pushSubscription(
-                                        subscription: subscription
-                                    )
-                                }
-                            }
+                            pushSubscription(for: video.subscriptionData)
                         }
                 }
 
@@ -59,12 +50,19 @@ struct VideoListItemDetails: View {
                         Text("\(published.formattedRelative) ago")
                     }
                 }
-                .fontWeight(.regular)
                 .font(.system(size: timeSize))
             }
             .padding(.trailing, queueButtonSize)
         }
         .foregroundStyle(.secondary)
+    }
+
+    private func pushSubscription(for sub: (any SubscriptionData)?) {
+        if let sendable = sub as? SendableSubscription {
+            navManager.pushSubscription(sendableSubscription: sendable)
+        } else if let subscription = sub as? Subscription {
+            navManager.pushSubscription(subscription: subscription)
+        }
     }
 }
 
