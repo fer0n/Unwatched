@@ -254,7 +254,7 @@ final class ChapterServiceTests: XCTestCase {
                 ]
             ),
 
-            // different category, stay the same
+            // different category
             (
                 input: [
                     .init(10,    to: 80,     category: .sponsor),
@@ -262,9 +262,20 @@ final class ChapterServiceTests: XCTestCase {
                 ],
                 exptected: [
                     .init(10,    to: 80,     category: .sponsor),
-                    .init(30,   to: 50,    category: .intro)
                 ]
-            )
+            ),
+
+
+            // faulty external
+            (
+                input: [
+                    .init(550.803, to: 587.897, category: .filler),
+                    .init(550.824, to: 587.891, category: .outro),
+                ],
+                exptected: [
+                    .init(550.803, to: 587.897, category: .filler),
+                ]
+            ),
         ]
 
         for (input, expected) in data {
