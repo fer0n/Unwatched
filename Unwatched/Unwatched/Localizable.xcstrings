@@ -9939,6 +9939,74 @@
         }
       }
     },
+    "removeShortsFromInbox" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es gibt #shorts in der Inbox. Sollen sie entfernt werden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are #shorts inside your inbox. Should they be removed?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hay #shorts en tu bandeja de entrada. ¿Deberían eliminarse?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il y a des #shorts dans votre boîte de réception. Faut-il les supprimer?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W Twojej skrzynce odbiorczej znajdują się #shorts. Czy powinny zostać usunięte?"
+          }
+        }
+      }
+    },
+    "removeShortsFromInbox %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entferne ^[%lld #short](inflect: true) aus der Inbox"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove ^[%lld #short](inflect: true) from Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar ^[%lld #short](inflect: true) de la Bandeja de entrada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer ^[%lld #short](inflect: true) de la Boîte de réception"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń ^[%lld #short](inflect: true) ze Skrzynki odbiorczej"
+          }
+        }
+      }
+    },
     "repair" : {
       "localizations" : {
         "de" : {

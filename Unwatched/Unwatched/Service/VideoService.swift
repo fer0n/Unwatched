@@ -289,6 +289,13 @@ extension VideoService {
         return task
     }
 
+    static func inboxShortsCount() -> Task<Int?, Never> {
+        return Task.detached {
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            return await repo.inboxShortsCount()
+        }
+    }
+
     static func clearAllYtShortsFromInbox(_ modelContext: ModelContext) {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.isYtShort == true })
         if let entries = try? modelContext.fetch(fetch) {

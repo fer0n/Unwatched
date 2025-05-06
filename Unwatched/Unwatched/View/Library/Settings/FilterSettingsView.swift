@@ -10,6 +10,11 @@ struct FilterSettingsView: View {
     @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @AppStorage(Const.skipChapterText) var skipChapterText: String = ""
 
+    @Environment(\.modelContext) var modelContext
+
+    @State var shortsCount: Int?
+    @State var showConfirm = false
+
     var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
@@ -22,6 +27,11 @@ struct FilterSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    .onChange(of: defaultShortsSetting) {
+                        if defaultShortsSetting == .hide {
+                            checkShortsInInbox()
+                        }
+                    }
                 }
 
                 MySection("chapterFilter", footer: "chapterFilterFooter") {
@@ -35,8 +45,29 @@ struct FilterSettingsView: View {
 
                 SponsorBlockSettingsView()
             }
+            .confirmationDialog(
+                "removeShortsFromInbox",
+                isPresented: $showConfirm,
+                titleVisibility: .visible,
+                actions: {
+                    Button("removeShortsFromInbox \(shortsCount ?? 0)", role: .destructive) {
+                        VideoService.clearAllYtShortsFromInbox(modelContext)
+                    }
+                    Button("cancel", role: .cancel) { }
+                }
+            )
         }
         .myNavigationTitle("filterSettings")
+    }
+
+    func checkShortsInInbox() {
+        Task {
+            let task = VideoService.inboxShortsCount()
+            if let count = await task.value, count > 0 {
+                shortsCount = count
+                showConfirm = true
+            }
+        }
     }
 }
 
