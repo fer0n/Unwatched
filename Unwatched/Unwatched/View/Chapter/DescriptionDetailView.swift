@@ -56,13 +56,17 @@ struct DescriptionDetailHeaderView: View {
                 setShowMenu: setShowMenu
             )
             if let published = video.publishedDate {
-                Text(verbatim: "\(published.formattedExtensive) (\(published.formattedRelativeVerbatim))")
+                Text(verbatim: "\(published.formattedExtensive) (\(publishedDateText(published)))")
             }
             if let timeString = video.duration?.formattedSeconds {
                 Text(verbatim: timeString)
             }
         }
         .foregroundStyle(.secondary)
+    }
+
+    func publishedDateText(_ published: Date) -> String {
+        String(localized: "\(published.formattedRelative) ago")
     }
 }
 

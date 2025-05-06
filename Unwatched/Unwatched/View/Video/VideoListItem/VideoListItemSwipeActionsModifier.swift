@@ -388,7 +388,7 @@ struct TrailingSwipeActionsView: View {
                     }
                     navManager.videoDetail = video
                 } label: {
-                    Image(systemName: Const.videoDescriptionSF)
+                    Image(systemName: "text.bubble.fill")
                 }
                 .tint(theme.color.mix(with: Color.black, by: 0.5))
                 .accessibilityLabel("videoDescription")
