@@ -16,7 +16,7 @@ struct DescriptionButton: View {
         Button {
             show = true
         } label: {
-            Image(systemName: Const.videoDescriptionSF)
+            Image(Const.videoDescriptionSF)
                 .symbolRenderingMode(.monochrome)
                 .playerToggleModifier(isOn: show, isSmall: true)
         }

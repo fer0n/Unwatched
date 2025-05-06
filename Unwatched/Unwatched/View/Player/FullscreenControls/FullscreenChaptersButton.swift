@@ -21,7 +21,7 @@ struct FullscreenChaptersButton: View {
                 menuOpen = true
             }
         } label: {
-            Image(systemName: "line.3.horizontal.circle.fill")
+            Image(Const.videoDescriptionCircleSF)
                 .resizable()
                 .modifier(PlayerControlButtonStyle())
                 .frame(width: size, height: size)

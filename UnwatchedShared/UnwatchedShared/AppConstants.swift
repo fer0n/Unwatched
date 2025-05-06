@@ -139,7 +139,8 @@ public struct Const {
 
     public static let circleBackgroundSF = "circle.fill"
 
-    public static let videoDescriptionSF = "line.3.horizontal"
+    public static let videoDescriptionSF = "custom.line.3.text"
+    public static let videoDescriptionCircleSF = "custom.line.3.text.circle.fill"
     public static let chaptersSF = "checklist.checked"
 
     public static let appBrowserSF = "play.rectangle.fill"
