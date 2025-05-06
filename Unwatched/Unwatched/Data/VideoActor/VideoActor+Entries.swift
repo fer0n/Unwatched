@@ -437,4 +437,9 @@ extension VideoActor {
 
         try? modelContext.save()
     }
+
+    func inboxShortsCount() -> Int? {
+        let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.isYtShort == true })
+        return try? modelContext.fetchCount(fetch)
+    }
 }
