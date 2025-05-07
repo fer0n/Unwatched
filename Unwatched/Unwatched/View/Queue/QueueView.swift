@@ -112,7 +112,7 @@ struct QueueView: View {
     @Previewable @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
 
     QueueView(queue: queue)
-        .modelContainer(DataProvider.previewContainer)
+        .modelContainer(DataProvider.previewContainerFilled)
         .environment(NavigationManager())
         .environment(PlayerManager())
         .environment(RefreshManager())

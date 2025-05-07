@@ -64,6 +64,7 @@ struct VideoListItem: View {
                     queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
                     showVideoListOrder: config.showVideoListOrder
                 )
+                .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
             }
 
             if config.showQueueButton {
@@ -72,6 +73,7 @@ struct VideoListItem: View {
             }
         }
         .padding([.vertical, .leading], -5)
+        .padding(.horizontal, videoListFormat == .expansive ? -5 : 0)
         .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
             videoData: videoData,

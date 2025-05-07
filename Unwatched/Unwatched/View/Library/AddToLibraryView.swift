@@ -125,25 +125,31 @@ struct AddToLibraryView: View {
         let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
         let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
-        if isLoading {
-            ProgressView()
-        } else if failed {
-            Image(systemName: Const.clearNoFillSF)
-                .accessibilityLabel("failed")
-        } else if isSuccess {
-            Image(systemName: "checkmark")
-                .accessibilityLabel("success")
-        } else if addText.isEmpty {
-            Button("paste") {
-
-                if let text = ClipboardService.get(), !text.isEmpty {
-                    handleTextFieldSubmit(text)
-                }
+        Button {
+            if let text = ClipboardService.get(), !text.isEmpty {
+                handleTextFieldSubmit(text)
             }
-            .buttonStyle(CapsuleButtonStyle())
-            .tint(.neutralAccentColor)
-            .disabled(subManager.isLoading)
+        } label: {
+            Text("paste")
+                .opacity(isLoading || failed || isSuccess ? 0 : 1)
+                .overlay {
+                    if isLoading {
+                        ProgressView()
+                            #if os(macOS)
+                            .scaleEffect(0.5)
+                        #endif
+                    } else if failed {
+                        Image(systemName: Const.clearNoFillSF)
+                            .accessibilityLabel("failed")
+                    } else if isSuccess {
+                        Image(systemName: "checkmark")
+                            .accessibilityLabel("success")
+                    }
+                }
         }
+        .buttonStyle(CapsuleButtonStyle())
+        .tint(.neutralAccentColor)
+        .disabled(subManager.isLoading)
     }
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
@@ -242,6 +248,6 @@ struct AddToLibraryView: View {
 #Preview {
     AddToLibraryView(subManager: .constant(SubscribeManager()), showBrowser: true)
         .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager())
+        .environment(NavigationManager.shared)
         .environment(RefreshManager.shared)
 }

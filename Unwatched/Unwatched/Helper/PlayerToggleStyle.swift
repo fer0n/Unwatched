@@ -42,7 +42,11 @@ struct PlayerToggleModifier: ViewModifier {
 
         content
             .symbolRenderingMode(.palette)
+            #if os(macOS)
+            .font(.headline)
+            #else
             .font(isSmall ? .subheadline : .headline)
+            #endif
             .fontWeight(.regular)
             .frame(width: size, height: size)
             .foregroundStyle(color, color.opacity(0.7))
