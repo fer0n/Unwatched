@@ -551,7 +551,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter la chaîne à Non visionnées"
+            "value" : "Ajouter la chaîne sur Unwatched"
           }
         },
         "pl" : {
@@ -1776,7 +1776,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les publicités ne s'affichent pas pour des raisons techniques ; Unwatched ne les bloque pas activement. Si vous souhaitez soutenir vos chaînes, pensez à utiliser Patreon ou YouTube Premium."
+            "value" : "Les publicités ne s'affichent pas pour des raisons techniques ; Unwatched ne les bloque pas activement. Si vous souhaitez soutenir les chaînes YouTube, envisagez d'utiliser Patreon ou YouTube Premium."
           }
         },
         "pl" : {
@@ -2932,7 +2932,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Compacter"
+            "value" : "Compact"
           }
         },
         "pl" : {
@@ -3136,7 +3136,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veuillez envisager d'obtenir YouTube Premium pour soutenir les créateurs"
+            "value" : "S'il vous plaît, abonnez-vous à [YouTube Premium](https://www.youtube.com/premium) pour soutenir les créateurs de contenu."
           }
         },
         "pl" : {
@@ -3918,7 +3918,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer le cache d'images"
+            "value" : "Vider le cache d'images"
           }
         },
         "pl" : {
@@ -5006,7 +5006,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ne pas sauvegarder toutes les vidéos visionnées"
+            "value" : "Ne pas sauvegarder toutes les vidéos vus"
           }
         },
         "pl" : {
@@ -5414,7 +5414,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Masquage automatique"
+            "value" : "Masquer automatiquement"
           }
         },
         "pl" : {
@@ -7242,7 +7242,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer les Visionnés"
+            "value" : "Supprimer les vidéos Vus"
           }
         },
         "pl" : {
@@ -7276,7 +7276,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Marquer comme Visionné"
+            "value" : "Marquer comme étant Vus"
           }
         },
         "pl" : {
@@ -7344,7 +7344,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été visionnées, ne sont pas dans la file d'attente ou la boîte de réception et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
+            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou la boîte de réception et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
           }
         },
         "pl" : {
@@ -7888,7 +7888,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos marquées comme visionnées apparaîtront ici"
+            "value" : "Les vidéos marquées comme vus apparaîtront ici"
           }
         },
         "pl" : {
@@ -8296,7 +8296,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les notifications ont été désactivées pour Non visionnées. Si vous souhaitez recevoir des notifications, vous devez d'abord les activer dans les Paramètres."
+            "value" : "Les notifications ont été désactivées pour Unwatched. Si vous souhaitez recevoir des notifications, vous devez d'abord les activer dans les Paramètres."
           }
         },
         "pl" : {
@@ -8670,7 +8670,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En lecture"
+            "value" : "Pendant la lecture"
           }
         },
         "pl" : {
@@ -9146,7 +9146,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le lecteur utilise généralement le lecteur intégré de YouTube, mais si les chaînes désactivent cette fonction, le site web YouTube sera affiché à la place. Toutes les commandes restent fonctionnelles, et vous pouvez utiliser le bouton plein écran de YouTube pour regarder la vidéo en plein écran."
+            "value" : "En général, le lecteur intégré de YouTube est utilisé, mais si les chaînes désactivent cette fonction, le site web de YouTube s'affichera à sa place. Toutes les commandes restent fonctionnelles, et vous pouvez utiliser le bouton plein écran de YouTube pour regarder la vidéo en plein écran."
           }
         },
         "pl" : {
@@ -9554,7 +9554,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter en suivant"
+            "value" : "Ajouter à la file d'attente"
           }
         },
         "pl" : {
@@ -9588,7 +9588,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Évaluer Non visionné"
+            "value" : "Évaluer Unwatched"
           }
         },
         "pl" : {
@@ -10098,7 +10098,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exiger une confirmation claire"
+            "value" : "Exiger une confirmation"
           }
         },
         "pl" : {
@@ -10982,7 +10982,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afficher le bouton \"Ajouter en suivant\" sur les entrées de la boîte de réception"
+            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées de la boîte de réception"
           }
         },
         "pl" : {
@@ -13040,7 +13040,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recherchez sur YouTube pour ajouter rapidement vos chaînes préférées à Non visionnés"
+            "value" : "Recherchez sur YouTube pour ajouter rapidement vos chaînes préférées à Unwatched"
           }
         },
         "pl" : {
@@ -14162,7 +14162,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Visionné"
+            "value" : "Vus"
           }
         },
         "pl" : {
@@ -14230,7 +14230,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pourquoi mes vidéos visionnées n'apparaissent pas dans mon historique YouTube ?"
+            "value" : "Pourquoi mes vidéos vus n'apparaissent pas dans mon historique YouTube ?"
           }
         },
         "pl" : {
@@ -14298,7 +14298,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Regarder dans Non visionnées"
+            "value" : "Regarder dans Unwatched"
           }
         },
         "pl" : {
@@ -14332,7 +14332,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lit la vidéo dans et ouvre Non visionnées"
+            "value" : "Lire la vidéo et ouvrir Unwatched"
           }
         },
         "pl" : {
