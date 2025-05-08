@@ -20,6 +20,7 @@ import UnwatchedShared
     var openTabBrowserUrl: BrowserUrl?
     var openWindow: OpenWindowAction?
     var columnVisibility: NavigationSplitViewVisibility = .automatic
+    var showDeferDateSelector = false
 
     var videoDetail: Video?
     var playerTab: ControlNavigationTab = .controls

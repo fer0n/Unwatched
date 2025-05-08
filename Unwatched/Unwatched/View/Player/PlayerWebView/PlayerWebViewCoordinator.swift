@@ -127,7 +127,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
         if let date = Date.parseYtOfflineDate(payload) {
             Logger.log.info("handleOffline: defer video to: \(date)")
-            parent.deferVideoDate = IdentifiableDate(date)
+            parent.player.deferVideoDate = date
             parent.player.pause()
         }
     }
