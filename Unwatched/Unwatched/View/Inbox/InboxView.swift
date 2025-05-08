@@ -41,9 +41,11 @@ struct InboxView: View {
                     if !inboxEntries.isEmpty {
                         swipeTipView
                             .listRowBackground(Color.backgroundColor)
+                            .listRowSeparator(.hidden)
                     }
 
                     HideShortsTipView()
+                        .listRowSeparator(.hidden)
 
                     ForEach(inboxEntries) { entry in
                         ZStack {
@@ -73,6 +75,7 @@ struct InboxView: View {
                     ClearAllVideosButton(clearAll: clearAll)
                         .opacity(showClear ? 1 : 0)
                         .disabled(!showClear)
+                        .listRowSeparator(.hidden)
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
