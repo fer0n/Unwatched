@@ -23,7 +23,6 @@ struct PlayerWebView: PlatformViewRepresentable {
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
     @Binding var appNotificationVM: AppNotificationVM
-    @Binding var deferVideoDate: IdentifiableDate?
 
     let playerType: PlayerType
     let onVideoEnded: () -> Void
@@ -221,7 +220,6 @@ struct PlayerWebView: PlatformViewRepresentable {
             overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
             appNotificationVM: .constant(AppNotificationVM()),
-            deferVideoDate: .constant(nil),
             playerType: .youtubeEmbedded,
             onVideoEnded: {
 

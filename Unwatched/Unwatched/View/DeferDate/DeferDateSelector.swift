@@ -12,16 +12,16 @@ struct DeferDateSelector: View {
     @Environment(\.modelContext) var modelContext
     @State var date: Date?
 
-    let detectedDate: (Binding<IdentifiableDate?>)?
+    let detectedDate: (Binding<Date?>)?
     let video: Video?
     let onSuccess: (() -> Void)?
 
-    init(video: Video?, detectedDate: (Binding<IdentifiableDate?>)? = nil, onSuccess: (() -> Void)?) {
+    init(video: Video?, detectedDate: (Binding<Date?>)? = nil, onSuccess: (() -> Void)?) {
         self.video = video
         self.detectedDate = detectedDate
         self.onSuccess = onSuccess
 
-        let initialDate = detectedDate?.wrappedValue?.date ?? video?.deferDate ?? nextFullHour
+        let initialDate = detectedDate?.wrappedValue ?? video?.deferDate ?? nextFullHour
         _date = State(initialValue: initialDate)
     }
 
@@ -126,7 +126,7 @@ struct DeferDateSelector: View {
     }
 
     var detectedDateValue: Date? {
-        detectedDate?.wrappedValue?.date
+        detectedDate?.wrappedValue
     }
 
     var isDirty: Bool {
@@ -154,7 +154,7 @@ struct DeferDateSelector: View {
 #Preview {
     DeferDateSelector(
         video: Video.getDummy(),
-        detectedDate: .constant(IdentifiableDate(Date.now)),
+        detectedDate: .constant(Date.now),
         onSuccess: nil
     )
     // .modelContainer(DataProvider.previewContainer)

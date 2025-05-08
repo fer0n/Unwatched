@@ -113,6 +113,7 @@ extension Date {
         let locales = ["en_US", "de_DE"]
         let dateFormats = [
             "MMMM d 'at' h:mm a",      // "January 22 at 8:15 PM"
+            "d MMMM 'at' HH:mm",       // "8 May at 8:15 PM"
             "d. MMMM 'um' HH:mm"       // "22. Januar um 20:15"
         ]
 

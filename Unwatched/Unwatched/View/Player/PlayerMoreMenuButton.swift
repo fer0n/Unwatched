@@ -72,18 +72,12 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         .help("moreOptions")
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .dateSelectorSheet(
-            show: $showDeferDateSelector,
-            video: player.video
-        ) {
-            player.loadTopmostVideoFromQueue(modelContext: modelContext)
-        }
     }
 
     var deferDateButton: some View {
         Button {
             navManager.showMenu = false
-            showDeferDateSelector = true
+            navManager.showDeferDateSelector = true
         } label: {
             Text("deferVideo")
             Image(systemName: "clock.fill")
