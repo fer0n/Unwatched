@@ -26,13 +26,35 @@ struct AddVideoButton: View {
     var body: some View {
         addVideoButton
             .background {
-                playNowButton
-                    .opacity(isVideoUrl ? 1 : 0)
-                    .animation(.default, value: isVideoUrl)
-                    .offset(y: -(35 + size))
+                ZStack {
+                    openInBrowserButton
+                        .offset(y: -(2 * 35 + 2 * size))
+                    playNowButton
+                        .offset(y: -(35 + size))
+                }
+                .opacity(isVideoUrl ? 1 : 0)
+                .animation(.default, value: isVideoUrl)
             }
             .foregroundStyle(Color.backgroundColor)
             .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
+    }
+
+    var openInBrowserButton: some View {
+        Button {
+            if let youtubeUrl {
+                UrlService.open(youtubeUrl)
+                dismiss()
+            }
+        } label: {
+            Image(systemName: "safari.fill")
+                .resizable()
+                .scaledToFit()
+                .fontWeight(.heavy)
+                .frame(width: size * 2, height: size * 2)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+        }
+        .buttonStyle(.plain)
     }
 
     var playNowButton: some View {
@@ -40,7 +62,7 @@ struct AddVideoButton: View {
             hapticToggle.toggle()
             // play now
             let task = Task {
-                if let youtubeUrl = youtubeUrl {
+                if let youtubeUrl {
                     await avm.addUrls([youtubeUrl], at: 0)
                 } else {
                     throw VideoError.noVideoUrl
