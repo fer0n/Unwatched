@@ -279,7 +279,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter les vidéos de la playlist dans le fil d'actualité"
+            "value" : "Ajouter les vidéos de la playlist dans l'Inbox"
           }
         },
         "pl" : {
@@ -721,7 +721,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter dans le Fil d'actualité"
+            "value" : "Ajouter dans l'Inbox"
           }
         },
         "pl" : {
@@ -755,7 +755,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fil d'actualité"
+            "value" : "Inbox"
           }
         },
         "pl" : {
@@ -2660,7 +2660,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Retirer du fil d'actualité"
+            "value" : "Retirer de l'Inbox"
           }
         },
         "pl" : {
@@ -3782,7 +3782,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos reportées réapparaîtront à la date spécifiée dans le fil d'actualité ou la file d'attente selon les paramètres d'abonnement."
+            "value" : "Les vidéos reportées réapparaîtront à la date spécifiée dans l'Inbox ou la file d'attente selon les paramètres d'abonnement."
           }
         },
         "pl" : {
@@ -6562,7 +6562,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fil d'actualité"
+            "value" : "Inbox"
           }
         },
         "pl" : {
@@ -7344,7 +7344,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou bien le fil d'actualité et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
+            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou bien l'Inbox et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
           }
         },
         "pl" : {
@@ -7650,7 +7650,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Déplacer vers le Fil d'actualité"
+            "value" : "Déplacer vers l'Inbox"
           }
         },
         "pl" : {
@@ -7956,7 +7956,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fil d'actualité vide"
+            "value" : "Inbox vide"
           }
         },
         "pl" : {
@@ -9860,7 +9860,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos : %1$lld\nEntrées dans la File d'attente : %2$lld Entrées dans le Fil d'actualité : %3$lld Chapitres : %4$lld Abonnements : %5$lld"
+            "value" : "Vidéos : %1$lld\nEntrées dans la File d'attente : %2$lld Entrées dans l'Inbox : %3$lld Chapitres : %4$lld Abonnements : %5$lld"
           }
         },
         "pl" : {
@@ -9962,7 +9962,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il y a des #shorts dans votre fil d'actualité. Faut-il les supprimer?"
+            "value" : "Il y a des #shorts dans votre Inbox. Faut-il les supprimer?"
           }
         },
         "pl" : {
@@ -9996,7 +9996,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer ^[%lld #short](inflect: true) dans le Fil d'actualité"
+            "value" : "Supprimer ^[%lld #short](inflect: true) dans l'Inbox"
           }
         },
         "pl" : {
@@ -10948,7 +10948,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comportement par défaut pour les #shorts YouTube : il peut être modifié pour des chaînes individuelles. Cela affecte les nouvelles vidéos et listes, mais n'affecte pas la file d'attente actuelle, le fil d'actualité ou l'historique de visionnage."
+            "value" : "Comportement par défaut pour les #shorts YouTube : il peut être modifié pour des chaînes individuelles. Cela affecte les nouvelles vidéos et listes, mais n'affecte pas la file d'attente, l'Inbox ou l'historique de visionnage."
           }
         },
         "pl" : {
@@ -10982,7 +10982,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées du fil d'actualité"
+            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées de l'Inbox"
           }
         },
         "pl" : {
@@ -12436,7 +12436,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment la playlist doit-elle être gérée ?\nL'ajout de la playlist à la file d'attente/Fil d'actualité est limité à %lld vidéo(s)."
+            "value" : "Comment la playlist doit-elle être gérée ?\nL'ajout de la playlist à la file d'attente/Inbox est limité à %lld vidéo(s)."
           }
         },
         "pl" : {
@@ -13652,7 +13652,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos ajoutées au fil d'actualité"
+            "value" : "Vidéos ajoutées a l'Inbox"
           }
         },
         "pl" : {
