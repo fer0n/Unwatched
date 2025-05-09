@@ -4326,7 +4326,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si la synchronisation iCloud est activée, les doublons ne peuvent actuellement pas être évités. Cependant, ils devraient être automatiquement nettoyés après l'actualisation.\n\nSi toujours visible, appuyez sur le bouton d’actualization pour un certain temps et selectionnez \“Rechargez et Dédupliquer\”. Si le problème persistent, veuillez me le faire savior."
+            "value" : "Si la synchronisation iCloud est activée, les doublons ne peuvent actuellement pas être évités. Cependant, ils devraient être automatiquement nettoyés après l'actualisation.\n\nSi toujours visible, appuyez sur le bouton d’actualization pour un certain temps et selectionnez “Rechargez et Dédupliquer”. Si le problème persistent, veuillez me le faire savior."
           }
         },
         "pl" : {
