@@ -279,7 +279,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter les vidéos de la playlist à la boîte de réception"
+            "value" : "Ajouter les vidéos de la playlist dans l'Inbox"
           }
         },
         "pl" : {
@@ -721,7 +721,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter à la boîte de réception"
+            "value" : "Ajouter dans l'Inbox"
           }
         },
         "pl" : {
@@ -755,7 +755,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Boîte de réception"
+            "value" : "Inbox"
           }
         },
         "pl" : {
@@ -2660,7 +2660,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Effacer de la boîte de réception"
+            "value" : "Retirer de l'Inbox"
           }
         },
         "pl" : {
@@ -3782,7 +3782,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos reportées réapparaîtront à la date spécifiée dans la boîte de réception ou la file d'attente selon les paramètres d'abonnement."
+            "value" : "Les vidéos reportées réapparaîtront à la date spécifiée dans l'Inbox ou la file d'attente selon les paramètres d'abonnement."
           }
         },
         "pl" : {
@@ -4326,7 +4326,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si la synchronisation iCloud est activée, les doublons ne peuvent actuellement pas être évités. Cependant, ils devraient être automatiquement nettoyés après l'actualisation."
+            "value" : "Si la synchronisation iCloud est activée, les doublons ne peuvent actuellement pas être évités. Cependant, ils devraient être automatiquement nettoyés après l'actualisation.\n\nSi toujours visible, appuyez sur le bouton d’actualization pour un certain temps et selectionnez \“Rechargez et Dédupliquer\”. Si le problème persistent, veuillez me le faire savior."
           }
         },
         "pl" : {
@@ -4394,7 +4394,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si toujours visibles, appuyez longuement sur le bouton d'actualisation et sélectionnez \"Recharger & Dédupliquer\". S'ils persistent, veuillez me le faire savoir."
+            "value" : "Doublons"
           }
         },
         "pl" : {
@@ -4462,7 +4462,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Doublons"
+            "value" : "Pourquoi la durée est-elle manquante sur certaines vidéos ? Que signifie \"+\" ?"
           }
         },
         "pl" : {
@@ -6562,7 +6562,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Boîte de réception"
+            "value" : "Inbox"
           }
         },
         "pl" : {
@@ -7344,7 +7344,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou la boîte de réception et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
+            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou bien l'Inbox et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
           }
         },
         "pl" : {
@@ -7514,7 +7514,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched est conçu comme une file d'attente unique avec un lecteur. Pour un organisateur plus complet, envisagez d'utiliser Play: Save Videos Watch Later. Il fera probablement tout ce que vous souhaitez et plus encore !"
+            "value" : "Unwatched est conçu comme une file d'attente avec un lecteur. Pour une organisation plus complète, envisagez d'utiliser [Play: Save Videos Watch Later](https://apps.apple.com/app/id1596506190). Il fera tout ce que vous souhaitez et bien plus encore !"
           }
         },
         "pl" : {
@@ -7650,7 +7650,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Déplacer vers la Boîte de Réception"
+            "value" : "Déplacer vers l'Inbox"
           }
         },
         "pl" : {
@@ -7786,7 +7786,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune Vidéo en Favori"
+            "value" : "Aucune vidéo marquée (Signet)"
           }
         },
         "pl" : {
@@ -7820,7 +7820,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les vidéos marquées apparaîtront ici"
+            "value" : "Les vidéos marquées (Signet) apparaîtront ici"
           }
         },
         "pl" : {
@@ -7956,7 +7956,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Boîte de réception vide"
+            "value" : "Inbox vide"
           }
         },
         "pl" : {
@@ -9826,7 +9826,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer le marque-page"
+            "value" : "Supprimer le Signet"
           }
         },
         "pl" : {
@@ -9860,7 +9860,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos : %1$lld\nEntrées dans la file : %2$lld Entrées dans la boîte de réception : %3$lld Chapitres : %4$lld Abonnements : %5$lld"
+            "value" : "Vidéos : %1$lld\nEntrées dans la File d'attente : %2$lld Entrées dans l'Inbox : %3$lld Chapitres : %4$lld Abonnements : %5$lld"
           }
         },
         "pl" : {
@@ -9962,7 +9962,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il y a des #shorts dans votre boîte de réception. Faut-il les supprimer?"
+            "value" : "Il y a des #shorts dans votre Inbox. Faut-il les supprimer?"
           }
         },
         "pl" : {
@@ -9996,7 +9996,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer ^[%lld #short](inflect: true) de la Boîte de réception"
+            "value" : "Supprimer ^[%lld #short](inflect: true) dans l'Inbox"
           }
         },
         "pl" : {
@@ -10948,7 +10948,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comportement par défaut pour les #shorts YouTube ; peut être modifié pour des chaînes individuelles. Cela affecte les nouvelles vidéos et listes - n'affecte pas la file d'attente actuelle, la boîte de réception actuelle ou l'historique de visionnage."
+            "value" : "Comportement par défaut pour les #shorts YouTube : il peut être modifié pour des chaînes individuelles. Cela affecte les nouvelles vidéos et listes, mais n'affecte pas la file d'attente, l'Inbox ou l'historique de visionnage."
           }
         },
         "pl" : {
@@ -10982,7 +10982,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées de la boîte de réception"
+            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées de l'Inbox"
           }
         },
         "pl" : {
@@ -12436,7 +12436,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment la playlist doit-elle être gérée ?\nL'ajout de la playlist à la File d'attente/Boîte de réception est limité à %lld vidéos."
+            "value" : "Comment la playlist doit-elle être gérée ?\nL'ajout de la playlist à la file d'attente/Inbox est limité à %lld vidéo(s)."
           }
         },
         "pl" : {
@@ -13652,7 +13652,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos ajoutées à la boîte de réception"
+            "value" : "Vidéos ajoutées a l'Inbox"
           }
         },
         "pl" : {
