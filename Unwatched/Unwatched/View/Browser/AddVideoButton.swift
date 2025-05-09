@@ -19,20 +19,42 @@ struct AddVideoButton: View {
     @State var showInsert = false
     @State var hapticToggle = false
 
-    var youtubeUrl: URL?
-    var isVideoUrl: Bool
+    @Binding var browserManager: BrowserManager
+
     var size: Double = 20
 
     var body: some View {
         addVideoButton
             .background {
-                playNowButton
-                    .opacity(isVideoUrl ? 1 : 0)
-                    .animation(.default, value: isVideoUrl)
-                    .offset(y: -(35 + size))
+                ZStack {
+                    openInBrowserButton
+                        .offset(y: -(2 * 35 + 2 * size))
+                    playNowButton
+                        .offset(y: -(35 + size))
+                }
+                .opacity(isVideoUrl ? 1 : 0)
+                .animation(.default, value: isVideoUrl)
             }
             .foregroundStyle(Color.backgroundColor)
             .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
+    }
+
+    var openInBrowserButton: some View {
+        Button {
+            if let youtubeUrl {
+                UrlService.open(youtubeUrl)
+                dismiss()
+            }
+        } label: {
+            Image(systemName: "safari.fill")
+                .resizable()
+                .scaledToFit()
+                .fontWeight(.heavy)
+                .frame(width: size * 2, height: size * 2)
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+        }
+        .buttonStyle(.plain)
     }
 
     var playNowButton: some View {
@@ -40,18 +62,19 @@ struct AddVideoButton: View {
             hapticToggle.toggle()
             // play now
             let task = Task {
-                if let youtubeUrl = youtubeUrl {
-                    await avm.addUrls([youtubeUrl], at: 0)
+                if let youtubeUrl {
+                    let time = await browserManager.getCurrentTime()
+                    await avm.addUrls([youtubeUrl], at: 0, startTime: time)
                 } else {
                     throw VideoError.noVideoUrl
                 }
             }
-            player
-                .loadTopmostVideoFromQueue(
-                    after: task,
-                    source: .userInteraction,
-                    playIfCurrent: true
-                )
+
+            player.loadTopmostVideoFromQueue(
+                after: task,
+                source: .userInteraction,
+                playIfCurrent: true
+            )
             navManager.handlePlay()
             dismiss()
         } label: {
@@ -139,6 +162,14 @@ struct AddVideoButton: View {
         .frame(width: size, height: size)
     }
 
+    var youtubeUrl: URL? {
+        browserManager.currentUrl
+    }
+
+    var isVideoUrl: Bool {
+        browserManager.isVideoUrl
+    }
+
     var backgroundSize: CGFloat {
         avm.isDragOver ? 6 * size : 2 * size
     }
@@ -154,7 +185,7 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(youtubeUrl: URL(staticString: "www.google.com"), isVideoUrl: false)
+        AddVideoButton(browserManager: .constant(BrowserManager()))
             .padding(20)
     }
     .environment(PlayerManager())

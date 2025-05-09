@@ -12,26 +12,23 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
 
     @Binding var url: BrowserUrl?
-    @Binding var stopPlayback: Bool?
 
     var startUrl: BrowserUrl?
-    var browserManager: BrowserManager
+    @Binding var browserManager: BrowserManager
 
     init(
         url: Binding<BrowserUrl?> = .constant(
             nil
         ),
-        stopPlayback: Binding<Bool?>,
         startUrl: BrowserUrl? = nil,
-        browserManager: BrowserManager
+        browserManager: Binding<BrowserManager>
     ) {
         self._url = url
         self.startUrl = startUrl
         if startUrl == nil {
             self.startUrl = url.wrappedValue
         }
-        self._stopPlayback = stopPlayback
-        self.browserManager = browserManager
+        self._browserManager = browserManager
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
@@ -58,6 +55,8 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             webView.load(request)
             url = nil
         }
+
+        browserManager.webView = webView
         return webView
 
     }
@@ -67,11 +66,6 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             let request = URLRequest(url: requestUrl)
             view.load(request)
             url = nil
-        }
-
-        if stopPlayback == true {
-            view.pauseAllMediaPlayback()
-            stopPlayback = false
         }
     }
 

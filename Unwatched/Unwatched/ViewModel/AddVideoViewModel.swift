@@ -13,7 +13,7 @@ import UnwatchedShared
     var isLoading = false
     var isSuccess: Bool?
 
-    @MainActor func addUrls(_ urls: [URL], at index: Int = 1) async {
+    @MainActor func addUrls(_ urls: [URL], at index: Int = 1, startTime: Double? = nil) async {
         Logger.log.info("handleUrlDrop inbox \(urls)")
         if urls.count == 0 {
             self.isSuccess = false
@@ -27,7 +27,8 @@ import UnwatchedShared
         let task = VideoService.addForeignUrls(
             urls,
             in: .queue,
-            at: index
+            at: index,
+            startTime: startTime
         )
         let success: ()? = try? await task.value
         withAnimation {
