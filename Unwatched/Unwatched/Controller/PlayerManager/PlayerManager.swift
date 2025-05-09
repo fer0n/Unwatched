@@ -41,6 +41,7 @@ import UnwatchedShared
     var isLoading: Bool = true
     var temporaryPlaybackSpeed: Double?
     private(set) var aspectRatio: Double?
+    var deferVideoDate: Date?
 
     @ObservationIgnored var previousIsPlaying = false
     @ObservationIgnored var previousState = PreviousState()
@@ -96,7 +97,7 @@ import UnwatchedShared
         previousChapter = nil
         setVideoEnded(false)
         handleChapterChange()
-        guard let video = video else {
+        guard let video else {
             return
         }
 
@@ -110,6 +111,7 @@ import UnwatchedShared
         previousState.pipEnabled = false
         canPlayPip = false
         handleChapterRefresh()
+        deferVideoDate = nil
         withAnimation {
             embeddingDisabled = false
         }
