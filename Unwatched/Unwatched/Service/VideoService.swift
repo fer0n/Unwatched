@@ -214,12 +214,13 @@ extension VideoService {
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacementArea,
-                               at index: Int = 1) -> Task<(), Error> {
+                               at index: Int = 1,
+                               startTime: Double? = nil) -> Task<(), Error> {
         Logger.log.info("addForeignUrls")
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            try await repo.addForeignUrls(urls, in: videoPlacement, at: index)
+            try await repo.addForeignUrls(urls, in: videoPlacement, at: index, startTime: startTime)
         }
         return task
     }

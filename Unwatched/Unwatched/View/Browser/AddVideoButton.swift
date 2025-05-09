@@ -19,8 +19,8 @@ struct AddVideoButton: View {
     @State var showInsert = false
     @State var hapticToggle = false
 
-    var youtubeUrl: URL?
-    var isVideoUrl: Bool
+    @Binding var browserManager: BrowserManager
+
     var size: Double = 20
 
     var body: some View {
@@ -63,17 +63,18 @@ struct AddVideoButton: View {
             // play now
             let task = Task {
                 if let youtubeUrl {
-                    await avm.addUrls([youtubeUrl], at: 0)
+                    let time = await browserManager.getCurrentTime()
+                    await avm.addUrls([youtubeUrl], at: 0, startTime: time)
                 } else {
                     throw VideoError.noVideoUrl
                 }
             }
-            player
-                .loadTopmostVideoFromQueue(
-                    after: task,
-                    source: .userInteraction,
-                    playIfCurrent: true
-                )
+
+            player.loadTopmostVideoFromQueue(
+                after: task,
+                source: .userInteraction,
+                playIfCurrent: true
+            )
             navManager.handlePlay()
             dismiss()
         } label: {
@@ -161,6 +162,14 @@ struct AddVideoButton: View {
         .frame(width: size, height: size)
     }
 
+    var youtubeUrl: URL? {
+        browserManager.currentUrl
+    }
+
+    var isVideoUrl: Bool {
+        browserManager.isVideoUrl
+    }
+
     var backgroundSize: CGFloat {
         avm.isDragOver ? 6 * size : 2 * size
     }
@@ -176,7 +185,7 @@ struct AddVideoButton: View {
 #Preview {
     HStack {
         Spacer()
-        AddVideoButton(youtubeUrl: URL(staticString: "www.google.com"), isVideoUrl: false)
+        AddVideoButton(browserManager: .constant(BrowserManager()))
             .padding(20)
     }
     .environment(PlayerManager())

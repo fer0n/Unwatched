@@ -10,7 +10,8 @@ import UnwatchedShared
 
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
-                        at index: Int) async throws {
+                        at index: Int,
+                        startTime: Double? = nil) async throws {
         var videoIds = [String]()
         var playlistIds = [String]()
 
@@ -27,11 +28,11 @@ import UnwatchedShared
         }
 
         if !videoIds.isEmpty {
-            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index)
+            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index, startTime: startTime)
         }
 
         for playlistId in playlistIds {
-            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index)
+            try await addForeignPlaylist(playlistId: playlistId, in: videoplacement, at: index, startTime: startTime)
         }
 
         try modelContext.save()
@@ -42,7 +43,8 @@ import UnwatchedShared
 
     private func addForeignPlaylist(playlistId: String,
                                     in videoplacement: VideoPlacementArea,
-                                    at index: Int) async throws {
+                                    at index: Int,
+                                    startTime: Double?) async throws {
         Logger.log.info("addForeignPlaylist")
         var videos = [Video]()
         let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
@@ -58,6 +60,7 @@ import UnwatchedShared
                 }
             }
         }
+        setVideosCurrentTime(videos, startTime)
         setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
     }
@@ -68,7 +71,8 @@ import UnwatchedShared
 
     private func addForeignVideos(videoIds: [String],
                                   in videoplacement: VideoPlacementArea,
-                                  at index: Int) async throws {
+                                  at index: Int,
+                                  startTime: Double?) async throws {
         Logger.log.info("addForeignVideos?")
         var videos = [Video]()
         for youtubeId in videoIds {
@@ -82,8 +86,17 @@ import UnwatchedShared
                 }
             }
         }
+        setVideosCurrentTime(videos, startTime)
         setVideosNew(videos)
         addVideosTo(videos, placement: videoplacement, index: index)
+    }
+
+    func setVideosCurrentTime(_ videos: [Video], _ startTime: Double?) {
+        if let startTime {
+            for video in videos {
+                video.elapsedSeconds = startTime
+            }
+        }
     }
 
     func setVideosNew(_ videos: [Video]) {
