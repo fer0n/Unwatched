@@ -24,7 +24,6 @@ struct BrowserView: View, KeyboardReadable {
 
     var showHeader = true
     var safeArea = true
-    var stopPlayback: Binding<Bool?> = .constant(nil)
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -40,9 +39,8 @@ struct BrowserView: View, KeyboardReadable {
 
                 ZStack {
                     YtBrowserWebView(url: url,
-                                     stopPlayback: stopPlayback,
                                      startUrl: startUrl,
-                                     browserManager: browserManager)
+                                     browserManager: $browserManager)
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
@@ -61,9 +59,7 @@ struct BrowserView: View, KeyboardReadable {
                                     Spacer()
                                 }
 
-                                AddVideoButton(youtubeUrl: browserManager.currentUrl,
-                                               isVideoUrl: browserManager.isVideoUrl,
-                                               size: size)
+                                AddVideoButton(browserManager: $browserManager, size: size)
                                     .padding(size)
                             }
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
@@ -118,6 +114,7 @@ struct BrowserView: View, KeyboardReadable {
                     await refresher.refreshAll()
                 }
             }
+            browserManager.stopPlayback()
         }
     }
 
