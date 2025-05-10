@@ -17,6 +17,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("queue", systemImage: "rectangle.stack")
                 }
+            TvSettingsView()
+                .tabItem {
+                    Label("settings", systemImage: Const.settingsViewSF)
+                }
         }
         .environment(imageManager)
         .environment(syncer)

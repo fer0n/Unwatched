@@ -39,7 +39,14 @@ struct AddTestDataButton: View {
     @Environment(\.modelContext) var modelContext
 
     var body: some View {
-        Button("fillData", systemImage: "plus", action: fillData)
+        Button {
+            fillData()
+        } label: {
+            HStack(spacing: 20) {
+                Image(systemName: "plus")
+                Text(verbatim: "Test Data")
+            }
+        }
     }
 
     func fillData() {

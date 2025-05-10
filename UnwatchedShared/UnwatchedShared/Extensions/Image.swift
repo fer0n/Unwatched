@@ -48,7 +48,7 @@ public extension CGImage {
     }
 }
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 public typealias PlatformImage = UIImage
 

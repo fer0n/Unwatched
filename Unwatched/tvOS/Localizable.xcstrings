@@ -15,6 +15,12 @@
             "value" : "Cancel"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -43,6 +49,12 @@
             "value" : "Clear"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -57,29 +69,6 @@
         }
       }
     },
-    "fillData" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Testdaten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Test Data"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dane testowe"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
     "markWatched" : {
       "localizations" : {
         "de" : {
@@ -92,6 +81,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Watched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visto"
           }
         },
         "fr" : {
@@ -108,28 +103,73 @@
         }
       }
     },
-    "openAppStore" : {
+    "markWatchedSetting" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Store"
+            "value" : "Als gesehen markieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Store"
+            "value" : "Mark as Watched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar como visto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer comme visionné"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Store"
+            "value" : "Oznacz jako obejrzane"
           }
         }
-      },
-      "shouldTranslate" : false
+      }
+    },
+    "markWatchedSettingHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Video beim Auswählen als gesehen markieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark video as watched when selecting it"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcar el video como visto al seleccionarlo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer la vidéo comme visionnée lors de sa sélection"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oznacz film jako obejrzany podczas wybierania"
+          }
+        }
+      }
     },
     "queue" : {
       "localizations" : {
@@ -143,6 +183,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cola"
           }
         },
         "fr" : {
@@ -159,6 +205,40 @@
         }
       }
     },
+    "settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paramètres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawienia"
+          }
+        }
+      }
+    },
     "videosUnavailable" : {
       "localizations" : {
         "de" : {
@@ -171,6 +251,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay videos"
           }
         },
         "fr" : {
@@ -201,6 +287,12 @@
             "value" : "To see videos, open Unwatched on your iOS/iPadOS device and add Videos to your Queue.  Make sure you have iCloud sync enabled (under Library → Settings → User Data)."
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para ver videos, abre Unwatched en tu dispositivo iOS/iPadOS y añade Videos a tu Cola. \n\nAsegúrate de tener la sincronización de iCloud activada (en Biblioteca → Ajustes → Datos de usuario)."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -227,6 +319,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube App is required to watch videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se requiere la aplicación de YouTube para ver videos"
           }
         },
         "fr" : {

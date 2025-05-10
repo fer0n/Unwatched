@@ -51,7 +51,7 @@ struct QueueGridView: View {
             }
             .alert("youtubeAppRequired", isPresented: $showAlert) {
                 Button("cancel", role: .cancel) { }
-                Button("openAppStore") {
+                Button {
                     guard let url = URL(string: "https://apps.apple.com/app/id544007664") else {
                         print("YouTube App Store URL not working")
                         return
@@ -61,21 +61,31 @@ struct QueueGridView: View {
                         options: [:],
                         completionHandler: nil
                     )
+                } label: {
+                    Text(verbatim: "App Store")
                 }
             }
         }
     }
 
-    func openYouTube(_ id: String?) {
+    func openYouTube(_ id: String?) async -> Bool {
         guard let id, let appURL = URL(string: "youtube://watch/\(id)") else {
             print("Invalid YouTube URL: \(id ?? "NIL")")
-            return
+            return false
         }
-        UIApplication.shared.open(appURL, options: [:], completionHandler: { success in
-            if !success {
+
+        let success = await withCheckedContinuation { continuation in
+            UIApplication.shared.open(appURL, options: [:]) { success in
+                continuation.resume(returning: success)
+            }
+        }
+
+        if !success {
+            await MainActor.run {
                 showAlert = true
             }
-        })
+        }
+        return success
     }
 
     func beforeRemove(_ entry: QueueEntry) {

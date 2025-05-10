@@ -7,11 +7,12 @@ import SwiftUI
 import UnwatchedShared
 
 struct QueueEntryListItem: View {
+    @AppStorage(Const.markAsWatched) var markAsWatched: Bool = false
     @Environment(\.modelContext) var modelContext
     var entry: QueueEntry
     let width: Double
 
-    var openYouTube: (String?) -> Void
+    var openYouTube: (String?) async -> Bool
     var beforeRemove: (QueueEntry) -> Void
 
     @State var toBeWatched: Video?
@@ -20,7 +21,7 @@ struct QueueEntryListItem: View {
     init(
         _ entry: QueueEntry,
         width: Double,
-        openYouTube: @escaping (String?) -> Void,
+        openYouTube: @escaping (String?) async -> Bool,
         beforeRemove: @escaping (QueueEntry) -> Void
     ) {
         self.entry = entry
@@ -45,7 +46,9 @@ struct QueueEntryListItem: View {
             } label: {
                 label
             } primaryAction: {
-                openYouTube(entry.video?.youtubeId)
+                Task {
+                    await handleItemClick(entry.video)
+                }
             }
             .buttonStyle(FocusButtonStyle())
         }
@@ -73,6 +76,15 @@ struct QueueEntryListItem: View {
                     .aspectRatio(contentMode: .fit)
 
                 Text(verbatim: "\n\n")
+            }
+        }
+    }
+
+    private func handleItemClick(_ video: Video?) async {
+        if let video {
+            let success = await openYouTube(video.youtubeId)
+            if markAsWatched && success {
+                VideoService.setVideoWatched(video, modelContext: modelContext)
             }
         }
     }
