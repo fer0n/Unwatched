@@ -216,11 +216,20 @@ struct PlayerControls: View {
         .animation(.default.speed(3), value: showControls)
         .animation(.default, value: player.isTallAspectRatio)
         .contentShape(Rectangle())
-        .simultaneousGesture(TapGesture().onEnded {
-            if !showControls {
-                autoHideVM.setShowControls()
-            }
-        })
+        .simultaneousGesture(
+            compactSize ? DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    autoHideVM.setKeepVisible(true, "playerDrag")
+                    if !showControls {
+                        autoHideVM.setShowControls()
+                    }
+                }
+                .onEnded { _ in
+                    autoHideVM.setShowControls()
+                    autoHideVM.setKeepVisible(false, "playerDrag")
+                }
+                : nil
+        )
     }
 
     func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
