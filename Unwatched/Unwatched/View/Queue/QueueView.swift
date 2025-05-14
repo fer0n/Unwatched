@@ -34,6 +34,9 @@ struct QueueView: View {
                 }
                 // Potential Workaround: always showing the list might avoid a crash
                 List {
+                    EmptyView()
+                        .id(NavigationManager.getScrollId("top", ClearList.queue.rawValue))
+
                     ForEach(queue) { entry in
                         ZStack {
                             if let video = entry.video {
@@ -86,7 +89,7 @@ struct QueueView: View {
         .tint(.neutralAccentColor)
         .listStyle(.plain)
         .onAppear {
-            navManager.setScrollId(queue.first?.video?.youtubeId, "queue")
+            navManager.setScrollId("top", ClearList.queue.rawValue)
         }
     }
 

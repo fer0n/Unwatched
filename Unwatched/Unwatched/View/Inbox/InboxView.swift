@@ -38,14 +38,15 @@ struct InboxView: View {
                 // Workaround: always have the list visible, this avoids a crash when adding the last
                 // inbox item to the queue and then moving the video on top of the queue
                 List {
+                    HideShortsTipView()
+                        .id(NavigationManager.getScrollId("top", ClearList.inbox.rawValue))
+                        .listRowSeparator(.hidden)
+
                     if !inboxEntries.isEmpty {
                         swipeTipView
                             .listRowBackground(Color.backgroundColor)
                             .listRowSeparator(.hidden)
                     }
-
-                    HideShortsTipView()
-                        .listRowSeparator(.hidden)
 
                     ForEach(inboxEntries) { entry in
                         ZStack {
@@ -81,7 +82,7 @@ struct InboxView: View {
                 .listStyle(.plain)
             }
             .onAppear {
-                navManager.setScrollId(inboxEntries.first?.video?.youtubeId, "inbox")
+                navManager.setScrollId("top", ClearList.inbox.rawValue)
             }
             .toolbar {
                 if showCancelButton {
