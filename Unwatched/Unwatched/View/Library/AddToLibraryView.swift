@@ -54,6 +54,7 @@ struct AddToLibraryView: View {
                 .submitLabel(.send)
             #endif
             TextFieldClearButton(text: $addText)
+
             pasteButton
                 .padding(.leading, 5)
         }
@@ -125,30 +126,36 @@ struct AddToLibraryView: View {
         let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
         let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
-        Button {
-            if let text = ClipboardService.get(), !text.isEmpty {
-                handleTextFieldSubmit(text)
+        ZStack {
+            if isLoading {
+                ProgressView()
+                    .frame(width: 10, height: 10)
+                    #if os(macOS)
+                    .scaleEffect(0.3)
+                #endif
+            } else if failed {
+                Image(systemName: Const.clearNoFillSF)
+                    .accessibilityLabel("failed")
+            } else if isSuccess {
+                Image(systemName: "checkmark")
+                    .accessibilityLabel("success")
             }
-        } label: {
-            Text("paste")
-                .opacity(isLoading || failed || isSuccess ? 0 : 1)
-                .overlay {
-                    if isLoading {
-                        ProgressView()
-                            #if os(macOS)
-                            .scaleEffect(0.5)
-                        #endif
-                    } else if failed {
-                        Image(systemName: Const.clearNoFillSF)
-                            .accessibilityLabel("failed")
-                    } else if isSuccess {
-                        Image(systemName: "checkmark")
-                            .accessibilityLabel("success")
-                    }
-                }
         }
-        .buttonStyle(CapsuleButtonStyle())
-        .tint(.neutralAccentColor)
+
+        PasteButton(payloadType: MultiPayload.self) { payloads in
+            guard let payload = payloads.first else {
+                return
+            }
+            switch payload.content {
+            case .text(let content):
+                handleTextFieldSubmit(content)
+            case .url(let url):
+                handleTextFieldSubmit(url.absoluteString)
+            }
+        }
+        .buttonBorderShape(.capsule)
+        .labelStyle(.iconOnly)
+        .tint(theme.color)
         .disabled(subManager.isLoading)
     }
 

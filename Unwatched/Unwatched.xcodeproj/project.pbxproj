@@ -549,6 +549,8 @@
 		88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */; };
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
+		88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
+		88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FEBFC42C19927E007FC1A5 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC32C19927E007FC1A5 /* UIDevice.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
 		88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
@@ -898,6 +900,7 @@
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
+		88FB23692DD4BAD00066DB07 /* MultiPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPayload.swift; sourceTree = "<group>"; };
 		88FEBFC32C19927E007FC1A5 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
@@ -1005,6 +1008,7 @@
 			isa = PBXGroup;
 			children = (
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
+				88FB23692DD4BAD00066DB07 /* MultiPayload.swift */,
 				884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */,
 				880F05412D90293D0049B902 /* ToggleSidebar.swift */,
 				880F03822D8EE73D0049B902 /* CursorHideModifier.swift */,
@@ -1869,6 +1873,7 @@
 				889AF9612C50ED05001CEDE6 /* UrlService.swift in Sources */,
 				887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				88373C262C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
+				88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,
 				889AF9622C50ED05001CEDE6 /* VideoActor+Subscriptions.swift in Sources */,
 				889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */,
 				889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */,
@@ -2115,6 +2120,7 @@
 			files = (
 				884069D72D7A290D00814A72 /* SearchField.swift in Sources */,
 				88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */,
+				88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,
 				881E513F2B59D9A8006384E4 /* Task.swift in Sources */,
 				88DFC0C02B4489C2001895C8 /* VideoListItem.swift in Sources */,
 				8898B6772B480C3700348D01 /* AddSubscriptionView.swift in Sources */,
