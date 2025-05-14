@@ -75,6 +75,14 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func updateView(_ view: WKWebView) {
+        #if os(macOS)
+        // workaround: reload otherwise keeps old audio playing in the background
+        if player.shouldStop {
+            view.pauseAllMediaPlayback()
+            player.shouldStop = false
+        }
+        #endif
+
         if player.isLoading {
             // avoid setting anything before the player is ready
             Logger.log.info("video not loaded yet – cancelling updateUIView")

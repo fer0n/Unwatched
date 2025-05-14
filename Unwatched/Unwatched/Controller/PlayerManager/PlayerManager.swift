@@ -37,6 +37,7 @@ import UnwatchedShared
     var isRepeating: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
+    var shouldStop: Bool = false
     var unstarted: Bool = true
     var isLoading: Bool = true
     var temporaryPlaybackSpeed: Double?
@@ -260,6 +261,7 @@ import UnwatchedShared
     /// Attempts to keep playing as seamlessly as possible
     @MainActor
     func hotReloadPlayer() {
+        shouldStop = true
         handleHotSwap()
         PlayerManager.reloadPlayer()
     }
