@@ -28,8 +28,15 @@ struct PlayerCommands: Commands {
             }
 
             Section("playbackSpeed") {
+                #if os(macOS)
                 PlayerShortcut.speedUp.render()
+                #endif
+                PlayerShortcut.speedUp.render(isAlt: true)
+                #if os(macOS)
                 PlayerShortcut.slowDown.render()
+                #endif
+                PlayerShortcut.slowDown.render(isAlt: true)
+
                 PlayerShortcut.temporarySlowDown.render()
                 PlayerShortcut.temporarySpeedUp.render()
             }

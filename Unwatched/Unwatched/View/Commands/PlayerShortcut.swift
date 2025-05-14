@@ -52,8 +52,8 @@ enum PlayerShortcut: String, CaseIterable {
         case .temporarySlowDown: return [("s", [])]
         case .markWatched: return [("w", .shift)]
         case .nextVideo: return [("n", .shift)]
-        case .speedUp: return [(.upArrow, [])]
-        case .slowDown: return [(.downArrow, [])]
+        case .speedUp: return [(.upArrow, []), (">", [])]
+        case .slowDown: return [(.downArrow, []), ("<", [])]
         case .reloadPlayer: return [("r", [.command])]
         }
     }
