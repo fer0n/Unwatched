@@ -31,8 +31,9 @@ struct UrlService {
         "https://youtu.be/\(youtubeId)" + (timestamp.map { "?t=\(Int($0))" } ?? "")
     }
 
-    static func getEmailUrl(body: String) -> URL {
-        URL(string: "mailto:unwatched.app@gmail.com?body=\n\n\(body)")!
+    static func getEmailUrl(title: String? = nil, body: String) -> URL {
+        let subject = title != nil ? "subject=\(title ?? "")&" : ""
+        return URL(string: "mailto:unwatched.app@gmail.com?\(subject)body=\n\n\(body)")!
     }
 
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double? = nil) -> String {

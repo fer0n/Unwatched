@@ -24,6 +24,7 @@ public struct Const {
     public static let watchedSF = "checkmark.circle.fill"
     public static let clearNoFillSF = "xmark"
     public static let checkmarkSF = "checkmark"
+    public static let errorSF = "exclamationmark.triangle.fill"
 
     public static let bundleId = "com.pentlandFirth.Unwatched"
 

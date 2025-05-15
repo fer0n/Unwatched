@@ -146,7 +146,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         let task = VideoService.addForeignUrls([url], in: .queue)
         let notification = AppNotificationData(
             title: "addingVideo",
-            icon: Const.queueTopSF,
             isLoading: true,
             timeout: 0
         )
@@ -332,11 +331,26 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             minimalPlayerUI: minimalPlayerUI,
             isNonEmbedding: parent.player.embeddingDisabled
         )
-        webView.evaluateJavaScript(script)
+        webView.evaluateJavaScript(script) { _, error in
+            if let error {
+                Logger.log.error("Error evaluating JavaScript: \(error)")
+                self.showError(error)
+            }
+        }
         withAnimation {
             parent.player.unstarted = true
         }
         parent.player.handleAutoStart()
+    }
+
+    func showError(_ error: Error) {
+        let notification = AppNotificationData(
+            title: "errorOccured",
+            error: error,
+            icon: Const.errorSF,
+            timeout: 10
+        )
+        parent.appNotificationVM.show(notification)
     }
 }
 

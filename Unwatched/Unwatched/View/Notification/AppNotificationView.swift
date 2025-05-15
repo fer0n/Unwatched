@@ -10,26 +10,66 @@ struct AppNotificationView: View {
     let notification: AppNotificationData?
 
     var body: some View {
-        HStack(spacing: 5) {
-            Image(systemName: notification?.isLoading == true ? "progress.indicator" : notification?.icon ?? ""
-            )
+        VStack(spacing: 5) {
+            HStack(spacing: 5) {
+                if notification?.isLoading == true || notification?.icon != nil {
+                    Image(systemName: notification?.isLoading == true
+                            ? "progress.indicator"
+                            : notification?.icon ?? ""
+                    )
+                }
 
-            Text(notification?.title ?? "")
-                .foregroundStyle(.primary)
-                .fontWeight(.semibold)
+                Text(notification?.title ?? "")
+                    .foregroundStyle(.primary)
+                    .fontWeight(.semibold)
+            }
+
+            if let error = notification?.error {
+                Button {
+                    reportMessage(error)
+                } label: {
+                    Image(systemName: "arrowshape.turn.up.right.fill")
+                    Text("reportAnIssue")
+                }
+                .buttonStyle(.bordered)
+                .tint(.black)
+                .buttonBorderShape(.capsule)
+            }
         }
         .foregroundStyle(.white)
         .padding(.horizontal, 15)
         .padding(.vertical, 10)
-        .background(.black.opacity(0.2))
+        .background(
+            notification?.error != nil
+                ? .red
+                : .black.opacity(0.2)
+        )
         .background(.regularMaterial)
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
         .fixedSize()
+    }
+
+    func reportMessage(_ error: Error) {
+        let versionInfo = HelpView.versionInfo
+        let body = """
+            \(versionInfo)
+
+            \(error)
+            """
+        let url = UrlService.getEmailUrl(title: error.localizedDescription, body: body)
+        UrlService.open(url)
     }
 }
 
 #Preview {
     @Previewable @State var appNotificationVM = AppNotificationVM()
+
+    let errorMessage = AppNotificationData(
+        title: "errorOccured",
+        error: VideoError.emptyYoutubeId,
+        icon: Const.errorSF,
+        timeout: 0
+    )
 
     return VStack {
         Button {
@@ -41,12 +81,14 @@ struct AppNotificationView: View {
         } label: {
             Text(verbatim: "Simple")
         }
+
+        Button {
+            appNotificationVM.show(errorMessage)
+        } label: {
+            Text(verbatim: "Error")
+        }
         .onAppear {
-            appNotificationVM.show(AppNotificationData(
-                title: "success",
-                icon: "checkmark",
-                timeout: 2.0
-            ))
+            appNotificationVM.show(errorMessage)
         }
 
         Button {
