@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct AppNotificationView: View {
     let notification: AppNotificationData?
+    let onDismiss: () -> Void
 
     var body: some View {
         VStack(spacing: 5) {
@@ -47,6 +48,16 @@ struct AppNotificationView: View {
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
         .fixedSize()
+        .simultaneousGesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.height < -20 {
+                        withAnimation {
+                            onDismiss()
+                        }
+                    }
+                }
+        )
     }
 
     func reportMessage(_ error: Error) {

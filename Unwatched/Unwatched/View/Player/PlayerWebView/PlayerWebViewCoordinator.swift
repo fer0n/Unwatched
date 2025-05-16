@@ -331,26 +331,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             minimalPlayerUI: minimalPlayerUI,
             isNonEmbedding: parent.player.embeddingDisabled
         )
-        webView.evaluateJavaScript(script) { _, error in
-            if let error {
-                Logger.log.error("Error evaluating JavaScript: \(error)")
-                self.showError(error)
-            }
-        }
+        webView.evaluateJavaScript(script, completionHandler: parent.handleJsError)
         withAnimation {
             parent.player.unstarted = true
         }
         parent.player.handleAutoStart()
-    }
-
-    func showError(_ error: Error) {
-        let notification = AppNotificationData(
-            title: "errorOccured",
-            error: error,
-            icon: Const.errorSF,
-            timeout: 10
-        )
-        parent.appNotificationVM.show(notification)
     }
 }
 

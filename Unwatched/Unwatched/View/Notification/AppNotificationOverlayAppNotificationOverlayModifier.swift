@@ -12,7 +12,8 @@ struct AppNotificationOverlayModifier: ViewModifier {
         content
             .overlay(alignment: .top) {
                 AppNotificationView(
-                    notification: appNotificationVM.currentNotification
+                    notification: appNotificationVM.currentNotification,
+                    onDismiss: { appNotificationVM.isPresented = false }
                 )
                 .padding(.top, 2)
                 .offset(y: appNotificationVM.isPresented ? 0 : -150)

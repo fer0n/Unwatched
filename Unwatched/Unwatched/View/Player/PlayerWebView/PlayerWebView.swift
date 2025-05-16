@@ -116,10 +116,26 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
     #endif
 
+    func evaluateJavaScript(_ view: WKWebView, _ script: String) {
+        view.evaluateJavaScript(script + " undefined;", completionHandler: handleJsError)
+    }
+
+    func handleJsError(result: Any?, _ error: (any Error)?) {
+        guard let error else { return }
+        Logger.log.error("Error evaluating JavaScript: \(error)")
+        let notification = AppNotificationData(
+            title: "errorOccured",
+            error: error,
+            icon: Const.errorSF,
+            timeout: 10
+        )
+        appNotificationVM.show(notification)
+    }
+
     func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.playbackSpeed != (player.temporaryPlaybackSpeed ?? player.playbackSpeed) {
             Logger.log.info("SPEED")
-            uiView.evaluateJavaScript(getSetPlaybackRateScript())
+            evaluateJavaScript(uiView, getSetPlaybackRateScript())
             player.previousState.playbackSpeed = player.playbackSpeed
         }
     }
@@ -128,10 +144,10 @@ struct PlayerWebView: PlatformViewRepresentable {
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
                 Logger.log.info("PLAY")
-                uiView.evaluateJavaScript(getPlayScript())
+                evaluateJavaScript(uiView, getPlayScript())
             } else {
                 Logger.log.info("PAUSE")
-                uiView.evaluateJavaScript(getPauseScript())
+                evaluateJavaScript(uiView, getPauseScript())
             }
             player.previousState.isPlaying = player.isPlaying
         }
@@ -141,10 +157,10 @@ struct PlayerWebView: PlatformViewRepresentable {
         if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
             if player.pipEnabled {
                 Logger.log.info("PIP ON")
-                uiView.evaluateJavaScript(getEnterPipScript())
+                evaluateJavaScript(uiView, getEnterPipScript())
             } else {
                 Logger.log.info("PIP OFF")
-                uiView.evaluateJavaScript(getExitPipScript())
+                evaluateJavaScript(uiView, getExitPipScript())
             }
             if !player.pipEnabled {
                 player.previousState.pipEnabled = false
@@ -155,13 +171,13 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handleSeek(_ prev: PreviousState, _ uiView: WKWebView) {
         if let seekAbs = player.seekAbsolute {
             Logger.log.info("SEEK ABS")
-            uiView.evaluateJavaScript(getSeekToScript(seekAbs))
+            evaluateJavaScript(uiView, getSeekToScript(seekAbs))
             player.seekAbsolute = nil
         }
 
         if let seekRel = player.seekRelative {
             Logger.log.info("SEEK REL")
-            uiView.evaluateJavaScript(getSeekRelScript(seekRel))
+            evaluateJavaScript(uiView, getSeekRelScript(seekRel))
             player.seekRelative = nil
         }
     }
