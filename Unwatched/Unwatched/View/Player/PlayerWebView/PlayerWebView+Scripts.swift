@@ -38,9 +38,9 @@ extension PlayerWebView {
                     document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
                 }
                 attemptClick();
-                const retryClicks = window.location.href.includes('youtube-nocookie');
                 setTimeout(() => checkResult(0), 50);
                 function checkResult(retries) {
+                    const retryClicks = window.location.href.includes('youtube-nocookie');
                     if (!video.paused) {
                         return;
                     }
@@ -69,8 +69,7 @@ extension PlayerWebView {
                 }
 
                 // theater mode - workaround: using setTimeout on macOS leads to auto play in some cases
-                const isTheaterMode = video?.offsetWidth >= window.innerWidth * 0.98;
-                if (!isTheaterMode) {
+                if (!(video?.offsetWidth >= window.innerWidth * 0.98)) {
                     const theaterButton = document.querySelector(".ytp-size-button");
                     if (theaterButton) {
                         theaterButton.click();
@@ -243,14 +242,15 @@ extension PlayerWebView {
             video.addEventListener("leavepictureinpicture", function(event) {
                 sendMessage("pip", "exit");
             });
-            function startPiP() {
-                if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-                    video.requestPictureInPicture().catch(error => {
-                        sendMessage('pip', error);
-                    });
-                } else {
-                    sendMessage('pip', "not even trying")
-                }
+        }
+
+        function startPiP() {
+            if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+                video.requestPictureInPicture().catch(error => {
+                    sendMessage('pip', error);
+                });
+            } else {
+                sendMessage('pip', "not even trying")
             }
         }
 
