@@ -124,16 +124,35 @@ extension PlayerWebView {
         isNonEmbedding: Bool
     ) -> String {
         """
-        var video = document.querySelector('video');
         var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
-        video.playbackRate = \(playbackSpeed);
+        var playbackRate = \(playbackSpeed);
         var startAtTime = \(startAt);
         var disableCaptions = \(disableCaptions);
         var minimalPlayerUI = \(minimalPlayerUI);
         const interceptKeys = \(PlayerShortcut.interceptKeysJS);
         const isNonEmbedding = \(isNonEmbedding);
 
-        video.muted = false;
+
+        var video = null;
+        let videoFindAttempts = 0;
+        findVideo();
+        function findVideo() {
+            video = document.querySelector('video');
+            if (video) {
+                video.playbackRate = playbackRate;
+                video.muted = false;
+                addVideoPlaybackEventListener();
+                addVideoMetaDataEventListener();
+                addPiPEventListener();
+            } else {
+                videoFindAttempts++;
+                if (videoFindAttempts < 10) {
+                    setTimeout(findVideo, 200);
+                } else {
+                    throw new Error('Video not found after 10 attempts');
+                }
+            }
+        }
 
         function sendMessage(topic, payload) {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
@@ -177,36 +196,63 @@ extension PlayerWebView {
 
 
         // play, pause, ended
-        video.addEventListener('play', function() {
-            startTimer();
-            sendMessage("play")
-        });
-        video.addEventListener('pause', function() {
-            stopTimer();
-            const url = window.location.href;
-            const payload = `${video.currentTime},${url}`;
-            sendMessage("pause", payload);
-        });
-        video.addEventListener('ended', function() {
-            sendMessage("ended");
-        });
-        video.addEventListener('webkitpresentationmodechanged', function (event) {
-            event.stopPropagation()
-        }, true)
+        function addVideoPlaybackEventListener() {
+            video.addEventListener('play', function() {
+                startTimer();
+                sendMessage("play")
+            });
+            video.addEventListener('pause', function() {
+                stopTimer();
+                const url = window.location.href;
+                const payload = `${video.currentTime},${url}`;
+                sendMessage("pause", payload);
+            });
+            video.addEventListener('ended', function() {
+                sendMessage("ended");
+            });
+            video.addEventListener('webkitpresentationmodechanged', function (event) {
+                event.stopPropagation()
+            }, true)
+        }
 
 
         // meta data
-        video.addEventListener('loadedmetadata', function() {
-            const duration = video.duration;
-            sendMessage("duration", duration.toString());
-            if (requiresFetchingVideoData) {
-                sendMessage('updateTitle', document.title);
+        function addVideoMetaDataEventListener() {
+            video.addEventListener('loadedmetadata', function() {
+                const duration = video.duration;
+                sendMessage("duration", duration.toString());
+                if (requiresFetchingVideoData) {
+                    sendMessage('updateTitle', document.title);
+                }
+                video.currentTime = startAtTime;
+            }, { once: true });
+            video.addEventListener('loadeddata', function() {
+                sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);
+            });
+        }
+
+
+        // Pip
+        function addPiPEventListener() {
+            video.addEventListener("canplay", function() {
+                sendMessage("pip", "canplay");
+            }, { once: true });
+            video.addEventListener("enterpictureinpicture", function(event) {
+                sendMessage("pip", "enter");
+            });
+            video.addEventListener("leavepictureinpicture", function(event) {
+                sendMessage("pip", "exit");
+            });
+            function startPiP() {
+                if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+                    video.requestPictureInPicture().catch(error => {
+                        sendMessage('pip', error);
+                    });
+                } else {
+                    sendMessage('pip', "not even trying")
+                }
             }
-            video.currentTime = startAtTime;
-        }, { once: true });
-        video.addEventListener('loadeddata', function() {
-            sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);
-        });
+        }
 
 
         // styling
@@ -423,27 +469,6 @@ extension PlayerWebView {
                 endEvent.isReTriggering = true;
                 event.target.dispatchEvent(endEvent);
             }, 0);
-        }
-
-
-        // Pip
-        video.addEventListener("canplay", function() {
-            sendMessage("pip", "canplay");
-        }, { once: true });
-        video.addEventListener("enterpictureinpicture", function(event) {
-            sendMessage("pip", "enter");
-        });
-        video.addEventListener("leavepictureinpicture", function(event) {
-            sendMessage("pip", "exit");
-        });
-        function startPiP() {
-            if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-                video.requestPictureInPicture().catch(error => {
-                    sendMessage('pip', error);
-                });
-            } else {
-                sendMessage('pip', "not even trying")
-            }
         }
 
 
