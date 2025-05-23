@@ -66,12 +66,25 @@ import UnwatchedShared
         }
     }
 
+    func getValue(_ source: String) -> Bool {
+        keepVisibleDict.contains(source)
+    }
+
     var keepVisible: Bool {
         get {
             !keepVisibleDict.isEmpty
         }
         set {
             setKeepVisible(newValue, "binding")
+        }
+    }
+
+    var showDescription: Bool {
+        get {
+            getValue("description")
+        }
+        set {
+            setKeepVisible(newValue, "description")
         }
     }
 }

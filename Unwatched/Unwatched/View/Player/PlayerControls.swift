@@ -29,7 +29,6 @@ struct PlayerControls: View {
 
     @Binding var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
-    @State var showDescriptionPopover: Bool = false
 
     var hasLargeFont: Bool {
         dynamicTypeSize > .large && !hideControlsFullscreen
@@ -115,7 +114,7 @@ struct PlayerControls: View {
                         #endif
 
                         if compactSize {
-                            DescriptionButton(show: $showDescriptionPopover)
+                            DescriptionButton(show: $autoHideVM.showDescription)
                         }
 
                         if enableHideControls && hasLargeFont {
@@ -243,7 +242,7 @@ struct PlayerControls: View {
 
     func handleTitleTap() {
         if compactSize {
-            showDescriptionPopover = true
+            autoHideVM.showDescription = true
         } else {
             navManager.handleVideoDetail(scrollToCurrentChapter: true)
         }

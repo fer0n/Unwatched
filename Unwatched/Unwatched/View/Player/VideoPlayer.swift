@@ -153,6 +153,7 @@ struct VideoPlayer: View {
                 Device.isMac && navManager.isSidebarHidden
                     || !Device.isIphone && hideControlsFullscreen
             )
+            && !autoHideVM.showDescription
     }
 }
 

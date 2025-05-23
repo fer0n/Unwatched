@@ -28,7 +28,7 @@ struct DescriptionButton: View {
                     .environment(\.colorScheme, colorScheme)
                     .environment(player)
                     .environment(navManager)
-                    .frame(maxWidth: 500, maxHeight: 600)
+                    .frame(idealWidth: 500, maxWidth: 500, maxHeight: 600)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: show)
