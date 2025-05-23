@@ -331,7 +331,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             minimalPlayerUI: minimalPlayerUI,
             isNonEmbedding: parent.player.embeddingDisabled
         )
-        webView.evaluateJavaScript(script, completionHandler: parent.handleJsError)
+        parent.evaluateJavaScript(webView, script)
         withAnimation {
             parent.player.unstarted = true
         }
