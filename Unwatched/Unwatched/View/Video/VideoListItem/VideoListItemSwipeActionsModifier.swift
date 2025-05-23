@@ -387,6 +387,7 @@ struct TrailingSwipeActionsView: View {
                         return
                     }
                     navManager.videoDetail = video
+                    video.isNew = false
                 } label: {
                     Image(systemName: "text.bubble.fill")
                 }

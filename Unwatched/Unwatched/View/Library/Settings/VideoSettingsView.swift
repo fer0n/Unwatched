@@ -21,7 +21,7 @@ struct VideoSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection("newVideos") {
+                MySection("newVideos", footer: "newVideosFooter") {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
                             Text($0.description(defaultPlacement: ""))

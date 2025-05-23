@@ -22,12 +22,10 @@ extension VideoActor {
         var orderedQueue = queue.sorted(by: { $0.order < $1.order })
 
         if updateIsNew {
-            if Const.autoRemoveNew.bool ?? true {
-                for sourceIndex in source {
-                    let queueEntry = orderedQueue[sourceIndex]
-                    if queueEntry.video?.isNew == true {
-                        queueEntry.video?.isNew = false
-                    }
+            for sourceIndex in source {
+                let queueEntry = orderedQueue[sourceIndex]
+                if queueEntry.video?.isNew == true {
+                    queueEntry.video?.isNew = false
                 }
             }
         }

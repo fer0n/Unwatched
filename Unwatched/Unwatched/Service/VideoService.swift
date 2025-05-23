@@ -235,6 +235,9 @@ extension VideoService {
         fetch.fetchLimit = 1
         let entries = try? context.fetch(fetch)
         if let nextVideo = entries?.first?.video {
+            if nextVideo.isNew {
+                _ = setIsNew(nextVideo.persistentModelID, false)
+            }
             return nextVideo
         }
         return nil
