@@ -305,12 +305,15 @@ import UnwatchedShared
         let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
 
         withAnimation {
-            if subscription.customAspectRatio == nil && !isTallAspectRatio {
-                if cleanedAspectRatio == Const.defaultVideoAspectRatio {
+            if !isTallAspectRatio {
+                if subscription.customAspectRatio == nil
+                    && cleanedAspectRatio == Const.defaultVideoAspectRatio {
                     return
                 }
 
-                video.subscription?.customAspectRatio = cleanedAspectRatio
+                if subscription.customAspectRatio != cleanedAspectRatio {
+                    video.subscription?.customAspectRatio = cleanedAspectRatio
+                }
             }
 
             // video might be different than subscription aspect ratio → use custom one only for this video
