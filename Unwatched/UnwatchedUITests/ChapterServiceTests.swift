@@ -1131,7 +1131,41 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Topic 2", startTime: 5 * 60 + 10, endTime: 7 * 60 + 25),
                     SendableChapter(title: "Conclusion", startTime: 7 * 60 + 25, endTime: nil)
                 ]
+            ),
+            (
+                """
+                links
+
+                1:56 Dino Hab:
+                https://www.uploadvr.com/raise
+
+                6:55 Encounter Dinosaurs:
+                https://www.uploadvr.com/encounter-dinosaurs/
+
+                8:00 Encounter: Dinosaurs
+                """,
+                [
+                    // SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(
+                        title: "Dino Hab",
+                        startTime: 1 * 60 + 56,
+                        endTime: 6 * 60 + 55,
+                        link: URL(
+                            string: "https://www.uploadvr.com/raise"
+                        )
+                    ),
+                    SendableChapter(
+                        title: "Encounter Dinosaurs",
+                        startTime: 6 * 60 + 55,
+                        endTime: 8 * 60,
+                        link: URL(
+                            string: "https://www.uploadvr.com/encounter-dinosaurs/"
+                        )
+                    ),
+                    SendableChapter(title: "Encounter: Dinosaurs", startTime: 8 * 60, endTime: nil)
+                ]
             )
+
         ]
 
         for (description, expected) in testValues {
@@ -1196,6 +1230,11 @@ final class ChapterServiceTests: XCTestCase {
 
             if chapter.category != rhs[index].category {
                 print("category mismatch: \(chapter.category) != \(rhs[index].category)")
+                return false
+            }
+
+            if chapter.link != rhs[index].link {
+                print("link mismatch: \(chapter.link) != \(rhs[index].link)")
                 return false
             }
         }
