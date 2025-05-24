@@ -172,8 +172,9 @@ extension PlayerWebView {
             if (event.ctrlKey) currentModifiers.push('Control');
             if (event.altKey) currentModifiers.push('Alt');
 
+            const key = event.key.toLowerCase?.() || event.key;
             return interceptKeys.some(combo =>
-                combo.key === event.key &&
+                combo.key === key &&
                 combo.modifiers.length === currentModifiers.length &&
                 combo.modifiers.every(mod => currentModifiers.includes(mod))
             );

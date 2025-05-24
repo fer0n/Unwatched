@@ -64,7 +64,7 @@ enum PlayerShortcut: String, CaseIterable {
     static var interceptKeysJS: String {
         let allShortcuts = PlayerShortcut.allCases.flatMap { shortcut in
             shortcut.keyboardShortcuts.map { combo in
-                let jsKey = combo.key.asJavaScriptKey
+                let jsKey = combo.key.asJavaScriptKey.lowercased()
                 let modifiers = combo.modifier.isEmpty ? "[]" :
                     combo.modifier.contains(.command) ? "['Meta']" :
                     combo.modifier.contains(.shift) ? "['Shift']" :
