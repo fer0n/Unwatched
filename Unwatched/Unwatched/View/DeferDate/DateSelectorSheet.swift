@@ -13,7 +13,7 @@ struct DateSelectorSheet: ViewModifier {
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    @State private var sheetHeight: CGFloat = .zero
+    @State private var sheetHeight: CGFloat = 600
 
     func body(content: Content) -> some View {
         @Bindable var player = player
@@ -28,7 +28,10 @@ struct DateSelectorSheet: ViewModifier {
                 )
                 .fixedSize(horizontal: false, vertical: true)
                 .onSizeChange { size in
-                    sheetHeight = size.height
+                    Task {
+                        // workaround: without Taskt, the sheet height is stuck on 0
+                        sheetHeight = size.height
+                    }
                 }
                 .presentationDetents([.height(sheetHeight)])
                 .tint(theme.color)
