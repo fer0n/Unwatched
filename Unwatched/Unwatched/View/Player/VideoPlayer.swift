@@ -32,7 +32,12 @@ struct VideoPlayer: View {
 
         VStack(spacing: 0) {
             if showFullscreenControlsCompactSize {
-                PlayButtonSpacer(padding: padding, size: .small)
+                squishyPadding
+                PlayButtonSpacer(
+                    padding: padding * 2,
+                    size: .small
+                )
+                .layoutPriority(1)
             }
 
             PlayerView(autoHideVM: $autoHideVM,
@@ -41,11 +46,13 @@ struct VideoPlayer: View {
                        setShowMenu: setShowMenu,
                        enableHideControls: enableHideControls,
                        sleepTimerVM: sleepTimerVM)
-                .layoutPriority(1)
+                .layoutPriority(2)
 
             if !landscapeFullscreen {
                 if compactSize {
                     if showFullscreenControlsCompactSize {
+                        squishyPadding
+
                         PlayerControls(compactSize: compactSize,
                                        horizontalLayout: horizontalLayout,
                                        enableHideControls: enableHideControls,
@@ -90,6 +97,11 @@ struct VideoPlayer: View {
                 autoHideVM.setKeepVisible(isVisible, "hover")
             }
         )
+    }
+
+    var squishyPadding: some View {
+        Spacer()
+            .frame(minHeight: 0, maxHeight: 6)
     }
 
     @MainActor

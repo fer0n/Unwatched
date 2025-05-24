@@ -136,8 +136,7 @@ struct PlayButtonSpacer: View {
 
     var body: some View {
         Spacer()
-            .frame(maxHeight: size + padding * 2)
-            .layoutPriority(0)
+            .frame(minHeight: 0, maxHeight: max(0, size + padding))
     }
 }
 

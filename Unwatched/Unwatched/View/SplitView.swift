@@ -24,24 +24,23 @@ struct MacOSSplitView: View {
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
         } detail: {
             GeometryReader { proxy in
-                ZStack {
-                    VideoPlayer(
-                        compactSize: bigScreen,
-                        horizontalLayout: horizontalLayout(proxy.size),
-                        landscapeFullscreen: landscapeFullscreen,
-                        hideControls: detailOnly
-                    )
-                    #if os(macOS)
-                    .toolbar(removing: .title)
-                    .toolbarBackground(
-                        showToolbarBackground ? .automatic : .hidden,
-                        for: .windowToolbar
-                    )
-                    #endif
-                    .environment(\.colorScheme, .dark)
-                }
-                .frame(maxHeight: .infinity)
+                VideoPlayer(
+                    compactSize: bigScreen,
+                    horizontalLayout: horizontalLayout(proxy.size),
+                    landscapeFullscreen: landscapeFullscreen,
+                    hideControls: detailOnly
+                )
+                #if os(macOS)
+                .toolbar(removing: .title)
+                .toolbarBackground(
+                    showToolbarBackground ? .automatic : .hidden,
+                    for: .windowToolbar
+                )
+                #endif
+                .environment(\.colorScheme, .dark)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .edgesIgnoringSafeArea(.all)
         }
     }
 
