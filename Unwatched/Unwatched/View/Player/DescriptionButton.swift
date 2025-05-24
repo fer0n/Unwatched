@@ -14,7 +14,7 @@ struct DescriptionButton: View {
 
     var body: some View {
         Button {
-            show = true
+            show.toggle()
         } label: {
             Image(Const.videoDescriptionSF)
                 .symbolRenderingMode(.monochrome)
@@ -31,6 +31,7 @@ struct DescriptionButton: View {
                     .frame(idealWidth: 500, maxWidth: 500, maxHeight: 600)
             }
         }
+        .keyboardShortcut("i", modifiers: [])
         .sensoryFeedback(Const.sensoryFeedback, trigger: show)
     }
 }
