@@ -22,15 +22,12 @@ struct PlayerLoadingTimeout: View {
                 PlayerManager.reloadPlayer()
                 hapticToggle.toggle()
             } label: {
-                Image(systemName: Const.reloadSF)
-                    .foregroundStyle(.automaticWhite)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .padding(7)
-                    .background {
-                        Circle()
-                            .fill(.automaticBlack)
-                    }
+                Image(systemName: Const.reloadCircleSF)
+                    .resizable()
+                    .frame(width: 45, height: 45)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
+                    .fontWeight(.regular)
             }
             .buttonStyle(.plain)
             .opacity(showReload ? 1 : 0)

@@ -39,17 +39,17 @@ struct FullscreenOverlayControls: View {
             Image(systemName: overlayVM.icon.systemName)
                 .resizable()
                 .animation(nil, value: overlayVM.show)
-                .frame(width: 90, height: 90)
+                .frame(width: 80, height: 80)
                 .phaseAnimator([0, 1, 0], trigger: overlayVM.show) { view, phase in
                     view
                         .scaleEffect(phase == 1 ? 1 : 0.75)
-                        .opacity(phase == 1 ? 0.8 : 0)
+                        .opacity(phase == 1 ? 1 : 0)
                 } animation: { _ in
                     .easeInOut(duration: 0.2)
                 }
                 .fontWeight(overlayVM.icon.fontWeight)
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(.black, .white)
+                .foregroundStyle(Color.white.opacity(0.7), .ultraThinMaterial)
                 .allowsHitTesting(false)
 
             if player.videoEnded {
@@ -109,15 +109,27 @@ enum OverlayIcon {
 }
 
 #Preview {
-    let player = PlayerManager()
-    player.videoEnded = true
+    @Previewable @State var overlayVM = OverlayFullscreenVM()
 
-    return FullscreenOverlayControls(
-        overlayVM: .constant(OverlayFullscreenVM()),
-        enabled: true,
-        show: true,
-        markVideoWatched: {_, _ in }
-    )
+    let player = PlayerManager()
+    player.videoEnded = false
+
+    return ZStack {
+        Color.gray
+        Color.white
+            .opacity(0.9)
+            .onTapGesture {
+                overlayVM.show(.play)
+            }
+
+        FullscreenOverlayControls(
+            overlayVM: $overlayVM,
+            enabled: true,
+            show: true,
+            markVideoWatched: {_, _ in }
+        )
+    }
+    .environment(\.colorScheme, .dark)
     .environment(player)
     .modelContainer(DataProvider.previewContainerFilled)
 }

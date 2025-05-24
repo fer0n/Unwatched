@@ -20,6 +20,7 @@ struct ClearAllVideosButton: View {
                 Image(systemName: Const.clearSF)
                     .resizable()
                     .frame(width: 30, height: 30)
+                    .symbolRenderingMode(.hierarchical)
                 Spacer()
             }.padding()
         }
