@@ -106,7 +106,15 @@ extension PlayerWebView {
     }
 
     func getEnterPipScript() -> String {
-        "startPiP();"
+        """
+        if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
+            video.requestPictureInPicture().catch(error => {
+                sendMessage('pip', error);
+            });
+        } else {
+            sendMessage('pip', "not even trying")
+        }
+        """
     }
 
     func getExitPipScript() -> String {
@@ -139,28 +147,35 @@ extension PlayerWebView {
 
         var video = null;
         let videoFindAttempts = 0;
-        findVideo();
-        function findVideo() {
-            video = document.querySelector('video');
-            if (video) {
-                video.playbackRate = playbackRate;
-                video.muted = false;
-                addVideoPlaybackEventListener();
-                addVideoMetaDataEventListener();
-                addPiPEventListener();
-                handleFullscreenButton();
-            } else {
-                videoFindAttempts++;
-                if (videoFindAttempts < 10) {
-                    setTimeout(findVideo, 200);
-                } else {
-                    throw new Error('Video not found after 10 attempts');
-                }
-            }
-        }
+        var isSwiping = false;
+
 
         function sendMessage(topic, payload) {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
+        }
+
+        findVideo();
+        function findVideo() {
+            try {
+                video = document.querySelector('video');
+                if (video) {
+                    video.playbackRate = playbackRate;
+                    video.muted = false;
+                    addVideoPlaybackEventListener();
+                    addVideoMetaDataEventListener();
+                    addPiPEventListener();
+                    handleFullscreenButton();
+                } else {
+                    videoFindAttempts++;
+                    if (videoFindAttempts < 10) {
+                        setTimeout(findVideo, 200);
+                    } else {
+                        sendMessage("error", "Video not found after 10 attempts");
+                    }
+                }
+            } catch (error) {
+                sendMessage("error", error && error.message ? error.message : String(error));
+            }
         }
 
 
@@ -249,16 +264,6 @@ extension PlayerWebView {
             video.addEventListener("leavepictureinpicture", function(event) {
                 sendMessage("pip", "exit");
             });
-        }
-
-        function startPiP() {
-            if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
-                video.requestPictureInPicture().catch(error => {
-                    sendMessage('pip', error);
-                });
-            } else {
-                sendMessage('pip', "not even trying")
-            }
         }
 
 
@@ -506,7 +511,7 @@ extension PlayerWebView {
             function checkError() {
                 const errorContent = document.querySelector('.ytp-error-content')
                 if (errorContent) {
-                    sendMessage("error", errorContent?.innerText);
+                    sendMessage("youtubeError", errorContent?.innerText);
                 }
             }
             function cancelErrorChecks() {

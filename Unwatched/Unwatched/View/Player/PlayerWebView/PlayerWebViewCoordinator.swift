@@ -81,6 +81,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleOffline(payload)
         case "keyboardEvent":
             handleKeyboard(payload)
+        case "youtubeError":
+            handleError(payload, youtube: true)
         case "error":
             handleError(payload)
         case "fullscreen":
@@ -278,10 +280,10 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
     }
 
-    func handleError(_ payload: String?) {
+    func handleError(_ payload: String?, youtube: Bool = false) {
         Logger.log.error("video player error: \(payload ?? "Unknown")")
 
-        if !parent.player.embeddingDisabled {
+        if youtube && !parent.player.embeddingDisabled {
             parent.player.isLoading = true
 
             parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
@@ -295,7 +297,16 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
                 parent.player.pause()
                 parent.player.embeddingDisabled = true
             }
+            return
         }
+
+        let notification = AppNotificationData(
+            title: "errorOccured",
+            error: PlayerError.javascriptError(payload ?? "Unknown"),
+            icon: Const.errorSF,
+            timeout: 10
+        )
+        parent.appNotificationVM.show(notification)
     }
 
     func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
@@ -358,4 +369,8 @@ enum SwipeDirecton: String {
     // swiftlint:disable:next identifier_name
     case up
     case down
+}
+
+enum PlayerError: Error {
+    case javascriptError(_ message: String)
 }
