@@ -69,7 +69,7 @@ struct MenuView: View {
                 }
             }
             .padding(.horizontal, padding)
-            .sheet(item: $navManager.videoDetail) { video in
+            .popover(item: $navManager.videoDetail) { video in
                 ZStack {
                     Color.backgroundColor.ignoresSafeArea(.all)
 
@@ -77,6 +77,9 @@ struct MenuView: View {
                         .presentationDragIndicator(.hidden)
                 }
                 .environment(\.colorScheme, colorScheme)
+                .presentationCompactAdaptation(
+                    Device.isMac ? .popover : .sheet
+                )
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
