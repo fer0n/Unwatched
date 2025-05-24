@@ -16,21 +16,25 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
+    @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
 
     @State var sleepTimerVM = SleepTimerViewModel()
     @State var autoHideVM = AutoHideVM.shared
 
     var compactSize = false
-    var showInfo = true
     var horizontalLayout = false
     var landscapeFullscreen = true
     let hideControls: Bool
 
     var body: some View {
-        let tallestAspectRatio = player.videoAspectRatio <= Const.tallestAspectRatio + Const.aspectRatioTolerance
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
+        let padding: CGFloat = 3
 
         VStack(spacing: 0) {
+            if showFullscreenControlsCompactSize {
+                PlayButtonSpacer(padding: padding, size: .small)
+            }
+
             PlayerView(autoHideVM: $autoHideVM,
                        landscapeFullscreen: landscapeFullscreen,
                        markVideoWatched: markVideoWatched,
@@ -41,20 +45,20 @@ struct VideoPlayer: View {
 
             if !landscapeFullscreen {
                 if compactSize {
-                    PlayerControls(compactSize: compactSize,
-                                   showInfo: showInfo,
-                                   horizontalLayout: horizontalLayout,
-                                   enableHideControls: enableHideControls,
-                                   hideControls: hideControls,
-                                   setShowMenu: setShowMenu,
-                                   markVideoWatched: markVideoWatched,
-                                   sleepTimerVM: sleepTimerVM,
-                                   minHeight: .constant(nil),
-                                   autoHideVM: $autoHideVM)
-                        .padding(.top, 3)
+                    if showFullscreenControlsCompactSize {
+                        PlayerControls(compactSize: compactSize,
+                                       horizontalLayout: horizontalLayout,
+                                       enableHideControls: enableHideControls,
+                                       hideControls: hideControls,
+                                       setShowMenu: setShowMenu,
+                                       markVideoWatched: markVideoWatched,
+                                       sleepTimerVM: sleepTimerVM,
+                                       minHeight: .constant(nil),
+                                       autoHideVM: $autoHideVM)
+                            .padding(.vertical, padding)
+                    }
                 } else {
                     PlayerContentView(compactSize: compactSize,
-                                      showInfo: showInfo && !tallestAspectRatio,
                                       horizontalLayout: horizontalLayout,
                                       enableHideControls: enableHideControls,
                                       hideControls: hideControls,
@@ -155,11 +159,18 @@ struct VideoPlayer: View {
             )
             && !autoHideVM.showDescription
     }
+
+    var showFullscreenControlsCompactSize: Bool {
+        compactSize && (
+            fullscreenControlsSetting != .disabled
+                || Device.isMac && (!navManager.isMacosFullscreen || !horizontalLayout)
+                || !Device.isMac && !horizontalLayout
+        )
+    }
 }
 
 #Preview {
     VideoPlayer(compactSize: false,
-                showInfo: true,
                 horizontalLayout: false,
                 landscapeFullscreen: false,
                 hideControls: false)

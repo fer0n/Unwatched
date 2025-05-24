@@ -8,32 +8,61 @@ import UnwatchedShared
 
 struct MacOSSplitView: View {
     @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
 
     let bigScreen: Bool
     let isLandscape: Bool
     let landscapeFullscreen: Bool
+    let breakpoint: CGFloat = 200
 
     var body: some View {
         @Bindable var navManager = navManager
 
         NavigationSplitView(columnVisibility: $navManager.columnVisibility) {
             MenuView(isSidebar: true)
-                .showSidebarToggle()
+                .toolbar(navManager.isMacosFullscreen ? .hidden : .visible)
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
         } detail: {
-            VideoPlayer(
-                compactSize: bigScreen,
-                showInfo: !bigScreen || (isLandscape && bigScreen) && !detailOnly,
-                horizontalLayout: detailOnly && (isLandscape && bigScreen),
-                landscapeFullscreen: landscapeFullscreen,
-                hideControls: detailOnly
-            )
-            .environment(\.colorScheme, .dark)
+            GeometryReader { proxy in
+                ZStack {
+                    VideoPlayer(
+                        compactSize: bigScreen,
+                        horizontalLayout: horizontalLayout(proxy.size),
+                        landscapeFullscreen: landscapeFullscreen,
+                        hideControls: detailOnly
+                    )
+                    #if os(macOS)
+                    .toolbar(removing: .title)
+                    .toolbarBackground(
+                        showToolbarBackground ? .automatic : .hidden,
+                        for: .windowToolbar
+                    )
+                    #endif
+                    .environment(\.colorScheme, .dark)
+                }
+                .frame(maxHeight: .infinity)
+            }
         }
+    }
+
+    func horizontalLayout(_ size: CGSize) -> Bool {
+        (isLandscape && bigScreen) &&
+            (navManager.isMacosFullscreen || spaceRequiresHorizontalLayout(size))
+    }
+
+    func spaceRequiresHorizontalLayout(_ size: CGSize) -> Bool {
+        let videoAspectRatio = player.videoAspectRatio
+        let videoHeight =  size.width / videoAspectRatio
+        let remainingHeight = size.height - videoHeight
+        return remainingHeight < breakpoint
     }
 
     var detailOnly: Bool {
         navManager.isSidebarHidden
+    }
+
+    var showToolbarBackground: Bool {
+        navManager.isMacosFullscreen && navManager.isSidebarHidden
     }
 }
 
@@ -50,7 +79,6 @@ struct IOSSPlitView: View {
         layout {
             VideoPlayer(
                 compactSize: bigScreen,
-                showInfo: !bigScreen || (isLandscape && bigScreen) && !hideControlsFullscreen,
                 horizontalLayout: hideControlsFullscreen,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen

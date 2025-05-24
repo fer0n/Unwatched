@@ -22,6 +22,8 @@ import UnwatchedShared
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
 
+    var isMacosFullscreen = false
+
     var videoDetail: Video?
     var playerTab: ControlNavigationTab = .controls
     @ObservationIgnored var scrollToCurrentChapter = false

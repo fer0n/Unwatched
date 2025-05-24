@@ -37,7 +37,7 @@ struct ChapterMiniControlView: View {
                             image
                                 .font(.system(size: 20))
                         }
-                        .buttonStyle(ChangeChapterButtonStyle())
+                        .buttonStyle(ChangeChapterButtonStyle(size: chapterButtonSize))
                         .disabled(player.previousChapterDisabled)
                     } else {
                         Color.clear.fixedSize()
@@ -89,13 +89,14 @@ struct ChapterMiniControlView: View {
                     .frame(maxWidth: link == nil ? nil : .infinity)
 
                     if hasChapters {
-                        HStack(spacing: -5) {
+                        HStack(spacing: limitHeight ? 0 : -5) {
                             NextChapterButton { image in
                                 image
                                     .font(.system(size: 20))
                             }
                             .buttonStyle(ChangeChapterButtonStyle(
-                                chapter: player.currentChapter
+                                chapter: player.currentChapter,
+                                size: chapterButtonSize
                             ))
                             .disabled(player.nextChapter == nil)
 
@@ -155,6 +156,10 @@ struct ChapterMiniControlView: View {
                 .font(.title3)
                 .multilineTextAlignment(.center)
         }
+    }
+
+    var chapterButtonSize: CGFloat {
+        limitHeight ? 32 : 40
     }
 }
 

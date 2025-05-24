@@ -92,6 +92,54 @@ struct PlayButton: View {
     }
 }
 
+struct PlayerControlsPlayButton: View {
+    @ScaledMetric var size: CGFloat
+
+    init(size: Size) {
+        let absoluteSize = PlayerControlsPlayButton.playButtonSize(size)
+        self._size = ScaledMetric(wrappedValue: absoluteSize)
+    }
+
+    var body: some View {
+        PlayButton(size: size)
+            .fontWeight(.black)
+    }
+
+    static func playButtonSize(_ size: Size) -> CGFloat {
+        switch size {
+        case .small:
+            return 45
+        case .medium:
+            return 80
+        case .large:
+            return 90
+        }
+    }
+
+    enum Size {
+        case small
+        case medium
+        case large
+    }
+}
+
+struct PlayButtonSpacer: View {
+    var padding: CGFloat = 0
+    @ScaledMetric var size: CGFloat
+
+    init(padding: CGFloat, size: PlayerControlsPlayButton.Size) {
+        self.padding = padding
+        let absoluteSize = PlayerControlsPlayButton.playButtonSize(size)
+        self._size = ScaledMetric(wrappedValue: absoluteSize)
+    }
+
+    var body: some View {
+        Spacer()
+            .frame(maxHeight: size + padding * 2)
+            .layoutPriority(0)
+    }
+}
+
 #Preview {
     PlayButton(size: 90)
         .modelContainer(DataProvider.previewContainer)

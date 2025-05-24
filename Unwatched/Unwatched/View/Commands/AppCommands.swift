@@ -27,6 +27,7 @@ struct AppCommands: Commands {
 
             Section {
                 PlayerShortcut.hideControls.render()
+                PlayerShortcut.toggleFullscreen.render()
             }
         }
 

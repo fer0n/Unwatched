@@ -45,9 +45,6 @@ struct UnwatchedApp: App {
                 .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
             #endif
         }
-        #if os(macOS)
-        .windowStyle(.hiddenTitleBar)
-        #endif
         .commands {
             PlayerCommands()
             AppCommands()

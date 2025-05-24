@@ -13,7 +13,6 @@ struct PlayerContentView: View {
     @Environment(PlayerManager.self) var player
 
     let compactSize: Bool
-    let showInfo: Bool
     let horizontalLayout: Bool
     let enableHideControls: Bool
     let hideControls: Bool
@@ -33,7 +32,6 @@ struct PlayerContentView: View {
         ZStack {
             TabView(selection: $navManager.playerTab) {
                 PlayerControls(compactSize: compactSize,
-                               showInfo: showInfo,
                                horizontalLayout: horizontalLayout,
                                enableHideControls: enableHideControls,
                                hideControls: hideControls,

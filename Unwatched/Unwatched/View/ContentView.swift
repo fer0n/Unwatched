@@ -29,10 +29,6 @@ struct ContentView: View {
             let isLandscape = proxy.size.width > proxy.size.height
             let landscapeFullscreen = !bigScreen && isLandscape
 
-            let chapterViewDetent: Set<PresentationDetent> = player.embeddingDisabled
-                ? [.medium]
-                : [.height(sheetPos.playerControlHeight)]
-
             ZStack {
                 #if os(iOS)
                 IOSSPlitView(

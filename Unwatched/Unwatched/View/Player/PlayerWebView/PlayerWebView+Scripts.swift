@@ -113,24 +113,29 @@ extension PlayerWebView {
         "document.exitPictureInPicture();"
     }
 
-    // swiftlint:disable function_body_length
-    static func initScript(
-        _ playbackSpeed: Double,
-        _ startAt: Double,
-        _ requiresFetchingVideoData: Bool?,
-        disableCaptions: Bool,
-        minimalPlayerUI: Bool,
-        isNonEmbedding: Bool
-    ) -> String {
-        """
-        var requiresFetchingVideoData = \(requiresFetchingVideoData == true);
-        var playbackRate = \(playbackSpeed);
-        var startAtTime = \(startAt);
-        var disableCaptions = \(disableCaptions);
-        var minimalPlayerUI = \(minimalPlayerUI);
-        const interceptKeys = \(PlayerShortcut.interceptKeysJS);
-        const isNonEmbedding = \(isNonEmbedding);
+    struct InitScriptOptions {
+        let playbackSpeed: Double
+        let startAt: Double
+        let requiresFetchingVideoData: Bool?
+        let disableCaptions: Bool
+        let minimalPlayerUI: Bool
+        let isNonEmbedding: Bool
+        let hijackFullscreenButton: Bool
+        let fullscreenTitle: String
+    }
 
+    // swiftlint:disable function_body_length
+    static func initScript(_ options: InitScriptOptions) -> String {
+        """
+        var requiresFetchingVideoData = \(options.requiresFetchingVideoData == true);
+        var playbackRate = \(options.playbackSpeed);
+        var startAtTime = \(options.startAt);
+        var disableCaptions = \(options.disableCaptions);
+        var minimalPlayerUI = \(options.minimalPlayerUI);
+        const interceptKeys = \(PlayerShortcut.interceptKeysJS);
+        const isNonEmbedding = \(options.isNonEmbedding);
+        const hijackFullscreenButton = \(options.hijackFullscreenButton);
+        const fullscreenTitle = "\(options.fullscreenTitle)";
 
         var video = null;
         let videoFindAttempts = 0;
@@ -143,6 +148,7 @@ extension PlayerWebView {
                 addVideoPlaybackEventListener();
                 addVideoMetaDataEventListener();
                 addPiPEventListener();
+                handleFullscreenButton();
             } else {
                 videoFindAttempts++;
                 if (videoFindAttempts < 10) {
@@ -283,6 +289,26 @@ extension PlayerWebView {
                     : ''}
             `;
             document.head.appendChild(style);
+        }
+
+
+        // handleFullscreenButton
+        function handleFullscreenButton() {
+            if (!hijackFullscreenButton) {
+                return
+            }
+            const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+            if (fullscreenButton) {
+                fullscreenButton.style.opacity = 1;
+                fullscreenButton.style.cursor = 'pointer';
+                fullscreenButton.disabled = false;
+                fullscreenButton.title = fullscreenTitle;
+                fullscreenButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    sendMessage("fullscreen");
+                }, true);
+            }
         }
 
 

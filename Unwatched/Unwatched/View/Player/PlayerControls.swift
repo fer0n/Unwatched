@@ -18,7 +18,6 @@ struct PlayerControls: View {
     @ScaledMetric var speedSpacingScaled = 8
 
     let compactSize: Bool
-    let showInfo: Bool
     let horizontalLayout: Bool
     let enableHideControls: Bool
     let hideControls: Bool
@@ -138,27 +137,24 @@ struct PlayerControls: View {
                         }
                     }
 
-                    HStack {
+                    HStack(spacing: hasSmallControls ? speedSpacing : nil) {
                         WatchedButton(
                             markVideoWatched: markVideoWatched,
-                            indicateWatched: false
+                            indicateWatched: false,
+                            isSmall: hasSmallControls
                         )
                         .frame(maxWidth: compactSize ? nil : .infinity)
 
-                        PlayButton(size:
-                                    (player.embeddingDisabled)
-                                    ? 80
-                                    : horizontalLayout
-                                    ? 60
-                                    : 90
-                        )
-                        .fontWeight(.black)
+                        PlayerControlsPlayButton(size: playButtonSize)
 
-                        NextVideoButton(markVideoWatched: markVideoWatched)
-                            .frame(maxWidth: compactSize ? nil : .infinity)
+                        NextVideoButton(
+                            markVideoWatched: markVideoWatched,
+                            isSmall: hasSmallControls
+                        )
+                        .frame(maxWidth: compactSize ? nil : .infinity)
 
                         if enableHideControls && !hasLargeFont {
-                            HideControlsButton()
+                            HideControlsButton(isSmall: hasSmallControls)
                         }
                     }
                     .padding(.horizontal, compactSize ? 0 : 10)
@@ -171,7 +167,6 @@ struct PlayerControls: View {
                 }
                 .padding(.horizontal, 15)
                 .padding(.bottom, !compactSize ? 20 : 0)
-                .padding(.vertical, compactSize ? 5 : 0)
                 .frame(maxWidth: 800)
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
@@ -204,7 +199,7 @@ struct PlayerControls: View {
         .background {
             PlayerBackgroundGestureRecognizer()
         }
-        .padding(.bottom, 5)
+        .padding(.bottom, compactSize ? 0 : 5 )
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
             sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
@@ -254,6 +249,18 @@ struct PlayerControls: View {
             || fullscreenControlsSetting == .autoHide && (!player.isPlaying || autoHideVM.showControls)
             || player.videoIsCloseToEnd
     }
+
+    var playButtonSize: PlayerControlsPlayButton.Size {
+        horizontalLayout
+            ? .small
+            : player.embeddingDisabled || compactSize
+            ? .medium
+            : .large
+    }
+
+    var hasSmallControls: Bool {
+        !player.embeddingDisabled && horizontalLayout && compactSize
+    }
 }
 
 #Preview {
@@ -261,7 +268,6 @@ struct PlayerControls: View {
     // player.embeddingDisabled = true
 
     return PlayerControls(compactSize: true,
-                          showInfo: false,
                           horizontalLayout: true,
                           enableHideControls: false,
                           hideControls: true,

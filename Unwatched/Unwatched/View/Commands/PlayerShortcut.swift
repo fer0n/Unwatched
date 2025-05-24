@@ -22,6 +22,7 @@ enum PlayerShortcut: String, CaseIterable {
     case slowDown
     case reloadPlayer
     case refresh
+    case toggleFullscreen
 
     var title: LocalizedStringKey {
         switch self {
@@ -38,6 +39,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .speedUp: return "speedUp"
         case .slowDown: return "slowDown"
         case .reloadPlayer: return "reloadPlayer"
+        case .toggleFullscreen: return "toggleFullscreen"
         case .refresh: return "refresh"
         }
     }
@@ -49,15 +51,16 @@ enum PlayerShortcut: String, CaseIterable {
         case .seekBackward: return [(.leftArrow, []), ("j", [])]
         case .nextChapter: return [(.rightArrow, .command), ("l", .command)]
         case .previousChapter: return [(.leftArrow, .command), ("j", .command)]
-        case .hideControls: return [("f", [])]
+        case .hideControls: return [("t", [])]
         case .temporarySpeedUp: return [("d", [])]
         case .temporarySlowDown: return [("s", [])]
         case .markWatched: return [("w", .shift)]
         case .nextVideo: return [("n", .shift)]
         case .speedUp: return [(.upArrow, []), (">", [])]
         case .slowDown: return [(.downArrow, []), ("<", [])]
-        case .refresh: return [("r", [.command])]
         case .reloadPlayer: return [("r", [.command, .shift])]
+        case .toggleFullscreen: return [("f", [])]
+        case .refresh: return [("r", [.command])]
         }
     }
 
@@ -122,14 +125,7 @@ enum PlayerShortcut: String, CaseIterable {
                 OverlayFullscreenVM.shared.show(.next)
             }
         case .hideControls:
-            #if os(iOS)
-            withAnimation {
-                let hideControlsFullscreen = UserDefaults.standard.bool(forKey: Const.hideControlsFullscreen)
-                UserDefaults.standard.set(!hideControlsFullscreen, forKey: Const.hideControlsFullscreen)
-            }
-            #else
-            NavigationManager.shared.toggleSidebar()
-            #endif
+            hideControls()
         case .temporarySpeedUp:
             player.tempSpeedChange(faster: true)
         case .temporarySlowDown:
@@ -148,11 +144,32 @@ enum PlayerShortcut: String, CaseIterable {
             player.slowDown()
         case .reloadPlayer:
             player.hotReloadPlayer()
+        case .toggleFullscreen:
+            #if os(macOS)
+            if let mainWindow = NSApp.windows.first {
+                mainWindow.toggleFullScreen(nil)
+                mainWindow.makeKey()
+            }
+            #else
+            hideControls()
+            #endif
         case .refresh:
             Task { @MainActor in
                 await RefreshManager.shared.refreshAll(hardRefresh: false)
             }
         }
+    }
+
+    @MainActor
+    func hideControls() {
+        #if os(iOS)
+        withAnimation {
+            let hideControlsFullscreen = UserDefaults.standard.bool(forKey: Const.hideControlsFullscreen)
+            UserDefaults.standard.set(!hideControlsFullscreen, forKey: Const.hideControlsFullscreen)
+        }
+        #else
+        NavigationManager.shared.toggleSidebar()
+        #endif
     }
 
     @MainActor

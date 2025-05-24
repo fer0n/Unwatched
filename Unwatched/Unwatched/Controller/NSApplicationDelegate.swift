@@ -10,7 +10,7 @@ import OSLog
 import UnwatchedShared
 
 class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDelegate {
-    let mainWindow: NSWindow?
+    var mainWindow: NSWindow?
 
     override init() {
         mainWindow = nil
@@ -25,9 +25,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Set window delegate to receive close notifications
-        NSApp.windows.first?.delegate = self
+        mainWindow = NSApp.windows.first
+        mainWindow?.delegate = self
 
+        handleFullscreenOnLaunch()
         restoreWindowFrame()
     }
 
@@ -38,15 +39,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
 
     @MainActor
     func restoreWindowFrame() {
-        if let frameDescription = UserDefaults.standard.string(forKey: Const.mainWindowFrame) {
-            mainWindow?.setFrame(from: frameDescription)
+        if let mainWindow, let frameDescription = UserDefaults.standard.string(forKey: Const.mainWindowFrame) {
+            mainWindow.setFrame(from: frameDescription)
         }
     }
 
     @MainActor
     func persistWindowFrame() {
-        if let mainWindow = NSApp.windows.first {
+        if let mainWindow {
             UserDefaults.standard.set(mainWindow.frameDescriptor, forKey: Const.mainWindowFrame)
+        }
+    }
+
+    @MainActor
+    func windowWillEnterFullScreen(_ notification: Notification) {
+        handleEnterFullscreen()
+    }
+
+    @MainActor
+    func windowWillExitFullScreen(_ notification: Notification) {
+        NavigationManager.shared.toggleSidebar(show: true)
+        NavigationManager.shared.isMacosFullscreen = false
+    }
+
+    @MainActor
+    func handleEnterFullscreen() {
+        NavigationManager.shared.toggleSidebar(show: false)
+        NavigationManager.shared.isMacosFullscreen = true
+    }
+
+    @MainActor
+    func handleFullscreenOnLaunch() {
+        let isFullscreen = mainWindow?.styleMask.contains(.fullScreen) == true
+        if isFullscreen {
+            handleEnterFullscreen()
         }
     }
 }

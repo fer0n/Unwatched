@@ -23,13 +23,9 @@ struct PlaybackSettingsView: View {
                 if Device.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {
                         Picker("fullscreenControls", selection: $fullscreenControlsSetting) {
-                            Text(FullscreenControls.autoHide.description)
-                                .tag(FullscreenControls.autoHide)
-                            Text(FullscreenControls.enabled.description)
-                                .tag(FullscreenControls.enabled)
-                            if Device.isIphone {
-                                Text(FullscreenControls.disabled.description)
-                                    .tag(FullscreenControls.disabled)
+                            ForEach(FullscreenControls.allCases, id: \.self) { option in
+                                Text(option.description)
+                                    .tag(option)
                             }
                         }
                         .pickerStyle(.menu)

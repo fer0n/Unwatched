@@ -83,9 +83,15 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             handleKeyboard(payload)
         case "error":
             handleError(payload)
+        case "fullscreen":
+            handleFullscreen()
         default:
             break
         }
+    }
+
+    func handleFullscreen() {
+        PlayerShortcut.toggleFullscreen.trigger()
     }
 
     func handleKeyboard(_ payload: String?) {
@@ -323,14 +329,21 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
         let minimalPlayerUI = UserDefaults.standard.bool(forKey: Const.minimalPlayerUI)
-        let script = PlayerWebView.initScript(
-            parent.player.playbackSpeed,
-            parent.player.getStartPosition(),
-            parent.player.requiresFetchingVideoData(),
+        var hijackFullscreenButton = false
+        #if os(macOS)
+        hijackFullscreenButton = true
+        #endif
+        let options = PlayerWebView.InitScriptOptions(
+            playbackSpeed: parent.player.playbackSpeed,
+            startAt: parent.player.getStartPosition(),
+            requiresFetchingVideoData: parent.player.requiresFetchingVideoData(),
             disableCaptions: disableCaptions,
             minimalPlayerUI: minimalPlayerUI,
-            isNonEmbedding: parent.player.embeddingDisabled
+            isNonEmbedding: parent.player.embeddingDisabled,
+            hijackFullscreenButton: hijackFullscreenButton,
+            fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)"
         )
+        let script = PlayerWebView.initScript(options)
         parent.evaluateJavaScript(webView, script)
         withAnimation {
             parent.player.unstarted = true
