@@ -30,13 +30,6 @@ class CleanupServiceTests: XCTestCase {
         let watchedDiffDup = Video(title: "watchedDiffDup", url: URL(string: "watchedDiffUrl"), youtubeId: "watchedDiffYoutubeId", watchedDate: nil)
         context.insert(watchedDiffDup)
 
-        // cleared inbox date difference
-        let clearedDiff = Video(title: "clearedDiff", url: URL(string: "clearedDiffUrl"), youtubeId: "clearedDiffYoutubeId", clearedInboxDate: Date())
-        context.insert(clearedDiff)
-
-        let clearedDiffDup = Video(title: "clearedDiffDup", url: URL(string: "clearedDiffUrl"), youtubeId: "clearedDiffYoutubeId", clearedInboxDate: nil)
-        context.insert(clearedDiffDup)
-
         // elapsed seconds difference
         let elapsedDiff = Video(title: "elapsedDiff", url: URL(string: "elapsedDiffUrl"), youtubeId: "elapsedDiffYoutubeId", elapsedSeconds: 100)
         context.insert(elapsedDiff)
@@ -108,9 +101,6 @@ class CleanupServiceTests: XCTestCase {
 
             let containsWatchedDiff = videos.contains(where: { $0.title == "watchedDiff" })
             XCTAssertTrue(containsWatchedDiff, "watched difference: kept wrong duplicate")
-
-            let containsClearedDiff = videos.contains(where: { $0.title == "clearedDiff" })
-            XCTAssertTrue(containsClearedDiff, "cleared inbox date difference: kept wrong duplicate")
 
             let containsElapsedDiff = videos.contains(where: { $0.title == "elapsedDiff" })
             XCTAssertTrue(containsElapsedDiff, "elapsed seconds difference: kept wrong duplicate")

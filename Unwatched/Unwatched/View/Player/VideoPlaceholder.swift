@@ -20,19 +20,14 @@ struct VideoPlaceholder: View {
             .frame(maxWidth: .infinity)
             .background(backgroundTapRecognizer)
             .animation(.default, value: player.videoAspectRatio)
+            .edgesIgnoringSafeArea(.all)
     }
 
     var backgroundTapRecognizer: some View {
-        HStack {
-            Color.black
-                .onTapGesture {
-                    autoHideVM.setShowControls(positionLeft: true)
-                }
-            Color.black
-                .onTapGesture {
-                    autoHideVM.setShowControls(positionLeft: false)
-                }
-        }
-        .disabled(fullscreenControlsSetting != .autoHide)
+        Color.black
+            .onTapGesture {
+                autoHideVM.setShowControls()
+            }
+            .disabled(fullscreenControlsSetting != .autoHide)
     }
 }

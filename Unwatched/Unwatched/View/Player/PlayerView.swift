@@ -23,6 +23,10 @@ struct PlayerView: View {
     @Environment(\.requestReview) var requestReview
 
     @Binding var autoHideVM: AutoHideVM
+
+    #if os(iOS)
+    @State var orientation = OrientationManager()
+    #endif
     @State var overlayVM = OverlayFullscreenVM.shared
     @State var appNotificationVM = AppNotificationVM()
 
@@ -56,17 +60,20 @@ struct PlayerView: View {
                         FullscreenPlayerControlsWrapper(
                             markVideoWatched: markVideoWatched,
                             autoHideVM: $autoHideVM,
-                            sleepTimerVM: sleepTimerVM)
+                            sleepTimerVM: sleepTimerVM,
+                            isLeft: isLeft)
                             .environment(\.layoutDirection, .leftToRight)
                     }
                 }
-                .environment(\.layoutDirection, autoHideVM.positionLeft
+                #if os(iOS)
+                .environment(\.layoutDirection, orientation.isLandscapeRight
                                 ? .rightToLeft
                                 : .leftToRight)
-                .frame(maxWidth: !showFullscreenControls || wideAspect
+                #endif
+                .frame(maxWidth: !showFullscreenControls
                         ? .infinity
                         : nil)
-                .fullscreenSafeArea(enable: wideAspect)
+                .fullscreenSafeArea(enable: landscapeFullscreen)
                 // force reload if value changed (requires settings update)
                 .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
                 .onChange(of: reloadVideoId) {
@@ -96,6 +103,14 @@ struct PlayerView: View {
         )
     }
 
+    var isLeft: Bool {
+        #if os(iOS)
+        orientation.isLandscapeRight
+        #else
+        false
+        #endif
+    }
+
     var hideMiniPlayer: Bool {
         !(
             navManager.showMenu
@@ -106,11 +121,6 @@ struct PlayerView: View {
 
     var showFullscreenControls: Bool {
         fullscreenControlsSetting != .disabled && Device.supportsFullscreenControls
-    }
-
-    var wideAspect: Bool {
-        (player.videoAspectRatio + Const.aspectRatioTolerance) >= Const.consideredWideAspectRatio
-            && landscapeFullscreen
     }
 
     var controlsHidden: Bool {

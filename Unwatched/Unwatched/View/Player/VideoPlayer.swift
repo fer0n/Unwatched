@@ -69,7 +69,6 @@ struct VideoPlayer: View {
             }
         }
         .tint(.neutralAccentColor)
-        .contentShape(Rectangle())
         .onChange(of: navManager.showMenu) {
             if navManager.showMenu == false {
                 sheetPos.updatePlayerControlHeight()
@@ -80,7 +79,7 @@ struct VideoPlayer: View {
                 player.video?.isNew = false
             }
         }
-        .ignoresSafeArea(edges: landscapeFullscreen ? .all : [])
+        .ignoresSafeArea(edges: landscapeFullscreen ? (player.embeddingDisabled ? .all : .vertical) : [])
         .onChange(of: landscapeFullscreen) {
             handleLandscapeFullscreenChange(landscapeFullscreen)
         }

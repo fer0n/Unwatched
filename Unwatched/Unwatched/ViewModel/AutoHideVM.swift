@@ -48,13 +48,7 @@ import UnwatchedShared
     }
 
     @MainActor
-    func setShowControls(positionLeft: Bool? = nil) {
-        if let positionLeft {
-            self.positionLeft = positionLeft
-        } else if !keepVisible && !showControls {
-            // if not already shown, default to right side
-            self.positionLeft = false
-        }
+    func setShowControls() {
         showControlsLocal = true
     }
 
