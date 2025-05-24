@@ -29,10 +29,15 @@ struct VideoPlayer: View {
     var body: some View {
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
         let padding: CGFloat = 3
+        let squishablePadding: CGFloat = 15
 
         VStack(spacing: 0) {
             if showFullscreenControlsCompactSize {
-                PlayButtonSpacer(padding: padding, size: .small)
+                PlayButtonSpacer(
+                    padding: padding + squishablePadding,
+                    size: .small,
+                    hasToolbar: !navManager.isMacosFullscreen
+                )
             }
 
             PlayerView(autoHideVM: $autoHideVM,
@@ -46,16 +51,22 @@ struct VideoPlayer: View {
             if !landscapeFullscreen {
                 if compactSize {
                     if showFullscreenControlsCompactSize {
-                        PlayerControls(compactSize: compactSize,
-                                       horizontalLayout: horizontalLayout,
-                                       enableHideControls: enableHideControls,
-                                       hideControls: hideControls,
-                                       setShowMenu: setShowMenu,
-                                       markVideoWatched: markVideoWatched,
-                                       sleepTimerVM: sleepTimerVM,
-                                       minHeight: .constant(nil),
-                                       autoHideVM: $autoHideVM)
-                            .padding(.vertical, padding)
+                        VStack(spacing: 0) {
+                            Spacer()
+                                .frame(minHeight: 0, maxHeight: squishablePadding)
+                                .layoutPriority(0)
+
+                            PlayerControls(compactSize: compactSize,
+                                           horizontalLayout: horizontalLayout,
+                                           enableHideControls: enableHideControls,
+                                           hideControls: hideControls,
+                                           setShowMenu: setShowMenu,
+                                           markVideoWatched: markVideoWatched,
+                                           sleepTimerVM: sleepTimerVM,
+                                           minHeight: .constant(nil),
+                                           autoHideVM: $autoHideVM)
+                                .padding(.vertical, padding)
+                        }
                     }
                 } else {
                     PlayerContentView(compactSize: compactSize,

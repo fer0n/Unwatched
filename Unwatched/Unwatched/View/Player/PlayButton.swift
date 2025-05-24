@@ -127,17 +127,23 @@ struct PlayerControlsPlayButton: View {
 struct PlayButtonSpacer: View {
     var padding: CGFloat = 0
     @ScaledMetric var size: CGFloat
+    var hasToolbar: Bool = false
 
-    init(padding: CGFloat, size: PlayerControlsPlayButton.Size) {
+    init(padding: CGFloat, size: PlayerControlsPlayButton.Size, hasToolbar: Bool) {
         self.padding = padding
         let absoluteSize = PlayerControlsPlayButton.playButtonSize(size)
         self._size = ScaledMetric(wrappedValue: absoluteSize)
+        self.hasToolbar = hasToolbar
     }
 
     var body: some View {
         Spacer()
-            .frame(maxHeight: size + padding * 2)
+            .frame(minHeight: 0, maxHeight: max(0, (size + padding * 2) - toolbarHeight))
             .layoutPriority(0)
+    }
+
+    var toolbarHeight: CGFloat {
+        hasToolbar ? 50 : 0
     }
 }
 
