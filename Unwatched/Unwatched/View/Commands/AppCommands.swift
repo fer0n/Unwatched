@@ -21,6 +21,7 @@ struct AppCommands: Commands {
 
         CommandGroup(after: .toolbar) {
             Section {
+                PlayerShortcut.refresh.render()
                 PlayerShortcut.reloadPlayer.render()
             }
 

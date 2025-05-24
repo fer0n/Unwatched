@@ -21,6 +21,7 @@ enum PlayerShortcut: String, CaseIterable {
     case speedUp
     case slowDown
     case reloadPlayer
+    case refresh
 
     var title: LocalizedStringKey {
         switch self {
@@ -37,6 +38,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .speedUp: return "speedUp"
         case .slowDown: return "slowDown"
         case .reloadPlayer: return "reloadPlayer"
+        case .refresh: return "refresh"
         }
     }
 
@@ -54,7 +56,8 @@ enum PlayerShortcut: String, CaseIterable {
         case .nextVideo: return [("n", .shift)]
         case .speedUp: return [(.upArrow, []), (">", [])]
         case .slowDown: return [(.downArrow, []), ("<", [])]
-        case .reloadPlayer: return [("r", [.command])]
+        case .refresh: return [("r", [.command])]
+        case .reloadPlayer: return [("r", [.command, .shift])]
         }
     }
 
@@ -145,6 +148,10 @@ enum PlayerShortcut: String, CaseIterable {
             player.slowDown()
         case .reloadPlayer:
             player.hotReloadPlayer()
+        case .refresh:
+            Task { @MainActor in
+                await RefreshManager.shared.refreshAll(hardRefresh: false)
+            }
         }
     }
 
