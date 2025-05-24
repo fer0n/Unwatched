@@ -36,7 +36,6 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             isExpanded: isExpanded,
             indicatorSpacing: indicatorSpacing
         )
-        .disabled(player.video?.subscription == nil)
         .onChange(of: player.video?.subscription) {
             // workaround
         }
@@ -67,6 +66,7 @@ struct CombinedPlaybackSpeedSetting: View {
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
                         .padding(.horizontal, 2)
+                        .disabled(player.video?.subscription == nil)
                 }
                 .padding(.vertical)
             } else {
@@ -83,6 +83,7 @@ struct CombinedPlaybackSpeedSetting: View {
                             )
                         )
                         .offset(x: -1)
+                        .disabled(player.video?.subscription == nil)
 
                     if showTemporarySpeed {
                         Button {
