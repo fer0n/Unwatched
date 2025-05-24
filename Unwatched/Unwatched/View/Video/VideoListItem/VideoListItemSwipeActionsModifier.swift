@@ -148,8 +148,12 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func handleIsNew(_ video: Video, _ isNew: Bool?) {
         if let isNew,
            videoData.isNew != isNew {
-            withAnimation {
+            if video.inboxEntry != nil {
                 video.isNew = isNew
+            } else {
+                withAnimation {
+                    video.isNew = isNew
+                }
             }
         }
     }
