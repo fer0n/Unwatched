@@ -53,6 +53,7 @@ struct CorePlayButton<Content>: View where Content: View {
         .contextMenu {
             PlayButtonContextMenu()
         }
+        .keyboardShortcut(.space, modifiers: [])
     }
 }
 
