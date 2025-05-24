@@ -25,9 +25,9 @@ struct ClearAllVideosButton: View {
         }
         .buttonStyle(.plain)
         .clearConfirmation(clearAll: clearAll, triggerAction: $triggerAction)
-        .listRowSeparator(.hidden)
         .listRowBackground(Color.backgroundColor)
         .accessibilityLabel("clearAllVideos")
+        .listRowSeparator(.hidden)
     }
 }
 

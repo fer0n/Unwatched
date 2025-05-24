@@ -94,13 +94,13 @@ struct QueueView: View {
     }
 
     func moveQueueEntry(from source: IndexSet, to destination: Int) {
+        if source.count == 1 && source.first == destination {
+            return
+        }
         VideoService.moveQueueEntry(from: source,
                                     to: destination,
                                     updateIsNew: true,
                                     modelContext: modelContext)
-        if source.count == 1 && source.first == destination {
-            return
-        }
         if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue()
         }

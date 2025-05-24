@@ -74,9 +74,8 @@ struct InboxView: View {
                     .listRowBackground(Color.backgroundColor)
 
                     ClearAllVideosButton(clearAll: clearAll)
-                        .opacity(showClear ? 1 : 0)
                         .disabled(!showClear)
-                        .listRowSeparator(.hidden)
+                        .opacity(showClear ? 1 : 0)
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
