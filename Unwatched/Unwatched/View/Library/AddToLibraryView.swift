@@ -40,6 +40,7 @@ struct AddToLibraryView: View {
                         .tint(theme.color)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             })
             .foregroundStyle(theme.color)
             .buttonStyle(.plain)
