@@ -24,9 +24,12 @@ struct MacOSSplitView: View {
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
         } detail: {
             GeometryReader { proxy in
+                let horizontalLayout = horizontalLayout(proxy.size)
+
                 VideoPlayer(
                     compactSize: bigScreen,
-                    horizontalLayout: horizontalLayout(proxy.size),
+                    horizontalLayout: horizontalLayout,
+                    limitWidth: shouldLimitWidth(proxy.size, horizontalLayout),
                     landscapeFullscreen: landscapeFullscreen,
                     hideControls: detailOnly
                 )
@@ -47,6 +50,14 @@ struct MacOSSplitView: View {
     func horizontalLayout(_ size: CGSize) -> Bool {
         (isLandscape && bigScreen) &&
             (navManager.isMacosFullscreen || spaceRequiresHorizontalLayout(size))
+    }
+
+    func shouldLimitWidth(_ size: CGSize, _ horizontalLayout: Bool) -> Bool {
+        if horizontalLayout {
+            size.width < 750
+        } else {
+            size.width < 600
+        }
     }
 
     func spaceRequiresHorizontalLayout(_ size: CGSize) -> Bool {

@@ -74,6 +74,9 @@ struct SpeedControlView: View {
                 }
             }
             .onPreferenceChange(SpeedPreferenceKey.self) { minY in
+                if minY.width == viewModel.width {
+                    return
+                }
                 Task { @MainActor in
                     viewModel.width = minY.width
                     viewModel.itemWidth = (minY.width - thumbSize) / CGFloat(Const.speeds.count - 1)

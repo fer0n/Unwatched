@@ -19,6 +19,7 @@ struct PlayerControls: View {
 
     let compactSize: Bool
     let horizontalLayout: Bool
+    let limitWidth: Bool
     let enableHideControls: Bool
     let hideControls: Bool
 
@@ -99,12 +100,13 @@ struct PlayerControls: View {
                         CombinedPlaybackSpeedSettingPlayer(
                             spacing: speedSpacing,
                             showTemporarySpeed: compactSize,
+                            limitWidth: limitWidth,
                             indicatorSpacing: player.embeddingDisabled
                                 ? 2
                                 : compactSize
                                 ? 2.5
-                                : 4
-                        )
+                                : 4,
+                            )
                         .fixedSize(horizontal: compactSize, vertical: false)
 
                         #if os(iOS)
@@ -269,6 +271,7 @@ struct PlayerControls: View {
 
     return PlayerControls(compactSize: true,
                           horizontalLayout: true,
+                          limitWidth: false,
                           enableHideControls: false,
                           hideControls: true,
                           setShowMenu: { },

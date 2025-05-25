@@ -14,6 +14,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var spacing: CGFloat = 10
     var showTemporarySpeed = false
     var isExpanded = false
+    var limitWidth = false
     var hasHaptics = true
     var indicatorSpacing: CGFloat = 4
 
@@ -34,11 +35,11 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             spacing: spacing,
             showTemporarySpeed: showTemporarySpeed,
             isExpanded: isExpanded,
-            indicatorSpacing: indicatorSpacing
-        )
-        .onChange(of: player.video?.subscription) {
-            // workaround
-        }
+            limitWidth: limitWidth,
+            indicatorSpacing: indicatorSpacing)
+            .onChange(of: player.video?.subscription) {
+                // workaround
+            }
     }
 }
 
@@ -53,11 +54,14 @@ struct CombinedPlaybackSpeedSetting: View {
     var spacing: CGFloat = 10
     var showTemporarySpeed = false
     var isExpanded = false
+    var limitWidth = false
     var indicatorSpacing: CGFloat = 4
 
     var body: some View {
         HStack(spacing: spacing) {
-            if isExpanded {
+            if limitWidth {
+                CompactFullscreenSpeedControl()
+            } else if isExpanded {
                 VStack {
                     SpeedControlView(
                         selectedSpeed: $selectedSpeed,

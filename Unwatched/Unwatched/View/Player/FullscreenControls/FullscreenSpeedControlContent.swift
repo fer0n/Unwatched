@@ -16,6 +16,10 @@ struct FullscreenSpeedControlContent: View {
     @State var task: Task<Void, Never>?
     @State var currentPage: Int?
 
+    // workaround: on macOS, when changing the window size from the left, the page
+    // is often stuck in between two pages
+    var animationWorkaround: Bool = false
+
     var body: some View {
         ScrollView {
             LazyVStack {
@@ -27,6 +31,7 @@ struct FullscreenSpeedControlContent: View {
             }
             .scrollTargetLayout()
         }
+        .opacity(currentPage == nil ? 0 : 1)
         .onScrollInteraction { isActive in
             isInteracting = isActive
             if !isActive {
@@ -54,16 +59,24 @@ struct FullscreenSpeedControlContent: View {
                 } catch { }
             }
         }
-        .onChange(of: value, initial: true) {
-            if let index = Const.speeds.firstIndex(of: value),
-               currentPage != index {
-                currentPage = index
+        .onChange(of: value, initial: !animationWorkaround) {
+            setCurrentPage(value)
+        }
+        .task {
+            if animationWorkaround {
+                setCurrentPage(value)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: currentPage)
     }
 
-    @MainActor
+    func setCurrentPage(_ value: Double) {
+        if let index = Const.speeds.firstIndex(of: value),
+           currentPage != index {
+            currentPage = index
+        }
+    }
+
     func triggerChange(_ currentPage: Int?) {
         guard let currentPage else {
             return

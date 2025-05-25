@@ -23,6 +23,7 @@ struct VideoPlayer: View {
 
     var compactSize = false
     var horizontalLayout = false
+    var limitWidth = false
     var landscapeFullscreen = true
     let hideControls: Bool
 
@@ -55,6 +56,7 @@ struct VideoPlayer: View {
 
                         PlayerControls(compactSize: compactSize,
                                        horizontalLayout: horizontalLayout,
+                                       limitWidth: limitWidth,
                                        enableHideControls: enableHideControls,
                                        hideControls: hideControls,
                                        setShowMenu: setShowMenu,
@@ -183,6 +185,7 @@ struct VideoPlayer: View {
 #Preview {
     VideoPlayer(compactSize: false,
                 horizontalLayout: false,
+                limitWidth: false,
                 landscapeFullscreen: false,
                 hideControls: false)
         .modelContainer(DataProvider.previewContainer)

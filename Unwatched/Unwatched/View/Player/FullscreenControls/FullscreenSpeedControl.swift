@@ -10,6 +10,35 @@ import UnwatchedShared
     var debounceTask: Task<Void, Never>?
 }
 
+struct CompactFullscreenSpeedControl: View {
+    @Environment(PlayerManager.self) var player
+    @State var showSpeedControl = false
+
+    var body: some View {
+        FullscreenSpeedControlContent(
+            value: player.playbackSpeed,
+            onChange: { player.playbackSpeed = $0 },
+            triggerInteraction: { },
+            isInteracting: .constant(false),
+            animationWorkaround: true
+        )
+        .fontWeight(.regular)
+        .playerToggleModifier(isOn: player.temporaryPlaybackSpeed != nil, isSmall: true)
+        .onTapGesture {
+            showSpeedControl = true
+        }
+        .popover(isPresented: $showSpeedControl) {
+            CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
+                .padding(.horizontal)
+                .frame(width: 350)
+                .presentationBackground(.black)
+                .environment(\.colorScheme, .dark)
+                .presentationCompactAdaptation(.popover)
+                .fontWeight(nil)
+        }
+    }
+}
+
 struct FullscreenSpeedControl: View {
     @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
