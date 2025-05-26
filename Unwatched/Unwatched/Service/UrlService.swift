@@ -172,7 +172,7 @@ struct UrlService {
     }
 
     static func getCleanTitle(_ title: String?) -> String? {
-        if let title = title {
+        if let title {
             return title.replacingOccurrences(of: " - YouTube", with: "")
         }
         return nil
@@ -198,9 +198,9 @@ struct UrlService {
         // https://www.youtube.com/embed/QHpTxLM9opU
 
         // swiftlint:disable:next line_length
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n]+|youtu.be\/[^\/\?\n]+))"#
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n\s]+|youtu.be\/[^\/\?\n]+))"#
         let matches = text.matchingMultiple(regex: regex)
-        if let matches = matches {
+        if let matches {
             let urls = matches.compactMap { URL(string: $0) }
             let rest = text.replacingOccurrences(of: regex, with: "", options: .regularExpression)
             return (urls, rest)
@@ -212,7 +212,7 @@ struct UrlService {
         // https://www.youtube.com/playlist?list=PL6BHqJ_7o92sPDB2UpgWBYdeyeSs-pc8_
         let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/playlist\?list\=[^\/\?\s]+))"#
         let matches = text.matchingMultiple(regex: regex)
-        if let matches = matches {
+        if let matches {
             let urls = matches.compactMap { URL(string: $0) }
             let rest = text.replacingOccurrences(of: regex, with: "", options: .regularExpression)
             return (urls, rest)
@@ -226,7 +226,7 @@ struct UrlService {
                               mobile: Bool = true,
                               videosSubPath: Bool = true) -> String? {
         let baseUrl = "https://\(mobile ? "m." : "")youtube.com"
-        if let playlistId = playlistId {
+        if let playlistId {
             return "\(baseUrl)/playlist?list=\(playlistId)"
         }
         let subPath = videosSubPath ? "/videos" : ""
