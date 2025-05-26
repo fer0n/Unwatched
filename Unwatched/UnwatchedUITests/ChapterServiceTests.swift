@@ -1006,7 +1006,7 @@ final class ChapterServiceTests: XCTestCase {
             ),
             (
                 """
-                00:00 - Introduction;
+                00:00 — Introduction;
                 01:30 - Overview;
                 03:45 - Topic 1,
                 05:10 - Topic 2,
