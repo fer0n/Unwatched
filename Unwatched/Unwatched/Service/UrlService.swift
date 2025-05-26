@@ -52,6 +52,29 @@ struct UrlService {
             + "?t=\(startAt)s&enablejsapi=1&color=white&controls=1&iv_load_policy=3\(captionsUrl)"
     }
 
+    static func getStartTimeFromUrl(_ url: URL) -> Double? {
+        // https://www.youtube.com/watch?v=epBbbysk5cU&t=60s
+        let regex = #"t=(\d+(\.\d+)?)"# // Match seconds with optional decimal part
+        if let match = url.absoluteString.matching(regex: regex) {
+            return Double(match)
+        }
+        return nil
+    }
+
+    static func addTimeToUrl(_ url: URL, time: Double) -> URL? {
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+        var queryItems = components.queryItems ?? []
+        if let index = queryItems.firstIndex(where: { $0.name == "t" }) {
+            queryItems[index].value = "\(Int(time))s"
+        } else {
+            queryItems.append(URLQueryItem(name: "t", value: "\(Int(time))s"))
+        }
+        components.queryItems = queryItems
+        return components.url
+    }
+
     static func stringContainsUrl (_ text: String) -> Bool {
         let regex = #"https:\/\/\w+\.\w+"#
         return text.matching(regex: regex) != nil
@@ -198,7 +221,7 @@ struct UrlService {
         // https://www.youtube.com/embed/QHpTxLM9opU
 
         // swiftlint:disable:next line_length
-        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n\s]+|youtu.be\/[^\/\?\n]+))"#
+        let regex = #"((?:https\:\/\/)?(?:www\.)?(?:m\.)?(youtube.com\/(?:(?:watch\?v=)|(?:shorts\/)|(?:embed\/))[^\/\?\n\s]+|youtu.be\/[^\/\?\n]+))\??\S*"#
         let matches = text.matchingMultiple(regex: regex)
         if let matches {
             let urls = matches.compactMap { URL(string: $0) }

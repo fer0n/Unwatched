@@ -63,8 +63,13 @@ struct AddVideoButton: View {
             // play now
             let task = Task {
                 if let youtubeUrl {
-                    let time = await browserManager.getCurrentTime()
-                    await avm.addUrls([youtubeUrl], at: 0, startTime: time)
+                    var url = youtubeUrl
+
+                    if let time = await browserManager.getCurrentTime(),
+                       let urlWithTime = UrlService.addTimeToUrl(youtubeUrl, time: time) {
+                        url = urlWithTime
+                    }
+                    await avm.addUrls([url], at: 0)
                 } else {
                     throw VideoError.noVideoUrl
                 }
