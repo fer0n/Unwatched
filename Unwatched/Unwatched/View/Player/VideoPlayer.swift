@@ -29,7 +29,7 @@ struct VideoPlayer: View {
 
     var body: some View {
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
-        let padding: CGFloat = 3
+        let padding: CGFloat = horizontalLayout ? 3 : 8
 
         VStack(spacing: 0) {
             if showFullscreenControlsCompactSize {

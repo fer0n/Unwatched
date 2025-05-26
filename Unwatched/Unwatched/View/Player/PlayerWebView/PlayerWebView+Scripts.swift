@@ -314,6 +314,39 @@ extension PlayerWebView {
                     sendMessage("fullscreen");
                 }, true);
             }
+
+            // Listen for double click and send fullscreen message
+            let clickTimeout;
+            let clickCount = 0;
+            let pendingClick = null;
+
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('video')
+                    || event.target.matches('.ytp-cued-thumbnail-overlay-image')
+                    || event.target.matches('.videowall-endscreen')
+                    || event.target.matches('.ytp-videowall-still-info-content')) {
+                    if (event.isReTriggering) {
+                        return;
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
+                    if (pendingClick) {
+                        // This is the second click - it's a double click
+                        clearTimeout(clickTimeout);
+                        pendingClick = null;
+                        sendMessage("fullscreen");
+                    } else {
+                        // This is the first click - wait to see if there's a second one
+                        pendingClick = event;
+                        clickTimeout = setTimeout(function() {
+                            const newEvent = new event.constructor('click', event);
+                            newEvent.isReTriggering = true;
+                            pendingClick.target.dispatchEvent(newEvent);
+                            pendingClick = null;
+                        }, 200);
+                    }
+                }
+            }, true);
         }
 
 
