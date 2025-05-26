@@ -23,7 +23,7 @@ struct DescriptionButton: View {
         .buttonStyle(.plain)
         .popover(isPresented: $show) {
             if let video = player.video {
-                ChapterDescriptionView(video: video)
+                ChapterDescriptionView(video: video, scrollToCurrent: true)
                     .presentationBackground(.black)
                     .environment(\.colorScheme, colorScheme)
                     .environment(player)
