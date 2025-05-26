@@ -14,7 +14,6 @@
 		8804A3ED2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */; };
 		8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */; };
 		8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */; };
-		8804A3F42B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */; };
 		8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F62B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift */; };
 		8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
 		880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */; };
@@ -368,7 +367,6 @@
 		889AF92F2C50ECEE001CEDE6 /* CustomSettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */; };
 		889AF9302C50ECEE001CEDE6 /* ChapterTimeRemaining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */; };
 		889AF9312C50ECEE001CEDE6 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A82B45B27600482F29 /* VideoPlayer.swift */; };
-		889AF9322C50ECEE001CEDE6 /* VideoPlayerFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */; };
 		889AF9342C50ECEE001CEDE6 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
 		889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */; };
 		889AF9362C50ECEE001CEDE6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C1612C427940006D2423 /* PlayerView.swift */; };
@@ -621,7 +619,6 @@
 		8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionDetailView.swift; sourceTree = "<group>"; };
 		8804A3EE2B8B88A000D3F4F1 /* VideoListItemDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemDetails.swift; sourceTree = "<group>"; };
 		8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemStatus.swift; sourceTree = "<group>"; };
-		8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerFooter.swift; sourceTree = "<group>"; };
 		8804A3F62B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+Chapters.swift"; sourceTree = "<group>"; };
 		8804F91E2B4805A100E19B7A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionAndBuildNumber.swift; sourceTree = "<group>"; };
@@ -1116,7 +1113,6 @@
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				88B0C1612C427940006D2423 /* PlayerView.swift */,
 				886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */,
-				8804A3F32B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift */,
 				8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */,
 				88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */,
 				88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */,
@@ -1949,7 +1945,6 @@
 				880C21222D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */,
 				88F3AA8C2C998B040030B2EA /* Color.swift in Sources */,
 				888CDF782C997A20007A8A54 /* FullscreenControls.swift in Sources */,
-				889AF9322C50ECEE001CEDE6 /* VideoPlayerFooter.swift in Sources */,
 				889AF9342C50ECEE001CEDE6 /* PlayButton.swift in Sources */,
 				887E82B12CD8FD8800B196EA /* Notification.swift in Sources */,
 				889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */,
@@ -2385,7 +2380,6 @@
 				88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,
 				88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */,
 				881F57432C4A830300559BF9 /* OrientationManager.swift in Sources */,
-				8804A3F42B8B8D6E00D3F4F1 /* VideoPlayerFooter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

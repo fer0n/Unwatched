@@ -15,11 +15,11 @@ struct SleepTimer: View {
     @State var slider: UISlider?
     #endif
     @State var hapticToggle: Bool = false
-    var viewModel: SleepTimerViewModel
+    @Binding var viewModel: SleepTimerViewModel
 
-    init(viewModel: SleepTimerViewModel, onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
-        viewModel.onEnded = onEnded
-        self.viewModel = viewModel
+    init(viewModel: Binding<SleepTimerViewModel>, onEnded: @escaping (_ fadeOutSeconds: Double?) -> Void) {
+        viewModel.wrappedValue.onEnded = onEnded
+        self._viewModel = viewModel
     }
 
     var accessibilityLabel: String {
@@ -45,7 +45,7 @@ struct SleepTimer: View {
         } label: {
             HStack(alignment: .center, spacing: 2) {
                 Text(viewModel.titleText)
-                Image(systemName: viewModel.remainingSeconds <= 0 ? "moon.zzz.fill" : "moon.zzz.fill")
+                Image(systemName: "moon.zzz.fill")
                     .contentTransition(.symbolEffect(.replace))
             }
         }
@@ -103,6 +103,6 @@ struct SleepTimer: View {
 }
 
 #Preview {
-    SleepTimer(viewModel: SleepTimerViewModel(), onEnded: { _ in })
+    SleepTimer(viewModel: .constant(SleepTimerViewModel()), onEnded: { _ in })
         .environment(PlayerManager())
 }

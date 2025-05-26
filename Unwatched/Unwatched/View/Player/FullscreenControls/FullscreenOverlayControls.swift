@@ -45,7 +45,7 @@ struct FullscreenOverlayControls: View {
                         .scaleEffect(phase == 1 ? 1 : 0.75)
                         .opacity(phase == 1 ? 1 : 0)
                 } animation: { _ in
-                    .easeInOut(duration: 0.2)
+                    .easeInOut(duration: 0.15)
                 }
                 .fontWeight(overlayVM.icon.fontWeight)
                 .symbolRenderingMode(.palette)

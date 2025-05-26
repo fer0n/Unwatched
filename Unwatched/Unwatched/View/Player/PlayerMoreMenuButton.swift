@@ -14,8 +14,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     @State var flashSymbol: String?
 
     @State var showDeferDateSelector: Bool = false
+    @State var sleepTimerVM: SleepTimerViewModel
 
-    var sleepTimerVM: SleepTimerViewModel
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var extended = false
     var isCircleVariant = false
@@ -23,10 +23,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     var body: some View {
         Menu {
-            ReloadPlayerButton()
-            Divider()
+            SleepTimer(viewModel: $sleepTimerVM, onEnded: player.onSleepTimerEnded)
 
-            SleepTimer(viewModel: sleepTimerVM, onEnded: player.onSleepTimerEnded)
             if let video = player.video {
                 CopyUrlOptions(
                     video: video,
@@ -40,12 +38,16 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             bookmarkButton
             deferDateButton
 
-            if let video = player.video, let url = video.url {
-                Divider()
-                if extended {
-                    ExtendedPlayerActions(markVideoWatched: markVideoWatched)
-                }
+            Divider()
+            if extended {
+                ExtendedPlayerActions(markVideoWatched: markVideoWatched)
+            }
 
+            Divider()
+            ReloadPlayerButton()
+            Divider()
+
+            if let url = player.video?.url {
                 Button {
                     openUrl(url)
                 } label: {
@@ -54,7 +56,6 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         .padding(5)
                 }
             }
-
         } label: {
             self.contentImage(Image(systemName: systemName))
                 .contentTransition(.symbolEffect(.replace))

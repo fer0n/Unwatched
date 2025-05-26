@@ -12,7 +12,7 @@ struct FullscreenPlayerControls: View {
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var arrowEdge: Edge
-    var sleepTimerVM: SleepTimerViewModel
+    @State var sleepTimerVM: SleepTimerViewModel
     let isLeft: Bool
 
     var body: some View {
