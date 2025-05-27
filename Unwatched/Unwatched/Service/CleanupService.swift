@@ -16,7 +16,7 @@ struct CleanupService {
         RemovedDuplicatesInfo,
         Never
     > {
-        Logger.log.info("cleanupDuplicatesAndInboxDate")
+        Log.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
             let repo = CleanupActor(modelContainer: DataProvider.shared.container)
             let info = await repo.removeDuplicates(
@@ -68,7 +68,7 @@ struct CleanupService {
     func cleanupInboxEntryDates() {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
         guard let entries = try? modelContext.fetch(fetch) else {
-            Logger.log.info("No inbox entries to cleanup dates")
+            Log.info("No inbox entries to cleanup dates")
             return
         }
         for entry in entries {
@@ -84,10 +84,10 @@ struct CleanupService {
         duplicateInfo = RemovedDuplicatesInfo()
 
         if quickCheck && !hasDuplicateRecentVideos() {
-            Logger.log.info("Has duplicate inbox entries")
+            Log.info("Has duplicate inbox entries")
             return duplicateInfo
         }
-        Logger.log.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
+        Log.info("removing duplicates now, \(videoOnly ? "only videos" : "all")")
 
         if !videoOnly {
             removeSubscriptionDuplicates()

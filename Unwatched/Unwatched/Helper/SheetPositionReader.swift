@@ -84,17 +84,17 @@ import UnwatchedShared
     }
 
     func setDetentMiniPlayer() {
-        Logger.log.info("setDetentMiniPlayer()")
+        Log.info("setDetentMiniPlayer()")
         selectedDetent = .height(maxSheetHeight)
     }
 
     func setDetentVideoPlayer() {
-        Logger.log.info("setDetentVideoPlayer()")
+        Log.info("setDetentVideoPlayer()")
         selectedDetent = .height(playerControlHeight)
     }
 
     func setDetentMinimumSheet() {
-        Logger.log.info("setDetentMinimumSheet()")
+        Log.info("setDetentMinimumSheet()")
         selectedDetent = .height(Const.minSheetDetent)
     }
 

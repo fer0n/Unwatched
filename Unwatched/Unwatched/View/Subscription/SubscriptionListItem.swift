@@ -13,7 +13,7 @@ struct SubscriptionListItem: View {
 
     func deleteSubscription() {
         guard let id = subscription.persistentId else {
-            Logger.log.info("No id to delete subscription")
+            Log.info("No id to delete subscription")
             return
         }
         let task = SubscriptionService.deleteSubscriptions(

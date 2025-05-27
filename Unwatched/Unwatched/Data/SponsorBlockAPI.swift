@@ -34,7 +34,7 @@ struct SponsorBlockAPI {
         var result = [SendableChapter]()
         for segment in segments {
             guard let startTime = segment.segment.first else {
-                Logger.log.warning("Start time for sponsored segment could not be found")
+                Log.warning("Start time for sponsored segment could not be found")
                 continue
             }
             let endTime = segment.segment.last

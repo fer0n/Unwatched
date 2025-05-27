@@ -27,13 +27,13 @@ struct VideoCrawler {
     }
 
     static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
-        Logger.log.info("loadVideosFromRSS \(url)")
+        Log.info("loadVideosFromRSS \(url)")
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
         return rssParserDelegate.videos
     }
 
     static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
-        Logger.log.info("loadSubscriptionFromRSS \(feedUrl)")
+        Log.info("loadSubscriptionFromRSS \(feedUrl)")
         let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0)
         if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
@@ -46,7 +46,7 @@ struct VideoCrawler {
             print("subscriptionInfo", subscriptionInfo)
             return subscriptionInfo
         }
-        Logger.log.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")
+        Log.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 

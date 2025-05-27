@@ -14,7 +14,7 @@ extension UserDataService {
             if let value = UserDefaults.standard.object(forKey: key) {
                 result[key] = AnyCodable(value)
             } else {
-                Logger.log.warning("Encoding settings key not set/found: \(key)")
+                Log.warning("Encoding settings key not set/found: \(key)")
             }
         }
         return result

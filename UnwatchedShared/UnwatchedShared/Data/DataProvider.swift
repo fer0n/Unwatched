@@ -16,7 +16,7 @@ public final class DataProvider: Sendable {
     public static let shared = DataProvider()
     
     public let container: ModelContainer = {        
-        Logger.log.info("getModelContainer")
+        Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
             enableIcloudSync = true
@@ -34,7 +34,7 @@ public final class DataProvider: Sendable {
             cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
         
-        Logger.log.info("getModelContainer: config set")
+        Log.info("getModelContainer: config set")
 
         do {
             do {
@@ -43,17 +43,17 @@ public final class DataProvider: Sendable {
                     migrationPlan: UnwatchedMigrationPlan.self,
                     configurations: [config]
                 )
-                Logger.log.info("getModelContainer: setting UndoManager")
+                Log.info("getModelContainer: setting UndoManager")
                 Task { @MainActor in
                     container.mainContext.undoManager = UndoManager()
                 }
                 return container
             } catch {
-                Logger.log.error("getModelContainer error: \(error)")
+                Log.error("getModelContainer error: \(error)")
             }
 
             // workaround for migration (disable sync for initial launch)
-            Logger.log.info("getModelContainer: fallback")
+            Log.info("getModelContainer: fallback")
             let config = ModelConfiguration(
                 schema: DataProvider.schema,
                 isStoredInMemoryOnly: false,

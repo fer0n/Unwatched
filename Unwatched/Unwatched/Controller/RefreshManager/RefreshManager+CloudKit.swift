@@ -16,7 +16,7 @@ extension RefreshManager {
             return
         }
 
-        Logger.log.info("iCloud sync: Setting up sync notification")
+        Log.info("iCloud sync: Setting up sync notification")
         NotificationCenter.default.publisher(for: NSPersistentCloudKitContainer.eventChangedNotification)
             .sink { [weak self] notification in
                 guard let self else { return }
@@ -51,12 +51,12 @@ extension RefreshManager {
     }
 
     func cancelCloudKitListener() {
-        Logger.log.info("iCloud sync: cancelling sync notification")
+        Log.info("iCloud sync: cancelling sync notification")
         cancellables.removeAll()
     }
 
     func handleIcloudSyncDone() async {
-        Logger.log.info("iCloud sync: handleIcloudSyncDone")
+        Log.info("iCloud sync: handleIcloudSyncDone")
         let task = Task { @MainActor in
             self.isSyncingIcloud = false
         }
@@ -84,7 +84,7 @@ extension RefreshManager {
         guard enableIcloudSync else {
             return
         }
-        Logger.log.info("quickCleanup")
+        Log.info("quickCleanup")
 
         let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: true)
         _ = await task.value

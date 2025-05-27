@@ -18,7 +18,7 @@ public struct ImageService {
         for info in cache.values {
             let imageCache = CachedImage(info.url, imageData: info.data)
             context.insert(imageCache)
-            Logger.log.info("saved image with URL: \(info.url)")
+            Log.info("saved image with URL: \(info.url)")
 
         }
 

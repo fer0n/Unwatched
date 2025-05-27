@@ -158,7 +158,7 @@ struct BackupView: View {
             case .success(let file):
                 fileToBeRestored = IdentifiableURL(url: file)
             case .failure(let error):
-                Logger.log.error("\(error.localizedDescription)")
+                Log.error("\(error.localizedDescription)")
             }
         }
         .task(id: isDeletingEverythingTask) {
@@ -173,7 +173,7 @@ struct BackupView: View {
 
     func deleteFile(at offsets: IndexSet) {
         guard let index = offsets.first else {
-            Logger.log.error("deleteFile: offsets is empty")
+            Log.error("deleteFile: offsets is empty")
             return
         }
 
@@ -183,7 +183,7 @@ struct BackupView: View {
             fileNames.remove(atOffsets: offsets)
             getAllIcloudFiles()
         } catch {
-            Logger.log.error("deleteFile: \(error)")
+            Log.error("deleteFile: \(error)")
         }
     }
 
@@ -215,7 +215,7 @@ struct BackupView: View {
             let data = try UserDataService.exportUserData()
             return data
         } catch {
-            Logger.log.error("Export failed: \(error)")
+            Log.error("Export failed: \(error)")
             return nil
         }
     }
@@ -226,7 +226,7 @@ struct BackupView: View {
             try await task.value
             self.getAllIcloudFiles()
         } catch {
-            Logger.log.error("\(error)")
+            Log.error("\(error)")
         }
     }
 
@@ -246,7 +246,7 @@ struct BackupView: View {
     func getAllIcloudFiles() {
         let fileManager = FileManager.default
         guard let backupsUrl = UserDataService.getBackupsDirectory() else {
-            Logger.log.warning("no documents url")
+            Log.warning("no documents url")
             hasicloudDirectory = false
             return
         }
@@ -262,7 +262,7 @@ struct BackupView: View {
                 }
                 fileNames = Array(sortedFileUrls.prefix(5))
             } catch {
-                Logger.log.error("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
+                Log.error("Error while enumerating files \(backupsUrl.path): \(error.localizedDescription)")
             }
         }
     }
@@ -283,18 +283,18 @@ struct BackupView: View {
     func doWithFileData(_ filePath: URL,
                         after: Task<(), Never>? = nil,
                         action: @escaping (Data) -> Void) {
-        Logger.log.info("importFile: \(filePath)")
+        Log.info("importFile: \(filePath)")
         let isSecureAccess = filePath.startAccessingSecurityScopedResource()
 
         Task {
             await after?.value
-            Logger.log.info("after task done")
+            Log.info("after task done")
             do {
                 let data = try Data(contentsOf: filePath)
-                Logger.log.info("data is there")
+                Log.info("data is there")
                 action(data)
             } catch {
-                Logger.log.error("error when importing: \(error)")
+                Log.error("error when importing: \(error)")
             }
             if isSecureAccess {
                 filePath.stopAccessingSecurityScopedResource()

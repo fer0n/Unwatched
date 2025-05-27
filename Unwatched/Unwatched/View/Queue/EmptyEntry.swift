@@ -97,7 +97,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                 if let queueEntry = entry as? QueueEntry {
                     if video.queueEntry == nil || force {
                         video.queueEntry = queueEntry
-                        Logger.log.info("Reconnected video to queue entry")
+                        Log.info("Reconnected video to queue entry")
                     } else {
                         // there already is an entry, but it's not this one
                         // which means it's a duplicate or is still syncing
@@ -106,7 +106,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                 if let inboxEntry = entry as? InboxEntry {
                     if video.inboxEntry == nil || force {
                         video.inboxEntry = inboxEntry
-                        Logger.log.info("Reconnected video to inbox entry")
+                        Log.info("Reconnected video to inbox entry")
                     } else {
                         // there already is an entry, but it's not this one
                         // which means it's a duplicate or is still syncing
@@ -115,7 +115,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
                 try? modelContext.save()
             }
         } else {
-            Logger.log.info("Couldn't reconnect video to entry")
+            Log.info("Couldn't reconnect video to entry")
         }
 
         if !force {
@@ -139,7 +139,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
     }
 
     func clearEntry() {
-        Logger.log.info("Clear Entry")
+        Log.info("Clear Entry")
         withAnimation {
             if let queueEntry = entry as? QueueEntry {
                 VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)

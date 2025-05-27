@@ -43,7 +43,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     }
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        Logger.log.warning("Memory warning received")
+        Log.warning("Memory warning received")
         NotificationManager.notifyRun(.warning, "Memory Warning")
     }
 
@@ -52,7 +52,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        Logger.log.info("Received in-App notification: \(notification)")
+        Log.info("Received in-App notification: \(notification)")
         handleDeferedNotification(notification)
         completionHandler([])
     }
@@ -81,9 +81,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             Task { @MainActor in
                 NavigationManager.shared.navigateTo(tab)
             }
-            Logger.log.info("Notification destination: \(destination)")
+            Log.info("Notification destination: \(destination)")
         } else {
-            Logger.log.info("Tap on notification without destination")
+            Log.info("Tap on notification without destination")
         }
     }
 
@@ -104,7 +104,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         let placement: VideoPlacementArea? = tab == .queue ? .queue : tab == .inbox ? .inbox : nil
 
         guard let youtubeId = userInfo[Const.notificationVideoId] as? String else {
-            Logger.log.warning("Notification action cannot function")
+            Log.warning("Notification action cannot function")
             return nil
         }
         return (youtubeId, placement)
@@ -112,7 +112,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
     nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {
         guard let (youtubeId, placement) = getValuesFromNotification(response.notification) else {
-            Logger.log.warning("handleNotificationActions: Cannot get values from notification")
+            Log.warning("handleNotificationActions: Cannot get values from notification")
             return
         }
 
@@ -161,15 +161,15 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     }
 
     nonisolated func handleBackgroundRefresh() {
-        Logger.log.info("register handleBackgroundRefresh()")
+        Log.info("register handleBackgroundRefresh()")
         BGTaskScheduler.shared.register(forTaskWithIdentifier: Const.backgroundAppRefreshId, using: nil) { task in
             task.expirationHandler = {
-                Logger.log.info("experied")
+                Log.info("experied")
                 NotificationManager.notifyRun(.error, "Experied")
             }
 
             Task { @MainActor in
-                Logger.log.info("handleBackgroundVideoRefresh")
+                Log.info("handleBackgroundVideoRefresh")
                 await RefreshManager.shared.handleBackgroundVideoRefresh()
 
                 task.setTaskCompleted(success: true)

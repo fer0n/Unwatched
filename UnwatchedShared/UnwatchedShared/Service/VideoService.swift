@@ -51,7 +51,7 @@ public struct VideoService {
                 queueEntry.order = index
             }
         } catch {
-            Logger.log.error("No queue entry found to delete")
+            Log.error("No queue entry found to delete")
         }
     }
 }

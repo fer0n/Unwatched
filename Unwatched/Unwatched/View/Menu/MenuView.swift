@@ -98,7 +98,7 @@ struct MenuView: View {
 
     @MainActor
     func handleTabChanged(_ newTab: NavigationTab, _ proxy: ScrollViewProxy) {
-        Logger.log.info("handleTabChanged \(newTab.rawValue)")
+        Log.info("handleTabChanged \(newTab.rawValue)")
         if newTab == navManager.tab {
             let isTopView = navManager.handleTappedTwice()
             Task { @MainActor in

@@ -14,7 +14,7 @@ struct HelpView: View {
 
             MyForm {
                 MySection(footer: "pleaseCheckFaq") {
-                    Link(destination: UrlService.getEmailUrl(body: HelpView.versionInfo)) {
+                    Link(destination: UrlService.getEmailUrl(body: Device.versionInfo)) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
                 }
@@ -25,13 +25,6 @@ struct HelpView: View {
             }
         }
         .myNavigationTitle("emailAndFaq")
-    }
-
-    static var versionInfo: String {
-        """
-        \(Device.systemVersion)
-        Unwatched \(VersionAndBuildNumber.both)
-        """
     }
 }
 

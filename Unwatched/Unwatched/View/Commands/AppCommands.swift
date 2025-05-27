@@ -73,7 +73,7 @@ struct AppCommands: Commands {
             }
 
             Section {
-                Link(destination: UrlService.getEmailUrl(body: HelpView.versionInfo)) {
+                Link(destination: UrlService.getEmailUrl(body: Device.versionInfo)) {
                     Text("contactUs")
                 }
 

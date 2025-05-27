@@ -81,7 +81,7 @@ extension VideoActor {
     }
 
     func detectShortAndAdjustEntries(_ video: Video) async {
-        Logger.log.info("detectShortAndAdjustEntries: \(video.title)")
+        Log.info("detectShortAndAdjustEntries: \(video.title)")
         let (isYtShort, _) = await VideoActor.isYtShort(video.thumbnailUrl)
         video.isYtShort = isYtShort
         if isYtShort == true && (video.subscription?.shortsSetting.shouldHide() ?? false) {
@@ -93,7 +93,7 @@ extension VideoActor {
     }
 
     func updateVideoAndGetImageToDelete(_ video: Video, _ updatedVideo: SendableVideo) -> URL? {
-        Logger.log.info("updateExistingVideo: \(video.title)")
+        Log.info("updateExistingVideo: \(video.title)")
         video.title = updatedVideo.title
         video.updatedDate = updatedVideo.updatedDate
 
@@ -138,7 +138,7 @@ extension VideoActor {
     func updateRecentVideoDate(_ subscription: Subscription, _ date: Date?) {
         if let mostRecentDate = date, date != nil,
            date ?? .distantPast > subscription.mostRecentVideoDate ?? .distantPast {
-            Logger.log.info("updateRecentVideoDate \(mostRecentDate)")
+            Log.info("updateRecentVideoDate \(mostRecentDate)")
             subscription.mostRecentVideoDate = mostRecentDate
         }
     }
@@ -172,7 +172,7 @@ extension VideoActor {
     }
 
     func handleVideoPlacement(_ videos: [Video], placement: VideoPlacement) {
-        Logger.log.info("handleVideoPlacement")
+        Log.info("handleVideoPlacement")
         switch placement {
         case .inbox:
             addVideosTo(videos, placement: .inbox)
@@ -248,7 +248,7 @@ extension VideoActor {
                 )
             try modelContext.save()
         } else {
-            Logger.log.info("clearEntries: model not found")
+            Log.info("clearEntries: model not found")
         }
     }
 
@@ -350,7 +350,7 @@ extension VideoActor {
                 queueEntry.order = index
             }
         } catch {
-            Logger.log.error("insertQueueEntries: \(error)")
+            Log.error("insertQueueEntries: \(error)")
         }
     }
 
@@ -361,7 +361,7 @@ extension VideoActor {
         case .queue:
             clearQueue(direction, index: index)
         @unknown default:
-            Logger.log.warning("Clear list value not implemented")
+            Log.warning("Clear list value not implemented")
         }
         try modelContext.save()
     }
@@ -409,7 +409,7 @@ extension VideoActor {
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.deferDate != nil && $0.deferDate ?? past <= now })
         let videos = try? modelContext.fetch(fetch)
 
-        Logger.log.info("consumeDeferredVideos: \(videos?.count ?? 0)")
+        Log.info("consumeDeferredVideos: \(videos?.count ?? 0)")
 
         let defaultPlacement = getDefaultVideoPlacement()
 

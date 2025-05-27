@@ -44,7 +44,7 @@ struct QueueVideoButton: View {
             from: videoData,
             modelContext: modelContext
         ) else {
-            Logger.log.error("addToTopQueue: no video")
+            Log.error("addToTopQueue: no video")
             return
         }
         hapticToggle.toggle()

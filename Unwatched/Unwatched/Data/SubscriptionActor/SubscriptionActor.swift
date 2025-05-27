@@ -35,7 +35,7 @@ actor SubscriptionActor {
         // check if it already exists, if it does, subscribe
         if let id = subsciptionId, let sub = self[id, as: Subscription.self] {
             unarchive(sub)
-            Logger.log.info("successfully subscribed via subId")
+            Log.info("successfully subscribed via subId")
             try modelContext.save()
             return
         }
@@ -62,7 +62,7 @@ actor SubscriptionActor {
             return
         }
         guard let subscriptionInfo = info else {
-            Logger.log.info("no channel info here")
+            Log.info("no channel info here")
             return
         }
         // if it doesn't exist get url and run the regular subscription flow
@@ -100,7 +100,7 @@ actor SubscriptionActor {
                             return (subState, sendableSub)
                         }
                     } else {
-                        Logger.log.warning("channel info has no url")
+                        Log.warning("channel info has no url")
                         throw SubscriptionError.noInfoFoundToSubscribeTo
                     }
                 }
@@ -141,14 +141,14 @@ actor SubscriptionActor {
         let feedUrl = try await SubscriptionActor.getChannelFeedFromUrl(url: url,
                                                                         userName: userName,
                                                                         playlistId: playlistId)
-        Logger.log.info("getSubscription, feed: \(feedUrl.absoluteString)")
+        Log.info("getSubscription, feed: \(feedUrl.absoluteString)")
         var sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: feedUrl)
         sendableSub.youtubeUserName = sendableSub.youtubeUserName ?? userName
         return sendableSub
     }
 
     static func getChannelFeedFromUrl(url: URL, userName: String?, playlistId: String?) async throws -> URL {
-        Logger.log.info("getChannelFeedFromUrl: \(url.absoluteString)")
+        Log.info("getChannelFeedFromUrl: \(url.absoluteString)")
         if UrlService.isYoutubeFeedUrl(url: url) {
             return url
         }
@@ -192,7 +192,7 @@ actor SubscriptionActor {
             $0.isArchived == true
         })
         guard let subs = try? modelContext.fetch(fetch) else {
-            Logger.log.info("cleanupArchivedSubscriptions: no subscriptions found")
+            Log.info("cleanupArchivedSubscriptions: no subscriptions found")
             return
         }
         try deleteSubscriptions(subs)

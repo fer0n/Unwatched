@@ -64,7 +64,7 @@ struct SubscriptionService {
             $0.isArchived == false
         })
         guard let subs = try? modelContext.fetch(fetch) else {
-            Logger.log.info("softUnsubscribeAll: no subscriptions found")
+            Log.info("softUnsubscribeAll: no subscriptions found")
             return
         }
         for sub in subs {

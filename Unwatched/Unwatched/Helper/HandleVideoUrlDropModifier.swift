@@ -24,7 +24,7 @@ struct HandleVideoUrlDropModifier: ViewModifier {
     }
 
     func handleUrlDrop(_ items: [URL], _ location: CGPoint) -> Bool {
-        Logger.log.info("handleUrlDrop \(items)")
+        Log.info("handleUrlDrop \(items)")
         let task = VideoService.addForeignUrls(items, in: placement, at: 0)
         if placement == .queue {
             player.loadTopmostVideoFromQueue(after: task)
@@ -63,7 +63,7 @@ struct HandleDynamicVideoURLDropView<Content: DynamicViewContent>: DynamicViewCo
     }
 
     func handleUrlDrop(_ items: [URL], _ index: Int) {
-        Logger.log.info("handleUrlDrop \(items)")
+        Log.info("handleUrlDrop \(items)")
         let task = VideoService.addForeignUrls(items, in: placement, at: index)
         if placement == .queue && index == 0 {
             player.loadTopmostVideoFromQueue(after: task)

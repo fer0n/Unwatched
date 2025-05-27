@@ -30,7 +30,7 @@ struct AirPlayView: View {
     var body: some View {
         Button {
             guard let button = routePickerView.subviews.first(where: { $0 is UIButton }) else {
-                Logger.log.info("AirPlay button not found")
+                Log.info("AirPlay button not found")
                 return
             }
             hapticToggle.toggle()

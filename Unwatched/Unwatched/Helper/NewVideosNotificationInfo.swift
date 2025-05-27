@@ -74,7 +74,7 @@ struct NewVideosNotificationInfo {
                 guard let video = info.video,
                       video.thumbnailData == nil,
                       let imageUrl = video.thumbnailUrl else {
-                    Logger.log.info("No video/imageUrl when trying to load image data")
+                    Log.info("No video/imageUrl when trying to load image data")
                     continue
                 }
 
@@ -83,7 +83,7 @@ struct NewVideosNotificationInfo {
                         let data = try await ImageService.loadImageData(url: imageUrl)
                         return (index, data)
                     } catch {
-                        Logger.log.info("Failed to load image data for \(info.title): \(error)")
+                        Log.info("Failed to load image data for \(info.title): \(error)")
                         return (index, nil)
                     }
                 }

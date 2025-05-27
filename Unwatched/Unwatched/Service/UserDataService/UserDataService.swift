@@ -29,7 +29,7 @@ struct UserDataService {
 
         let fetchVideos = getVideoFetchIfMinimal()
         let fetched = fetchMapExportable(Video.self, fetchVideos)
-        Logger.log.info("fetched \(fetched.count)")
+        Log.info("fetched \(fetched.count)")
         backup.videos = fetched
         if fetchVideos != nil {
             _ = fetchMapExportable(Video.self)
@@ -45,7 +45,7 @@ struct UserDataService {
         backup.subscriptions = subs.filter({ !$0.isArchived || !$0.videosIds.isEmpty })
 
         if backup.isEmpty {
-            Logger.log.info("checkIfBackupEmpty")
+            Log.info("checkIfBackupEmpty")
             throw UserDataServiceError.noDataToBackupFound
         }
 
@@ -60,7 +60,7 @@ struct UserDataService {
                 return nil
             }
             let includeWatched = !UserDefaults.standard.bool(forKey: Const.exludeWatchHistoryInBackup)
-            Logger.log.info("returning fetch")
+            Log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
                     || (includeWatched && $0.watchedDate != nil)
@@ -103,7 +103,7 @@ struct UserDataService {
 
     // loads user data from .unwatchedbackup files
     static func importBackup(_ data: Data, settingsOnly: Bool = false) {
-        Logger.log.info("importBackup, userdataservice")
+        Log.info("importBackup, userdataservice")
         let decoder = JSONDecoder()
 
         do {
@@ -113,7 +113,7 @@ struct UserDataService {
                 try restoreVideoData(from: backup)
             }
         } catch {
-            Logger.log.error("error decoding: \(error)")
+            Log.error("error decoding: \(error)")
         }
     }
 
@@ -155,7 +155,7 @@ struct UserDataService {
         do {
             return try UserDataService.exportUserData()
         } catch {
-            Logger.log.error("couldn't export: \(error)")
+            Log.error("couldn't export: \(error)")
             throw error
         }
     }
@@ -178,7 +178,7 @@ struct UserDataService {
                 let data = try self.exportFile()
                 try data.write(to: directory)
             } catch {
-                Logger.log.error("saveToIcloud: \(error)")
+                Log.error("saveToIcloud: \(error)")
                 throw error
             }
         }
@@ -201,10 +201,10 @@ struct UserDataService {
             let files = fileNames.map { directory.appendingPathComponent($0) }
 
             let toDelete = filterOutKeeperFiles(files)
-            Logger.log.info("deleting: \(toDelete.count) files")
+            Log.info("deleting: \(toDelete.count) files")
             return toDelete
         } catch {
-            Logger.log.error("getFilesToDelete: \(error)")
+            Log.error("getFilesToDelete: \(error)")
             return []
         }
     }
@@ -252,7 +252,7 @@ struct UserDataService {
         do {
             try FileManager.default.removeItem(at: filepath)
         } catch {
-            Logger.log.error("deleteFile: \(error)")
+            Log.error("deleteFile: \(error)")
         }
     }
 
@@ -260,20 +260,20 @@ struct UserDataService {
         if let containerUrl = FileManager.default.url(
             forUbiquityContainerIdentifier: nil
         )?.appendingPathComponent("Documents/Backups") {
-            Logger.log.info("containerUrl \(containerUrl)")
+            Log.info("containerUrl \(containerUrl)")
             if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
                 do {
-                    Logger.log.info("create directory")
+                    Log.info("create directory")
                     try FileManager.default.createDirectory(
                         at: containerUrl, withIntermediateDirectories: true, attributes: nil
                     )
                 } catch {
-                    Logger.log.error("\(error.localizedDescription)")
+                    Log.error("\(error.localizedDescription)")
                 }
             }
             return containerUrl
         }
-        Logger.log.info("backupsDirectory: nil")
+        Log.info("backupsDirectory: nil")
         return nil
     }
 

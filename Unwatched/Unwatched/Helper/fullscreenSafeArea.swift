@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 /**
  Adjusts a fullscreen video in 18/9 to avoid cutting into the notch/dynamic island depending on the device

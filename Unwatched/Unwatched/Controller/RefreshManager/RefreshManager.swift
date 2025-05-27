@@ -83,7 +83,7 @@ actor RefreshActor {
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
         let canStartLoading = await startLoading()
         guard canStartLoading else {
-            Logger.log.info("currently refreshing, stopping now")
+            Log.info("currently refreshing, stopping now")
             return
         }
 
@@ -100,26 +100,26 @@ actor RefreshActor {
             )
             _ = try await task.value
         } catch {
-            Logger.log.info("Error during refresh: \(error)")
+            Log.info("Error during refresh: \(error)")
         }
 
         await cleanup(hardRefresh: hardRefresh)
     }
 
     func handleAutoBackup() {
-        Logger.log.info("handleAutoBackup")
+        Log.info("handleAutoBackup")
         let lastAutoBackupDate = UserDefaults.standard.object(forKey: Const.lastAutoBackupDate) as? Date
         if let lastAutoBackupDate = lastAutoBackupDate {
             let calendar = Calendar.current
             if calendar.isDateInToday(lastAutoBackupDate) {
-                Logger.log.info("last backup was today")
+                Log.info("last backup was today")
                 return
             }
         }
 
         let automaticBackups = UserDefaults.standard.object(forKey: Const.automaticBackups) as? Bool ?? true
         guard automaticBackups == true else {
-            Logger.log.info("no auto backup on")
+            Log.info("no auto backup on")
             return
         }
 
@@ -127,7 +127,7 @@ actor RefreshActor {
         Task {
             try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoBackupDate)
-            Logger.log.info("saved backup")
+            Log.info("saved backup")
 
             // Auto delete
             if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
@@ -148,7 +148,7 @@ actor RefreshActor {
         if cancellables.isEmpty {
             setupCloudKitListener()
         }
-        Logger.log.info("iCloud sync: refreshOnStartup started")
+        Log.info("iCloud sync: refreshOnStartup started")
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
 
@@ -176,7 +176,7 @@ actor RefreshActor {
                         await executeAutoRefresh()
                     }
                 } catch {
-                    Logger.log.info("error: \(error)")
+                    Log.info("error: \(error)")
                 }
             }
         } else {
@@ -188,7 +188,7 @@ actor RefreshActor {
     }
 
     func handleBecameInactive() {
-        Logger.log.info("handleBecameInactive")
+        Log.info("handleBecameInactive")
         cancelCloudKitListener()
         syncDoneTask?.cancel()
         autoRefreshTask?.cancel()
@@ -206,7 +206,7 @@ actor RefreshActor {
     }
 
     func executeAutoRefresh() async {
-        Logger.log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
+        Log.info("iCloud sync: executeRefreshOnStartup refreshOnStartup")
         let autoRefresh = UserDefaults.standard.object(forKey: Const.autoRefresh) as? Bool ?? true
 
         if autoRefresh {
@@ -214,7 +214,7 @@ actor RefreshActor {
             let shouldRefresh = lastAutoRefreshDate == nil ||
                 lastAutoRefreshDate!.timeIntervalSinceNow < -Const.autoRefreshIntervalSeconds
             if shouldRefresh {
-                Logger.log.info("refreshing now")
+                Log.info("refreshing now")
                 await self.refreshAll()
             }
             await scheduleRepeatingRefresh()
@@ -224,10 +224,10 @@ actor RefreshActor {
     func scheduleRepeatingRefresh() async {
         do {
             try await Task.sleep(s: Const.autoRefreshIntervalSeconds)
-            Logger.log.info("scheduleRepeatingRefresh now")
+            Log.info("scheduleRepeatingRefresh now")
             await self.executeAutoRefresh()
         } catch {
-            Logger.log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
+            Log.info("scheduleRepeatingRefresh cancelled/error: \(error)")
         }
     }
 }
@@ -236,15 +236,15 @@ actor RefreshActor {
 extension RefreshManager {
     #if os(iOS)
     func scheduleVideoRefresh() {
-        Logger.log.info("scheduleVideoRefresh()")
+        Log.info("scheduleVideoRefresh()")
         let request = BGAppRefreshTaskRequest(identifier: Const.backgroundAppRefreshId)
         request.earliestBeginDate = Date(timeIntervalSinceNow: Const.earliestBackgroundBeginSeconds)
         do {
             try BGTaskScheduler.shared.submit(request)
         } catch {
-            Logger.log.info("Error scheduleVideoRefresh: \(error)")
+            Log.info("Error scheduleVideoRefresh: \(error)")
         }
-        Logger.log.info("Scheduled background task") // Breakpoint 1 HERE
+        Log.info("Scheduled background task") // Breakpoint 1 HERE
 
         // swiftlint:disable:next line_length
         // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"com.pentlandFirth.Unwatched.refreshVideos"]
@@ -264,7 +264,7 @@ extension RefreshManager {
 
             let canStartLoading = await refreshActor.startLoading()
             guard canStartLoading else {
-                Logger.log.info("Already refreshing")
+                Log.info("Already refreshing")
                 NotificationManager.notifyRun(.abort)
                 return
             }

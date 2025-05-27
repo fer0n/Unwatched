@@ -5,7 +5,7 @@
 
 import SwiftUI
 import WebKit
-import OSLog
+import UnwatchedShared
 
 @Observable class BrowserManager {
     var info: SubscriptionInfo?
@@ -53,12 +53,12 @@ import OSLog
             webView.evaluateJavaScript(getCurrentTimeScript()) { (result, error) in
                 var currentTimeResult: Double?
                 if let error {
-                    Logger.log.error("JavaScript evaluation error: \(error)")
+                    Log.error("JavaScript evaluation error: \(error)")
                 } else if let currentTime = result as? Double {
-                    Logger.log.info("Current time: \(currentTime)")
+                    Log.info("Current time: \(currentTime)")
                     currentTimeResult = currentTime
                 } else {
-                    Logger.log.warning("Could not get current time from video")
+                    Log.warning("Could not get current time from video")
                 }
                 continuation.resume(returning: currentTimeResult)
             }

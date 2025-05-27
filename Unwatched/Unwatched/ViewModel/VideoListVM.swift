@@ -36,7 +36,7 @@ import OSLog
 
     @MainActor
     private func fetchVideos(skip: Int = 0, limit: Int? = nil) async {
-        Logger.log.info("VideoListVM: fetchVideos")
+        Log.info("VideoListVM: fetchVideos")
         isLoading = true
         let newVideos = await VideoService.getSendableVideos(
             filter,
@@ -74,11 +74,11 @@ import OSLog
 
     @MainActor
     func updateVideos(_ ids: Set<PersistentIdentifier>) {
-        Logger.log.info("updateVideos: \(ids.count)")
+        Log.info("updateVideos: \(ids.count)")
         let modelContext = DataProvider.mainContext
         for persistentId in ids {
             guard let updatedVideo: Video = modelContext.existingModel(for: persistentId) else {
-                Logger.log.warning("updateVideo failed: no model found; removing video")
+                Log.warning("updateVideo failed: no model found; removing video")
                 withAnimation {
                     if let index = videos.firstIndex(where: { $0.persistentId == persistentId }) {
                         videos.remove(at: index)

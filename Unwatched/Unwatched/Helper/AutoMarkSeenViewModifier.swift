@@ -16,7 +16,7 @@ struct AutoMarkSeenViewModifier: ViewModifier {
             .onDisappear {
                 if autoRemoveNew, video.isNew == true {
                     guard let videoId = video.persistentId else {
-                        Logger.log.warning("AutoMarkSeenViewModifier: no videoId")
+                        Log.warning("AutoMarkSeenViewModifier: no videoId")
                         return
                     }
                     _ = withAnimation {

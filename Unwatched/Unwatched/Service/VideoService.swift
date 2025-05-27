@@ -8,14 +8,14 @@ extension VideoService {
         subscriptionIds: [PersistentIdentifier]? = nil
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
-            Logger.log.info("loadNewVideosInBg")
+            Log.info("loadNewVideosInBg")
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             do {
                 return try await repo.loadVideos(
                     subscriptionIds
                 )
             } catch {
-                Logger.log.error("\(error)")
+                Log.error("\(error)")
                 throw error
             }
         }
@@ -119,7 +119,7 @@ extension VideoService {
                 try await Task.sleep(for: .milliseconds(delay))
                 let context = DataProvider.mainContext
                 guard let model: Video = context.existingModel(for: videoModelId) else {
-                    Logger.log.warning("forceUpdateVideo: video not found")
+                    Log.warning("forceUpdateVideo: video not found")
                     return
                 }
                 withAnimation {
@@ -156,7 +156,7 @@ extension VideoService {
                 let repo = VideoActor(modelContainer: DataProvider.shared.container)
                 try await repo.clearEntries(from: videoId)
             } else {
-                Logger.log.info("Video not found")
+                Log.info("Video not found")
             }
         }
     }
@@ -215,7 +215,7 @@ extension VideoService {
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacementArea,
                                at index: Int = 1) -> Task<(), Error> {
-        Logger.log.info("addForeignUrls")
+        Log.info("addForeignUrls")
 
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
@@ -259,7 +259,7 @@ extension VideoService {
             try context.delete(model: Video.self)
             try context.save()
         } catch {
-            Logger.log.error("Failed to delete everything")
+            Log.error("Failed to delete everything")
         }
 
         _ = ImageService.deleteAllImages()
@@ -339,7 +339,7 @@ extension VideoService {
 
     @MainActor
     static func deferVideo(_ videoId: PersistentIdentifier, deferDate: Date) {
-        Logger.log.info("deferVideo: \(deferDate)")
+        Log.info("deferVideo: \(deferDate)")
         let context = DataProvider.mainContext
         let video: Video? = context.existingModel(for: videoId)
         guard let video else {

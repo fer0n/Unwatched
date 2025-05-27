@@ -13,7 +13,7 @@ extension PlayerWebView {
     @MainActor
     func loadPlayer(webView: WKWebView, startAt: Double, type: PlayerType) -> Bool {
         guard let youtubeId = player.video?.youtubeId else {
-            Logger.log.warning("loadPlayer: no youtubeId")
+            Log.warning("loadPlayer: no youtubeId")
             return false
         }
         let urlString = type == .youtube
@@ -21,7 +21,7 @@ extension PlayerWebView {
             : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt)
 
         guard let url = URL(string: urlString) else {
-            Logger.log.warning("loadPlayer: no url")
+            Log.warning("loadPlayer: no url")
             return false
         }
 
@@ -32,7 +32,7 @@ extension PlayerWebView {
 
     func getPlayScript() -> String {
         if player.unstarted {
-            Logger.log.info("PLAY: unstarted")
+            Log.info("PLAY: unstarted")
             return """
                 function attemptClick() {
                     document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
@@ -144,6 +144,7 @@ extension PlayerWebView {
         const isNonEmbedding = \(options.isNonEmbedding);
         const hijackFullscreenButton = \(options.hijackFullscreenButton);
         const fullscreenTitle = "\(options.fullscreenTitle)";
+        const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
 
         var video = null;
         let videoFindAttempts = 0;
@@ -356,7 +357,7 @@ extension PlayerWebView {
             clearInterval(timer);
             timer = setInterval(function() {
                 sendMessage("currentTime", video.currentTime);
-            }, \(Const.elapsedTimeMonitorSeconds * 1000));
+            }, timerInterval);
         }
         function stopTimer() {
             clearInterval(timer);

@@ -95,7 +95,7 @@ class SubscriptionListVM: TransactionVM<Subscription> {
         let modelContext = DataProvider.mainContext
         for persistentId in ids {
             guard let updatedSub: Subscription = modelContext.existingModel(for: persistentId) else {
-                Logger.log.warning("updateSubscription failed: no model found")
+                Log.warning("updateSubscription failed: no model found")
                 return
             }
 

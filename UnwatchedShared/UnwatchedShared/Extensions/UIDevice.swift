@@ -1,32 +1,53 @@
 import Foundation
 
-struct Device {
+public struct Device {
+    public static var version: String? {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+
+    public static var buildNumber: String {
+        if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            return " (\(build))"
+        }
+        return ""
+    }
+
+    public static var buildNumberAndVersion: String {
+        "v\(version ?? "-")\(buildNumber)"
+    }
+    
+    public static var versionInfo: String {
+        """
+        \(Device.systemVersion)
+        Unwatched \(buildNumberAndVersion)
+        """
+    }
+    
     #if os(iOS)
-    @MainActor
     static let systemVersion = "iOS \(UIDevice.current.systemVersion)"
 
     @MainActor
-    static let isIphone: Bool = {
+    public static let isIphone: Bool = {
         UIDevice.modelName.contains("iPhone")
     }()
 
     @MainActor
-    static let supportsFullscreenControls: Bool = {
+    public static let supportsFullscreenControls: Bool = {
         !UIDevice.modelName.contains("iPhone SE")
     }()
 
     @MainActor
-    static let requiresFullscreenWebWorkaround: Bool = {
+    public static let requiresFullscreenWebWorkaround: Bool = {
         !UIDevice.modelName.contains("iPhone")
     }()
 
     @MainActor
-    static let isMac: Bool = {
+    public static let isMac: Bool = {
         ProcessInfo.processInfo.isiOSAppOnMac
     }()
 
     @MainActor
-    static let deviceName: String = {
+    public static let deviceName: String = {
         if isMac {
             return "Mac"
         } else {
@@ -35,19 +56,19 @@ struct Device {
     }()
 
     #elseif os(macOS)
-    static let systemVersion = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
-    static let isIphone: Bool = false
-    static let supportsFullscreenControls: Bool = true
-    static let requiresFullscreenWebWorkaround: Bool = false
-    static let isMac: Bool = true
+    public static let systemVersion = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
+    public static let isIphone: Bool = false
+    public static let supportsFullscreenControls: Bool = true
+    public static let requiresFullscreenWebWorkaround: Bool = false
+    public static let isMac: Bool = true
 
-    static let deviceName: String = {
+    public static let deviceName: String = {
         Host.current().localizedName ?? "Mac"
     }()
     #endif
 
     @MainActor
-    static let modelName: String = {
+    public static let modelName: String = {
         #if os(iOS)
         return UIDevice.modelName
         #elseif os(macOS)

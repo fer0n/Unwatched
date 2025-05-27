@@ -85,7 +85,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
         if player.isLoading {
             // avoid setting anything before the player is ready
-            Logger.log.info("video not loaded yet – cancelling updateUIView")
+            Log.info("video not loaded yet – cancelling updateUIView")
             return
         }
 
@@ -122,7 +122,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
-        Logger.log.error("Error evaluating JavaScript: \(error)")
+        Log.error("Error evaluating JavaScript: \(error)")
         let notification = AppNotificationData(
             title: "errorOccured",
             error: error,
@@ -134,7 +134,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.playbackSpeed != (player.temporaryPlaybackSpeed ?? player.playbackSpeed) {
-            Logger.log.info("SPEED")
+            Log.info("SPEED")
             evaluateJavaScript(uiView, getSetPlaybackRateScript())
             player.previousState.playbackSpeed = player.playbackSpeed
         }
@@ -143,10 +143,10 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handlePlayPause(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.isPlaying != player.isPlaying {
             if player.isPlaying {
-                Logger.log.info("PLAY")
+                Log.info("PLAY")
                 evaluateJavaScript(uiView, getPlayScript())
             } else {
-                Logger.log.info("PAUSE")
+                Log.info("PAUSE")
                 evaluateJavaScript(uiView, getPauseScript())
             }
             player.previousState.isPlaying = player.isPlaying
@@ -156,10 +156,10 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handlePip(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
             if player.pipEnabled {
-                Logger.log.info("PIP ON")
+                Log.info("PIP ON")
                 evaluateJavaScript(uiView, getEnterPipScript())
             } else {
-                Logger.log.info("PIP OFF")
+                Log.info("PIP OFF")
                 evaluateJavaScript(uiView, getExitPipScript())
             }
             if !player.pipEnabled {
@@ -170,13 +170,13 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func handleSeek(_ prev: PreviousState, _ uiView: WKWebView) {
         if let seekAbs = player.seekAbsolute {
-            Logger.log.info("SEEK ABS")
+            Log.info("SEEK ABS")
             evaluateJavaScript(uiView, getSeekToScript(seekAbs))
             player.seekAbsolute = nil
         }
 
         if let seekRel = player.seekRelative {
-            Logger.log.info("SEEK REL")
+            Log.info("SEEK REL")
             evaluateJavaScript(uiView, getSeekRelScript(seekRel))
             player.seekRelative = nil
         }
@@ -184,7 +184,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func handleQueueVideo(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.videoId != player.video?.youtubeId {
-            Logger.log.info("CUE VIDEO: \(player.video?.title ?? "-")")
+            Log.info("CUE VIDEO: \(player.video?.title ?? "-")")
             print("\(playerType)")
             let startAt = player.getStartPosition()
 

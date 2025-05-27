@@ -49,6 +49,8 @@ struct DebugView: View {
                     }
                 }
 
+                DebugLoggerView()
+
                 MySection("userData") {
                     AsyncButton {
                         let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)

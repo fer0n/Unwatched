@@ -17,11 +17,11 @@ extension ChapterService {
         forceRefresh: Bool = false
     ) async throws -> [SendableChapter]? {
         if !shouldRefreshSponserBlock(videoId, forceRefresh) {
-            Logger.log.info("SponsorBlock: not refreshing")
+            Log.info("SponsorBlock: not refreshing")
             return nil
         }
 
-        Logger.log.info("SponsorBlock, old: \(videoChapters)")
+        Log.info("SponsorBlock, old: \(videoChapters)")
 
         let loadAllSegments = videoChapters.isEmpty
         let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, allSegments: loadAllSegments)
@@ -43,7 +43,7 @@ extension ChapterService {
             )
         }
 
-        Logger.log.info("SponsorBlock, new: \(newChapters)")
+        Log.info("SponsorBlock, new: \(newChapters)")
         return newChapters
     }
 
@@ -103,7 +103,7 @@ extension ChapterService {
     }
 
     private static func handleMissingEndTime(_ chapter: SendableChapter) -> [SendableChapter] {
-        Logger.log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
+        Log.warning("Failed to update chapters: Chapter \(chapter.title ?? "[unknown title]") has no end time")
         return [chapter]
     }
 
@@ -221,7 +221,7 @@ extension ChapterService {
 
         for chapter in chapters {
             guard let endTime = chapter.endTime else {
-                Logger.log.info("generateChapters: chapter has no end time")
+                Log.info("generateChapters: chapter has no end time")
                 continue
             }
 
@@ -274,13 +274,13 @@ extension ChapterService {
     ) -> Bool {
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
-            Logger.log.info("SponsorBlock: Turned off in settings")
+            Log.info("SponsorBlock: Turned off in settings")
             return false
         }
 
         let context = DataProvider.newContext()
         guard let video: Video = context.existingModel(for: videoId) else {
-            Logger.log.info("SponsorBlock: No video model, not loading")
+            Log.info("SponsorBlock: No video model, not loading")
             return false
         }
 
@@ -289,7 +289,7 @@ extension ChapterService {
         if let publishedDate = video.publishedDate {
             let oneDay: TimeInterval = 60 * 60 * 24
             if Date().timeIntervalSince(publishedDate) < oneDay {
-                Logger.log.info("SponsorBlock: refresh recent \(publishedDate)")
+                Log.info("SponsorBlock: refresh recent \(publishedDate)")
                 shouldRefresh = true
             }
         }
@@ -297,17 +297,17 @@ extension ChapterService {
         if let lastUpdate = video.sponserBlockUpdateDate {
             let threeDays: TimeInterval = 60 * 60 * 24 * 3
             if Date().timeIntervalSince(lastUpdate) > threeDays {
-                Logger.log.info("SponsorBlock: last refresh old enough")
+                Log.info("SponsorBlock: last refresh old enough")
                 shouldRefresh = true
             }
         } else {
 
             // updateDate not saved properly?
             if video.mergedChapters?.isEmpty ?? true {
-                Logger.log.info("SponsorBlock: never refreshed")
+                Log.info("SponsorBlock: never refreshed")
                 shouldRefresh = true
             } else {
-                Logger.log.info("SponsorBlock: no date, but mergedChapters exist")
+                Log.info("SponsorBlock: no date, but mergedChapters exist")
             }
         }
 
@@ -321,7 +321,7 @@ extension ChapterService {
     static func fillOutEmptyEndTimes(chapters: inout [Chapter], duration: Double, context: ModelContext) -> Bool {
         // Go through, set missing end-dates to the start date of the following chapter.
         // Add a "filler" chapter at the end if the duration doesn't match the length.
-        Logger.log.info("fillOutEmptyEndTimes")
+        Log.info("fillOutEmptyEndTimes")
 
         if chapters.isEmpty {
             return false

@@ -258,7 +258,7 @@ struct PlayerView: View {
         }
 
         let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
-        Logger.log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
+        Log.info(">handleVideoEnded, continuousPlay: \(continuousPlay)")
         handleRequestReview()
 
         if continuousPlay {

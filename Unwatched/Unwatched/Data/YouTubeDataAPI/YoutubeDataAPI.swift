@@ -19,18 +19,18 @@ struct YoutubeDataAPI {
             return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: handle)
         } catch {
             lemnosLifeError = error
-            Logger.log.error("\(error)")
+            Log.error("\(error)")
         }
         do {
             return try await YoutubeDataAPI.getYtChannelIdViaList(handle)
         } catch {
-            Logger.log.error("\(error)")
+            Log.error("\(error)")
         }
         throw SubscriptionError.failedGettingChannelIdFromUsername(lemnosLifeError?.localizedDescription)
     }
 
     static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
-        Logger.log.info("getLemnoslifeChannelId")
+        Log.info("getLemnoslifeChannelId")
         let url = "https://yt.lemnoslife.com/channels?handle=@\(handle)"
         let subscriptionInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: YtChannelId.self)
         if let item = subscriptionInfo.items.first {
@@ -40,9 +40,9 @@ struct YoutubeDataAPI {
     }
 
     private static func getYtChannelIdViaList(_ handle: String) async throws -> String {
-        Logger.log.info("getYtChannelIdViaList")
+        Log.info("getYtChannelIdViaList")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
-        Logger.log.info("apiUrl \(apiUrl)")
+        Log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
         if let item = response.items.first {
@@ -63,7 +63,7 @@ struct YoutubeDataAPI {
             let result = try decoder.decode(T.self, from: data)
             return result
         } catch {
-            Logger.log.info("couldn't decode result: \(error)")
+            Log.info("couldn't decode result: \(error)")
         }
 
         let response = try decoder.decode(YtErrorResponseBody.self, from: data)
@@ -75,9 +75,9 @@ struct YoutubeDataAPI {
         if youtubeVideoId.isEmpty {
             throw VideoError.noYoutubeId
         }
-        Logger.log.info("getYtVideoInfo")
+        Log.info("getYtVideoInfo")
         let apiUrl = "\(baseUrl)videos?key=\(apiKey)&id=\(youtubeVideoId)&part=snippet,contentDetails"
-        Logger.log.info("apiUrl \(apiUrl)")
+        Log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtVideoInfo.self)
         if let item = response.items.first {
@@ -132,7 +132,7 @@ struct YoutubeDataAPI {
         if youtubePlaylistId.isEmpty {
             throw VideoError.noYoutubePlaylistId
         }
-        Logger.log.info("getYtVideoInfoFromPlaylist")
+        Log.info("getYtVideoInfoFromPlaylist")
 
         var result = [SendableVideo]()
         var nextPageToken: String?
@@ -140,7 +140,7 @@ struct YoutubeDataAPI {
 
         repeat {
             let apiUrl = getYtPlaylistUrl(youtubePlaylistId, nextPageToken)
-            Logger.log.info("apiUrl \(apiUrl)")
+            Log.info("apiUrl \(apiUrl)")
             counter += 1
             let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtPlaylistItems.self)
             if response.items.isEmpty {
@@ -154,7 +154,7 @@ struct YoutubeDataAPI {
             nextPageToken = response.nextPageToken
         } while nextPageToken != nil && counter < Const.playlistPageRequestLimit
 
-        Logger.log.info("Amount of imported videos: \(result.count)")
+        Log.info("Amount of imported videos: \(result.count)")
         return result
     }
 }

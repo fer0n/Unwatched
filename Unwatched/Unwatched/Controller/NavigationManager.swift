@@ -50,7 +50,7 @@ import UnwatchedShared
            let loadedNavManager = try? JSONDecoder().decode(NavigationManager.self, from: savedNavManager) {
             return loadedNavManager
         } else {
-            Logger.log.info("navManager not found")
+            Log.info("navManager not found")
             return NavigationManager()
         }
     }
@@ -96,7 +96,7 @@ import UnwatchedShared
         sendableSubscription: SendableSubscription? = nil
     ) {
         guard let sendableSub = sendableSubscription ?? subscription?.toExport else {
-            Logger.log.error("pushSubscription: no subscription given")
+            Log.error("pushSubscription: no subscription given")
             return
         }
         switch tab {

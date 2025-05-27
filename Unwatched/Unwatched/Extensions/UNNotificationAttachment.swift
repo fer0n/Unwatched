@@ -7,14 +7,14 @@
 import UserNotifications
 import Foundation
 import UIKit
-import OSLog
+import UnwatchedShared
 
 extension UNNotificationAttachment {
 
     static func create(identifier: String,
                        imageData: Data) -> UNNotificationAttachment? {
         guard let image = UIImage(data: imageData) else {
-            Logger.log.info("No imagedata")
+            Log.info("No imagedata")
             return nil
         }
         let croppedImage = image.croppedYtThumbnail()

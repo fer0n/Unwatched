@@ -95,7 +95,7 @@ struct SubscriptionListSection: View {
         guard let urls = droppedUrls else {
             return
         }
-        Logger.log.info("handleUrlDrop library \(urls)")
+        Log.info("handleUrlDrop library \(urls)")
         let subscriptionInfo = urls.map { SubscriptionInfo(rssFeedUrl: $0) }
         await subManager.addSubscription(subscriptionInfo: subscriptionInfo)
     }

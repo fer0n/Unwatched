@@ -1,5 +1,5 @@
 import Foundation
-import OSLog
+import UnwatchedShared
 
 extension String {
     var isValidURL: Bool {
@@ -44,7 +44,7 @@ extension String {
             }
             return result
         } catch let error {
-            Logger.log.error("invalid regex: \(error.localizedDescription)")
+            Log.error("invalid regex: \(error.localizedDescription)")
             return nil
         }
     }

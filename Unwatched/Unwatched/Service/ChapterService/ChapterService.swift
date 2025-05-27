@@ -34,7 +34,7 @@ struct ChapterService {
             let chaptersWithDuration = updateDurationAndEndTime(in: chapters, videoDuration: videoDuration)
             return chaptersWithDuration
         } catch {
-            Logger.log.error("Error creating regex: \(error)")
+            Log.error("Error creating regex: \(error)")
         }
         return []
     }
@@ -166,7 +166,7 @@ struct ChapterService {
     }
 
     static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
-        Logger.log.info("updateIfNeeded")
+        Log.info("updateIfNeeded")
         var newChapters = [Chapter]()
         let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
         newChapters.reserveCapacity(chapters.count)
@@ -178,7 +178,7 @@ struct ChapterService {
                 ? oldChapters[index]
                 : nil
             if !chapterEqual(newChapter, oldChapter) {
-                Logger.log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
+                Log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
                 hasChanges = true
                 if let oldChapter {
                     modelContext.delete(oldChapter)
@@ -201,7 +201,7 @@ struct ChapterService {
         if UserDefaults.standard.bool(forKey: Const.skipSponsorSegments) {
             return true
         }
-        Logger.log.info("SponsorBlock: skipping sponsor segments is disabled")
+        Log.info("SponsorBlock: skipping sponsor segments is disabled")
         return false
     }
 
@@ -209,7 +209,7 @@ struct ChapterService {
         if !skipSponsorBlock { return }
 
         for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
-            Logger.log.info("skipping: \(chapter)")
+            Log.info("skipping: \(chapter)")
             chapters[index].isActive = false
         }
     }
@@ -217,7 +217,7 @@ struct ChapterService {
     static func skipSponsorSegments(in chapters: [Chapter]) {
         guard skipSponsorBlock else { return }
         for chapter in chapters where chapter.category == .sponsor {
-            Logger.log.info("skipping: \(chapter)")
+            Log.info("skipping: \(chapter)")
             chapter.isActive = false
         }
     }
@@ -225,7 +225,7 @@ struct ChapterService {
     static func filterChapters(in video: Video?) {
         guard let skipChapterText = UserDefaults.standard.string(forKey: Const.skipChapterText),
               !skipChapterText.isEmpty else {
-            Logger.log.info("No skip chapter text")
+            Log.info("No skip chapter text")
             return
         }
         let filterStrings = skipChapterText.split(separator: ",").map {
@@ -236,7 +236,7 @@ struct ChapterService {
             guard let title = chapter.title else { continue }
 
             if let matchingFilter = filterStrings.first(where: { title.localizedStandardContains($0) }) {
-                Logger.log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
+                Log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
                 chapter.isActive = false
             }
         }

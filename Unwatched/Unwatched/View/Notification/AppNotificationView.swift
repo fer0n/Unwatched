@@ -61,7 +61,7 @@ struct AppNotificationView: View {
     }
 
     func reportMessage(_ error: Error) {
-        let versionInfo = HelpView.versionInfo
+        let versionInfo = Device.versionInfo
         let body = """
             \(versionInfo)
 

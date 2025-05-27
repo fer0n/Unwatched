@@ -18,7 +18,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        Logger.log.info("webViewWebContentProcessDidTerminate")
+        Log.info("webViewWebContentProcessDidTerminate")
         parent.player.isLoading = true
         parent.loadWebContent(webView)
     }
@@ -33,7 +33,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             let payload = body[safe: 1]
             let payloadString = payload.map { String($0) }
             if topic != "currentTime" {
-                Logger.log.info(">\(messageBody)")
+                Log.info(">\(messageBody)")
             }
             handleJsMessages(String(topic), payloadString)
         }
@@ -98,7 +98,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     func handleKeyboard(_ payload: String?) {
         guard let payload, !payload.isEmpty else {
-            Logger.log.warning("handleKeyboard: Empty payload")
+            Log.warning("handleKeyboard: Empty payload")
             return
         }
 
@@ -106,7 +106,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         guard components.count == 5 else { return }
         let keyRaw = String(components[0])
         guard let key = PlayerShortcut.parseKey(keyRaw) else {
-            Logger.log.warning("Key not recognized: \(keyRaw)")
+            Log.warning("Key not recognized: \(keyRaw)")
             return
         }
 
@@ -124,7 +124,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         if let shortcut = PlayerShortcut.fromKeyCombo(key: key, modifiers: modifiers) {
             shortcut.trigger()
         } else {
-            // Logger.log.warning("No shortcut found to trigger for: \(keyRaw) + modifier(?)")
+            // Log.warning("No shortcut found to trigger for: \(keyRaw) + modifier(?)")
             print("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
         }
     }
@@ -134,7 +134,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             return
         }
         if let date = Date.parseYtOfflineDate(payload) {
-            Logger.log.info("handleOffline: defer video to: \(date)")
+            Log.info("handleOffline: defer video to: \(date)")
             parent.player.deferVideoDate = date
             parent.player.pause()
         }
@@ -147,7 +147,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             return
         }
         if youtubeId == parent.player.video?.youtubeId {
-            Logger.log.info("handleUrlClicked: current video")
+            Log.info("handleUrlClicked: current video")
             return
         }
 
@@ -198,7 +198,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func handleSwipe(_ payload: String?) {
         guard let direction = payload,
               let parsed = SwipeDirecton(rawValue: direction) else {
-            Logger.log.warning("No side given for longTouch")
+            Log.warning("No side given for longTouch")
             return
         }
         parent.handleSwipe(parsed)
@@ -207,7 +207,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func handleAspectRatio(_ payload: String?) {
         guard let value = payload,
               let aspectRatio = Double(value) else {
-            Logger.log.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
+            Log.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
             return
         }
         parent.player.handleAspectRatio(aspectRatio)
@@ -219,7 +219,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     func handleLongTouchStart(_ payload: String?) {
         guard let side = payload else {
-            Logger.log.warning("No side given for longTouch")
+            Log.warning("No side given for longTouch")
             return
         }
         if side == "left" {
@@ -266,7 +266,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func handleDuration(_ payload: String?) {
         print("handleDuration")
         guard let payload = payload, let duration = Double(payload), duration > 0 else {
-            Logger.log.info("handleDuration: not updating")
+            Log.info("handleDuration: not updating")
             return
         }
 
@@ -281,7 +281,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleError(_ payload: String?, youtube: Bool = false) {
-        Logger.log.error("video player error: \(payload ?? "Unknown")")
+        Log.error("video player error: \(payload ?? "Unknown")")
 
         if youtube && !parent.player.embeddingDisabled {
             parent.player.isLoading = true
@@ -355,6 +355,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)"
         )
         let script = PlayerWebView.initScript(options)
+        Log.info("InitScriptOptions: \(options)")
         parent.evaluateJavaScript(webView, script)
         withAnimation {
             parent.player.unstarted = true

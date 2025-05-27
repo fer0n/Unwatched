@@ -70,13 +70,13 @@ extension ThemeColor {
         Task { @MainActor in
             UIApplication.shared.setAlternateIconName(self.appIconName) { error in
                 if let error {
-                    Logger.log.error("Error setting alternate icon: \(error)")
+                    Log.error("Error setting alternate icon: \(error)")
                 }
             }
         }
         #elseif os(macOS)
         // macOS doesn't support programmatic app icon changes
-        Logger.log.debug("App icon changes not supported on macOS")
+        Log.warning("App icon changes not supported on macOS")
         #endif
     }
 }

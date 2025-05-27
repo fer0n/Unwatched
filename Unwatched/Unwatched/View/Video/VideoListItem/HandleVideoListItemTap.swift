@@ -31,7 +31,7 @@ struct HandleVideoListItemTap: ViewModifier {
             from: videoData,
             modelContext: modelContext
         ) else {
-            Logger.log.error("no video to tap")
+            Log.error("no video to tap")
             return
         }
         Task {

@@ -57,7 +57,7 @@ import UnwatchedShared
            let loadedPlayer = try? JSONDecoder().decode(PlayerManager.self, from: savedPlayer) {
             return loadedPlayer
         } else {
-            Logger.log.info("player not found")
+            Log.info("player not found")
             return PlayerManager()
         }
     }
@@ -104,7 +104,7 @@ import UnwatchedShared
 
         aspectRatio = nil
         if video.url == oldValue?.url {
-            Logger.log.info("Tapped existing video")
+            Log.info("Tapped existing video")
             self.play()
             return
         }
@@ -176,7 +176,7 @@ import UnwatchedShared
     @MainActor
     func clearVideo(_ modelContext: ModelContext) {
         guard let video else {
-            Logger.log.warning("No container when trying to clear video")
+            Log.warning("No container when trying to clear video")
             return
         }
         VideoService.clearEntries(from: video,
@@ -192,7 +192,7 @@ import UnwatchedShared
         playIfCurrent: Bool = false,
         updateTime: Bool = false
     ) {
-        Logger.log.info("loadTopmostVideoFromQueue")
+        Log.info("loadTopmostVideoFromQueue")
         let container = DataProvider.shared.container
         let currentVideoId = video?.youtubeId
 
@@ -207,12 +207,12 @@ import UnwatchedShared
                     let delta = topVideoTime - time
 
                     if abs(delta) <= Const.updateTimeMinimum {
-                        Logger.log.info("updateTime: same video, same time: \(topVideoTime)")
+                        Log.info("updateTime: same video, same time: \(topVideoTime)")
                         return
                     }
                     currentTime = topVideoTime
                     self.seek(to: topVideoTime)
-                    Logger.log.info("updateTime \(topVideoTime)")
+                    Log.info("updateTime \(topVideoTime)")
                 }
             } else {
                 hardClearVideo()
@@ -242,7 +242,7 @@ import UnwatchedShared
 
     @MainActor
     func handleHotSwap() {
-        Logger.log.info("handleHotSwap")
+        Log.info("handleHotSwap")
         isLoading = true
         canPlayPip = false
         previousState.pipEnabled = false
@@ -273,7 +273,7 @@ import UnwatchedShared
             return
         }
         #endif
-        Logger.log.info("restoreVideo")
+        Log.info("restoreVideo")
         loadTopmostVideoFromQueue()
     }
 
@@ -286,10 +286,10 @@ import UnwatchedShared
 
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
-        Logger.log.info("handleAspectRatio \(aspectRatio)")
+        Log.info("handleAspectRatio \(aspectRatio)")
         guard let video = video,
               let subscription = video.subscription else {
-            Logger.log.info("No video/subscription to set aspect ratio for")
+            Log.info("No video/subscription to set aspect ratio for")
             return
         }
 

@@ -13,14 +13,14 @@ extension PlayerManager {
 
     @MainActor
     func handleAutoStart() {
-        Logger.log.info("handleAutoStart")
+        Log.info("handleAutoStart")
         isLoading = false
 
         guard let source = videoSource else {
-            Logger.log.info("no source, stopping")
+            Log.info("no source, stopping")
             return
         }
-        Logger.log.info("source: \(String(describing: source))")
+        Log.info("source: \(String(describing: source))")
         switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
@@ -48,17 +48,17 @@ extension PlayerManager {
     func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
-            Logger.log.info("updateElapsedTime: wrong video to update")
+            Log.info("updateElapsedTime: wrong video to update")
             return
         }
-        Logger.log.info("updateElapsedTime")
+        Log.info("updateElapsedTime")
 
         let newTime = time ?? currentTime
 
         guard let time = newTime,
               video?.elapsedSeconds != time,
               let modelId = video?.persistentModelID else {
-            Logger.log.info("updateElapsedTime: no change")
+            Log.info("updateElapsedTime: no change")
             return
         }
 
@@ -295,7 +295,7 @@ extension PlayerManager {
 
     @MainActor
     func setVideoEnded(_ value: Bool) {
-        Logger.log.info("setVideoEnded")
+        Log.info("setVideoEnded")
         if value != videoEnded {
             withAnimation {
                 videoEnded = value
@@ -321,7 +321,7 @@ extension PlayerManager {
 
     @MainActor
     func setAirplayHD(_ value: Bool) {
-        Logger.log.info("setAirplayHD: \(value)")
+        Log.info("setAirplayHD: \(value)")
         if airplayHD != value {
             airplayHD = value
             hotReloadPlayer()

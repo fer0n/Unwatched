@@ -23,7 +23,7 @@ import UnwatchedShared
                 playlistIds.append(playlistId)
             } else {
                 containsError = true
-                Logger.log.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
+                Log.warning("Url doesn't seem to be for a playlist or video: \(url.absoluteString)")
             }
         }
 
@@ -44,7 +44,7 @@ import UnwatchedShared
     private func addForeignPlaylist(playlistId: String,
                                     in videoplacement: VideoPlacementArea,
                                     at index: Int) async throws {
-        Logger.log.info("addForeignPlaylist")
+        Log.info("addForeignPlaylist")
         var videos = [Video]()
         let playlistVideos = try await YoutubeDataAPI.getYtVideoInfoFromPlaylist(playlistId)
         for sendableVideo in playlistVideos {
@@ -55,7 +55,7 @@ import UnwatchedShared
                     videos.append(video)
                     try await handleNewForeignVideo(video, feedTitle: feedTitle)
                 } else {
-                    Logger.log.warning("Video couldn't be created")
+                    Log.warning("Video couldn't be created")
                 }
             }
         }
@@ -70,7 +70,7 @@ import UnwatchedShared
     private func addForeignVideos(videoIds: [(String, Double?)],
                                   in videoplacement: VideoPlacementArea,
                                   at index: Int) async throws {
-        Logger.log.info("addForeignVideos?")
+        Log.info("addForeignVideos?")
         var videos = [Video]()
         for (youtubeId, startAt) in videoIds {
             var video = videoAlreadyExists(youtubeId)
@@ -82,7 +82,7 @@ import UnwatchedShared
                 }
             }
             guard let video else {
-                Logger.log.warning("Video couldn't be created for youtubeId: \(youtubeId)")
+                Log.warning("Video couldn't be created for youtubeId: \(youtubeId)")
                 continue
             }
             if let startAt {
@@ -110,7 +110,7 @@ import UnwatchedShared
     }
 
     func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
-        Logger.log.info("loadVideos")
+        Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
@@ -152,7 +152,7 @@ import UnwatchedShared
         defaultPlacement: DefaultVideoPlacement
     ) async -> Int {
         guard let subModel = getSubscription(via: sub) else {
-            Logger.log.info("missing info when trying to load videos")
+            Log.info("missing info when trying to load videos")
             return 0
         }
         let mostRecentDate = getMostRecentDate(videos)
@@ -240,7 +240,7 @@ import UnwatchedShared
                 }
             }
         } catch {
-            Logger.log.error("isYtShort detection failed to load image data: \(error)")
+            Log.error("isYtShort detection failed to load image data: \(error)")
         }
         return (nil, nil)
     }

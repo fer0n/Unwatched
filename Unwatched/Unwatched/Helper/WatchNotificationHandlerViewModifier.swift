@@ -36,11 +36,11 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     #if os(iOS)
     private func handleRouteChange() {
         guard UserDefaults.standard.bool(forKey: Const.autoAirplayHD) else {
-            Logger.log.info("autoAirplayHD off")
+            Log.info("autoAirplayHD off")
             return
         }
         let currentRoute = getCurrentRoute()
-        Logger.log.info("Airplay route: \(currentRoute.rawValue)")
+        Log.info("Airplay route: \(currentRoute.rawValue)")
         player.setAirplayHD(currentRoute == .airplay)
     }
 
@@ -54,16 +54,16 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     #endif
 
     func handlePasteAndPlay() {
-        Logger.log.info("handlePasteAndPlay")
+        Log.info("handlePasteAndPlay")
         guard let string = ClipboardService.get(), let url = URL(string: string) else {
-            Logger.log.warning("handlePasteAndPlay: no valid url pasted")
+            Log.warning("handlePasteAndPlay: no valid url pasted")
             return
         }
         addAndPlay(url)
     }
 
     func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
-        Logger.log.info("handleWatchInUnwatched")
+        Log.info("handleWatchInUnwatched")
         if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
             addAndPlay(youtubeUrl)
         }

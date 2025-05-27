@@ -115,7 +115,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                 }
                 videos.append(video)
             } else {
-                Logger.log.warning("couldn't create the video")
+                Log.warning("couldn't create the video")
             }
             currentTitle = ""
             currentLink = ""

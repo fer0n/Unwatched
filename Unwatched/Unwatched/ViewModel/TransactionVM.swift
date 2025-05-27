@@ -53,7 +53,7 @@ import OSLog
             let context = DataProvider.newContext()
             try context.deleteHistory(descriptor)
         } catch {
-            Logger.log.error("deleteTransactions: \(error)")
+            Log.error("deleteTransactions: \(error)")
         }
     }
 
@@ -85,7 +85,7 @@ import OSLog
             let task = Task.detached {
                 var modelUpdates: Set<PersistentIdentifier>?
                 let transactions = TransactionVM.findTransactions(after: token)
-                Logger.log.info("modelsHaveChanges: \(transactions.count)")
+                Log.info("modelsHaveChanges: \(transactions.count)")
                 if transactions.count <= 20 {
                     // if there's more than 20 changes, simply fetch everything
                     modelUpdates = TransactionVM.getModelUpdates(transactions)

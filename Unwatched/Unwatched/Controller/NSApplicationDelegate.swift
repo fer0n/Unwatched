@@ -18,10 +18,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        Logger.log.info("applicationWillTerminate")
+        Log.info("applicationWillTerminate")
         SetupView.handleAppClosed()
         persistWindowFrame()
-        Logger.log.info("applicationWillTerminate done")
+        Log.info("applicationWillTerminate done")
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {

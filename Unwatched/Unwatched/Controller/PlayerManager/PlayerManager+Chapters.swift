@@ -57,7 +57,7 @@ extension PlayerManager {
 
     @MainActor
     func cancelTimeMonitoring() {
-        Logger.log.info("cancelTimeMonitoring")
+        Log.info("cancelTimeMonitoring")
         currentEndTime = nil
         earlyEndTime = nil
         changeChapterTask?.cancel()
@@ -73,10 +73,10 @@ extension PlayerManager {
 
     @MainActor
     func handleChapterChange(for timeProp: Double? = nil) {
-        Logger.log.info("handleChapterChange")
+        Log.info("handleChapterChange")
         guard let time = timeProp ?? currentTime,
               let video else {
-            Logger.log.info("no time or video")
+            Log.info("no time or video")
             cancelTimeMonitoring()
             return
         }
@@ -84,13 +84,13 @@ extension PlayerManager {
         let chapters = video.sortedChapters
         guard !chapters.isEmpty else {
             cancelTimeMonitoring() // stop monitoring this video for chapters
-            Logger.log.info("no info to check for chapters")
+            Log.info("no info to check for chapters")
             return
         }
 
         // current chapter
         guard let current = extractCurrentChapter(at: time) else {
-            Logger.log.info("extractCurrentChapter failed")
+            Log.info("extractCurrentChapter failed")
             cancelTimeMonitoring()
             return
         }
@@ -105,7 +105,7 @@ extension PlayerManager {
         nextChapter = nextActive
         if !current.isActive {
             if let nextActive {
-                Logger.log.info("skip to next chapter: \(nextActive.titleTextForced)")
+                Log.info("skip to next chapter: \(nextActive.titleTextForced)")
                 seek(to: nextActive.startTime)
             } else if let duration = video.duration, time < duration - Const.seekToEndBuffer {
                 seek(to: duration)
@@ -143,14 +143,14 @@ extension PlayerManager {
             }
         } else {
             // no more chapters
-            Logger.log.info("no more chapters")
+            Log.info("no more chapters")
             cancelTimeMonitoring()
         }
     }
 
     @MainActor
     func schedulePreciseChapterChange(delay: Double, targetTime: Double) {
-        Logger.log.info("schedulePreciseChapterChange time: \(targetTime)")
+        Log.info("schedulePreciseChapterChange time: \(targetTime)")
         changeChapterTask?.cancel()
         changeChapterTask = Task { @MainActor in
             do {
@@ -182,7 +182,7 @@ extension PlayerManager {
     @MainActor
     func goToPreviousChapter() -> Bool {
         guard let current = currentChapter else {
-            Logger.log.warning("goToPreviousChapter: No current chapter found")
+            Log.warning("goToPreviousChapter: No current chapter found")
             return false
         }
 
@@ -204,7 +204,7 @@ extension PlayerManager {
 
     @MainActor
     func handleChapterRefresh(forceRefresh: Bool = false) {
-        Logger.log.info("handleChapterRefresh")
+        Log.info("handleChapterRefresh")
         ChapterService.filterChapters(in: video)
 
         let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
@@ -214,7 +214,7 @@ extension PlayerManager {
 
         guard let videoId = video?.persistentModelID,
               let youtubeId = video?.youtubeId else {
-            Logger.log.warning("Not enough info to enrich chapters")
+            Log.warning("Not enough info to enrich chapters")
             return
         }
 
@@ -236,17 +236,17 @@ extension PlayerManager {
                             duration: duration,
                             forceRefresh: forceRefresh
                         ) else {
-                    Logger.log.info("SponsorBlock: Not updating merged chapters")
+                    Log.info("SponsorBlock: Not updating merged chapters")
                     return
                 }
-                Logger.log.info("SponsorBlock: Refreshed")
+                Log.info("SponsorBlock: Refreshed")
                 ChapterService.skipSponsorSegments(in: &newChapters)
 
                 let modelContext = DataProvider.mainContext
                 ChapterService.updateIfNeeded(newChapters, video, modelContext)
                 try modelContext.save()
             } catch {
-                Logger.log.error("Error while merging chapters: \(error)")
+                Log.error("Error while merging chapters: \(error)")
             }
             self.handleChapterChange()
         }
@@ -255,7 +255,7 @@ extension PlayerManager {
     @MainActor
     func ensureStartPositionWorksWithChapters(_ time: Double) -> Double {
         guard let video = video else {
-            Logger.log.warning("ensureStartPositionWorksWithChapters: no video")
+            Log.warning("ensureStartPositionWorksWithChapters: no video")
             return time
         }
         // regular chapter is active, time is okay

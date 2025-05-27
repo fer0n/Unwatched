@@ -259,7 +259,7 @@ struct UrlService {
         if let channelId {
             return "\(baseUrl)/channel/\(channelId)\(subPath)"
         }
-        Logger.log.warning("nothing to create a url from")
+        Log.warning("nothing to create a url from")
         return nil
     }
 

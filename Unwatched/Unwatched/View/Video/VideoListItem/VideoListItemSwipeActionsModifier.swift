@@ -105,7 +105,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         asyncAction: ((PersistentIdentifier) -> (Task<Void, Error>)?)?,
         syncAction: ((Video) -> Void)?
     ) {
-        Logger.log.info("performVideoAction")
+        Log.info("performVideoAction")
 
         var order = videoData.queueEntryData?.order
         var task: Task<Void, Error>?
@@ -119,7 +119,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             }
         } else {
             guard let video = getVideo() else {
-                Logger.log.error("performVideoAction: no video")
+                Log.error("performVideoAction: no video")
                 return
             }
             handleIsNew(video, isNew)
@@ -159,7 +159,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func addVideoToTopQueue() {
-        Logger.log.info("addVideoTop")
+        Log.info("addVideoTop")
         performVideoAction(
             isNew: false,
             asyncAction: { videoId in
@@ -179,7 +179,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func addVideoToBottomQueue() {
-        Logger.log.info("addVideoBottom")
+        Log.info("addVideoBottom")
         performVideoAction(
             isNew: false,
             asyncAction: { videoId in
@@ -197,7 +197,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func moveToInbox() {
-        Logger.log.info("moveToInbox")
+        Log.info("moveToInbox")
         performVideoAction(
             isNew: false,
             asyncAction: { videoId in
@@ -290,7 +290,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func clearList(_ list: ClearList, _ direction: ClearDirection) {
         try? modelContext.save()
         guard let video = getVideo() else {
-            Logger.log.error("clearList: no video")
+            Log.error("clearList: no video")
             return
         }
         let task = VideoService.clearList(
@@ -387,7 +387,7 @@ struct TrailingSwipeActionsView: View {
                         from: videoData,
                         modelContext: modelContext
                     ) else {
-                        Logger.log.error("No video to show details for")
+                        Log.error("No video to show details for")
                         return
                     }
                     navManager.videoDetail = video

@@ -13,15 +13,15 @@ extension SubscriptionActor {
         _ sub: SendableSubscription,
         unarchiveSubIfAvailable: Bool = false
     ) async -> (SubscriptionState, SendableSubscription?) {
-        Logger.log.info("verifySubscriptionInfo: \(sub.title)")
-        Logger.log.info("youtubePlaylistId: \(sub.youtubePlaylistId?.debugDescription ?? "")")
+        Log.info("verifySubscriptionInfo: \(sub.title)")
+        Log.info("youtubePlaylistId: \(sub.youtubePlaylistId?.debugDescription ?? "")")
         var subState = SubscriptionState(title: sub.title)
 
         if let title = getTitleIfSubscriptionExists(
             channelId: sub.youtubeChannelId,
             unarchiveSubIfAvailable
         ) {
-            Logger.log.info("found existing sub via channelId")
+            Log.info("found existing sub via channelId")
             subState.title = title
             subState.alreadyAdded = true
             return (subState, nil)
@@ -34,11 +34,11 @@ extension SubscriptionActor {
             } else if let channelId = sub.youtubeChannelId {
                 url = try UrlService.getFeedUrlFromChannelId(channelId)
             } else {
-                Logger.log.info("no info for verify")
+                Log.info("no info for verify")
                 subState.error = "no info found"
                 return (subState, nil)
             }
-            Logger.log.info("url: \(url.absoluteString)")
+            Log.info("url: \(url.absoluteString)")
             let sendableSub = try await VideoCrawler.loadSubscriptionFromRSS(feedUrl: url)
             subState.success = true
             return (subState, sendableSub)
@@ -63,7 +63,7 @@ extension SubscriptionActor {
                 playlistId: subState.playlistId,
                 unarchiveSubIfAvailable
             ) {
-                Logger.log.info("loadSubscriptionInfo: found existing sub via userName")
+                Log.info("loadSubscriptionInfo: found existing sub via userName")
                 subState.title = title
                 subState.alreadyAdded = true
                 return (subState, nil)
@@ -77,7 +77,7 @@ extension SubscriptionActor {
                    let title = getTitleIfSubscriptionExists(channelId: channelId,
                                                             playlistId: subState.playlistId,
                                                             unarchiveSubIfAvailable) {
-                    Logger.log.info("loadSubscriptionInfo: found existing sub via channelId")
+                    Log.info("loadSubscriptionInfo: found existing sub via channelId")
                     subState.title = title
                     subState.alreadyAdded = true
                     return (subState, nil)
@@ -94,7 +94,7 @@ extension SubscriptionActor {
     }
 
     func isSubscribed(channelId: String?, playlistId: String?, updateInfo: SubscriptionInfo? = nil) -> Bool {
-        Logger.log.info("isSubscribed; channelId: \(channelId ?? ""), playlistId: \(playlistId ?? "")")
+        Log.info("isSubscribed; channelId: \(channelId ?? ""), playlistId: \(playlistId ?? "")")
         var fetch: FetchDescriptor<Subscription>
         if let playlistId {
             fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
@@ -123,16 +123,16 @@ extension SubscriptionActor {
                 return subs.contains { !$0.isArchived && $0.youtubePlaylistId == nil }
             }
         } else {
-            Logger.log.error("isSubscribed: Neither channelId nor playlistId given")
+            Log.error("isSubscribed: Neither channelId nor playlistId given")
             return false
         }
         return false
     }
 
     private func updateSubscriptionInfo(_ sub: Subscription, info: SubscriptionInfo?) {
-        Logger.log.info("updateSubscriptionInfo: \(sub.title), \(info.debugDescription)")
+        Log.info("updateSubscriptionInfo: \(sub.title), \(info.debugDescription)")
         guard let info else {
-            Logger.log.info("no info to update subscription with")
+            Log.info("no info to update subscription with")
             return
         }
         sub.youtubeUserName = info.userName ?? sub.youtubeUserName
@@ -148,7 +148,7 @@ extension SubscriptionActor {
     private func updateSubscriptionImage(_ sub: Subscription, imageUrl: URL?) {
         if let imageUrl,
            sub.thumbnailUrl != imageUrl {
-            Logger.log.info("Updating thumbnail url")
+            Log.info("Updating thumbnail url")
             if let oldUrl = sub.thumbnailUrl {
                 imageUrlsToBeDeleted.append(oldUrl)
             }

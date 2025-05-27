@@ -164,7 +164,7 @@ struct AddToLibraryView: View {
         addVideosTip.invalidate(reason: .actionPerformed)
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
-            Logger.log.warning("no url found")
+            Log.warning("no url found")
             return
         }
         if containsPlaylistUrl(text) {
@@ -177,7 +177,7 @@ struct AddToLibraryView: View {
     func addUrlsFromText(_ text: String,
                          playListAsVideos: Bool = false,
                          target: VideoPlacementArea = .queue) {
-        Logger.log.info("addUrlsFromText: \(text)")
+        Log.info("addUrlsFromText: \(text)")
         var (videoUrlsLocal, rest) = UrlService.extractVideoUrls(text)
 
         if playListAsVideos {
@@ -245,7 +245,7 @@ struct AddToLibraryView: View {
                 addVideosSuccess = true
                 return
             } catch {
-                Logger.log.error("\(error)")
+                Log.error("\(error)")
                 addVideosSuccess = false
                 isLoadingVideos = false
             }

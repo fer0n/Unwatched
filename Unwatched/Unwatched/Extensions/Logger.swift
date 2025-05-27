@@ -5,6 +5,7 @@
 
 import Foundation
 import OSLog
+import UnwatchedShared
 
 extension Logger: @unchecked Sendable {
     /// Logs the view cycles like a view that appeared.

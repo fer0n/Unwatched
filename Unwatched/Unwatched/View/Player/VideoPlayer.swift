@@ -125,7 +125,7 @@ struct VideoPlayer: View {
 
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
-        Logger.log.info(">markVideoWatched")
+        Log.info(">markVideoWatched")
         if let video = player.video {
             try? modelContext.save()
 

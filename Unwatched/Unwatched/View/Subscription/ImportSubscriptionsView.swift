@@ -128,7 +128,7 @@ struct ImportSubscriptionsView: View {
             do {
                 subStates = try await task.value
             } catch {
-                Logger.log.error("error loading subStates: \(error)")
+                Log.error("error loading subStates: \(error)")
             }
             isLoading = false
         }
@@ -181,7 +181,7 @@ struct ImportSubscriptionsView: View {
     }
 
     func startReplacingImport() {
-        Logger.log.info("startReplacingImport")
+        Log.info("startReplacingImport")
         withAnimation {
             isLoading = true
         }
@@ -192,7 +192,7 @@ struct ImportSubscriptionsView: View {
     }
 
     func startAddImport() {
-        Logger.log.info("startAddImport")
+        Log.info("startAddImport")
         withAnimation {
             isLoading = true
         }
@@ -217,7 +217,7 @@ struct ImportSubscriptionsView: View {
         case .success(let file):
             readFile(file)
         case .failure(let error):
-            Logger.log.info("\(error.localizedDescription)")
+            Log.info("\(error.localizedDescription)")
         }
     }
 
@@ -231,7 +231,7 @@ struct ImportSubscriptionsView: View {
                 file.stopAccessingSecurityScopedResource()
             }
         } catch {
-            Logger.log.error("Failed to read file: \(error)")
+            Log.error("Failed to read file: \(error)")
         }
     }
 
@@ -248,9 +248,9 @@ struct ImportSubscriptionsView: View {
 
     func parseRow(_ row: String) -> SendableSubscription? {
         let columns = row.components(separatedBy: ",")
-        Logger.log.info("columns \(columns)")
+        Log.info("columns \(columns)")
         guard columns.count >= 3 else {
-            Logger.log.error("Invalid row: \(row)")
+            Log.error("Invalid row: \(row)")
             return nil
         }
         let channelId = columns[0]

@@ -41,7 +41,7 @@ struct SetupView: View {
                     #if os(iOS)
                     NotificationManager.handleNotifications(checkDeferred: true)
                     #endif
-                    Logger.log.info("active")
+                    Log.info("active")
                     Task {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
@@ -60,7 +60,7 @@ struct SetupView: View {
     }
 
     static func handleAppClosed() {
-        Logger.log.info("handleAppClosed")
+        Log.info("handleAppClosed")
         #if os(iOS)
         NotificationManager.handleNotifications()
         #endif
@@ -79,7 +79,7 @@ struct SetupView: View {
         SheetPositionReader.shared.save()
         PlayerManager.shared.save()
         await ImageCacheManager.shared.persistCache()
-        Logger.log.info("saved state")
+        Log.info("saved state")
     }
 }
 

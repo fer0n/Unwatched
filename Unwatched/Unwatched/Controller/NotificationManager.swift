@@ -13,7 +13,7 @@ import UnwatchedShared
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) async {
-        Logger.log.info("notifyNewVideos")
+        Log.info("notifyNewVideos")
 
         let notifyAboutInbox = UserDefaults.standard.bool(forKey: Const.videoAddedToInboxNotification)
         let notifyAboutQueue = UserDefaults.standard.bool(forKey: Const.videoAddedToQueueNotification)
@@ -39,7 +39,7 @@ struct NotificationManager {
     static func sendNotification(_ notificationInfo: NotificationInfo,
                                  userInfo: [AnyHashable: Any]? = nil,
                                  triggerDate: Date? = nil) {
-        Logger.log.info("sendNotification: \(notificationInfo.title)")
+        Log.info("sendNotification: \(notificationInfo.title)")
         let content = UNMutableNotificationContent()
         content.title = notificationInfo.title
         content.body = notificationInfo.subtitle
@@ -62,7 +62,7 @@ struct NotificationManager {
                 [.year, .month, .day, .hour, .minute, .second],
                 from: triggerDate
             )
-            Logger.log.info("Created trigger for: \(dateComponents)")
+            Log.info("Created trigger for: \(dateComponents)")
             trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         } else {
             trigger = nil
@@ -71,7 +71,7 @@ struct NotificationManager {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { (error) in
             if let error = error {
-                Logger.log.error("Error scheduling notification: \(error)")
+                Log.error("Error scheduling notification: \(error)")
             }
         }
     }
@@ -87,7 +87,7 @@ struct NotificationManager {
         }
 
         let identifiers = matchingRequests.map { $0.identifier }
-        Logger.log.info("cancelNotificationForVideo: \(identifiers)")
+        Log.info("cancelNotificationForVideo: \(identifiers)")
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 
@@ -134,7 +134,7 @@ struct NotificationManager {
         if let youtubeId = notificationInfo?.video?.youtubeId {
             result[Const.notificationVideoId] = youtubeId
         } else {
-            Logger.log.info("ModelId not present in notificationInfo")
+            Log.info("ModelId not present in notificationInfo")
         }
         if addEntriesOnReceive {
             result[Const.addEntriesOnReceive] = "true"
@@ -146,7 +146,7 @@ struct NotificationManager {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, error in
                 if let error = error {
-                    Logger.log.error("Error when asking for notification permission: \(error)")
+                    Log.error("Error when asking for notification permission: \(error)")
                     continuation.resume(throwing: error)
                 } else {
                     continuation.resume()
@@ -175,7 +175,7 @@ struct NotificationManager {
         UserDefaults.standard.set(newValue, forKey: Const.badgeCount)
 
         guard number < 0 else {
-            Logger.log.info("changeBadgeNumer: number is not negative.")
+            Log.info("changeBadgeNumer: number is not negative.")
             // inbox/queue count is set while refreshing the videos
             return
         }
@@ -220,7 +220,7 @@ struct NotificationManager {
                 do {
                     try await NotificationManager.askNotificationPermission()
                 } catch {
-                    Logger.log.warning("Notification permission error: \(error)")
+                    Log.warning("Notification permission error: \(error)")
                 }
                 let disalbed = await areNotificationsDisabled()
                 if disalbed {
