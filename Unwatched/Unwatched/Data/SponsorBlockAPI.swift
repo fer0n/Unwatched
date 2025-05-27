@@ -21,7 +21,7 @@ struct SponsorBlockAPI {
 
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoder = JSONDecoder()
-        print("skipSegments url: \(urlString)")
+        Log.info("skipSegments url: \(urlString)")
         if let result = try? decoder.decode([SponsorBlockSegmentModel].self, from: data) {
             return result
         } else {

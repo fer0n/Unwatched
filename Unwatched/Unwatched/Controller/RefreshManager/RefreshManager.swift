@@ -256,7 +256,7 @@ extension RefreshManager {
 
     func handleBackgroundVideoRefresh() async {
         #if os(iOS)
-        print("Background task running now")
+        Log.info("Background task running now")
         do {
             scheduleVideoRefresh()
 
@@ -282,12 +282,12 @@ extension RefreshManager {
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if newVideos.videoCount > 0 {
-                print("notifyNewVideos")
+                Log.info("notifyNewVideos")
                 await NotificationManager.notifyNewVideos(newVideos)
             }
             NotificationManager.notifyRun(.end)
         } catch {
-            print("Error during background refresh: \(error)")
+            Log.error("Error during background refresh: \(error)")
             NotificationManager.notifyRun(.error, error.localizedDescription)
         }
         #endif

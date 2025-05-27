@@ -35,7 +35,7 @@ import OSLog
         do {
             transactions = try taskContext.fetchHistory(historyDescriptor)
         } catch let error {
-            print(error)
+            Log.error("findTransactions: \(error)")
         }
 
         return transactions

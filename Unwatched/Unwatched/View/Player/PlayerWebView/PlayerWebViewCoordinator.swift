@@ -124,8 +124,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         if let shortcut = PlayerShortcut.fromKeyCombo(key: key, modifiers: modifiers) {
             shortcut.trigger()
         } else {
-            // Log.warning("No shortcut found to trigger for: \(keyRaw) + modifier(?)")
-            print("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
+            Log.info("No shortcut found to trigger for: \(keyRaw) + \(modifiers)")
         }
     }
 
@@ -264,7 +263,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleDuration(_ payload: String?) {
-        print("handleDuration")
+        Log.info("handleDuration")
         guard let payload = payload, let duration = Double(payload), duration > 0 else {
             Log.info("handleDuration: not updating")
             return
@@ -340,6 +339,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
         let minimalPlayerUI = UserDefaults.standard.bool(forKey: Const.minimalPlayerUI)
+        let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
         var hijackFullscreenButton = false
         #if os(macOS)
         hijackFullscreenButton = true
@@ -352,7 +352,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             minimalPlayerUI: minimalPlayerUI,
             isNonEmbedding: parent.player.embeddingDisabled,
             hijackFullscreenButton: hijackFullscreenButton,
-            fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)"
+            fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
+            enableLogging: enableLogging
         )
         let script = PlayerWebView.initScript(options)
         Log.info("InitScriptOptions: \(options)")

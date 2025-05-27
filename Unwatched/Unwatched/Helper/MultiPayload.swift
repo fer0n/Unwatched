@@ -5,6 +5,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import UnwatchedShared
 
 struct MultiPayload: Transferable {
     enum PayloadContent {
@@ -38,8 +39,6 @@ struct MultiPayload: Transferable {
         DataRepresentation(
             contentType: UTType.url,
             exporting: { payload -> Data in
-                print("payload", payload)
-
                 switch payload.content {
                 case .text(let string):
                     if let url = URL(string: string) {

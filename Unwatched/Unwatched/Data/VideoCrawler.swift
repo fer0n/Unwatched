@@ -43,7 +43,6 @@ struct VideoCrawler {
             if let author = subscriptionInfo.author, author == subscriptionInfo.title {
                 subscriptionInfo.author = nil
             }
-            print("subscriptionInfo", subscriptionInfo)
             return subscriptionInfo
         }
         Log.info("rssParserDelegate.subscriptionInfo \(rssParserDelegate.subscriptionInfo.debugDescription)")

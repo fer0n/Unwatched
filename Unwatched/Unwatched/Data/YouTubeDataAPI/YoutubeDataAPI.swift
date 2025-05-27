@@ -42,7 +42,6 @@ struct YoutubeDataAPI {
     private static func getYtChannelIdViaList(_ handle: String) async throws -> String {
         Log.info("getYtChannelIdViaList")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
-        Log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
         if let item = response.items.first {
@@ -77,7 +76,6 @@ struct YoutubeDataAPI {
         }
         Log.info("getYtVideoInfo")
         let apiUrl = "\(baseUrl)videos?key=\(apiKey)&id=\(youtubeVideoId)&part=snippet,contentDetails"
-        Log.info("apiUrl \(apiUrl)")
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtVideoInfo.self)
         if let item = response.items.first {
@@ -140,7 +138,6 @@ struct YoutubeDataAPI {
 
         repeat {
             let apiUrl = getYtPlaylistUrl(youtubePlaylistId, nextPageToken)
-            Log.info("apiUrl \(apiUrl)")
             counter += 1
             let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtPlaylistItems.self)
             if response.items.isEmpty {
@@ -150,7 +147,7 @@ struct YoutubeDataAPI {
                 let video = YoutubeDataAPI.createVideo(item.snippet, videoId: item.contentDetails.videoId)
                 result.append(video)
             }
-            print(result.count, response.pageInfo.resultsPerPage, response.pageInfo.totalResults)
+            Log.info("getYtVideoInfoFromPlaylist: \(result.count), \(response.pageInfo.resultsPerPage), \(response.pageInfo.totalResults)")
             nextPageToken = response.nextPageToken
         } while nextPageToken != nil && counter < Const.playlistPageRequestLimit
 

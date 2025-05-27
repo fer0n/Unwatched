@@ -185,7 +185,6 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handleQueueVideo(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.videoId != player.video?.youtubeId {
             Log.info("CUE VIDEO: \(player.video?.title ?? "-")")
-            print("\(playerType)")
             let startAt = player.getStartPosition()
 
             let success = loadPlayer(webView: uiView, startAt: startAt, type: playerType)

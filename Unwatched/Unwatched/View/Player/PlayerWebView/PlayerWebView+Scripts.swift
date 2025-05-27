@@ -24,6 +24,7 @@ extension PlayerWebView {
             Log.warning("loadPlayer: no url")
             return false
         }
+        Log.info("loadPlayer: \(urlString)")
 
         let request = URLRequest(url: url)
         webView.load(request)
@@ -77,11 +78,21 @@ extension PlayerWebView {
                 }
             """
         }
-        return "video.play();"
+        return """
+               video = document.querySelector('video');
+               video
+                   .play()
+                   .catch(error => {
+                        sendError(error);
+                    });
+               """
     }
 
     func getPauseScript() -> String {
-        "video.pause();"
+        """
+        video = document.querySelector('video');
+        video.pause();
+        """
     }
 
     func getSeekToScript(_ seekTo: Double) -> String {
@@ -130,6 +141,7 @@ extension PlayerWebView {
         let isNonEmbedding: Bool
         let hijackFullscreenButton: Bool
         let fullscreenTitle: String
+        let enableLogging: Bool
     }
 
     // swiftlint:disable function_body_length
@@ -145,6 +157,7 @@ extension PlayerWebView {
         const hijackFullscreenButton = \(options.hijackFullscreenButton);
         const fullscreenTitle = "\(options.fullscreenTitle)";
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
+        const enableLogging = \(options.enableLogging);
 
         var video = null;
         let videoFindAttempts = 0;
@@ -153,6 +166,14 @@ extension PlayerWebView {
 
         function sendMessage(topic, payload) {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
+        }
+
+        function sendError(error) {
+            if (error && error.message) {
+                sendMessage("error", error.message);
+            } else {
+                sendMessage("error", String(error));
+            }
         }
 
         findVideo();
@@ -175,7 +196,7 @@ extension PlayerWebView {
                     }
                 }
             } catch (error) {
-                sendMessage("error", error && error.message ? error.message : String(error));
+                sendError(error);
             }
         }
 
@@ -215,6 +236,33 @@ extension PlayerWebView {
                 sendMessage('keyboardEvent', payload);
             }
         }, true);
+
+
+        // Check video state
+        if (enableLogging) {
+            function checkVideoState() {
+                const videos = document.querySelectorAll('video');
+                sendMessage('videoCount', videos.length);
+
+                videos.forEach((v, index) => {
+                    let info = {
+                        readyState: v.readyState,
+                        networkState: v.networkState,
+                        paused: v.paused,
+                        ended: v.ended,
+                        currentTime: v.currentTime,
+                        duration: v.duration,
+                        videoWidth: v.videoWidth,
+                        videoHeight: v.videoHeight,
+                        src: v.src,
+                        className: v.className,
+                        id: v.id
+                    };
+                    sendMessage(`checkVideoState ${index}`, JSON.stringify(info));
+                });
+            }
+            setInterval(checkVideoState, 3000);
+        }
 
 
         // play, pause, ended

@@ -84,7 +84,7 @@ actor SubscriptionActor {
         sendableSubs: [SendableSubscription] = []
     ) async throws -> [SubscriptionState] {
         var subscriptionStates = [SubscriptionState]()
-        print("addSubscriptions", subscriptionStates)
+        Log.info("addSubscriptions: \(subscriptionStates)")
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
                 for info in subscriptionInfo {
