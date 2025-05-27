@@ -13,7 +13,7 @@ struct FullscreenPlayerControls: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var arrowEdge: Edge
     @State var sleepTimerVM: SleepTimerViewModel
-    let isLeft: Bool
+    let showLeft: Bool
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -86,7 +86,7 @@ struct FullscreenPlayerControls: View {
             Spacer()
 
             #if os(iOS)
-            FullscreenChangeOrientationButton(size: size, isLeft: isLeft)
+            FullscreenChangeOrientationButton(size: size, showLeft: showLeft)
             #endif
 
             Spacer()
@@ -108,7 +108,7 @@ struct FullscreenPlayerControls: View {
             markVideoWatched: { _, _ in },
             arrowEdge: .trailing,
             sleepTimerVM: SleepTimerViewModel(),
-            isLeft: true)
+            showLeft: true)
             .padding()
     }
     .ignoresSafeArea(.all)

@@ -10,7 +10,7 @@ import UnwatchedShared
 struct FullscreenChangeOrientationButton: View {
     @Environment(PlayerManager.self) var player
     let size: CGFloat
-    let isLeft: Bool
+    let showLeft: Bool
 
     var body: some View {
         Button {
@@ -30,7 +30,7 @@ struct FullscreenChangeOrientationButton: View {
                 Text(player.pipEnabled ? "exitPip" : "enterPip")
                 Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
             }
-            if isLeft {
+            if showLeft {
                 Button {
                     OrientationManager.changeOrientation(to: .landscapeRight)
                 } label: {

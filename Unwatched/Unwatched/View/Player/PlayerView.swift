@@ -25,7 +25,7 @@ struct PlayerView: View {
     @Binding var autoHideVM: AutoHideVM
 
     #if os(iOS)
-    @State var orientation = OrientationManager()
+    @State var orientation = OrientationManager.shared
     #endif
     @State var overlayVM = OverlayFullscreenVM.shared
     @State var appNotificationVM = AppNotificationVM()
@@ -61,12 +61,12 @@ struct PlayerView: View {
                             markVideoWatched: markVideoWatched,
                             autoHideVM: $autoHideVM,
                             sleepTimerVM: sleepTimerVM,
-                            isLeft: isLeft)
+                            showLeft: showLeft)
                             .environment(\.layoutDirection, .leftToRight)
                     }
                 }
                 #if os(iOS)
-                .environment(\.layoutDirection, orientation.isLandscapeRight
+                .environment(\.layoutDirection, showLeft
                                 ? .rightToLeft
                                 : .leftToRight)
                 #endif
@@ -103,9 +103,9 @@ struct PlayerView: View {
         )
     }
 
-    var isLeft: Bool {
+    var showLeft: Bool {
         #if os(iOS)
-        orientation.isLandscapeRight
+        orientation.hasLeftEmpty
         #else
         false
         #endif

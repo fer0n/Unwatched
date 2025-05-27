@@ -5,10 +5,13 @@
 
 #if os(iOS)
 import SwiftUI
+import UnwatchedShared
 
 @Observable class OrientationManager {
-    var isLandscapeLeft: Bool = false
-    var isLandscapeRight: Bool = false
+    @MainActor
+    static let shared = OrientationManager()
+
+    var hasLeftEmpty = false
 
     @MainActor
     init() {
@@ -23,14 +26,14 @@ import SwiftUI
 
     @MainActor
     @objc private func didChangeOrientation() {
+        Log.info("OrientationManager: didChangeOrientation")
         updateOrientation()
     }
 
     @MainActor
     private func updateOrientation() {
         let orientation = UIDevice.current.orientation
-        isLandscapeLeft = orientation == .landscapeLeft
-        isLandscapeRight = orientation == .landscapeRight
+        hasLeftEmpty = orientation == .landscapeRight
     }
 
     @MainActor
@@ -40,6 +43,8 @@ import SwiftUI
             return
         }
         windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
+        Log.info("ChangeOrientation to \(orientation)")
+        shared.hasLeftEmpty = orientation == .landscapeLeft
     }
 }
 #endif

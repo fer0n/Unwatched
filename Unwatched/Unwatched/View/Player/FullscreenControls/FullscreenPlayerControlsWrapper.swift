@@ -14,11 +14,11 @@ struct FullscreenPlayerControlsWrapper: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     @Binding var autoHideVM: AutoHideVM
     var sleepTimerVM: SleepTimerViewModel
-    var isLeft = false
+    var showLeft = false
 
     var body: some View {
         let nonEmbedding = player.embeddingDisabled
-        let arrowEdge: Edge = isLeft ? .leading : .trailing
+        let arrowEdge: Edge = showLeft ? .leading : .trailing
 
         if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(
@@ -26,9 +26,9 @@ struct FullscreenPlayerControlsWrapper: View {
                 markVideoWatched: markVideoWatched,
                 arrowEdge: arrowEdge,
                 sleepTimerVM: sleepTimerVM,
-                isLeft: isLeft
+                showLeft: showLeft
             )
-            .offset(x: nonEmbedding ? -5 : isLeft ? -22 : 22)
+            .offset(x: nonEmbedding ? -5 : showLeft ? -22 : 22)
             .frame(width: 60)
             .fixedSize(horizontal: true, vertical: false)
             .simultaneousGesture(TapGesture().onEnded {
