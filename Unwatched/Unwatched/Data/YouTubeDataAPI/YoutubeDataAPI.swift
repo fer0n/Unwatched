@@ -14,33 +14,7 @@ struct YoutubeDataAPI {
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
     static func getYtChannelId(from handle: String) async throws -> String {
-        var lemnosLifeError: Error?
-        do {
-            return try await YoutubeDataAPI.getChannelIdViaLemnoslife(from: handle)
-        } catch {
-            lemnosLifeError = error
-            Log.error("\(error)")
-        }
-        do {
-            return try await YoutubeDataAPI.getYtChannelIdViaList(handle)
-        } catch {
-            Log.error("\(error)")
-        }
-        throw SubscriptionError.failedGettingChannelIdFromUsername(lemnosLifeError?.localizedDescription)
-    }
-
-    static func getChannelIdViaLemnoslife(from handle: String) async throws -> String {
-        Log.info("getLemnoslifeChannelId")
-        let url = "https://yt.lemnoslife.com/channels?handle=@\(handle)"
-        let subscriptionInfo = try await YoutubeDataAPI.handleYoutubeRequest(url: url, model: YtChannelId.self)
-        if let item = subscriptionInfo.items.first {
-            return item.id
-        }
-        throw SubscriptionError.failedGettingChannelIdFromUsername("getChannelIdViaLemnoslife")
-    }
-
-    private static func getYtChannelIdViaList(_ handle: String) async throws -> String {
-        Log.info("getYtChannelIdViaList")
+        Log.info("getYtChannelId")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
 
         let response = try await YoutubeDataAPI.handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
