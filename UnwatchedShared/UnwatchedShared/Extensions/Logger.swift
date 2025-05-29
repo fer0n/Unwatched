@@ -45,31 +45,32 @@ public class Log {
     
     static func log(_ message: String, level: OSLogType = .default) {
         logger.log(level: level, "\(message)")
-
+        
         guard isEnabled, let logFile else {
             return
         }
-
-        let timestamp = Date().formatted(date: .numeric, time: .standard)
-        let logLine = "\(timestamp) [\(level.name)] \(message)\n"
         
-
-        do {
-            guard let data = logLine.data(using: String.Encoding.utf8) else { return }
-            let fileHandle = try FileHandle(forWritingTo: logFile)
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(data)
-            fileHandle.closeFile()
-        } catch {
-            // file doesn't exist, create it
-            let deviceInfo = Device.versionInfo
-            let text = """
+        Task.detached {
+            let timestamp = Date().formatted(date: .numeric, time: .standard)
+            let logLine = "\(timestamp) [\(level.name)] \(message)\n"
+            
+            do {
+                guard let data = logLine.data(using: String.Encoding.utf8) else { return }
+                let fileHandle = try FileHandle(forWritingTo: logFile)
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(data)
+                fileHandle.closeFile()
+            } catch {
+                // file doesn't exist, create it
+                let deviceInfo = Device.versionInfo
+                let text = """
                 \(deviceInfo)
                 
                 \(logLine)
                 """
-            guard let data = text.data(using: .utf8) else { return }
-            try? data.write(to: logFile, options: .atomicWrite)
+                guard let data = text.data(using: .utf8) else { return }
+                try? data.write(to: logFile, options: .atomicWrite)
+            }
         }
     }
 
