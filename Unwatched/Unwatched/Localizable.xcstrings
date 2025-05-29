@@ -6641,6 +6641,108 @@
         }
       }
     },
+    "inboxOverflowTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox füllt sich?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Filling up?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Se está llenando el Inbox?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Inbox se remplit ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox się zapełnia?"
+          }
+        }
+      }
+    },
+    "inboxOverflowTipAction %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld behalten, Ältere löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep %lld, Clear Older"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantener %lld, Borrar más antiguos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garder %lld, Effacer les plus anciens"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zachowaj %lld, Wyczyść starsze"
+          }
+        }
+      }
+    },
+    "inboxOverflowTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge Videos, die du ansehen möchtest, zu deiner Queue hinzu, entferne die anderen. Du entscheidest nur einmal — und entfernte Videos bleiben in der Bibliothek."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add videos you want to watch to your queue, removed the rest. You’ll only decide once — and removed videos stick around in the Library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega los videos que quieres ver a tu queue, elimina el resto. Solo decidirás una vez — y los videos eliminados permanecen en la Biblioteca."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez les vidéos que vous voulez regarder à votre queue, supprimez le reste. Vous ne déciderez qu'une fois — et les vidéos supprimées restent dans la Bibliothèque."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj filmy, które chcesz obejrzeć, do swojej queue, usuń resztę. Zdecydujesz tylko raz — a usunięte filmy pozostaną w Bibliotece."
+          }
+        }
+      }
+    },
     "InboxHasVideosTip" : {
       "localizations" : {
         "de" : {
@@ -6705,6 +6807,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kliknij tutaj, aby zobaczyć nowe filmy"
+          }
+        }
+      }
+    },
+    "inboxHiddenEntries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ältere Einträge ausgeblendet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Older entries hidden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entradas más antiguas ocultas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrées plus anciennes masquées"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starsze wpisy ukryte"
           }
         }
       }

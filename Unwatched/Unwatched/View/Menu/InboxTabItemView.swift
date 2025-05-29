@@ -10,9 +10,16 @@ import UnwatchedShared
 struct InboxTabItemView: View {
     @Environment(RefreshManager.self) var refresher
     @Environment(NavigationManager.self) var navManager
-    @Query(sort: \InboxEntry.date,
-           order: .reverse,
-           animation: .default)
+
+    static var descriptor: FetchDescriptor<InboxEntry> {
+        var descriptor = FetchDescriptor<InboxEntry>(
+            sortBy: [SortDescriptor(\InboxEntry.date, order: .reverse)]
+        )
+        descriptor.fetchLimit = Const.inboxFetchLimit
+        return descriptor
+    }
+
+    @Query(InboxTabItemView.descriptor, animation: .default)
     var inboxEntries: [InboxEntry]
 
     let showCancelButton: Bool

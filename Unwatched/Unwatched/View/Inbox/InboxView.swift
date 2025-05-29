@@ -5,9 +5,11 @@
 
 import SwiftUI
 import SwiftData
-import TipKit
 import OSLog
 import UnwatchedShared
+
+
+
 
 struct InboxView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
@@ -18,7 +20,6 @@ struct InboxView: View {
 
     var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
-    var swipeTip = InboxSwipeTip()
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -42,8 +43,12 @@ struct InboxView: View {
                         .id(NavigationManager.getScrollId("top", ClearList.inbox.rawValue))
                         .listRowSeparator(.hidden)
 
+                    if hasTooManyItems {
+                        InboxOverflowTipView()
+                    }
+
                     if !inboxEntries.isEmpty {
-                        swipeTipView
+                        InboxSwipeTipView()
                             .listRowBackground(Color.backgroundColor)
                             .listRowSeparator(.hidden)
                     }
@@ -73,6 +78,10 @@ struct InboxView: View {
                     .handleDynamicVideoURLDrop(.inbox)
                     .listRowBackground(Color.backgroundColor)
 
+                    if hasTooManyItems {
+                        HiddenEntriesInfo()
+                    }
+
                     ClearAllVideosButton(clearAll: clearAll)
                         .disabled(!showClear)
                         .opacity(showClear ? 1 : 0)
@@ -100,6 +109,10 @@ struct InboxView: View {
         .tint(.neutralAccentColor)
     }
 
+    var hasTooManyItems: Bool {
+        inboxEntries.count >= Const.inboxFetchLimit
+    }
+
     var undoRedoToolbarButton: some ToolbarContent {
         // Workaround: having this be its own view
         // doesn't work for some reason
@@ -114,35 +127,6 @@ struct InboxView: View {
             .font(.footnote)
             .fontWeight(.bold)
         }
-    }
-
-    var swipeTipView: some View {
-        TipView(swipeTip)
-            .tipBackground(Color.insetBackgroundColor)
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button(action: invalidateTip) {
-                    Image(systemName: "text.insert")
-                        .accessibilityLabel("queueNext")
-                }
-                .tint(theme.color.mix(with: Color.black, by: 0.1))
-
-                Button(action: invalidateTip) {
-                    Image(systemName: Const.queueBottomSF)
-                }
-                .accessibilityLabel("queueLast")
-                .tint(theme.color.mix(with: Color.black, by: 0.3))
-            }
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(action: invalidateTip) {
-                    Image(systemName: Const.clearSF)
-                }
-                .accessibilityLabel("clear")
-                .tint(theme.color.mix(with: Color.black, by: 0.9))
-            }
-    }
-
-    func invalidateTip() {
-        swipeTip.invalidate(reason: .actionPerformed)
     }
 
     func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {

@@ -102,6 +102,14 @@ public struct Const {
 
     /// Number of notifications that will be sent at once per inbox/queue
     public static let simultaneousNotificationsLimit = 1
+    
+    /// The maximum number of videos that will be shown in the inbox (performance reasons)
+    /// Workaround, can be removed if @Query fetches in background or fixes performance
+    public static let inboxFetchLimit = 200
+    
+    /// Option to keep the last x videos in the inbox when clearing it
+    public static let inboxOverflowKeepCount = 20
+    
     public static let notificationImageUrl = "notificationImageUrl"
     public static let notificationActionQueue = "notificationActionQueue"
     public static let notificationActionClear = "notificationActionClear"
@@ -190,6 +198,7 @@ public struct Const {
     public static let continuousPlay = "continuousPlay"
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
+    public static let inboxFullDismissedDate = "inboxFullDismissedDate"
 
     
     /// Legacy setting, moved to `defaultShortsSetting`

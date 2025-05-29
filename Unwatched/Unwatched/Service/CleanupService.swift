@@ -9,6 +9,30 @@ import OSLog
 import UnwatchedShared
 
 struct CleanupService {
+    static func clearOldInboxEntries(keep: Int, _ modelContext: ModelContext) -> Int? {
+        Log.info("removeOldInboxEntries")
+        let fetch = FetchDescriptor<InboxEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+        guard let entries = try? modelContext.fetch(fetch) else {
+            Log.warning("No inbox entries to cleanup")
+            return nil
+        }
+
+        if entries.count <= keep {
+            Log.warning("No inbox entries to remove, only \(entries.count) found")
+            return nil
+        }
+
+        let removableEntries = Array(entries.dropFirst(keep))
+        let removedEntryCount = removableEntries.count
+        for entry in removableEntries {
+            modelContext.delete(entry)
+        }
+        Log.info("removeOldInboxEntries: \(removedEntryCount)")
+
+        try? modelContext.save()
+        return removedEntryCount
+    }
+
     static func cleanupDuplicatesAndInboxDate(
         quickCheck: Bool = false,
         videoOnly: Bool = true

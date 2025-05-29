@@ -83,6 +83,16 @@ extension VideoService {
         }
     }
 
+    static func clearAllInboxEntries(_ modelContext: ModelContext) {
+        let fetch = FetchDescriptor<InboxEntry>()
+        if let entries = try? modelContext.fetch(fetch) {
+            for entry in entries {
+                modelContext.delete(entry)
+            }
+            try? modelContext.save()
+        }
+    }
+
     static func deleteInboxEntries(_ entries: [InboxEntry], modelContext: ModelContext) {
         for entry in entries {
             VideoService.deleteInboxEntry(entry, modelContext: modelContext)

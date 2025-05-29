@@ -34,6 +34,12 @@
 		8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9182B95116A004D7CE2 /* NewVideosNotificationInfo.swift */; };
 		8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */; };
 		8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */; };
+		8809D8912DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8902DE8E38200B28165 /* InboxSwipeTipView.swift */; };
+		8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8902DE8E38200B28165 /* InboxSwipeTipView.swift */; };
+		8809D8942DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8932DE8E54400B28165 /* HiddenEntriesInfo.swift */; };
+		8809D8952DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8932DE8E54400B28165 /* HiddenEntriesInfo.swift */; };
+		8809D8972DE8EE7300B28165 /* InboxOverflowTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8962DE8EE7300B28165 /* InboxOverflowTip.swift */; };
+		8809D8982DE8EE7300B28165 /* InboxOverflowTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8809D8962DE8EE7300B28165 /* InboxOverflowTip.swift */; };
 		880C211A2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */; };
 		880C211B2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */; };
 		880C211E2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */; };
@@ -633,6 +639,9 @@
 		8808A9182B95116A004D7CE2 /* NewVideosNotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewVideosNotificationInfo.swift; sourceTree = "<group>"; };
 		8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerToggleStyle.swift; sourceTree = "<group>"; };
 		8808D8242B4B02E300B4FF11 /* SpeedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedControlView.swift; sourceTree = "<group>"; };
+		8809D8902DE8E38200B28165 /* InboxSwipeTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxSwipeTipView.swift; sourceTree = "<group>"; };
+		8809D8932DE8E54400B28165 /* HiddenEntriesInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenEntriesInfo.swift; sourceTree = "<group>"; };
+		8809D8962DE8EE7300B28165 /* InboxOverflowTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxOverflowTip.swift; sourceTree = "<group>"; };
 		880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissSheetButton.swift; sourceTree = "<group>"; };
 		880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeferDateButtonStyle.swift; sourceTree = "<group>"; };
 		880C21202D7ECEDE00E859A5 /* DateSelectorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectorSheet.swift; sourceTree = "<group>"; };
@@ -1175,6 +1184,9 @@
 			isa = PBXGroup;
 			children = (
 				887AC8CD2B4988D000512852 /* InboxView.swift */,
+				8809D8902DE8E38200B28165 /* InboxSwipeTipView.swift */,
+				8809D8932DE8E54400B28165 /* HiddenEntriesInfo.swift */,
+				8809D8962DE8EE7300B28165 /* InboxOverflowTip.swift */,
 			);
 			path = Inbox;
 			sourceTree = "<group>";
@@ -1839,6 +1851,7 @@
 				889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */,
 				889AF8FC2C50ECCD001CEDE6 /* NotificationManager.swift in Sources */,
 				88358A7E2C65596D00AF71F8 /* UIImage.swift in Sources */,
+				8809D8982DE8EE7300B28165 /* InboxOverflowTip.swift in Sources */,
 				8890179F2D790C61008BC329 /* BrowserWindow.swift in Sources */,
 				884777342D2150850044E812 /* URL.swift in Sources */,
 				889AF94E2C50ED05001CEDE6 /* SubscriptionService.swift in Sources */,
@@ -1913,6 +1926,7 @@
 				889AF94B2C50ECF5001CEDE6 /* ChapterMiniControlView.swift in Sources */,
 				889AF94C2C50ECF5001CEDE6 /* SubscriptionListItem.swift in Sources */,
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailView.swift in Sources */,
+				8809D8952DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */,
 				884CC88A2DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */,
 				889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */,
@@ -2029,6 +2043,7 @@
 				887EB2DE2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
 				889AF8E92C50ECA9001CEDE6 /* DismissToolbarButton.swift in Sources */,
 				889AF8EA2C50ECA9001CEDE6 /* CapsulePicker.swift in Sources */,
+				8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
 				88D446AD2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */,
 				88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */,
 				882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */,
@@ -2131,6 +2146,7 @@
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
 				8899247C2C48552D001185A6 /* MySection.swift in Sources */,
+				8809D8912DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
 				88CBE34A2BB76FAE00B5722F /* SpeedContolViewModel.swift in Sources */,
 				88373C282C8C6A9100ACBB3B /* SubscriptionListVM.swift in Sources */,
 				889931DA2D731AC5009096AB /* PlayerType.swift in Sources */,
@@ -2304,6 +2320,7 @@
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
 				883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */,
 				887EB2E12CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
+				8809D8972DE8EE7300B28165 /* InboxOverflowTip.swift in Sources */,
 				882966F72CCE1F9400E96D3C /* View.swift in Sources */,
 				888E1E002B7000DA00608F99 /* BookmarkedVideosView.swift in Sources */,
 				88BE6C312B723B9900456777 /* PlayerWebView.swift in Sources */,
@@ -2351,6 +2368,7 @@
 				8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */,
 				88F347212CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
+				8809D8942DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				88C5EF8B2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */,
 				8899246B2C47FAE3001185A6 /* InboxTabItemView.swift in Sources */,
