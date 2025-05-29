@@ -79,7 +79,6 @@ extension PlayerWebView {
             """
         }
         return """
-               video = document.querySelector('video');
                video
                    .play()
                    .catch(error => {
@@ -90,7 +89,6 @@ extension PlayerWebView {
 
     func getPauseScript() -> String {
         """
-        video = document.querySelector('video');
         video.pause();
         """
     }
@@ -180,6 +178,9 @@ extension PlayerWebView {
         function findVideo() {
             try {
                 video = document.querySelector('video');
+                if (enableLogging) {
+                    sendVideoState(video);
+                }
                 if (video) {
                     video.playbackRate = playbackRate;
                     video.muted = false;
@@ -190,7 +191,7 @@ extension PlayerWebView {
                 } else {
                     videoFindAttempts++;
                     if (videoFindAttempts < 10) {
-                        setTimeout(findVideo, 200);
+                        setTimeout(findVideo, 100 * videoFindAttempts);
                     } else {
                         sendMessage("error", "Video not found after 10 attempts");
                     }
@@ -239,28 +240,35 @@ extension PlayerWebView {
 
 
         // Check video state
+        function sendVideoState(v, message = "checkVideoState") {
+            let info = {
+                sameVideo: video === v,
+                video: !!v,
+                readyState: v?.readyState,
+                networkState: v?.networkState,
+                paused: v?.paused,
+                ended: v?.ended,
+                currentTime: v?.currentTime,
+                duration: v?.duration,
+                videoWidth: v?.videoWidth,
+                videoHeight: v?.videoHeight,
+                src: v?.src,
+                className: v?.className,
+                id: v?.id
+            };
+            sendMessage(message, JSON.stringify(info));
+        }
+
         if (enableLogging) {
             function checkVideoState() {
                 const videos = document.querySelectorAll('video');
                 sendMessage('videoCount', videos.length);
 
                 videos.forEach((v, index) => {
-                    let info = {
-                        readyState: v.readyState,
-                        networkState: v.networkState,
-                        paused: v.paused,
-                        ended: v.ended,
-                        currentTime: v.currentTime,
-                        duration: v.duration,
-                        videoWidth: v.videoWidth,
-                        videoHeight: v.videoHeight,
-                        src: v.src,
-                        className: v.className,
-                        id: v.id
-                    };
-                    sendMessage(`checkVideoState ${index}`, JSON.stringify(info));
+                    sendVideoState(v, `checkVideoState ${index}`);
                 });
             }
+            checkVideoState();
             setInterval(checkVideoState, 3000);
         }
 
