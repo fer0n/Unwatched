@@ -24,19 +24,24 @@ struct FaqView: View {
 
     let faqContent: [FaqInfo] = [
         FaqInfo(
+            "pictureInPictureFaqT",
+            "pictureInPictureFaqQ",
+            "pictureInPictureFaqA"
+        ),
+        FaqInfo(
             "durationMissingFaqT",
             "durationMissingFaqQ",
             "durationMissingFaqA"
         ),
         FaqInfo(
+            "duplicatesFaqT",
+            "duplicatesFaqQ",
+            "duplicatesFaqA"
+        ),
+        FaqInfo(
             "overlayStuckFaqT",
             "overlayStuckFaqQ",
             "overlayStuckFaqA"
-        ),
-        FaqInfo(
-            "pictureInPictureFaqT",
-            "pictureInPictureFaqQ",
-            "pictureInPictureFaqA"
         ),
         FaqInfo(
             "tvOsFaqT",
@@ -47,16 +52,6 @@ struct FaqView: View {
             "watchHistoryNotShowingFaqT",
             "watchHistoryNotShowingFaqQ",
             "watchHistoryNotShowingFaqA"
-        ),
-        FaqInfo(
-            "duplicatesFaqT",
-            "duplicatesFaqQ",
-            "duplicatesFaqA"
-        ),
-        FaqInfo(
-            "macOsFaqT",
-            "macOsFaqQ",
-            "macOsFaqA"
         ),
         FaqInfo(
             "syncNotWorkingFaqT",

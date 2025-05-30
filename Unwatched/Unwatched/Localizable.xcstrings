@@ -6641,108 +6641,6 @@
         }
       }
     },
-    "inboxOverflowTip" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inbox füllt sich?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inbox Filling up?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Se está llenando el Inbox?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L'Inbox se remplit ?"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inbox się zapełnia?"
-          }
-        }
-      }
-    },
-    "inboxOverflowTipAction %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld behalten, Ältere löschen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep %lld, Clear Older"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantener %lld, Borrar más antiguos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garder %lld, Effacer les plus anciens"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zachowaj %lld, Wyczyść starsze"
-          }
-        }
-      }
-    },
-    "inboxOverflowTipMessage" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Füge Videos, die du ansehen möchtest, zu deiner Queue hinzu, entferne die anderen. Du entscheidest nur einmal — und entfernte Videos bleiben in der Bibliothek."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add videos you want to watch to your queue, removed the rest. You’ll only decide once — and removed videos stick around in the Library."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agrega los videos que quieres ver a tu queue, elimina el resto. Solo decidirás una vez — y los videos eliminados permanecen en la Biblioteca."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajoutez les vidéos que vous voulez regarder à votre queue, supprimez le reste. Vous ne déciderez qu'une fois — et les vidéos supprimées restent dans la Bibliothèque."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dodaj filmy, które chcesz obejrzeć, do swojej queue, usuń resztę. Zdecydujesz tylko raz — a usunięte filmy pozostaną w Bibliotece."
-          }
-        }
-      }
-    },
     "InboxHasVideosTip" : {
       "localizations" : {
         "de" : {
@@ -6841,6 +6739,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starsze wpisy ukryte"
+          }
+        }
+      }
+    },
+    "inboxOverflowTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox füllt sich?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Filling up?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Se está llenando el Inbox?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'Inbox se remplit ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox się zapełnia?"
+          }
+        }
+      }
+    },
+    "inboxOverflowTipAction %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld behalten, Ältere löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep %lld, Clear Older"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantener %lld, Borrar más antiguos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garder %lld, Effacer les plus anciens"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zachowaj %lld, Wyczyść starsze"
+          }
+        }
+      }
+    },
+    "inboxOverflowTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge Videos, die du ansehen möchtest, zu deiner Queue hinzu, entferne die anderen. Du entscheidest nur einmal — und entfernte Videos bleiben in der Bibliothek."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add videos you want to watch to your queue, removed the rest. You’ll only decide once — and removed videos stick around in the Library."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agrega los videos que quieres ver a tu queue, elimina el resto. Solo decidirás una vez — y los videos eliminados permanecen en la Biblioteca."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez les vidéos que vous voulez regarder à votre queue, supprimez le reste. Vous ne déciderez qu'une fois — et les vidéos supprimées restent dans la Bibliothèque."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaj filmy, które chcesz obejrzeć, do swojej queue, usuń resztę. Zdecydujesz tylko raz — a usunięte filmy pozostaną w Bibliotece."
           }
         }
       }
@@ -7351,108 +7351,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zapętlanie filmu włączone"
-          }
-        }
-      }
-    },
-    "macOsFaqA" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auf Apple Silicone Macs ist Unwatched bereits als iPad Version verfügbar. Falls es Probleme geben sollte, gib mir bitte Bescheid.  Bezüglich einer nativen macOS Version: Unwatched ist ein Nebenprojekt an dem ich in meiner freien Zeit arbeite. Für den Moment fokussiere ich mich auf die bestehenden Plattformen. Ich werde weitere Plattformen in der Zukunft in Betracht ziehen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you’re using an Apple Silicone Mac, you can already use the iPad version. Please let me know, if you’re running into any issues there.  Regarding a native macOS version: I'm a one-person team, and this app is a side project I work on during my free time. I want to focus on the platforms I'm currently supporting before exploring new ones."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si estás utilizando una Mac con chip de silicio de Apple, ya puedes usar la versión para iPad. Por favor, házmelo saber si tienes algún problema allí."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si vous utilisez un Mac Apple Silicon, vous pouvez déjà utiliser la version iPad. N'hésitez pas à me faire savoir si vous rencontrez des problèmes. Concernant une version native macOS : je suis une équipe d'une personne, et cette application est un projet parallèle sur lequel je travaille pendant mon temps libre. Je souhaite me concentrer sur les plateformes que je supporte actuellement avant d'en explorer de nouvelles."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jeśli używasz Maca z procesorem Apple Silicon, możesz już korzystać z wersji na iPad. Daj mi znać, jeśli napotkasz jakieś problemy.  Jeśli chodzi o natywną wersję na macOS: Jestem jednoosobowym zespołem, a ta aplikacja to projekt poboczny, nad którym pracuję w wolnym czasie. Chcę skupić się na platformach, które obecnie wspieram, zanim zacznę eksplorować nowe."
-          }
-        }
-      }
-    },
-    "macOsFaqQ" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird es eine macOS Version von Unwatched geben?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Will Unwatched be available on macOS?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Con respecto a una versión nativa para macOS: soy un equipo de una sola persona y esta aplicación es un proyecto paralelo en el que trabajo durante mi tiempo libre. Quiero concentrarme en las plataformas que actualmente admito antes de explorar otras nuevas."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched sera-t-il disponible sur macOS ?"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Czy Unwatched będzie dostępny na macOS?"
-          }
-        }
-      }
-    },
-    "macOsFaqT" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS Support"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "macOS Support"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compatibilidad con macOS"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Support macOS"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wsparcie dla macOS"
           }
         }
       }
@@ -12418,31 +12316,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unter \"Einstellungen → Benutzerdaten\" kann iCloud-Synchronisierung aktiviert werden. Diese Funktion ist experimentell.  Falls es Probleme gibt, findet sich hier eine Schritt-für-Schritt Anleitung zur Fehlerbehebung: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+            "value" : "Unter \"Einstellungen → Benutzerdaten\" kann iCloud-Synchronisierung aktiviert werden.  Falls es Probleme gibt, findet sich hier eine Schritt-für-Schritt Anleitung zur Fehlerbehebung: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable iCloud sync in \"Settings → User Data.\" This feature is still experimental.  If you’re running into issues, you can try the troubleshooting steps here: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+            "value" : "Enable iCloud sync in \"Settings → User Data.\"  If you’re running into issues, you can try the troubleshooting steps here: [Unwatched iCloud Sync Trouble Shooting](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Habilita la sincronización con iCloud en \"Configuración → Datos de Usuario.\" Esta función aún es experimental. Si estás experimentando problemas, puedes probar los pasos de solución aquí: [Solución de problemas de sincronización con iCloud de Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+            "value" : "Habilita la sincronización con iCloud en \"Configuración → Datos de Usuario.\"\n\nSi estás experimentando problemas, puedes probar los pasos de solución aquí: [Solución de problemas de sincronización con iCloud de Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activez la synchronisation iCloud dans \"Réglages → Données utilisateur\". Cette fonctionnalité est encore expérimentale. Si vous rencontrez des problèmes, vous pouvez essayer les étapes de dépannage ici : [Dépannage de la synchronisation iCloud Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+            "value" : "Activez la synchronisation iCloud dans \"Réglages → Données utilisateur\".\n\nSi vous rencontrez des problèmes, vous pouvez essayer les étapes de dépannage ici : [Dépannage de la synchronisation iCloud Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włącz synchronizację iCloud w \"Ustawienia → Dane Użytkownika\". Ta funkcja jest nadal eksperymentalna.  Jeśli napotkasz problemy, możesz spróbować kroków rozwiązywania problemów tutaj: [Rozwiązywanie problemów z synchronizacją iCloud w Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
+            "value" : "Włącz synchronizację iCloud w \"Ustawienia → Dane Użytkownika\".  Jeśli napotkasz problemy, możesz spróbować kroków rozwiązywania problemów tutaj: [Rozwiązywanie problemów z synchronizacją iCloud w Unwatched](https://github.com/fer0n/Unwatched/wiki/Unwatched-iCloud-Sync-Troubleshooting)"
           }
         }
       }
