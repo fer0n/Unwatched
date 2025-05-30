@@ -40,6 +40,10 @@ struct UnwatchedApp: App {
                         // avoid fetching another video first
                         player.restoreNowPlayingVideo()
                     }
+
+                    #if os(macOS)
+                    appDelegate.handleAppear()
+                    #endif
                 }
                 #if os(macOS)
                 .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)

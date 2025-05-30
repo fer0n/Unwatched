@@ -76,11 +76,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func updateView(_ view: WKWebView) {
         #if os(macOS)
-        // workaround: reload otherwise keeps old audio playing in the background
-        if player.shouldStop {
-            view.pauseAllMediaPlayback()
-            player.shouldStop = false
-        }
+        handleShouldStop(view)
         #endif
 
         if player.isLoading {
@@ -130,6 +126,15 @@ struct PlayerWebView: PlatformViewRepresentable {
             timeout: 10
         )
         appNotificationVM.show(notification)
+    }
+
+    func handleShouldStop(_ view: WKWebView) {
+        // workaround: reload otherwise keeps old audio playing in the background
+        if player.shouldStop {
+            Log.info("STOP")
+            view.pauseAllMediaPlayback()
+            player.shouldStop = false
+        }
     }
 
     func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
@@ -229,6 +234,7 @@ struct PlayerWebView: PlatformViewRepresentable {
             }
         }
 
+        // swiftlint:disable:next line_length
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacingOccurrences(of: "_", with: ".")) Safari/\(webKitVersion)"
     }
 }

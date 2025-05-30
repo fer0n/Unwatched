@@ -41,13 +41,14 @@ struct SetupView: View {
                     #if os(iOS)
                     NotificationManager.handleNotifications(checkDeferred: true)
                     #endif
-                    Log.info("active")
+                    Log.info("scenePhase: active")
                     Task {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
                     }
                 #if os(iOS)
                 case .background:
+                    Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
                 #endif
                 default:
