@@ -39,7 +39,7 @@ struct HideShortsTip: Tip {
 }
 
 struct HideShortsTipView: View {
-    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @Environment(\.modelContext) var modelContext
 
     var hideShortsTip = HideShortsTip()

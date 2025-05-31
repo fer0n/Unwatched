@@ -61,7 +61,7 @@ struct SettingsWindowView: View {
         .tint(theme.color)
         #if os(macOS)
         .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
-        // workaround: depricated, but tint doesn't work on macOS
+        // workaround: deprecated, but tint doesn't work on macOS
         .accentColor(theme.color)
         #endif
     }

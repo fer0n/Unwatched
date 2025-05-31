@@ -7,9 +7,9 @@ import SwiftUI
 import UnwatchedShared
 
 struct SponsorBlockSettingsView: View {
-    @AppStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
-    @AppStorage(Const.youtubePremium) var youtubePremium: Bool = false
-    @AppStorage(Const.skipSponsorSegments) var skipSponsorSegments: Bool = false
+    @CloudStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
+    @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
+    @CloudStorage(Const.skipSponsorSegments) var skipSponsorSegments: Bool = false
 
     @State var showAlert = false
 

@@ -272,7 +272,7 @@ extension ChapterService {
         _ videoId: PersistentIdentifier,
         _ forceRefresh: Bool
     ) -> Bool {
-        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             Log.info("SponsorBlock: Turned off in settings")
             return false

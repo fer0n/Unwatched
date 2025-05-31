@@ -7,8 +7,8 @@
 //import SwiftUI
 //
 //
-//enum UnwatchedSchemaV1p9: VersionedSchema {
-//    static let versionIdentifier = Schema.Version(1, 9, 0)
+//enum UnwatchedSchemaV1p10: VersionedSchema {
+//    static let versionIdentifier = Schema.Version(1, 10, 0)
 //
 //    static var models: [any PersistentModel.Type] {
 //        [
@@ -51,7 +51,6 @@
 //        public var youtubeChannelId: String?
 //        public var isYtShort: Bool?
 //        public var bookmarkedDate: Date?
-//        public var clearedInboxDate: Date?
 //        public var createdDate: Date?
 //        public var isNew: Bool = false
 //
@@ -72,7 +71,6 @@
 //                    deferDate: Date? = nil,
 //                    isYtShort: Bool? = nil,
 //                    bookmarkedDate: Date? = nil,
-//                    clearedInboxDate: Date? = nil,
 //                    createdDate: Date? = .now) {
 //            self.title = title
 //            self.url = url
@@ -88,7 +86,6 @@
 //            self.watchedDate = watchedDate
 //            self.deferDate = deferDate
 //            self.bookmarkedDate = bookmarkedDate
-//            self.clearedInboxDate = clearedInboxDate
 //            self.createdDate = createdDate
 //            self.isYtShort = isYtShort
 //        }

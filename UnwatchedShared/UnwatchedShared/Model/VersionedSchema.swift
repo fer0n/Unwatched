@@ -146,12 +146,56 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
     )
     
-    public static var migrateV1p7toV1p9 = MigrationStage.custom(
+    public static var migrateV1p8toV1p9 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p8.self,
         toVersion: UnwatchedSchemaV1p9.self,
         willMigrate: nil,
         didMigrate: nil
     )
+    
+    public static var migrateV1p9toV1p10 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p9.self,
+        toVersion: UnwatchedSchemaV1p10.self,
+        willMigrate: { context in
+            migrateV1p9toV1p10DidMigrate()
+        },
+        didMigrate: { context in
+            migrateV1p9toV1p10DidMigrate()
+        }
+    )
+    public static func migrateV1p9toV1p10DidMigrate() {
+        Log.info("Migrating UserDefaults to iCloud KeyValueStore")
+        if UserDefaults.standard.bool(forKey: "v1p9toV1p10DidMigrate") {
+            Log.info("Migration already done")
+            return
+        }
+        if let value = UserDefaults.standard.value(forKey: Const.defaultShortsSetting) as? Int64 {
+            Log.info("Migrate: defaultShortsSetting \(value)")
+            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.defaultShortsSetting)
+            UserDefaults.standard.removeObject(forKey: Const.defaultShortsSetting)
+        }
+        if let value = UserDefaults.standard.value(forKey: Const.skipChapterText) as? String {
+            Log.info("Migrate: skipChapterText \(value)")
+            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.skipChapterText)
+            UserDefaults.standard.removeObject(forKey: Const.skipChapterText)
+        }
+        if let value = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool {
+            Log.info("Migrate: mergeSponsorBlockChapters \(value)")
+            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.mergeSponsorBlockChapters)
+            UserDefaults.standard.removeObject(forKey: Const.mergeSponsorBlockChapters)
+        }
+        if let value = UserDefaults.standard.value(forKey: Const.youtubePremium) as? Bool {
+            Log.info("Migrate: youtubePremium \(value)")
+            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.youtubePremium)
+            UserDefaults.standard.removeObject(forKey: Const.youtubePremium)
+        }
+        if let value = UserDefaults.standard.value(forKey: Const.skipSponsorSegments) as? Bool {
+            Log.info("Migrate: skipSponsorSegments \(value)")
+            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.skipSponsorSegments)
+            UserDefaults.standard.removeObject(forKey: Const.skipSponsorSegments)
+        }
+        UserDefaults.standard.set(true, forKey: "v1p9toV1p10DidMigrate")
+    }
 
     public static var stages: [MigrationStage] {
         [
@@ -163,7 +207,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p5toV1p6,
             migrateV1p6toV1p7,
             migrateV1p7toV1p8,
-            migrateV1p7toV1p9,
+            migrateV1p8toV1p9,
+            migrateV1p9toV1p10,
         ]
     }
 }

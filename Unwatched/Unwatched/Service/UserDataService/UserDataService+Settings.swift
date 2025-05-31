@@ -17,6 +17,13 @@ extension UserDataService {
                 Log.warning("Encoding settings key not set/found: \(key)")
             }
         }
+        for (key, _) in Const.syncedSettingsDefaults {
+            if let value = NSUbiquitousKeyValueStore.default.object(forKey: key) {
+                result[key] = AnyCodable(value)
+            } else {
+                Log.warning("Encoding sync settings key not set/found: \(key)")
+            }
+        }
         return result
     }
 
@@ -26,7 +33,11 @@ extension UserDataService {
         }
         resetDefaultSettingsIfNeeded()
         for (key, value) in settings {
-            UserDefaults.standard.setValue(value.value, forKey: key)
+            if Const.syncedSettingsDefaults.contains(where: { $0.key == key }) {
+                NSUbiquitousKeyValueStore.default.set(value.value, forKey: key)
+            } else {
+                UserDefaults.standard.setValue(value.value, forKey: key)
+            }
         }
         #if os(iOS)
         NotificationManager.ensurePermissionsAreGivenForSettings()

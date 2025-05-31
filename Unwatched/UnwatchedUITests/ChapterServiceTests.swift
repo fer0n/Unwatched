@@ -583,7 +583,7 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testSponsorBlock() async {
-        UserDefaults.standard.setValue(true, forKey: Const.mergeSponsorBlockChapters)
+        NSUbiquitousKeyValueStore.default.set(true, forKey: Const.mergeSponsorBlockChapters)
         let modelContext = DataProvider.newContext()
 
         let video = ChapterServiceTestData.getSponsoredVideo()
@@ -1308,7 +1308,6 @@ CHAPTERS
             watchedDate: nil,
             isYtShort: false,
             bookmarkedDate: nil,
-            clearedInboxDate: nil,
             createdDate: nil
         )
     }

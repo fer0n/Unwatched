@@ -9,6 +9,15 @@ import SwiftUI
 import UnwatchedShared
 
 extension Const {
+    static let syncedSettingsDefaults: [String: Sendable] = [
+        // Filter
+        Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
+        Const.skipChapterText: "",
+        Const.mergeSponsorBlockChapters: false,
+        Const.youtubePremium: false,
+        Const.skipSponsorSegments: false
+    ]
+
     static let settingsDefaults: [String: Sendable] = [
         // Notifications
         Const.videoAddedToInboxNotification: false,
@@ -35,13 +44,6 @@ extension Const {
         Const.disableCaptions: false,
         Const.minimalPlayerUI: false,
         Const.autoAirplayHD: false,
-
-        // Filter
-        Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
-        Const.skipChapterText: "",
-        Const.mergeSponsorBlockChapters: false,
-        Const.youtubePremium: false,
-        Const.skipSponsorSegments: false,
 
         // Appearance
         Const.browserAsTab: false,

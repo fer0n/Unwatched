@@ -41,8 +41,8 @@ extension ShortsSetting {
         let hideShorts: Bool = {
             if let defaultHideShorts { return defaultHideShorts }
 
-            let defaultShortSettingRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsSetting)
-            let defaultShortSetting = ShortsSetting(rawValue: defaultShortSettingRaw) ?? .show
+            let defaultShortSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+            let defaultShortSetting = ShortsSetting(rawValue: Int(defaultShortSettingRaw)) ?? .show
             return defaultShortSetting == .hide
         }()
 

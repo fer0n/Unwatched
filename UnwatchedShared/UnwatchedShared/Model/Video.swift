@@ -40,8 +40,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var isYtShort: Bool?
     public var bookmarkedDate: Date?
     
-    @available(*, deprecated, message: "Remove with next data model update")
-    public var clearedInboxDate: Date?
     public var createdDate: Date?
     public var isNew: Bool = false
     
@@ -74,7 +72,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     ) -> [T] {
         var result = [T]()
 
-        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
         if (mergedChapters?.count ?? 0) > 1 && settingOn {
             result = mergedChapters ?? []
         } else if (chapters?.count ?? 0) > 1 {
@@ -120,7 +118,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             isYtShort: isYtShort,
             videoDescription: videoDescription,
             bookmarkedDate: bookmarkedDate,
-            clearedInboxDate: clearedInboxDate,
             createdDate: createdDate,
             hasInboxEntry: inboxEntry != nil,
             queueEntry: queueEntry?.toExport,
@@ -149,7 +146,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 deferDate: Date? = nil,
                 isYtShort: Bool? = nil,
                 bookmarkedDate: Date? = nil,
-                clearedInboxDate: Date? = nil,
                 createdDate: Date? = .now,
                 isNew: Bool = false,
     ) {
@@ -168,7 +164,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.deferDate = deferDate
         self.isYtShort = isYtShort
         self.bookmarkedDate = bookmarkedDate
-        self.clearedInboxDate = clearedInboxDate
         self.createdDate = createdDate
         self.isNew = isNew
     }

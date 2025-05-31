@@ -947,6 +947,7 @@
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
 		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
+		88F7D6D92DE4C261001E1F3F /* CloudStorage */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CloudStorage; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1028,6 +1029,7 @@
 		88143EB52B4A7FEF00829E13 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
 				88FB23692DD4BAD00066DB07 /* MultiPayload.swift */,
 				884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */,
@@ -1674,6 +1676,7 @@
 			fileSystemSynchronizedGroups = (
 				8847772B2D214FAE0044E812 /* UserDataService */,
 				887051762D2EE11B0000F4AB /* Notification */,
+				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 			);
 			name = UnwatchedUITests;
 			productName = UnwatchedUITests;
@@ -1720,6 +1723,7 @@
 			fileSystemSynchronizedGroups = (
 				8847772B2D214FAE0044E812 /* UserDataService */,
 				887051762D2EE11B0000F4AB /* Notification */,
+				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 			);
 			name = Unwatched;
 			productName = Unwatched;

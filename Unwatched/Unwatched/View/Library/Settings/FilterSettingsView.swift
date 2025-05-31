@@ -7,8 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct FilterSettingsView: View {
-    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
-    @AppStorage(Const.skipChapterText) var skipChapterText: String = ""
+    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+    @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
 
     @Environment(\.modelContext) var modelContext
 
@@ -20,6 +20,12 @@ struct FilterSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
+                MySection {
+                    Text("settingsSync")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundStyle(.secondary)
+                }
+
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
                     Picker("shortsSetting", selection: $defaultShortsSetting) {
                         ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {

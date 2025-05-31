@@ -207,7 +207,7 @@ extension PlayerManager {
         Log.info("handleChapterRefresh")
         ChapterService.filterChapters(in: video)
 
-        let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             return
         }

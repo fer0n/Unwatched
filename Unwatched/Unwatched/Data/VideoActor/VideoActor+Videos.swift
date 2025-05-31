@@ -249,8 +249,8 @@ import UnwatchedShared
         let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
         let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
 
-        let shortsSettingRaw = UserDefaults.standard.integer(forKey: Const.defaultShortsSetting)
-        let shortsSetting = ShortsSetting(rawValue: shortsSettingRaw) ?? .show
+        let shortsSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+        let shortsSetting = ShortsSetting(rawValue: Int(shortsSettingRaw)) ?? .show
         let showShorts = shortsSetting != .hide
 
         let info = DefaultVideoPlacement(

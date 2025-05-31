@@ -80,6 +80,7 @@ public final class DataProvider: Sendable {
         if !dict.isEmpty {
             UnwatchedMigrationPlan.migrateV1p6toV1p7DidMigrate(context)
         }
+        UnwatchedMigrationPlan.migrateV1p9toV1p10DidMigrate()
     }
     
     public let imageContainer: ModelContainer = {

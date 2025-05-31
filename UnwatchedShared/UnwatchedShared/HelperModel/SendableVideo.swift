@@ -107,7 +107,6 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         isYtShort: Bool? = nil,
         videoDescription: String? = nil,
         bookmarkedDate: Date? = nil,
-        clearedInboxDate: Date? = nil,
         createdDate: Date? = .now,
         hasInboxEntry: Bool? = nil,
         queueEntry: SendableQueueEntry? = nil,

@@ -12,7 +12,7 @@ struct SubscriptionInfoDetails: View {
     @Environment(\.modelContext) var modelContext
 
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool

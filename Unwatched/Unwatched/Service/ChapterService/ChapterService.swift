@@ -198,7 +198,7 @@ struct ChapterService {
     }
 
     private static var skipSponsorBlock: Bool {
-        if UserDefaults.standard.bool(forKey: Const.skipSponsorSegments) {
+        if NSUbiquitousKeyValueStore.default.bool(forKey: Const.skipSponsorSegments) {
             return true
         }
         Log.info("SponsorBlock: skipping sponsor segments is disabled")
@@ -223,7 +223,7 @@ struct ChapterService {
     }
 
     static func filterChapters(in video: Video?) {
-        guard let skipChapterText = UserDefaults.standard.string(forKey: Const.skipChapterText),
+        guard let skipChapterText = NSUbiquitousKeyValueStore.default.string(forKey: Const.skipChapterText),
               !skipChapterText.isEmpty else {
             Log.info("No skip chapter text")
             return
