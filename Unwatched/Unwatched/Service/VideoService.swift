@@ -365,11 +365,20 @@ extension VideoService {
     @MainActor
     static func scheduleDeferedVideoNotification(_ video: Video, deferDate: Date) {
         #if os(iOS)
-        var info = NotificationInfo(video.subscription?.title ?? "", video.title, video: video.toExport)
+        var info = NotificationInfo(
+            "🕑 " + (video.subscription?.title ?? ""),
+            video.title,
+            video: video.toExport,
+            placement: .queue,
+            enableActions: true
+        )
         let imageUrl = video.thumbnailUrl
-
         Task {
-            let userInfo = NotificationManager.getUserInfo(tab: nil, notificationInfo: info, addEntriesOnReceive: true)
+            let userInfo = NotificationManager.getUserInfo(
+                tab: .queue,
+                notificationInfo: info,
+                addEntriesOnReceive: true,
+                )
             if let imageUrl {
                 let data = try await ImageService.loadImageData(url: imageUrl)
                 info.video?.thumbnailData = data
@@ -389,10 +398,10 @@ extension VideoService {
         #endif
     }
 
-    static func consumeDeferredVideos() {
+    static func consumeDeferredVideos(_ clearedYouTubeId: String? = nil) {
         Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            await repo.consumeDeferredVideos()
+            await repo.consumeDeferredVideos(clearedYouTubeId)
         }
     }
 }

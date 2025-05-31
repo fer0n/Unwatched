@@ -141,7 +141,13 @@ struct NewVideosNotificationInfo {
         if newVideosCount == 1,
            let subscriptionTitle = dict.keys.first,
            let video = dict.values.flatMap({ $0 }).first {
-            return NotificationInfo(subscriptionTitle, "\(prefix)\(video.title)", video: video, placement: placement)
+            return NotificationInfo(
+                subscriptionTitle,
+                "\(prefix)\(video.title)",
+                video: video,
+                placement: placement,
+                enableActions: true
+            )
         }
         if dict.keys.count == 1, let first = dict.first {
             return NotificationInfo(first.key,

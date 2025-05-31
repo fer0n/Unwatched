@@ -403,7 +403,7 @@ extension VideoActor {
         }
     }
 
-    func consumeDeferredVideos() {
+    func consumeDeferredVideos(_ clearedYouTubeId: String? = nil) {
         let past = Date.distantFuture
         let now = Date.now
         let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.deferDate != nil && $0.deferDate ?? past <= now })
@@ -411,23 +411,22 @@ extension VideoActor {
 
         Log.info("consumeDeferredVideos: \(videos?.count ?? 0)")
 
-        let defaultPlacement = getDefaultVideoPlacement()
-
         for video in videos ?? [] {
             video.deferDate = nil
-            guard video.inboxEntry == nil, video.queueEntry == nil else {
+
+            if let clearedId = clearedYouTubeId, video.youtubeId == clearedId {
+                Log.info("consumeDeferredVideos: already cleared \(video.title)")
                 continue
             }
 
-            let sub = video.subscription
-            var placement = sub?.videoPlacement ?? .inbox
-            if sub?.videoPlacement == .defaultPlacement {
-                placement = defaultPlacement.videoPlacement
+            guard video.inboxEntry == nil,
+                  video.queueEntry == nil else {
+                continue
             }
-
+            video.isNew = true
             _ = addSingleVideoTo(
                 [video],
-                videoPlacement: placement,
+                videoPlacement: .queueNext,
                 hideShorts: false,
                 isNew: true,
                 )

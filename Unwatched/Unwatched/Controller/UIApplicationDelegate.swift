@@ -14,7 +14,7 @@ import BackgroundTasks
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     let notificationCenter = UNUserNotificationCenter.current()
 
-    func woraroundInitialWebViewDelay() {
+    func workaroundInitialWebViewDelay() {
         let webView = WKWebView()
         webView.loadHTMLString("", baseURL: nil)
     }
@@ -23,7 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
-        woraroundInitialWebViewDelay()
+        workaroundInitialWebViewDelay()
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
         return true
@@ -60,17 +60,24 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
                                             didReceive response: UNNotificationResponse,
                                             withCompletionHandler completionHandler: @escaping () -> Void) {
-        handleDeferedNotification(response.notification)
-        handleNotificationActions(response)
+        let clearedInfo = handleNotificationActions(response)
+        handleDeferedNotification(response.notification, clearedInfo)
         handleTabDestination(response)
         completionHandler()
     }
 
-    nonisolated func handleDeferedNotification(_ notification: UNNotification) {
+    nonisolated func handleDeferedNotification(
+        _ notification: UNNotification,
+        _ clearedInfo: (youtubeId: String, wasCleared: Bool)? = nil
+    ) {
         let userInfo = notification.request.content.userInfo
         let addEntriesOnReceive = userInfo[Const.addEntriesOnReceive] as? String == "true"
         if addEntriesOnReceive {
-            VideoService.consumeDeferredVideos()
+            var clearedYoutubeId: String?
+            if let cleared = clearedInfo, cleared.wasCleared {
+                clearedYoutubeId = cleared.youtubeId
+            }
+            VideoService.consumeDeferredVideos(clearedYoutubeId)
         }
     }
 
@@ -110,22 +117,25 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return (youtubeId, placement)
     }
 
-    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) {
-        guard let (youtubeId, placement) = getValuesFromNotification(response.notification) else {
+    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) -> (youtubeId: String, wasCleared: Bool)? {
+        guard let (youtubeId, _) = getValuesFromNotification(response.notification) else {
             Log.warning("handleNotificationActions: Cannot get values from notification")
-            return
+            return nil
         }
 
         switch response.actionIdentifier {
         case Const.notificationActionQueue:
             VideoService.insertQueueEntriesAsync(at: 1, youtubeId: youtubeId)
             NotificationManager.changeBadgeNumber(by: -1)
+            return (youtubeId, false)
         case Const.notificationActionClear:
             VideoService.clearFromEverywhere(youtubeId)
             NotificationManager.changeBadgeNumber(by: -1)
+            return (youtubeId, true)
         default:
             break
         }
+        return nil
     }
 
     nonisolated func setupNotificationCategories(_ center: UNUserNotificationCenter) {
