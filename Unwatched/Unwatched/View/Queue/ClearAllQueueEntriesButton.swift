@@ -17,6 +17,8 @@ struct ClearAllQueueEntriesButton: View {
     }
 
     func clearAll() {
-        VideoService.clearAllQueueEntries(modelContext)
+        withAnimation {
+            VideoService.clearAllQueueEntries(modelContext)
+        }
     }
 }

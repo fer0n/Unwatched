@@ -32,13 +32,21 @@ public struct VideoService {
         try? modelContext.save()
     }
     
-    public static func deleteQueueEntry(_ queueEntry: QueueEntry, modelContext: ModelContext) {
+    public static func deleteQueueEntry(
+        _ queueEntry: QueueEntry,
+        updateOrder: Bool = true,
+        modelContext: ModelContext
+    ) {
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
-        updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
+        queueEntry.video?.isNew = false
+        if updateOrder {
+            updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
+        }
     }
 
     public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
+        entry.video?.isNew = false
         modelContext.delete(entry)
     }
     

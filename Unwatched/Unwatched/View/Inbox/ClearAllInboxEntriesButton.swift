@@ -14,6 +14,8 @@ struct ClearAllInboxEntriesButton: View {
     }
 
     func clearAll() {
-        VideoService.clearAllInboxEntries(modelContext)
+        withAnimation {
+            VideoService.clearAllInboxEntries(modelContext)
+        }
     }
 }
