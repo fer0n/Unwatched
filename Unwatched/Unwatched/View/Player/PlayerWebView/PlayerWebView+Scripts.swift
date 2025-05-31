@@ -78,13 +78,7 @@ extension PlayerWebView {
                 }
             """
         }
-        return """
-               video
-                   .play()
-                   .catch(error => {
-                        sendError(error);
-                    });
-               """
+        return "play();"
     }
 
     func getPauseScript() -> String {
@@ -166,14 +160,16 @@ extension PlayerWebView {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
         }
 
-        function sendError(error) {
+        function sendError(error, prefix = "") {
             if (error && error.message) {
-                sendMessage("error", error.message);
+                sendMessage("error", `${prefix}${error.message}`);
             } else {
-                sendMessage("error", String(error));
+                sendMessage("error", `${prefix}${error}`);
             }
         }
 
+
+        // Video setup
         findVideo();
         function findVideo() {
             try {
@@ -182,23 +178,25 @@ extension PlayerWebView {
                     sendVideoState(video);
                 }
                 if (video) {
-                    video.playbackRate = playbackRate;
-                    video.muted = false;
-                    addVideoPlaybackEventListener();
-                    addVideoMetaDataEventListener();
-                    addPiPEventListener();
-                    handleFullscreenButton();
+                    setupVideo();
                 } else {
-                    videoFindAttempts++;
-                    if (videoFindAttempts < 10) {
-                        setTimeout(findVideo, 100 * videoFindAttempts);
-                    } else {
-                        sendMessage("error", "Video not found after 10 attempts");
-                    }
+                    const observer = new MutationObserver(() => {
+                        video = document.querySelector('video');
+                        if (video) {
+                            observer.disconnect();
+                            setupVideo();
+                        }
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
                 }
             } catch (error) {
                 sendError(error);
             }
+        }
+        function setupVideo() {
+            video.playbackRate = playbackRate;
+            video.muted = false;
+            handleFullscreenButton();
         }
 
 
@@ -273,55 +271,64 @@ extension PlayerWebView {
         }
 
 
-        // play, pause, ended
-        function addVideoPlaybackEventListener() {
-            video.addEventListener('play', function() {
+        document.addEventListener('play', (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 startTimer();
                 sendMessage("play")
-            });
-            video.addEventListener('pause', function() {
+            }
+        }, true);
+        document.addEventListener('pause', (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 stopTimer();
                 const url = window.location.href;
-                const payload = `${video.currentTime},${url}`;
+                const payload = `${e.target.currentTime},${url}`;
                 sendMessage("pause", payload);
-            });
-            video.addEventListener('ended', function() {
+            }
+        }, true);
+        document.addEventListener('ended', (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 sendMessage("ended");
-            });
-            video.addEventListener('webkitpresentationmodechanged', function (event) {
-                event.stopPropagation()
-            }, true)
-        }
-
+            }
+        }, true);
 
         // meta data
-        function addVideoMetaDataEventListener() {
-            video.addEventListener('loadedmetadata', function() {
-                const duration = video.duration;
+        document.addEventListener('loadedmetadata', (e) => {
+            if (e.target.tagName === 'VIDEO') {
+                const duration = e.target.duration;
                 sendMessage("duration", duration.toString());
                 if (requiresFetchingVideoData) {
                     sendMessage('updateTitle', document.title);
                 }
-                video.currentTime = startAtTime;
-            }, { once: true });
-            video.addEventListener('loadeddata', function() {
-                sendMessage("aspectRatio", `${video.videoWidth/video.videoHeight}`);
-            });
-        }
+                e.target.currentTime = startAtTime;
+            }
+        }, true);
+        document.addEventListener('loadeddata', (e) => {
+            if (e.target.tagName === 'VIDEO') {
+                sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
+            }
+        }, true);
 
 
         // Pip
-        function addPiPEventListener() {
-            video.addEventListener("canplay", function() {
+        document.addEventListener("canplay", (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "canplay");
-            }, { once: true });
-            video.addEventListener("enterpictureinpicture", function(event) {
+
+                e.target.addEventListener('webkitpresentationmodechanged', (e) => {
+                    e.stopPropagation()
+                }, true)
+            }
+        }, true);
+        document.addEventListener("enterpictureinpicture", (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "enter");
-            });
-            video.addEventListener("leavepictureinpicture", function(event) {
+            }
+        }, true);
+        document.addEventListener("leavepictureinpicture", (e) => {
+            if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "exit");
-            });
-        }
+            }
+        }, true);
 
 
         // styling
@@ -412,7 +419,11 @@ extension PlayerWebView {
         function startTimer() {
             clearInterval(timer);
             timer = setInterval(function() {
-                sendMessage("currentTime", video.currentTime);
+                let time = video?.currentTime || null;
+                sendMessage("currentTime", time);
+                if (time === null) {
+                    video = document.querySelector('video');
+                }
             }, timerInterval);
         }
         function stopTimer() {
@@ -506,9 +517,16 @@ extension PlayerWebView {
             }
         });
 
+        function play() {
+            video.play()
+                .catch(error => {
+                    sendError(error, "silent ");
+                });
+        }
+
         function togglePlay() {
             if (video.paused) {
-                video.play();
+                play();
             } else {
                 video.pause();
             }

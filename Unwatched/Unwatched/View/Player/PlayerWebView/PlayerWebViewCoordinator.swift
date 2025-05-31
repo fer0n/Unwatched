@@ -282,9 +282,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     func handleError(_ payload: String?, youtube: Bool = false) {
         Log.error("video player error: \(payload ?? "Unknown")")
 
-        if youtube && !parent.player.embeddingDisabled {
-            parent.player.isLoading = true
+        if youtube {
+            if parent.player.embeddingDisabled {
+                return
+            }
 
+            parent.player.isLoading = true
             parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
                 ? true
                 : parent.player.isPlaying
@@ -298,7 +301,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             }
             return
         }
-
+        if payload?.hasPrefix("silent") == true {
+            return
+        }
         let notification = AppNotificationData(
             title: "errorOccured",
             error: PlayerError.javascriptError(payload ?? "Unknown"),
