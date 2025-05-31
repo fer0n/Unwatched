@@ -10,13 +10,10 @@ import UnwatchedShared
 
 struct QueueView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
 
-    @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
-    @Environment(PlayerManager.self) private var player
 
     var queue: [QueueEntry]
     var showCancelButton: Bool = false
@@ -61,22 +58,19 @@ struct QueueView: View {
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                         .videoListItemEntry()
                     }
-                    .onMove(perform: moveQueueEntry)
+                    .moveQueueEntryModifier()
                     .handleDynamicVideoURLDrop(.queue)
                     .listRowBackground(Color.backgroundColor)
 
-                    if showClearQueueButton && queue.count >= Const.minListEntriesToShowClear {
-                        ClearAllVideosButton(clearAll: clearAll)
+                    if !queue.isEmpty {
+                        ClearAllQueueEntriesButton()
                     }
                 }
                 .scrollContentBackground(.hidden)
                 .disabled(queue.isEmpty)
             }
             .myNavigationTitle("queue", showBack: false)
-            .navigationDestination(for: SendableSubscription.self) { sub in
-                SendableSubscriptionDetailView(sub, modelContext)
-                    .foregroundStyle(Color.neutralAccentColor)
-            }
+            .sendableSubscriptionDestination()
             .toolbar {
                 if showCancelButton {
                     DismissToolbarButton()
@@ -91,23 +85,6 @@ struct QueueView: View {
         .onAppear {
             navManager.setScrollId("top", ClearList.queue.rawValue)
         }
-    }
-
-    func moveQueueEntry(from source: IndexSet, to destination: Int) {
-        if source.count == 1 && source.first == destination {
-            return
-        }
-        VideoService.moveQueueEntry(from: source,
-                                    to: destination,
-                                    updateIsNew: true,
-                                    modelContext: modelContext)
-        if destination == 0 || source.contains(0) {
-            player.loadTopmostVideoFromQueue()
-        }
-    }
-
-    func clearAll() {
-        VideoService.deleteQueueEntries(queue, modelContext: modelContext)
     }
 }
 

@@ -8,9 +8,6 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-
-
-
 struct InboxView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
@@ -23,13 +20,12 @@ struct InboxView: View {
 
     var body: some View {
         @Bindable var navManager = navManager
-        let showClear = inboxEntries.count >= Const.minListEntriesToShowClear
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
                 Color.backgroundColor.ignoresSafeArea(.all)
 
-                if inboxEntries.isEmpty {
+                if !hasEntries {
                     ContentUnavailableView("noInboxItems",
                                            systemImage: "tray.fill",
                                            description: Text("noInboxItemsDescription"))
@@ -47,7 +43,7 @@ struct InboxView: View {
                         InboxOverflowTipView()
                     }
 
-                    if !inboxEntries.isEmpty {
+                    if hasEntries {
                         InboxSwipeTipView()
                             .listRowBackground(Color.backgroundColor)
                             .listRowSeparator(.hidden)
@@ -82,9 +78,9 @@ struct InboxView: View {
                         HiddenEntriesInfo()
                     }
 
-                    ClearAllVideosButton(clearAll: clearAll)
-                        .disabled(!showClear)
-                        .opacity(showClear ? 1 : 0)
+                    ClearAllInboxEntriesButton()
+                        .disabled(!hasEntries)
+                        .opacity(hasEntries ? 1 : 0)
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
@@ -92,41 +88,20 @@ struct InboxView: View {
             .onAppear {
                 navManager.setScrollId("top", ClearList.inbox.rawValue)
             }
-            .toolbar {
-                if showCancelButton {
-                    DismissToolbarButton()
-                }
-                undoRedoToolbarButton
-                ToolbarSpacerWorkaround()
-                RefreshToolbarButton()
-            }
+            .inboxToolbar(showCancelButton)
             .myNavigationTitle("inbox", showBack: false)
-            .navigationDestination(for: SendableSubscription.self) { sub in
-                SendableSubscriptionDetailView(sub, modelContext)
-            }
+            .sendableSubscriptionDestination()
             .tint(theme.color)
         }
         .tint(.neutralAccentColor)
     }
 
-    var hasTooManyItems: Bool {
-        inboxEntries.count >= Const.inboxFetchLimit
+    var hasEntries: Bool {
+        !inboxEntries.isEmpty
     }
 
-    var undoRedoToolbarButton: some ToolbarContent {
-        // Workaround: having this be its own view
-        // doesn't work for some reason
-        ToolbarItem(placement: .cancellationAction) {
-            Button {
-                modelContext.undoManager?.undo()
-            } label: {
-                Image(systemName: "arrow.uturn.backward")
-            }
-            .accessibilityLabel("undo")
-            .opacity(modelContext.undoManager?.canUndo == true ? 1 : 0)
-            .font(.footnote)
-            .fontWeight(.bold)
-        }
+    var hasTooManyItems: Bool {
+        inboxEntries.count >= Const.inboxFetchLimit
     }
 
     func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
@@ -138,10 +113,6 @@ struct InboxView: View {
 
     func deleteInboxEntry(_ entry: InboxEntry) {
         VideoService.deleteInboxEntry(entry, modelContext: modelContext)
-    }
-
-    func clearAll() {
-        VideoService.deleteInboxEntries(inboxEntries, modelContext: modelContext)
     }
 }
 

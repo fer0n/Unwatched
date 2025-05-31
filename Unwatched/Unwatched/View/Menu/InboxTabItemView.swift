@@ -9,7 +9,6 @@ import UnwatchedShared
 
 struct InboxTabItemView: View {
     @Environment(RefreshManager.self) var refresher
-    @Environment(NavigationManager.self) var navManager
 
     static var descriptor: FetchDescriptor<InboxEntry> {
         var descriptor = FetchDescriptor<InboxEntry>(
@@ -39,15 +38,13 @@ struct InboxTabItemView: View {
     var getInboxSymbol: Image {
         let isLoading = refresher.isLoading
         let isEmpty = inboxEntries.isEmpty
-        let currentTab = navManager.tab == .inbox
 
         let full = isEmpty ? "" : ".full"
         if !isLoading {
             return Image(systemName: "tray\(full)")
         }
 
-        let fill = currentTab ? ".fill" : ""
-        return Image("custom.tray.loading\(fill)")
+        return Image("custom.tray.loading.fill")
     }
 
     var hasNewItems: Bool {

@@ -7,14 +7,10 @@ import SwiftUI
 import UnwatchedShared
 
 struct LibraryDestinationModifier: ViewModifier {
-    @Environment(\.modelContext) var modelContext
-
     // swiftlint:disable cyclomatic_complexity
     func body(content: Content) -> some View {
         content
-            .navigationDestination(for: SendableSubscription.self) { sub in
-                SendableSubscriptionDetailView(sub, modelContext)
-            }
+            .sendableSubscriptionDestination()
             .navigationDestination(for: LibraryDestination.self) { value in
                 switch value {
                 case .allVideos:
