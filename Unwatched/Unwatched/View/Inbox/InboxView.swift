@@ -63,7 +63,6 @@ struct InboxView: View {
                                         showDelete: false,
                                         )
                                 )
-                                .autoMarkSeen(video)
                             } else {
                                 EmptyEntry(entry)
                             }

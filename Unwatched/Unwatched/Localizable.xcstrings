@@ -1617,40 +1617,6 @@
         }
       }
     },
-    "autoRemoveNew" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„Neu“ automatisch entfernen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto Remove “New”"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eliminar \"Nuevo\" automáticamente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suppression automatique du \"Nouveau\""
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatycznie usuń \"Nowe\""
-          }
-        }
-      }
-    },
     "backupNow" : {
       "localizations" : {
         "de" : {
@@ -7861,40 +7827,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nowe filmy"
-          }
-        }
-      }
-    },
-    "newVideosFooter" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wenn aktiviert, wird der Status „Neu“ entfernt, nachdem das Video sichtbar war. Andernfalls wird er erst nach einer Interaktion (verschieben, Beschreibung ansehen, abspielen) entfernt."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If enabled, “New” status will be removed after the video has been visible. Otherwise, it will only be removed after an interaction (move, view description, play)."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si está activado, el estado «Nuevo» se eliminará después de que el vídeo haya sido visible. De lo contrario, solo se eliminará tras una interacción (mover, ver descripción, reproducir)."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Si activé, le statut « Nouveau » sera supprimé après que la vidéo ait été affichée. Sinon, il ne sera supprimé qu’après une interaction (déplacement, affichage de la description, lecture)."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jeśli włączone, status „Nowe” zostanie usunięty po wyświetleniu wideo. W przeciwnym razie zostanie usunięty dopiero po interakcji (przesunięcie, podgląd opisu, odtworzenie)."
           }
         }
       }

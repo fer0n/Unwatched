@@ -50,7 +50,6 @@ struct QueueView: View {
                                         showDelete: false,
                                         )
                                 )
-                                .autoMarkSeen(video)
                             } else {
                                 EmptyEntry(entry)
                             }

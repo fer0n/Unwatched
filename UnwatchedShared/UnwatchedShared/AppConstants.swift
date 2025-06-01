@@ -210,7 +210,6 @@ public struct Const {
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"
     public static let showTabBarLabels = "showTabBarLabels"
     public static let requireClearConfirmation = "requireClearConfirmation"
-    public static let autoRemoveNew = "autoRemoveNew"
     public static let showClearQueueButton = "showClearQueueButton"
     public static let showAddToQueueButton = "showAddToQueueButton"
     public static let useNoCookieUrl = "useNoCookieUrl"

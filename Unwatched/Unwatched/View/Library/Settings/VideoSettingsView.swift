@@ -8,7 +8,6 @@ import UnwatchedShared
 
 struct VideoSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @AppStorage(Const.autoRemoveNew) var autoRemoveNew: Bool = true
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
@@ -21,17 +20,13 @@ struct VideoSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection("newVideos", footer: "newVideosFooter") {
+                MySection {
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
                             Text($0.description(defaultPlacement: ""))
                         }
                     }
                     .pickerStyle(.menu)
-
-                    Toggle(isOn: $autoRemoveNew) {
-                        Text("autoRemoveNew")
-                    }
                 }
 
                 MySection("refresh", footer: "allowRefreshDuringSyncFooter") {

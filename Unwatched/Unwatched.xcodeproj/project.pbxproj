@@ -148,8 +148,6 @@
 		884777372D21509F0044E812 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884777352D21509F0044E812 /* AnyCodable.swift */; };
 		8847D6C72C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
 		8847D6C82C99865400BFA12F /* ChapterCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8847D6C62C99865400BFA12F /* ChapterCategory.swift */; };
-		884CC8892DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */; };
-		884CC88A2DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */; };
 		884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		8852493E2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
@@ -727,7 +725,6 @@
 		884777322D2150850044E812 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		884777352D21509F0044E812 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
-		884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoMarkSeenViewModifier.swift; sourceTree = "<group>"; };
 		884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTabItemView.swift; sourceTree = "<group>"; };
 		8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChangeOrientationButton.swift; sourceTree = "<group>"; };
 		885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentNavBarWorkaround.swift; sourceTree = "<group>"; };
@@ -1032,7 +1029,6 @@
 				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
 				88FB23692DD4BAD00066DB07 /* MultiPayload.swift */,
-				884CC8882DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift */,
 				880F05412D90293D0049B902 /* ToggleSidebar.swift */,
 				880F03822D8EE73D0049B902 /* CursorHideModifier.swift */,
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
@@ -1952,7 +1948,6 @@
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailView.swift in Sources */,
 				8809D8952DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */,
-				884CC88A2DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */,
 				889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */,
 				884777302D2150060044E812 /* UserDataServiceError.swift in Sources */,
 				889AF8FF2C50ECCD001CEDE6 /* OrientationManager.swift in Sources */,
@@ -2216,7 +2211,6 @@
 				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
-				884CC8892DC388ED00FC59DF /* AutoMarkSeenViewModifier.swift in Sources */,
 				889931D72D731AB0009096AB /* PreviousState.swift in Sources */,
 				88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
