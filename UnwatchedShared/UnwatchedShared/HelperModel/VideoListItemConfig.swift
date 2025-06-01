@@ -17,7 +17,6 @@ public struct VideoListItemConfig {
     public let queueRole: ButtonRole?
     public let onChange: (() -> Void)?
     public let clearAboveBelowList: ClearList?
-    public let videoSwipeActions: [VideoActions]
     public let showQueueButton: Bool
     public let showContextMenu: Bool
     public let showVideoListOrder: Bool
@@ -36,7 +35,6 @@ public struct VideoListItemConfig {
         queueRole: ButtonRole? = nil,
         onChange: (() -> Void)? = nil,
         clearAboveBelowList: ClearList? = nil,
-        videoSwipeActions: [VideoActions] = [.queueTop, .queueBottom, .clear, .more, .details],
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
         showVideoListOrder: Bool = false,
@@ -54,7 +52,6 @@ public struct VideoListItemConfig {
         self.queueRole = queueRole
         self.onChange = onChange
         self.clearAboveBelowList = clearAboveBelowList
-        self.videoSwipeActions = videoSwipeActions
         self.showQueueButton = showQueueButton
         #if os(iOS)
         self.showContextMenu = showContextMenu

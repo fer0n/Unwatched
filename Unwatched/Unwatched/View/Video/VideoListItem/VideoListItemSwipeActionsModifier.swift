@@ -93,12 +93,10 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     var canBeCleared: Bool {
-        config.videoSwipeActions.contains(.clear) &&
-            (config.hasInboxEntry == true
-                || config.isNew == true
-                || config.hasQueueEntry == true
-                || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
-            )
+        config.hasInboxEntry == true
+            || config.isNew == true
+            || config.hasQueueEntry == true
+            || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
     }
 
     func performVideoAction(
@@ -326,24 +324,20 @@ struct LeadingSwipeActionsView: View {
 
     var body: some View {
         Group {
-            if config.videoSwipeActions.contains(.queueTop) {
-                Button(role: config.queueRole,
-                       action: addVideoToTopQueue,
-                       label: {
-                        Image(systemName: Const.queueTopSF)
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.1))
-                    .accessibilityLabel("queueNext")
-            }
-            if config.videoSwipeActions.contains(.queueBottom) {
-                Button(role: config.queueRole,
-                       action: addVideoToBottomQueue,
-                       label: {
-                        Image(systemName: Const.queueBottomSF)
-                       })
-                    .tint(theme.color.mix(with: Color.black, by: 0.3))
-                    .accessibilityLabel("queueLast")
-            }
+            Button(role: config.queueRole,
+                   action: addVideoToTopQueue,
+                   label: {
+                    Image(systemName: Const.queueTopSF)
+                   })
+                .tint(theme.color.mix(with: Color.black, by: 0.1))
+                .accessibilityLabel("queueNext")
+            Button(role: config.queueRole,
+                   action: addVideoToBottomQueue,
+                   label: {
+                    Image(systemName: Const.queueBottomSF)
+                   })
+                .tint(theme.color.mix(with: Color.black, by: 0.3))
+                .accessibilityLabel("queueLast")
             if config.isNew == true {
                 Button(action: toggleIsNew) {
                     Image(systemName: Const.removeNewSF)
@@ -385,28 +379,24 @@ struct TrailingSwipeActionsView: View {
                 .labelStyle(.iconOnly)
                 .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
-            if config.videoSwipeActions.contains(.more) {
-                #if os(iOS)
-                moreMenu
-                #endif
-            }
-            if config.videoSwipeActions.contains(.details) {
-                Button {
-                    guard let video = VideoService.getVideoModel(
-                        from: videoData,
-                        modelContext: modelContext
-                    ) else {
-                        Log.error("No video to show details for")
-                        return
-                    }
-                    navManager.videoDetail = video
-                    video.isNew = false
-                } label: {
-                    Image(systemName: "text.bubble.fill")
+            #if os(iOS)
+            moreMenu
+            #endif
+            Button {
+                guard let video = VideoService.getVideoModel(
+                    from: videoData,
+                    modelContext: modelContext
+                ) else {
+                    Log.error("No video to show details for")
+                    return
                 }
-                .tint(theme.color.mix(with: Color.black, by: 0.5))
-                .accessibilityLabel("videoDescription")
+                navManager.videoDetail = video
+                video.isNew = false
+            } label: {
+                Image(systemName: "text.bubble.fill")
             }
+            .tint(theme.color.mix(with: Color.black, by: 0.5))
+            .accessibilityLabel("videoDescription")
         }
     }
 
