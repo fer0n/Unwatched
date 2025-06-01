@@ -47,9 +47,9 @@ struct VideoListItem: View {
                 .padding([.vertical, .leading], 5)
                 .overlay(alignment: .topLeading) {
                     VideoListItemStatus(
+                        showAllStatus: config.showAllStatus,
                         youtubeId: videoData.youtubeId,
                         playingVideoId: player.video?.youtubeId,
-                        showPlayingStatus: config.showPlayingStatus,
                         hasInboxEntry: config.hasInboxEntry,
                         hasQueueEntry: config.hasQueueEntry,
                         watched: config.watched,

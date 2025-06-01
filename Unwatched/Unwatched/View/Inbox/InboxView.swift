@@ -55,7 +55,9 @@ struct InboxView: View {
                                 VideoListItem(
                                     video,
                                     config: VideoListItemConfig(
+                                        hasInboxEntry: true,
                                         isNew: video.isNew,
+                                        showAllStatus: false,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
                                         clearAboveBelowList: .inbox,

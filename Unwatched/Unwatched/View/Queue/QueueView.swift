@@ -40,9 +40,10 @@ struct QueueView: View {
                                 VideoListItem(
                                     video,
                                     config: VideoListItemConfig(
+                                        hasQueueEntry: true,
                                         videoDuration: video.duration,
                                         isNew: video.isNew,
-                                        showPlayingStatus: false,
+                                        showAllStatus: false,
                                         clearRole: .destructive,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,

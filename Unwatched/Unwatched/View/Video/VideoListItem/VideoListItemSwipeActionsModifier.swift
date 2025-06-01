@@ -93,10 +93,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     var canBeCleared: Bool {
-        config.hasInboxEntry == true
-            || config.isNew == true
-            || config.hasQueueEntry == true
-            || [NavigationTab.queue, NavigationTab.inbox].contains(navManager.tab)
+        config.hasInboxEntry == true || config.hasQueueEntry == true
     }
 
     func performVideoAction(
