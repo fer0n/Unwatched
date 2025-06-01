@@ -134,7 +134,7 @@ struct NewVideosNotificationInfo {
 
     private func getText(from dict: [String: [SendableVideo]], placement: VideoPlacementArea) -> NotificationInfo? {
         let newVideosCount = dict.values.flatMap { $0 }.count
-        let prefix = placement == .inbox ? "" : "→ "
+        let prefix = placement == .inbox ? "" : "↪️ "
         if newVideosCount == 0 {
             return nil
         }
