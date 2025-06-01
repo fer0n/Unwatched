@@ -583,7 +583,6 @@ final class ChapterServiceTests: XCTestCase {
     }
 
     func testSponsorBlock() async {
-        NSUbiquitousKeyValueStore.default.set(true, forKey: Const.mergeSponsorBlockChapters)
         let modelContext = DataProvider.newContext()
 
         let video = ChapterServiceTestData.getSponsoredVideo()
@@ -600,7 +599,8 @@ final class ChapterServiceTests: XCTestCase {
             let chapters = try await ChapterService.mergeOrGenerateChapters(
                 youtubeId: video.youtubeId,
                 videoId: video.persistentModelID,
-                videoChapters: realChapters
+                videoChapters: realChapters,
+                overrideSettingOn: true
             )
             print("chapters with duration: \(String(describing: chapters))")
             XCTAssertGreaterThan(chapters?.count ?? 0, 0)

@@ -14,9 +14,10 @@ extension ChapterService {
         videoId: PersistentIdentifier,
         videoChapters: [SendableChapter],
         duration: Double? = nil,
-        forceRefresh: Bool = false
+        forceRefresh: Bool = false,
+        overrideSettingOn: Bool? = nil
     ) async throws -> [SendableChapter]? {
-        if !shouldRefreshSponserBlock(videoId, forceRefresh) {
+        if !shouldRefreshSponserBlock(videoId, forceRefresh, overrideSettingOn) {
             Log.info("SponsorBlock: not refreshing")
             return nil
         }
@@ -270,9 +271,10 @@ extension ChapterService {
 
     static func shouldRefreshSponserBlock(
         _ videoId: PersistentIdentifier,
-        _ forceRefresh: Bool
+        _ forceRefresh: Bool,
+        _ settingOn: Bool? = nil
     ) -> Bool {
-        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
+        let settingOn = settingOn ?? NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
         if !settingOn {
             Log.info("SponsorBlock: Turned off in settings")
             return false
