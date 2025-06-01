@@ -182,6 +182,9 @@ extension PlayerWebView {
                 } else {
                     const observer = new MutationObserver(() => {
                         video = document.querySelector('video');
+                        if (enableLogging) {
+                            sendVideoState(video, "videoMutation");
+                        }
                         if (video) {
                             observer.disconnect();
                             setupVideo();
@@ -197,6 +200,12 @@ extension PlayerWebView {
             video.playbackRate = playbackRate;
             video.muted = false;
             handleFullscreenButton();
+        }
+        function repairVideo(message = "") {
+            video = document.querySelector('video');
+            if (enableLogging) {
+                sendVideoState(video, "repairedVideo " + message);
+            }
         }
 
 
@@ -240,6 +249,7 @@ extension PlayerWebView {
         // Check video state
         function sendVideoState(v, message = "checkVideoState") {
             let info = {
+                inDom: document.contains(v),
                 sameVideo: video === v,
                 video: !!v,
                 readyState: v?.readyState,
@@ -421,8 +431,8 @@ extension PlayerWebView {
             timer = setInterval(function() {
                 let time = video?.currentTime || null;
                 sendMessage("currentTime", time);
-                if (time === null) {
-                    video = document.querySelector('video');
+                if (time === null || document.contains(video) === false) {
+                    repairVideo("startTimer");
                 }
             }, timerInterval);
         }
@@ -521,6 +531,7 @@ extension PlayerWebView {
             video.play()
                 .catch(error => {
                     sendError(error, "silent ");
+                    repairVideo("play");
                 });
         }
 
