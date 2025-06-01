@@ -61,19 +61,7 @@ struct AddVideoButton: View {
         Button {
             hapticToggle.toggle()
             // play now
-            let task = Task {
-                if let youtubeUrl {
-                    var url = youtubeUrl
-
-                    if let time = await browserManager.getCurrentTime(),
-                       let urlWithTime = UrlService.addTimeToUrl(youtubeUrl, time: time) {
-                        url = urlWithTime
-                    }
-                    await avm.addUrls([url], at: 0)
-                } else {
-                    throw VideoError.noVideoUrl
-                }
-            }
+            let task = addTimestampedUrl(at: 0)
 
             player.loadTopmostVideoFromQueue(
                 after: task,
@@ -104,11 +92,7 @@ struct AddVideoButton: View {
                 .frame(width: backgroundSize, height: backgroundSize)
             Button {
                 if isVideoUrl || isPlaylistUrl {
-                    Task {
-                        if let youtubeUrl = youtubeUrl {
-                            await avm.addUrls([youtubeUrl])
-                        }
-                    }
+                    _ = addTimestampedUrl()
                 } else {
                     showHelp = true
                 }
@@ -184,6 +168,25 @@ struct AddVideoButton: View {
             return UrlService.getPlaylistIdFromUrl(url) != nil
         }
         return false
+    }
+
+    func getTimestampedUrl() async -> URL? {
+        if let youtubeUrl,
+           let time = await browserManager.getCurrentTime(),
+           let urlWithTime = UrlService.addTimeToUrl(youtubeUrl, time: time) {
+            return urlWithTime
+        }
+        return youtubeUrl
+    }
+
+    func addTimestampedUrl(at index: Int = 1) -> Task<Void, Error> {
+        return Task {
+            if let url = await getTimestampedUrl() {
+                await avm.addUrls([url], at: index)
+            } else {
+                throw VideoError.noVideoUrl
+            }
+        }
     }
 }
 
