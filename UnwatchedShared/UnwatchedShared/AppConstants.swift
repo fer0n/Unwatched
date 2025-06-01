@@ -120,6 +120,7 @@ public struct Const {
     public static let queueTagSF = "rectangle.stack"
     public static let inboxTabEmptySF = "tray"
     public static let clearSF = "xmark.circle.fill"
+    public static let removeNewSF = "circle.slash.fill"
 
     public static let queueTopSF = "text.insert"
     public static let queueBottomSF = "text.append"

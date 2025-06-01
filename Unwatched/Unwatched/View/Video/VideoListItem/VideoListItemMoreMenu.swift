@@ -47,7 +47,7 @@ struct VideoListItemMoreMenuView: View {
             }
             Button(action: toggleIsNew) {
                 if videoData.isNew == true {
-                    Label("removeIsNew", systemImage: "circle.slash.fill")
+                    Label("removeIsNew", systemImage: Const.removeNewSF)
                 } else {
                     Label("addIsNew", systemImage: "circle.fill")
                 }

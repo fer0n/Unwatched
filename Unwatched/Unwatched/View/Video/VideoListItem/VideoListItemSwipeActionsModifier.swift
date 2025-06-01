@@ -25,8 +25,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     theme: theme,
                     config: config,
                     addVideoToTopQueue: addVideoToTopQueue,
-                    addVideoToBottomQueue: addVideoToBottomQueue
-                )
+                    addVideoToBottomQueue: addVideoToBottomQueue,
+                    toggleIsNew: toggleIsNew,
+                    )
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 TrailingSwipeActionsView(
@@ -321,6 +322,7 @@ struct LeadingSwipeActionsView: View {
     var config: VideoListItemConfig
     var addVideoToTopQueue: () -> Void
     var addVideoToBottomQueue: () -> Void
+    var toggleIsNew: () -> Void
 
     var body: some View {
         Group {
@@ -341,6 +343,13 @@ struct LeadingSwipeActionsView: View {
                        })
                     .tint(theme.color.mix(with: Color.black, by: 0.3))
                     .accessibilityLabel("queueLast")
+            }
+            if config.isNew == true {
+                Button(action: toggleIsNew) {
+                    Image(systemName: Const.removeNewSF)
+                }
+                .tint(theme.color.mix(with: Color.black, by: 0.5))
+                .accessibilityLabel("removeIsNew")
             }
         }
     }
