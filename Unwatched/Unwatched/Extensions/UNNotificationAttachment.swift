@@ -44,7 +44,7 @@ extension UNNotificationAttachment {
                 ])
             return imageAttachment
         } catch {
-            Log.error("error " + error.localizedDescription)
+            Log.error(error.localizedDescription)
         }
         return nil
     }

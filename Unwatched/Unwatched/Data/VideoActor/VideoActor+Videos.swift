@@ -121,6 +121,7 @@ import UnwatchedShared
         }
 
         try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
+            Log.info("loadVideos for \(sendableSubs.count) subscriptions")
             for sub in sendableSubs {
                 group.addTask {
                     try await self.fetchVideos(sub)

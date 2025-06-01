@@ -40,7 +40,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             return
         }
         let currentRoute = getCurrentRoute()
-        Log.info("Airplay route: \(currentRoute.rawValue)")
+        Log.info("autoAirplayHD route: \(currentRoute.rawValue)")
         player.setAirplayHD(currentRoute == .airplay)
     }
 

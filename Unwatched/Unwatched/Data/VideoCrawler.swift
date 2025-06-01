@@ -27,7 +27,6 @@ struct VideoCrawler {
     }
 
     static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
-        Log.info("loadVideosFromRSS \(url)")
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
         return rssParserDelegate.videos
     }
