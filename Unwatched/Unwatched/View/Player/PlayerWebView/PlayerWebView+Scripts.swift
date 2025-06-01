@@ -311,7 +311,7 @@ extension PlayerWebView {
                 }
                 e.target.currentTime = startAtTime;
             }
-        }, true);
+        }, { capture: true, once: true });
         document.addEventListener('loadeddata', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
@@ -328,7 +328,7 @@ extension PlayerWebView {
                     e.stopPropagation()
                 }, true)
             }
-        }, true);
+        }, { capture: true, once: true });
         document.addEventListener("enterpictureinpicture", (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "enter");
