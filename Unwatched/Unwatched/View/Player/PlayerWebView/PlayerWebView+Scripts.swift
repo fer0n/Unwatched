@@ -346,6 +346,9 @@ extension PlayerWebView {
         function styling() {
             const style = document.createElement('style');
             style.innerHTML = `
+                * {
+                    cursor: default !important;
+                }
                 .ytp-pause-overlay, .branding-img {
                     display: none !important;
                 }
@@ -379,7 +382,6 @@ extension PlayerWebView {
             const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
             if (fullscreenButton) {
                 fullscreenButton.style.opacity = 1;
-                fullscreenButton.style.cursor = 'pointer';
                 fullscreenButton.disabled = false;
                 fullscreenButton.title = fullscreenTitle;
                 fullscreenButton.addEventListener('click', function(event) {
