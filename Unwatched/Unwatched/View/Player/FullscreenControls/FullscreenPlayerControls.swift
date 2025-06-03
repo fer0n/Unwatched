@@ -43,6 +43,7 @@ struct FullscreenPlayerControls: View {
                         .resizable()
                         .frame(width: size, height: size)
                     ChapterTimeRemaining()
+                        .fontWidth(.condensed)
                         .fontWeight(.medium)
                         .foregroundStyle(Color.foregroundGray.opacity(0.5))
                 }

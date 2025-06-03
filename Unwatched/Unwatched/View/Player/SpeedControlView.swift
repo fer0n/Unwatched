@@ -16,7 +16,7 @@ struct SpeedControlView: View {
     @Binding var selectedSpeed: Double
 
     @ScaledMetric var thumbSize: CGFloat = 35
-    @ScaledMetric var selectedFontSize: CGFloat = 16
+    @ScaledMetric var selectedFontSize: CGFloat = 17
     let frameHeight: CGFloat = 35
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
     let borderWidth: CGFloat = 2
@@ -59,8 +59,9 @@ struct SpeedControlView: View {
                             }
                         if isHightlighted {
                             Text(SpeedControlViewModel.formatSpeed(speed))
-                                .fontWeight(.bold)
-                                .font(.custom("SFCompactDisplay-Semibold", size: 12))
+                                .font(.system(size: 12))
+                                .fontWeight(.heavy)
+                                .fontWidth(.condensed)
                                 .foregroundStyle(foregroundColor)
                                 .allowsHitTesting(false)
                         }
@@ -119,8 +120,10 @@ struct SpeedControlView: View {
                     .frame(width: thumbSize, height: thumbSize)
                 Text(floatingText)
                     .foregroundStyle(.automaticWhite)
-                    .font(.custom("SFCompactDisplay-Bold", size: selectedFontSize))
+                    .font(.system(size: selectedFontSize))
                     .sensoryFeedback(Const.sensoryFeedback, trigger: floatingText)
+                    .fontWidth(.condensed)
+                    .fontWeight(.heavy)
             }
             .position(x: dragState ?? controlMinXLocal, y: midY)
             .frame(maxHeight: thumbSize)

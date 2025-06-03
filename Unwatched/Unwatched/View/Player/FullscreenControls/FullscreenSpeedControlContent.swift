@@ -92,14 +92,14 @@ struct FullscreenSpeedControlContent: View {
         HStack(spacing: 0) {
             let speedText = SpeedControlViewModel.formatSpeed(speed)
             Text(verbatim: speedText)
-                .font(.custom("SFCompactDisplay-Bold", size: 17))
             if speedText.count <= 1 {
                 Text(verbatim: "×")
-                    .font(Font.custom("SFCompactDisplay-Bold", size: 14))
             }
         }
+        .font(.system(size: 18))
+        .fontWidth(.compressed)
+        .fontWeight(.bold)
         .fixedSize()
-        // .animation(.default, value: customSetting)
     }
 }
 

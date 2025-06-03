@@ -170,6 +170,7 @@ struct ChapterMiniControlRemainingText: View {
         if let remaining = player.currentRemainingText {
             Text(remaining)
                 .font(.system(size: 12).monospacedDigit())
+                .fontWidth(.condensed)
                 .animation(.default, value: player.currentRemainingText)
                 .contentTransition(.numericText(countsDown: true))
                 .foregroundStyle(.secondary)

@@ -37,11 +37,6 @@
 	<array>
 		<string>AddVideoIntent</string>
 	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>SF-Compact-Display-Semibold.otf</string>
-		<string>SF-Compact-Display-Bold.otf</string>
-	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

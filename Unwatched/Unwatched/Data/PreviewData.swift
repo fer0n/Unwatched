@@ -55,7 +55,7 @@ extension PlayerManager {
         player.currentTime = 5
         player.currentChapter = Chapter.getDummy()
         // player.embeddingDisabled = true
-        player.isPlaying = true
+        player.isPlaying = false
         return player
     }
 }
