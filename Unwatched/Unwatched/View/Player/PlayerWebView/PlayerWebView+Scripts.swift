@@ -160,11 +160,11 @@ extension PlayerWebView {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
         }
 
-        function sendError(error, prefix = "") {
+        function sendError(error) {
             if (error && error.message) {
-                sendMessage("error", `${prefix}${error.message}`);
+                sendMessage("error", error.message);
             } else {
-                sendMessage("error", `${prefix}${error}`);
+                sendMessage("error", error);
             }
         }
 
@@ -203,9 +203,7 @@ extension PlayerWebView {
         }
         function repairVideo(message = "") {
             video = document.querySelector('video');
-            if (enableLogging) {
-                sendVideoState(video, "repairedVideo " + message);
-            }
+            sendVideoState(video, "repairedVideo " + message);
         }
 
 
@@ -532,7 +530,7 @@ extension PlayerWebView {
         function play() {
             video.play()
                 .catch(error => {
-                    sendError(error, "silent ");
+                    sendError(error);
                     repairVideo("play");
                 });
         }

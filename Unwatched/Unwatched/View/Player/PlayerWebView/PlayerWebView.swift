@@ -119,13 +119,6 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
         Log.error("Error evaluating JavaScript: \(error)")
-        let notification = AppNotificationData(
-            title: "errorOccured",
-            error: error,
-            icon: Const.errorSF,
-            timeout: 10
-        )
-        appNotificationVM.show(notification)
     }
 
     func handleShouldStop(_ view: WKWebView) {

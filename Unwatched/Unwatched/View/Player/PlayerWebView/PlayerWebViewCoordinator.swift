@@ -301,16 +301,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             }
             return
         }
-        if payload?.hasPrefix("silent") == true {
-            return
-        }
-        let notification = AppNotificationData(
-            title: "errorOccured",
-            error: PlayerError.javascriptError(payload ?? "Unknown"),
-            icon: Const.errorSF,
-            timeout: 10
-        )
-        parent.appNotificationVM.show(notification)
     }
 
     func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
