@@ -36,6 +36,7 @@ struct InboxOverflowTipView: View {
                                 .font(.headline)
                                 .foregroundStyle(.tertiary)
                         }
+                        .buttonStyle(.plain)
                     }
 
                     Text("inboxOverflowTipMessage")

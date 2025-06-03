@@ -127,20 +127,19 @@ struct AddToLibraryView: View {
         let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
         let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
-        ZStack {
-            if isLoading {
-                ProgressView()
-                    .frame(width: 10, height: 10)
-                    #if os(macOS)
-                    .scaleEffect(0.3)
-                #endif
-            } else if failed {
-                Image(systemName: Const.clearNoFillSF)
-                    .accessibilityLabel("failed")
-            } else if isSuccess {
-                Image(systemName: "checkmark")
-                    .accessibilityLabel("success")
-            }
+        if isLoading {
+            ProgressView()
+                .frame(width: 10, height: 10)
+                .padding(.horizontal, 5)
+                #if os(macOS)
+                .scaleEffect(0.3)
+            #endif
+        } else if failed {
+            Image(systemName: Const.clearNoFillSF)
+                .accessibilityLabel("failed")
+        } else if isSuccess {
+            Image(systemName: "checkmark")
+                .accessibilityLabel("success")
         }
 
         PasteButton(payloadType: MultiPayload.self) { payloads in

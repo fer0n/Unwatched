@@ -102,7 +102,7 @@ struct InboxView: View {
     }
 
     var hasTooManyItems: Bool {
-        inboxEntries.count >= Const.inboxFetchLimit
+        inboxEntries.count >= (Const.inboxFetchLimit - 1)
     }
 
     func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
