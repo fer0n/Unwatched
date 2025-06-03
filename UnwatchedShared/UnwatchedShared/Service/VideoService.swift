@@ -37,9 +37,11 @@ public struct VideoService {
         updateOrder: Bool = true,
         modelContext: ModelContext
     ) {
+        if queueEntry.video?.isNew == true {
+            queueEntry.video?.isNew = false
+        }
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
-        queueEntry.video?.isNew = false
         if updateOrder {
             updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
         }
