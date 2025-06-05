@@ -21,20 +21,22 @@ struct DateSelectorSheet: ViewModifier {
 
         content
             .sheet(isPresented: $navManager.showDeferDateSelector, onDismiss: onDismiss) {
-                DeferDateSelector(
-                    video: player.video,
-                    detectedDate: $player.deferVideoDate,
-                    onSuccess: handleSuccess
-                )
-                .fixedSize(horizontal: false, vertical: true)
-                .onSizeChange { size in
-                    Task {
-                        // workaround: without Taskt, the sheet height is stuck on 0
-                        sheetHeight = size.height
+                ScrollView {
+                    DeferDateSelector(
+                        video: player.video,
+                        detectedDate: $player.deferVideoDate,
+                        onSuccess: handleSuccess
+                    )
+                    .fixedSize(horizontal: false, vertical: true)
+                    .onSizeChange { size in
+                        Task {
+                            // workaround: without Taskt, the sheet height is stuck on 0
+                            sheetHeight = size.height
+                        }
                     }
+                    .presentationDetents([.height(sheetHeight)])
+                    .tint(theme.color)
                 }
-                .presentationDetents([.height(sheetHeight)])
-                .tint(theme.color)
             }
             .onChange(of: player.deferVideoDate) {
                 if player.deferVideoDate != nil {

@@ -26,103 +26,101 @@ struct DeferDateSelector: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack {
-                Text("deferVideo")
-                    .font(.headline)
-                    .fontWeight(.black)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
+        VStack {
+            Text("deferVideo")
+                .font(.headline)
+                .fontWeight(.black)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding()
 
-                Text("deferDateHelper")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .multilineTextAlignment(.leading)
-                    .font(.footnote)
-                    .padding(.bottom)
+            Text("deferDateHelper")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .font(.footnote)
+                .padding(.bottom)
 
-                if let detectedDateValue {
-                    Button {
-                        self.date = detectedDateValue
-                    } label: {
-                        Text(formatted(detectedDateValue))
-                    }
-                    .buttonStyle(DeferDateButtonStyle(
-                        isHighlighted: date == detectedDateValue,
-                        color: theme.color,
-                        contrastColor: theme.contrastColor
-                    ))
-                }
-
+            if let detectedDateValue {
                 Button {
-                    date = nextFullHour
+                    self.date = detectedDateValue
                 } label: {
-                    Text("selected")
+                    Text(formatted(detectedDateValue))
                 }
                 .buttonStyle(DeferDateButtonStyle(
-                    isHighlighted: date != nil && date != detectedDateValue,
+                    isHighlighted: date == detectedDateValue,
                     color: theme.color,
                     contrastColor: theme.contrastColor
                 ))
-
-                Button(role: .destructive) {
-                    date = nil
-                } label: {
-                    Text("none")
-                        .frame(maxWidth: .infinity)
-                }
-                .contentShape(Rectangle())
-                .buttonStyle(DeferDateButtonStyle(
-                    isHighlighted: date == nil,
-                    color: .red,
-                    contrastColor: .white
-                ))
             }
-            .padding(.horizontal)
 
-            DatePicker("selectDate", selection: Binding<Date>(get: {self.date ?? Date()}, set: {self.date = $0}))
-                #if os(iOS)
-                .datePickerStyle(.wheel)
-                #else
-                .padding(.vertical)
-                .datePickerStyle(.graphical)
-                #endif
-                .labelsHidden()
-                .myNavigationTitle("deferVideo", showBack: false)
-                .padding(.horizontal)
-                .disabled(date == nil)
-
-            HStack {
-                DismissSheetButton()
-                    .buttonStyle(DeferDateButtonStyle(
-                        isHighlighted: false,
-                        color: theme.color,
-                        contrastColor: theme.contrastColor
-                    ))
-
-                Button("confirm", systemImage: "checkmark") {
-                    if let video, let videoId = video.persistentId {
-                        if let date {
-                            VideoService.deferVideo(
-                                videoId,
-                                deferDate: date
-                            )
-                            onSuccess?()
-                        } else {
-                            VideoService.cancelDeferVideo(video)
-                        }
-                        dismiss()
-                    }
-                }
-                .buttonStyle(DeferDateButtonStyle(
-                    isHighlighted: true,
-                    color: theme.color,
-                    contrastColor: theme.contrastColor
-                ))
-                .disabled(!isDirty)
+            Button {
+                date = nextFullHour
+            } label: {
+                Text("selected")
             }
-            .fontWeight(.medium)
-            .padding()
+            .buttonStyle(DeferDateButtonStyle(
+                isHighlighted: date != nil && date != detectedDateValue,
+                color: theme.color,
+                contrastColor: theme.contrastColor
+            ))
+
+            Button(role: .destructive) {
+                date = nil
+            } label: {
+                Text("none")
+                    .frame(maxWidth: .infinity)
+            }
+            .contentShape(Rectangle())
+            .buttonStyle(DeferDateButtonStyle(
+                isHighlighted: date == nil,
+                color: .red,
+                contrastColor: .white
+            ))
         }
+        .padding(.horizontal)
+
+        DatePicker("selectDate", selection: Binding<Date>(get: {self.date ?? Date()}, set: {self.date = $0}))
+            #if os(iOS)
+            .datePickerStyle(.wheel)
+            #else
+            .padding(.vertical)
+            .datePickerStyle(.graphical)
+            #endif
+            .labelsHidden()
+            .myNavigationTitle("deferVideo", showBack: false)
+            .padding(.horizontal)
+            .disabled(date == nil)
+
+        HStack {
+            DismissSheetButton()
+                .buttonStyle(DeferDateButtonStyle(
+                    isHighlighted: false,
+                    color: theme.color,
+                    contrastColor: theme.contrastColor
+                ))
+
+            Button("confirm", systemImage: "checkmark") {
+                if let video, let videoId = video.persistentId {
+                    if let date {
+                        VideoService.deferVideo(
+                            videoId,
+                            deferDate: date
+                        )
+                        onSuccess?()
+                    } else {
+                        VideoService.cancelDeferVideo(video)
+                    }
+                    dismiss()
+                }
+            }
+            .buttonStyle(DeferDateButtonStyle(
+                isHighlighted: true,
+                color: theme.color,
+                contrastColor: theme.contrastColor
+            ))
+            .disabled(!isDirty)
+        }
+        .fontWeight(.medium)
+        .padding()
     }
 
     var detectedDateValue: Date? {

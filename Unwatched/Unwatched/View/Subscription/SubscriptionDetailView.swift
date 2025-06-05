@@ -56,6 +56,7 @@ struct SubscriptionDetailView: View {
 
                 VideoListView(subscriptionId: subscription.persistentModelID)
             }
+            .scrollContentBackground(.hidden)
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
