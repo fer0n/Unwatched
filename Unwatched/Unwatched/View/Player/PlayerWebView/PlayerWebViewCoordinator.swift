@@ -320,7 +320,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
         updateTimeCounter += 1
         if persist,
-           let urlString = urlString,
+           let urlString,
            let url = URL(string: String(urlString)),
            let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
             updateTimeCounter = 0

@@ -133,6 +133,7 @@ extension VideoService {
         isNew: Bool? = nil,
         delay: Double = 200,
         ) -> Task<Void, Error> {
+        Log.info("forceUpdateVideo")
         return Task { @MainActor in
             do {
                 try await Task.sleep(for: .milliseconds(delay))

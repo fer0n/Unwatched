@@ -333,6 +333,7 @@ extension PlayerManager {
         guard !isPlaying else {
             return
         }
-        loadTopmostVideoFromQueue(updateTime: true)
+        let context = DataProvider.mainContext
+        loadTopmostVideoFromQueue(modelContext: context, updateTime: true)
     }
 }
