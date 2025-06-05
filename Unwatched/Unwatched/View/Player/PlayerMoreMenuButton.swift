@@ -49,6 +49,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
             if let url = player.video?.url {
                 Button {
+                    navManager.showMenu = true
                     openUrl(url)
                 } label: {
                     Text("openInAppBrowser")
