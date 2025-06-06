@@ -28,7 +28,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
         })
 
         CombinedPlaybackSpeedSetting(
-            selectedSpeed: $player.playbackSpeed,
+            selectedSpeed: $player.debouncedPlaybackSpeed,
             isOn: isOn,
             hapticToggle: $hapticToggle,
             hasHaptics: hasHaptics,

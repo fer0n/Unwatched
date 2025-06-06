@@ -16,7 +16,7 @@ struct CompactFullscreenSpeedControl: View {
 
     var body: some View {
         FullscreenSpeedControlContent(
-            value: player.playbackSpeed,
+            value: player.debouncedPlaybackSpeed,
             onChange: { player.playbackSpeed = $0 },
             triggerInteraction: { },
             isInteracting: .constant(false),
@@ -62,7 +62,7 @@ struct FullscreenSpeedControl: View {
                     .frame(width: size, height: size)
                     .foregroundStyle(Color.backgroundColor)
                 FullscreenSpeedControlContent(
-                    value: player.playbackSpeed,
+                    value: player.debouncedPlaybackSpeed,
                     onChange: { player.playbackSpeed = $0 },
                     triggerInteraction: { autoHideVM.setShowControls() },
                     isInteracting: Binding(

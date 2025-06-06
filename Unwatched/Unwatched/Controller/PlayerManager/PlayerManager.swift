@@ -40,9 +40,12 @@ import UnwatchedShared
     var shouldStop: Bool = false
     var unstarted: Bool = true
     var isLoading: Bool = true
-    var temporaryPlaybackSpeed: Double?
-    private(set) var aspectRatio: Double?
     var deferVideoDate: Date?
+    private(set) var aspectRatio: Double?
+
+    var temporaryPlaybackSpeed: Double?
+    var _debouncedPlaybackSpeed: Double?
+    @ObservationIgnored var playbackSpeedTask: Task<Void, Never>?
 
     @ObservationIgnored var previousIsPlaying = false
     @ObservationIgnored var previousState = PreviousState()

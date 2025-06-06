@@ -138,10 +138,10 @@ enum PlayerShortcut: String, CaseIterable {
             OverlayFullscreenVM.shared.show(.nextVideo)
         case .speedUp:
             AutoHideVM.shared.setShowControls()
-            player.speedUp()
+            player.debouncedSpeedUp()
         case .slowDown:
             AutoHideVM.shared.setShowControls()
-            player.slowDown()
+            player.debouncedSlowDown()
         case .reloadPlayer:
             player.hotReloadPlayer()
         case .toggleFullscreen:

@@ -92,7 +92,9 @@ struct SpeedControlView: View {
             thumb
         }
         .onChange(of: selectedSpeed) {
-            controlMinX = viewModel.getXPos(selectedSpeed)
+            if dragState == nil {
+                controlMinX = viewModel.getXPos(selectedSpeed)
+            }
         }
         .onChange(of: navManager.showMenu) {
             if dragState != nil {
@@ -167,7 +169,22 @@ struct SpeedControlView: View {
             ? selectedSpeed
             : viewModel.getSpeedFromPos(dragState ?? 0)
         let text = SpeedControlViewModel.formatSpeed(speed)
+        handleDebounceSpeedChange(speed)
         return text + (text.count <= 2 ? "×" : "")
+    }
+
+    func handleDebounceSpeedChange(_ speed: Double) {
+        if dragState != nil, speed != viewModel.currentSpeed {
+            viewModel.currentSpeed = speed
+            viewModel.speedDebounceTask?.cancel()
+            viewModel.speedDebounceTask = Task {
+                do {
+                    try await Task.sleep(for: .milliseconds(500))
+                    selectedSpeed = speed
+                    viewModel.speedDebounceTask = nil
+                } catch {}
+            }
+        }
     }
 }
 

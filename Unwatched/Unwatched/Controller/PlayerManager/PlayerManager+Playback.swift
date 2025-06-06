@@ -174,6 +174,29 @@ extension PlayerManager {
     }
 
     @MainActor
+    var debouncedPlaybackSpeed: Double {
+        get {
+            _debouncedPlaybackSpeed ?? playbackSpeed
+        }
+        set {
+            setPlaybackSpeed(newValue)
+        }
+    }
+
+    @MainActor
+    func setPlaybackSpeedDebounced(_ value: Double) {
+        _debouncedPlaybackSpeed = value
+        playbackSpeedTask?.cancel()
+        playbackSpeedTask = Task {
+            do {
+                try await Task.sleep(for: .milliseconds(400))
+                setPlaybackSpeed(value)
+                _debouncedPlaybackSpeed = nil
+            } catch { }
+        }
+    }
+
+    @MainActor
     var actualPlaybackSpeed: Double {
         getPlaybackSpeed()
     }
@@ -206,18 +229,18 @@ extension PlayerManager {
     }
 
     @MainActor
-    func speedUp() {
-        let nextSpeed = Const.speeds.first(where: { $0 > playbackSpeed }) ?? Const.speeds.last
+    func debouncedSpeedUp() {
+        let nextSpeed = Const.speeds.first(where: { $0 > debouncedPlaybackSpeed }) ?? Const.speeds.last
         if let nextSpeed {
-            playbackSpeed = nextSpeed
+            setPlaybackSpeedDebounced(nextSpeed)
         }
     }
 
     @MainActor
-    func slowDown() {
-        let nextSpeed = Const.speeds.last(where: { $0 < playbackSpeed }) ?? Const.speeds.first
+    func debouncedSlowDown() {
+        let nextSpeed = Const.speeds.last(where: { $0 < debouncedPlaybackSpeed }) ?? Const.speeds.first
         if let nextSpeed {
-            playbackSpeed = nextSpeed
+            setPlaybackSpeedDebounced(nextSpeed)
         }
     }
 

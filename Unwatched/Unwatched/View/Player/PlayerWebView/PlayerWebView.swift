@@ -131,7 +131,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
-        if prev.playbackSpeed != (player.temporaryPlaybackSpeed ?? player.playbackSpeed) {
+        if prev.playbackSpeed != player.playbackSpeed {
             Log.info("SPEED")
             evaluateJavaScript(uiView, getSetPlaybackRateScript())
             player.previousState.playbackSpeed = player.playbackSpeed

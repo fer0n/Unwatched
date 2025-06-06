@@ -13,6 +13,9 @@ class SpeedControlViewModel {
     var padding: CGFloat = 0
     var showContent = false
 
+    var speedDebounceTask: Task<Void, Never>?
+    var currentSpeed: Double?
+
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
         let adjustedPos = pos - padding
         var calculatedIndex: Int {
