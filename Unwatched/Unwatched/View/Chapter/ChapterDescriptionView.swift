@@ -22,17 +22,19 @@ struct ChapterDescriptionView: View {
 
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: isCompact ? 10 : 15) {
-                    DescriptionDetailHeaderView(video: video, onTitleTap: {
-                        if let url = video.url?.absoluteString {
-                            navManager.openUrlInApp(.url(url))
-                            navManager.videoDetail = nil
-                        }
-                    }, setShowMenu: setShowMenu)
+                VStack(alignment: .leading, spacing: isCompact ? 8 : 10) {
+                    DescriptionDetailHeaderView(
+                        video: video,
+                        smallTitle: isCompact,
+                        onTitleTap: onTitleTap,
+                        setShowMenu: setShowMenu)
 
                     if hasChapters {
                         ChapterList(video: video, isCompact: isCompact)
                             .padding(.vertical)
+                    } else {
+                        Spacer()
+                            .frame(height: 7)
                     }
 
                     DescriptionDetailView(video: video)
@@ -67,6 +69,13 @@ struct ChapterDescriptionView: View {
         }
         .padding(.top, 2)
         .tint(.neutralAccentColor)
+    }
+
+    func onTitleTap() {
+        if let url = video.url?.absoluteString {
+            navManager.openUrlInApp(.url(url))
+            navManager.videoDetail = nil
+        }
     }
 }
 

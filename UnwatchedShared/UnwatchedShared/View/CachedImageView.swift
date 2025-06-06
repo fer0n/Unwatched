@@ -37,7 +37,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
             self.placeholder()
                 .task {
                     if image == nil, let url = imageUrl {
-                        let task = getImage(url)
+                        let task = ImageService.getImage(url, cacheManager)
                         if let taskResult = try? await task.value {
                             let (taskImage, info) = taskResult
                             image = taskImage
@@ -45,46 +45,6 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
                         }
                     }
                 }
-        }
-    }
-
-    func getImage(_ url: URL) -> Task<(PlatformImage?, ImageCacheInfo?), Error> {
-        let cacheInfo = self.cacheManager[url.absoluteString]
-
-        return Task {
-            // load from memory
-            if let cacheInfo = cacheInfo {
-                #if os(iOS)
-                return (UIImage(data: cacheInfo.data), nil)
-                #elseif os(macOS)
-                return (NSImage(data: cacheInfo.data), nil)
-                #endif
-            }
-
-            // fetch from DB
-            let container = DataProvider.shared.imageContainer
-            let context = ModelContext(container)
-            if let model = ImageService.getCachedImage(for: url, context),
-               let imageData = model.imageData {
-                #if os(iOS)
-                return (UIImage(data: imageData), nil)
-                #elseif os(macOS)
-                return (NSImage(data: imageData), nil)
-                #endif
-            }
-
-            // fetch online
-            let imageData = try await ImageService.loadImageData(url: url)
-            let imageInfo = ImageCacheInfo(
-                url: url,
-                data: imageData
-            )
-
-            #if os(iOS) || os(tvOS)
-            return (UIImage(data: imageData), imageInfo)
-            #elseif os(macOS)
-            return (NSImage(data: imageData), imageInfo)
-            #endif
         }
     }
 }

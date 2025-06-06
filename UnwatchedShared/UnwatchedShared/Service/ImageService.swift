@@ -16,10 +16,23 @@ public struct ImageService {
         let context = ModelContext(container)
 
         for info in cache.values {
-            let imageCache = CachedImage(info.url, imageData: info.data)
-            context.insert(imageCache)
-            Log.info("saved image with URL: \(info.url)")
-
+            if info.persistImage == true {
+                var color: Color? = nil
+                if info.persistColor == true {
+                    color = info.color
+                    Log.info("saved color with image for: \(info.url)")
+                }
+                let imageCache = CachedImage(info.url, imageData: info.data, color: color)
+                context.insert(imageCache)
+                Log.info("saved image with URL: \(info.url)")
+            } else if info.persistColor == true, let color = info.color {
+                guard let image = getCachedImage(for: info.url, context) else {
+                    Log.error("Could not find image for URL: \(info.url)")
+                    continue
+                }
+                Log.info("saved color for: \(info.url)")
+                image.color = color
+            }
         }
 
         try? context.save()
@@ -219,6 +232,85 @@ public struct ImageService {
         }
         
         return false
+    }
+    
+    @MainActor
+    public static func getImage(
+        _ url: URL,
+        _ cacheManager: ImageCacheManager
+    ) -> Task<(PlatformImage?, ImageCacheInfo), Error> {
+        let cacheInfo = cacheManager[url.absoluteString]
+
+        return Task.detached {
+            // load from memory
+            if var cacheInfo {
+                #if os(iOS)
+                return (UIImage(data: cacheInfo.data), cacheInfo)
+                #elseif os(macOS)
+                return (NSImage(data: cacheInfo.data), cacheInfo)
+                #endif
+            }
+
+            // fetch from DB
+            let container = DataProvider.shared.imageContainer
+            let context = ModelContext(container)
+            if let model = ImageService.getCachedImage(for: url, context),
+               let imageData = model.imageData {
+                let imageInfo = ImageCacheInfo(
+                    url: url,
+                    data: imageData,
+                    color: model.color,
+                    persistImage: false,
+                    persistColor: false
+                )
+                #if os(iOS)
+                return (UIImage(data: imageData), imageInfo)
+                #elseif os(macOS)
+                return (NSImage(data: imageData), imageInfo)
+                #endif
+            }
+
+            // fetch online
+            let imageData = try await ImageService.loadImageData(url: url)
+            let imageInfo = ImageCacheInfo(
+                url: url,
+                data: imageData,
+                persistImage: true
+            )
+
+            #if os(iOS) || os(tvOS)
+            return (UIImage(data: imageData), imageInfo)
+            #elseif os(macOS)
+            return (NSImage(data: imageData), imageInfo)
+            #endif
+        }
+    }
+    
+    @MainActor
+    public static func getAccentColor(from url: URL, _ imageCacheManager: ImageCacheManager) async -> Task<ImageCacheInfo?, Never> {
+        let task = ImageService.getImage(
+            url,
+            imageCacheManager
+        )
+        
+        return Task.detached {
+            guard let value = try? await task.value else {
+                Log.error("getAccentColor failed: \(url)")
+                return nil
+            }
+            var info = value.1
+            
+            if info.color == nil {
+                let image = value.0
+                if let color = image?.extractVibrantAccentColor() {
+                    info.color = color
+                    info.persistColor = true
+                } else {
+                    Log.error("getAccentColor: no color for \(url)")
+                }
+            }
+            return info
+        }
     }
 }
 

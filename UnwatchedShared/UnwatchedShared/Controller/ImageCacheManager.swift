@@ -54,9 +54,21 @@ import OSLog
 public struct ImageCacheInfo: Sendable {
     public var url: URL
     public var data: Data
+    public var color: Color?
+    public var persistImage: Bool
+    public var persistColor: Bool
     
-    public init(url: URL, data: Data) {
+    public init(
+        url: URL,
+        data: Data,
+        color: Color? = nil,
+        persistImage: Bool = true,
+        persistColor: Bool = true
+    ) {
         self.url = url
         self.data = data
+        self.color = color
+        self.persistImage = persistImage
+        self.persistColor = persistColor
     }
 }

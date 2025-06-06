@@ -63,8 +63,9 @@ struct PlayerControls: View {
                             setShowMenu: setShowMenu,
                             showImage: true
                         )
-                        .font(.subheadline)
+                        .font(.headline)
                         .fontWeight(.medium)
+                        .fontWidth(.condensed)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)

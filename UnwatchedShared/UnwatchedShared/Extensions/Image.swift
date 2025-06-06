@@ -60,6 +60,12 @@ public extension UIImage {
         
         return cgImage.pixelColors(at: points)
     }
+    
+    func extractVibrantAccentColor() -> Color? {
+        guard let cgImage = self.cgImage else { return nil }
+        return cgImage.extractVibrantAccentColor()
+    }
+
 }
 #endif
 
@@ -74,6 +80,11 @@ public extension NSImage {
         }
         
         return cgImage.pixelColors(at: points)
+    }
+    
+    func extractVibrantAccentColor() -> Color? {
+        guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
+        return cgImage.extractVibrantAccentColor()
     }
 }
 

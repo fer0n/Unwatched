@@ -27,8 +27,11 @@ struct DescriptionDetailView: View {
 
 struct DescriptionDetailHeaderView: View {
     @State var hapticToggle = false
+    @ScaledMetric var titleSize: CGFloat = 35
+    @ScaledMetric var subTitleSize: CGFloat = 15
 
     let video: Video
+    var smallTitle = false
     let onTitleTap: () -> Void
     let setShowMenu: (() -> Void)?
 
@@ -37,8 +40,11 @@ struct DescriptionDetailHeaderView: View {
             onTitleTap()
         } label: {
             Text(verbatim: video.title)
-                .font(.system(.title2))
-                .fontWeight(.black)
+                .font(smallTitle
+                        ? .title
+                        : .system(size: titleSize))
+                .fontWeight(.semibold)
+                .fontWidth(.compressed)
                 .multilineTextAlignment(.leading)
         }
         .buttonStyle(.plain)
@@ -63,6 +69,8 @@ struct DescriptionDetailHeaderView: View {
             }
         }
         .foregroundStyle(.secondary)
+        .font(.system(size: subTitleSize))
+        .fontWeight(.regular)
     }
 
     func publishedDateText(_ published: Date) -> String {

@@ -50,6 +50,7 @@ struct CapsuleMenuLabel: View {
                 .font(.system(size: 13))
                 .opacity(0.7)
             Text(text)
+                .fontWidth(.condensed)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)

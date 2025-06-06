@@ -18,9 +18,10 @@ struct SubscriptionInfoDetails: View {
     @Binding var requiresUnsubscribe: Bool
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(subscription.title)
-                .font(.system(size: 34))
+                .font(.system(size: 42))
+                .fontWidth(.condensed)
                 .fontWeight(.heavy)
                 .padding(.horizontal)
 
@@ -65,7 +66,7 @@ struct SubscriptionInfoDetails: View {
                 .padding(.horizontal)
             }
             Spacer()
-                .frame(height: 20)
+                .frame(height: 10)
             VStack(alignment: .leading, spacing: 5) {
                 Text("settings")
                     .font(.subheadline)
@@ -180,13 +181,15 @@ struct SubscriptionInfoDetails: View {
                 }
             }
         } label: {
-            HStack {
+            HStack(spacing: 3) {
                 Image(systemName: subscription.isArchived ? "plus" : "checkmark")
                     .contentTransition(.symbolEffect(.replace))
                 Text(subscription.isArchived
                         ? String(localized: "subscribe")
                         : String(localized: "subscribed"))
             }
+            .fontWidth(.condensed)
+            .fontWeight(.semibold)
             .padding(10)
         }
     }

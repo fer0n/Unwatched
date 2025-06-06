@@ -31,28 +31,7 @@ struct SubscriptionDetailView: View {
                             showTitle = true
                         }
                 }
-                .padding(.top, 200)
-                .listRowInsets(EdgeInsets(top: -200, leading: 0, bottom: 0, trailing: 0))
-                .listRowSeparator(.hidden)
-                .background(
-                    CachedImageView(imageUrl: imageUrl) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } placeholder: {
-                        Color.clear
-                    }
-                    .overlay(Material.thin)
-                    .padding(.bottom, -225)
-                    .mask(LinearGradient(gradient: Gradient(
-                        stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: .black.opacity(0.8), location: 0.2),
-                            .init(color: .black, location: 0.3),
-                            .init(color: .black, location: 1)
-                        ]
-                    ), startPoint: .top, endPoint: .bottom))
-                )
+                .imageAccentBackground(url: imageUrl)
 
                 VideoListView(subscriptionId: subscription.persistentModelID)
             }
@@ -121,7 +100,7 @@ struct SubscriptionDetailView: View {
 }
 
 #Preview {
-    let container = DataProvider.previewContainer
+    let container = DataProvider.previewContainerFilled
     let fetch = FetchDescriptor<Subscription>()
     let subs = try? container.mainContext.fetch(fetch)
     let sub = subs?.first

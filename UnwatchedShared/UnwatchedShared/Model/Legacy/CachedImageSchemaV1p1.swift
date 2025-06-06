@@ -1,11 +1,10 @@
 //
-//  CachedImageSchemaV1p1.swift
-//  UnwatchedShared
+//  UnwatchedSchemaV1.swift
+//  Unwatched
 //
 
 import SwiftData
-
-
+import SwiftUI
 
 enum CachedImageSchemaV1p1: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 1, 0)
@@ -13,27 +12,16 @@ enum CachedImageSchemaV1p1: VersionedSchema {
     static var models: [any PersistentModel.Type] {
         [CachedImage.self]
     }
-}
+    
+    @Model public final class CachedImage {
+        @Attribute(.unique) public var imageUrl: URL?
+        @Attribute(.externalStorage) public var imageData: Data?
+        public var createdOn: Date?
 
-public enum CachedImageMigrationPlan: SchemaMigrationPlan {
-    public static var schemas: [any VersionedSchema.Type] {
-        [
-            CachedImageSchemaV1.self,
-            CachedImageSchemaV1p1.self
-        ]
-    }
-
-    static let migrateCachedImageV1toV1p1 = MigrationStage.custom(
-        fromVersion: CachedImageSchemaV1.self,
-        toVersion: CachedImageSchemaV1p1.self,
-        willMigrate: { context in
-            // clear cache
-            try? context.delete(model: CachedImageSchemaV1.CachedImage.self)
-            try? context.save()
-        }, didMigrate: nil
-    )
-
-    public static var stages: [MigrationStage] {
-        [migrateCachedImageV1toV1p1]
+        public init(_ imageUrl: URL, imageData: Data) {
+            self.imageUrl = imageUrl
+            self.imageData = imageData
+            self.createdOn = .now
+        }
     }
 }

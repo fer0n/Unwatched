@@ -24,9 +24,9 @@ struct CapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .opacity(isEnabled ? 1 : 0.2)
-            .padding(.vertical, 5)
-            .padding(.horizontal, 10)
-            .background(background, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+            .padding(.vertical, 3)
+            .padding(.horizontal, 5)
+            .background(background, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .foregroundStyle(foreground)
     }
 }
