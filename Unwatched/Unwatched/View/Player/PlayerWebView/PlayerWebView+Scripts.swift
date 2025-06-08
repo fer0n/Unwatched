@@ -26,7 +26,9 @@ extension PlayerWebView {
         }
         Log.info("loadPlayer: \(urlString)")
 
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        let referer = "https://app.local.com"
+        request.setValue(referer, forHTTPHeaderField: "Referer")
         webView.load(request)
         return true
     }
