@@ -185,6 +185,9 @@ extension PlayerManager {
 
     @MainActor
     func setPlaybackSpeedDebounced(_ value: Double) {
+        if temporaryPlaybackSpeed != nil {
+            return
+        }
         _debouncedPlaybackSpeed = value
         playbackSpeedTask?.cancel()
         playbackSpeedTask = Task {
@@ -282,6 +285,9 @@ extension PlayerManager {
 
     @MainActor
     private func setPlaybackSpeed(_ value: Double) {
+        if temporaryPlaybackSpeed != nil {
+            return
+        }
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {
