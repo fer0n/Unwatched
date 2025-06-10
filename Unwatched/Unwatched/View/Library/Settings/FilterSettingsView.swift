@@ -9,6 +9,7 @@ import UnwatchedShared
 struct FilterSettingsView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
+    @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
 
     @Environment(\.modelContext) var modelContext
 
@@ -41,7 +42,16 @@ struct FilterSettingsView: View {
                 }
 
                 MySection("chapterFilter", footer: "chapterFilterFooter") {
-                    TextField("skipChapterText", text: $skipChapterText)
+                    TextField("keywords", text: $skipChapterText)
+                        .autocorrectionDisabled()
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                        .submitLabel(.done)
+                    #endif
+                }
+
+                MySection("videoTitleFilter", footer: "videoTitleFilterFooter") {
+                    TextField("keywords", text: $filterVideoTitleText)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.never)

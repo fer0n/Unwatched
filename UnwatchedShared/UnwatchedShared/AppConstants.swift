@@ -12,6 +12,7 @@ public struct Const {
     public static let youtubePremium = "youtubePremium"
     public static let skipSponsorSegments = "skipSponsorSegments"
     public static let skipChapterText = "skipChapterText"
+    public static let filterVideoTitleText = "filterVideoTitleText"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
     

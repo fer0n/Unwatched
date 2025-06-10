@@ -254,9 +254,12 @@ import UnwatchedShared
         let shortsSetting = ShortsSetting(rawValue: Int(shortsSettingRaw)) ?? .show
         let showShorts = shortsSetting != .hide
 
+        let filterVideoTitleText = NSUbiquitousKeyValueStore.default.string(forKey: Const.filterVideoTitleText) ?? ""
+
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
-            hideShorts: !showShorts
+            hideShorts: !showShorts,
+            filterVideoTitleText: filterVideoTitleText
         )
         return info
     }

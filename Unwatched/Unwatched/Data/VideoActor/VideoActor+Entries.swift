@@ -143,6 +143,15 @@ extension VideoActor {
         }
     }
 
+    func getFilteredByVideoTitleText(_ videos: [Video], _ defaultPlacement: DefaultVideoPlacement) -> [Video] {
+        let filterStrings = defaultPlacement.filterVideoTitleText.split(separator: ",").map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return videos.filter { video in
+            return !filterStrings.contains(where: { video.title.localizedStandardContains($0) })
+        }
+    }
+
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
                                   defaultPlacement: DefaultVideoPlacement) -> Int {
@@ -153,6 +162,7 @@ extension VideoActor {
         if let cutOffDate = sub.mostRecentVideoDate {
             videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
         }
+        videosToAdd = getFilteredByVideoTitleText(videosToAdd, defaultPlacement)
 
         var placement = sub.videoPlacement
         if sub.videoPlacement == .defaultPlacement {

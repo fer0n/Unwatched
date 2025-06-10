@@ -6913,6 +6913,40 @@
         }
       }
     },
+    "keywords" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlagwort 1,Schlagwort 2,…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keyword 1,Keyword 2,…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palabra clave 1, Palabra clave 2,…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot-clé 1,Mot-clé 2,…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Słowo kluczowe 1, słowo kluczowe 2, …"
+          }
+        }
+      }
+    },
     "latestUnwatchedBackups" : {
       "localizations" : {
         "de" : {
@@ -11563,40 +11597,6 @@
         }
       }
     },
-    "skipChapterText" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schlagwort 1,Schlagwort 2,…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keyword 1,Keyword 2,…"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palabra clave 1, Palabra clave 2,…"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mot-clé 1,Mot-clé 2,…"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Słowo kluczowe 1, słowo kluczowe 2, …"
-          }
-        }
-      }
-    },
     "skipSponsorSegments" : {
       "localizations" : {
         "de" : {
@@ -14169,6 +14169,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tytuł"
+          }
+        }
+      }
+    },
+    "videoTitleFilter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video-Titel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título del video"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre de la vidéo"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tytuł wideo"
+          }
+        }
+      }
+    },
+    "videoTitleFilterFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video-Titel, die einem der Schlagwörter entsprechen, werden nicht zur Queue/Inbox hinzugefügt, bleiben aber in der Bibliothek. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video titles matching any of the keywords will not be added to Queue/Inbox, but will still be in the library. Use “,” to separate multiple keywords."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los títulos de videos que coincidan con cualquiera de las palabras clave no se agregarán a Queue/Inbox, pero seguirán estando en la biblioteca. Usa \",\" para separar múltiples palabras clave."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les titres de vidéos correspondant à l'un des mots-clés ne seront pas ajoutés à Queue/Inbox, mais resteront dans la bibliothèque. Utilisez \",\" pour séparer plusieurs mots-clés."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tytuły wideo pasujące do któregokolwiek ze słów kluczowych nie zostaną dodane do Queue/Inbox, ale nadal będą w bibliotece. Użyj \",\" aby oddzielić wiele słów kluczowych."
           }
         }
       }
