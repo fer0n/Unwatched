@@ -39,9 +39,9 @@ struct FaqView: View {
             "duplicatesFaqA"
         ),
         FaqInfo(
-            "overlayStuckFaqT",
-            "overlayStuckFaqQ",
-            "overlayStuckFaqA"
+            "performanceIssuesFaqT",
+            "performanceIssuesFaqQ",
+            "performanceIssuesFaqA"
         ),
         FaqInfo(
             "tvOsFaqT",

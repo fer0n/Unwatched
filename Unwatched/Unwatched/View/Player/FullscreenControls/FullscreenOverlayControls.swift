@@ -56,18 +56,33 @@ struct FullscreenOverlayControls: View {
                 HStack {
                     WatchedButton(
                         markVideoWatched: markVideoWatched,
-                        indicateWatched: false
+                        indicateWatched: false,
+                        material: .ultraThinMaterial
                     )
                     .frame(maxWidth: .infinity)
 
-                    PlayButton(size: 90)
+                    CorePlayButton(
+                        circleVariant: true,
+                        enableHaptics: true,
+                        enableHelperPopup: false
+                    ) { image in
+                        image
+                            .resizable()
+                            .frame(width: 90, height: 90)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.automaticBlack, .regularMaterial)
+                            .fontWeight(.black)
+                    }
 
-                    NextVideoButton(markVideoWatched: markVideoWatched)
-                        .frame(maxWidth: .infinity)
+                    NextVideoButton(
+                        markVideoWatched: markVideoWatched,
+                        material: .ultraThinMaterial
+                    )
+                    .frame(maxWidth: .infinity)
                 }
                 .frame(maxWidth: 500)
                 .padding(.horizontal, 10)
-                .opacity(enabled && show ? 1 : 0)
+                .opacity(enabled && show ? 0.98 : 0)
                 .animation(.default, value: show)
             }
         }
@@ -112,7 +127,7 @@ enum OverlayIcon {
     @Previewable @State var overlayVM = OverlayFullscreenVM()
 
     let player = PlayerManager()
-    player.videoEnded = false
+    player.videoEnded = true
 
     return ZStack {
         Color.gray

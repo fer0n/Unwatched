@@ -67,6 +67,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.autoHideVM.setKeepVisible(false, "longTouch")
         case "interaction":
             handleInteraction()
+        case "overlay":
+            handleOverlay(payload)
         case "aspectRatio":
             handleAspectRatio(payload)
         case "swipe":
@@ -214,6 +216,23 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     func handleInteraction() {
         parent.autoHideVM.setShowControls()
+    }
+
+    func handleOverlay(_ payload: String?) {
+        guard let payload else {
+            Log.warning("No payload given for handleOverlay")
+            return
+        }
+        withAnimation(.default.speed(2)) {
+            switch payload {
+            case "show":
+                parent.autoHideVM.setKeepVisible(true, "overlay")
+            case "hide":
+                parent.autoHideVM.setKeepVisible(false, "overlay")
+            default:
+                break
+            }
+        }
     }
 
     func handleLongTouchStart(_ payload: String?) {

@@ -8919,108 +8919,6 @@
         }
       }
     },
-    "overlayStuckFaqA" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auf den “…”-Button tippen und „Player neu laden“ wählen sollte das Problem beheben. Alternativ kann der native iOS-Vollbildmodus aktiviert werden, oder in den Einstellungen automatisch eingeschaltet werden.\n\nDies tritt auf, wenn der Player ein „Touch Down“ ohne „Touch Up“ erkennt (z. B. beim Hochwischen zum Home-Bildschirm, während das Video berührt wird). Leider ist dies ein Problem von YouTube, das ich nicht beheben kann."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tap the “…”-Button and select “Reload Player” to resolve the issue. You can also enable native iOS fullscreen, which can be set to turn on automatically in Settings.\n\nThis issue occurs when the player detects a \"touch down\" without a corresponding \"touch up\" (e.g., swiping up to return to the home screen when the swipe happens over the video). Unfortunately, this is a YouTube issue I cannot resolve."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toque el botón \"...\" y seleccione \"Recargar reproductor\" para resolver el problema. También puede habilitar la pantalla completa nativa de iOS, que se puede configurar para que se active automáticamente en Configuración.\n\nEste problema ocurre cuando el reproductor detecta un \"touch down\" sin un \"retoque\" correspondiente (por ejemplo, deslizando hacia arriba para volver a la pantalla de inicio cuando el deslizamiento se produce sobre el vídeo). Desafortunadamente, este es un problema de YouTube que no puedo resolver."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Appuyez sur le bouton \"...\" et sélectionnez \"Recharger le lecteur\" pour résoudre le problème. Vous pouvez également activer le plein écran natif iOS, qui peut être configuré pour s'activer automatiquement dans les Paramètres.\n\nCe problème survient lorsque le lecteur détecte un \"appui\" sans \"relâchement\" correspondant (par exemple, en glissant vers le haut pour revenir à l'écran d'accueil lorsque le glissement se produit sur la vidéo). Malheureusement, c'est un problème YouTube que je ne peux pas résoudre."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kliknij przycisk \"…\" i wybierz \"Przeładuj odtwarzacz\", aby rozwiązać problem. Możesz też włączyć natywny tryb pełnoekranowy iOS, który można ustawić na automatyczne włączanie w Ustawieniach.\n\nTen problem występuje, gdy odtwarzacz wykryje \"dotknięcie bez zwolnienia\" (np. przesunięcie palcem do ekranu głównego, gdy palec znajduje się nad filmem). Niestety, to problem po stronie YouTube, którego nie mogę naprawić."
-          }
-        }
-      }
-    },
-    "overlayStuckFaqQ" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Das YouTube Overlay (play button etc.) verschwindet nicht mehr von alleine."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube’s player controls are stuck and don’t disappear."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Los controles del reproductor de YouTube están atascados y no desaparecen."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les contrôles du lecteur YouTube sont bloqués et ne disparaissent pas."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sterowanie odtwarzacza YouTube jest zablokowane i nie znika."
-          }
-        }
-      }
-    },
-    "overlayStuckFaqT" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Overlay immer Sichtbar"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube Overlays Stuck"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Superposiciones de YouTube atascadas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Superpositions YouTube bloquées"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nakładka YouTube nie znika"
-          }
-        }
-      }
-    },
     "pause" : {
       "localizations" : {
         "de" : {
@@ -9051,6 +8949,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pauza"
+          }
+        }
+      }
+    },
+    "performanceIssuesFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das passiert normalerweise, wenn zu viele Videos in der Queue oder der Inbox gespeichert sind. Falls das der Fall ist, versuche einige davon zu entfernen – keine Angst, alle Videos bleiben unter Bibliothek → Alle Videos zugänglich. Der einfachste Weg, Videos zu entfernen, ist nach links zu wischen, auf den „…\"-Button zu tippen und „oberhalb/unterhalb löschen\" auszuwählen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usually, this happens when too many videos are kept inside the Queue or Inbox. If that’s the case, try to clear it up – don’t worry, all the videos will remain accessible under Library → All Videos. The easiest way to clear videos is to swipe left on one, tap the “…”-Button and select “clear above/below”."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normalmente, esto sucede cuando se mantienen demasiados videos en la Cola o en la Bandeja de entrada. Si ese es el caso, trata de limpiarla – no te preocupes, todos los videos seguirán siendo accesibles en Biblioteca → Todos los videos. La forma más fácil de limpiar videos es deslizar hacia la izquierda en uno, tocar el botón \"…\" y seleccionar \"limpiar arriba/abajo\"."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En général, cela se produit lorsque trop de vidéos sont conservées dans la File d'attente ou la Boîte de réception. Si c'est le cas, essayez de faire le ménage – ne vous inquiétez pas, toutes les vidéos resteront accessibles sous Bibliothèque → Toutes les vidéos. Le moyen le plus simple de supprimer des vidéos est de glisser vers la gauche sur une vidéo, d'appuyer sur le bouton « … » et de sélectionner « effacer au-dessus/en dessous »."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwykle dzieje się tak, gdy zbyt wiele filmów jest przechowywanych w Kolejce lub Skrzynce odbiorczej. Jeśli tak jest, spróbuj to wyczyścić – nie martw się, wszystkie filmy pozostaną dostępne w Biblioteka → Wszystkie filmy. Najłatwiejszym sposobem na usunięcie filmów jest przesunięcie palcem w lewo na filmie, dotknięcie przycisku „…\" i wybranie „wyczyść powyżej/poniżej\"."
+          }
+        }
+      }
+    },
+    "performanceIssuesFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum ist die App plötzlich so langsam?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why is the App suddenly really slow?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué la aplicación está de repente muy lenta?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourquoi l'application est-elle soudainement très lente ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dlaczego aplikacja nagle działa bardzo wolno?"
+          }
+        }
+      }
+    },
+    "performanceIssuesFaqT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performance Probleme"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Performance Issues"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problemas de rendimiento"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problèmes de performance"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problemy z wydajnością"
           }
         }
       }

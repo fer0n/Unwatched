@@ -15,6 +15,7 @@ struct WatchedButton: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var indicateWatched: Bool = true
     var isSmall = false
+    var material: Material?
 
     var body: some View {
         Button {
@@ -25,7 +26,8 @@ struct WatchedButton: View {
                 .fontWeight(.bold)
                 .playerToggleModifier(
                     isOn: indicateWatched ? player.isConsideredWatched : false,
-                    isSmall: isSmall
+                    isSmall: isSmall,
+                    material: material
                 )
         }
         .buttonStyle(.plain)

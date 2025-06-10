@@ -150,16 +150,17 @@ struct PlayerView: View {
                 )
 
                 thumbnailPlaceholder
-                    .opacity(!player.isPlaying && !hideMiniPlayer ? 1 : 0)
+                    .opacity(showEmbeddedThumbnail ? 1 : 0)
             }
-            .animation(.easeInOut(duration: player.isPlaying ? 0.3 : 0)
-                        .delay(player.isPlaying ? 0.3 : 0),
-                       value: player.isPlaying)
             .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
             .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-            .frame(width: !hideMiniPlayer ? 89 : nil,
-                   height: !hideMiniPlayer ? 50 : nil)
+            .frame(width: !hideMiniPlayer ? 107 : nil,
+                   height: !hideMiniPlayer ? 60 : nil)
+            .scaleEffect(!hideMiniPlayer ? 0.83 : 1)
+            .padding(.horizontal, !hideMiniPlayer ? -(107 * 0.17) / 2 : 0)
+            // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
+            // 107 width with 16/9 is the minimum size to still get the higher resolution
             .onTapGesture {
                 if !hideMiniPlayer {
                     handleMiniPlayerTap()
@@ -232,8 +233,8 @@ struct PlayerView: View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: !hideMiniPlayer ? 89 : nil,
-                       height: !hideMiniPlayer ? 50 : nil)
+                .frame(width: !hideMiniPlayer ? 107 : nil,
+                       height: !hideMiniPlayer ? 60 : nil)
         } placeholder: {
             Color.backgroundColor
         }
@@ -241,6 +242,10 @@ struct PlayerView: View {
         .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         .onTapGesture(perform: handleMiniPlayerTap)
         .id(player.video?.thumbnailUrl)
+    }
+
+    var showEmbeddedThumbnail: Bool {
+        !hideMiniPlayer && player.unstarted
     }
 
     @MainActor

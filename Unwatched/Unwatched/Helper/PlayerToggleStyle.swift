@@ -25,21 +25,13 @@ struct PlayerToggleModifier: ViewModifier {
     let isOn: Bool
     var isSmall: Bool = false
     var stroke: Bool = true
+    var material: Material?
 
     @Environment(\.isEnabled) var isEnabled
     @ScaledMetric var smallSize: CGFloat = 40
     @ScaledMetric var normalSize: CGFloat = 50
 
-    init(isOn: Bool, isSmall: Bool = false, stroke: Bool = true) {
-        self.isOn = isOn
-        self.isSmall = isSmall
-        self.stroke = stroke
-    }
-
     func body(content: Content) -> some View {
-        let size = isSmall ? smallSize : normalSize
-        let color = isOn ? Color.backgroundColor : Color.automaticBlack
-
         content
             .symbolRenderingMode(.palette)
             #if os(macOS)
@@ -51,21 +43,39 @@ struct PlayerToggleModifier: ViewModifier {
             .frame(width: size, height: size)
             .foregroundStyle(color, color.opacity(0.7))
             .opacity(isEnabled ? 1 : 0.4)
-            .background(isOn
-                            ? Color.neutralAccentColor
-                            : Color.backgroundColor
-            )
+            .background(background)
             .clipShape(Circle())
+    }
+
+    var size: CGFloat {
+        isSmall ? smallSize : normalSize
+    }
+
+    var color: Color {
+        isOn ? Color.backgroundColor : Color.automaticBlack
+    }
+
+    @ViewBuilder
+    var background: some View {
+        if let material {
+            Color.clear.overlay(material)
+        } else if isOn {
+            Color.neutralAccentColor
+        } else {
+            Color.backgroundColor
+        }
     }
 }
 
 extension View {
     func playerToggleModifier(isOn: Bool,
                               isSmall: Bool = false,
-                              stroke: Bool = true) -> some View {
+                              stroke: Bool = true,
+                              material: Material? = nil) -> some View {
         self.modifier(PlayerToggleModifier(isOn: isOn,
                                            isSmall: isSmall,
-                                           stroke: stroke))
+                                           stroke: stroke,
+                                           material: material))
     }
 }
 

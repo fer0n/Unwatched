@@ -37,6 +37,7 @@ extension PlayerWebView {
         if player.unstarted {
             Log.info("PLAY: unstarted")
             return """
+                hideOverlay();
                 function attemptClick() {
                     document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
                 }
@@ -157,6 +158,9 @@ extension PlayerWebView {
         let videoFindAttempts = 0;
         var isSwiping = false;
 
+        let overlay = document.querySelector('#player-control-overlay');
+        let isNewEmbedding = !!overlay; // initially found means new embedding player
+
 
         function sendMessage(topic, payload) {
             window.webkit.messageHandlers.iosListener.postMessage("" + topic + ";" + payload);
@@ -199,6 +203,7 @@ extension PlayerWebView {
             }
         }
         function setupVideo() {
+            addVideoListeners();
             video.playbackRate = playbackRate;
             video.muted = false;
             handleFullscreenButton();
@@ -206,7 +211,137 @@ extension PlayerWebView {
         function repairVideo(message = "") {
             video = document.querySelector('video');
             sendVideoState(video, "repairedVideo " + message);
+            setupVideo();
         }
+
+        // Overlay control
+        let overlayVisible = overlay && overlay.classList.contains('fadein');
+        let overlayHideTimer = null;
+        let lastTapDate = null;
+        let consecutiveSingleTaps = 0;
+        let allowFadeinChanges = false;
+        sendMessage('isNewEmbedding', isNewEmbedding);
+
+        setupOverlay();
+        if (minimalPlayerUI) {
+            hideOverlay();
+        }
+        document.addEventListener('pointerup', function(event) {
+            if (event.pointerType !== 'mouse') return;
+            if (isVideoElement(event)) {
+                handleOverlayTap();
+            }
+        });
+
+        function isOverlayHealthy() {
+            if (document.contains(overlay)) {
+                return true;
+            }
+            console.log('isOverlayHealthy: query overlay');
+            overlay = document.querySelector('#player-control-overlay');
+            if (!overlay) {
+                console.log('isOverlayHealthy: not in DOM');
+                return false;
+            }
+            console.log('isOverlayHealthy: repaired');
+            setupOverlay();
+            return true;
+        }
+        function overlayHealthCheckPolling() {
+            if (!isNewEmbedding) return;
+            let timers = [];
+            function checkOverlay() {
+                const isHealthy = isOverlayHealthy();
+                console.log('checkOverlay, healthy:', isHealthy);
+                if (isHealthy) {
+                    cancelChecks();
+                }
+            }
+            function cancelChecks() {
+                console.log("cancelChecks");
+                timers.forEach(clearTimeout);
+                timers = [];
+            }
+            timers.push(setTimeout(checkOverlay, 1000));
+            timers.push(setTimeout(checkOverlay, 3000));
+            timers.push(setTimeout(checkOverlay, 8000));
+        }
+
+        function toggleOverlay() {
+            if (!isNewEmbedding) return;
+            if (overlay) {
+                if (overlayVisible) {
+                    hideOverlay();
+                } else {
+                    showOverlay();
+                }
+            }
+        }
+
+        function debouncedHideOverlay(duration = 2500) {
+            if (!overlayVisible || !isNewEmbedding) return;
+            clearTimeout(overlayHideTimer);
+            overlayHideTimer = setTimeout(() => {
+                const element = document.querySelector('yt-bigboard');
+                const isScrubbing = element.children.length > 0;
+                if (!isScrubbing && !video.paused) {
+                    hideOverlay();
+                }
+            }, duration);
+        }
+
+        function setupOverlay() {
+            if (!overlay || !isNewEmbedding) return;
+            // Override setAttribute to block fadein changes (except when we allow it)
+            const originalSetAttribute = overlay.setAttribute;
+            overlay.setAttribute = function(name, value) {
+                if (name === 'class' && !allowFadeinChanges) {
+                    const currentClasses = overlay.className.split(' ');
+                    const newClasses = value.split(' ');
+
+                    const currentHasFadein = currentClasses.includes('fadein');
+                    const newHasFadein = newClasses.includes('fadein');
+
+                if (currentHasFadein !== newHasFadein) {
+                        return;
+                    }
+                }
+                return originalSetAttribute.call(this, name, value);
+            };
+            // Block classList methods for fadein (except when we allow it)
+            ['add', 'remove', 'toggle'].forEach(method => {
+                const original = overlay.classList[method];
+                overlay.classList[method] = function(...args) {
+                if (args.includes('fadein') && !allowFadeinChanges) {
+                    return;
+                }
+                return original.apply(this, args);
+                };
+            });
+        }
+
+        function showOverlay() {
+            if (overlayVisible || !isNewEmbedding) return;
+            allowFadeinChanges = true;
+            overlay.classList.add('fadein');
+            allowFadeinChanges = false;
+            overlayVisible = true;
+            sendMessage('overlay', 'show');
+             if (!video.paused) {
+                debouncedHideOverlay();
+             }
+        };
+
+        function hideOverlay() {
+            isOverlayHealthy();
+            if (!overlayVisible || !isNewEmbedding) return;
+            allowFadeinChanges = true;
+            overlay.classList.remove('fadein');
+            allowFadeinChanges = false;
+            overlayVisible = false;
+            sendMessage('overlay', 'hide');
+            clearTimeout(overlayHideTimer);
+        };
 
 
         // Prevent specific keyboard shortcuts from being captured
@@ -280,12 +415,17 @@ extension PlayerWebView {
             setInterval(checkVideoState, 3000);
         }
 
-
+        function addVideoListeners() {
+            video.addEventListener('seeked', () => {
+                debouncedHideOverlay(1000);
+            });
+        }
         document.addEventListener('play', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 startTimer();
-                sendMessage("play")
+                sendMessage("play");
             }
+            hideOverlay();
         }, true);
         document.addEventListener('pause', (e) => {
             if (e.target.tagName === 'VIDEO') {
@@ -310,6 +450,9 @@ extension PlayerWebView {
                     sendMessage('updateTitle', document.title);
                 }
                 e.target.currentTime = startAtTime;
+
+                // setting video time so early breaks the overlay reference
+                overlayHealthCheckPolling();
             }
         }, { capture: true, once: true });
         document.addEventListener('loadeddata', (e) => {
@@ -340,36 +483,92 @@ extension PlayerWebView {
             }
         }, true);
 
-
         // styling
         styling()
         function styling() {
             const style = document.createElement('style');
-            style.innerHTML = `
-                * {
-                    cursor: default !important;
-                }
-                .ytp-pause-overlay, .branding-img {
-                    display: none !important;
-                }
-                ${!isNonEmbedding
-                    ? '.ytp-play-progress { background: #ddd !important; }'
-                    : ''}
-                .videowall-endscreen {
-                    opacity: 0.2;
-                }
-                body, html {
-                    overflow: hidden !important;
-                    touch-action: none !important;
-                }
-                ${disableCaptions
-                    ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; }'
-                    : ''}
-                ${minimalPlayerUI
-                    ? '.ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, .ytp-info-panel-preview, ' +
-                      '.ytp-pip-button, .ytp-mute-button { display: none !important; } '
-                    : ''}
-            `;
+            if (!isNewEmbedding) {
+                style.textContent = `
+                    * {
+                        cursor: default !important;
+                    }
+                    .ytp-pause-overlay, .branding-img {
+                        display: none !important;
+                    }
+                    @media (max-width: 350px) {
+                        .ytp-gradient-top, .ytp-chrome-top, .ytp-button, .ytp-impression-link,
+                        .ytp-chrome-bottom {
+                            display: none !important;
+                        }
+                    }
+                    ${!isNonEmbedding
+                        ? '.ytp-play-progress { background: #ddd !important; }'
+                        : ''}
+                    .videowall-endscreen {
+                        opacity: 0.2;
+                    }
+                    body, html {
+                        overflow: hidden !important;
+                        touch-action: none !important;
+                    }
+                    ${disableCaptions
+                        ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; }'
+                        : ''}
+                    ${minimalPlayerUI ? `
+                        .ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, .ytp-volume-panel,
+                        .ytp-info-panel-preview, .ytp-pip-button, .ytp-mute-button {
+                            display: none !important;
+                        }
+                        ` : ''}
+                `;
+            } else {
+                style.textContent = `
+                    * {
+                        cursor: default !important;
+                    }
+                    .branding-img {
+                        display: none !important;
+                    }
+                    @media (max-width: 350px) {
+                        #player-control-overlay, .ytmCuedOverlayPlayButton, .ytmCuedOverlayGradient {
+                            display: none !important;
+                        }
+                    }
+                    ${!isNonEmbedding ? `
+                        .ytProgressBarPlayheadProgressBarPlayheadDot,
+                        .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
+                        .ytChapteredProgressBarChapteredPlayerBarFill,
+                        .ytProgressBarLineProgressBarPlayed {
+                            background: #ddd !important;
+                        }
+                        ` : ''}
+                    ${disableCaptions ? `
+                        .ytp-caption-window-container, .ytmClosedCaptioningButtonButton {
+                            display: none !important;
+                        }
+                        ` : ''}
+                    ${minimalPlayerUI ? `
+                        .ytmVideoInfoVideoDetailsContainer, .icon-add_to_watch_later,
+                        .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
+                        .player-control-play-pause-icon, .player-controls-spinner,
+                        .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost,
+                        .ytmMuteButtonButton, .ytmCuedOverlayGradient {
+                            display: none !important;
+                        }
+                        .player-settings-icon, .ytmClosedCaptioningButtonHost {
+                            background: radial-gradient(circle, rgba(0, 0, 0, 0.18) 52%, transparent 0%) !important;
+                        }
+                        #player-control-overlay.fadein .player-controls-background {
+                            background: linear-gradient(
+                                to bottom,
+                                transparent,
+                                transparent calc(100% - 145px),
+                                rgba(0, 0, 0, 0.6) calc(100% - 20px)
+                            ) !important;
+                        }
+                        ` : ''}
+                `;
+            }
             document.head.appendChild(style);
         }
 
@@ -379,7 +578,12 @@ extension PlayerWebView {
             if (!hijackFullscreenButton) {
                 return
             }
-            const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+            let fullscreenButton = null;
+            if (!isNewEmbedding) {
+                fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+            } else {
+                fullscreenButton = document.querySelector('.fullscreen-icon');
+            }
             if (fullscreenButton) {
                 fullscreenButton.style.opacity = 1;
                 fullscreenButton.disabled = false;
@@ -397,10 +601,7 @@ extension PlayerWebView {
             let pendingClick = null;
 
             document.addEventListener('click', function(event) {
-                if (event.target.matches('video')
-                    || event.target.matches('.ytp-cued-thumbnail-overlay-image')
-                    || event.target.matches('.videowall-endscreen')
-                    || event.target.matches('.ytp-videowall-still-info-content')) {
+                if (isVideoElement(event)) {
                     if (event.isReTriggering) {
                         return;
                     }
@@ -483,12 +684,23 @@ extension PlayerWebView {
         var longTouchSent = false;
         var touchStartEvent;
 
+        function isVideoElement(event) {
+            return event.target.matches('video')
+                || event.target.matches('.ytp-cued-thumbnail-overlay-image')
+                || event.target.matches('.videowall-endscreen')
+                || event.target.matches('.ytp-videowall-still-info-content')
+
+                // new embedded player
+                || event.target.matches('.player-controls-background')
+                || event.target.matches('.fullscreen-action-menu')
+                || event.target.matches('.ytmVideoInfoHost')
+                || event.target.matches('.ytwPlayerMiddleControlsHost')
+                || event.target.matches('.player-controls-bottom')
+        }
+
         function addTouchEventListener(eventType, handler) {
             window.addEventListener(eventType, event => {
-                if (event.target.matches('video')
-                    || event.target.matches('.ytp-cued-thumbnail-overlay-image')
-                    || event.target.matches('.videowall-endscreen')
-                    || event.target.matches('.ytp-videowall-still-info-content')) {
+                if (isVideoElement(event)) {
                     handler(event);
                 }
             }, true);
@@ -529,19 +741,22 @@ extension PlayerWebView {
             }
         });
 
+        function togglePlay() {
+            if (video.paused) {
+                play();
+            } else {
+                video.pause();
+            }
+        }
+
         function play() {
             video.play()
                 .catch(error => {
                     sendError(error);
                     repairVideo("play");
                 });
-        }
-
-        function togglePlay() {
-            if (video.paused) {
-                play();
-            } else {
-                video.pause();
+            if (overlayVisible) {
+                hideOverlay();
             }
         }
 
@@ -566,11 +781,11 @@ extension PlayerWebView {
             }
 
             touchTimeout = setTimeout(function() {
-            if (!isSwiping && !isPinching) {
-                const side = touch.clientX < screenWidth / 2 ? "left" : "right";
-                sendMessage("longTouch", side);
-                longTouchSent = true;
-            }
+                if (!isSwiping && !isPinching) {
+                    const side = touch.clientX < screenWidth / 2 ? "left" : "right";
+                    sendMessage("longTouch", side);
+                    longTouchSent = true;
+                }
             }, touchCountsAsLongPress);
         }
 
@@ -601,14 +816,43 @@ extension PlayerWebView {
             } else if (centerTouch) {
                 togglePlay();
                 sendMessage("centerTouch", video.paused ? "play" : "pause");
+            } else {
+                handleOverlayTap();
             }
+        }
+
+        function handleOverlayTap() {
+            if (!isNewEmbedding) return;
+            const now = Date.now();
+            if (lastTapDate && now - lastTapDate < 300) {
+                consecutiveSingleTaps += 1;
+                handleDoubleTapSeek(event);
+            } else {
+                consecutiveSingleTaps = 0;
+            }
+            lastTapDate = now;
+            if ((consecutiveSingleTaps ?? 0) < 1) {
+                toggleOverlay();
+            }
+        }
+
+        function handleDoubleTapSeek(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            showOverlay();
+            const touchEndX = event.changedTouches?.[0]?.clientX;
+            const screenWidth = window.innerWidth;
+            const seekRel = (touchEndX < screenWidth / 2 ? -1 : 1) * 10;
+            video.currentTime += seekRel;
         }
 
         function triggerTouchEvent() {
             if (isSwiping || longTouchSent || centerTouch) {
                 return;
             }
-            sendMessage("interaction");
+            if (!isNewEmbedding) {
+                sendMessage("interaction");
+            }
             const event = touchStartEvent;
 
             // Manually trigger the event again with the custom property
@@ -625,40 +869,41 @@ extension PlayerWebView {
         }
 
 
+
+
         // Error handling
         if (!isNonEmbedding) {
-            var errorCheckTimers = [];
-
             function checkError() {
                 const errorContent = document.querySelector('.ytp-error-content')
                 if (errorContent) {
                     sendMessage("youtubeError", errorContent?.innerText);
                 }
             }
-            function cancelErrorChecks() {
-                errorCheckTimers.forEach(clearTimeout);
-                errorCheckTimers = [];
-            }
-
             // check for errors
             checkError()
-            errorCheckTimers.push(setTimeout(checkError, 1000));
-            errorCheckTimers.push(setTimeout(checkError, 3000));
-            errorCheckTimers.push(setTimeout(checkError, 5000));
-            errorCheckTimers.push(setTimeout(checkError, 10000));
+            setTimeout(checkError, 1000);
+            setTimeout(checkError, 3000);
+            setTimeout(checkError, 5000);
+            setTimeout(checkError, 10000);
         }
 
         // Handle link clicks
         document.addEventListener('click', function(event) {
             sendMessage("click");
-            // Find if the clicked element is an <a> tag or is inside one
+
             let target = event.target;
-            if (target.tagName === 'A' || target.parentNode?.tagName === 'A') {
+            let link = null;
+            if (target.tagName === 'A') {
+                link = target;
+            } else if (target.parentNode?.tagName === 'A') {
+                link = target.parentNode;
+            } else if (target.parentNode?.parentNode?.tagName === 'A') {
+                link = target.parentNode.parentNode;
+            }
+            if (link) {
                 event.preventDefault();
                 event.stopPropagation();
-
-                const href = target.tagName === 'A' ? target.href : target.parentNode.href;
-                sendMessage("urlClicked", href);
+                sendMessage("urlClicked", link.href);
             }
         }, true);
     """

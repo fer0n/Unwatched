@@ -98,7 +98,7 @@ public struct Const {
     public static let elapsedTimeMonitorSeconds: Double = 1
 
     /// Time in seconds before fullscreen controls are automatically hidden
-    public static let controlsAutoHideDebounce: Double = 4
+    public static let controlsAutoHideDebounce: Double = 2.5
 
     /// Number of notifications that will be sent at once per inbox/queue
     public static let simultaneousNotificationsLimit = 1
