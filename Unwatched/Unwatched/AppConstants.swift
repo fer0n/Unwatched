@@ -61,9 +61,6 @@ extension Const {
         Const.automaticBackups: true,
         Const.exludeWatchHistoryInBackup: false,
         Const.minimalBackups: true,
-        Const.autoDeleteBackups: false,
-
-        // Other Things
-        Const.playbackSpeed: 1
+        Const.autoDeleteBackups: false
     ]
 }

@@ -77,7 +77,7 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(DataProvider.previewContainerFilled)
-        .environment(NavigationManager.getDummy(true))
+        .environment(NavigationManager.getDummy(false))
         .environment(Alerter())
         .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())

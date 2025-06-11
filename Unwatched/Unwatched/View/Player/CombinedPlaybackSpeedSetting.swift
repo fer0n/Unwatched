@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct CombinedPlaybackSpeedSettingPlayer: View {
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
 
     @State var hapticToggle: Bool = false
@@ -23,7 +22,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
         let isOn = Binding(get: {
             player.video?.subscription?.customSpeedSetting != nil
         }, set: { value in
-            player.video?.subscription?.customSpeedSetting = value ? playbackSpeed : nil
+            player.video?.subscription?.customSpeedSetting = value ? player.defaultPlaybackSpeed : nil
             hapticToggle.toggle()
         })
 
@@ -72,6 +71,7 @@ struct CombinedPlaybackSpeedSetting: View {
                         .padding(.horizontal, 2)
                         .disabled(player.video?.subscription == nil)
                 }
+                .disabled(player.temporaryPlaybackSpeed != nil)
                 .padding(.vertical)
             } else {
                 HStack(spacing: -6) {
@@ -87,7 +87,7 @@ struct CombinedPlaybackSpeedSetting: View {
                             )
                         )
                         .offset(x: -1)
-                        .disabled(player.video?.subscription == nil)
+                        .disabled(player.video?.subscription == nil || player.temporaryPlaybackSpeed != nil)
 
                     if showTemporarySpeed {
                         Button {

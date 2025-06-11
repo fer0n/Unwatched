@@ -9,7 +9,7 @@ import UnwatchedShared
 
 struct SubscriptionSpeedSetting: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1
+    @Environment(PlayerManager.self) var player
 
     @Bindable var subscription: Subscription
     @State var showSpeedControl = false
@@ -22,7 +22,7 @@ struct SubscriptionSpeedSetting: View {
             if let custom = subscription.customSpeedSetting {
                 text = "\(SpeedControlViewModel.formatSpeed(custom))×"
             } else {
-                text = String(localized: "defaultSpeed\(SpeedControlViewModel.formatSpeed(playbackSpeed))")
+                text = String(localized: "defaultSpeed\(SpeedControlViewModel.formatSpeed(player.defaultPlaybackSpeed))")
             }
             return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
         }
@@ -33,7 +33,7 @@ struct SubscriptionSpeedSetting: View {
 
                 let selectedSpeed = Binding(
                     get: {
-                        subscription.customSpeedSetting ?? playbackSpeed
+                        subscription.customSpeedSetting ?? player.defaultPlaybackSpeed
                     }, set: { value in
                         subscription.customSpeedSetting = value
                     })
@@ -43,7 +43,7 @@ struct SubscriptionSpeedSetting: View {
                     }, set: { value in
                         withAnimation {
                             if value {
-                                subscription.customSpeedSetting = playbackSpeed
+                                subscription.customSpeedSetting = player.defaultPlaybackSpeed
                             } else {
                                 subscription.customSpeedSetting = nil
                             }

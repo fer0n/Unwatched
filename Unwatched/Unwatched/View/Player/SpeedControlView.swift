@@ -20,7 +20,7 @@ struct SpeedControlView: View {
     let frameHeight: CGFloat = 35
     let coordinateSpace: NamedCoordinateSpace = .named("speed")
     let borderWidth: CGFloat = 2
-    var indicatorSpacing: CGFloat = 4
+    var indicatorSpacing: CGFloat = 2
 
     var midY: CGFloat {
         thumbSize / 2
@@ -30,7 +30,7 @@ struct SpeedControlView: View {
         let highlighted: [Double] = viewModel.showDecimalHighlights
             ? Const.highlightedPlaybackSpeeds
             : Const.highlightedSpeedsInt
-        let frameSize: CGFloat = 4
+        let frameSize: CGFloat = 3
 
         ZStack {
             Spacer()
@@ -40,7 +40,7 @@ struct SpeedControlView: View {
             HStack(spacing: 0) {
                 ForEach(Const.speeds, id: \.self) { speed in
                     let isHightlighted = highlighted.contains(speed)
-                    let foregroundColor: Color = .foregroundGray.opacity(0.3)
+                    let foregroundColor: Color = .foregroundGray.opacity(0.5)
 
                     ZStack {
                         Circle()
@@ -52,7 +52,7 @@ struct SpeedControlView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 withAnimation {
-                                    selectedSpeed = speed
+                                    selectedSpeed = getSelectedSpeed(speed)
                                     controlMinX = viewModel.getXPos(selectedSpeed)
                                     dragState = nil
                                 }
@@ -61,9 +61,11 @@ struct SpeedControlView: View {
                             Text(SpeedControlViewModel.formatSpeed(speed))
                                 .font(.system(size: 12))
                                 .fontWeight(.heavy)
-                                .fontWidth(.condensed)
+                                .fontWidth(.compressed)
                                 .foregroundStyle(foregroundColor)
                                 .allowsHitTesting(false)
+                                .frame(minWidth: 10)
+                                .frame(width: frameSize, height: frameSize)
                         }
                     }
                 }
@@ -186,6 +188,25 @@ struct SpeedControlView: View {
             }
         }
     }
+
+    func getSelectedSpeed(_ tappedSpeed: Double) -> Double {
+        // get speed or highlighted speed only if tapped speed is right next to it
+        if Device.isMac {
+            return tappedSpeed
+        }
+        let index = Const.speeds.firstIndex(of: tappedSpeed) ?? 0
+        let highlightIndeces = Const.highlightedSpeedsInt
+            .compactMap { Const.speeds.firstIndex(of: $0) }
+
+        if highlightIndeces.contains(index) {
+            return tappedSpeed
+        }
+        let match = highlightIndeces.filter { index == $0 - 1 || index == $0 + 1 }
+        guard let first = match.first else {
+            return tappedSpeed
+        }
+        return Const.speeds[first]
+    }
 }
 
 struct SpeedPreferenceKey: PreferenceKey {
@@ -211,12 +232,11 @@ struct SpeedControlViewPreview: View {
         SpeedControlView(selectedSpeed: $selected)
             .modelContainer(DataProvider.previewContainer)
             .environment(NavigationManager())
-        // .padding()
     }
 }
 
 #Preview {
     SpeedControlViewPreview()
-        .frame(width: 300)
+        .frame(width: 100)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

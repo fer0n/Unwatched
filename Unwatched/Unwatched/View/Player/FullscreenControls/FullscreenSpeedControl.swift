@@ -15,32 +15,32 @@ struct CompactFullscreenSpeedControl: View {
     @State var showSpeedControl = false
 
     var body: some View {
-        FullscreenSpeedControlContent(
-            value: player.debouncedPlaybackSpeed,
-            onChange: { player.playbackSpeed = $0 },
-            triggerInteraction: { },
-            isInteracting: .constant(false),
-            animationWorkaround: true
-        )
-        .fontWeight(.regular)
-        .playerToggleModifier(isOn: player.temporaryPlaybackSpeed != nil, isSmall: true)
-        .onTapGesture {
-            showSpeedControl = true
-        }
-        .popover(isPresented: $showSpeedControl) {
-            CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
-                .padding(.horizontal)
-                .frame(width: 350)
-                .presentationBackground(.black)
-                .environment(\.colorScheme, .dark)
-                .presentationCompactAdaptation(.popover)
-                .fontWeight(nil)
-        }
+        Text(verbatim: speedText)
+            .font(.system(size: 17))
+            .fontWidth(.compressed)
+            .fontWeight(.bold)
+            .playerToggleModifier(isOn: player.temporaryPlaybackSpeed != nil, isSmall: true)
+            .onTapGesture {
+                showSpeedControl = true
+            }
+            .popover(isPresented: $showSpeedControl) {
+                CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
+                    .padding(.horizontal)
+                    .frame(width: 350)
+                    .presentationBackground(.black)
+                    .environment(\.colorScheme, .dark)
+                    .presentationCompactAdaptation(.popover)
+                    .fontWeight(nil)
+            }
+    }
+
+    var speedText: String {
+        let speedText = SpeedControlViewModel.formatSpeed(player.debouncedPlaybackSpeed)
+        return "\(speedText)\(speedText.count <= 1 ? "×" : "")"
     }
 }
 
 struct FullscreenSpeedControl: View {
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
     @Binding var autoHideVM: AutoHideVM
@@ -77,9 +77,6 @@ struct FullscreenSpeedControl: View {
             }
             .modifier(PlayerControlButtonStyle(isOn: customSetting))
         }
-        .onChange(of: playbackSpeed) {
-            // workaround: refresh speed
-        }
         .onChange(of: player.video?.subscription) {
             // workaround: refresh speed
         }
@@ -111,5 +108,35 @@ struct FullscreenSpeedControl: View {
 
     var customSetting: Bool {
         player.video?.subscription?.customSpeedSetting != nil
+    }
+}
+
+#Preview {
+    let player = PlayerManager.getDummy()
+
+    VStack(spacing: 100) {
+        FullscreenSpeedControl(autoHideVM: .constant(AutoHideVM()), size: 30)
+            .modelContainer(DataProvider.previewContainer)
+            .environment(player)
+            .environment(NavigationManager())
+            .scaleEffect(4)
+
+        HStack {
+            Button {
+                player.temporarySlowDown()
+            } label: {
+                Text("down")
+            }
+            Button {
+                player.resetTemporaryPlaybackSpeed()
+            } label: {
+                Text("reset")
+            }
+            Button {
+                player.temporarySpeedUp()
+            } label: {
+                Text("up")
+            }
+        }
     }
 }

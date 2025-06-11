@@ -16,8 +16,6 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 
 struct PlayerWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.playbackSpeed) var playbackSpeed = 1.0
-    // workaround: view doesn't update otherwise
     @Environment(PlayerManager.self) var player
 
     @Binding var overlayVM: OverlayFullscreenVM

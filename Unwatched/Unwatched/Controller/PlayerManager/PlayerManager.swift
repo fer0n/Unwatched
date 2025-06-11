@@ -43,6 +43,11 @@ import UnwatchedShared
     var deferVideoDate: Date?
     private(set) var aspectRatio: Double?
 
+    var defaultPlaybackSpeed: Double = 1 {
+        didSet {
+            UserDefaults.standard.set(defaultPlaybackSpeed, forKey: Const.playbackSpeed)
+        }
+    }
     var temporaryPlaybackSpeed: Double?
     var _debouncedPlaybackSpeed: Double?
     @ObservationIgnored var playbackSpeedTask: Task<Void, Never>?
@@ -53,14 +58,17 @@ import UnwatchedShared
     @ObservationIgnored var changeChapterTask: Task<Void, Never>?
     @ObservationIgnored var earlyEndTime: Double?
 
-    init() {}
+    init() {
+        defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
+    }
 
     static func load() -> PlayerManager {
         if let savedPlayer = UserDefaults.standard.data(forKey: Const.playerManager),
            let loadedPlayer = try? JSONDecoder().decode(PlayerManager.self, from: savedPlayer) {
+            loadedPlayer.defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
             return loadedPlayer
         } else {
-            Log.info("player not found")
+            Log.warning("player not found")
             return PlayerManager()
         }
     }

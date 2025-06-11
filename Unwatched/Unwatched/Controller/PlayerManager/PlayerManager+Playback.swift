@@ -166,7 +166,7 @@ extension PlayerManager {
     @MainActor
     var playbackSpeed: Double {
         get {
-            temporaryPlaybackSpeed ?? getPlaybackSpeed()
+            temporaryPlaybackSpeed ?? unmodifiedPlaybackSpeed
         }
         set {
             setPlaybackSpeed(newValue)
@@ -200,13 +200,13 @@ extension PlayerManager {
     }
 
     @MainActor
-    var actualPlaybackSpeed: Double {
-        getPlaybackSpeed()
+    var unmodifiedPlaybackSpeed: Double {
+        video?.subscription?.customSpeedSetting ?? defaultPlaybackSpeed
     }
 
     @MainActor
     var temporarySlowDownThreshold: Bool {
-        actualPlaybackSpeed >= Const.temporarySpeedSwap
+        unmodifiedPlaybackSpeed >= Const.temporarySpeedSwap
     }
 
     @MainActor
@@ -224,7 +224,7 @@ extension PlayerManager {
 
     @MainActor
     func temporarySlowDown() {
-        if actualPlaybackSpeed <= 1 {
+        if unmodifiedPlaybackSpeed <= 1 {
             temporaryPlaybackSpeed = Const.speedMin
         } else {
             temporaryPlaybackSpeed = 1
@@ -278,12 +278,6 @@ extension PlayerManager {
     }
 
     @MainActor
-    private func getPlaybackSpeed() -> Double {
-        video?.subscription?.customSpeedSetting ??
-            UserDefaults.standard.object(forKey: Const.playbackSpeed) as? Double ?? 1
-    }
-
-    @MainActor
     private func setPlaybackSpeed(_ value: Double) {
         if temporaryPlaybackSpeed != nil {
             return
@@ -291,7 +285,7 @@ extension PlayerManager {
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {
-            UserDefaults.standard.setValue(value, forKey: Const.playbackSpeed)
+            defaultPlaybackSpeed = value
         }
     }
 

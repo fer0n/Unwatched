@@ -14,7 +14,6 @@ struct PlayerView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
-    @AppStorage(Const.playbackSpeed) var playbackSpeed: Double = 1.0
 
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
@@ -81,9 +80,6 @@ struct PlayerView: View {
                 }
                 .onChange(of: playVideoFullscreen) {
                     player.handleHotSwap()
-                }
-                .onChange(of: playbackSpeed) {
-                    // workaround: doesn't update otherwise
                 }
                 .overlay {
                     PlayerLoadingTimeout()

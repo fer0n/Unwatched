@@ -106,7 +106,7 @@ struct PlayerControls: View {
                                 ? 2
                                 : compactSize
                                 ? 2.5
-                                : 4,
+                                : 2,
                             )
                         .fixedSize(horizontal: compactSize, vertical: false)
 
