@@ -300,6 +300,7 @@ import UnwatchedShared
 
     func getSendableVideos(
         _ filter: Predicate<Video>?,
+        _ manualFilter: (@Sendable (Video) -> Bool)?,
         _ sortBy: [SortDescriptor<Video>],
         _ skip: Int = 0,
         _ limit: Int? = nil
@@ -309,7 +310,12 @@ import UnwatchedShared
             fetch.fetchLimit = limit
         }
         fetch.fetchOffset = skip
-        let videos = try? modelContext.fetch(fetch)
+        var videos = try? modelContext.fetch(fetch)
+        if let manualFilter {
+            videos = videos?.filter { video in
+                manualFilter(video)
+            }
+        }
         return videos?.compactMap {
             $0.toExportWithSubscription
         } ?? []

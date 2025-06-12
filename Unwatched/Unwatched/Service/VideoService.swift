@@ -32,13 +32,14 @@ extension VideoService {
 
     static func getSendableVideos(
         _ filter: Predicate<Video>?,
+        _ manualFilter: (@Sendable (Video) -> Bool)?,
         _ sort: [SortDescriptor<Video>],
         _ skip: Int = 0,
         _ limit: Int? = nil
     ) async -> [SendableVideo] {
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            return await repo.getSendableVideos(filter, sort, skip, limit)
+            return await repo.getSendableVideos(filter, manualFilter, sort, skip, limit)
         }
         return await task.value
     }
@@ -412,6 +413,12 @@ extension VideoService {
         Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             await repo.consumeDeferredVideos(clearedYouTubeId)
+        }
+    }
+
+    static func getVideoTitleFilter(_ filterVideoTitleText: String) -> [String] {
+        return filterVideoTitleText.split(separator: ",").map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }

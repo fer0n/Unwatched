@@ -16,7 +16,7 @@ struct VideosViewAsync: View {
     var body: some View {
         List {
             VideoListViewAsync(videoListVM: $videoListVM)
-            workaroundPlaceholder
+            AsyncPlaceholderWorkaround(videoListVM: $videoListVM)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -29,8 +29,12 @@ struct VideosViewAsync: View {
             videoListVM.setSorting(sorting, refresh: true)
         }
     }
+}
 
-    @ViewBuilder var workaroundPlaceholder: some View {
+struct AsyncPlaceholderWorkaround: View {
+    @Binding var videoListVM: VideoListVM
+
+    var body: some View {
         // workaround: UITabBar scrollEdgeAppearance pops in and out. Reason: the parent view is showing the
         // regular appearance. (if the parent is showing the scrollEdgeAppearance, it works correctly)
         // When the child appears, the view is initially empty and the tabbar transitions over to a transparent
@@ -45,7 +49,8 @@ struct VideosViewAsync: View {
                     #else
                     return NSScreen.main?.frame.size.height ?? 800
                     #endif
-                }())        }
+                }())
+        }
     }
 }
 

@@ -42,6 +42,8 @@ struct LibraryDestinationModifier: ViewModifier {
                     HelpView()
                 case .filter:
                     FilterSettingsView()
+                case .titleFilter:
+                    TitleFilterWithPreview()
                 }
             }
     }
@@ -55,18 +57,19 @@ extension View {
 }
 
 enum LibraryDestination: Codable {
-    case sideloading
-    case watchHistory
-    case allVideos
-    case bookmarkedVideos
-    case userData
-    case settings
-    case settingsNotifications
-    case settingsNewVideos
-    case settingsAppearance
-    case settingsPlayback
-    case importSubscriptions
-    case debug
-    case help
-    case filter
+    case sideloading,
+         watchHistory,
+         allVideos,
+         bookmarkedVideos,
+         userData,
+         settings,
+         settingsNotifications,
+         settingsNewVideos,
+         settingsAppearance,
+         settingsPlayback,
+         importSubscriptions,
+         debug,
+         help,
+         filter,
+         titleFilter
 }

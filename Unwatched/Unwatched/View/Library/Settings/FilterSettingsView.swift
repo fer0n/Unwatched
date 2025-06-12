@@ -28,6 +28,11 @@ struct FilterSettingsView: View {
                 }
 
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
+                    #if os(iOS)
+                    NavigationLink(value: LibraryDestination.titleFilter) {
+                        Text("videoTitle")
+                    }
+                    #endif
                     Picker("shortsSetting", selection: $defaultShortsSetting) {
                         ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
                             Text($0.description(defaultSetting: ""))
@@ -41,17 +46,12 @@ struct FilterSettingsView: View {
                     }
                 }
 
+                #if os(macOS)
+                TitleFilterView()
+                #endif
+
                 MySection("chapterFilter", footer: "chapterFilterFooter") {
                     TextField("keywords", text: $skipChapterText)
-                        .autocorrectionDisabled()
-                        #if os(iOS)
-                        .textInputAutocapitalization(.never)
-                        .submitLabel(.done)
-                    #endif
-                }
-
-                MySection("videoTitleFilter", footer: "videoTitleFilterFooter") {
-                    TextField("keywords", text: $filterVideoTitleText)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.never)

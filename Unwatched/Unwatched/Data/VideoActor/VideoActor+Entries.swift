@@ -144,9 +144,7 @@ extension VideoActor {
     }
 
     func getFilteredByVideoTitleText(_ videos: [Video], _ defaultPlacement: DefaultVideoPlacement) -> [Video] {
-        let filterStrings = defaultPlacement.filterVideoTitleText.split(separator: ",").map {
-            $0.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
+        let filterStrings = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText)
         return videos.filter { video in
             return !filterStrings.contains(where: { video.title.localizedStandardContains($0) })
         }

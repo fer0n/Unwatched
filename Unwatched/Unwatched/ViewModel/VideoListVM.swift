@@ -9,8 +9,8 @@ import SwiftUI
 import OSLog
 
 @Observable class VideoListVM: TransactionVM<Video> {
-    @ObservationIgnored private let initialBatchSize: Int = 150
-    @ObservationIgnored private let pageSize: Int = 250
+    @ObservationIgnored private(set) var initialBatchSize: Int = 150
+    @ObservationIgnored private var pageSize: Int = 250
 
     @MainActor
     var videos = [SendableVideo]()
@@ -19,7 +19,12 @@ import OSLog
     var isLoading = true
 
     var filter: Predicate<Video>?
+    var manualFilter: (@Sendable (Video) -> Bool)?
     private var sort: [SortDescriptor<Video>] = []
+
+    init(initialBatchSize: Int = 150) {
+        self.initialBatchSize = initialBatchSize
+    }
 
     @MainActor
     var hasNoVideos: Bool {
@@ -38,8 +43,12 @@ import OSLog
     private func fetchVideos(skip: Int = 0, limit: Int? = nil) async {
         Log.info("VideoListVM: fetchVideos")
         isLoading = true
+        defer {
+            isLoading = false
+        }
         let newVideos = await VideoService.getSendableVideos(
             filter,
+            manualFilter,
             sort,
             skip,
             limit ?? initialBatchSize
@@ -51,7 +60,6 @@ import OSLog
             } else {
                 videos = newVideos
             }
-            isLoading = false
         }
     }
 
@@ -116,7 +124,7 @@ import OSLog
         if loaded {
             return
         }
-        if let ids = ids {
+        if let ids {
             updateVideos(ids)
         } else {
             await fetchVideos()
@@ -137,6 +145,14 @@ import OSLog
             return
         }
         isLoading = true
+        defer {
+            isLoading = false
+        }
+
+        if manualFilter != nil {
+            Log.warning("loadMoreContent: manualFilter is set, skipping pagination")
+            return
+        }
 
         let skip = videos.count
         let limit = pageSize
@@ -144,6 +160,5 @@ import OSLog
         Task {
             await fetchVideos(skip: skip, limit: limit)
         }
-        isLoading = false
     }
 }

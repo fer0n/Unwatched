@@ -175,6 +175,8 @@
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886F020D2CA5B3B000EF2EEA /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; };
 		886F020E2CA5B3B000EF2EEA /* UnwatchedShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8871A5722DFA4291002083B6 /* TitleFilterWithPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8871A5712DFA4291002083B6 /* TitleFilterWithPreview.swift */; };
+		8871A5732DFA4291002083B6 /* TitleFilterWithPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8871A5712DFA4291002083B6 /* TitleFilterWithPreview.swift */; };
 		887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
 		887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
@@ -738,6 +740,7 @@
 		886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtPlaylistItems.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnwatchedTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8871A5712DFA4291002083B6 /* TitleFilterWithPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleFilterWithPreview.swift; sourceTree = "<group>"; };
 		887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationDelegate.swift; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
@@ -1321,6 +1324,7 @@
 				88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */,
 				888F74A82BA1FD8400B94822 /* VideoSettingsView.swift */,
 				8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */,
+				8871A5712DFA4291002083B6 /* TitleFilterWithPreview.swift */,
 				88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */,
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
 				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
@@ -1973,6 +1977,7 @@
 				88D127C22D927C370052F42D /* PlayerShortcut.swift in Sources */,
 				889AF90C2C50ECDE001CEDE6 /* InboxHasEntriesTip.swift in Sources */,
 				88E63F052D75AABF00AC0A89 /* SplitView.swift in Sources */,
+				8871A5722DFA4291002083B6 /* TitleFilterWithPreview.swift in Sources */,
 				889AF90D2C50ECDE001CEDE6 /* QueueView.swift in Sources */,
 				881EEF4D2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
 				8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */,
@@ -2198,6 +2203,7 @@
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				889931D72D731AB0009096AB /* PreviousState.swift in Sources */,
 				88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
+				8871A5732DFA4291002083B6 /* TitleFilterWithPreview.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
 				8805050C2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */,
 				88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */,
@@ -2659,7 +2665,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2707,7 +2713,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

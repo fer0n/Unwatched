@@ -5765,6 +5765,40 @@
         }
       }
     },
+    "hiddenEntriesManualFilter %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld neueste Videos überprüft"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld most recent videos checked"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld videos más recientes verificados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld vidéos les plus récentes vérifiées"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld najnowszych filmów sprawdzonych"
+          }
+        }
+      }
+    },
     "hideControls" : {
       "localizations" : {
         "de" : {
@@ -14178,31 +14212,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video-Titel"
+            "value" : "Videotitel-Filter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video Title"
+            "value" : "Video Title Filter"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Título del video"
+            "value" : "Filtro de título de video"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Titre de la vidéo"
+            "value" : "Filtre de titre vidéo"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tytuł wideo"
+            "value" : "Filtr tytułu wideo"
           }
         }
       }
