@@ -31,7 +31,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     getTimestamp: getTimestamp
                 ) {
                     hapticToggle.toggle()
-                    flashSymbol = "checkmark"
+                    flashSymbol = isCircleVariant ? "checkmark.circle.fill" : "checkmark"
                 }
             }
 
@@ -59,10 +59,10 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             }
         } label: {
             self.contentImage(Image(systemName: systemName))
-                .contentTransition(.symbolEffect(.replace))
+                .contentTransition(transition)
                 .task(id: flashSymbol) {
                     if flashSymbol != nil {
-                        try? await Task.sleep(s: 0.8)
+                        try? await Task.sleep(s: 1)
                         withAnimation {
                             flashSymbol = nil
                         }
@@ -74,6 +74,14 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         .help("moreOptions")
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
+
+    var transition: ContentTransition {
+        if #available(iOS 18, *) {
+            ContentTransition.symbolEffect(.replace.magic(fallback: .replace))
+        } else {
+            ContentTransition.symbolEffect(.replace)
+        }
     }
 
     var deferDateButton: some View {
