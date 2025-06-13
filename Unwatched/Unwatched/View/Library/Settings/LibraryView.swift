@@ -45,7 +45,8 @@ struct LibraryView: View {
                     if showCancelButton {
                         DismissToolbarButton()
                     }
-                    ToolbarSpacerWorkaround()
+                    SyncStatusToolbarInfo()
+                    ToolbarSpacer(.fixed)
                     #if os(iOS)
                     settingsToolbarButton
                     #endif

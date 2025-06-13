@@ -75,7 +75,8 @@ struct QueueView: View {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
-                ToolbarSpacerWorkaround()
+                SyncStatusToolbarInfo()
+                ToolbarSpacer(.fixed)
                 RefreshToolbarButton()
             }
             .tint(theme.color)

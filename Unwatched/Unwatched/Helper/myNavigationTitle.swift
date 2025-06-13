@@ -18,8 +18,7 @@ struct MyNavigationTitle: ViewModifier {
         content
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.backgroundColor.opacity(sheetOpacity || opaque ? Const.sheetOpacityValue : 1),
-                               for: .navigationBar)
+            .toolbarBackground(toolbarBackground, for: .navigationBar)
             .toolbarBackground(.automatic, for: .navigationBar)
             .toolbar {
                 if let title = title {
@@ -37,6 +36,14 @@ struct MyNavigationTitle: ViewModifier {
         #else
         .navigationTitle(title ?? "")
         #endif
+    }
+
+    var toolbarBackground: Color {
+        if #available(iOS 26, *) {
+            Color.clear
+        } else {
+            Color.backgroundColor.opacity(sheetOpacity || opaque ? Const.sheetOpacityValue : 1)
+        }
     }
 }
 

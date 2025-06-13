@@ -50,6 +50,8 @@ struct SubscriptionDetailView: View {
         )
         .toolbar {
             if !subscription.isArchived {
+                SyncStatusToolbarInfo()
+                ToolbarSpacer(.fixed)
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
             }
         }

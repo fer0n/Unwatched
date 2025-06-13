@@ -16,8 +16,11 @@ struct InboxToolbar: ViewModifier {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
-                undoRedoToolbarButton
-                ToolbarSpacerWorkaround()
+                if modelContext.undoManager?.canUndo == true {
+                    undoRedoToolbarButton
+                }
+                SyncStatusToolbarInfo()
+                ToolbarSpacer(.fixed)
                 RefreshToolbarButton()
             }
     }
@@ -32,7 +35,6 @@ struct InboxToolbar: ViewModifier {
                 Image(systemName: "arrow.uturn.backward")
             }
             .accessibilityLabel("undo")
-            .opacity(modelContext.undoManager?.canUndo == true ? 1 : 0)
             .font(.footnote)
             .fontWeight(.bold)
         }

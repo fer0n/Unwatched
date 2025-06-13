@@ -68,6 +68,7 @@ struct MenuView: View {
                     .padding(.horizontal, -padding)
                 }
             }
+            .tabBarMinimizeBehavior(.onScrollDown)
             .padding(.horizontal, padding)
             .popover(item: $navManager.videoDetail) { video in
                 ZStack {
