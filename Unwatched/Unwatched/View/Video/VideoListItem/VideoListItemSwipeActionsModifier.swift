@@ -369,7 +369,7 @@ struct TrailingSwipeActionsView: View {
             if canBeCleared {
                 Button(
                     "clearVideo",
-                    systemImage: Const.clearSF,
+                    systemImage: Const.clearNoFillSF,
                     role: config.clearRole,
                     action: clearVideoEverywhere
                 )
@@ -390,7 +390,7 @@ struct TrailingSwipeActionsView: View {
                 navManager.videoDetail = video
                 video.isNew = false
             } label: {
-                Image(systemName: "text.bubble.fill")
+                Image(Const.videoDescriptionSF)
             }
             .tint(theme.color.mix(with: Color.black, by: 0.5))
             .accessibilityLabel("videoDescription")
@@ -417,7 +417,7 @@ struct TrailingSwipeActionsView: View {
                 deleteVideo: deleteVideo
             )
         } label: {
-            Image(systemName: "ellipsis.circle.fill")
+            Image(systemName: "ellipsis")
         }
         .tint(theme.color.mix(with: Color.black, by: 0.7))
     }
