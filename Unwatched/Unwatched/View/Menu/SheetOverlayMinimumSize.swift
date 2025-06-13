@@ -19,6 +19,8 @@ struct SheetOverlayMinimumSize: View {
                 .ignoresSafeArea(.all)
                 .myNavigationTitle(currentTab.stringKey, showBack: false)
                 .toolbar {
+                    SyncStatusToolbarInfo()
+                    ToolbarSpacer(.fixed)
                     RefreshToolbarButton()
                 }
                 .disabled(true)

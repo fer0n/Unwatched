@@ -16,12 +16,6 @@ struct CoreRefreshButton: View {
 
     var body: some View {
         HStack {
-            Image(systemName: "icloud.fill")
-                .symbolEffect(.pulse, options: .speed(0.7).repeating)
-                .accessibilityLabel("syncing")
-                .opacity(refresher.isSyncingIcloud ? 0.5 : 0)
-                .animation(.default, value: refresher.isSyncingIcloud)
-
             Button {
                 try? modelContext.save()
                 Task { @MainActor in
@@ -86,6 +80,24 @@ struct CoreRefreshButton: View {
     private func nextTurn() {
         withAnimation(.linear(duration: 1)) {
             rotation += 180
+        }
+    }
+}
+
+struct SyncStatusToolbarInfo: ToolbarContent {
+    @Environment(RefreshManager.self) var refresher
+
+    var body: some ToolbarContent {
+        if refresher.isSyncingIcloud {
+            ToolbarItem {
+                Image(systemName: "icloud.fill")
+                    .symbolEffect(.pulse, options: .speed(0.7).repeating)
+                    .accessibilityLabel("syncing")
+                    .opacity(refresher.isSyncingIcloud ? 0.5 : 0)
+                    .animation(.default, value: refresher.isSyncingIcloud)
+                    .font(.footnote)
+                    .fontWeight(.bold)
+            }
         }
     }
 }
