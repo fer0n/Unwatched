@@ -318,7 +318,7 @@ extension PlayerManager {
 
     @MainActor
     func setVideoEnded(_ value: Bool) {
-        Log.info("setVideoEnded")
+        Log.info("setVideoEnded \(value)")
         if value != videoEnded {
             withAnimation {
                 videoEnded = value

@@ -696,6 +696,7 @@ extension PlayerWebView {
                 || event.target.matches('.ytmVideoInfoHost')
                 || event.target.matches('.ytwPlayerMiddleControlsHost')
                 || event.target.matches('.player-controls-bottom')
+                || event.target.matches('.ytmCuedOverlayHost')
         }
 
         function addTouchEventListener(eventType, handler) {

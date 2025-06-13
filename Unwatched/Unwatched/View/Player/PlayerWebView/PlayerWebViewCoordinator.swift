@@ -189,7 +189,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleCenterTouch(_ payload: String?) {
-        guard let payload = payload else {
+        guard let payload else {
             return
         }
         let play = payload == "play"

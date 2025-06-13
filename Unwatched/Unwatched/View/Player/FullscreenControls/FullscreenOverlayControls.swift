@@ -52,39 +52,38 @@ struct FullscreenOverlayControls: View {
                 .foregroundStyle(Color.white.opacity(0.7), .ultraThinMaterial)
                 .allowsHitTesting(false)
 
-            if player.videoEnded {
-                HStack {
-                    WatchedButton(
-                        markVideoWatched: markVideoWatched,
-                        indicateWatched: false,
-                        material: .ultraThinMaterial
-                    )
-                    .frame(maxWidth: .infinity)
+            HStack {
+                WatchedButton(
+                    markVideoWatched: markVideoWatched,
+                    indicateWatched: false,
+                    material: .ultraThinMaterial
+                )
+                .frame(maxWidth: .infinity)
 
-                    CorePlayButton(
-                        circleVariant: true,
-                        enableHaptics: true,
-                        enableHelperPopup: false
-                    ) { image in
-                        image
-                            .resizable()
-                            .frame(width: 90, height: 90)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.automaticBlack, .regularMaterial)
-                            .fontWeight(.black)
-                    }
-
-                    NextVideoButton(
-                        markVideoWatched: markVideoWatched,
-                        material: .ultraThinMaterial
-                    )
-                    .frame(maxWidth: .infinity)
+                CorePlayButton(
+                    circleVariant: true,
+                    enableHaptics: true,
+                    enableHelperPopup: false
+                ) { image in
+                    image
+                        .resizable()
+                        .frame(width: 90, height: 90)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.automaticBlack, .regularMaterial)
+                        .fontWeight(.black)
                 }
-                .frame(maxWidth: 500)
-                .padding(.horizontal, 10)
-                .opacity(enabled && show ? 0.98 : 0)
-                .animation(.default, value: show)
+
+                NextVideoButton(
+                    markVideoWatched: markVideoWatched,
+                    material: .ultraThinMaterial
+                )
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: 500)
+            .padding(.horizontal, 10)
+            .opacity(player.videoEnded && enabled && show ? 1 : 0)
+            .allowsHitTesting(player.videoEnded && enabled && show)
+            .animation(.default, value: show)
         }
     }
 }
