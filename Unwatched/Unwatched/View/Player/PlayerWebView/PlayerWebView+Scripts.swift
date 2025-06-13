@@ -552,7 +552,7 @@ extension PlayerWebView {
                         .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
                         .player-control-play-pause-icon, .player-controls-spinner,
                         .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost,
-                        .ytmMuteButtonButton, .ytmCuedOverlayGradient {
+                        .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, .ytmCuedOverlayGradient {
                             display: none !important;
                         }
                         .player-settings-icon, .ytmClosedCaptioningButtonHost {
