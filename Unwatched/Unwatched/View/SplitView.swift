@@ -43,7 +43,7 @@ struct MacOSSplitView: View {
                 .environment(\.colorScheme, .dark)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .edgesIgnoringSafeArea(.all)
+            .edgesIgnoringSafeArea(.vertical)
         }
     }
 
