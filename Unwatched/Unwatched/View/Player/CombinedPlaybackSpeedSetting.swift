@@ -16,6 +16,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var limitWidth = false
     var hasHaptics = true
     var indicatorSpacing: CGFloat = 4
+    var glassEffect = true
 
     var body: some View {
         @Bindable var player = player
@@ -35,10 +36,12 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             showTemporarySpeed: showTemporarySpeed,
             isExpanded: isExpanded,
             limitWidth: limitWidth,
-            indicatorSpacing: indicatorSpacing)
-            .onChange(of: player.video?.subscription) {
-                // workaround
-            }
+            indicatorSpacing: indicatorSpacing,
+            glassEffect: glassEffect
+        )
+        .onChange(of: player.video?.subscription) {
+            // workaround
+        }
     }
 }
 
@@ -55,6 +58,7 @@ struct CombinedPlaybackSpeedSetting: View {
     var isExpanded = false
     var limitWidth = false
     var indicatorSpacing: CGFloat = 4
+    var glassEffect = true
 
     var body: some View {
         HStack(spacing: spacing) {
@@ -66,6 +70,8 @@ struct CombinedPlaybackSpeedSetting: View {
                         selectedSpeed: $selectedSpeed,
                         indicatorSpacing: indicatorSpacing
                     )
+                    .speedSelectionBackground(glassEffect: glassEffect)
+
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
                         .padding(.horizontal, 2)
@@ -107,16 +113,36 @@ struct CombinedPlaybackSpeedSetting: View {
                         .accessibilityLabel("toggleTemporarySpeed")
                     }
                 }
-                .background {
-                    Capsule()
-                        .fill(Color.backgroundColor)
-                }
+                .speedSelectionBackground(glassEffect: glassEffect)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in
             return hasHaptics
         }
+    }
+}
+
+struct SpeedSelectionBackgroundModifier: ViewModifier {
+    let glassEffect: Bool
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *), glassEffect {
+            content
+                .glassEffect()
+        } else {
+            content
+                .background {
+                    Capsule()
+                        .fill(Color.backgroundColor)
+                }
+        }
+    }
+}
+
+extension View {
+    public func speedSelectionBackground(glassEffect: Bool = true) -> some View {
+        modifier(SpeedSelectionBackgroundModifier(glassEffect: glassEffect))
     }
 }
 
