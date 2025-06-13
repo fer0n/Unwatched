@@ -12,6 +12,7 @@ struct MyNavigationTitle: ViewModifier {
     var title: LocalizedStringKey?
     var opaque: Bool = false
     var showBack: Bool = true
+    var titleHidden = false
 
     func body(content: Content) -> some View {
         content
@@ -26,6 +27,8 @@ struct MyNavigationTitle: ViewModifier {
                         VStack {
                             Text(title)
                                 .fontWeight(.black)
+                                .offset(y: titleHidden ? 10 : 0)
+                                .opacity(titleHidden ? 0 : 1)
                         }
                     }
                 }
@@ -40,7 +43,16 @@ struct MyNavigationTitle: ViewModifier {
 extension View {
     func myNavigationTitle(_ title: LocalizedStringKey? = nil,
                            opaque: Bool = false,
-                           showBack: Bool = true) -> some View {
-        self.modifier(MyNavigationTitle(title: title, opaque: opaque, showBack: showBack))
+                           showBack: Bool = true,
+                           titleHidden: Bool = false
+    ) -> some View {
+        self.modifier(
+            MyNavigationTitle(
+                title: title,
+                opaque: opaque,
+                showBack: showBack,
+                titleHidden: titleHidden
+            )
+        )
     }
 }

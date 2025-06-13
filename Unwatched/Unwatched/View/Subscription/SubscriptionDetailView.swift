@@ -26,9 +26,13 @@ struct SubscriptionDetailView: View {
                     SubscriptionInfoDetails(subscription: subscription,
                                             requiresUnsubscribe: $requiresUnsubscribe)
                         .onAppear {
-                            showTitle = false
+                            withAnimation(.default.speed(2)) {
+                                showTitle = false
+                            }
                         }.onDisappear {
-                            showTitle = true
+                            withAnimation(.default.speed(2)) {
+                                showTitle = true
+                            }
                         }
                 }
                 .imageAccentBackground(url: imageUrl)
@@ -41,7 +45,9 @@ struct SubscriptionDetailView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
         .listStyle(.plain)
-        .myNavigationTitle(showTitle ? LocalizedStringKey(subscription.title) : nil)
+        .myNavigationTitle(LocalizedStringKey(subscription.title),
+                           titleHidden: !showTitle
+        )
         .toolbar {
             if !subscription.isArchived {
                 RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
