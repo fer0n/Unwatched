@@ -109,10 +109,6 @@ struct SpeedControlView: View {
         .opacity(viewModel.showContent ? 1 : 0)
         .animation(.default, value: viewModel.showContent)
         .padding(borderWidth)
-        .background {
-            Capsule()
-                .fill(Color.backgroundColor)
-        }
     }
 
     @ViewBuilder var thumb: some View {
@@ -122,6 +118,7 @@ struct SpeedControlView: View {
                 Circle()
                     .fill()
                     .frame(width: thumbSize, height: thumbSize)
+                    .glassEffect(.regular.tint(.white).interactive())
                 Text(floatingText)
                     .foregroundStyle(.automaticWhite)
                     .font(.system(size: selectedFontSize))

@@ -107,7 +107,8 @@ struct PlayerControls: View {
                                 : compactSize
                                 ? 2.5
                                 : 2,
-                            )
+                            glassEffect: false
+                        )
                         .fixedSize(horizontal: compactSize, vertical: false)
 
                         #if os(iOS)

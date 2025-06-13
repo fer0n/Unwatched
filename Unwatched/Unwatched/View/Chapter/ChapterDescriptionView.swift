@@ -39,8 +39,8 @@ struct ChapterDescriptionView: View {
 
                     DescriptionDetailView(video: video)
                 }
-                .padding(.horizontal, isCompact ? 10 : 20)
-                .padding(.top, isCompact ? 10 : 30)
+                .padding(.horizontal, isCompact ? 15 : 20)
+                .padding(.top, isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
 
                 Spacer()

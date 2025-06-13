@@ -27,7 +27,7 @@ struct CompactFullscreenSpeedControl: View {
                 CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                     .padding(.horizontal)
                     .frame(width: 350)
-                    .presentationBackground(.black)
+                    .presentationBackground(Const.iOS26 ? .clear : .black)
                     .environment(\.colorScheme, .dark)
                     .presentationCompactAdaptation(.popover)
                     .fontWeight(nil)
@@ -96,8 +96,11 @@ struct FullscreenSpeedControl: View {
             CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                 .padding(.horizontal)
                 .frame(width: 350)
-                .presentationBackground(.black)
                 .environment(\.colorScheme, .dark)
+                .if(!Const.iOS26) { view in
+                    view
+                        .presentationBackground(.black)
+                }
                 .presentationCompactAdaptation(.popover)
                 .onDisappear {
                     autoHideVM.keepVisible = false
@@ -119,7 +122,7 @@ struct FullscreenSpeedControl: View {
             .modelContainer(DataProvider.previewContainer)
             .environment(player)
             .environment(NavigationManager())
-            .scaleEffect(4)
+        // .scaleEffect(4)
 
         HStack {
             Button {
@@ -137,6 +140,13 @@ struct FullscreenSpeedControl: View {
             } label: {
                 Text("up")
             }
+        }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background {
+        HStack(spacing: 0) {
+            Color.black.frame(width: 300)
+            Color.orange
         }
     }
 }
