@@ -22,7 +22,7 @@ struct PlayerContentView: View {
     let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
-    let fadeOutHeight: CGFloat = 55
+    let fadeOutHeight: CGFloat = 25
 
     @State var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
@@ -61,6 +61,9 @@ struct PlayerContentView: View {
                         bottomSpacer: fadeOutHeight + Const.minSheetDetent,
                         setShowMenu: setShowMenu
                     )
+                    .overlay {
+                        topShadow
+                    }
                     .tabItem {
                         Image(systemName: "checklist")
                             .fontWeight(.black)
@@ -85,7 +88,7 @@ struct PlayerContentView: View {
 
             if !hidePlayerPageIndicator {
                 pageControl
-                    .padding(.bottom, compactSize ? 0 : Const.minSheetDetent - 3)
+                    .padding(.bottom, compactSize ? 0 : Const.minSheetDetent - 30)
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .opacity(navManager.showMenu ? 1 : 0)
             }
@@ -108,23 +111,37 @@ struct PlayerContentView: View {
         .clipShape(Capsule())
     }
 
-    var bottomShadow: some View {
+    var topShadow: some View {
         VStack(spacing: 0) {
-            Spacer()
-
             Color.black
                 .allowsHitTesting(false)
-                .frame(height: fadeOutHeight)
+                .frame(height: 80)
                 .mask(LinearGradient(gradient: Gradient(
                     stops: [
                         .init(color: .black.opacity(0.9), location: 0),
                         .init(color: .black.opacity(0.3), location: 0.55),
                         .init(color: .clear, location: 1)
                     ]
-                ), startPoint: .bottom, endPoint: .top))
+                ), startPoint: .top, endPoint: .bottom))
+
+            Spacer()
+        }
+    }
+
+    var bottomShadow: some View {
+        VStack(spacing: 0) {
+            Spacer()
 
             Color.black
-                .frame(height: compactSize ? 0 : Const.minSheetDetent - 10)
+                .allowsHitTesting(false)
+                .frame(height: Const.minSheetDetent + fadeOutHeight)
+                .mask(LinearGradient(gradient: Gradient(
+                    stops: [
+                        .init(color: .black.opacity(0.9), location: 0),
+                        .init(color: .black.opacity(0.5), location: 0.8),
+                        .init(color: .clear, location: 1)
+                    ]
+                ), startPoint: .bottom, endPoint: .top))
         }
     }
 }

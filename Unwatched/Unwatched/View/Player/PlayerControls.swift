@@ -205,7 +205,7 @@ struct PlayerControls: View {
         .padding(.bottom, compactSize ? 0 : 5 )
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
-            sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
+            sheetPos.setPlayerControlHeight(size.height)
             if player.limitHeight || compactSize {
                 minHeight = size.height
             }
