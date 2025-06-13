@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUICore
 
 public struct Device {
     public static var version: String? {
@@ -21,6 +22,11 @@ public struct Device {
         \(Device.systemVersion)
         Unwatched \(buildNumberAndVersion)
         """
+    }
+    
+    @MainActor
+    public static func isBigScreen(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
+        sizeClass == .regular && !isIphone
     }
     
     #if os(iOS)

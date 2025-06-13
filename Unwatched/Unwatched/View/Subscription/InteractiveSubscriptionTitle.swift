@@ -9,6 +9,8 @@ import UnwatchedShared
 struct InteractiveSubscriptionTitle: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.modelContext) var modelContext
+    @Environment(SheetPositionReader.self) var sheetPos
+    @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @State var subscribeManager = SubscribeManager()
 
     let video: Video?
@@ -71,8 +73,15 @@ struct InteractiveSubscriptionTitle: View {
     }
 
     func openSubscription(_ sub: Subscription) {
+        if sheetPos.isMinimumSheet && !Device.isBigScreen(sizeClass) {
+            Task {
+                // workaround: view appearing while still being cut off due to sheet position
+                navManager.pushSubscription(subscription: sub)
+            }
+        } else {
+            navManager.pushSubscription(subscription: sub)
+        }
         navManager.videoDetail = nil
-        navManager.pushSubscription(subscription: sub)
         setShowMenu?()
     }
 }
