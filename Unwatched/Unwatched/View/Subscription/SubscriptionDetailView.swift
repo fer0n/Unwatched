@@ -26,11 +26,11 @@ struct SubscriptionDetailView: View {
                     SubscriptionInfoDetails(subscription: subscription,
                                             requiresUnsubscribe: $requiresUnsubscribe)
                         .onAppear {
-                            withAnimation(.default.speed(2)) {
+                            withAnimation(.default.speed(1.5)) {
                                 showTitle = false
                             }
                         }.onDisappear {
-                            withAnimation(.default.speed(2)) {
+                            withAnimation(.default.speed(1.5)) {
                                 showTitle = true
                             }
                         }
@@ -40,6 +40,7 @@ struct SubscriptionDetailView: View {
                 VideoListView(subscriptionId: subscription.persistentModelID)
             }
             .scrollContentBackground(.hidden)
+            .scrollEdgeEffectDisabled(!showTitle, for: .top)
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
