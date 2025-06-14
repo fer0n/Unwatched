@@ -70,6 +70,17 @@ class CleanupServiceTests: XCTestCase {
         let inboxDiffDup = Video(title: "inboxDiffDup", url: URL(string: "inboxDiffUrl"), youtubeId: "inboxDiffYoutubeId")
         context.insert(inboxDiffDup)
 
+        // inbox & queue entry for same video
+        let bothInboxQueue = Video(title: "bothInboxQueue", url: URL(string: "bothInboxQueue"), youtubeId: "bothInboxQueueYoutubeId")
+        context.insert(bothInboxQueue)
+        let inboxQueueEntry = InboxEntry(bothInboxQueue)
+        context.insert(inboxQueueEntry)
+        bothInboxQueue.inboxEntry = inboxQueueEntry
+        let queueEntryInboxQueueDiff = QueueEntry(video: bothInboxQueue, order: 0)
+        context.insert(queueEntryInboxQueueDiff)
+        bothInboxQueue.queueEntry = queueEntryInboxQueueDiff
+
+
         try? context.save()
 
         do {
@@ -113,6 +124,12 @@ class CleanupServiceTests: XCTestCase {
 
             let containsInboxDiff = videos.contains(where: { $0.title == "inboxDiff" })
             XCTAssertTrue(containsInboxDiff, "inbox entry difference: kept wrong duplicate")
+
+            let containsBothInboxQueueVideo = videos.first(where: { $0.title == "bothInboxQueue" })
+            let hasInboxEntry = containsBothInboxQueueVideo?.inboxEntry != nil
+            let hasQueueEntry = containsBothInboxQueueVideo?.queueEntry != nil
+            XCTAssertFalse(hasInboxEntry, "entry differences: inbox entry should be removed")
+            XCTAssertTrue(hasQueueEntry, "entry differences: queue entry should be kept")
 
         } catch {
             XCTFail("Fetching failed: \(error)")

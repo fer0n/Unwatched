@@ -107,7 +107,7 @@ struct CleanupService {
     ) -> RemovedDuplicatesInfo {
         duplicateInfo = RemovedDuplicatesInfo()
 
-        if quickCheck && !hasDuplicateRecentVideos() {
+        if quickCheck && !hasDuplicateRecentVideosOrEntries() {
             Log.info("Has duplicate inbox entries")
             return duplicateInfo
         }
@@ -120,13 +120,13 @@ struct CleanupService {
             removeEmptyInboxEntries()
             removeEmptyQueueEntries()
         }
-        removeVideoDuplicates()
+        removeVideoDuplicatesAndEntries()
         try? modelContext.save()
 
         return duplicateInfo
     }
 
-    private func hasDuplicateRecentVideos() -> Bool {
+    private func hasDuplicateRecentVideosOrEntries() -> Bool {
         let sort = SortDescriptor<Video>(\.publishedDate, order: .reverse)
         var fetch = FetchDescriptor<Video>(sortBy: [sort])
         fetch.fetchLimit = Const.recentVideoDedupeCheck
@@ -135,7 +135,8 @@ struct CleanupService {
         }
         var seenIds = Set<String>()
         for video in videos {
-            if seenIds.contains(video.youtubeId) {
+            if seenIds.contains(video.youtubeId)
+                || (video.inboxEntry != nil && video.queueEntry != nil) {
                 return true
             }
             seenIds.insert(video.youtubeId)
@@ -243,11 +244,12 @@ struct CleanupService {
     }
 
     // MARK: Videos
-    func removeVideoDuplicates() {
+    func removeVideoDuplicatesAndEntries() {
         let fetch = FetchDescriptor<Video>()
         guard let videos = try? modelContext.fetch(fetch) else {
             return
         }
+        removeMultipleEntries(from: videos)
         let duplicates = getDuplicates(from: videos, keySelector: {
             ($0.url?.absoluteString ?? "")
         }, sort: sortVideos)
@@ -255,6 +257,19 @@ struct CleanupService {
         for duplicate in duplicates {
             CleanupService.deleteVideo(duplicate, modelContext)
         }
+    }
+
+    func removeMultipleEntries(from videos: [Video]) {
+        var count = 0
+        for video in videos where video.inboxEntry != nil && video.queueEntry != nil {
+            if let inboxEntry = video.inboxEntry {
+                VideoService.deleteInboxEntry(
+                    inboxEntry, modelContext: modelContext
+                )
+                count += 1
+            }
+        }
+        duplicateInfo.countInboxEntries += count
     }
 
     func sortVideos(_ videos: [Video]) -> [Video] {
