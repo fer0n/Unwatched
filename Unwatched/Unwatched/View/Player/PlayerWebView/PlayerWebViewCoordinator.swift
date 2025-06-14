@@ -39,7 +39,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func handleJsMessages(_ topic: String, _ payload: String?) {
         switch topic {
         case "pause":
@@ -142,7 +142,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleUrlClicked(_ payload: String?) {
-        guard let payload = payload,
+        guard let payload,
               let url = URL(string: payload),
               let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
             return
@@ -267,7 +267,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handlePlaybackSpeed(_ payload: String?) {
-        guard let payload = payload,
+        guard let payload,
               let playbackRate = Double(payload),
               parent.player.playbackSpeed != playbackRate else {
             return
@@ -283,7 +283,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 
     func handleDuration(_ payload: String?) {
         Log.info("handleDuration")
-        guard let payload = payload, let duration = Double(payload), duration > 0 else {
+        guard let payload, let duration = Double(payload), duration > 0 else {
             Log.info("handleDuration: not updating")
             return
         }
@@ -323,7 +323,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
-        guard let payload = payload else {
+        guard let payload else {
             return
         }
         // "paused:2161.00033421,https://www.youtube.com/watch?t=2161&v=dKbT0iFia0I"

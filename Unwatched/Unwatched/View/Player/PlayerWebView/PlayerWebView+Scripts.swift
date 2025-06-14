@@ -419,6 +419,9 @@ extension PlayerWebView {
             video.addEventListener('seeked', () => {
                 debouncedHideOverlay(1000);
             });
+            video.addEventListener('ratechange', () => {
+                sendMessage('playbackRate', video.playbackRate);
+            });
         }
         document.addEventListener('play', (e) => {
             if (e.target.tagName === 'VIDEO') {

@@ -59,7 +59,9 @@ import UnwatchedShared
     @ObservationIgnored var earlyEndTime: Double?
 
     init() {
-        defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
+        if let speed = UserDefaults.standard.value(forKey: Const.playbackSpeed) as? Double {
+            defaultPlaybackSpeed = speed
+        }
     }
 
     static func load() -> PlayerManager {
