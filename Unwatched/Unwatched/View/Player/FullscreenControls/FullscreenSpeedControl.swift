@@ -41,6 +41,9 @@ struct CompactFullscreenSpeedControl: View {
 }
 
 struct FullscreenSpeedControl: View {
+    @Namespace private var namespace
+    let transitionId = "popoverTransition"
+
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
     @Binding var autoHideVM: AutoHideVM
@@ -91,6 +94,7 @@ struct FullscreenSpeedControl: View {
         )
         .frame(width: 35)
         .fontWeight(.medium)
+        .matchedTransitionSource(id: transitionId, in: namespace)
         .padding(.horizontal) // workaround: safearea pushing content in pop over
         .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
@@ -106,6 +110,7 @@ struct FullscreenSpeedControl: View {
                     autoHideVM.keepVisible = false
                 }
                 .fontWeight(nil)
+                .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
         }
     }
 
