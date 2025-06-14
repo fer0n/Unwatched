@@ -98,7 +98,7 @@
       },
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.8
+        "opacity" : 0.2
       },
       "specular" : true,
       "translucency" : {
@@ -144,7 +144,7 @@
       },
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.8
+        "opacity" : 0.15
       },
       "specular" : true,
       "translucency" : {
