@@ -20,13 +20,14 @@ struct ChapterListItem: View {
                     Text(title)
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
+                        .foregroundStyle(.primary)
                 }
                 if let timeText {
                     Text(timeText)
                         .font(.subheadline.monospacedDigit())
                         .animation(.default, value: timeText)
                         .contentTransition(.numericText(countsDown: true))
-                        .foregroundStyle(Color.gray)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
             }

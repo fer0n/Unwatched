@@ -21,13 +21,14 @@ struct MyNavigationTitle: ViewModifier {
             .toolbarBackground(toolbarBackground, for: .navigationBar)
             .toolbarBackground(.automatic, for: .navigationBar)
             .toolbar {
-                if let title = title {
+                if let title {
                     ToolbarItem(placement: .principal) {
                         VStack {
                             Text(title)
                                 .fontWeight(.black)
                                 .offset(y: titleHidden ? 10 : 0)
                                 .opacity(titleHidden ? 0 : 1)
+                                .blur(radius: titleHidden ? 3 : 0)
                         }
                     }
                 }

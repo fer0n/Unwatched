@@ -16,7 +16,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var limitWidth = false
     var hasHaptics = true
     var indicatorSpacing: CGFloat = 4
-    var glassEffect = true
+    var isTransparent = true
 
     var body: some View {
         @Bindable var player = player
@@ -37,7 +37,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             isExpanded: isExpanded,
             limitWidth: limitWidth,
             indicatorSpacing: indicatorSpacing,
-            glassEffect: glassEffect
+            isTransparent: isTransparent
         )
         .onChange(of: player.video?.subscription) {
             // workaround
@@ -58,7 +58,7 @@ struct CombinedPlaybackSpeedSetting: View {
     var isExpanded = false
     var limitWidth = false
     var indicatorSpacing: CGFloat = 4
-    var glassEffect = true
+    var isTransparent = true
 
     var body: some View {
         HStack(spacing: spacing) {
@@ -70,7 +70,7 @@ struct CombinedPlaybackSpeedSetting: View {
                         selectedSpeed: $selectedSpeed,
                         indicatorSpacing: indicatorSpacing
                     )
-                    .speedSelectionBackground(glassEffect: glassEffect)
+                    .speedSelectionBackground(isTransparent: isTransparent)
 
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
@@ -113,7 +113,7 @@ struct CombinedPlaybackSpeedSetting: View {
                         .accessibilityLabel("toggleTemporarySpeed")
                     }
                 }
-                .speedSelectionBackground(glassEffect: glassEffect)
+                .speedSelectionBackground(isTransparent: isTransparent)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -124,25 +124,20 @@ struct CombinedPlaybackSpeedSetting: View {
 }
 
 struct SpeedSelectionBackgroundModifier: ViewModifier {
-    let glassEffect: Bool
+    let isTransparent: Bool
 
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *), glassEffect {
-            content
-                .glassEffect()
-        } else {
-            content
-                .background {
-                    Capsule()
-                        .fill(Color.backgroundColor)
-                }
-        }
+        content
+            .background {
+                Capsule()
+                    .fill(Color.backgroundColor.opacity(isTransparent ? 0.5 : 1))
+            }
     }
 }
 
 extension View {
-    public func speedSelectionBackground(glassEffect: Bool = true) -> some View {
-        modifier(SpeedSelectionBackgroundModifier(glassEffect: glassEffect))
+    public func speedSelectionBackground(isTransparent: Bool = true) -> some View {
+        modifier(SpeedSelectionBackgroundModifier(isTransparent: isTransparent))
     }
 }
 

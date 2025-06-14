@@ -16,6 +16,7 @@ struct ChapterDescriptionView: View {
     var setShowMenu: (() -> Void)?
     var isCompact = false
     var scrollToCurrent = false
+    var isTransparent = false
 
     var body: some View {
         let hasChapters = video.sortedChapters.isEmpty == false
@@ -30,8 +31,12 @@ struct ChapterDescriptionView: View {
                         setShowMenu: setShowMenu)
 
                     if hasChapters {
-                        ChapterList(video: video, isCompact: isCompact)
-                            .padding(.vertical)
+                        ChapterList(
+                            video: video,
+                            isCompact: isCompact,
+                            isTransparent: isTransparent
+                        )
+                        .padding(.vertical)
                     } else {
                         Spacer()
                             .frame(height: 7)

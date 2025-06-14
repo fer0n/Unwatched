@@ -12,7 +12,8 @@ struct ChapterList: View {
     @Environment(PlayerManager.self) var player
 
     var video: Video
-    var isCompact: Bool = false
+    var isCompact = false
+    var isTransparent = false
 
     var padding: CGFloat {
         isCompact ? 4 : 6
@@ -32,26 +33,26 @@ struct ChapterList: View {
                         timeText: getTimeText(
                             chapter, isCurrent: isCurrent
                         ),
-                        spacing: padding
-                    )
-                    .padding(.horizontal, padding + 2)
-                    .padding(.vertical, padding)
-                    .padding(.trailing, 4)
-                    .background(
-                        backgroundColor
-                            .clipShape(.rect(cornerRadius: 15.0))
-                            .opacity(chapter.isActive ? 1 : 0.6)
-                    )
-                    .id(chapter.persistentModelID)
-                    .onTapGesture {
-                        if !chapter.isActive {
-                            toggleChapter(chapter)
-                        } else {
-                            setChapter(chapter)
+                        spacing: padding)
+                        .padding(.horizontal, padding + 2)
+                        .padding(.vertical, padding)
+                        .padding(.trailing, 4)
+                        .background(
+                            backgroundColor
+                                .clipShape(.rect(cornerRadius: 15.0))
+                                .opacity(chapter.isActive ? 1 : 0.6)
+                                .opacity(isTransparent ? 0.7 : 1)
+                        )
+                        .id(chapter.persistentModelID)
+                        .onTapGesture {
+                            if !chapter.isActive {
+                                toggleChapter(chapter)
+                            } else {
+                                setChapter(chapter)
+                            }
                         }
-                    }
-                    .foregroundStyle(foregroundColor)
-                    .tint(foregroundColor)
+                        .foregroundStyle(foregroundColor)
+                        .tint(foregroundColor)
                 }
             }
         }
@@ -125,23 +126,31 @@ struct ChapterList: View {
     try? context.save()
 
     return (
-        ZStack {}
-            .popover(isPresented: .constant(true), arrowEdge: .trailing) {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        ChapterList(video: video, isCompact: true)
-                            .padding(6)
-                    }
-                    .background(.blue)
-                    .onAppear {
-                        proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
-                    }
-                    .scrollIndicators(.hidden)
-                }
-                .frame(minWidth: 200, idealWidth: 300, maxWidth: 350)
-                .presentationCompactAdaptation(.popover)
+        ZStack {
+            HStack {
+                Color.red
+                    .frame(maxWidth: .infinity)
+                Color.blue
+                    .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .popover(isPresented: .constant(true), arrowEdge: .trailing) {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    ChapterList(video: video, isCompact: true, isTransparent: true)
+                        .padding(10)
+                }
+                // .background(.blue)
+                .onAppear {
+                    proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
+                }
+                .scrollIndicators(.hidden)
+            }
+            .frame(minWidth: 200, idealWidth: 300, maxWidth: 350)
+            .presentationCompactAdaptation(.popover)
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .preferredColorScheme(.dark)
     )
     .modelContainer(container)
     .environment(player)

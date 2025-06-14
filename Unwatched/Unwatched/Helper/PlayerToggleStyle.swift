@@ -25,7 +25,7 @@ struct PlayerToggleModifier: ViewModifier {
     let isOn: Bool
     var isSmall: Bool = false
     var stroke: Bool = true
-    var material: Material?
+    var backgroundColor: Color?
 
     @Environment(\.isEnabled) var isEnabled
     @ScaledMetric var smallSize: CGFloat = 40
@@ -57,8 +57,8 @@ struct PlayerToggleModifier: ViewModifier {
 
     @ViewBuilder
     var background: some View {
-        if let material {
-            Color.clear.overlay(material)
+        if let backgroundColor {
+            backgroundColor
         } else if isOn {
             Color.neutralAccentColor
         } else {
@@ -71,11 +71,11 @@ extension View {
     func playerToggleModifier(isOn: Bool,
                               isSmall: Bool = false,
                               stroke: Bool = true,
-                              material: Material? = nil) -> some View {
+                              backgroundColor: Color? = nil) -> some View {
         self.modifier(PlayerToggleModifier(isOn: isOn,
                                            isSmall: isSmall,
                                            stroke: stroke,
-                                           material: material))
+                                           backgroundColor: backgroundColor))
     }
 }
 

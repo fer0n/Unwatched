@@ -41,13 +41,18 @@ struct FullscreenChapterDescriptionButton: View {
                             .scaleEffect(1.5)
                     }
 
-                    ChapterDescriptionView(video: video, isCompact: true, scrollToCurrent: true)
-                        .scrollIndicators(.hidden)
-                        .frame(
-                            minWidth: 200,
-                            idealWidth: 350,
-                            maxWidth: 350
-                        )
+                    ChapterDescriptionView(
+                        video: video,
+                        isCompact: true,
+                        scrollToCurrent: true,
+                        isTransparent: true
+                    )
+                    .scrollIndicators(.hidden)
+                    .frame(
+                        minWidth: 200,
+                        idealWidth: 350,
+                        maxWidth: 350
+                    )
                 }
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
