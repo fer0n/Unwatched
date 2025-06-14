@@ -7,6 +7,9 @@ import SwiftUI
 import UnwatchedShared
 
 struct FullscreenChapterDescriptionButton: View {
+    @Namespace private var namespace
+    let transitionId = "popoverTransition"
+
     @Environment(PlayerManager.self) var player
     @State var show = false
 
@@ -29,6 +32,7 @@ struct FullscreenChapterDescriptionButton: View {
         .fontWeight(.bold)
         .accessibilityLabel("videoDescription")
         .padding(.horizontal) // workaround: safearea pushing content in pop over
+        .matchedTransitionSource(id: transitionId, in: namespace)
         .popover(isPresented: $show, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
@@ -51,6 +55,7 @@ struct FullscreenChapterDescriptionButton: View {
                     menuOpen = false
                 }
                 .fontWeight(nil)
+                .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
             }
         }
     }

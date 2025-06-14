@@ -48,10 +48,8 @@ struct PlayerView: View {
                     if player.embeddingDisabled {
                         playerWebsite
                             .environment(\.layoutDirection, .leftToRight)
-                            .zIndex(1)
                     } else {
                         playerEmbedded
-                            .zIndex(1)
                             .environment(\.layoutDirection, .leftToRight)
                     }
 
