@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct FullscreenChaptersButton: View {
+struct FullscreenChapterDescriptionButton: View {
     @Environment(PlayerManager.self) var player
     @State var show = false
 
@@ -32,19 +32,24 @@ struct FullscreenChaptersButton: View {
         .popover(isPresented: $show, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
-                    Color.sheetBackground
-                        .scaleEffect(1.5)
-
-                    ChapterDescriptionView(video: video, isCompact: true, scrollToCurrent: true)
-                        .scrollIndicators(.hidden)
-                        .frame(
-                            minWidth: 200,
-                            idealWidth: 350,
-                            maxWidth: 350
-                        )
+                    ChapterDescriptionView(
+                        video: video,
+                        isCompact: true,
+                        scrollToCurrent: true,
+                        isTransparent: true
+                    )
+                    .scrollIndicators(.hidden)
+                    .frame(
+                        minWidth: 200,
+                        idealWidth: 350,
+                        maxWidth: 350
+                    )
                 }
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
+                .if(!Const.iOS26) { view in
+                    view.presentationBackground(.ultraThinMaterial)
+                }
                 .onDisappear {
                     menuOpen = false
                 }
@@ -55,7 +60,7 @@ struct FullscreenChaptersButton: View {
 }
 
 #Preview {
-    FullscreenChaptersButton(
+    FullscreenChapterDescriptionButton(
         arrowEdge: .bottom,
         menuOpen: .constant(true),
         size: 40

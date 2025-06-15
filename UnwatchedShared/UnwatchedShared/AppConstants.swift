@@ -279,3 +279,12 @@ public struct Const {
     public static let videoListFormat = "videoListFormat"
     public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
 }
+
+public extension Const {
+    static var iOS26: Bool {
+        if #available(iOS 26, *) {
+            return true
+        }
+        return false
+    }
+}

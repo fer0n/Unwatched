@@ -109,19 +109,24 @@ struct SpeedControlView: View {
         .opacity(viewModel.showContent ? 1 : 0)
         .animation(.default, value: viewModel.showContent)
         .padding(borderWidth)
-        .background {
-            Capsule()
-                .fill(Color.backgroundColor)
-        }
+    }
+
+    var thumbBackground: some View {
+        Circle()
+            .fill()
+            .frame(width: thumbSize, height: thumbSize)
     }
 
     @ViewBuilder var thumb: some View {
         if let controlMinXLocal = controlMinX {
             let floatingText = getFloatingText()
             ZStack {
-                Circle()
-                    .fill()
-                    .frame(width: thumbSize, height: thumbSize)
+                // if #available(iOS 26, *) {
+                //     thumbBackground
+                //         .glassEffect(.regular.tint(.white).interactive())
+                // } else {
+                thumbBackground
+                // }
                 Text(floatingText)
                     .foregroundStyle(.automaticWhite)
                     .font(.system(size: selectedFontSize))

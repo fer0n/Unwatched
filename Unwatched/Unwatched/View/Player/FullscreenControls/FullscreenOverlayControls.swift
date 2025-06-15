@@ -43,21 +43,24 @@ struct FullscreenOverlayControls: View {
                 .phaseAnimator([0, 1, 0], trigger: overlayVM.show) { view, phase in
                     view
                         .scaleEffect(phase == 1 ? 1 : 0.75)
+                        .backgroundTransparentEffect(fallback: .ultraThinMaterial)
                         .opacity(phase == 1 ? 1 : 0)
                 } animation: { _ in
                     .easeInOut(duration: 0.15)
                 }
                 .fontWeight(overlayVM.icon.fontWeight)
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(Color.white.opacity(0.7), .ultraThinMaterial)
+                .foregroundStyle(Color.white.opacity(0.7), .clear)
+
                 .allowsHitTesting(false)
 
             HStack {
                 WatchedButton(
                     markVideoWatched: markVideoWatched,
                     indicateWatched: false,
-                    material: .ultraThinMaterial
+                    backgroundColor: .clear
                 )
+                .backgroundTransparentEffect(fallback: .ultraThinMaterial)
                 .frame(maxWidth: .infinity)
 
                 CorePlayButton(
@@ -69,14 +72,16 @@ struct FullscreenOverlayControls: View {
                         .resizable()
                         .frame(width: 90, height: 90)
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(.automaticBlack, .regularMaterial)
+                        .foregroundStyle(.primary, .clear)
                         .fontWeight(.black)
                 }
+                .backgroundTransparentEffect(fallback: .regularMaterial)
 
                 NextVideoButton(
                     markVideoWatched: markVideoWatched,
-                    material: .ultraThinMaterial
+                    backgroundColor: .clear
                 )
+                .backgroundTransparentEffect(fallback: .ultraThinMaterial)
                 .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: 500)
@@ -85,6 +90,27 @@ struct FullscreenOverlayControls: View {
             .allowsHitTesting(player.videoEnded && enabled && show)
             .animation(.default, value: show)
         }
+    }
+}
+
+struct BackgroundTranparencyEffect: ViewModifier {
+    var fallback: Material
+
+    func body(content: Content) -> some View {
+        // if #available(iOS 26, *) {
+        //     content
+        //         .glassEffect()
+        // } else {
+        content
+            .background(fallback)
+            .clipShape(Circle())
+        // }
+    }
+}
+
+extension View {
+    func backgroundTransparentEffect(fallback: Material) -> some View {
+        self.modifier(BackgroundTranparencyEffect(fallback: fallback))
     }
 }
 

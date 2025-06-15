@@ -28,9 +28,6 @@ struct SubscriptionSpeedSetting: View {
         }
         .popover(isPresented: $showSpeedControl, arrowEdge: .bottom) {
             ZStack {
-                Color.sheetBackground
-                    .scaleEffect(1.5)
-
                 let selectedSpeed = Binding(
                     get: {
                         subscription.customSpeedSetting ?? player.defaultPlaybackSpeed
@@ -55,12 +52,16 @@ struct SubscriptionSpeedSetting: View {
                     selectedSpeed: selectedSpeed,
                     isOn: isOn,
                     hapticToggle: .constant(false),
-                    isExpanded: true
+                    isExpanded: true,
+                    isTransparent: true
                 )
                 .padding(.horizontal)
             }
             .presentationCompactAdaptation(.popover)
             .frame(minWidth: 300, maxWidth: .infinity)
+            .if(!Const.iOS26) { view in
+                view.presentationBackground(.ultraThinMaterial)
+            }
         }
         .tint(theme.color)
     }

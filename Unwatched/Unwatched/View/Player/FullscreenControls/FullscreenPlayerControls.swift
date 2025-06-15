@@ -55,7 +55,7 @@ struct FullscreenPlayerControls: View {
             Spacer()
             Spacer()
 
-            FullscreenChaptersButton(
+            FullscreenChapterDescriptionButton(
                 arrowEdge: arrowEdge,
                 menuOpen: $autoHideVM.keepVisible,
                 size: size
@@ -97,6 +97,7 @@ struct FullscreenPlayerControls: View {
         .environment(\.colorScheme, .dark)
         .padding(.vertical)
         .frame(minWidth: 35)
+        .preferredColorScheme(.dark)
     }
 }
 

@@ -100,7 +100,7 @@ struct NextVideoButton: View {
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var isSmall: Bool = false
     var stroke: Bool = true
-    var material: Material?
+    var backgroundColor: Color?
 
     var body: some View {
         CoreNextButton(markVideoWatched: markVideoWatched) { image, isOn in
@@ -108,7 +108,7 @@ struct NextVideoButton: View {
                 .playerToggleModifier(isOn: isOn,
                                       isSmall: isSmall,
                                       stroke: stroke,
-                                      material: material)
+                                      backgroundColor: backgroundColor)
         }
     }
 }

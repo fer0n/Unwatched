@@ -16,6 +16,7 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
     var limitWidth = false
     var hasHaptics = true
     var indicatorSpacing: CGFloat = 4
+    var isTransparent = true
 
     var body: some View {
         @Bindable var player = player
@@ -35,10 +36,12 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
             showTemporarySpeed: showTemporarySpeed,
             isExpanded: isExpanded,
             limitWidth: limitWidth,
-            indicatorSpacing: indicatorSpacing)
-            .onChange(of: player.video?.subscription) {
-                // workaround
-            }
+            indicatorSpacing: indicatorSpacing,
+            isTransparent: isTransparent
+        )
+        .onChange(of: player.video?.subscription) {
+            // workaround
+        }
     }
 }
 
@@ -55,6 +58,7 @@ struct CombinedPlaybackSpeedSetting: View {
     var isExpanded = false
     var limitWidth = false
     var indicatorSpacing: CGFloat = 4
+    var isTransparent = true
 
     var body: some View {
         HStack(spacing: spacing) {
@@ -66,6 +70,8 @@ struct CombinedPlaybackSpeedSetting: View {
                         selectedSpeed: $selectedSpeed,
                         indicatorSpacing: indicatorSpacing
                     )
+                    .speedSelectionBackground(isTransparent: isTransparent)
+
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
                         .padding(.horizontal, 2)
@@ -107,16 +113,31 @@ struct CombinedPlaybackSpeedSetting: View {
                         .accessibilityLabel("toggleTemporarySpeed")
                     }
                 }
-                .background {
-                    Capsule()
-                        .fill(Color.backgroundColor)
-                }
+                .speedSelectionBackground(isTransparent: isTransparent)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in
             return hasHaptics
         }
+    }
+}
+
+struct SpeedSelectionBackgroundModifier: ViewModifier {
+    let isTransparent: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .background {
+                Capsule()
+                    .fill(Color.backgroundColor.opacity(isTransparent ? 0.5 : 1))
+            }
+    }
+}
+
+extension View {
+    public func speedSelectionBackground(isTransparent: Bool = true) -> some View {
+        modifier(SpeedSelectionBackgroundModifier(isTransparent: isTransparent))
     }
 }
 

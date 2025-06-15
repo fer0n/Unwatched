@@ -105,8 +105,8 @@
 		88373C1A2C8B381F00ACBB3B /* AppAppearanceSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */; };
 		88373C1C2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */; };
 		88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */; };
-		88373C1F2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */; };
-		88373C202C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */; };
+		88373C1F2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift */; };
+		88373C202C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C1E2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift */; };
 		88373C222C8C2A9200ACBB3B /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C212C8C2A9200ACBB3B /* HelpView.swift */; };
 		88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C212C8C2A9200ACBB3B /* HelpView.swift */; };
 		88373C252C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88373C242C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift */; };
@@ -695,7 +695,7 @@
 		88373C112C8B203400ACBB3B /* UnwatchedMiniature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedMiniature.swift; sourceTree = "<group>"; };
 		88373C182C8B381F00ACBB3B /* AppAppearanceSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearanceSelection.swift; sourceTree = "<group>"; };
 		88373C1B2C8B3E5000ACBB3B /* SetColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetColorScheme.swift; sourceTree = "<group>"; };
-		88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChaptersButton.swift; sourceTree = "<group>"; };
+		88373C1E2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChapterDescriptionButton.swift; sourceTree = "<group>"; };
 		88373C212C8C2A9200ACBB3B /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		88373C242C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendableSubscriptionDetailView.swift; sourceTree = "<group>"; };
 		88373C272C8C6A9100ACBB3B /* SubscriptionListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListVM.swift; sourceTree = "<group>"; };
@@ -1383,7 +1383,7 @@
 				88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */,
 				889924792C4847DD001185A6 /* ChapterTimeRemaining.swift */,
 				88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */,
-				88373C1E2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift */,
+				88373C1E2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift */,
 			);
 			path = FullscreenControls;
 			sourceTree = "<group>";
@@ -2100,7 +2100,7 @@
 				889AF9152C50ECE7001CEDE6 /* AddToLibraryView.swift in Sources */,
 				889AF9162C50ECE7001CEDE6 /* WatchHistoryView.swift in Sources */,
 				889AF9172C50ECE7001CEDE6 /* DebugView.swift in Sources */,
-				88373C202C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */,
+				88373C202C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
 				889AF9182C50ECE7001CEDE6 /* SubscriptionListSection.swift in Sources */,
 				889AF9192C50ECE7001CEDE6 /* LibraryDestination.swift in Sources */,
 				889AF91A2C50ECE7001CEDE6 /* BookmarkedVideosView.swift in Sources */,
@@ -2229,7 +2229,7 @@
 				887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */,
 				88BF35912BC91F20005FA53E /* AddFeedsMenu.swift in Sources */,
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
-				88373C1F2C8BAE2700ACBB3B /* FullscreenChaptersButton.swift in Sources */,
+				88373C1F2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
 				881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */,
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
 				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
