@@ -29,6 +29,16 @@ struct FaqView: View {
             "pictureInPictureFaqA"
         ),
         FaqInfo(
+            "generatedAudioFaqT",
+            "generatedAudioFaqQ",
+            "generatedAudioFaqA"
+        ),
+        FaqInfo(
+            "performanceIssuesFaqT",
+            "performanceIssuesFaqQ",
+            "performanceIssuesFaqA"
+        ),
+        FaqInfo(
             "durationMissingFaqT",
             "durationMissingFaqQ",
             "durationMissingFaqA"
@@ -37,11 +47,6 @@ struct FaqView: View {
             "duplicatesFaqT",
             "duplicatesFaqQ",
             "duplicatesFaqA"
-        ),
-        FaqInfo(
-            "performanceIssuesFaqT",
-            "performanceIssuesFaqQ",
-            "performanceIssuesFaqA"
         ),
         FaqInfo(
             "tvOsFaqT",

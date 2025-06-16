@@ -5595,6 +5595,108 @@
         }
       }
     },
+    "generatedAudioFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube aktiviert automatisch KI-generierte Audioausgabe und der neue Player zeigt möglicherweise keine Sprachoptionen an. Mögliche Lösungen:\n\n- Sprache in iOS-Einstellungen → Apps → Unwatched → Sprache ändern\n- Bei YouTube anmelden unter Bibliothek → YouTube Browser"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube auto-enables ai-generated audio and the new player may not show language options. Possible solutions are:\n- Changing language in iOS Settings → Apps → Unwatched → Language\n- Signing into YouTube under Library → Search YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube activa automáticamente el audio generado por IA y el nuevo reproductor puede no mostrar opciones de idioma. Posibles soluciones:\n\n- Cambiar idioma en Configuración iOS → Apps → Unwatched → Idioma\n- Iniciar sesión en YouTube en Biblioteca → Buscar YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube active automatiquement l'audio généré par IA et le nouveau lecteur peut ne pas afficher les options de langue. Solutions possibles :\n- Changer la langue dans Réglages iOS → Apps → Unwatched → Langue\n- Se connecter à YouTube sous Bibliothèque → Rechercher YouTube\n\n"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube automatycznie włącza audio generowane przez AI, a nowy odtwarzacz może nie wyświetlać opcji języka. Możliwe rozwiązania:\n\n- Zmiana języka w Ustawienia iOS → Aplikacje → Unwatched → Język\n- Zalogowanie się do YouTube w Biblioteka → Szukaj YouTube"
+          }
+        }
+      }
+    },
+    "generatedAudioFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum werden manche Videos nicht in ihrer Originalsprache abgespielt?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why are some videos not playing in their original language?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué algunos videos no se reproducen en su idioma original?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourquoi certaines vidéos ne sont-elles pas lues dans leur langue d'origine ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dlaczego niektóre filmy nie są odtwarzane w języku oryginalnym?"
+          }
+        }
+      }
+    },
+    "generatedAudioFaqT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch übersetzte Audioausgabe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-translated Audio"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio traducido automáticamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio traduit automatiquement"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatycznie tłumaczone audio"
+          }
+        }
+      }
+    },
     "getCurrentVideo" : {
       "localizations" : {
         "de" : {
@@ -8992,31 +9094,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das passiert normalerweise, wenn zu viele Videos in der Queue oder der Inbox gespeichert sind. Falls das der Fall ist, versuche einige davon zu entfernen – keine Angst, alle Videos bleiben unter Bibliothek → Alle Videos zugänglich. Der einfachste Weg, Videos zu entfernen, ist nach links zu wischen, auf den „…\"-Button zu tippen und „oberhalb/unterhalb löschen\" auszuwählen."
+            "value" : "Ein Grund dafür ist, zu viele Videos in der Inbox oder in der Queue zu haben. Ich werde das hoffentlich in Zukunft verbessern. In der Zwischenzeit wird das Entfernen von Einträgen dort das Problem beheben – keine Sorge, alle Videos bleiben unter Bibliothek → Alle Videos zugänglich. Der einfachste Weg, Einträge zu entfernen, ist nach links zu wischen, den „...\"-Button zu tippen und „oberhalb/unterhalb löschen\" zu wählen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usually, this happens when too many videos are kept inside the Queue or Inbox. If that’s the case, try to clear it up – don’t worry, all the videos will remain accessible under Library → All Videos. The easiest way to clear videos is to swipe left on one, tap the “…”-Button and select “clear above/below”."
+            "value" : "One reason for this is having too many videos in the Inbox or Queue. I'll hopefully improve this in the future. Meanwhile, removing entries from there will fix it – don't worry, all videos remain accessible under Library → All Videos. The easiest way to clear videos is to swipe left on one, tap the \"...\" button, and select \"clear above/below\"."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Normalmente, esto sucede cuando se mantienen demasiados videos en la Cola o en la Bandeja de entrada. Si ese es el caso, trata de limpiarla – no te preocupes, todos los videos seguirán siendo accesibles en Biblioteca → Todos los videos. La forma más fácil de limpiar videos es deslizar hacia la izquierda en uno, tocar el botón \"…\" y seleccionar \"limpiar arriba/abajo\"."
+            "value" : "Una razón para esto es tener demasiados videos en el Inbox o Queue. Espero mejorar esto en el futuro. Mientras tanto, eliminar entradas de ahí solucionará el problema – no te preocupes, todos los videos permanecen accesibles en Biblioteca → Todos los videos. La forma más fácil de limpiar videos es deslizar hacia la izquierda en uno, tocar el botón \"...\" y seleccionar \"limpiar arriba/abajo\"."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En général, cela se produit lorsque trop de vidéos sont conservées dans la File d'attente ou la Boîte de réception. Si c'est le cas, essayez de faire le ménage – ne vous inquiétez pas, toutes les vidéos resteront accessibles sous Bibliothèque → Toutes les vidéos. Le moyen le plus simple de supprimer des vidéos est de glisser vers la gauche sur une vidéo, d'appuyer sur le bouton « … » et de sélectionner « effacer au-dessus/en dessous »."
+            "value" : "Une des raisons est d'avoir trop de vidéos dans l'Inbox ou la Queue. J'espère améliorer cela à l'avenir. En attendant, supprimer des entrées de là corrigera le problème – ne vous inquiétez pas, toutes les vidéos restent accessibles sous Bibliothèque → Toutes les vidéos. Le moyen le plus simple de vider les vidéos est de glisser vers la gauche sur une vidéo, appuyer sur le bouton « ... » et sélectionner « vider au-dessus/en-dessous »."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zwykle dzieje się tak, gdy zbyt wiele filmów jest przechowywanych w Kolejce lub Skrzynce odbiorczej. Jeśli tak jest, spróbuj to wyczyścić – nie martw się, wszystkie filmy pozostaną dostępne w Biblioteka → Wszystkie filmy. Najłatwiejszym sposobem na usunięcie filmów jest przesunięcie palcem w lewo na filmie, dotknięcie przycisku „…\" i wybranie „wyczyść powyżej/poniżej\"."
+            "value" : "Jednym z powodów jest posiadanie zbyt wielu filmów w Inbox lub Queue. Mam nadzieję poprawić to w przyszłości. Tymczasem usunięcie wpisów stamtąd naprawi problem – nie martw się, wszystkie filmy pozostaną dostępne w Biblioteka → Wszystkie filmy. Najłatwiejszym sposobem czyszczenia filmów jest przesunięcie palcem w lewo na jednym z nich, dotknięcie przycisku „...\" i wybranie „wyczyść powyżej/poniżej\"."
           }
         }
       }
@@ -14416,31 +14518,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Option \"Einstellungen → Wiedergabe → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser mit deinem YouTube Account angemeldet bist."
+            "value" : "Die Option \"Einstellungen → Wiedergabe → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser unter Bibliothek → YouTube Browser mit deinem YouTube Account angemeldet bist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disable “Settings → Playback → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser."
+            "value" : "Disable “Settings → Playback → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser under Library → Search YouTube."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desactiva \"Configuración → Reproducción → Modo Sin Cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador integrado en la aplicación."
+            "value" : "Desactiva \"Configuración → Reproducción → Modo sin cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador de la aplicación en Biblioteca → Buscar en YouTube.\nRetryClaude can make mistakes. Please double-check responses."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivez « Paramètres → Lecture → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré.\n"
+            "value" : "Désactivez « Réglages → Lecture → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré sous Bibliothèque → Rechercher sur YouTube."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyłącz „Ustawienia → Odtwarzanie → Tryb bez ciasteczek”, aby oglądane filmy pojawiały się na YouTube, i zaloguj się przez wbudowaną przeglądarkę.\n"
+            "value" : "Wyłącz „Ustawienia → Odtwarzanie → Tryb bez ciasteczek\", aby obejrzane filmy pojawiały się na YouTube, i zaloguj się przez przeglądarkę w aplikacji w Biblioteka → Szukaj w YouTube."
           }
         }
       }
