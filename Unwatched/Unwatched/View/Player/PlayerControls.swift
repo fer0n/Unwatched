@@ -87,8 +87,8 @@ struct PlayerControls: View {
                     setShowMenu: setShowMenu,
                     handleTitleTap: handleTitleTap,
                     limitHeight: horizontalLayout || player.isTallAspectRatio,
-                    inlineTime: horizontalLayout
-                )
+                    inlineTime: horizontalLayout || player.isTallAspectRatio,
+                    )
                 .contentShape(Rectangle())
                 .padding(.horizontal)
 

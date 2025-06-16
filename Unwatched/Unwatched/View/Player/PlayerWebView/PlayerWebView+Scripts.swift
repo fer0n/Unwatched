@@ -498,7 +498,7 @@ extension PlayerWebView {
                     .ytp-pause-overlay, .branding-img {
                         display: none !important;
                     }
-                    @media (max-width: 350px) {
+                    @media (max-width: 200px) {
                         .ytp-gradient-top, .ytp-chrome-top, .ytp-button, .ytp-impression-link,
                         .ytp-chrome-bottom {
                             display: none !important;
@@ -532,7 +532,7 @@ extension PlayerWebView {
                     .branding-img {
                         display: none !important;
                     }
-                    @media (max-width: 350px) {
+                    @media (max-width: 200px) {
                         #player-control-overlay, .ytmCuedOverlayPlayButton, .ytmCuedOverlayGradient {
                             display: none !important;
                         }
