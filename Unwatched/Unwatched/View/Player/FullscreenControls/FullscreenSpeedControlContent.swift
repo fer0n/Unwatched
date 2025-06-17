@@ -41,7 +41,9 @@ struct FullscreenSpeedControlContent: View {
                 triggerChange(viewModel.currentPage)
             }
         }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage)
+        .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage) { old, _ in
+            old != nil
+        }
         .scrollTargetBehavior(.viewAligned)
         .safeAreaPadding(.vertical, 20)
         .scrollPosition(id: $viewModel.currentPage, anchor: .center)
