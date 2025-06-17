@@ -59,7 +59,11 @@ import UnwatchedShared
     @ObservationIgnored var earlyEndTime: Double?
 
     init() {
-        if let speed = UserDefaults.standard.value(forKey: Const.playbackSpeed) as? Double {
+        initPlaybackSpeed()
+    }
+
+    func initPlaybackSpeed() {
+        if let speed = UserDefaults.standard.value(forKey: Const.playbackSpeed) as? Double, speed > 0 {
             defaultPlaybackSpeed = speed
         }
     }
@@ -67,7 +71,7 @@ import UnwatchedShared
     static func load() -> PlayerManager {
         if let savedPlayer = UserDefaults.standard.data(forKey: Const.playerManager),
            let loadedPlayer = try? JSONDecoder().decode(PlayerManager.self, from: savedPlayer) {
-            loadedPlayer.defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
+            loadedPlayer.initPlaybackSpeed()
             return loadedPlayer
         } else {
             Log.warning("player not found")
