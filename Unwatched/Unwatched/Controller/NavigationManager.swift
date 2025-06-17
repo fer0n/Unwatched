@@ -211,7 +211,7 @@ import UnwatchedShared
             searchFocused = false
         }
 
-        if (Const.hideMenuOnPlay.bool ?? true) || rotateOnPlay {
+        if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)
             #else
