@@ -24,6 +24,11 @@ enum PlayerShortcut: String, CaseIterable {
     case refresh
     case toggleFullscreen
 
+    case goToQueue
+    case goToInbox
+    case goToLibrary
+    case goToBrowser
+
     var title: LocalizedStringKey {
         switch self {
         case .playPause: return "playPause"
@@ -41,6 +46,10 @@ enum PlayerShortcut: String, CaseIterable {
         case .reloadPlayer: return "reloadPlayer"
         case .toggleFullscreen: return "toggleFullscreen"
         case .refresh: return "refresh"
+        case .goToQueue: return NavigationTab.queue.stringKey
+        case .goToInbox: return NavigationTab.inbox.stringKey
+        case .goToLibrary: return NavigationTab.library.stringKey
+        case .goToBrowser: return NavigationTab.browser.stringKey
         }
     }
 
@@ -61,6 +70,10 @@ enum PlayerShortcut: String, CaseIterable {
         case .reloadPlayer: return [("r", [.command, .shift])]
         case .toggleFullscreen: return [("f", [])]
         case .refresh: return [("r", [.command])]
+        case .goToQueue: return [("1", [.command])]
+        case .goToInbox: return [("2", [.command])]
+        case .goToLibrary: return [("3", [.command])]
+        case .goToBrowser: return [("4", [.command])]
         }
     }
 
@@ -156,6 +169,16 @@ enum PlayerShortcut: String, CaseIterable {
         case .refresh:
             Task { @MainActor in
                 await RefreshManager.shared.refreshAll(hardRefresh: false)
+            }
+        case .goToQueue:
+            NavigationManager.shared.navigateTo(.queue)
+        case .goToInbox:
+            NavigationManager.shared.navigateTo(.inbox)
+        case .goToLibrary:
+            NavigationManager.shared.navigateTo(.library)
+        case .goToBrowser:
+            if Const.browserAsTab.bool ?? false {
+                NavigationManager.shared.navigateTo(.browser)
             }
         }
     }

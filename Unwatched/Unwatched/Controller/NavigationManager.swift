@@ -130,6 +130,9 @@ import UnwatchedShared
         if !showMenu {
             showMenu = true
         }
+        if isSidebarHidden {
+            toggleSidebar(show: true)
+        }
         Task { @MainActor in
             if SheetPositionReader.shared.isMinimumSheet {
                 SheetPositionReader.shared.setDetentVideoPlayer()
