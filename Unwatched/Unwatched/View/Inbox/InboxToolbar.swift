@@ -7,6 +7,7 @@ import SwiftUI
 
 struct InboxToolbar: ViewModifier {
     @Environment(\.modelContext) var modelContext
+    @Environment(TinyUndoManager.self) private var undoManager
 
     var showCancelButton: Bool = false
 
@@ -27,12 +28,12 @@ struct InboxToolbar: ViewModifier {
         // doesn't work for some reason
         ToolbarItem(placement: .cancellationAction) {
             Button {
-                modelContext.undoManager?.undo()
+                undoManager.undo()
             } label: {
                 Image(systemName: "arrow.uturn.backward")
             }
             .accessibilityLabel("undo")
-            .opacity(modelContext.undoManager?.canUndo == true ? 1 : 0)
+            .opacity(undoManager.canUndo ? 1 : 0)
             .font(.footnote)
             .fontWeight(.bold)
         }

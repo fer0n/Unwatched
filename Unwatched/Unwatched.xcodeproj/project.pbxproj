@@ -424,6 +424,8 @@
 		889AF96A2C50ED6C001CEDE6 /* apiKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB752B54FB510010A12F /* apiKey.swift */; };
 		889D61682D521EF30070389D /* VideoListItemEntryModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */; };
 		889D61692D521EF30070389D /* VideoListItemEntryModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */; };
+		889DFB642E0225FD00D694E0 /* TinyUndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */; };
+		889DFB652E0225FD00D694E0 /* TinyUndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88ABDF452D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
@@ -817,6 +819,7 @@
 		889931D92D731AC5009096AB /* PlayerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerType.swift; sourceTree = "<group>"; };
 		889931DC2D732635009096AB /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
 		889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemEntryModifier.swift; sourceTree = "<group>"; };
+		889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyUndoManager.swift; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -1229,6 +1232,7 @@
 				8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */,
 				883CA81D2B5BD3ED00028D52 /* SubscribeManager.swift */,
 				881F57422C4A830300559BF9 /* OrientationManager.swift */,
+				889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */,
 				88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */,
 			);
 			path = Controller;
@@ -2054,6 +2058,7 @@
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
 				889AF8E82C50ECA9001CEDE6 /* KeyboardReadable.swift in Sources */,
 				887EB2DE2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
+				889DFB652E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
 				889AF8E92C50ECA9001CEDE6 /* DismissToolbarButton.swift in Sources */,
 				889AF8EA2C50ECA9001CEDE6 /* CapsulePicker.swift in Sources */,
 				8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
@@ -2348,6 +2353,7 @@
 				8891F0AD2B4E7E170098A3FB /* VideoActor+Videos.swift in Sources */,
 				881F57412C4A5DD900559BF9 /* BrowserViewHeader.swift in Sources */,
 				881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */,
+				889DFB642E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
 				88F3AA912C998BFC0030B2EA /* VideoPlacement.swift in Sources */,
 				880505122C836882005F0972 /* FaqView.swift in Sources */,
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
@@ -2665,7 +2671,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 251;
+				CURRENT_PROJECT_VERSION = 252;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2713,7 +2719,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 251;
+				CURRENT_PROJECT_VERSION = 252;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

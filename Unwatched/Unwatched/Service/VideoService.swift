@@ -68,20 +68,12 @@ extension VideoService {
     }
 
     static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) {
-        if video.inboxEntry != nil {
-            clearEntries(
-                from: video,
-                except: InboxEntry.self,
-                modelContext: modelContext
-            )
-        } else {
-            clearEntries(
-                from: video,
-                modelContext: modelContext
-            )
-            let inboxEntry = InboxEntry(video)
-            modelContext.insert(inboxEntry)
-        }
+        clearEntries(
+            from: video,
+            modelContext: modelContext
+        )
+        let inboxEntry = InboxEntry(video)
+        modelContext.insert(inboxEntry)
     }
 
     static func clearAllInboxEntries(_ modelContext: ModelContext) {

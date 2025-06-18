@@ -22,6 +22,7 @@ struct SetupView: View {
     @State var sheetPos = SheetPositionReader.shared
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.shared
+    @State var undoManager = TinyUndoManager()
 
     var body: some View {
         ContentView()
@@ -32,6 +33,7 @@ struct SetupView: View {
             .environment(navManager)
             .environment(\.originalColorScheme, colorScheme)
             .environment(imageCacheManager)
+            .environment(undoManager)
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }

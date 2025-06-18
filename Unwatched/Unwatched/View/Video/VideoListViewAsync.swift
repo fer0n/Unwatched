@@ -65,7 +65,7 @@ struct VideoListViewAsync: View {
                 watched: video.watchedDate != nil,
                 deferred: video.deferDate != nil,
                 isNew: video.isNew,
-                onChange: {
+                onChange: { _ in
                     videoListVM.updateVideo(video)
                 },
                 async: true

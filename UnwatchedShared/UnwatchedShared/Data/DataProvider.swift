@@ -38,16 +38,11 @@ public final class DataProvider: Sendable {
 
         do {
             do {
-                let container = try ModelContainer(
+                return try ModelContainer(
                     for: DataProvider.schema,
                     migrationPlan: UnwatchedMigrationPlan.self,
                     configurations: [config]
                 )
-                Log.info("getModelContainer: setting UndoManager")
-                Task { @MainActor in
-                    container.mainContext.undoManager = UndoManager()
-                }
-                return container
             } catch {
                 Log.error("getModelContainer error: \(error)")
             }
@@ -65,7 +60,6 @@ public final class DataProvider: Sendable {
                 configurations: [config]
             )
             Task { @MainActor in
-                container.mainContext.undoManager = UndoManager()
                 DataProvider.migrationWorkaround(container.mainContext)
             }
             return container

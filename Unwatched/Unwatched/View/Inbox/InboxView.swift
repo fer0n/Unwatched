@@ -14,6 +14,7 @@ struct InboxView: View {
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @Environment(TinyUndoManager.self) private var undoManager
 
     var inboxEntries: [InboxEntry]
     var showCancelButton: Bool = false
@@ -60,10 +61,10 @@ struct InboxView: View {
                                         showAllStatus: false,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
+                                        onChange: { handleChange($0, video) },
                                         clearAboveBelowList: .inbox,
                                         showQueueButton: showAddToQueueButton,
-                                        showDelete: false,
-                                        )
+                                        showDelete: false)
                                 )
                             } else {
                                 EmptyEntry(entry)
@@ -79,7 +80,7 @@ struct InboxView: View {
                         HiddenEntriesInfo()
                     }
 
-                    ClearAllInboxEntriesButton()
+                    ClearAllInboxEntriesButton(willClearAll: willClearAll)
                         .disabled(!hasEntries)
                         .opacity(hasEntries ? 1 : 0)
                 }
@@ -105,15 +106,29 @@ struct InboxView: View {
         inboxEntries.count >= (Const.inboxFetchLimit - 1)
     }
 
-    func deleteInboxEntryIndexSet(_ indexSet: IndexSet) {
-        for index in indexSet {
-            let entry = inboxEntries[index]
-            deleteInboxEntry(entry)
-        }
-    }
-
     func deleteInboxEntry(_ entry: InboxEntry) {
         VideoService.deleteInboxEntry(entry, modelContext: modelContext)
+    }
+
+    func willClearAll() {
+        let videoIds = inboxEntries.compactMap { $0.video?.persistentModelID }
+        undoManager.handleAction(.clear, videoIds)
+    }
+
+    func handleChange(_ reason: ChangeReason?, _ video: Video) {
+        guard let reason else {
+            return
+        }
+        switch reason {
+        case .queue, .clear:
+            undoManager.handleAction(reason, [video.persistentModelID])
+        case .clearAbove:
+            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .above)
+        case .clearBelow:
+            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .below)
+        default:
+            Log.warning("handleChange: Unsupported reason \(reason) for video \(video.youtubeId)")
+        }
     }
 }
 
