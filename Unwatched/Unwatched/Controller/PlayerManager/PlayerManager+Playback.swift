@@ -131,19 +131,19 @@ extension PlayerManager {
     }
 
     @MainActor
-    func seekForward() -> Bool {
-        seek(backward: false)
+    func seekForward(_ seconds: Double? = nil) -> Bool {
+        seek(backward: false, seconds ?? Const.seekSeconds)
     }
 
     @MainActor
-    func seekBackward() -> Bool {
-        seek(backward: true)
+    func seekBackward(_ seconds: Double? = nil) -> Bool {
+        seek(backward: true, seconds ?? Const.seekSeconds)
     }
 
     @MainActor
-    func seek(backward: Bool) -> Bool {
+    func seek(backward: Bool, _ seconds: Double) -> Bool {
         if video != nil && unstarted == false {
-            let seek = backward ? -Const.seekSeconds : Const.seekSeconds
+            let seek = backward ? -seconds : seconds
             seekRelative = seek
             if !isPlaying {
                 currentTime? += seek

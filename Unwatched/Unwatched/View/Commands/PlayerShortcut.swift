@@ -9,8 +9,10 @@ import OSLog
 
 enum PlayerShortcut: String, CaseIterable {
     case playPause
-    case seekForward
-    case seekBackward
+    case seekForward5
+    case seekBackward5
+    case seekForward10
+    case seekBackward10
     case nextChapter
     case previousChapter
     case hideControls
@@ -32,8 +34,10 @@ enum PlayerShortcut: String, CaseIterable {
     var title: LocalizedStringKey {
         switch self {
         case .playPause: return "playPause"
-        case .seekForward: return "seekForward"
-        case .seekBackward: return "seekBackward"
+        case .seekForward5: return "seekForward\(5)"
+        case .seekBackward5: return "seekBackward\(5)"
+        case .seekForward10: return "seekForward\(10)"
+        case .seekBackward10: return "seekBackward\(10)"
         case .nextChapter: return "nextChapter"
         case .previousChapter: return "previousChapter"
         case .hideControls: return "toggleSidebar"
@@ -56,8 +60,10 @@ enum PlayerShortcut: String, CaseIterable {
     var keyboardShortcuts: [(key: KeyEquivalent, modifier: EventModifiers)] {
         switch self {
         case .playPause: return [(.space, []), ("k", [])]
-        case .seekForward: return [(.rightArrow, []), ("l", [])]
-        case .seekBackward: return [(.leftArrow, []), ("j", [])]
+        case .seekForward5: return [(.rightArrow, [])]
+        case .seekBackward5: return [(.leftArrow, [])]
+        case .seekForward10: return [("l", [])]
+        case .seekBackward10: return [("j", [])]
         case .nextChapter: return [(.rightArrow, .command), ("l", .command)]
         case .previousChapter: return [(.leftArrow, .command), ("j", .command)]
         case .hideControls: return [("t", [])]
@@ -121,12 +127,20 @@ enum PlayerShortcut: String, CaseIterable {
         switch self {
         case .playPause:
             player.handlePlayButton()
-        case .seekForward:
-            if player.seekForward() {
+        case .seekForward5:
+            if player.seekForward(5) {
                 OverlayFullscreenVM.shared.show(.seekForward)
             }
-        case .seekBackward:
-            if player.seekBackward() {
+        case .seekBackward5:
+            if player.seekBackward(5) {
+                OverlayFullscreenVM.shared.show(.seekBackward)
+            }
+        case .seekForward10:
+            if player.seekForward(10) {
+                OverlayFullscreenVM.shared.show(.seekForward)
+            }
+        case .seekBackward10:
+            if player.seekBackward(10) {
                 OverlayFullscreenVM.shared.show(.seekBackward)
             }
         case .previousChapter:

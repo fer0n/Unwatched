@@ -10,18 +10,21 @@ struct PlayerCommands: Commands {
     var body: some Commands {
         CommandMenu("playback") {
             Section {
+                PlayerShortcut.playPause.render()
                 PlayerShortcut.playPause.render(isAlt: true)
-                PlayerShortcut.seekBackward.render(isAlt: true)
-                PlayerShortcut.seekForward.render(isAlt: true)
+
+                #if os(macOS)
+                PlayerShortcut.seekBackward5.render()
+                PlayerShortcut.seekForward5.render()
+                #endif
+
+                PlayerShortcut.seekBackward10.render()
+                PlayerShortcut.seekForward10.render()
+
                 PlayerShortcut.previousChapter.render(isAlt: true)
                 PlayerShortcut.nextChapter.render(isAlt: true)
-            }
 
-            Section("alternative") {
-                PlayerShortcut.playPause.render()
                 #if os(macOS)
-                PlayerShortcut.seekBackward.render()
-                PlayerShortcut.seekForward.render()
                 PlayerShortcut.previousChapter.render()
                 PlayerShortcut.nextChapter.render()
                 #endif
@@ -30,11 +33,10 @@ struct PlayerCommands: Commands {
             Section("playbackSpeed") {
                 #if os(macOS)
                 PlayerShortcut.speedUp.render()
-                #endif
-                PlayerShortcut.speedUp.render(isAlt: true)
-                #if os(macOS)
                 PlayerShortcut.slowDown.render()
                 #endif
+
+                PlayerShortcut.speedUp.render(isAlt: true)
                 PlayerShortcut.slowDown.render(isAlt: true)
 
                 PlayerShortcut.temporarySlowDown.render()

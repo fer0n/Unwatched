@@ -1106,40 +1106,6 @@
         }
       }
     },
-    "alternative" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternative"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternative"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternativa"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternative"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alternatywa"
-          }
-        }
-      }
-    },
     "app" : {
       "localizations" : {
         "de" : {
@@ -10789,70 +10755,70 @@
         }
       }
     },
-    "seekBackward" : {
+    "seekBackward%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zurück springen"
+            "value" : "Zurückspulen (%llds)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seek Backward"
+            "value" : "Seek Backward (%llds)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Retroceder"
+            "value" : "Retroceder (%llds)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reculer"
+            "value" : "Reculer (%llds)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przewiń do tylu"
+            "value" : "Przewiń wstecz (%llds)"
           }
         }
       }
     },
-    "seekForward" : {
+    "seekForward%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vorwärts springen"
+            "value" : "Vorspulen (%llds)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seek Forward"
+            "value" : "Seek Forward (%llds)"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avanzar"
+            "value" : "Avanzar (%llds)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avancer"
+            "value" : "Avancer (%llds)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przewiń do przodu"
+            "value" : "Przewiń do przodu (%llds)"
           }
         }
       }
