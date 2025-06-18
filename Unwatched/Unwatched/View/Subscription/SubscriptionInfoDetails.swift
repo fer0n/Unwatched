@@ -16,6 +16,7 @@ struct SubscriptionInfoDetails: View {
 
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
+    @Binding var showFilter: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -102,6 +103,11 @@ struct SubscriptionInfoDetails: View {
                                 return (text, img)
                             },
                             menuLabel: "shortsSetting")
+
+                        SubscriptionTitleFilterButton(
+                            showFilter: $showFilter,
+                            hasFilter: !subscription.filterText.isEmpty
+                        )
 
                         Spacer()
                     }
@@ -203,24 +209,34 @@ struct SubscriptionInfoDetails: View {
 
     if let sub = sub {
         return VStack {
-            SubscriptionInfoDetails(subscription: sub, requiresUnsubscribe: .constant(false))
-                .modelContainer(container)
-                .environment(NavigationManager())
-                .environment(RefreshManager())
-                .environment(PlayerManager())
-                .environment(ImageCacheManager())
-                .background(.gray)
+            SubscriptionInfoDetails(
+                subscription: sub,
+                requiresUnsubscribe: .constant(
+                    false
+                ),
+                showFilter: .constant(false)
+            )
+            .modelContainer(container)
+            .environment(NavigationManager())
+            .environment(RefreshManager())
+            .environment(PlayerManager())
+            .environment(ImageCacheManager())
+            .background(.gray)
             Color.blue
             Spacer()
         }
     } else {
         return VStack {
-            SubscriptionInfoDetails(subscription: Subscription.getDummy(), requiresUnsubscribe: .constant(false))
-                .modelContainer(container)
-                .environment(NavigationManager())
-                .environment(RefreshManager())
-                .environment(PlayerManager())
-                .environment(ImageCacheManager())
+            SubscriptionInfoDetails(
+                subscription: Subscription.getDummy(),
+                requiresUnsubscribe: .constant(false),
+                showFilter: .constant(false)
+            )
+            .modelContainer(container)
+            .environment(NavigationManager())
+            .environment(RefreshManager())
+            .environment(PlayerManager())
+            .environment(ImageCacheManager())
             Spacer()
         }
     }

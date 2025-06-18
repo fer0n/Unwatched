@@ -8,7 +8,7 @@
 //
 //
 //enum UnwatchedSchemaV1p10: VersionedSchema {
-//    static let versionIdentifier = Schema.Version(1, 10, 0)
+//    static let versionIdentifier = Schema.Version(1, 11, 0)
 //
 //    static var models: [any PersistentModel.Type] {
 //        [
@@ -102,6 +102,7 @@
 //        public var title: String = "-"
 //        public var author: String?
 //        public var subscribedDate: Date?
+//        public var filterText: String = ""
 //        public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
 //        public var isArchived: Bool = false
 //        

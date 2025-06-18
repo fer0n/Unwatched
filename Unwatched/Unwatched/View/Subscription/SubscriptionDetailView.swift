@@ -16,6 +16,7 @@ struct SubscriptionDetailView: View {
     @State var requiresUnsubscribe = false
     @State var loadNewVideosTask: Task<(), Never>?
     @State var showTitle: Bool = false
+    @State var showFilter = false
 
     @Bindable var subscription: Subscription
 
@@ -24,7 +25,8 @@ struct SubscriptionDetailView: View {
             List {
                 VStack {
                     SubscriptionInfoDetails(subscription: subscription,
-                                            requiresUnsubscribe: $requiresUnsubscribe)
+                                            requiresUnsubscribe: $requiresUnsubscribe,
+                                            showFilter: $showFilter)
                         .onAppear {
                             withAnimation(.default.speed(1.5)) {
                                 showTitle = false
@@ -37,7 +39,25 @@ struct SubscriptionDetailView: View {
                 }
                 .imageAccentBackground(url: imageUrl)
 
-                VideoListView(subscriptionId: subscription.persistentModelID)
+                if showFilter {
+                    Button {
+                        showFilter = false
+                    } label: {
+                        Text("filterPreviewClose")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.capsule)
+                    .foregroundStyle(Color.automaticBlack)
+                    .tint(Color.insetBackgroundColor)
+                    .listRowBackground(Color.backgroundColor)
+                    .listRowSeparator(.hidden)
+
+                    SubscriptionTitleFitlerPreview(subscription: subscription)
+                        .listRowSeparator(.hidden)
+                } else {
+                    VideoListView(subscriptionId: subscription.persistentModelID)
+                }
             }
             .scrollContentBackground(.hidden)
         }

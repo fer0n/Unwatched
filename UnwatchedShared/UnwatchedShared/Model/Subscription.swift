@@ -23,6 +23,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var title: String = "-"
     public var author: String?
     public var subscribedDate: Date?
+    public var filterText: String = ""
     
     public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
     public var videoPlacement: VideoPlacement {
@@ -84,6 +85,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
                 title: String,
                 author: String? = nil,
                 subscribedDate: Date? = .now,
+                filterText: String = "",
                 videoPlacement: VideoPlacement = .defaultPlacement,
                 isArchived: Bool = false,
 
@@ -99,6 +101,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.title = title
         self.author = author
         self.subscribedDate = subscribedDate
+        self.filterText = filterText
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
 
@@ -119,6 +122,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             title: title,
             author: author,
             subscribedDate: subscribedDate,
+            filterText: filterText,
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
@@ -140,6 +144,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var title: String
     public var author: String?
     public var subscribedDate: Date? = .now
+    public var filterText: String = ""
     public var videoPlacement: VideoPlacement
     public var isArchived: Bool
 
@@ -163,6 +168,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         title: String,
         author: String? = nil,
         subscribedDate: Date? = nil,
+        filterText: String = "",
         videoPlacement: VideoPlacement = VideoPlacement.defaultPlacement,
         isArchived: Bool = false,
         customSpeedSetting: Double? = nil,
@@ -179,6 +185,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.title = title
         self.author = author
         self.subscribedDate = subscribedDate
+        self.filterText = filterText
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
         self.customSpeedSetting = customSpeedSetting
@@ -208,6 +215,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             title: title,
             author: author,
             subscribedDate: subscribedDate,
+            filterText: filterText,
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
@@ -226,6 +234,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              title,
              author,
              subscribedDate,
+             filterText,
              isArchived,
              customSpeedSetting,
              customAspectRatio,

@@ -43,7 +43,7 @@ struct LibraryDestinationModifier: ViewModifier {
                 case .filter:
                     FilterSettingsView()
                 case .titleFilter:
-                    TitleFilterWithPreview()
+                    GlobalTitleFilterWithPreview()
                 }
             }
     }

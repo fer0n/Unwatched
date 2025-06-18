@@ -50,6 +50,7 @@ struct AsyncPlaceholderWorkaround: View {
                     return NSScreen.main?.frame.size.height ?? 800
                     #endif
                 }())
+                .listRowBackground(Color.backgroundColor)
         }
     }
 }

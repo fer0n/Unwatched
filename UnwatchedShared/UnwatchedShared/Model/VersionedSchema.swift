@@ -196,6 +196,13 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
         UserDefaults.standard.set(true, forKey: "v1p9toV1p10DidMigrate")
     }
+    
+    public static var migrateV1p10toV1p11 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p10.self,
+        toVersion: UnwatchedSchemaV1p11.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
 
     public static var stages: [MigrationStage] {
         [
@@ -209,6 +216,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p7toV1p8,
             migrateV1p8toV1p9,
             migrateV1p9toV1p10,
+            migrateV1p10toV1p11
         ]
     }
 }
