@@ -8,7 +8,6 @@ import UnwatchedShared
 
 struct InteractiveSubscriptionTitle: View {
     @Environment(NavigationManager.self) var navManager
-    @Environment(\.modelContext) var modelContext
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
     @State var subscribeManager = SubscribeManager()
