@@ -45,6 +45,7 @@ struct WatchedButton: View {
         }
         .fontWeight(.bold)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .geometryGroup()
     }
 }
 

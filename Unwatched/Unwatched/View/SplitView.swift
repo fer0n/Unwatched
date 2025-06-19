@@ -112,6 +112,7 @@ struct IOSSPlitView: View {
                     }
                     .edgesIgnoringSafeArea(.all)
                     .environment(\.layoutDirection, .leftToRight)
+                    .transition(.move(edge: .trailing))
             }
         }
         .environment(\.layoutDirection, .rightToLeft)

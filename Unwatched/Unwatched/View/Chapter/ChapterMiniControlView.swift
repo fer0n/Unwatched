@@ -8,6 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 struct ChapterMiniControlView: View {
+    @Namespace var namespace
+
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
@@ -87,6 +89,7 @@ struct ChapterMiniControlView: View {
                         }
                     }
                     .frame(maxWidth: link == nil ? nil : .infinity)
+                    .geometryGroup()
 
                     if hasChapters {
                         HStack(spacing: limitHeight ? 0 : -5) {
@@ -102,6 +105,7 @@ struct ChapterMiniControlView: View {
 
                             if inlineTime {
                                 ChapterMiniControlRemainingText()
+                                    .matchedGeometryEffect(id: "remainingText", in: namespace)
                                     .allowsHitTesting(false)
                             }
                         }
@@ -123,6 +127,7 @@ struct ChapterMiniControlView: View {
 
                         if hasChapters {
                             ChapterMiniControlRemainingText()
+                                .matchedGeometryEffect(id: "remainingText", in: namespace)
                                 .allowsHitTesting(false)
                                 .frame(height: 0)
                         } else {

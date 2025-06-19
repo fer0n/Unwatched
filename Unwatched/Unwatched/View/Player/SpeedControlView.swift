@@ -134,6 +134,7 @@ struct SpeedControlView: View {
                     .fontWidth(.condensed)
                     .fontWeight(.heavy)
             }
+            .geometryGroup()
             .position(x: dragState ?? controlMinXLocal, y: midY)
             .frame(maxHeight: thumbSize)
             .animation(.bouncy(duration: 0.4), value: controlMinX)

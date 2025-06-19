@@ -76,6 +76,7 @@ struct HideControlsButton: View {
                 .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
             }
         }
+        .geometryGroup()
     }
 
     func handlePress() {

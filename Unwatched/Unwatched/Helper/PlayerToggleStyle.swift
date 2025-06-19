@@ -43,7 +43,7 @@ struct PlayerToggleModifier: ViewModifier {
             .frame(width: size, height: size)
             .foregroundStyle(color, color.opacity(0.7))
             .opacity(isEnabled ? 1 : 0.4)
-            .background(background)
+            .background(background.padding(-5))
             .clipShape(Circle())
     }
 
