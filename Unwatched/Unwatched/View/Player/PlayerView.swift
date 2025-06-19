@@ -116,7 +116,9 @@ struct PlayerView: View {
     }
 
     var showFullscreenControls: Bool {
-        fullscreenControlsSetting != .disabled && Device.supportsFullscreenControls
+        fullscreenControlsSetting != .disabled
+            && Device.supportsFullscreenControls
+            && hideMiniPlayer
     }
 
     var controlsHidden: Bool {
