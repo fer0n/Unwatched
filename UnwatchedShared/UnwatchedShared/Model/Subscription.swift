@@ -227,6 +227,48 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             thumbnailUrl: thumbnailUrl
         )
     }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        videosIds = try container.decode([Int].self, forKey: .videosIds)
+        link = try container.decodeIfPresent(URL.self, forKey: .link)
+        title = try container.decode(String.self, forKey: .title)
+        author = try container.decodeIfPresent(String.self, forKey: .author)
+        subscribedDate = try container.decodeIfPresent(Date.self, forKey: .subscribedDate)
+        filterText = try container.decodeIfPresent(String.self, forKey: .filterText) ?? ""
+        videoPlacement = VideoPlacement(rawValue: try container.decodeIfPresent(Int.self, forKey: .videoPlacement) ?? VideoPlacement.defaultPlacement.rawValue) ?? VideoPlacement.defaultPlacement
+        isArchived = try container.decodeIfPresent(Bool.self, forKey: .isArchived) ?? false
+        customSpeedSetting = try container.decodeIfPresent(Double.self, forKey: .customSpeedSetting)
+        customAspectRatio = try container.decodeIfPresent(Double.self, forKey: .customAspectRatio)
+        mostRecentVideoDate = try container.decodeIfPresent(Date.self, forKey: .mostRecentVideoDate)
+        youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
+        youtubePlaylistId = try container.decodeIfPresent(String.self, forKey: .youtubePlaylistId)
+        youtubeUserName = try container.decodeIfPresent(String.self, forKey: .youtubeUserName)
+        thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
+        persistentId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .persistentId)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(videosIds, forKey: .videosIds)
+        try container.encodeIfPresent(link, forKey: .link)
+        try container.encode(title, forKey: .title)
+        try container.encodeIfPresent(author, forKey: .author)
+        try container.encodeIfPresent(subscribedDate, forKey: .subscribedDate)
+        try container.encodeIfPresent(filterText, forKey: .filterText)
+        try container.encode(videoPlacement.rawValue, forKey: .videoPlacement)
+        try container.encode(isArchived, forKey: .isArchived)
+        try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
+        try container.encodeIfPresent(customAspectRatio, forKey: .customAspectRatio)
+        try container.encodeIfPresent(mostRecentVideoDate, forKey: .mostRecentVideoDate)
+        try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
+        try container.encodeIfPresent(youtubePlaylistId, forKey: .youtubePlaylistId)
+        try container.encodeIfPresent(youtubeUserName, forKey: .youtubeUserName)
+        try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
+        try container.encodeIfPresent(persistentId, forKey: .persistentId)
+    }
 
     private enum CodingKeys: String, CodingKey {
         case videosIds,

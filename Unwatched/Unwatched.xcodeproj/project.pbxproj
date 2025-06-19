@@ -177,6 +177,7 @@
 		8871A5732DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8871A5712DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift */; };
 		887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
 		887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
+		8874F4BD2E04A9B600AA5B3D /* backup-legacy.json in Resources */ = {isa = PBXBuildFile; fileRef = 8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
@@ -753,6 +754,7 @@
 		886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnwatchedTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8871A5712DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTitleFilterWithPreview.swift; sourceTree = "<group>"; };
 		887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationDelegate.swift; sourceTree = "<group>"; };
+		8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "backup-legacy.json"; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
 		887AC8CD2B4988D000512852 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
@@ -1665,6 +1667,7 @@
 			isa = PBXGroup;
 			children = (
 				CDA07A352C601F250009BFEC /* backup-file.json */,
+				8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */,
 			);
 			path = TestData;
 			sourceTree = "<group>";
@@ -1820,6 +1823,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8874F4BD2E04A9B600AA5B3D /* backup-legacy.json in Resources */,
 				CDA07A362C601F250009BFEC /* backup-file.json in Resources */,
 				889AF9692C50ED33001CEDE6 /* Assets.xcassets in Resources */,
 			);
@@ -2701,7 +2705,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 253;
+				CURRENT_PROJECT_VERSION = 254;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2749,7 +2753,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 253;
+				CURRENT_PROJECT_VERSION = 254;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
