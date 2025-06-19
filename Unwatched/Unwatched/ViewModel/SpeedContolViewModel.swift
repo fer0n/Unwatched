@@ -6,15 +6,23 @@
 import Foundation
 import UnwatchedShared
 
+@Observable
 class SpeedControlViewModel {
-    var width: CGFloat = 0
-    var itemWidth: CGFloat = 0
-    var fullWidth: CGFloat = 0
-    var padding: CGFloat = 0
+    @ObservationIgnored var width: CGFloat = 0
+    @ObservationIgnored var itemWidth: CGFloat = 0
+    @ObservationIgnored var fullWidth: CGFloat = 0
+    @ObservationIgnored var padding: CGFloat = 0
     var showContent = false
 
-    var speedDebounceTask: Task<Void, Never>?
-    var currentSpeed: Double?
+    var controlMinX: CGFloat?
+    var dragState: CGFloat?
+
+    @ObservationIgnored var speedDebounceTask: Task<Void, Never>?
+    @ObservationIgnored var currentSpeed: Double?
+
+    func setThumbPosition(to speed: CGFloat) {
+        controlMinX = getXPos(speed)
+    }
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
         let adjustedPos = pos - padding
@@ -35,6 +43,10 @@ class SpeedControlViewModel {
         return (CGFloat(selectedSpeedIndex) * itemWidth)
             + (itemWidth / 2)
             + padding
+    }
+
+    func resetDragState() {
+        dragState = nil
     }
 
     /// Only true when there's enough space
