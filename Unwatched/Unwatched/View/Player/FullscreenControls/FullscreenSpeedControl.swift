@@ -82,10 +82,7 @@ struct FullscreenSpeedControl: View {
         .highPriorityGesture(
             TapGesture()
                 .onEnded { _ in
-                    if !showSpeedControl && !isInteracting {
-                        showSpeedControl = true
-                        autoHideVM.keepVisible = true
-                    }
+                    handleTap()
                 }
         )
         .frame(width: 35)
@@ -105,10 +102,26 @@ struct FullscreenSpeedControl: View {
                 }
                 .fontWeight(nil)
         }
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAction {
+            handleTap()
+        }
     }
 
     var customSetting: Bool {
         player.video?.subscription?.customSpeedSetting != nil
+    }
+
+    var accessibilityLabel: String {
+        let speedText = SpeedControlViewModel.formatSpeed(player.debouncedPlaybackSpeed)
+        return String(localized: "playbackSpeed \(speedText)")
+    }
+
+    func handleTap() {
+        if !showSpeedControl && !isInteracting {
+            showSpeedControl = true
+            autoHideVM.keepVisible = true
+        }
     }
 }
 

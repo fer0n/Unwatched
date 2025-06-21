@@ -33,6 +33,9 @@ struct WatchedButton: View {
         .buttonStyle(.plain)
         .symbolEffect(.bounce.down, value: hapticToggle)
         .help("markWatched")
+        .accessibilityElement()
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(LocalizedStringKey("markWatched"))
         .contextMenu {
             if player.video != nil {
                 Button {

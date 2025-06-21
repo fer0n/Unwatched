@@ -109,6 +109,9 @@ struct ChapterMiniControlView: View {
                                     .allowsHitTesting(false)
                             }
                         }
+                        .accessibilityElement()
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("nextChapter")
                     } else {
                         Color.clear.fixedSize()
                     }
@@ -130,6 +133,7 @@ struct ChapterMiniControlView: View {
                                 .matchedGeometryEffect(id: "remainingText", in: namespace)
                                 .allowsHitTesting(false)
                                 .frame(height: 0)
+                                .accessibilityHidden(true)
                         } else {
                             EmptyView()
                         }

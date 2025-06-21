@@ -75,6 +75,7 @@ struct VideoListItem: View {
         }
         .padding([.vertical, .leading], -5)
         .padding(.horizontal, videoListFormat == .expansive ? -5 : 0)
+        .accessibilityElement(children: .combine)
         .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
             videoData: videoData,

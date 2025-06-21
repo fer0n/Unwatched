@@ -116,6 +116,10 @@ struct PlayerScrubber: View {
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(localized: "playerScrubber"))
+        .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
+        .accessibilityValue(formattedCurrentTime)
     }
 
     var isDisabled: Bool {
@@ -155,6 +159,17 @@ struct PlayerScrubber: View {
 
     var formattedCurrentTime: String {
         currentTime?.formattedSecondsColon ?? ""
+    }
+
+    func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
+        switch direction {
+        case .increment:
+            _ = player.seekForward(15)
+        case .decrement:
+            _ = player.seekBackward(15)
+        default:
+            break
+        }
     }
 
     func handleChanged(_ value: DragGesture.Value) {

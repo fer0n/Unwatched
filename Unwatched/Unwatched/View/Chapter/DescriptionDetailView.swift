@@ -63,14 +63,19 @@ struct DescriptionDetailHeaderView: View {
             .equatable()
             if let published = video.publishedDate {
                 Text(verbatim: "\(published.formattedExtensive) (\(publishedDateText(published)))")
+                    .accessibilityLabel(published.formatted(.relative(presentation: .named, unitsStyle: .spellOut)))
             }
             if let duration = video.duration {
                 Text(verbatim: duration.formattedSeconds)
+                    .accessibilityLabel(
+                        "\(Duration.seconds(duration).formatted(.units(allowed: [.hours, .minutes]))) long"
+                    )
             }
         }
         .foregroundStyle(.secondary)
         .font(.system(size: subTitleSize))
         .fontWeight(.regular)
+        .accessibilityElement(children: .combine)
     }
 
     func publishedDateText(_ published: Date) -> String {

@@ -56,6 +56,14 @@ struct VideoListItemDetails: View, Equatable {
 
                     if let published = video.publishedDate {
                         Text("\(published.formattedRelative) ago")
+                            .accessibilityLabel(
+                                published.formatted(
+                                    .relative(
+                                        presentation: .numeric,
+                                        unitsStyle: .spellOut
+                                    )
+                                )
+                            )
                     }
                 }
                 .font(.system(size: timeSize))

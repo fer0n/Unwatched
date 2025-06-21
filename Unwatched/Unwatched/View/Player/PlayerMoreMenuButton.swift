@@ -71,9 +71,10 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         }
         .menuIndicator(.hidden)
         .buttonStyle(.plain)
-        .help("moreOptions")
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .help("moreOptions")
+        .accessibilityLabel(String(localized: "moreOptions"))
     }
 
     var transition: ContentTransition {

@@ -30,29 +30,37 @@ struct ChapterList: View {
                     ChapterListItem(
                         chapter: chapter,
                         toggleChapter: toggleChapter,
-                        timeText: getTimeText(
-                            chapter, isCurrent: isCurrent
-                        ),
-                        spacing: padding)
-                        .padding(.horizontal, padding + 2)
-                        .padding(.vertical, padding)
-                        .padding(.trailing, 4)
-                        .background(
-                            backgroundColor
-                                .clipShape(.rect(cornerRadius: 15.0))
-                                .opacity(chapter.isActive ? 1 : 0.6)
-                                .opacity(isTransparent ? 0.7 : 1)
+                        spacing: padding,
+                        currentTime: isCurrent ? player.currentTime : nil,
                         )
-                        .id(chapter.persistentModelID)
-                        .onTapGesture {
-                            if !chapter.isActive {
-                                toggleChapter(chapter)
-                            } else {
-                                setChapter(chapter)
-                            }
+                    .padding(.horizontal, padding + 2)
+                    .padding(.vertical, padding)
+                    .padding(.trailing, 4)
+                    .background(
+                        backgroundColor
+                            .clipShape(.rect(cornerRadius: 15.0))
+                            .opacity(chapter.isActive ? 1 : 0.6)
+                            .opacity(isTransparent ? 0.7 : 1)
+                    )
+                    .id(chapter.persistentModelID)
+                    .onTapGesture {
+                        if !chapter.isActive {
+                            toggleChapter(chapter)
+                        } else {
+                            setChapter(chapter)
                         }
-                        .foregroundStyle(foregroundColor)
-                        .tint(foregroundColor)
+                    }
+                    .foregroundStyle(foregroundColor)
+                    .tint(foregroundColor)
+                    .accessibilityActions {
+                        Button("playChapter") {
+                            setChapter(chapter)
+                        }
+                        Button(chapter.isActive ? "disable" : "enable") {
+                            toggleChapter(chapter)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
                 }
             }
         }
@@ -77,16 +85,6 @@ struct ChapterList: View {
         }
         player.setChapter(chapter)
     }
-
-    func getTimeText(_ chapter: Chapter, isCurrent: Bool) -> String? {
-        guard isCurrent,
-              let endTime = chapter.endTime,
-              let currentTime = player.currentTime else {
-            return chapter.duration?.formattedSeconds
-        }
-        let remaining = endTime - currentTime
-        return String(localized: "\(remaining.formattedSeconds) remaining")
-    }
 }
 
 #Preview {
@@ -98,7 +96,12 @@ struct ChapterList: View {
     let video = Video.getDummy()
     context.insert(video)
 
-    let ch1 = Chapter(title: "Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1", time: 0, duration: 20, endTime: 20)
+    let ch1 = Chapter(
+        title: "Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1 Chapter 1",
+        time: 0,
+        duration: 20,
+        endTime: 20
+    )
     let ch2 = Chapter(title: nil, time: 20, duration: 20, endTime: 40)
     let ch3 = Chapter(title: "Chapter 3", time: 40, duration: 20, endTime: 60)
     let ch4 = Chapter(title: "Chapter 4", time: 60, duration: 20, endTime: 80)

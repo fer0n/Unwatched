@@ -47,13 +47,16 @@ struct TabItemView<Content: View>: View {
                     image
                         .environment(\.symbolVariants, .fill)
                         .fontWeight(.black)
-                    if showBadge {
-                        Text(verbatim: "●")
-                    } else if showTabBarLabels {
-                        Text(tag.description)
-                    } else {
-                        Text(verbatim: "")
+                    ZStack {
+                        if showBadge {
+                            Text(verbatim: "●")
+                        } else if showTabBarLabels {
+                            Text(tag.description)
+                        } else {
+                            Text(verbatim: "")
+                        }
                     }
+                    .accessibilityLabel(tag.description)
                 }
                 .tag(tag)
             #endif

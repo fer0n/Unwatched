@@ -41,6 +41,11 @@ struct InteractiveSubscriptionTitle: View, Equatable {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityElement()
+            .accessibilityLabel(sub.displayTitle)
+            .accessibilityAction {
+                openSubscription(sub)
+            }
         } else {
             Spacer()
         }

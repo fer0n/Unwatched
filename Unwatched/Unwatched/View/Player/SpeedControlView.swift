@@ -61,6 +61,27 @@ struct SpeedControlView: View {
         .opacity(viewModel.showContent ? 1 : 0)
         .animation(.default, value: viewModel.showContent)
         .padding(borderWidth)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(String(format: "%.1f", selectedSpeed))
+        .accessibilityLabel("playbackSpeed")
+        .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
+    }
+
+    func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
+        let speeds = Const.speeds
+        if let currentIndex = speeds.firstIndex(of: selectedSpeed) {
+            var newIndex = currentIndex
+            switch direction {
+            case .increment:
+                newIndex = min(currentIndex + 1, speeds.count - 1)
+            case .decrement:
+                newIndex = max(currentIndex - 1, 0)
+            default:
+                break
+            }
+            selectedSpeed = speeds[newIndex]
+            viewModel.setThumbPosition(to: selectedSpeed)
+        }
     }
 
     func getSelectedSpeed(_ tappedSpeed: Double) -> Double {
