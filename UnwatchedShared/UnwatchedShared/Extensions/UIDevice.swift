@@ -16,19 +16,19 @@ public struct Device {
     public static var buildNumberAndVersion: String {
         "v\(version ?? "-")\(buildNumber)"
     }
-    
+
     public static var versionInfo: String {
         """
         \(Device.systemVersion)
         Unwatched \(buildNumberAndVersion)
         """
     }
-    
+
     @MainActor
     public static func isBigScreen(_ sizeClass: UserInterfaceSizeClass?) -> Bool {
         sizeClass == .regular && !isIphone
     }
-    
+
     #if os(iOS)
     static let systemVersion = "iOS \(UIDevice.current.systemVersion)"
 

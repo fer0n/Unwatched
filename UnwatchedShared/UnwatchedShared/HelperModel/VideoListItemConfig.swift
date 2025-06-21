@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-
 public struct VideoListItemConfig {
     public let hasInboxEntry: Bool?
     public let hasQueueEntry: Bool?

@@ -15,10 +15,10 @@ public struct Const {
     public static let filterVideoTitleText = "filterVideoTitleText"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
-    
+
     public static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"
-    
+
     public static let themeColor = "themeColor"
 
     // MARK: - SF Symbols
@@ -36,7 +36,7 @@ public struct Const {
     public static let minSheetDetent: CGFloat = 50
     public static let playerControlPadding: CGFloat = 2
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
-    
+
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
@@ -50,13 +50,13 @@ public struct Const {
     public static let autoRefreshIgnoresSync = "autoRefreshIgnoresSync"
     public static let markAsWatched = "markAsWatched"
     public static let descriptionPopover = "descriptionPopover"
-    
+
     /// When seeking to the end, the video will seek to duraiton - thisBuffer
     public static let seekToEndBuffer: CGFloat = 0.5
-    
+
     /// Default seconds to seek forward/back
     public static let seekSeconds: Double = 10
-    
+
     /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
 
@@ -121,7 +121,7 @@ public struct Const {
     public static let recentVideoDedupeCheck: Int = 30
 
     public static let updateDbTimeSeconds: Int = 30
-    
+
     /// Timer interval to monitor the current playback
     public static let elapsedTimeMonitorSeconds: Double = 1
 
@@ -130,14 +130,14 @@ public struct Const {
 
     /// Number of notifications that will be sent at once per inbox/queue
     public static let simultaneousNotificationsLimit = 1
-    
+
     /// The maximum number of videos that will be shown in the inbox (performance reasons)
     /// Workaround, can be removed if @Query fetches in background or fixes performance
     public static let inboxFetchLimit = 200
-    
+
     /// Option to keep the last x videos in the inbox when clearing it
     public static let inboxOverflowKeepCount = 20
-    
+
     public static let notificationImageUrl = "notificationImageUrl"
     public static let notificationActionQueue = "notificationActionQueue"
     public static let notificationActionClear = "notificationActionClear"
@@ -199,7 +199,7 @@ public struct Const {
     public static let shareSF = "square.and.arrow.up.fill"
     public static let videoSF = "play.rectangle.fill"
     public static let channelSF = "person.fill"
-    
+
     // Settings
     public static let notificationsSettingsSF = "app.badge"
     public static let videoSettingsSF = "film.stack"
@@ -208,7 +208,7 @@ public struct Const {
     public static let appearanceSettingsSF = "paintbrush.fill"
     public static let userDataSettingsSF = "opticaldiscdrive.fill"
     public static let debugSettingsSF = "ladybug.fill"
-    
+
     // Windows
     public static let windowHelp = "windowHelp"
     public static let windowImportSubs = "windowImportSubs"
@@ -229,11 +229,10 @@ public struct Const {
     public static let enableLogging = "enableLogging"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
 
-    
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"
     public static let defaultShortsSetting = "defaultShortsSetting"
-    
+
     public static let navigationManager = "NavigationManager"
     public static let playerManager = "PlayerManager"
     public static let lastAutoRefreshDate = "lastAutoRefreshDate"

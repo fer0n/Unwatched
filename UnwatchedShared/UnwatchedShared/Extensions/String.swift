@@ -8,4 +8,3 @@ public extension String {
         UserDefaults.standard.value(forKey: self) as? Bool
     }
 }
-

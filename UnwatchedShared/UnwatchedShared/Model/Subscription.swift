@@ -24,7 +24,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var author: String?
     public var subscribedDate: Date?
     public var filterText: String = ""
-    
+
     public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
     public var videoPlacement: VideoPlacement {
         get {
@@ -38,10 +38,9 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             _videoPlacement = newValue.rawValue
         }
     }
-    
-    
+
     public var isArchived: Bool = false
-    
+
     // workaround: SwiftData filter don't work with enums; migration issues if non-nill
     public var _shortsSetting: Int? = ShortsSetting.defaultSetting.rawValue
     public var shortsSetting: ShortsSetting {
@@ -227,10 +226,10 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             thumbnailUrl: thumbnailUrl
         )
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         videosIds = try container.decode([Int].self, forKey: .videosIds)
         link = try container.decodeIfPresent(URL.self, forKey: .link)
         title = try container.decode(String.self, forKey: .title)
@@ -251,7 +250,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         try container.encode(videosIds, forKey: .videosIds)
         try container.encodeIfPresent(link, forKey: .link)
         try container.encode(title, forKey: .title)
@@ -286,7 +285,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              youtubeUserName,
              thumbnailUrl,
              persistentId
-        
+
         // legacy property name
         case videoPlacement = "placeVideosIn"
     }

@@ -12,7 +12,7 @@ enum CachedImageSchemaV1p1: VersionedSchema {
     static var models: [any PersistentModel.Type] {
         [CachedImage.self]
     }
-    
+
     @Model public final class CachedImage {
         @Attribute(.unique) public var imageUrl: URL?
         @Attribute(.externalStorage) public var imageData: Data?

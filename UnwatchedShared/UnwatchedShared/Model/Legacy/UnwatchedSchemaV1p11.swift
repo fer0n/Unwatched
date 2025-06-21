@@ -6,7 +6,6 @@
 import SwiftData
 import SwiftUI
 
-
 enum UnwatchedSchemaV1p11: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 11, 0)
 

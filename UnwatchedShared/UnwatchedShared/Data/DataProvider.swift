@@ -14,26 +14,26 @@ public extension ProcessInfo {
 
 public final class DataProvider: Sendable {
     public static let shared = DataProvider()
-    
-    public let container: ModelContainer = {        
+
+    public let container: ModelContainer = {
         Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
-            enableIcloudSync = true
+        enableIcloudSync = true
         #endif
-        
+
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") || ProcessInfo.processInfo.isXcodePreview {
             return DataProvider.previewContainer
         }
         #endif
-        
+
         let config = ModelConfiguration(
             schema: DataProvider.schema,
             isStoredInMemoryOnly: false,
             cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
-        
+
         Log.info("getModelContainer: config set")
 
         do {
@@ -67,7 +67,7 @@ public final class DataProvider: Sendable {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
-    
+
     private static func migrationWorkaround(_ context: ModelContext) {
         // workaround: migration fails during willMigrate (https://developer.apple.com/forums/thread/775060)
         let dict = UnwatchedMigrationPlan.subPlaceVideosIn
@@ -76,11 +76,11 @@ public final class DataProvider: Sendable {
         }
         UnwatchedMigrationPlan.migrateV1p9toV1p10DidMigrate()
     }
-    
+
     public let imageContainer: ModelContainer = {
         let schema = Schema([CachedImage.self])
         let fileName = "imageCache.sqlite"
-        
+
         #if os(tvOS)
         let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
         #elseif os(macOS)
@@ -105,18 +105,18 @@ public final class DataProvider: Sendable {
             fatalError("Could not create CachedImage ModelContainer: \(error)")
         }
     }()
-    
+
     init() {}
-    
+
     public static func newContext() -> ModelContext {
         ModelContext(shared.container)
     }
-    
+
     @MainActor
     public static var mainContext: ModelContext {
         shared.container.mainContext
     }
-    
+
     public static let dbEntries: [any PersistentModel.Type] = [
         Video.self,
         Subscription.self,

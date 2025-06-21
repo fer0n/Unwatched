@@ -6,7 +6,6 @@
 import SwiftData
 import SwiftUI
 
-
 enum UnwatchedSchemaV1p10: VersionedSchema {
     static let versionIdentifier = Schema.Version(1, 10, 0)
 
@@ -19,7 +18,7 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
             Chapter.self
         ]
     }
-    
+
     @Model
     public final class Video {
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video)
@@ -91,7 +90,6 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
         }
     }
 
-    
     @Model
     public final class Subscription {
         @Relationship(deleteRule: .nullify, inverse: \Video.subscription)
@@ -104,7 +102,7 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
         public var subscribedDate: Date?
         public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
         public var isArchived: Bool = false
-        
+
         // workaround: SwiftData filter don't work with enums; migration issues if non-nill
         public var _shortsSetting: Int? = ShortsSetting.defaultSetting.rawValue
 
@@ -151,7 +149,7 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
             self.thumbnailUrl = thumbnailUrl
         }
     }
-    
+
     @Model
     public final class QueueEntry {
         public var video: Video?
@@ -164,7 +162,7 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
             self.order = order
         }
     }
-    
+
     @Model
     public final class InboxEntry {
         public var video: Video?
@@ -177,7 +175,7 @@ enum UnwatchedSchemaV1p10: VersionedSchema {
             self.date = video?.publishedDate
         }
     }
-    
+
     @Model
     public final class Chapter {
         public var title: String?

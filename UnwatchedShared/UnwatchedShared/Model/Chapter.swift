@@ -65,7 +65,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var isExternal: Bool {
         category?.isExternal ?? false
     }
-    
+
     public var hasPriority: Bool {
         category?.hasPriority ?? false
     }
@@ -85,7 +85,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
             link: link
         )
     }
-    
+
     public init(
         _ startTime: Double,
         to endTime: Double? = nil,

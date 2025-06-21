@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-
 public extension CGImage {
     func extractVibrantAccentColor() -> Color? {
         Log.info("extractVibrantAccentColor")
@@ -15,22 +14,21 @@ public extension CGImage {
     }
 }
 
-
 private class ImageColorAnalyzer {
     private let maxColors = 256
     private let colorTolerance: Float = 27.0 // HSB tolerance for grouping similar colors
-    
+
     private let vibrancyWeight: Float = 1    // How much to prioritize saturation
     private let prominenceWeight: Float = 0.5  // How much to prioritize pixel count
     private let brightnessWeight: Float = 0.4  // How much to prioritize balanced brightness
-    
+
     // Ideal brightness range for scoring (middle range gets highest score)
     private let idealBrightnessRange: ClosedRange<Float> = 0.5...0.999
 
     func extractVibrantColor(from cgImage: CGImage) -> CGColor? {
         let colorCounts = analyzeImageColors(cgImage)
         let groupedColors = groupSimilarColors(colorCounts)
-        
+
         return selectBestColorByScore(from: groupedColors)
     }
 
@@ -123,34 +121,34 @@ private class ImageColorAnalyzer {
 
     private func selectBestColorByScore(from colorCounts: [CGColor: Int]) -> CGColor? {
         guard !colorCounts.isEmpty else { return nil }
-        
+
         let totalPixelsSampled = colorCounts.values.reduce(0, +)
         let maxCount = colorCounts.values.max() ?? 1
-        
+
         var bestColor: CGColor?
         var bestScore: Float = 0
-        
+
         for (color, count) in colorCounts {
             let score = calculateColorScore(color: color, count: count, totalPixels: totalPixelsSampled, maxCount: maxCount)
-            
+
             if score > bestScore {
                 bestScore = score
                 bestColor = color
             }
         }
-        
+
         return bestColor
     }
-    
+
     private func calculateColorScore(color: CGColor, count: Int, totalPixels: Int, maxCount: Int) -> Float {
         let hsb = color.hsbComponents
-        
+
         // Vibrancy score (0-1): Higher saturation is better
         let vibrancyScore = hsb.saturation
-        
+
         // Prominence score (0-1): Normalize pixel count
         let prominenceScore = Float(count) / Float(maxCount)
-        
+
         // Brightness score (0-1): Prefer colors in the ideal brightness range
         let brightnessScore: Float
         if idealBrightnessRange.contains(hsb.brightness) {
@@ -162,10 +160,10 @@ private class ImageColorAnalyzer {
             // Too bright - score decreases as it gets brighter
             brightnessScore = (1.0 - hsb.brightness) / (1.0 - idealBrightnessRange.upperBound)
         }
-        
+
         // Apply penalties for extreme cases
         var penalty: Float = 1.0
-        
+
         // Penalty for very low saturation (near grayscale)
         if hsb.saturation < 0.3 {
             if hsb.saturation < 0.2 {
@@ -174,7 +172,7 @@ private class ImageColorAnalyzer {
                 penalty *= 0.01
             }
         }
-        
+
         // Penalty for very low prominence (less than x% of pixels)
         let prominence = Float(count) / Float(totalPixels)
         if prominence < 0.2 {
@@ -184,7 +182,7 @@ private class ImageColorAnalyzer {
                 penalty *= 0.01
             }
         }
-        
+
         // Penalty for extreme brightness (pure black or white)
         if hsb.brightness < 0.3 || hsb.brightness > 0.999 {
             if hsb.brightness < 0.01 || hsb.brightness > 0.9999 {
@@ -195,12 +193,12 @@ private class ImageColorAnalyzer {
                 penalty *= 0.01
             }
         }
-        
+
         // Calculate weighted score
         let weightedScore = (vibrancyScore * vibrancyWeight) +
-                           (prominenceScore * prominenceWeight) +
-                           (brightnessScore * brightnessWeight)
-        
+            (prominenceScore * prominenceWeight) +
+            (brightnessScore * brightnessWeight)
+
         return weightedScore * penalty
     }
 }
@@ -249,24 +247,23 @@ private extension CGColor {
     }
 }
 
-
 // shorts detection
 #if os(iOS)
 #Preview {
     @Previewable @State var imageColors: [Color] = [.gray, .gray, .gray, .gray]
-    
+
     let urls = [
         URL(string: "https://yt3.ggpht.com/lm_rPgM6BQFft9IdivtzaZMnZ3ab84yDrdjohb1CkO3tXXhGzPqs_N5sUSr32gFcIAflZCtCjw=s176-c-k-c0x00ffffff-no-rj-mo")!, // faevr
         URL(string: "https://yt3.googleusercontent.com/ytc/AIdro_ndrznk18X0Sm4a8-tgnWB6yMUlSq_-hcCjN9SxEJ0S9PM=s160-c-k-c0x00ffffff-no-rj")!, // valve
         URL(string: "https://yt3.ggpht.com/gvrEezxXgIqEv1k5zfp2fvMCOuL0uam774xGV0Sk9Vz2t_ytgqEO6GJE87dmt8q9MXkOaMe0Jw=s176-c-k-c0x00ffffff-no-rj-mo")!, // beardo benjo
         URL(string: "https://yt3.googleusercontent.com/WgwnZy3sVim2cCBqCiRAXmQ8O_MFSc02Du52E74bFJGUaokjoXdBkAX7DL_Nv8TRQMYpp7jX=s160-c-k-c0x00ffffff-no-rj")! // virtual bro
     ]
-    
+
     let images = urls.map { url in
         let data = try! Data(contentsOf: url)
         return UIImage(data: data)!
     }
-    
+
     return VStack(spacing: 20) {
         ForEach(0..<images.count, id: \.self) { index in
             ZStack {

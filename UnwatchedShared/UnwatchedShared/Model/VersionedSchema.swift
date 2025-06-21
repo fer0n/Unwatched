@@ -58,18 +58,18 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         willMigrate: nil,
         didMigrate: nil
     )
-    
+
     public static var migrateV1p3toV1p4 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p3.self,
         toVersion: UnwatchedSchemaV1p4.self,
-        willMigrate: { context in
+        willMigrate: { _ in
             migrateHideShortsSetting()
         },
-        didMigrate: { context in
+        didMigrate: { _ in
             migrateHideShortsSetting()
         }
     )
-    
+
     private static func migrateHideShortsSetting() {
         if UserDefaults.standard.object(forKey: Const.defaultShortsSetting) == nil {
             let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
@@ -77,21 +77,21 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UserDefaults.standard.setValue(shortSetting.rawValue, forKey: Const.defaultShortsSetting)
         }
     }
-    
+
     public static var migrateV1p4toV1p5 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p4.self,
         toVersion: UnwatchedSchemaV1p5.self,
         willMigrate: nil,
         didMigrate: nil
     )
-    
+
     public static var migrateV1p5toV1p6 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p5.self,
         toVersion: UnwatchedSchemaV1p6.self,
         willMigrate: nil,
         didMigrate: nil
     )
-    
+
     static var subPlaceVideosIn = [String: Int]()
     public static var migrateV1p6toV1p7 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p6.self,
@@ -135,31 +135,31 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         try? context.save()
         UnwatchedMigrationPlan.subPlaceVideosIn = [:]
     }
-    
+
     public static var migrateV1p7toV1p8 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p7.self,
         toVersion: UnwatchedSchemaV1p8.self,
         willMigrate: nil,
-        didMigrate: { context in
+        didMigrate: { _ in
             let enableYtWatchHistory = "enableYtWatchHistory".bool ?? true
             UserDefaults.standard.setValue(!enableYtWatchHistory, forKeyPath: Const.useNoCookieUrl)
         }
     )
-    
+
     public static var migrateV1p8toV1p9 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p8.self,
         toVersion: UnwatchedSchemaV1p9.self,
         willMigrate: nil,
         didMigrate: nil
     )
-    
+
     public static var migrateV1p9toV1p10 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p9.self,
         toVersion: UnwatchedSchemaV1p10.self,
-        willMigrate: { context in
+        willMigrate: { _ in
             migrateV1p9toV1p10DidMigrate()
         },
-        didMigrate: { context in
+        didMigrate: { _ in
             migrateV1p9toV1p10DidMigrate()
         }
     )
@@ -196,7 +196,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
         UserDefaults.standard.set(true, forKey: "v1p9toV1p10DidMigrate")
     }
-    
+
     public static var migrateV1p10toV1p11 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p10.self,
         toVersion: UnwatchedSchemaV1p11.self,

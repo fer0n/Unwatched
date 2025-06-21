@@ -6,7 +6,6 @@
 import SwiftUI
 import SwiftData
 
-
 public protocol VideoData {
     var title: String { get }
     var elapsedSeconds: Double? { get }
@@ -22,7 +21,7 @@ public protocol VideoData {
     var isNew: Bool { get }
     var url: URL? { get }
     var persistentId: PersistentIdentifier? { get }
-    
+
     var sortedChapterData: [ChapterData] { get }
     var subscriptionData: (any SubscriptionData)? { get }
     var hasInboxEntry: Bool? { get }
@@ -33,7 +32,6 @@ public protocol ChapterData {
     var endTime: Double? { get }
     var isActive: Bool { get }
 }
-        
 
 public struct VideoListItemThumbnailOverlay: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
@@ -45,7 +43,7 @@ public struct VideoListItemThumbnailOverlay: View {
     var color: Color?
     var showDuration = true
     var fixedProgressbarHeight: CGFloat?
-    
+
     @ScaledMetric var progressbarHeight: CGFloat = 5
     @ScaledMetric var padding: CGFloat = 4
     @ScaledMetric var radius: CGFloat = 6
@@ -70,7 +68,7 @@ public struct VideoListItemThumbnailOverlay: View {
     }
 
     // MARK: - Progress Bar Overlay
-    
+
     @ViewBuilder
     private func progressOverlay(barHeight: CGFloat) -> some View {
         if let progress = cleanedProgress {
@@ -84,7 +82,7 @@ public struct VideoListItemThumbnailOverlay: View {
     }
 
     // MARK: - Duration Text Overlay
-    
+
     @ViewBuilder
     private func durationOverlay(barHeight: CGFloat) -> some View {
         if hasDuration {
