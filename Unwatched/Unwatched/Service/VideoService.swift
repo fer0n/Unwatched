@@ -195,7 +195,7 @@ extension VideoService {
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
                                    modelContext: ModelContext) {
-        // workaround: update queue on main thread, animaitons don't work on iOS 18 otherwise
+        // workaround: update queue on main thread, animations don't work on iOS 18 otherwise
         VideoActor.insertQueueEntries(
             at: index,
             videos: videos,

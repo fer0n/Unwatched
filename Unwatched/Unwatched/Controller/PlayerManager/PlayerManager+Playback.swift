@@ -87,7 +87,12 @@ extension PlayerManager {
     @MainActor
     func playVideo(_ video: Video) {
         self.videoSource = .userInteraction
-        self.video = video
+        if self.video != video {
+            self.video = video
+        } else {
+            Log.info("playVideo: video already playing")
+            play()
+        }
     }
 
     @MainActor

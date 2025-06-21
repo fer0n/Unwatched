@@ -126,7 +126,9 @@ import UnwatchedShared
     }
 
     func navigateTo(_ tab: NavigationTab) {
-        self.tab = tab
+        if self.tab != tab {
+            self.tab = tab
+        }
         if !showMenu {
             showMenu = true
         }
@@ -141,8 +143,11 @@ import UnwatchedShared
     }
 
     func navigateToQueue() {
-        self.tab = .queue
-        presentedSubscriptionQueue.removeAll()
+        if tab != .queue {
+            self.tab = .queue
+        } else {
+            presentedSubscriptionQueue.removeAll()
+        }
     }
 
     func setScrollId(_ value: String?, _ differentiator: String = "") {

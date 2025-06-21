@@ -57,10 +57,10 @@ struct DescriptionDetailHeaderView: View {
 
         VStack(alignment: .leading) {
             InteractiveSubscriptionTitle(
-                video: video,
                 subscription: video.subscription,
                 setShowMenu: setShowMenu
             )
+            .equatable()
             if let published = video.publishedDate {
                 Text(verbatim: "\(published.formattedExtensive) (\(publishedDateText(published)))")
             }

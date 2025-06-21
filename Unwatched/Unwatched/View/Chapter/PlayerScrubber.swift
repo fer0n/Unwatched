@@ -42,11 +42,12 @@ struct PlayerScrubber: View {
                         .contentTransition(.numericText(countsDown: false))
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text(formattedCurrentTime == " " ? " " : formattedDuration)
+                    Text(formattedDuration)
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
                         .contentTransition(.numericText(countsDown: false))
                 }
-                .animation(.default.speed(1), value: formattedCurrentTime == " ")
+                .opacity(showTime ? 1 : 0)
+                .animation(.default.speed(1), value: showTime ? 1 : 0)
                 .padding(.horizontal, scrubbingPadding)
                 .foregroundStyle(.secondary)
                 .font(.caption)
@@ -133,11 +134,11 @@ struct PlayerScrubber: View {
         isInactive ? currentScrubberWidth : (initialDragPosition ?? currentScrubberWidth) + dragOffset
     }
 
-    var currentTime: Double? {
-        guard inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive) else {
-            return nil
-        }
+    var showTime: Bool {
+        inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive)
+    }
 
+    var currentTime: Double? {
         if isGestureActive,
            let time = getTimeFromPosition(draggedScrubberWidth),
            let duration = player.video?.duration {
@@ -149,11 +150,11 @@ struct PlayerScrubber: View {
     }
 
     var formattedDuration: String {
-        player.video?.duration?.formattedSecondsColon ?? " "
+        player.video?.duration?.formattedSecondsColon ?? ""
     }
 
     var formattedCurrentTime: String {
-        currentTime?.formattedSecondsColon ?? " "
+        currentTime?.formattedSecondsColon ?? ""
     }
 
     func handleChanged(_ value: DragGesture.Value) {

@@ -145,13 +145,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func handleIsNew(_ video: Video, _ isNew: Bool?) {
         if let isNew,
            videoData.isNew != isNew {
-            if video.inboxEntry != nil {
-                video.isNew = isNew
-            } else {
-                withAnimation {
-                    video.isNew = isNew
-                }
-            }
+            video.isNew = isNew
         }
     }
 
@@ -197,20 +191,22 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func moveToInbox() {
         Log.info("moveToInbox")
-        performVideoAction(
-            isNew: false,
-            asyncAction: { videoId in
-                VideoService.moveVideoToInboxAsync(
-                    videoId
-                )
-            },
-            syncAction: { video in
-                VideoService.moveVideoToInbox(
-                    video,
-                    modelContext: modelContext
-                )
-            }
-        )
+        withAnimation {
+            performVideoAction(
+                isNew: false,
+                asyncAction: { videoId in
+                    VideoService.moveVideoToInboxAsync(
+                        videoId
+                    )
+                },
+                syncAction: { video in
+                    VideoService.moveVideoToInbox(
+                        video,
+                        modelContext: modelContext
+                    )
+                }
+            )
+        }
     }
 
     func toggleBookmark() {

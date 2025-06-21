@@ -6,13 +6,11 @@
 import SwiftUI
 import UnwatchedShared
 
-struct InteractiveSubscriptionTitle: View {
+struct InteractiveSubscriptionTitle: View, Equatable {
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
-    @State var subscribeManager = SubscribeManager()
 
-    let video: Video?
     let subscription: Subscription?
     let setShowMenu: (() -> Void)?
     var showImage = false
@@ -31,44 +29,28 @@ struct InteractiveSubscriptionTitle: View {
                         } placeholder: {
                             Color.clear
                         }
-                        .id("subImage-\(sub.youtubeChannelId ?? "")")
+                        .id("subImage-\(sub.thumbnailUrl?.absoluteString ?? "")")
                         .frame(width: 30, height: 30)
                         .clipShape(Circle())
                     }
                     Text(sub.displayTitle)
-                    if let icon = subscribeManager.getSubscriptionSystemName(video: video) {
+                    if let icon = getSubscriptionSystemName {
                         Image(systemName: icon)
-                            .contentTransition(.symbolEffect(.replace))
-                            .symbolEffect(.pulse, options: .repeating, isActive: subscribeManager.isLoading)
                     }
                 }
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .contextMenu {
-                Button {
-                    Task {
-                        if let videoId = video?.persistentModelID {
-                            await subscribeManager.handleSubscription(videoId)
-                        }
-                    }
-                } label: {
-                    HStack {
-                        if subscribeManager.isSubscribed(video: video) {
-                            Image(systemName: Const.clearNoFillSF)
-                            Text("unsubscribe")
-                        } else {
-                            Image(systemName: "plus")
-                            Text("subscribe")
-                        }
-                    }
-                }
-                .textCase(.none)
-                .disabled(subscribeManager.isLoading)
-            }
         } else {
             Spacer()
         }
+    }
+
+    var getSubscriptionSystemName: String? {
+        if !(subscription?.isArchived == false) {
+            return "arrow.right.circle"
+        }
+        return nil
     }
 
     func openSubscription(_ sub: Subscription) {
@@ -82,5 +64,12 @@ struct InteractiveSubscriptionTitle: View {
         }
         navManager.videoDetail = nil
         setShowMenu?()
+    }
+
+    static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {
+        lhs.subscription?.isArchived == rhs.subscription?.isArchived
+            && lhs.subscription?.title == rhs.subscription?.title
+            && lhs.subscription?.thumbnailUrl == rhs.subscription?.thumbnailUrl
+            && lhs.showImage == rhs.showImage
     }
 }

@@ -58,7 +58,6 @@ struct PlayerControls: View {
                 if showRotateFullscreen && !player.embeddingDisabled && !player.isTallAspectRatio {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
-                            video: player.video,
                             subscription: player.video?.subscription,
                             setShowMenu: setShowMenu,
                             showImage: true
