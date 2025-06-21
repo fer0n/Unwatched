@@ -38,6 +38,7 @@ struct SubscriptionDetailView: View {
                         }
                 }
                 .imageAccentBackground(url: imageUrl)
+                .listRowBackground(Color.backgroundColor)
 
                 if showFilter {
                     Button {
