@@ -48,7 +48,7 @@ struct FullscreenChapterDescriptionButton: View {
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
                 .if(!Const.iOS26) { view in
-                    view.presentationBackground(.ultraThinMaterial)
+                    view.presentationBackground(Color.sheetBackground)
                 }
                 .onDisappear {
                     menuOpen = false
