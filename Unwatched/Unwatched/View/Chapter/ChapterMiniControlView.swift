@@ -176,7 +176,7 @@ struct ChapterMiniControlRemainingText: View {
             Text(remaining)
                 .font(.system(size: 12).monospacedDigit())
                 .fontWidth(.condensed)
-                .animation(.default, value: player.currentRemainingText)
+                .animation(.default, value: remaining)
                 .contentTransition(.numericText(countsDown: true))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)

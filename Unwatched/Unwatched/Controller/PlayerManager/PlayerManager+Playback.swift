@@ -77,11 +77,7 @@ extension PlayerManager {
 
     @MainActor
     var currentRemainingText: String? {
-        if let remaining = currentRemaining,
-           let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
-            return "\(rem)"
-        }
-        return nil
+        currentRemaining?.formatTimeMinimal
     }
 
     @MainActor

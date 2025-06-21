@@ -51,20 +51,3 @@ func parseDurationToSeconds(_ duration: String) -> Double? {
 
     return totalSeconds
 }
-
-func formatDurationFromSeconds(_ seconds: TimeInterval) -> String {
-    let formatter = DateComponentsFormatter()
-    formatter.allowedUnits = [.hour, .minute, .second]
-    formatter.unitsStyle = .positional
-
-    if let formattedDuration = formatter.string(from: seconds) {
-        let components = formattedDuration.split(separator: ":")
-        if components.count == 1 {
-            return "\(formattedDuration)s"
-        } else {
-            return formattedDuration
-        }
-    } else {
-        return ""
-    }
-}

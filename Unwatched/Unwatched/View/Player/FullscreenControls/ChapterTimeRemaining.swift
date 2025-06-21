@@ -18,6 +18,6 @@ struct ChapterTimeRemaining: View {
     }
 
     var currentRemaining: String {
-        player.currentRemaining?.formatTimeMinimal ?? "–"
+        player.currentRemainingText ?? "–"
     }
 }

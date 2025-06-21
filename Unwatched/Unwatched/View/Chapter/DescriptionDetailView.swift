@@ -64,8 +64,8 @@ struct DescriptionDetailHeaderView: View {
             if let published = video.publishedDate {
                 Text(verbatim: "\(published.formattedExtensive) (\(publishedDateText(published)))")
             }
-            if let timeString = video.duration?.formattedSeconds {
-                Text(verbatim: timeString)
+            if let duration = video.duration {
+                Text(verbatim: duration.formattedSeconds)
             }
         }
         .foregroundStyle(.secondary)
