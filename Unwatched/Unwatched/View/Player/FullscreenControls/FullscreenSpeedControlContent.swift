@@ -151,27 +151,18 @@ extension FullscreenSpeedControlContent {
     }
 }
 
-struct OnScrollInteractionModifier: ViewModifier {
-    let action: (_ isActive: Bool) -> Void
-
-    func body(content: Content) -> some View {
-        if #available(iOS 18, *) {
-            content
-                .onScrollPhaseChange { oldPhase, newPhase in
-                    if oldPhase == .idle && newPhase != .idle {
-                        action(true)
-                    } else if oldPhase != .idle && newPhase == .idle {
-                        action(false)
-                    }
-                }
-        } else {
-            content
-        }
-    }
-}
-
 extension View {
     func onScrollInteraction(_ action: @escaping (Bool) -> Void) -> some View {
-        modifier(OnScrollInteractionModifier(action: action))
+        if #available(iOS 18, *) {
+            return self.onScrollPhaseChange { oldPhase, newPhase in
+                if oldPhase == .idle && newPhase != .idle {
+                    action(true)
+                } else if oldPhase != .idle && newPhase == .idle {
+                    action(false)
+                }
+            }
+        } else {
+            return self
+        }
     }
 }

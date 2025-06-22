@@ -36,7 +36,7 @@ struct FullscreenChapterDescriptionButton: View {
                         video: video,
                         isCompact: true,
                         scrollToCurrent: true,
-                        isTransparent: true
+                        isTransparent: Const.iOS26
                     )
                     .scrollIndicators(.hidden)
                     .frame(

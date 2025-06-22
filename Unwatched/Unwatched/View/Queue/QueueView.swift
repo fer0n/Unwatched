@@ -59,7 +59,6 @@ struct QueueView: View {
                         .videoListItemEntry()
                     }
                     .moveQueueEntryModifier()
-                    .handleDynamicVideoURLDrop(.queue)
                     .listRowBackground(Color.backgroundColor)
 
                     if !queue.isEmpty {

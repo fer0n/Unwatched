@@ -19,14 +19,14 @@ struct SpeedSliderThumb: View {
     var body: some View {
         thumb
             .onChange(of: selectedSpeed) {
-                if viewModel.dragState == nil {
+                if viewModel.dragState == nil && selectedSpeed != viewModel.currentSpeed {
                     viewModel.setThumbPosition(to: selectedSpeed)
                 }
             }
             .onChange(of: navManager.showMenu) {
                 if viewModel.dragState != nil {
                     withAnimation {
-                        viewModel.dragState = nil
+                        viewModel.resetDragState()
                     }
                 }
             }
@@ -82,8 +82,9 @@ struct SpeedSliderThumb: View {
                     ? state.location.x
                     : (viewModel.controlMinX ?? 0) + value
 
-                let selected = viewModel.getSpeedFromPos(currentPos)
+                var selected = viewModel.getSpeedFromPos(currentPos)
                 viewModel.controlMinX = currentPos
+                selected = viewModel.getSelectedSpeed(selected)
                 selectedSpeed = selected
 
                 withAnimation {

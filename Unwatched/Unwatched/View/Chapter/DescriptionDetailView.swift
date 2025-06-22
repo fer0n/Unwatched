@@ -9,12 +9,12 @@ import UnwatchedShared
 struct DescriptionDetailView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
-    var video: Video
+    var description: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            if let desc = video.videoDescription {
-                let texts = desc.split(separator: "\n", omittingEmptySubsequences: false)
+        LazyVStack(alignment: .leading, spacing: 0) {
+            if let description {
+                let texts = description.split(separator: "\n", omittingEmptySubsequences: false)
                 ForEach(Array(texts.enumerated()), id: \.offset) { _, text in
                     Text(LocalizedStringKey(String(text)))
                 }
@@ -84,5 +84,5 @@ struct DescriptionDetailHeaderView: View {
 }
 
 #Preview {
-    DescriptionDetailView(video: Video.getDummy())
+    DescriptionDetailView(description: Video.getDummy().description)
 }

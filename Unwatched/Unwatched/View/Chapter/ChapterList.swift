@@ -21,7 +21,7 @@ struct ChapterList: View {
 
     var body: some View {
         if !chapters.isEmpty {
-            VStack(spacing: isCompact ? 4 : 10) {
+            LazyVStack(spacing: isCompact ? 4 : 10) {
                 ForEach(chapters) { chapter in
                     let isCurrent = chapter.persistentModelID == player.currentChapter?.persistentModelID
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor

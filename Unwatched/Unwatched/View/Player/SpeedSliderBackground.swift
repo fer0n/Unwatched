@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct SpeedSliderBackground: View {
+struct SpeedSliderBackground: View, Equatable {
     var onTap: (_ speed: Double) -> Void
     var showDecimalHighlights: Bool = false
     var thumbSize: CGFloat
@@ -47,5 +47,11 @@ struct SpeedSliderBackground: View {
                 }
             }
         }
+    }
+
+    nonisolated static func == (lhs: SpeedSliderBackground, rhs: SpeedSliderBackground) -> Bool {
+        lhs.indicatorSpacing == rhs.indicatorSpacing &&
+            lhs.thumbSize == rhs.thumbSize &&
+            lhs.showDecimalHighlights == rhs.showDecimalHighlights
     }
 }

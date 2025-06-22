@@ -173,18 +173,13 @@ struct ChapterMiniControlView: View {
 }
 
 struct ChapterMiniControlRemainingText: View {
-    @Environment(PlayerManager.self) var player
-
     var body: some View {
-        if let remaining = player.currentRemainingText {
-            Text(remaining)
-                .font(.system(size: 12).monospacedDigit())
-                .fontWidth(.condensed)
-                .animation(.default, value: remaining)
-                .contentTransition(.numericText(countsDown: true))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-        }
+        ChapterTimeRemaining()
+            .font(.system(size: 12).monospacedDigit())
+            .fontWidth(.condensed)
+            .contentTransition(.numericText(countsDown: true))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
     }
 }
 

@@ -6,15 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoListItemDetails: View, Equatable {
-    static func == (lhs: VideoListItemDetails, rhs: VideoListItemDetails) -> Bool {
-        lhs.video.title == rhs.video.title &&
-            lhs.video.subscriptionData?.displayTitle == rhs.video.subscriptionData?.displayTitle &&
-            lhs.video.publishedDate == rhs.video.publishedDate &&
-            lhs.queueButtonSize == rhs.queueButtonSize &&
-            lhs.showVideoListOrder == rhs.showVideoListOrder
-    }
-
+struct VideoListItemDetails: View {
     @Environment(NavigationManager.self) private var navManager
 
     var video: VideoData

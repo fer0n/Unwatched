@@ -22,6 +22,7 @@ class SpeedControlViewModel {
 
     func setThumbPosition(to speed: CGFloat) {
         controlMinX = getXPos(speed)
+        currentSpeed = speed
     }
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
@@ -46,7 +47,29 @@ class SpeedControlViewModel {
     }
 
     func resetDragState() {
-        dragState = nil
+        if dragState != nil {
+            dragState = nil
+        }
+    }
+
+    @MainActor
+    func getSelectedSpeed(_ tappedSpeed: Double) -> Double {
+        // get speed or highlighted speed only if tapped speed is right next to it
+        if Device.isMac {
+            return tappedSpeed
+        }
+        let index = Const.speeds.firstIndex(of: tappedSpeed) ?? 0
+        let highlightIndeces = Const.highlightedSpeedsInt
+            .compactMap { Const.speeds.firstIndex(of: $0) }
+
+        if highlightIndeces.contains(index) {
+            return tappedSpeed
+        }
+        let match = highlightIndeces.filter { index == $0 - 1 || index == $0 + 1 }
+        guard let first = match.first else {
+            return tappedSpeed
+        }
+        return Const.speeds[first]
     }
 
     /// Only true when there's enough space

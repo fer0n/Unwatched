@@ -73,7 +73,6 @@ struct InboxView: View {
                         .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.inbox.rawValue))
                         .videoListItemEntry()
                     }
-                    .handleDynamicVideoURLDrop(.inbox)
                     .listRowBackground(Color.backgroundColor)
 
                     if hasTooManyItems {

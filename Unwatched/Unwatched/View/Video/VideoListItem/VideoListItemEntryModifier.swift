@@ -6,11 +6,11 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoListItemEntryModifier: ViewModifier {
-    let padding: CGFloat = 12
+extension View {
+    func videoListItemEntry() -> some View {
+        let padding: CGFloat = 12
 
-    func body(content: Content) -> some View {
-        content
+        return self
             #if os(iOS)
             .padding(.vertical, -2)
             #endif
@@ -24,11 +24,5 @@ struct VideoListItemEntryModifier: ViewModifier {
             #if os(macOS)
             .padding(3)
         #endif
-    }
-}
-
-extension View {
-    func videoListItemEntry() -> some View {
-        self.modifier(VideoListItemEntryModifier())
     }
 }
