@@ -42,7 +42,7 @@ struct ChapterDescriptionView: View {
                             .frame(height: 7)
                     }
 
-                    DescriptionDetailView(description: video.description)
+                    DescriptionDetailView(description: video.videoDescription)
                 }
                 .padding(.horizontal, isCompact ? 10 : 20)
                 .padding(.top, isCompact ? 15 : 30)
