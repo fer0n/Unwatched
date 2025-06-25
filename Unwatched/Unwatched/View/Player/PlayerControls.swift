@@ -143,7 +143,6 @@ struct PlayerControls: View {
                     HStack(spacing: hasSmallControls ? speedSpacing : nil) {
                         WatchedButton(
                             markVideoWatched: markVideoWatched,
-                            indicateWatched: false,
                             isSmall: hasSmallControls
                         )
                         .frame(maxWidth: compactSize ? nil : .infinity)

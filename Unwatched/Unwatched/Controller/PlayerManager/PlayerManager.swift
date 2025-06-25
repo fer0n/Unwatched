@@ -141,16 +141,6 @@ import UnwatchedShared
     }
 
     @MainActor
-    var isConsideredWatched: Bool {
-        guard let video = video else {
-            return false
-        }
-        let noQueueEntry = video.queueEntry == nil
-        let noInboxEntry = video.inboxEntry == nil
-        return video.watchedDate != nil && noQueueEntry && noInboxEntry
-    }
-
-    @MainActor
     var isTallAspectRatio: Bool {
         videoAspectRatio <= Const.consideredTallAspectRatio
     }

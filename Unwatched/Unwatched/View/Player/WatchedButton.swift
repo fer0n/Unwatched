@@ -13,7 +13,6 @@ struct WatchedButton: View {
     @State var hapticToggle: Bool = false
 
     var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
-    var indicateWatched: Bool = true
     var isSmall = false
     var backgroundColor: Color?
 
@@ -25,7 +24,7 @@ struct WatchedButton: View {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)
                 .playerToggleModifier(
-                    isOn: indicateWatched ? player.isConsideredWatched : false,
+                    isOn: false,
                     isSmall: isSmall,
                     backgroundColor: backgroundColor
                 )

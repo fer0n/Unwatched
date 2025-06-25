@@ -57,7 +57,6 @@ struct FullscreenOverlayControls: View {
             HStack {
                 WatchedButton(
                     markVideoWatched: markVideoWatched,
-                    indicateWatched: false,
                     backgroundColor: .clear
                 )
                 .backgroundTransparentEffect(fallback: .ultraThinMaterial)
