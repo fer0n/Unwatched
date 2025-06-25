@@ -29,6 +29,7 @@ struct MyNavigationTitle: ViewModifier {
                                 .fontWeight(.black)
                                 .offset(y: titleHidden ? 10 : 0)
                                 .opacity(titleHidden ? 0 : 1)
+                                .lineLimit(1)
                         }
                     }
                 }
