@@ -25,11 +25,12 @@ enum PlayerShortcut: String, CaseIterable {
     case reloadPlayer
     case refresh
     case toggleFullscreen
-
     case goToQueue
     case goToInbox
     case goToLibrary
     case goToBrowser
+    case openInAppBrowser
+    case openInExternalBrowser
 
     var title: LocalizedStringKey {
         switch self {
@@ -54,6 +55,8 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToInbox: return NavigationTab.inbox.stringKey
         case .goToLibrary: return NavigationTab.library.stringKey
         case .goToBrowser: return NavigationTab.browser.stringKey
+        case .openInAppBrowser: return "openInAppBrowser"
+        case .openInExternalBrowser: return "openInExternalBrowser"
         }
     }
 
@@ -80,6 +83,8 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToInbox: return [("2", [.command])]
         case .goToLibrary: return [("3", [.command])]
         case .goToBrowser: return [("4", [.command])]
+        case .openInAppBrowser: return [("o", [])]
+        case .openInExternalBrowser: return [("o", [.shift])]
         }
     }
 
@@ -193,6 +198,17 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToBrowser:
             if Const.browserAsTab.bool ?? false {
                 NavigationManager.shared.navigateTo(.browser)
+            }
+        case .openInAppBrowser:
+            if let url = PlayerManager.shared.video?.url?.absoluteString {
+                NavigationManager.shared.openUrlInApp(.url(url))
+            }
+        case .openInExternalBrowser:
+            if let video = PlayerManager.shared.video {
+                let urlText = UrlService.getShortenedUrl(video.youtubeId, timestamp: PlayerManager.shared.currentTime)
+                if let url = URL(string: urlText) {
+                    UrlService.open(url)
+                }
             }
         }
     }

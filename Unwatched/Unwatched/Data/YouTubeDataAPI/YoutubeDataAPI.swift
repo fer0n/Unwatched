@@ -4,8 +4,7 @@ import UnwatchedShared
 
 struct YoutubeDataAPI {
     static var apiKey: String {
-        let apiKey = Credentials.apiKey
-        guard let apiKey = apiKey else {
+        guard let apiKey = Credentials.apiKey else {
             fatalError("youtube-api-key environment varible not set")
         }
         return apiKey

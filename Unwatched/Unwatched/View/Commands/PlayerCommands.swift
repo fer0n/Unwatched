@@ -47,6 +47,11 @@ struct PlayerCommands: Commands {
         CommandMenu("video") {
             PlayerShortcut.markWatched.render()
             PlayerShortcut.nextVideo.render()
+
+            Section {
+                PlayerShortcut.openInAppBrowser.render()
+                PlayerShortcut.openInExternalBrowser.render()
+            }
         }
     }
 }
