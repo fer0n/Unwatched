@@ -259,6 +259,7 @@ struct CleanupService {
         }
     }
 
+    /// Removes inbox entry for videos that have both an inbox and queue entry, which should never be the case.
     func removeMultipleEntries(from videos: [Video]) {
         var count = 0
         for video in videos where video.inboxEntry != nil && video.queueEntry != nil {
@@ -290,6 +291,12 @@ struct CleanupService {
             let sec1 = vid1.elapsedSeconds ?? 0
             if sec0 != sec1 {
                 return sec0 > sec1
+            }
+
+            let new0 = vid0.isNew
+            let new1 = vid1.isNew
+            if new0 != new1 {
+                return new1
             }
 
             let queue0 = vid0.queueEntry?.order ?? Int.max
