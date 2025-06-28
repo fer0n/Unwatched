@@ -37,26 +37,37 @@ struct SetupView: View {
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
             }
+            #if os(iOS)
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
-                    #if os(iOS)
                     NotificationManager.handleNotifications(checkDeferred: true)
-                    #endif
+
                     Log.info("scenePhase: active")
                     Task {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
                     }
-                #if os(iOS)
                 case .background:
                     Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
-                #endif
                 default:
                     break
                 }
             }
+            #endif
+            #if os(macOS)
+            .macOSActiveStateChange {
+                Log.info("macOSActive: active")
+                Task {
+                    refresher.handleAutoBackup()
+                    await refresher.handleBecameActive()
+                }
+            } handleResignActive: {
+                Log.info("macOSActive: inActive")
+                SetupView.handleAppClosed()
+            }
+            #endif
             .onAppear {
                 navManager.openWindow = openWindow
             }

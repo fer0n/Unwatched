@@ -574,6 +574,8 @@
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88F7E24B2DE59962001E1F3F /* DebugLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */; };
 		88F7E24C2DE59962001E1F3F /* DebugLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */; };
+		88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
+		88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
 		88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
@@ -938,6 +940,7 @@
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLoggerView.swift; sourceTree = "<group>"; };
+		88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateObserver.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 		88FB23692DD4BAD00066DB07 /* MultiPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPayload.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
@@ -1087,6 +1090,7 @@
 				88B0C15B2C40881F006D2423 /* myNavigationTitle.swift */,
 				88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */,
 				8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */,
+				88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -2024,6 +2028,7 @@
 				889AF8D72C50ECA9001CEDE6 /* AnimationCompletionCallback.swift in Sources */,
 				88899D942E035E54002C05BC /* TitleFilterView.swift in Sources */,
 				889AF8D82C50ECA9001CEDE6 /* PlayerToggleStyle.swift in Sources */,
+				88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
 				886818232D77586700E06A0D /* ImportSubscriptionsWindow.swift in Sources */,
 				889AF8D92C50ECA9001CEDE6 /* DateTimeConversion.swift in Sources */,
 				889AF9012C50ECD1001CEDE6 /* SleepTimerViewModel.swift in Sources */,
@@ -2252,6 +2257,7 @@
 				88F4087F2C18F541009F90E6 /* fullscreenSafeArea.swift in Sources */,
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				88F2876A2DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
+				88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
 				883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */,
 				887E72922B91ED9500928946 /* FullscreenPlayerControls.swift in Sources */,
 				88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */,
