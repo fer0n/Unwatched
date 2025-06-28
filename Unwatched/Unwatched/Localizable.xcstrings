@@ -8208,6 +8208,40 @@
         }
       }
     },
+    "nextChapterDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Springt, falls verfügbar, zum nächsten Video-Kapitel."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If available, skips to the next video chapter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está disponible, salta al siguiente capítulo del vídeo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passe, si disponible, au chapitre vidéo suivant."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeśli dostępny, przechodzi do następnego rozdziału wideo."
+          }
+        }
+      }
+    },
     "nextVideo" : {
       "localizations" : {
         "de" : {
@@ -8578,6 +8612,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brak"
+          }
+        }
+      }
+    },
+    "noNextChapterError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein nächstes Kapitel gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No next chapter found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún capítulo siguiente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun chapitre suivant trouvé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono następnego rozdziału"
+          }
+        }
+      }
+    },
+    "noPreviousChapterError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein vorheriges Kapitel gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No previous chapter found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún capítulo anterior"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun chapitre précédent trouvé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono poprzedniego rozdziału"
           }
         }
       }
@@ -9981,7 +10083,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vorheriges Chapter"
+            "value" : "Vorheriges Kapitel"
           }
         },
         "en" : {
@@ -10006,6 +10108,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Poprzedni rozdział"
+          }
+        }
+      }
+    },
+    "previousChapterDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Springt, falls verfügbar, zum vorherigen Video-Kapitel."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If available, skips to the previous video chapter."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si está disponible, salta al capítulo anterior del vídeo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passe, si disponible, au chapitre vidéo précédent."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeśli dostępny, przechodzi do poprzedniego rozdziału wideo."
           }
         }
       }

@@ -576,6 +576,10 @@
 		88F7E24C2DE59962001E1F3F /* DebugLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */; };
 		88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
+		88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */; };
+		88F85F4D2E100AD000FB15A1 /* PreviousVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */; };
+		88F85F4F2E100B1F00FB15A1 /* ChapterControlError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */; };
+		88F85F502E100B1F00FB15A1 /* ChapterControlError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
 		88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
@@ -941,6 +945,9 @@
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLoggerView.swift; sourceTree = "<group>"; };
 		88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateObserver.swift; sourceTree = "<group>"; };
+		88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideoChapter.swift; sourceTree = "<group>"; };
+		88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousVideoChapter.swift; sourceTree = "<group>"; };
+		88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterControlError.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 		88FB23692DD4BAD00066DB07 /* MultiPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPayload.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
@@ -1312,6 +1319,8 @@
 				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
 				887E82A92CD8FC4600B196EA /* VideoEntity.swift */,
 				887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */,
+				88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */,
+				88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */,
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
 				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
 				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
@@ -1398,6 +1407,7 @@
 				8847772F2D2150060044E812 /* UserDataServiceError.swift */,
 				8898B6832B4846D000348D01 /* SubscriptionError.swift */,
 				88D8584C2B559DCC0047E0E6 /* VideoError.swift */,
+				88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -2141,6 +2151,7 @@
 				889AF9172C50ECE7001CEDE6 /* DebugView.swift in Sources */,
 				88373C202C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
 				889AF9182C50ECE7001CEDE6 /* SubscriptionListSection.swift in Sources */,
+				88F85F502E100B1F00FB15A1 /* ChapterControlError.swift in Sources */,
 				889AF9192C50ECE7001CEDE6 /* LibraryDestination.swift in Sources */,
 				889AF91A2C50ECE7001CEDE6 /* BookmarkedVideosView.swift in Sources */,
 				88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
@@ -2223,6 +2234,7 @@
 				88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				8889A0652E04390A002C05BC /* SpeedSliderBackground.swift in Sources */,
+				88F85F4F2E100B1F00FB15A1 /* ChapterControlError.swift in Sources */,
 				88974D242D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */,
 				880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
@@ -2368,6 +2380,7 @@
 				887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */,
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
 				887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
+				88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* VideoSettingsView.swift in Sources */,
 				88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
@@ -2430,6 +2443,7 @@
 				884777332D2150850044E812 /* URL.swift in Sources */,
 				886C16E52CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */,
 				887CA9452B52E72700E344EC /* AppShortcutsProvider.swift in Sources */,
+				88F85F4D2E100AD000FB15A1 /* PreviousVideoChapter.swift in Sources */,
 				8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */,
 				88F347212CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
