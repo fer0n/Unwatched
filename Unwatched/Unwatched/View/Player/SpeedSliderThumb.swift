@@ -76,16 +76,20 @@ struct SpeedSliderThumb: View {
             }
             .onEnded { state in
                 let value = state.translation.width
+                let isThumbClick = abs(value) <= 3
+                var selected: Double = 1
 
-                // allow clicking "underneath" the thumb
-                let currentPos = abs(value) <= 3
-                    ? state.location.x
-                    : (viewModel.controlMinX ?? 0) + value
-
-                var selected = viewModel.getSpeedFromPos(currentPos)
-                viewModel.controlMinX = currentPos
-                selected = viewModel.getSelectedSpeed(selected)
-                selectedSpeed = selected
+                if isThumbClick {
+                    // allow clicking "underneath" the thumb
+                    let currentPos = state.location.x
+                    selected = viewModel.getSpeedFromPos(currentPos)
+                    selected = viewModel.getSelectedSpeed(selected)
+                    selectedSpeed = selected
+                } else {
+                    let currentPos = (viewModel.controlMinX ?? 0) + value
+                    selected = viewModel.getSpeedFromPos(currentPos)
+                    selectedSpeed = selected
+                }
 
                 withAnimation {
                     viewModel.setThumbPosition(to: selected)
