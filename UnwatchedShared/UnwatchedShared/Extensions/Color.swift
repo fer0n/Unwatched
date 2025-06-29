@@ -11,7 +11,6 @@ public extension Color {
     }
 }
 
-
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -33,11 +32,11 @@ extension Color {
             .sRGB,
             red: Double(r) / 255,
             green: Double(g) / 255,
-            blue:  Double(b) / 255,
+            blue: Double(b) / 255,
             opacity: Double(a) / 255
         )
     }
-    
+
     func toHex() -> String {
         let components = self.cgColor?.components ?? [0, 0, 0, 1]
         let red = Int(components[0] * 255)

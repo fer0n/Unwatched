@@ -10,7 +10,7 @@ import UnwatchedShared
 // swiftlint:disable all
 final class DataSpeedTests: XCTestCase {
     func testAsyncVideoLoading() async {
-        let data = (try? loadFileData(for: "backup-file.json"))!
+        let data = (try? DataSpeedTests.loadFileData(for: "backup-file.json"))!
         UserDataService.importBackup(data)
 
         let videoListVM = VideoListVM()
@@ -28,7 +28,7 @@ final class DataSpeedTests: XCTestCase {
     }
 
     func testFilterShorts() async {
-        let modelContext = await getModelContext()
+        let modelContext = await DataSpeedTests.getModelContext()
         let sort = SortDescriptor<Video>(\.publishedDate, order: .reverse)
         let filter = VideoListView.getVideoFilter(nil)
         let fetch = FetchDescriptor<Video>(predicate: filter, sortBy: [sort])
@@ -44,18 +44,18 @@ final class DataSpeedTests: XCTestCase {
 
     // MARK: Helpers
 
-    func getModelContext() async -> ModelContext {
+    static func getModelContext() async -> ModelContext {
         let data = (try? loadFileData(for: "backup-file.json"))!
         UserDataService.importBackup(data)
         return DataProvider.newContext()
     }
 
-    func loadFileData(for fixture: String) throws -> Data {
+    static func loadFileData(for fixture: String) throws -> Data {
         let url = testDataDirectory().appendingPathComponent(fixture)
         return try Data(contentsOf: url)
     }
 
-    func testDataDirectory(path: String = #file) -> URL {
+    static func testDataDirectory(path: String = #file) -> URL {
         let url = URL(fileURLWithPath: path)
         let testsDir = url.deletingLastPathComponent()
         let res = testsDir.appendingPathComponent("TestData")

@@ -21,6 +21,9 @@ struct HandleVideoListItemTap: ViewModifier {
             .onTapGesture {
                 handleTap()
             }
+            .accessibilityAction {
+                handleTap()
+            }
         #else
         .overlay(TapHandler(onTap: handleTap))
         #endif

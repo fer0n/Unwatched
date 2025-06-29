@@ -34,11 +34,7 @@ import UnwatchedShared
 
     var remainingText: String? {
         if remainingSeconds > 0 {
-            let remaining = Double(remainingSeconds)
-            let sec = remaining.formatTimeMinimal
-            let remainingText = sec
-            let text = remainingText ?? "\(remainingSeconds)"
-            return text
+            return Double(remainingSeconds).formatTimeMinimal
         }
         return nil
     }

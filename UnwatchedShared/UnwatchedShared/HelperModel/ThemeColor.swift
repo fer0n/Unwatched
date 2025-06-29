@@ -62,7 +62,7 @@ public enum ThemeColor: Int, CaseIterable, Sendable {
         }
         return .white
     }
-    
+
     public init() {
         self = .teal
     }

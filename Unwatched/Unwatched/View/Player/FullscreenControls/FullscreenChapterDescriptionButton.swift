@@ -36,16 +36,11 @@ struct FullscreenChapterDescriptionButton: View {
         .popover(isPresented: $show, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
-                    if !Const.iOS26 {
-                        Color.sheetBackground
-                            .scaleEffect(1.5)
-                    }
-
                     ChapterDescriptionView(
                         video: video,
                         isCompact: true,
                         scrollToCurrent: true,
-                        isTransparent: true
+                        isTransparent: Const.iOS26
                     )
                     .scrollIndicators(.hidden)
                     .frame(
@@ -56,6 +51,9 @@ struct FullscreenChapterDescriptionButton: View {
                 }
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
+                .if(!Const.iOS26) { view in
+                    view.presentationBackground(Color.sheetBackground)
+                }
                 .onDisappear {
                     menuOpen = false
                 }

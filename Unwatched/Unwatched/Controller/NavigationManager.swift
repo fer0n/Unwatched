@@ -126,9 +126,14 @@ import UnwatchedShared
     }
 
     func navigateTo(_ tab: NavigationTab) {
-        self.tab = tab
+        if self.tab != tab {
+            self.tab = tab
+        }
         if !showMenu {
             showMenu = true
+        }
+        if isSidebarHidden {
+            toggleSidebar(show: true)
         }
         Task { @MainActor in
             if SheetPositionReader.shared.isMinimumSheet {
@@ -138,8 +143,11 @@ import UnwatchedShared
     }
 
     func navigateToQueue() {
-        self.tab = .queue
-        presentedSubscriptionQueue.removeAll()
+        if tab != .queue {
+            self.tab = .queue
+        } else {
+            presentedSubscriptionQueue.removeAll()
+        }
     }
 
     func setScrollId(_ value: String?, _ differentiator: String = "") {
@@ -211,7 +219,7 @@ import UnwatchedShared
             searchFocused = false
         }
 
-        if (Const.hideMenuOnPlay.bool ?? true) || rotateOnPlay {
+        if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)
             #else

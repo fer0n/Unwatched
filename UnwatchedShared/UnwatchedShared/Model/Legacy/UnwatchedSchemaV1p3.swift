@@ -18,7 +18,7 @@ enum UnwatchedSchemaV1p3: VersionedSchema {
             Chapter.self
         ]
     }
-    
+
     @Model
     public final class Video {
         @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video)
@@ -89,7 +89,6 @@ enum UnwatchedSchemaV1p3: VersionedSchema {
         }
     }
 
-    
     @Model
     public final class Subscription {
         @Relationship(deleteRule: .nullify, inverse: \Video.subscription)
@@ -146,7 +145,7 @@ enum UnwatchedSchemaV1p3: VersionedSchema {
             self.thumbnailUrl = thumbnailUrl
         }
     }
-    
+
     @Model
     public final class QueueEntry {
         public var video: Video?
@@ -157,7 +156,7 @@ enum UnwatchedSchemaV1p3: VersionedSchema {
             self.order = order
         }
     }
-    
+
     @Model
     public final class InboxEntry {
         public var video: Video?
@@ -168,7 +167,7 @@ enum UnwatchedSchemaV1p3: VersionedSchema {
             self.date = video?.publishedDate
         }
     }
-    
+
     @Model
     public final class Chapter {
         public var title: String?

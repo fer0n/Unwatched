@@ -1,0 +1,265 @@
+{
+  "subscriptions": [
+    {
+      "thumbnailUrl": "https://yt3.googleusercontent.com/ytc/AIdro_lltZkOAE5XVIlI8U5QVXmdASgYyJiJps-LkO-uQnTwLMQ=s900-c-k-c0x00ffffff-no-rj",
+      "youtubeChannelId": "UCVYamHliCI9rw1tHR1xbkfw",
+      "videosIds": [],
+      "link": "https://www.youtube.com/feeds/videos.xml?channel_id=UCVYamHliCI9rw1tHR1xbkfw",
+      "subscribedDate": 728735970.710954,
+      "mostRecentVideoDate": 752264086,
+      "youtubeUserName": "Dave2D",
+      "isArchived": false,
+      "placeVideosIn": 3,
+      "title": "Dave2D"
+    },
+    {
+      "title": "Marques Brownlee",
+      "placeVideosIn": 1,
+      "youtubeUserName": "mkbhd",
+      "isArchived": false,
+      "thumbnailUrl": "https://yt3.googleusercontent.com/PEwQfVuhh5jO7_NDDufCq349q0W6MgZeYlgeMyW3OSRMxMx9W5yre5Fgbi4Bql56L1cPwoteOA=s900-c-k-c0x00ffffff-no-rj",
+      "subscribedDate": 772057080.470768,
+      "mostRecentVideoDate": 771809591,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "link": "https://www.youtube.com/feeds/videos.xml?channel_id=UCBJycsmduvYEL83R_U4JriQ",
+      "videosIds": [
+        9113857717720640000,
+        -4334649188556421000,
+        -541286656898967360,
+        -8285664800790959000,
+        -794923835009902300,
+        -5307549670635861000,
+        5593235361152615000,
+        4309008077240606700,
+        2280228337386708500,
+        442547762916792700,
+        -4077005928537287000,
+        -3183699650041405000,
+        8589767645820900000,
+        -2752038900369582600,
+        -5940775337059820000
+      ]
+    },
+    {
+      "title": "Gamertag VR",
+      "placeVideosIn": 3,
+      "youtubeUserName": "GAMERTAGVR",
+      "isArchived": false,
+      "thumbnailUrl": "https://yt3.googleusercontent.com/ih1Eh72V95CPzo5wRq6S0GtmrZpFrpAw78CYoCu9mqiJ66nP1t7wvEkjP3FdhQbt819P_4UQuw=s900-c-k-c0x00ffffff-no-rj",
+      "subscribedDate": 772057180.017814,
+      "mostRecentVideoDate": 771955204,
+      "youtubeChannelId": "UCnrAvt4i_2WV3yEKWyEUMlg",
+      "link": "https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg",
+      "videosIds": [
+        -7545595450081835000,
+        7606610315669672000,
+        7749636078139380000,
+        1354098155228211200,
+        1927407745395751000,
+        2181241172217738000,
+        -6057696938364744000,
+        -732910324920935000,
+        -344836818944913340,
+        8020990349758261000,
+        -8743701716996580000,
+        -8687164536540158000,
+        -6823835949742013000,
+        -8427145951677959000,
+        -2794253477667998700
+      ]
+    }
+  ],
+  "watchEntries": [],
+  "settings": {
+    "sheetOpacity": 1,
+    "hidePlayerPageIndicator": 0,
+    "refreshOnStartup": 1,
+    "disableCaptions": 0,
+    "youtubePremium": 0,
+    "useNoCookieUrl": 0,
+    "autoAirplayHD": 0,
+    "enableIcloudSync": 0,
+    "requireClearConfirmation": 1,
+    "showTabBarBadge": 1,
+    "showClearQueueButton": 0,
+    "exludeWatchHistoryInBackup": 1,
+    "darkModeTheme": 2,
+    "showAddToQueueButton": 0,
+    "minimalPlayerUI": 0,
+    "themeColor": 6,
+    "videoAddedToQueueNotification": 1,
+    "lightModeTheme": 0,
+    "browserAsTab": 0,
+    "fullscreenControlsSetting": 1,
+    "playVideoFullscreen": 0,
+    "returnToQueue": 1,
+    "defaultShortsSetting": 2,
+    "enableQueueContextMenu": 0,
+    "showTabBarLabels": 1,
+    "showNotificationBadge": 1,
+    "skipChapterText": "trivia,sponsor,guten abend,das wetter,Fußball,bundesliga,handball",
+    "skipSponsorSegments": 0,
+    "rotateOnPlay": 0,
+    "videoListFormat": 0,
+    "videoAddedToInboxNotification": 1,
+    "mergeSponsorBlockChapters": 1,
+    "autoRefreshIgnoresSync": 0
+  },
+  "queueEntries": [
+    {
+      "videoId": -4077005928537287000,
+      "order": 0
+    },
+    {
+      "videoId": -8285664800790959000,
+      "order": 2
+    },
+    {
+      "videoId": -7545595450081835000,
+      "order": 1
+    }
+  ],
+  "inboxEntries": [
+    {
+      "videoId": 2280228337386708500
+    },
+    {
+      "videoId": 5593235361152615000
+    },
+    {
+      "videoId": 8589767645820900000
+    },
+    {
+      "videoId": -344836818944913340
+    }
+  ],
+  "videos": [
+    {
+      "persistendId": -8285664800790959000,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "thumbnailUrl": "https://i2.ytimg.com/vi/eLusurjBcCs/hqdefault.jpg",
+      "publishedDate": 770918538,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=eLusurjBcCs",
+      "videoDescription": "OnePlus 13S is technically on the smaller end of the flagship spectrum. Too bad it's India and China only.\n\nGet up to 40% off at https://ridge.com/mkbhd during their Father’s Day sale!\n\nMKBHD Merch: http://shop.MKBHD.com\n\nPlaylist of MKBHD Intro music: https://goo.gl/B3AWV5\n\nPhone provided by OnePlus for review.\n\n~\nhttp://twitter.com/MKBHD\nhttp://instagram.com/MKBHD\nhttp://facebook.com/MKBHD",
+      "createdDate": 772057096.799395,
+      "title": "One Plus 13S Review: What's the S For?",
+      "isNew": false,
+      "youtubeId": "eLusurjBcCs",
+      "updatedDate": 771694712
+    },
+    {
+      "persistendId": 5593235361152615000,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "thumbnailUrl": "https://i2.ytimg.com/vi/I3f_ucrnCUg/hqdefault.jpg",
+      "publishedDate": 771809591,
+      "isYtShort": true,
+      "url": "https://www.youtube.com/watch?v=I3f_ucrnCUg",
+      "videoDescription": "",
+      "createdDate": 772057096.798493,
+      "title": "$750 Flashlight vs Phone Flashlight!",
+      "isNew": true,
+      "youtubeId": "I3f_ucrnCUg",
+      "updatedDate": 771955117
+    },
+    {
+      "persistendId": 2280228337386708500,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "thumbnailUrl": "https://i2.ytimg.com/vi/EDUqT2cZ1nY/hqdefault.jpg",
+      "publishedDate": 771366831,
+      "isYtShort": true,
+      "url": "https://www.youtube.com/shorts/EDUqT2cZ1nY",
+      "videoDescription": "All clear everything, coming to an iPhone near you.",
+      "createdDate": 772057096.798844,
+      "title": "iOS 26 Liquid Glass",
+      "isNew": true,
+      "youtubeId": "EDUqT2cZ1nY",
+      "updatedDate": 771586767
+    },
+    {
+      "persistendId": -4077005928537287000,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "thumbnailUrl": "https://i2.ytimg.com/vi/1E3tv_3D95g/hqdefault.jpg",
+      "publishedDate": 771227754,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=1E3tv_3D95g",
+      "videoDescription": "Hands on with iOS 26 and everything you need to know from WWDC 2025\n\nMKBHD Merch: http://shop.MKBHD.com\n\nIntro Track: Jordyn Edmonds\nPlaylist of MKBHD Intro music: https://goo.gl/B3AWV5\n\n~\nhttp://twitter.com/MKBHD\nhttp://instagram.com/MKBHD\nhttp://facebook.com/MKBHD\n\n0:00 26 All the Things\n2:01 iOS 26\n5:39 Liquid Glass concerns\n6:35 WatchOS 26\n7:53 tvOS 26\n8:10 macOS Tahoe\n10:55 visionOS 26\n12:48 iPadOS 26\n16:11 What about AI and Siri?",
+      "createdDate": 772057096.799113,
+      "title": "WWDC 2025 Impressions: Liquid Glass!",
+      "isNew": false,
+      "youtubeId": "1E3tv_3D95g",
+      "updatedDate": 771886275
+    },
+    {
+      "persistendId": 8589767645820900000,
+      "youtubeChannelId": "UCBJycsmduvYEL83R_U4JriQ",
+      "thumbnailUrl": "https://i1.ytimg.com/vi/HP_mXUuHPbo/hqdefault.jpg",
+      "publishedDate": 771627573,
+      "isYtShort": true,
+      "url": "https://www.youtube.com/shorts/HP_mXUuHPbo",
+      "videoDescription": "",
+      "createdDate": 772057096.798683,
+      "title": "Samsung broke this",
+      "isNew": true,
+      "youtubeId": "HP_mXUuHPbo",
+      "updatedDate": 771757217
+    },
+    {
+      "persistendId": -7545595450081835000,
+      "youtubeChannelId": "UCnrAvt4i_2WV3yEKWyEUMlg",
+      "thumbnailUrl": "https://i4.ytimg.com/vi/woTTXW1ber0/hqdefault.jpg",
+      "publishedDate": 771786035,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=woTTXW1ber0",
+      "videoDescription": "The BEST Meta Quest 3 Games With Realistic Graphics - Best VR Games Quest 3 2025. If you’re searching for Meta Quest 3 most realistic games or just want to know the best VR games for Quest 3 in 2025, I’ve compiled the top Meta Quest 3 games with the best graphics, including amazing ports like Red Matter 2, Batman Arkham Shadow, Assassin’s Creed Nexus, Metro Awakening, Blade & Sorcery: Nomad, and many more. Whether you’re after jaw-dropping visuals, immersive gameplay, or performance that pushes standalone VR to its limits, these are the titles that prove what the Quest 3 is truly capable of. From Skydance’s Behemoth to the visually stunning Ghost Town and underrated gems like Into Black, I cover them all. Plus, you’ll find gameplay, reviews, and performance tips for each title. Remember to leave a like and subscribe for more Meta Quest 3 game reviews and realistic VR experiences.\n\nUse my affilate codes to save 10% on every game featured today:\nRed Matter 2: https://www.meta.com/affiliates/5dCPZVb8s\nBatman Arkham Shadow: https://www.meta.com/affiliates/52Xddaz4t\nAssassins Creed Nexus: https://www.meta.com/affiliates/5bA88aqFP\nMetro Awakening: https://www.meta.com/affiliates/7STFAARx9\nInto The Radius 2: https://www.meta.com/affiliates/At8Ri1zeM\nThe Walking Dead S&S: https://www.meta.com/affiliates/5cXE5VmU8\nSkydances Behemoth: https://www.meta.com/affiliates/DetHw7iGj\nGhost Town: https://www.meta.com/affiliates/BRW1pGpVw\nBlade and Sorcery Nomad: https://www.meta.com/affiliates/4n8CwJeCY\nHard Bullet: https://www.meta.com/affiliates/9Qvg8uP1p\nAsgards Wrath 2: https://www.meta.com/affiliates/2JeVQb3kJG\nAlien Rogue Incursion: https://www.meta.com/affiliates/8b9w8DeeV\nContractors Showdown Exfil: https://www.meta.com/affiliates/4UfvumLDK\nContractors: https://www.meta.com/affiliates/Z589GsHLr\nInto Black: https://www.meta.com/affiliates/7zVM59z2r\nResident Evil 4: https://www.meta.com/affiliates/5m3xciysV\nReal VR Fishing: https://www.meta.com/affiliates/4cM3SqcpS\n\nJoin the GT Champions today for exclusive benefits👇\n⭐️ VIP Discord lounge\n⭐️ Stand out from the crowd with a GT badge\n⭐️ Exclusive chat emojis\nGT Champion sign up 👉:https://www.youtube.com/channel/UCnrAvt4i_2WV3yEKWyEUMlg/join\n\nOr become a Patron of the channel here: https://www.patreon.com/c/GamertagVR\n\nSupport the channel by drinking GFuel Energy and using my code 'GTVR' to save 20% on all your purchases at checkout👉 https://gfuel.com\n \nDescription Tags: VR Gaming, VR, Virtual Reality Gaming, VR Games, Virtual Reality Games, Meta Quest, Meta Quest 2, Quest 3S, Meta Quest 3S, Oculus Quest, PlayStation VR 2 ,PSVR 2, Meta Quest 3, VR Multiplayer Games, Beat Saber, Half-Life: Alyx, New VR games, Mixed Reality, Best Mixed Reality, VRChat, VR Hardware, VR 360, Best VR Games, Top VR Games, VR Game Reviews, New VR headset, VR Accessories, Upcoming VR Games, VR Gameplay, VR Tips, Gaming, Gamertag VR, VR mods, PCVR, Steam VR, \n\n#metaquest3S #metaquest3 #gamertagvr #questcreatorpartner",
+      "createdDate": 772057181.627508,
+      "title": "Meta Quest 3 Most Realistic Games - Best VR Games Quest 3 2025",
+      "isNew": false,
+      "youtubeId": "woTTXW1ber0",
+      "updatedDate": 771955156
+    },
+    {
+      "persistendId": -6057696938364744000,
+      "youtubeChannelId": "UCnrAvt4i_2WV3yEKWyEUMlg",
+      "thumbnailUrl": "https://i2.ytimg.com/vi/uSt-PCJIqYc/hqdefault.jpg",
+      "publishedDate": 771955204,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=uSt-PCJIqYc",
+      "videoDescription": "Is PSVR2 in trouble? In today’s video I wanted to talk about the current state of PlayStation VR2 and what its future might look like in 2025 and beyond. With major games like Beat Saber ending support, and other titles like Frenzies and Mannequin being pulled from PSVR2 after being officially announced for PSVR2, many fans are questioning is Sony is backing away from its VR ambitions. Even the latest PlayStation budget report failed to mention PSVR2, raising concerns about its long-term viability. Add to that the lack of PlayStation-exclusive VR titles and studios like Triangle Factory skipping the platform — and now people are searching “is PSVR2 a failure?” or “is PSVR2 being discontinued?” But it’s not all doom and gloom. Big titles like Reach, Vertigo 2, and Thief VR are still confirmed, and the possibility of Resident Evil 9 getting VR support brings some hope. If you’re wondering whether PSVR2 is worth it in 2025, this video breaks it all down and I look forward to your comments \n\nJoin the GT Champions today for exclusive benefits👇\n⭐️ VIP Discord lounge\n⭐️ Stand out from the crowd with a GT badge\n⭐️ Exclusive chat emojis\nGT Champion sign up 👉:https://www.youtube.com/channel/UCnrAvt4i_2WV3yEKWyEUMlg/join\n\nOr become a Patron of the channel here: https://www.patreon.com/c/GamertagVR\n\nSupport the channel by drinking GFuel Energy and using my code 'GTVR' to save 20% on all your purchases at checkout👉 https://gfuel.com\n \nDescription Tags: VR Gaming, VR, Virtual Reality Gaming, VR Games, Virtual Reality Games, Meta Quest, Meta Quest 2, Quest 3S, Meta Quest 3S, Oculus Quest, PlayStation VR 2 ,PSVR 2, Meta Quest 3, VR Multiplayer Games, Beat Saber, Half-Life: Alyx, New VR games, Mixed Reality, Best Mixed Reality, VRChat, VR Hardware, VR 360, Best VR Games, Top VR Games, VR Game Reviews, New VR headset, VR Accessories, Upcoming VR Games, VR Gameplay, VR Tips, Gaming, Gamertag VR, VR mods, PCVR, Steam VR, \n\n#psvr2 #vrgaming #gamertagvr",
+      "createdDate": 772057181.626055,
+      "title": "Is PSVR2 In Trouble…",
+      "isNew": false,
+      "youtubeId": "uSt-PCJIqYc",
+      "updatedDate": 772015758
+    },
+    {
+      "persistendId": -344836818944913340,
+      "youtubeChannelId": "UCnrAvt4i_2WV3yEKWyEUMlg",
+      "thumbnailUrl": "https://i1.ytimg.com/vi/DB2cnXyfZVQ/hqdefault.jpg",
+      "publishedDate": 771516105,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=DB2cnXyfZVQ",
+      "videoDescription": "In today’s vr video I jump into Alliance Peacefighter! A new vr space combat sim with full VR support, inspired by 90s classics like X-Wing and Wing Commander. Designed for fans of cinematic, story-driven gameplay, this VR space sim puts you in the cockpit as a rookie pilot fighting to prevent war between two powerful galactic factions. I’ll be showcasing how the game plays in virtual reality, breaking down the immersive flight mechanics, dogfights, and narrative experience on Meta Quest, PCVR, and beyond. If you’re into VR games with a retro sci-fi vibe, Alliance Peacefighter might be one to watch. Steam store link: https://store.steampowered.com/app/3538210/Alliance_Peacefighter/\n\nJoin the GT Champions today for exclusive benefits👇\n⭐️ VIP Discord lounge\n⭐️ Stand out from the crowd with a GT badge\n⭐️ Exclusive chat emojis\nGT Champion sign up 👉:https://www.youtube.com/channel/UCnrAvt4i_2WV3yEKWyEUMlg/join\n\nOr become a Patron of the channel here: https://www.patreon.com/c/GamertagVR\n\nSupport the channel by drinking GFuel Energy and using my code 'GTVR' to save 20% on all your purchases at checkout👉 https://gfuel.com\n \nDescription Tags: VR Gaming, VR, Virtual Reality Gaming, VR Games, Virtual Reality Games, Meta Quest, Meta Quest 2, Quest 3S, Meta Quest 3S, Oculus Quest, PlayStation VR 2 ,PSVR 2, Meta Quest 3, VR Multiplayer Games, Beat Saber, Half-Life: Alyx, New VR games, Mixed Reality, Best Mixed Reality, VRChat, VR Hardware, VR 360, Best VR Games, Top VR Games, VR Game Reviews, New VR headset, VR Accessories, Upcoming VR Games, VR Gameplay, VR Tips, Gaming, Gamertag VR, VR mods, PCVR, Steam VR, \n\n#PCVR #metaquest3 #gamertagvr #questcreatorpartner",
+      "createdDate": 772057181.629244,
+      "title": "This New VR Space Sim Is Awesome! Alliance Peacefighter VR",
+      "isNew": true,
+      "youtubeId": "DB2cnXyfZVQ",
+      "updatedDate": 771702451
+    },
+    {
+      "persistendId": -8427145951677959000,
+      "youtubeChannelId": "UCnrAvt4i_2WV3yEKWyEUMlg",
+      "thumbnailUrl": "https://i1.ytimg.com/vi/LGPzbsLmbdc/hqdefault.jpg",
+      "publishedDate": 771616222,
+      "isYtShort": false,
+      "url": "https://www.youtube.com/watch?v=LGPzbsLmbdc",
+      "videoDescription": "In today’s video we’re checking out the latest VR gaming news and upcoming VR games you need to know about for Meta Quest, PSVR2, and PCVR. While it’s been a quieter week overall, we dive into some new vr updates, a new vr games including a Last of Us-style survival VR game from the creator of Cold VR, a VR mode confirmed for Five Nights at Freddy’s: The Mimic, and a first-person PSVR2 exclusive mode for Dreams of Another. We also talk about the latest update to Midnight Walk on PSVR2, the pros and cons of its graphical improvements, and the newly announced Titan Isles—a four-player bullet-hell co-op experience from the creators of Windlands. Don’t forget to like and subscribe for more VR game reviews, updates, and vr gaming news.\n\nJoin the GT Champions today for exclusive benefits👇\n⭐️ VIP Discord lounge\n⭐️ Stand out from the crowd with a GT badge\n⭐️ Exclusive chat emojis\nGT Champion sign up 👉:https://www.youtube.com/channel/UCnrAvt4i_2WV3yEKWyEUMlg/join\n\nOr become a Patron of the channel here: https://www.patreon.com/c/GamertagVR\n\nTimestamps:\n00:00 - Intro\n00:33 - What Comes After VR\n01:27 - Five Nights at Freddy’s Secret of The Mimic VR\n01:54 - Dreams Of Another VR\n02:31 - The Midnight Walk PSVR2 Update Review\n03:33 - Titan Isles VR\n04:30 - Outro\n\nSupport the channel by drinking GFuel Energy and using my code 'GTVR' to save 20% on all your purchases at checkout👉 https://gfuel.com\n \nDescription Tags: VR Gaming, VR, Virtual Reality Gaming, VR Games, Virtual Reality Games, Meta Quest, Meta Quest 2, Quest 3S, Meta Quest 3S, Oculus Quest, PlayStation VR 2 ,PSVR 2, Meta Quest 3, VR Multiplayer Games, Beat Saber, Half-Life: Alyx, New VR games, Mixed Reality, Best Mixed Reality, VRChat, VR Hardware, VR 360, Best VR Games, Top VR Games, VR Game Reviews, New VR headset, VR Accessories, Upcoming VR Games, VR Gameplay, VR Tips, Gaming, Gamertag VR, VR mods, PCVR, Steam VR, \n\n#pscr2 #metaquest3 #questcreatorpartner #gamertagvr",
+      "createdDate": 772057181.62786,
+      "title": "New VR Games & VR News - PSVR2, Meta Quest & PCVR June 2025",
+      "isNew": false,
+      "youtubeId": "LGPzbsLmbdc",
+      "updatedDate": 771753046
+    }
+  ]
+}
+

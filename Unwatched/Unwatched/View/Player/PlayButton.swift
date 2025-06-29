@@ -45,7 +45,7 @@ struct CorePlayButton<Content>: View where Content: View {
                                         : 0)
             )
             .foregroundStyle(Color.neutralAccentColor)
-            .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+            .contentTransition(transition)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(player.isPlaying ? "pause" : "play")
@@ -54,6 +54,14 @@ struct CorePlayButton<Content>: View where Content: View {
             PlayButtonContextMenu()
         }
         .keyboardShortcut(.space, modifiers: [])
+    }
+
+    var transition: ContentTransition {
+        if #available(iOS 18, *) {
+            ContentTransition.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7))
+        } else {
+            ContentTransition.symbolEffect(.replace, options: .speed(7))
+        }
     }
 }
 

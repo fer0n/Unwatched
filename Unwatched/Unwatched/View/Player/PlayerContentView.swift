@@ -105,8 +105,7 @@ struct PlayerContentView: View {
                     }
                 }
             ),
-            numberOfPages: 2,
-            normalColor: .automaticBlack
+            numberOfPages: 2
         )
         .clipShape(Capsule())
     }

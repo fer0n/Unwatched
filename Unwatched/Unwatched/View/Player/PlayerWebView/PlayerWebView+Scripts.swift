@@ -419,6 +419,9 @@ extension PlayerWebView {
             video.addEventListener('seeked', () => {
                 debouncedHideOverlay(1000);
             });
+            video.addEventListener('ratechange', () => {
+                sendMessage('playbackRate', video.playbackRate);
+            });
         }
         document.addEventListener('play', (e) => {
             if (e.target.tagName === 'VIDEO') {
@@ -495,7 +498,7 @@ extension PlayerWebView {
                     .ytp-pause-overlay, .branding-img {
                         display: none !important;
                     }
-                    @media (max-width: 350px) {
+                    @media (max-width: 200px) {
                         .ytp-gradient-top, .ytp-chrome-top, .ytp-button, .ytp-impression-link,
                         .ytp-chrome-bottom {
                             display: none !important;
@@ -529,7 +532,7 @@ extension PlayerWebView {
                     .branding-img {
                         display: none !important;
                     }
-                    @media (max-width: 350px) {
+                    @media (max-width: 200px) {
                         #player-control-overlay, .ytmCuedOverlayPlayButton, .ytmCuedOverlayGradient {
                             display: none !important;
                         }
@@ -552,7 +555,7 @@ extension PlayerWebView {
                         .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
                         .player-control-play-pause-icon, .player-controls-spinner,
                         .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost,
-                        .ytmMuteButtonButton, .ytmCuedOverlayGradient {
+                        .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, .ytmCuedOverlayGradient {
                             display: none !important;
                         }
                         .player-settings-icon, .ytmClosedCaptioningButtonHost {
@@ -696,6 +699,7 @@ extension PlayerWebView {
                 || event.target.matches('.ytmVideoInfoHost')
                 || event.target.matches('.ytwPlayerMiddleControlsHost')
                 || event.target.matches('.player-controls-bottom')
+                || event.target.matches('.ytmCuedOverlayHost')
         }
 
         function addTouchEventListener(eventType, handler) {

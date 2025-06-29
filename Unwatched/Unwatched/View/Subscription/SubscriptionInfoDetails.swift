@@ -16,6 +16,9 @@ struct SubscriptionInfoDetails: View {
 
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
+    @Binding var showFilter: Bool
+
+    let padding: CGFloat = 15
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -23,7 +26,7 @@ struct SubscriptionInfoDetails: View {
                 .font(.system(size: 42))
                 .fontWidth(.condensed)
                 .fontWeight(.heavy)
-                .padding(.horizontal)
+                .padding(.horizontal, padding)
 
             headerDetails
 
@@ -63,7 +66,7 @@ struct SubscriptionInfoDetails: View {
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal)
+                .padding(.horizontal, padding)
             }
             Spacer()
                 .frame(height: 10)
@@ -78,6 +81,7 @@ struct SubscriptionInfoDetails: View {
                     HStack {
                         SubscriptionSpeedSetting(subscription: subscription)
                             .buttonStyle(CapsuleButtonStyle(primary: false))
+                            .padding(.leading, padding + workaroundPadding)
 
                         CapsulePicker(
                             selection: $subscription.videoPlacement,
@@ -103,14 +107,29 @@ struct SubscriptionInfoDetails: View {
                             },
                             menuLabel: "shortsSetting")
 
+                        SubscriptionTitleFilterButton(
+                            showFilter: $showFilter,
+                            hasFilter: !subscription.filterText.isEmpty
+                        )
+
                         Spacer()
+                            .padding(.trailing, padding + workaroundPadding)
                     }
-                    .padding(.horizontal)
                 }
+                .padding(.horizontal, -workaroundPadding)
             }
             .padding(.bottom, 15)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    var workaroundPadding: CGFloat {
+        // workaround: scrollcontainer is cut off on macOS
+        #if os(macOS)
+        15
+        #else
+        0
+        #endif
     }
 
     @ViewBuilder var headerDetails: some View {
@@ -166,7 +185,7 @@ struct SubscriptionInfoDetails: View {
             }
         }
         .padding(.bottom, 10)
-        .padding(.horizontal)
+        .padding(.horizontal, padding)
     }
 
     var subscribeButton: some View {
@@ -203,24 +222,34 @@ struct SubscriptionInfoDetails: View {
 
     if let sub = sub {
         return VStack {
-            SubscriptionInfoDetails(subscription: sub, requiresUnsubscribe: .constant(false))
-                .modelContainer(container)
-                .environment(NavigationManager())
-                .environment(RefreshManager())
-                .environment(PlayerManager())
-                .environment(ImageCacheManager())
-                .background(.gray)
+            SubscriptionInfoDetails(
+                subscription: sub,
+                requiresUnsubscribe: .constant(
+                    false
+                ),
+                showFilter: .constant(false)
+            )
+            .modelContainer(container)
+            .environment(NavigationManager())
+            .environment(RefreshManager())
+            .environment(PlayerManager())
+            .environment(ImageCacheManager())
+            .background(.gray)
             Color.blue
             Spacer()
         }
     } else {
         return VStack {
-            SubscriptionInfoDetails(subscription: Subscription.getDummy(), requiresUnsubscribe: .constant(false))
-                .modelContainer(container)
-                .environment(NavigationManager())
-                .environment(RefreshManager())
-                .environment(PlayerManager())
-                .environment(ImageCacheManager())
+            SubscriptionInfoDetails(
+                subscription: Subscription.getDummy(),
+                requiresUnsubscribe: .constant(false),
+                showFilter: .constant(false)
+            )
+            .modelContainer(container)
+            .environment(NavigationManager())
+            .environment(RefreshManager())
+            .environment(PlayerManager())
+            .environment(ImageCacheManager())
             Spacer()
         }
     }

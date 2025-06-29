@@ -6,15 +6,24 @@
 import Foundation
 import UnwatchedShared
 
+@Observable
 class SpeedControlViewModel {
-    var width: CGFloat = 0
-    var itemWidth: CGFloat = 0
-    var fullWidth: CGFloat = 0
-    var padding: CGFloat = 0
+    @ObservationIgnored var width: CGFloat = 0
+    @ObservationIgnored var itemWidth: CGFloat = 0
+    @ObservationIgnored var fullWidth: CGFloat = 0
+    @ObservationIgnored var padding: CGFloat = 0
     var showContent = false
 
-    var speedDebounceTask: Task<Void, Never>?
-    var currentSpeed: Double?
+    var controlMinX: CGFloat?
+    var dragState: CGFloat?
+
+    @ObservationIgnored var speedDebounceTask: Task<Void, Never>?
+    @ObservationIgnored var currentSpeed: Double?
+
+    func setThumbPosition(to speed: CGFloat) {
+        controlMinX = getXPos(speed)
+        currentSpeed = speed
+    }
 
     func getSpeedFromPos(_ pos: CGFloat) -> Double {
         let adjustedPos = pos - padding
@@ -35,6 +44,32 @@ class SpeedControlViewModel {
         return (CGFloat(selectedSpeedIndex) * itemWidth)
             + (itemWidth / 2)
             + padding
+    }
+
+    func resetDragState() {
+        if dragState != nil {
+            dragState = nil
+        }
+    }
+
+    @MainActor
+    func getSelectedSpeed(_ tappedSpeed: Double) -> Double {
+        // get speed or highlighted speed only if tapped speed is right next to it
+        if Device.isMac {
+            return tappedSpeed
+        }
+        let index = Const.speeds.firstIndex(of: tappedSpeed) ?? 0
+        let highlightIndeces = Const.highlightedSpeedsInt
+            .compactMap { Const.speeds.firstIndex(of: $0) }
+
+        if highlightIndeces.contains(index) {
+            return tappedSpeed
+        }
+        let match = highlightIndeces.filter { index == $0 - 1 || index == $0 + 1 }
+        guard let first = match.first else {
+            return tappedSpeed
+        }
+        return Const.speeds[first]
     }
 
     /// Only true when there's enough space

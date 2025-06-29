@@ -143,8 +143,12 @@ extension VideoActor {
         }
     }
 
-    func getFilteredByVideoTitleText(_ videos: [Video], _ defaultPlacement: DefaultVideoPlacement) -> [Video] {
-        let filterStrings = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText)
+    func getFilteredByVideoTitleText(
+        _ videos: [Video],
+        _ sub: Subscription,
+        _ defaultPlacement: DefaultVideoPlacement
+    ) -> [Video] {
+        let filterStrings = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText) + VideoService.getVideoTitleFilter(sub.filterText)
         return videos.filter { video in
             return !filterStrings.contains(where: { video.title.localizedStandardContains($0) })
         }
@@ -160,7 +164,7 @@ extension VideoActor {
         if let cutOffDate = sub.mostRecentVideoDate {
             videosToAdd = videosToAdd.filter { ($0.publishedDate ?? .distantPast) > cutOffDate }
         }
-        videosToAdd = getFilteredByVideoTitleText(videosToAdd, defaultPlacement)
+        videosToAdd = getFilteredByVideoTitleText(videosToAdd, sub, defaultPlacement)
 
         var placement = sub.videoPlacement
         if sub.videoPlacement == .defaultPlacement {

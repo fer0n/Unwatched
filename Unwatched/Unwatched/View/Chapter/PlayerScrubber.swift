@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct PlayerScrubber: View {
+    @Namespace var namespace
+
     @Environment(PlayerManager.self) var player
 
     @State private var dragOffset: CGFloat = 0
@@ -36,13 +38,16 @@ struct PlayerScrubber: View {
             if !inlineTime {
                 HStack {
                     Text(formattedCurrentTime)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .matchedGeometryEffect(id: "currentTime", in: namespace)
                         .contentTransition(.numericText(countsDown: false))
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text(formattedCurrentTime == " " ? " " : formattedDuration)
+                    Text(formattedDuration)
+                        .matchedGeometryEffect(id: "totalTime", in: namespace)
                         .contentTransition(.numericText(countsDown: false))
                 }
-                .animation(.default.speed(1), value: formattedCurrentTime == " ")
+                .opacity(showTime ? 1 : 0)
+                .animation(.default.speed(1), value: showTime ? 1 : 0)
                 .padding(.horizontal, scrubbingPadding)
                 .foregroundStyle(.secondary)
                 .font(.caption)
@@ -53,6 +58,8 @@ struct PlayerScrubber: View {
                     Text(formattedCurrentTime)
                         .foregroundStyle(.secondary)
                         .font(.subheadline.monospacedDigit())
+                        .fixedSize()
+                        .matchedGeometryEffect(id: "currentTime", in: namespace)
                         .animation(.default, value: formattedCurrentTime == " ")
                         .contentTransition(.numericText(countsDown: true))
                 }
@@ -104,9 +111,15 @@ struct PlayerScrubber: View {
                         .foregroundStyle(.secondary)
                         .font(.subheadline.monospacedDigit())
                         .contentTransition(.numericText(countsDown: true))
+                        .fixedSize()
+                        .matchedGeometryEffect(id: "totalTime", in: namespace)
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(String(localized: "playerScrubber"))
+        .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
+        .accessibilityValue(formattedCurrentTime)
     }
 
     var isDisabled: Bool {
@@ -125,11 +138,11 @@ struct PlayerScrubber: View {
         isInactive ? currentScrubberWidth : (initialDragPosition ?? currentScrubberWidth) + dragOffset
     }
 
-    var currentTime: Double? {
-        guard inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive) else {
-            return nil
-        }
+    var showTime: Bool {
+        inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive)
+    }
 
+    var currentTime: Double? {
         if isGestureActive,
            let time = getTimeFromPosition(draggedScrubberWidth),
            let duration = player.video?.duration {
@@ -141,11 +154,22 @@ struct PlayerScrubber: View {
     }
 
     var formattedDuration: String {
-        player.video?.duration?.formattedSecondsColon ?? " "
+        player.video?.duration?.formattedSecondsColon ?? ""
     }
 
     var formattedCurrentTime: String {
-        currentTime?.formattedSecondsColon ?? " "
+        currentTime?.formattedSecondsColon ?? ""
+    }
+
+    func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
+        switch direction {
+        case .increment:
+            _ = player.seekForward(15)
+        case .decrement:
+            _ = player.seekBackward(15)
+        default:
+            break
+        }
     }
 
     func handleChanged(_ value: DragGesture.Value) {

@@ -19,6 +19,10 @@ struct AirPlayButton: View {
             .contextMenu {
                 AirPlayHDButton()
             }
+            .help("airPlay")
+            .accessibilityElement()
+            .accessibilityAddTraits(.isButton)
+            .accessibilityLabel(String(localized: "airPlay"))
     }
 }
 

@@ -6,10 +6,10 @@
 import SwiftUI
 import UnwatchedShared
 
-struct LibraryDestinationModifier: ViewModifier {
+extension View {
     // swiftlint:disable cyclomatic_complexity
-    func body(content: Content) -> some View {
-        content
+    func libraryDestination() -> some View {
+        self
             .sendableSubscriptionDestination()
             .navigationDestination(for: LibraryDestination.self) { value in
                 switch value {
@@ -43,17 +43,11 @@ struct LibraryDestinationModifier: ViewModifier {
                 case .filter:
                     FilterSettingsView()
                 case .titleFilter:
-                    TitleFilterWithPreview()
+                    GlobalTitleFilterWithPreview()
                 }
             }
     }
     // swiftlint:enable cyclomatic_complexity
-}
-
-extension View {
-    func libraryDestination() -> some View {
-        self.modifier(LibraryDestinationModifier())
-    }
 }
 
 enum LibraryDestination: Codable {

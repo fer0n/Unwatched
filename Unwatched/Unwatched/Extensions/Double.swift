@@ -10,44 +10,30 @@ extension Double {
 }
 
 extension Double {
-    var formattedSeconds: String? {
-        let formatter = DateComponentsFormatter()
-        if self >= 3600 { // If self is greater than or equal to 3600 seconds (1 hour)
-            formatter.allowedUnits = [.hour, .minute]
-        } else if self >= 60 { // If self is greater than or equal to 60 seconds (1 minute)
-            formatter.allowedUnits = [.minute, .second]
-        } else {
-            formatter.allowedUnits = [.second]
-        }
-        formatter.unitsStyle = .abbreviated
-        formatter.zeroFormattingBehavior = .dropAll
-        return formatter.string(from: TimeInterval(self))
+    var formattedSeconds: String {
+        let units: Set<Duration.UnitsFormatStyle.Unit> = {
+            if self >= 3600 {
+                return [.hours, .minutes]
+            } else if self >= 60 {
+                return [.minutes, .seconds]
+            } else {
+                return [.seconds]
+            }
+        }()
+        return Duration.seconds(self).formatted(.units(allowed: units, width: .narrow))
     }
 
-    static private let formattedSecondsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .abbreviated
-        formatter.zeroFormattingBehavior = .dropAll
-        return formatter
-    }()
-
-    func getFormattedSeconds(for allowedUnits: NSCalendar.Unit) -> String? {
-        Double.formattedSecondsFormatter.allowedUnits = self < 60 ? [.second] : allowedUnits
-        return Double.formattedSecondsFormatter.string(from: TimeInterval(self))
-    }
-
-    static private let timeMinimalFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute, .second]
-        formatter.unitsStyle = .abbreviated
-        formatter.zeroFormattingBehavior = .dropAll
-        formatter.maximumUnitCount = 1
-        formatter.calendar?.locale = Locale(identifier: "en_US_POSIX")
-        return formatter
-    }()
-
-    var formatTimeMinimal: String? {
-        Double.timeMinimalFormatter.string(from: TimeInterval(self))
+    var formatTimeMinimal: String {
+        Duration
+            .seconds(self)
+            .formatted(
+                .units(
+                    allowed: [.hours, .minutes, .seconds],
+                    width: .narrow,
+                    maximumUnitCount: 1
+                )
+                .locale(Locale(identifier: "en_US_POSIX"))
+            )
     }
 }
 

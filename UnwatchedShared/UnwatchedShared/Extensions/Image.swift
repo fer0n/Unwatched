@@ -3,9 +3,7 @@
 //  UnwatchedShared
 //
 
-
 import SwiftUI
-
 
 public extension CGImage {
     func pixelColors(at points: [CGPoint]) -> [Color] {
@@ -39,11 +37,11 @@ public extension CGImage {
             let green = CGFloat(pixelData[pixelIndex + 1]) / 255.0
             let blue = CGFloat(pixelData[pixelIndex + 2]) / 255.0
             // let alpha = CGFloat(pixelData[pixelIndex + 3]) / 255.0
-            
+
             let color = Color(red: red, green: green, blue: blue)
             colors.append(color)
         }
-        
+
         return colors
     }
 }
@@ -57,10 +55,10 @@ public extension UIImage {
         guard let cgImage = self.cgImage else {
             return Array(repeating: .clear, count: points.count)
         }
-        
+
         return cgImage.pixelColors(at: points)
     }
-    
+
     func extractVibrantAccentColor() -> Color? {
         guard let cgImage = self.cgImage else { return nil }
         return cgImage.extractVibrantAccentColor()
@@ -78,10 +76,10 @@ public extension NSImage {
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             return Array(repeating: .clear, count: points.count)
         }
-        
+
         return cgImage.pixelColors(at: points)
     }
-    
+
     func extractVibrantAccentColor() -> Color? {
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
         return cgImage.extractVibrantAccentColor()

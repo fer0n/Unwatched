@@ -59,13 +59,19 @@ import UnwatchedShared
     @ObservationIgnored var earlyEndTime: Double?
 
     init() {
-        defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
+        initPlaybackSpeed()
+    }
+
+    func initPlaybackSpeed() {
+        if let speed = UserDefaults.standard.value(forKey: Const.playbackSpeed) as? Double, speed > 0 {
+            defaultPlaybackSpeed = speed
+        }
     }
 
     static func load() -> PlayerManager {
         if let savedPlayer = UserDefaults.standard.data(forKey: Const.playerManager),
            let loadedPlayer = try? JSONDecoder().decode(PlayerManager.self, from: savedPlayer) {
-            loadedPlayer.defaultPlaybackSpeed = UserDefaults.standard.double(forKey: Const.playbackSpeed)
+            loadedPlayer.initPlaybackSpeed()
             return loadedPlayer
         } else {
             Log.warning("player not found")
@@ -132,16 +138,6 @@ import UnwatchedShared
     @MainActor
     func requiresFetchingVideoData() -> Bool {
         video?.title.isEmpty == true
-    }
-
-    @MainActor
-    var isConsideredWatched: Bool {
-        guard let video = video else {
-            return false
-        }
-        let noQueueEntry = video.queueEntry == nil
-        let noInboxEntry = video.inboxEntry == nil
-        return video.watchedDate != nil && noQueueEntry && noInboxEntry
     }
 
     @MainActor

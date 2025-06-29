@@ -19,7 +19,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var duration: Double?
     public var elapsedSeconds: Double?
     public var chapters = [SendableChapter]()
-    
+
     public var sortedChapterData: [any ChapterData] {
         Video.getSortedChapters([], chapters)
     }
@@ -34,17 +34,17 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var bookmarkedDate: Date?
     public var createdDate: Date?
     public var isNew: Bool
-    
-    
+
+
     // relationship related values
     public var hasInboxEntry: Bool?
     public var queueEntry: SendableQueueEntry?
-    
+
     public var subscription: SendableSubscription?
     public var subscriptionData: (any SubscriptionData)? {
         subscription
     }
-    
+
     public var queueEntryData: QueueEntryData? {
         queueEntry
     }
@@ -86,7 +86,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             bookmarkedDate: self.bookmarkedDate,
             createdDate: self.createdDate,
             isNew: self.isNew,
-        )
+            )
     }
 
     public init(
@@ -112,7 +112,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         queueEntry: SendableQueueEntry? = nil,
         subscription: SendableSubscription? = nil,
         isNew: Bool = false,
-    ) {
+        ) {
         self.persistentId = persistentId
         self.youtubeId = youtubeId
         self.title = title
@@ -135,7 +135,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.queueEntry = queueEntry
         self.subscription = subscription
         self.isNew = isNew
-        
+
     }
 
     public init(from decoder: Decoder) throws {

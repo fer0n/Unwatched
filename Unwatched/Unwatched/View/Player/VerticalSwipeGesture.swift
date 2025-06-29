@@ -6,8 +6,7 @@
 import SwiftUI
 
 struct VerticalSwipeGesture: ViewModifier {
-    @GestureState private var dragState: CGFloat = 0
-    @State var stop: Bool = false
+    @State var viewModel = ViewModel()
 
     let disableGesture: Bool
     let onSwipeUp: () -> Void
@@ -19,23 +18,29 @@ struct VerticalSwipeGesture: ViewModifier {
                 disableGesture
                     ? nil
                     : DragGesture(minimumDistance: 30, coordinateSpace: .local)
-                    .updating($dragState) { value, state, _ in
-                        if stop { return }
-                        state = value.translation.height
+                    .onChanged { value in
+                        if viewModel.stop { return }
+                        let state = value.translation.height
                         if state < -30 {
                             onSwipeUp()
-                            stop = true
+                            viewModel.stop = true
                         } else if state > 30 {
                             onSwipeDown()
-                            stop = true
+                            viewModel.stop = true
                         } else if value.translation.width.magnitude > 30 {
-                            stop = true
+                            viewModel.stop = true
                         }
                     }
                     .onEnded { _ in
-                        stop = false
+                        viewModel.stop = false
                     }
             )
+    }
+}
+
+extension VerticalSwipeGesture {
+    class ViewModel {
+        var stop = false
     }
 }
 

@@ -14,6 +14,7 @@ struct TestData {
             title: "TestData.subscription",
             author: "Author name",
             subscribedDate: Date(),
+            filterText: "filter,text,here",
             videoPlacement: VideoPlacement.queueNext,
             isArchived: false,
             customSpeedSetting: 1.5,
