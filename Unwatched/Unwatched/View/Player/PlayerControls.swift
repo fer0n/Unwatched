@@ -58,7 +58,6 @@ struct PlayerControls: View {
                 if showRotateFullscreen && !player.embeddingDisabled && !player.isTallAspectRatio {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
-                            video: player.video,
                             subscription: player.video?.subscription,
                             setShowMenu: setShowMenu,
                             showImage: true
@@ -87,8 +86,8 @@ struct PlayerControls: View {
                     setShowMenu: setShowMenu,
                     handleTitleTap: handleTitleTap,
                     limitHeight: horizontalLayout || player.isTallAspectRatio,
-                    inlineTime: horizontalLayout
-                )
+                    inlineTime: horizontalLayout || player.isTallAspectRatio,
+                    )
                 .contentShape(Rectangle())
                 .padding(.horizontal)
 
@@ -144,7 +143,6 @@ struct PlayerControls: View {
                     HStack(spacing: hasSmallControls ? speedSpacing : nil) {
                         WatchedButton(
                             markVideoWatched: markVideoWatched,
-                            indicateWatched: false,
                             isSmall: hasSmallControls
                         )
                         .frame(maxWidth: compactSize ? nil : .infinity)

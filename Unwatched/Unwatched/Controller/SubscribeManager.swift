@@ -44,7 +44,7 @@ import UnwatchedShared
     }
 
     func getSubscriptionSystemName(video: Video?) -> String? {
-        guard let video = video else {
+        guard let video else {
             return nil
         }
         if isSubscribedSuccess == true {

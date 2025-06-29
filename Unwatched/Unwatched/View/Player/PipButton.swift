@@ -19,5 +19,11 @@ struct PipButton: View {
                 .playerToggleModifier(isOn: player.pipEnabled, isSmall: true)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .help(helper)
+        .accessibilityLabel(helper)
+    }
+
+    var helper: String {
+        player.pipEnabled ? String(localized: "exitPip") : String(localized: "enterPip")
     }
 }

@@ -31,5 +31,6 @@ struct PreviousChapterButton<Content>: View where Content: View {
         }
         .help("previousChapter")
         .sensoryFeedback(Const.sensoryFeedback, trigger: actionToggle)
+        .accessibilityLabel(String(localized: "previousChapter"))
     }
 }

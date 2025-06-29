@@ -54,64 +54,54 @@ struct FullscreenOverlayControls: View {
 
                 .allowsHitTesting(false)
 
-            if player.videoEnded {
-                HStack {
-                    WatchedButton(
-                        markVideoWatched: markVideoWatched,
-                        indicateWatched: false,
-                        backgroundColor: .clear
-                    )
-                    .backgroundTransparentEffect(fallback: .ultraThinMaterial)
-                    .frame(maxWidth: .infinity)
+            HStack {
+                WatchedButton(
+                    markVideoWatched: markVideoWatched,
+                    backgroundColor: .clear
+                )
+                .backgroundTransparentEffect(fallback: .ultraThinMaterial)
+                .frame(maxWidth: .infinity)
 
-                    CorePlayButton(
-                        circleVariant: true,
-                        enableHaptics: true,
-                        enableHelperPopup: false
-                    ) { image in
-                        image
-                            .resizable()
-                            .frame(width: 90, height: 90)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.primary, .clear)
-                            .fontWeight(.black)
-                    }
-                    .backgroundTransparentEffect(fallback: .regularMaterial)
-
-                    NextVideoButton(
-                        markVideoWatched: markVideoWatched,
-                        backgroundColor: .clear
-                    )
-                    .backgroundTransparentEffect(fallback: .ultraThinMaterial)
-                    .frame(maxWidth: .infinity)
+                CorePlayButton(
+                    circleVariant: true,
+                    enableHaptics: true,
+                    enableHelperPopup: false
+                ) { image in
+                    image
+                        .resizable()
+                        .frame(width: 90, height: 90)
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.primary, .clear)
+                        .fontWeight(.black)
                 }
-                .frame(maxWidth: 500)
-                .padding(.horizontal, 10)
-                .opacity(enabled && show ? 0.98 : 0)
-                .animation(.default, value: show)
+                .backgroundTransparentEffect(fallback: .regularMaterial)
+
+                NextVideoButton(
+                    markVideoWatched: markVideoWatched,
+                    backgroundColor: .clear
+                )
+                .backgroundTransparentEffect(fallback: .ultraThinMaterial)
+                .frame(maxWidth: .infinity)
             }
-        }
-    }
-}
-
-struct BackgroundTranparencyEffect: ViewModifier {
-    var fallback: Material
-
-    func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
-            content
-                .glassEffect()
-        } else {
-            content
-                .background(fallback)
-                .clipShape(Circle())
+            .frame(maxWidth: 500)
+            .padding(.horizontal, 10)
+            .opacity(player.videoEnded && enabled && show ? 1 : 0)
+            .allowsHitTesting(player.videoEnded && enabled && show)
+            .animation(.default, value: show)
         }
     }
 }
 
 extension View {
     func backgroundTransparentEffect(fallback: Material) -> some View {
-        self.modifier(BackgroundTranparencyEffect(fallback: fallback))
+        // if #available(iOS 26, *) {
+        //     content
+        //         .glassEffect()
+        // } else {
+        self
+            .background(fallback)
+            .clipShape(Circle())
+        // }
     }
 }
 

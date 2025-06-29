@@ -68,20 +68,12 @@ extension VideoService {
     }
 
     static func moveVideoToInbox(_ video: Video, modelContext: ModelContext) {
-        if video.inboxEntry != nil {
-            clearEntries(
-                from: video,
-                except: InboxEntry.self,
-                modelContext: modelContext
-            )
-        } else {
-            clearEntries(
-                from: video,
-                modelContext: modelContext
-            )
-            let inboxEntry = InboxEntry(video)
-            modelContext.insert(inboxEntry)
-        }
+        clearEntries(
+            from: video,
+            modelContext: modelContext
+        )
+        let inboxEntry = InboxEntry(video)
+        modelContext.insert(inboxEntry)
     }
 
     static func clearAllInboxEntries(_ modelContext: ModelContext) {
@@ -203,7 +195,7 @@ extension VideoService {
     static func insertQueueEntries(at index: Int = 0,
                                    videos: [Video],
                                    modelContext: ModelContext) {
-        // workaround: update queue on main thread, animaitons don't work on iOS 18 otherwise
+        // workaround: update queue on main thread, animations don't work on iOS 18 otherwise
         VideoActor.insertQueueEntries(
             at: index,
             videos: videos,
@@ -339,9 +331,7 @@ extension VideoService {
 
         if let lastChapter = video.sortedChapters.last {
             let time = lastChapter.endTime ?? lastChapter.startTime
-            if let timeText = time.formattedSecondsColon {
-                return (duration, ">\(timeText)")
-            }
+            return (duration, ">\(time.formattedSecondsColon)")
         }
 
         return (duration, nil)

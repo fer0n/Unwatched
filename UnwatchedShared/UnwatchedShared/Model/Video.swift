@@ -39,10 +39,10 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var youtubeChannelId: String?
     public var isYtShort: Bool?
     public var bookmarkedDate: Date?
-    
+
     public var createdDate: Date?
     public var isNew: Bool = false
-    
+
     public var subscriptionData: (any SubscriptionData)? {
         return subscription
     }
@@ -53,19 +53,19 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var persistentId: PersistentIdentifier? {
         persistentModelID
     }
-    
+
     public var sortedChapters: [Chapter] {
         Video.getSortedChapters(mergedChapters, chapters)
     }
-    
+
     public var sortedChapterData: [ChapterData] {
         Video.getSortedChapters(mergedChapters, chapters)
     }
-    
+
     public var hasInboxEntry: Bool? {
         inboxEntry != nil
     }
-    
+
     public static func getSortedChapters<T: ChapterData>(
         _ mergedChapters: [T]?,
         _ chapters: [T]?
@@ -96,7 +96,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var description: String {
         return "Video: \(title) (\(url?.absoluteString ?? ""))"
     }
-    
+
     public var queueEntryData: QueueEntryData? {
         queueEntry
     }
@@ -122,9 +122,9 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             hasInboxEntry: inboxEntry != nil,
             queueEntry: queueEntry?.toExport,
             isNew: isNew,
-        )
+            )
     }
-    
+
     public var toExportWithSubscription: SendableVideo? {
         var video = toExport
         video?.subscription = subscription?.toExport
@@ -148,7 +148,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 bookmarkedDate: Date? = nil,
                 createdDate: Date? = .now,
                 isNew: Bool = false,
-    ) {
+                ) {
         self.title = title
         self.url = url
         self.youtubeId = youtubeId

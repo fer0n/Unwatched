@@ -12,7 +12,7 @@ struct ImageAccentBackground: ViewModifier {
 
     var url: URL?
     let topPadding: CGFloat = 200
-    let gradientStart: CGFloat = 55
+    let gradientStart: CGFloat = 70
 
     func body(content: Content) -> some View {
         content
@@ -23,6 +23,9 @@ struct ImageAccentBackground: ViewModifier {
                     startPoint: .top,
                     endPoint: .bottom
                 )
+                #if os(macOS)
+                .padding(.horizontal, -15)
+                #endif
             )
             .padding(.top, topPadding - gradientStart)
             .listRowInsets(EdgeInsets(top: -topPadding, leading: 0, bottom: 0, trailing: 0))

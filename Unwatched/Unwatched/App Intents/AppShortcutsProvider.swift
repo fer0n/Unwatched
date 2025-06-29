@@ -33,6 +33,18 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             shortTitle: "WatchInUnwatched",
             systemImageName: "play.circle.fill"
         )
+        AppShortcut(
+            intent: NextVideoChapter(),
+            phrases: ["Skip to next Video Chapter in ${applicationName}", "Next ${applicationName} Chapter"],
+            shortTitle: "nextChapter",
+            systemImageName: "chevron.right.2"
+        )
+        AppShortcut(
+            intent: PreviousVideoChapter(),
+            phrases: ["Skip to previous Video Chapter in ${applicationName}", "Previous ${applicationName} Chapter"],
+            shortTitle: "previousChapter",
+            systemImageName: "chevron.left.2"
+        )
     }
 
     static let shortcutTileColor: ShortcutTileColor = .teal

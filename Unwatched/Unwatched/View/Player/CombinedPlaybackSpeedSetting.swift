@@ -123,21 +123,12 @@ struct CombinedPlaybackSpeedSetting: View {
     }
 }
 
-struct SpeedSelectionBackgroundModifier: ViewModifier {
-    let isTransparent: Bool
-
-    func body(content: Content) -> some View {
-        content
-            .background {
-                Capsule()
-                    .fill(Color.backgroundColor.opacity(isTransparent ? 0.5 : 1))
-            }
-    }
-}
-
 extension View {
     public func speedSelectionBackground(isTransparent: Bool = true) -> some View {
-        modifier(SpeedSelectionBackgroundModifier(isTransparent: isTransparent))
+        self.background {
+            Capsule()
+                .fill(Color.backgroundColor.opacity(isTransparent ? 0.5 : 1))
+        }
     }
 }
 

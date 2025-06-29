@@ -77,17 +77,18 @@ extension PlayerManager {
 
     @MainActor
     var currentRemainingText: String? {
-        if let remaining = currentRemaining,
-           let rem = remaining.getFormattedSeconds(for: [.minute, .hour]) {
-            return "\(rem)"
-        }
-        return nil
+        currentRemaining?.formatTimeMinimal
     }
 
     @MainActor
     func playVideo(_ video: Video) {
         self.videoSource = .userInteraction
-        self.video = video
+        if self.video != video {
+            self.video = video
+        } else {
+            Log.info("playVideo: video already playing")
+            play()
+        }
     }
 
     @MainActor
@@ -131,19 +132,19 @@ extension PlayerManager {
     }
 
     @MainActor
-    func seekForward() -> Bool {
-        seek(backward: false)
+    func seekForward(_ seconds: Double? = nil) -> Bool {
+        seek(backward: false, seconds ?? Const.seekSeconds)
     }
 
     @MainActor
-    func seekBackward() -> Bool {
-        seek(backward: true)
+    func seekBackward(_ seconds: Double? = nil) -> Bool {
+        seek(backward: true, seconds ?? Const.seekSeconds)
     }
 
     @MainActor
-    func seek(backward: Bool) -> Bool {
-        if video != nil && unstarted == false {
-            let seek = backward ? -Const.seekSeconds : Const.seekSeconds
+    func seek(backward: Bool, _ seconds: Double) -> Bool {
+        if video != nil {
+            let seek = backward ? -seconds : seconds
             seekRelative = seek
             if !isPlaying {
                 currentTime? += seek
@@ -318,7 +319,7 @@ extension PlayerManager {
 
     @MainActor
     func setVideoEnded(_ value: Bool) {
-        Log.info("setVideoEnded")
+        Log.info("setVideoEnded \(value)")
         if value != videoEnded {
             withAnimation {
                 videoEnded = value

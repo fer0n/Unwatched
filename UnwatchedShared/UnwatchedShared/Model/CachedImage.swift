@@ -12,7 +12,7 @@ import SwiftUI
     @Attribute(.externalStorage) public var imageData: Data?
     public var createdOn: Date?
     public var colorHex: String?
-    
+
     public var color: Color? {
         get {
             guard let colorHex else { return nil }
@@ -34,5 +34,3 @@ import SwiftUI
         self.color = color
     }
 }
-
-

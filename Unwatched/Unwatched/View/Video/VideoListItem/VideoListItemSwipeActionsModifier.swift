@@ -99,7 +99,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func performVideoAction(
         isNew: Bool? = nil,
         asyncAction: ((PersistentIdentifier) -> (Task<Void, Error>)?)?,
-        syncAction: ((Video) -> Void)?
+        syncAction: ((Video) -> Void)?,
+        changeReason: ChangeReason? = nil
     ) {
         Log.info("performVideoAction")
 
@@ -111,7 +112,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Task {
                 try? await task?.value
                 try? await isNewTask?.value
-                config.onChange?()
+                config.onChange?(changeReason)
             }
         } else {
             guard let video = getVideo() else {
@@ -122,7 +123,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             order = order ?? video.queueEntry?.order
             syncAction?(video)
             try? modelContext.save()
-            config.onChange?()
+            config.onChange?(changeReason)
         }
         handlePotentialQueueChange(after: task, order: order)
     }
@@ -144,13 +145,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func handleIsNew(_ video: Video, _ isNew: Bool?) {
         if let isNew,
            videoData.isNew != isNew {
-            if video.inboxEntry != nil {
-                video.isNew = isNew
-            } else {
-                withAnimation {
-                    video.isNew = isNew
-                }
-            }
+            video.isNew = isNew
         }
     }
 
@@ -170,7 +165,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     videos: [video],
                     modelContext: modelContext
                 )
-            }
+            },
+            changeReason: .queue
         )
     }
 
@@ -188,26 +184,29 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     video: video,
                     modelContext: modelContext
                 )
-            }
+            },
+            changeReason: .queue
         )
     }
 
     func moveToInbox() {
         Log.info("moveToInbox")
-        performVideoAction(
-            isNew: false,
-            asyncAction: { videoId in
-                VideoService.moveVideoToInboxAsync(
-                    videoId
-                )
-            },
-            syncAction: { video in
-                VideoService.moveVideoToInbox(
-                    video,
-                    modelContext: modelContext
-                )
-            }
-        )
+        withAnimation {
+            performVideoAction(
+                isNew: false,
+                asyncAction: { videoId in
+                    VideoService.moveVideoToInboxAsync(
+                        videoId
+                    )
+                },
+                syncAction: { video in
+                    VideoService.moveVideoToInbox(
+                        video,
+                        modelContext: modelContext
+                    )
+                }
+            )
+        }
     }
 
     func toggleBookmark() {
@@ -232,7 +231,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             let task = VideoService.setIsNew(videoId, isNew)
             Task {
                 try? await task.value
-                config.onChange?()
+                config.onChange?(nil)
             }
         }
     }
@@ -269,7 +268,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     from: video,
                     modelContext: modelContext
                 )
-            }
+            },
+            changeReason: .clear
         )
         if videoData.isYtShort == true {
             HideShortsTip.clearedShorts += 1
@@ -289,6 +289,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Log.error("clearList: no video")
             return
         }
+        config.onChange?(direction == .above ? .clearAbove : .clearBelow)
         let task = VideoService.clearList(
             list,
             direction,
@@ -297,7 +298,6 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         if list == .queue && direction == .above {
             player.loadTopmostVideoFromQueue(after: task)
         }
-        config.onChange?()
     }
 
     func deleteVideo() {
@@ -306,7 +306,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             withAnimation {
                 CleanupService.deleteVideo(video, modelContext)
                 try? modelContext.save()
-                config.onChange?()
+                config.onChange?(nil)
             }
         }
     }

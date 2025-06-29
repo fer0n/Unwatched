@@ -41,12 +41,13 @@ struct FullscreenSpeedControlContent: View {
                 triggerChange(viewModel.currentPage)
             }
         }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage)
+        .sensoryFeedback(Const.sensoryFeedback, trigger: viewModel.currentPage) { old, _ in
+            old != nil
+        }
         .scrollTargetBehavior(.viewAligned)
         .safeAreaPadding(.vertical, 20)
         .scrollPosition(id: $viewModel.currentPage, anchor: .center)
         .scrollIndicators(.never)
-        .animation(.default, value: viewModel.currentPage)
         .mask(viewModel.mask)
         .frame(width: 50, height: 50)
         .frame(width: viewModel.isScrolling ? nil : 22, height: viewModel.isScrolling ? nil : 22)
@@ -64,8 +65,10 @@ struct FullscreenSpeedControlContent: View {
                 } catch { }
             }
         }
-        .onChange(of: value, initial: true) {
-            viewModel.setCurrentPage(value)
+        .onChange(of: value) {
+            withAnimation {
+                viewModel.setCurrentPage(value)
+            }
         }
         .task {
             viewModel.handleAppear(value)
@@ -82,12 +85,13 @@ struct FullscreenSpeedControlContent: View {
         }
         onChange(speed)
     }
+}
 
+extension FullscreenSpeedControlContent {
     @Observable class ViewModel {
         var isScrolling = false
         var task: Task<Void, Never>?
         var currentPage: Int?
-        @ObservationIgnored var isInitialScrolling = true
 
         private var scrollingMask: LinearGradient {
             LinearGradient(gradient: Gradient(
@@ -125,24 +129,17 @@ struct FullscreenSpeedControlContent: View {
         }
 
         func handleScrolling(_ isActive: Bool) {
-            if isActive || isInitialScrolling {
+            if isActive {
                 isScrolling = isActive
             } else {
                 withAnimation {
                     isScrolling = isActive
                 }
             }
-            if isInitialScrolling && !isActive {
-                // initial scrolling on appear shouldn't be animated
-                isInitialScrolling = false
-            }
         }
 
         func handleAppear(_ value: Double) {
-            if value == ViewModel.speeds.first {
-                isInitialScrolling = false
-                isScrolling = false
-            }
+            setCurrentPage(value)
         }
 
         static let speeds: [Double] = Const.speeds.reversed()
@@ -154,29 +151,18 @@ struct FullscreenSpeedControlContent: View {
     }
 }
 
-struct OnScrollInteractionModifier: ViewModifier {
-    let action: (_ isActive: Bool) -> Void
-
-    func body(content: Content) -> some View {
-        if #available(iOS 18, *) {
-            content
-                .onScrollPhaseChange { oldPhase, newPhase in
-                    if oldPhase == .idle && newPhase != .idle {
-                        action(true)
-                    } else if oldPhase != .idle && newPhase == .idle {
-                        action(false)
-                    } else if oldPhase == .animating && newPhase == .interacting {
-                        action(true)
-                    }
-                }
-        } else {
-            content
-        }
-    }
-}
-
 extension View {
     func onScrollInteraction(_ action: @escaping (Bool) -> Void) -> some View {
-        modifier(OnScrollInteractionModifier(action: action))
+        if #available(iOS 18, *) {
+            return self.onScrollPhaseChange { oldPhase, newPhase in
+                if oldPhase == .idle && newPhase != .idle {
+                    action(true)
+                } else if oldPhase != .idle && newPhase == .idle {
+                    action(false)
+                }
+            }
+        } else {
+            return self
+        }
     }
 }

@@ -110,6 +110,7 @@ struct NextVideoButton: View {
                                       stroke: stroke,
                                       backgroundColor: backgroundColor)
         }
+        .geometryGroup()
     }
 }
 

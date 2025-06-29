@@ -4,8 +4,8 @@ import UnwatchedShared
 struct ChapterListItem: View {
     var chapter: Chapter
     var toggleChapter: (_ chapter: Chapter) -> Void
-    var timeText: String?
     var spacing: CGFloat = 5
+    var currentTime: Double?
 
     @ScaledMetric var frameSize = 30
     @State var toggleHaptic = false
@@ -21,14 +21,19 @@ struct ChapterListItem: View {
                         .lineLimit(3)
                         .multilineTextAlignment(.leading)
                         .foregroundStyle(.primary)
+                        .accessibilityElement()
+                        .accessibilityLabel(title)
                 }
-                if let timeText {
-                    Text(timeText)
+                let timeInfo = ChapterTimeInfo(chapter: chapter, currentTime: currentTime)
+                if let short = timeInfo.short, let verbose = timeInfo.verbose {
+                    Text(short)
                         .font(.subheadline.monospacedDigit())
-                        .animation(.default, value: timeText)
+                        .animation(.default, value: short)
                         .contentTransition(.numericText(countsDown: true))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
+                        .accessibilityElement()
+                        .accessibilityLabel(verbose)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,8 +71,36 @@ struct ChapterListItem: View {
             .animation(nil, value: chapter.isActive)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(chapter.isActive ? "chapterOn" : "chapterOff")
         .sensoryFeedback(Const.sensoryFeedback, trigger: toggleHaptic)
+        .accessibilityElement()
+        .accessibilityValue(accessibilityLabelToggle)
+        .accessibilityAction {
+            toggleChapter(chapter)
+            toggleHaptic.toggle()
+        }
+    }
+
+    var accessibilityLabelToggle: String {
+        chapter.isActive ? String(localized: "disable") : String(localized: "enable")
+    }
+
+    struct ChapterTimeInfo {
+        let short: String?
+        let verbose: String?
+
+        init(chapter: Chapter, currentTime: Double?) {
+            if let currentTime, let endTime = chapter.endTime {
+                let remaining = endTime - currentTime
+                self.short = String(localized: "\(remaining.formattedSeconds) remaining")
+                self.verbose = String(localized: "\(Duration.seconds(remaining).formatted(.units())) remaining")
+            } else if let duration = chapter.duration {
+                self.short = duration.formattedSeconds
+                self.verbose = Duration.seconds(duration).formatted(.units())
+            } else {
+                self.short = nil
+                self.verbose = nil
+            }
+        }
     }
 }
 
@@ -77,14 +110,16 @@ struct ChapterListItem: View {
             title: "Hello there",
             time: 102
         ), toggleChapter: { _ in },
-        timeText: "0 remaining")
+        currentTime: 10,
+        )
         .background(Color.gray)
 
         ChapterListItem(chapter: Chapter(
             title: nil,
             time: 102
         ), toggleChapter: { _ in },
-        timeText: "0 remaining")
+        currentTime: 10,
+        )
         .background(Color.gray)
     }
 }

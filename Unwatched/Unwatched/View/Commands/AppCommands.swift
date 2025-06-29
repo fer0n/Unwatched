@@ -21,6 +21,19 @@ struct AppCommands: Commands {
 
         CommandGroup(after: .toolbar) {
             Section {
+                Menu {
+                    PlayerShortcut.goToQueue.render()
+                    PlayerShortcut.goToInbox.render()
+                    PlayerShortcut.goToLibrary.render()
+                    if Const.browserAsTab.bool ?? false {
+                        PlayerShortcut.goToBrowser.render()
+                    }
+                } label: {
+                    Text("goToTab")
+                }
+            }
+
+            Section {
                 PlayerShortcut.refresh.render()
                 PlayerShortcut.reloadPlayer.render()
             }

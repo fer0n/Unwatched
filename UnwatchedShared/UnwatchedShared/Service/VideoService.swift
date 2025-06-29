@@ -19,10 +19,10 @@ public struct VideoService {
         }
         try? modelContext.save()
     }
-    
+
     public static func clearEntries(from video: Video,
-                             except model: (any PersistentModel.Type)? = nil,
-                             modelContext: ModelContext) {
+                                    except model: (any PersistentModel.Type)? = nil,
+                                    modelContext: ModelContext) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
             deleteInboxEntry(inboxEntry, modelContext: modelContext)
         }
@@ -31,7 +31,7 @@ public struct VideoService {
         }
         try? modelContext.save()
     }
-    
+
     public static func deleteQueueEntry(
         _ queueEntry: QueueEntry,
         updateOrder: Bool = true,
@@ -51,12 +51,12 @@ public struct VideoService {
         entry.video?.isNew = false
         modelContext.delete(entry)
     }
-    
+
     public static func updateQueueOrderDelete(deletedOrder: Int, modelContext: ModelContext) {
         do {
             let fetchDescriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
             let queue = try modelContext.fetch(fetchDescriptor)
-            
+
             for (index, queueEntry) in queue.enumerated() {
                 queueEntry.order = index
             }

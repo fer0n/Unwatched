@@ -37,8 +37,7 @@ struct FullscreenPlayerControlsWrapper: View {
                 }
             })
             .frame(width: nonEmbedding ? 60 : 0)
-            .opacity(showControls ? 1 : 0)
-            .animation(.easeInOut(duration: 3), value: player.videoIsCloseToEnd)
+            .modifier(ShowFullscreenControlsViewModifier(showControls: showControls))
         }
     }
 
@@ -46,6 +45,20 @@ struct FullscreenPlayerControlsWrapper: View {
         fullscreenControlsSetting == .enabled
             || !player.isPlaying
             || autoHideVM.showControls
-            || player.videoIsCloseToEnd
+    }
+}
+
+struct ShowFullscreenControlsViewModifier: ViewModifier {
+    @Environment(PlayerManager.self) var player
+    var showControls: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .opacity(showControlsLocal ? 1 : 0)
+            .animation(.easeInOut(duration: 3), value: player.videoIsCloseToEnd)
+    }
+
+    var showControlsLocal: Bool {
+        showControls || player.videoIsCloseToEnd
     }
 }

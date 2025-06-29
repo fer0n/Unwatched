@@ -16,11 +16,11 @@ public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
     case queueLast = 4
     case nothing = 2
     case defaultPlacement = 3
-    
+
     public static func isQueue(_ placement: VideoPlacement?) -> Bool {
         placement == .queueLast || placement == .queueNext
     }
-    
+
     public var resolvedPlacement: VideoPlacement {
         if self == .defaultPlacement {
             let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)

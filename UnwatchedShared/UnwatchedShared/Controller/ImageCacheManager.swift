@@ -16,10 +16,10 @@ import OSLog
     public static let shared: ImageCacheManager = {
         ImageCacheManager()
     }()
-    
+
     private var cache = [String: ImageCacheInfo]()
     public init() { }
-    
+
     public subscript(id: String?) -> ImageCacheInfo? {
         get {
             guard let id else { return nil }
@@ -57,7 +57,7 @@ public struct ImageCacheInfo: Sendable {
     public var color: Color?
     public var persistImage: Bool
     public var persistColor: Bool
-    
+
     public init(
         url: URL,
         data: Data,

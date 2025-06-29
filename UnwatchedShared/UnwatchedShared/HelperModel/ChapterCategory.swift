@@ -39,7 +39,7 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return ".generated"
         }
     }
-    
+
     public var hasPriority: Bool {
         self == .sponsor
     }

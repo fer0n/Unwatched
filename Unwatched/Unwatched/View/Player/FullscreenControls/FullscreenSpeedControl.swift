@@ -86,10 +86,7 @@ struct FullscreenSpeedControl: View {
         .highPriorityGesture(
             TapGesture()
                 .onEnded { _ in
-                    if !showSpeedControl && !isInteracting {
-                        showSpeedControl = true
-                        autoHideVM.keepVisible = true
-                    }
+                    handleTap()
                 }
         )
         .frame(width: 35)
@@ -102,8 +99,7 @@ struct FullscreenSpeedControl: View {
                 .frame(width: 350)
                 .environment(\.colorScheme, .dark)
                 .if(!Const.iOS26) { view in
-                    view
-                        .presentationBackground(.black)
+                    view.presentationBackground(.ultraThinMaterial)
                 }
                 .presentationCompactAdaptation(.popover)
                 .onDisappear {
@@ -112,10 +108,26 @@ struct FullscreenSpeedControl: View {
                 .fontWeight(nil)
                 .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
         }
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAction {
+            handleTap()
+        }
     }
 
     var customSetting: Bool {
         player.video?.subscription?.customSpeedSetting != nil
+    }
+
+    var accessibilityLabel: String {
+        let speedText = SpeedControlViewModel.formatSpeed(player.debouncedPlaybackSpeed)
+        return String(localized: "playbackSpeed \(speedText)")
+    }
+
+    func handleTap() {
+        if !showSpeedControl && !isInteracting {
+            showSpeedControl = true
+            autoHideVM.keepVisible = true
+        }
     }
 }
 

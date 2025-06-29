@@ -9,8 +9,8 @@ import SwiftUI
 import OSLog
 
 @Observable class VideoListVM: TransactionVM<Video> {
-    @ObservationIgnored private(set) var initialBatchSize: Int = 150
-    @ObservationIgnored private var pageSize: Int = 250
+    @ObservationIgnored private(set) var initialBatchSize: Int
+    @ObservationIgnored private var pageSize: Int = 100
 
     @MainActor
     var videos = [SendableVideo]()
@@ -22,7 +22,7 @@ import OSLog
     var manualFilter: (@Sendable (Video) -> Bool)?
     private var sort: [SortDescriptor<Video>] = []
 
-    init(initialBatchSize: Int = 150) {
+    init(initialBatchSize: Int = 50) {
         self.initialBatchSize = initialBatchSize
     }
 

@@ -9,6 +9,32 @@ import UnwatchedShared
 
 // swiftlint:disable all
 class ExportableTests: XCTestCase {
+    func testLegacyBackup() async {
+        let data = (try? DataSpeedTests.loadFileData(for: "backup-legacy.json"))!
+        await VideoService.deleteEverything()
+        UserDataService.importBackup(data)
+        let context = DataProvider.newContext()
+
+        // 3 subscriptions
+        let fetch = FetchDescriptor<Subscription>()
+        let subs = try? context.fetch(fetch)
+        XCTAssertEqual(subs?.count, 3, "Expected 3 subscriptions in legacy backup")
+
+        // check sub value
+
+        let sub = subs?.first(where: { $0.title == "Marques Brownlee" })
+        XCTAssertNotNil(sub, "Expected Marques Brownlee subscription in legacy backup")
+        XCTAssertEqual(sub?.youtubeChannelId, "UCBJycsmduvYEL83R_U4JriQ")
+        XCTAssertEqual(sub?.youtubeUserName, "mkbhd")
+        XCTAssertEqual(sub?.link?.absoluteString, "https://www.youtube.com/feeds/videos.xml?channel_id=UCBJycsmduvYEL83R_U4JriQ")
+        XCTAssertEqual(sub?.title, "Marques Brownlee")
+        XCTAssertEqual(sub?.videoPlacement, .queueNext)
+        XCTAssertGreaterThan(sub?.videos?.count ?? 0, 0)
+        XCTAssertEqual(sub?.isArchived, false)
+        XCTAssertEqual(sub?.thumbnailUrl?.absoluteString, "https://yt3.googleusercontent.com/PEwQfVuhh5jO7_NDDufCq349q0W6MgZeYlgeMyW3OSRMxMx9W5yre5Fgbi4Bql56L1cPwoteOA=s900-c-k-c0x00ffffff-no-rj")
+    }
+
+
     func testBackup() async {
         let context = DataProvider.newContext()
 

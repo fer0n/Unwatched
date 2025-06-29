@@ -8,6 +8,8 @@ import SwiftData
 import UnwatchedShared
 
 struct ChapterMiniControlView: View {
+    @Namespace var namespace
+
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
@@ -87,6 +89,7 @@ struct ChapterMiniControlView: View {
                         }
                     }
                     .frame(maxWidth: link == nil ? nil : .infinity)
+                    .geometryGroup()
 
                     if hasChapters {
                         HStack(spacing: limitHeight ? 0 : -5) {
@@ -102,9 +105,13 @@ struct ChapterMiniControlView: View {
 
                             if inlineTime {
                                 ChapterMiniControlRemainingText()
+                                    .matchedGeometryEffect(id: "remainingText", in: namespace)
                                     .allowsHitTesting(false)
                             }
                         }
+                        .accessibilityElement()
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("nextChapter")
                     } else {
                         Color.clear.fixedSize()
                     }
@@ -123,8 +130,10 @@ struct ChapterMiniControlView: View {
 
                         if hasChapters {
                             ChapterMiniControlRemainingText()
+                                .matchedGeometryEffect(id: "remainingText", in: namespace)
                                 .allowsHitTesting(false)
                                 .frame(height: 0)
+                                .accessibilityHidden(true)
                         } else {
                             EmptyView()
                         }
@@ -164,18 +173,13 @@ struct ChapterMiniControlView: View {
 }
 
 struct ChapterMiniControlRemainingText: View {
-    @Environment(PlayerManager.self) var player
-
     var body: some View {
-        if let remaining = player.currentRemainingText {
-            Text(remaining)
-                .font(.system(size: 12).monospacedDigit())
-                .fontWidth(.condensed)
-                .animation(.default, value: player.currentRemainingText)
-                .contentTransition(.numericText(countsDown: true))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-        }
+        ChapterTimeRemaining()
+            .font(.system(size: 12).monospacedDigit())
+            .fontWidth(.condensed)
+            .contentTransition(.numericText(countsDown: true))
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
     }
 }
 

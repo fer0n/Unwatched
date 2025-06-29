@@ -94,7 +94,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             self.date = date
         }
     }
-    
+
     @Model
     public final class Subscription {
         public typealias ExportType = SendableSubscription
@@ -185,7 +185,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             )
         }
     }
-    
+
     @Model
     public final class QueueEntry {
         public typealias ExportType = SendableQueueEntry
@@ -209,7 +209,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             return nil
         }
     }
-    
+
     @Model
     public final class InboxEntry {
         public typealias ExportType = SendableInboxEntry
@@ -238,7 +238,7 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
             return nil
         }
     }
-    
+
     @Model
     public final class Chapter {
 

@@ -19,7 +19,7 @@ struct ContentView: View {
     }
 
     var bigScreen: Bool {
-        sizeClass == .regular && !Device.isIphone
+        Device.isBigScreen(sizeClass)
     }
 
     var body: some View {

@@ -89,7 +89,7 @@ struct IOSSPlitView: View {
         layout {
             VideoPlayer(
                 compactSize: bigScreen,
-                horizontalLayout: hideControlsFullscreen,
+                horizontalLayout: hideControlsFullscreen && isLandscape,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen
             )
@@ -111,6 +111,11 @@ struct IOSSPlitView: View {
                         ))
                     }
                     .edgesIgnoringSafeArea(.all)
+                    .transition(
+                        isLandscape
+                            ? .move(edge: .trailing)
+                            : .offset(y: proxy.size.height * 0.4 + proxy.safeAreaInsets.bottom)
+                    )
                     .environment(\.layoutDirection, .leftToRight)
             }
         }

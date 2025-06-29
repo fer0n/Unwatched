@@ -91,19 +91,25 @@ import UnwatchedShared
     func setDetentVideoPlayer() {
         Log.info("setDetentVideoPlayer()")
         selectedDetent = .height(playerControlHeight)
+        setSwipedBelow(true)
     }
 
     func setDetentMinimumSheet() {
         Log.info("setDetentMinimumSheet()")
         selectedDetent = .height(Const.minSheetDetent)
+        setSwipedBelow(true)
     }
 
     // global position changes
     func handleSheetMinYUpdate(_ minY: CGFloat) {
         let value = minY - sheetDistanceToTop
         let newBelow = value > 50 || minY == 0 // after dismissing the sheet minY becomes 0
-        if newBelow != swipedBelow {
-            swipedBelow = newBelow
+        setSwipedBelow(newBelow)
+    }
+
+    func setSwipedBelow(_ value: Bool) {
+        if swipedBelow != value {
+            swipedBelow = value
         }
     }
 }

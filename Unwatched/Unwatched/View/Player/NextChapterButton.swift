@@ -32,8 +32,9 @@ struct NextChapterButton<Content>: View where Content: View {
             )
             .symbolEffect(.bounce.down, value: actionToggle)
         }
-        .help("nextChapter")
         .sensoryFeedback(Const.sensoryFeedback, trigger: actionToggle)
+        .help("nextChapter")
+        .accessibilityLabel(String(localized: "nextChapter"))
     }
 
     var innerImage: Image {

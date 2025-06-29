@@ -117,7 +117,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return (youtubeId, placement)
     }
 
-    nonisolated func handleNotificationActions(_ response: UNNotificationResponse) -> (youtubeId: String, wasCleared: Bool)? {
+    nonisolated func handleNotificationActions(
+        _ response: UNNotificationResponse
+    ) -> (
+        youtubeId: String,
+        wasCleared: Bool
+    )? {
         guard let (youtubeId, _) = getValuesFromNotification(response.notification) else {
             Log.warning("handleNotificationActions: Cannot get values from notification")
             return nil

@@ -5,7 +5,6 @@
 
 import SwiftData
 
-
 public enum CachedImageMigrationPlan: SchemaMigrationPlan {
     public static var schemas: [any VersionedSchema.Type] {
         [
@@ -14,7 +13,7 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
             CachedImageSchemaV1p2.self
         ]
     }
-    
+
     static let migrateCachedImageV1toV1p1 = MigrationStage.custom(
         fromVersion: CachedImageSchemaV1.self,
         toVersion: CachedImageSchemaV1p1.self,
@@ -24,7 +23,7 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
             try? context.save()
         }, didMigrate: nil
     )
-    
+
     static let migrateCachedImageV1p1toV1p2 = MigrationStage.custom(
         fromVersion: CachedImageSchemaV1p1.self,
         toVersion: CachedImageSchemaV1p2.self,

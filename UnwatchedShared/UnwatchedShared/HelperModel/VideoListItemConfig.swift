@@ -15,7 +15,7 @@ public struct VideoListItemConfig {
     public let showAllStatus: Bool
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
-    public let onChange: (() -> Void)?
+    public let onChange: ((_ reason: ChangeReason?) -> Void)?
     public let clearAboveBelowList: ClearList?
     public let showQueueButton: Bool
     public let showContextMenu: Bool
@@ -33,7 +33,7 @@ public struct VideoListItemConfig {
         showAllStatus: Bool = true,
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
-        onChange: (() -> Void)? = nil,
+        onChange: ((_ reason: ChangeReason?) -> Void)? = nil,
         clearAboveBelowList: ClearList? = nil,
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
@@ -62,4 +62,11 @@ public struct VideoListItemConfig {
         self.showDelete = showDelete
         self.async = async
     }
+}
+
+public enum ChangeReason {
+    case clear,
+         queue,
+         clearAbove,
+         clearBelow
 }
