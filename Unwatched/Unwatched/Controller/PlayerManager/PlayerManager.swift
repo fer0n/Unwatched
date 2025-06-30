@@ -104,34 +104,59 @@ import UnwatchedShared
     }
 
     @MainActor
-    private func handleNewVideoSet(_ oldValue: Video?) {
-        currentEndTime = 0
-        withAnimation {
-            currentTime = video?.elapsedSeconds ?? 0
+    private func resetVideoIndependentValues() {
+        if currentEndTime != 0 {
+            currentEndTime = 0
         }
-        isPlaying = false
-        currentChapter = nil
-        nextChapter = nil
-        previousChapter = nil
+        let newTime = video?.elapsedSeconds ?? 0
+        if currentTime != newTime {
+            currentTime = newTime
+        }
+        if isPlaying != false {
+            isPlaying = false
+        }
+        if currentChapter != nil {
+            currentChapter = nil
+        }
+        if nextChapter != nil {
+            nextChapter = nil
+        }
+        if previousChapter != nil {
+            previousChapter = nil
+        }
         setVideoEnded(false)
         handleChapterChange()
+    }
+
+    @MainActor
+    private func handleNewVideoSet(_ oldValue: Video?) {
+        resetVideoIndependentValues()
         guard let video else {
             return
         }
-
-        aspectRatio = nil
-        if video.url == oldValue?.url {
+        if video.youtubeId == oldValue?.youtubeId {
             Log.info("Tapped existing video")
             self.play()
             return
         }
-        unstarted = true
+        if aspectRatio != nil {
+            aspectRatio = nil
+        }
+        if unstarted != true {
+            unstarted = true
+        }
         previousState.pipEnabled = false
-        canPlayPip = false
+        if canPlayPip != false {
+            canPlayPip = false
+        }
         handleChapterRefresh()
-        deferVideoDate = nil
-        withAnimation {
-            embeddingDisabled = false
+        if deferVideoDate != nil {
+            deferVideoDate = nil
+        }
+        if embeddingDisabled != false {
+            withAnimation {
+                embeddingDisabled = false
+            }
         }
     }
 

@@ -7,8 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemDetails: View {
-    @Environment(NavigationManager.self) private var navManager
-
     var video: VideoData
     var queueButtonSize: CGFloat?
     var showVideoListOrder: Bool = false
@@ -35,9 +33,7 @@ struct VideoListItemDetails: View {
                         .font(.system(size: subSize))
                         .lineLimit(1)
                         .textCase(.uppercase)
-                        .onTapGesture {
-                            pushSubscription(for: video.subscriptionData)
-                        }
+                        .modifier(SubtitleTapViewModifier(sub: video.subscriptionData))
                 }
 
                 HStack(spacing: 5) {
@@ -64,8 +60,19 @@ struct VideoListItemDetails: View {
         }
         .foregroundStyle(.secondary)
     }
+}
 
-    private func pushSubscription(for sub: (any SubscriptionData)?) {
+struct SubtitleTapViewModifier: ViewModifier {
+    @Environment(NavigationManager.self) private var navManager
+    var sub: (any SubscriptionData)?
+
+    func body(content: Content) -> some View {
+        content.onTapGesture {
+            pushSubscription()
+        }
+    }
+
+    private func pushSubscription() {
         if let sendable = sub as? SendableSubscription {
             navManager.pushSubscription(sendableSubscription: sendable)
         } else if let subscription = sub as? Subscription {

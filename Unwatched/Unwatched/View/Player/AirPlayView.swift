@@ -13,9 +13,8 @@ struct AirPlayButton: View {
     @Environment(PlayerManager.self) var player
 
     var body: some View {
-        let isOn = player.airplayHD
-        AirPlayView(isOn: isOn)
-            .playerToggleModifier(isOn: isOn, isSmall: true)
+        AirPlayView()
+            .playerToggleModifier(isOn: player.airplayHD, isSmall: true)
             .contextMenu {
                 AirPlayHDButton()
             }
@@ -29,7 +28,6 @@ struct AirPlayButton: View {
 struct AirPlayView: View {
     @State private var routePickerView = AVRoutePickerView()
     @State var hapticToggle = false
-    let isOn: Bool
 
     var body: some View {
         Button {
