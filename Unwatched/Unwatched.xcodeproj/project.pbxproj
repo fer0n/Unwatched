@@ -526,8 +526,6 @@
 		88E779172D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
 		88E83E4E2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
 		88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
-		88E83E512D5D484400F596A9 /* AirPlayHDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */; };
-		88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */; };
 		88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
 		88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
@@ -914,7 +912,6 @@
 		88E63F032D75AABF00AC0A89 /* SplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitView.swift; sourceTree = "<group>"; };
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
-		88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayHDButton.swift; sourceTree = "<group>"; };
 		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
@@ -1170,7 +1167,6 @@
 				8889A0662E043EBC002C05BC /* SpeedSliderThumb.swift */,
 				88FA62D72B8485EA00924959 /* PlayButton.swift */,
 				88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */,
-				88E83E502D5D484400F596A9 /* AirPlayHDButton.swift */,
 				889924662C47F4A4001185A6 /* PlayerControls.swift */,
 				88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */,
 				88C965E92D0AB4F700D1AE3E /* PlayerBackgroundGestureRecognizer.swift */,
@@ -2084,7 +2080,6 @@
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
 				8868178C2D773BD300E06A0D /* FaqWindow.swift in Sources */,
 				88F287692DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
-				88E83E512D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				88B6DE382D76F06200CB8E64 /* SettingsWindowView.swift in Sources */,
 				889AF8E52C50ECA9001CEDE6 /* VideoSorting.swift in Sources */,
 				884777372D21509F0044E812 /* AnyCodable.swift in Sources */,
@@ -2253,7 +2248,6 @@
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				889931D72D731AB0009096AB /* PreviousState.swift in Sources */,
-				88E83E522D5D484400F596A9 /* AirPlayHDButton.swift in Sources */,
 				8871A5732DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift in Sources */,
 				88899D9A2E035EA1002C05BC /* TitleFilterContent.swift in Sources */,
 				8808D8232B4AF9FF00B4FF11 /* PlayerToggleStyle.swift in Sources */,
