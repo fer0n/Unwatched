@@ -38,7 +38,7 @@ struct VideoListItemDetails: View {
                 }
 
                 if let published = video.publishedDate {
-                    Text("\(published.formattedRelative) ago")
+                    Text(published.formattedRelative)
                         .font(.system(size: timeSize))
                         .accessibilityLabel(
                             published.formatted(
