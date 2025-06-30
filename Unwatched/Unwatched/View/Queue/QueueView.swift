@@ -11,7 +11,6 @@ import UnwatchedShared
 struct QueueView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
-    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
 
@@ -47,7 +46,6 @@ struct QueueView: View {
                                         clearRole: .destructive,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
-                                        showVideoListOrder: showVideoListOrder,
                                         showDelete: false,
                                         )
                                 )

@@ -62,8 +62,7 @@ struct VideoListItem: View {
                 VideoListItemDetails(
                     video: videoData,
                     queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
-                    showVideoListOrder: config.showVideoListOrder
-                )
+                    )
                 .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
             }
 

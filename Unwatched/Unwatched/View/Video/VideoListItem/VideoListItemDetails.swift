@@ -9,7 +9,6 @@ import UnwatchedShared
 struct VideoListItemDetails: View {
     var video: VideoData
     var queueButtonSize: CGFloat?
-    var showVideoListOrder: Bool = false
 
     @ScaledMetric var titleSize = 15
     @ScaledMetric var subSize   = 14
@@ -37,11 +36,6 @@ struct VideoListItemDetails: View {
                 }
 
                 HStack(spacing: 5) {
-                    if showVideoListOrder,
-                       let order = video.queueEntryData?.order {
-                        Text(verbatim: "#\(order)")
-                    }
-
                     if let published = video.publishedDate {
                         Text("\(published.formattedRelative) ago")
                             .accessibilityLabel(
