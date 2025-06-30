@@ -7,12 +7,12 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemDetails: View {
-    var video: VideoData
+    let video: VideoData
     var queueButtonSize: CGFloat?
 
-    @ScaledMetric var titleSize = 15
-    @ScaledMetric var subSize   = 14
-    @ScaledMetric var timeSize  = 12
+    @ScaledMetric private var titleSize = 15
+    @ScaledMetric private var subSize = 14
+    @ScaledMetric private var timeSize = 12
 
     private var videoTitle: String {
         video.title.isEmpty ? video.youtubeId : video.title
@@ -32,41 +32,32 @@ struct VideoListItemDetails: View {
                         .font(.system(size: subSize))
                         .lineLimit(1)
                         .textCase(.uppercase)
-                        .modifier(SubtitleTapViewModifier(sub: video.subscriptionData))
+                        .onTapGesture {
+                            VideoListItemDetails.handleSubscriptionTap(video.subscriptionData)
+                        }
                 }
 
-                HStack(spacing: 5) {
-                    if let published = video.publishedDate {
-                        Text("\(published.formattedRelative) ago")
-                            .accessibilityLabel(
-                                published.formatted(
-                                    .relative(
-                                        presentation: .numeric,
-                                        unitsStyle: .spellOut
-                                    )
+                if let published = video.publishedDate {
+                    Text("\(published.formattedRelative) ago")
+                        .font(.system(size: timeSize))
+                        .accessibilityLabel(
+                            published.formatted(
+                                .relative(
+                                    presentation: .numeric,
+                                    unitsStyle: .spellOut
                                 )
                             )
-                    }
+                        )
                 }
-                .font(.system(size: timeSize))
             }
             .padding(.trailing, queueButtonSize)
-        }
-        .foregroundStyle(.secondary)
-    }
-}
-
-struct SubtitleTapViewModifier: ViewModifier {
-    @Environment(NavigationManager.self) private var navManager
-    var sub: (any SubscriptionData)?
-
-    func body(content: Content) -> some View {
-        content.onTapGesture {
-            pushSubscription()
+            .foregroundStyle(.secondary)
         }
     }
 
-    private func pushSubscription() {
+    private static func handleSubscriptionTap(_ sub: (any SubscriptionData)?) {
+        guard let sub else { return }
+        let navManager = NavigationManager.shared
         if let sendable = sub as? SendableSubscription {
             navManager.pushSubscription(sendableSubscription: sendable)
         } else if let subscription = sub as? Subscription {

@@ -38,15 +38,16 @@ struct CopyUrlOptions: View {
 
     @ViewBuilder
     var copyChannelUrlButton: some View {
-        if let channel = video.subscription,
-           let urlString = UrlService.getYoutubeUrl(
-            userName: channel.youtubeUserName,
-            channelId: channel.youtubeChannelId,
-            mobile: false,
-            videosSubPath: false
-           ) {
+        if video.subscription != nil {
             Button {
-                copyUrl(urlString)
+                if let channel = video.subscription,
+                   let urlString = UrlService.getYoutubeUrl(
+                    userName: channel.youtubeUserName,
+                    channelId: channel.youtubeChannelId,
+                    mobile: false,
+                    videosSubPath: false) {
+                    copyUrl(urlString)
+                }
             } label: {
                 Text("channel")
                 Image(systemName: Const.channelSF)
@@ -56,12 +57,14 @@ struct CopyUrlOptions: View {
 
     @ViewBuilder
     var copyPlaylistUrlButton: some View {
-        if let urlString = UrlService.getYoutubeUrl(
-            playlistId: video.subscription?.youtubePlaylistId,
-            mobile: false
-        ) {
+        if let playlistId = video.subscription?.youtubePlaylistId {
             Button {
-                copyUrl(urlString)
+                if let urlString = UrlService.getYoutubeUrl(
+                    playlistId: playlistId,
+                    mobile: false
+                ) {
+                    copyUrl(urlString)
+                }
             } label: {
                 Text("playlist")
                 Image(systemName: "list.bullet")
