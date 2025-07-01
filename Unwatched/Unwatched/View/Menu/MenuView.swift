@@ -40,33 +40,32 @@ struct MenuView: View {
                 handleTabChanged(newValue, proxy)
             }) {
                 QueueTabItemView(
-                    showCancelButton: shouldShowCancelButton,
+                    showCancelButton: showCancelButton,
                     showBadge: showTabBarBadge,
                     horizontalpadding: -padding
                 )
 
                 InboxTabItemView(
-                    showCancelButton: shouldShowCancelButton,
+                    showCancelButton: showCancelButton,
                     showBadge: showTabBarBadge,
                     horizontalpadding: -padding
                 )
 
-                TabItemView(image: Image(systemName: "books.vertical"),
-                            tag: NavigationTab.library) {
-                    LibraryView(showCancelButton: shouldShowCancelButton)
-                        .padding(.horizontal, -padding)
-                }
-
-                TabItemView(image: Image(systemName: Const.appBrowserSF),
-                            tag: NavigationTab.browser,
-                            show: browserAsTab) {
-                    BrowserView(
-                        url: $navManager.openTabBrowserUrl,
-                        showHeader: false,
-                        safeArea: false
-                    )
+                LibraryView(showCancelButton: shouldShowCancelButton)
+                    .tabItemView(image: Image(systemName: "books.vertical"), tag: NavigationTab.library)
                     .padding(.horizontal, -padding)
-                }
+
+                BrowserView(
+                    url: $navManager.openTabBrowserUrl,
+                    showHeader: false,
+                    safeArea: false
+                )
+                .tabItemView(
+                    image: Image(systemName: Const.appBrowserSF),
+                    tag: NavigationTab.browser,
+                    show: browserAsTab
+                )
+                .padding(.horizontal, -padding)
             }
             .padding(.horizontal, padding)
             .popover(item: $navManager.videoDetail) { video in

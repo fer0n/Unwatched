@@ -16,7 +16,9 @@ struct InboxView: View {
     @Environment(NavigationManager.self) private var navManager
     @Environment(TinyUndoManager.self) private var undoManager
 
+    @Query(InboxView.descriptor, animation: .default)
     var inboxEntries: [InboxEntry]
+
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -129,10 +131,18 @@ struct InboxView: View {
             Log.warning("handleChange: Unsupported reason \(reason) for video \(video.youtubeId)")
         }
     }
+
+    static var descriptor: FetchDescriptor<InboxEntry> {
+        var descriptor = FetchDescriptor<InboxEntry>(
+            sortBy: [SortDescriptor(\InboxEntry.date, order: .reverse)]
+        )
+        descriptor.fetchLimit = Const.inboxFetchLimit
+        return descriptor
+    }
 }
 
 #Preview {
-    InboxView(inboxEntries: [])
+    InboxView()
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())

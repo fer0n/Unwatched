@@ -14,7 +14,9 @@ struct QueueView: View {
 
     @Environment(NavigationManager.self) private var navManager
 
+    @Query(QueueView.descriptor, animation: .default)
     var queue: [QueueEntry]
+
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -83,12 +85,14 @@ struct QueueView: View {
             navManager.setScrollId("top", ClearList.queue.rawValue)
         }
     }
+
+    static var descriptor: FetchDescriptor<QueueEntry> {
+        FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+    }
 }
 
 #Preview {
-    @Previewable @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
-
-    QueueView(queue: queue)
+    QueueView()
         .modelContainer(DataProvider.previewContainerFilled)
         .environment(NavigationManager())
         .environment(PlayerManager())

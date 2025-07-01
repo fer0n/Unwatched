@@ -6,30 +6,15 @@
 import SwiftUI
 import UnwatchedShared
 
-struct TabItemView<Content: View>: View {
+struct TabItemViewModifier: ViewModifier {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @Environment(NavigationManager.self) var navManager
-
-    var content: Content
 
     var image: Image
     var tag: NavigationTab
     var showBadge: Bool = false
     var show: Bool = true
 
-    init(image: Image,
-         tag: NavigationTab,
-         showBadge: Bool = false,
-         show: Bool = true,
-         @ViewBuilder content: () -> Content) {
-        self.image = image
-        self.tag = tag
-        self.showBadge = showBadge
-        self.show = show
-        self.content = content()
-    }
-
-    var body: some View {
+    func body(content: Content) -> some View {
         if show {
             #if os(macOS)
             content
@@ -61,5 +46,23 @@ struct TabItemView<Content: View>: View {
                 .tag(tag)
             #endif
         }
+    }
+}
+
+extension View {
+    func tabItemView(
+        image: Image,
+        tag: NavigationTab,
+        showBadge: Bool = false,
+        show: Bool = true
+    ) -> some View {
+        self.modifier(
+            TabItemViewModifier(
+                image: image,
+                tag: tag,
+                showBadge: showBadge,
+                show: show
+            )
+        )
     }
 }
