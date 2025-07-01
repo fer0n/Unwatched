@@ -12,8 +12,11 @@ struct SendableSubscriptionDetailView: View {
 
     init(_ sendableSub: SendableSubscription, _ modelContext: ModelContext) {
         if let id = sendableSub.persistentId {
-            let filter = #Predicate<Subscription> { $0.persistentModelID == id }
-            self._subscription = Query(filter: filter, animation: .default)
+            var fetch = FetchDescriptor<Subscription>(
+                predicate: #Predicate<Subscription> { $0.persistentModelID == id }
+            )
+            fetch.fetchLimit = 1
+            self._subscription = Query(fetch, animation: .default)
         }
     }
 
