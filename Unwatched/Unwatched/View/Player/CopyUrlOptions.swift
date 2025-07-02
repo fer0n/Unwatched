@@ -50,7 +50,6 @@ struct CopyUrlOptions: View {
                 }
             } label: {
                 Text("channel")
-                Image(systemName: Const.channelSF)
             }
         }
     }
@@ -67,7 +66,6 @@ struct CopyUrlOptions: View {
                 }
             } label: {
                 Text("playlist")
-                Image(systemName: "list.bullet")
             }
         }
     }
@@ -79,7 +77,6 @@ struct CopyUrlOptions: View {
                 copyUrl(urlString)
             } label: {
                 Text("rssFeed")
-                Image(systemName: "dot.radiowaves.up.forward")
             }
         }
     }
@@ -91,7 +88,6 @@ struct CopyUrlOptions: View {
             copyUrl(text)
         } label: {
             Text("video")
-            Image(systemName: Const.videoSF)
         }
     }
 
@@ -106,7 +102,6 @@ struct CopyUrlOptions: View {
                 copyUrl(text)
             } label: {
                 Text("videoAtTimestamp")
-                Image(systemName: "pin.fill")
             }
         }
     }
