@@ -490,6 +490,8 @@
 		88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AE62B751B6900BDBFDF /* VideoSorting.swift */; };
 		88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */; };
 		88D29AEF2B757E7300BDBFDF /* SearchableVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */; };
+		88D2B0B12E190E600024F8C0 /* FetchVideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */; };
+		88D2B0B22E190E600024F8C0 /* FetchVideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */; };
 		88D34D752B58F86800533B74 /* Alerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D34D742B58F86800533B74 /* Alerter.swift */; };
 		88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */; };
 		88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A82B45B27600482F29 /* VideoPlayer.swift */; };
@@ -882,6 +884,7 @@
 		88D29AE62B751B6900BDBFDF /* VideoSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSorting.swift; sourceTree = "<group>"; };
 		88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
 		88D29AEE2B757E7300BDBFDF /* SearchableVideos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableVideos.swift; sourceTree = "<group>"; };
+		88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchVideoData.swift; sourceTree = "<group>"; };
 		88D34D742B58F86800533B74 /* Alerter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerter.swift; sourceTree = "<group>"; };
 		88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSParserDelegate.swift; sourceTree = "<group>"; };
 		88D438A82B45B27600482F29 /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
@@ -1669,6 +1672,7 @@
 			isa = PBXGroup;
 			children = (
 				88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */,
+				88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */,
 			);
 			path = HelperModel;
 			sourceTree = "<group>";
@@ -1994,6 +1998,7 @@
 				886C16E62CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */,
 				889AF92C2C50ECEE001CEDE6 /* FullscreenPlayerControls.swift in Sources */,
 				889D61692D521EF30070389D /* VideoListItemEntryModifier.swift in Sources */,
+				88D2B0B12E190E600024F8C0 /* FetchVideoData.swift in Sources */,
 				889AF92D2C50ECEE001CEDE6 /* FullscreenSpeedControl.swift in Sources */,
 				886818212D77570B00E06A0D /* LinkItemView.swift in Sources */,
 				889AF92E2C50ECEE001CEDE6 /* PlayerWebView+Scripts.swift in Sources */,
@@ -2401,6 +2406,7 @@
 				881F57412C4A5DD900559BF9 /* BrowserViewHeader.swift in Sources */,
 				881E513B2B59D577006384E4 /* SubscriptionSorting.swift in Sources */,
 				889DFB642E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
+				88D2B0B22E190E600024F8C0 /* FetchVideoData.swift in Sources */,
 				88F3AA912C998BFC0030B2EA /* VideoPlacement.swift in Sources */,
 				880505122C836882005F0972 /* FaqView.swift in Sources */,
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,

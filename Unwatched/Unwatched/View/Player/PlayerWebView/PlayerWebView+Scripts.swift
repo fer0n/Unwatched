@@ -445,13 +445,38 @@ extension PlayerWebView {
         }, true);
 
         // meta data
+        if (requiresFetchingVideoData) {
+            fetchVideoData();
+        }
+        function fetchVideoData() {
+            // thumbnail url
+            const img = document.querySelector('.ytmVideoCoverThumbnail')?.style?.backgroundImage;
+            const thumbnailUrl = img ? img.slice(5, -2) : '';
+
+            // channelId
+            const channelLink = document.querySelector('.ytmVideoInfoChannelTitle');
+            let channelId = null;
+            if (channelLink) {
+                const href = channelLink.getAttribute('href');
+                if (href && href.startsWith('/channel/')) {
+                    channelId = href.split('/')[2];
+                }
+            }
+
+            // channel title
+            const channelTitle = document.querySelector(".ytmVideoInfoChannelTitle .ytmVideoInfoLink")?.innerText;
+
+            // title
+            let title = document.title?.replace(/- YouTube$/, '').trim();
+
+            const data = { thumbnailUrl, channelId, channelTitle, title };
+            sendMessage('videoData', JSON.stringify(data));
+        }
+
         document.addEventListener('loadedmetadata', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 const duration = e.target.duration;
                 sendMessage("duration", duration.toString());
-                if (requiresFetchingVideoData) {
-                    sendMessage('updateTitle', document.title);
-                }
                 e.target.currentTime = startAtTime;
 
                 // setting video time so early breaks the overlay reference

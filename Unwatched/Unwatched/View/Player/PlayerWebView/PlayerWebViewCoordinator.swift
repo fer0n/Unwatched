@@ -53,8 +53,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             parent.onVideoEnded()
         case "currentTime":
             handleTimeUpdate(payload)
-        case "updateTitle":
-            handleTitleUpdate(payload)
+        case "videoData":
+            handleVideoData(payload)
         case "duration":
             handleDuration(payload)
         case "playbackRate":
@@ -275,9 +275,20 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         parent.player.playbackSpeed = playbackRate
     }
 
-    func handleTitleUpdate(_ title: String?) {
-        if let title = UrlService.getCleanTitle(title) {
-            self.parent.player.video?.title = title
+    func handleVideoData(_ payload: String?) {
+        guard let payload,
+              let jsonData = payload.data(using: .utf8) else {
+            Log.warning("No payload given for handleTitleUpdate")
+            return
+        }
+        let decoder = JSONDecoder()
+        do {
+            let result = try decoder.decode(FetchVideoData.self, from: jsonData)
+            let videoId = parent.player.video?.persistentModelID
+            let video = VideoService.updateVideoData(videoId, videoData: result)
+            parent.player.setNextVideo(video, .hotSwap)
+        } catch {
+            Log.warning("couldn't decode result: \(error)")
         }
     }
 

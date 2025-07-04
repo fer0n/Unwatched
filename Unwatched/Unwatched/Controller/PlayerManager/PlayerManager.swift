@@ -135,8 +135,7 @@ import UnwatchedShared
             return
         }
         if video.youtubeId == oldValue?.youtubeId {
-            Log.info("Tapped existing video")
-            self.play()
+            Log.info("Existing video set")
             return
         }
         if aspectRatio != nil {
@@ -319,7 +318,7 @@ import UnwatchedShared
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
         Log.info("handleAspectRatio \(aspectRatio)")
-        guard let video = video,
+        guard let video,
               let subscription = video.subscription else {
             Log.info("No video/subscription to set aspect ratio for")
             return
