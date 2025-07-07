@@ -3116,6 +3116,74 @@
         }
       }
     },
+    "continuousPlay" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fortlaufende Wiedergabe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuous Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducción continua"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecture continue"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzanie ciągłe"
+          }
+        }
+      }
+    },
+    "continuousPlayHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auch durch langes Drücken der „Nächstes Video“-Taste im Player erreichbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can also be accessed by long pressing the “next video” button inside the player."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "También accesible manteniendo pulsado el botón de «siguiente vídeo» en el reproductor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Également accessible en maintenant le bouton « vidéo suivante » dans le lecteur."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dostępne również po dłuższym naciśnięciu przycisku „następny film” w odtwarzaczu."
+          }
+        }
+      }
+    },
     "continuousPlayOff" : {
       "localizations" : {
         "de" : {

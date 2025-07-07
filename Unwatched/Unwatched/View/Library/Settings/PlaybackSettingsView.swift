@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
+    @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
@@ -29,6 +30,12 @@ struct PlaybackSettingsView: View {
                             }
                         }
                         .pickerStyle(.menu)
+                    }
+                }
+
+                MySection(footer: "continuousPlayHelper") {
+                    Toggle(isOn: $continuousPlay) {
+                        Text("continuousPlay")
                     }
                 }
 
