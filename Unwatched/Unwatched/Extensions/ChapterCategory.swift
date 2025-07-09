@@ -24,7 +24,7 @@ extension ChapterCategory {
             return String(localized: "categoryPreview")
         case .musicOfftopic:
             return String(localized: "categoryMusicOfftopic")
-        case .generated:
+        case .generated, .chapter:
             return nil
         @unknown default:
             return "\(self.rawValue)"

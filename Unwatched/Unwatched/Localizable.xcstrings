@@ -2475,31 +2475,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setzt Kapitel, die eines der Schlüsselwörter enthalten, beim Laden des Videos auf inaktiv. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
+            "value" : "Setzt Kapitel, die eines der Schlüsselwörter enthalten, beim Laden des Videos auf inaktiv. Verwende \",\" um mehrere Schlüsselwörter zu trennen. Gilt nicht für SponsorBlock-Segmente (angezeigt mit „[Klammern]“)."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sets chapters that include any of the keywords to inactive when the video is loaded into the player. Use “,” to separate multiple keywords."
+            "value" : "Sets chapters that include any of the keywords to inactive when the video is loaded into the player. Use “,” to separate multiple keywords. Does not apply to SponsorBlock segments (shown with “[Brackets]”)."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Establece como inactivos los capítulos que incluyan cualquiera de las palabras clave cuando el video se cargue en el reproductor. Usa “,” para separar múltiples palabras clave."
+            "value" : "Establece como inactivos los capítulos que incluyan cualquiera de las palabras clave cuando se cargue el vídeo en el reproductor. Usa “,” para separar varias palabras clave. No se aplica a los segmentos de SponsorBlock (mostrados entre “[Corchetes]”)."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les chapitres contenant l'un des mots-clés seront définis comme inactifs lorsque la vidéo est chargée dans le lecteur. Utilisez \",\" pour séparer plusieurs mots-clés."
+            "value" : "Désactive les chapitres contenant l’un des mots-clés lorsque la vidéo est chargée dans le lecteur. Utilisez “,” pour séparer plusieurs mots-clés. Ne s’applique pas aux segments SponsorBlock (affichés entre “[Crochets]”)."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ustawia rozdziały zawierające dowolne z podanych słów kluczowych jako nieaktywne, gdy film zostanie załadowany do odtwarzacza. Użyj \",\" do oddzielenia wielu słów kluczowych."
+            "value" : "Ustawia rozdziały zawierające dowolne ze słów kluczowych jako nieaktywne po załadowaniu wideo do odtwarzacza. Użyj „,” aby oddzielić wiele słów kluczowych. Nie dotyczy segmentów SponsorBlock (oznaczonych „[Nawiasami]”)."
           }
         }
       }
@@ -12557,31 +12557,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falls verfügbar, werden SponsorBlock-Kapitel angezeigt. Wenn ein Video bereits Kapitel enthält, werden nur die Sponsoren-Segmente zusammengeführt. Hat ein Video keine Kapitel, werden alle verfügbaren Segmente (wie Intro, Outro, etc.) als Kapitel erstellt, mit leeren Kapiteln dazwischen."
+            "value" : "Falls verfügbar, werden SponsorBlock-Kapitel angezeigt. Wenn ein Video bereits Kapitel hat, werden nur Sponsor-Segmente ergänzt. Hat ein Video keine Kapitel, werden stattdessen die SponsorBlock-Kapitel verwendet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, only sponsor segments will be merged. If a video has no chapters, all available segments (like intro, outro, etc.) will be created as chapters, with empty chapters in between."
+            "value" : "If available, SponsorBlock chapters will be shown. When a video already has chapters, only sponsor segments will be added. If a video has no chapters, SponsorBlock chapters will be used instead."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si están disponibles, se mostrarán los capítulos de SponsorBlock. Cuando un video ya tiene capítulos, solo se fusionarán los segmentos de patrocinio. Si un video no tiene capítulos, todos los segmentos disponibles (como intro, outro, etc.) se crearán como capítulos, con capítulos vacíos entre ellos."
+            "value" : "Si está disponible, se mostrarán los capítulos de SponsorBlock. Si un vídeo ya tiene capítulos, solo se añadirán los segmentos de patrocinador. Si no tiene capítulos, se usarán los de SponsorBlock."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Si disponible, les chapitres SponsorBlock seront affichés. Lorsqu'une vidéo a déjà des chapitres, seuls les segments sponsorisés seront fusionnés. Si une vidéo n'a pas de chapitres, tous les segments disponibles (comme l'intro, l'outro, etc.) seront créés comme chapitres, avec des chapitres vides entre eux."
+            "value" : "Si disponible, les chapitres SponsorBlock seront affichés. Si une vidéo possède déjà des chapitres, seuls les segments sponsorisés seront ajoutés. Si elle n’a aucun chapitre, ceux de SponsorBlock seront utilisés à la place."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rozdziały SponsorBlock zostaną wyświetlone jeśli są dostępne. Gdy film ma już rozdziały, tylko segmenty sponsorowane zostaną dodane. Jeśli film nie ma rozdziałów, wszystkie dostępne segmenty (jak wstęp, zakończenie itp.) zostaną utworzone jako rozdziały z pustymi miejscami pomiędzy."
+            "value" : "Jeśli dostępne, zostaną wyświetlone rozdziały SponsorBlock. Jeśli wideo ma już rozdziały, dodane zostaną tylko segmenty sponsorów. Jeśli wideo nie ma rozdziałów, zostaną użyte rozdziały SponsorBlock."
           }
         }
       }
