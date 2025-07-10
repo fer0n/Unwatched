@@ -365,6 +365,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
         let minimalPlayerUI = UserDefaults.standard.bool(forKey: Const.minimalPlayerUI)
         let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
+        let forceOriginalAudio = UserDefaults.standard.value(forKey: Const.forceOriginalAudio) as? Bool ?? true
+
         var hijackFullscreenButton = false
         #if os(macOS)
         hijackFullscreenButton = true
@@ -378,7 +380,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             isNonEmbedding: parent.player.embeddingDisabled,
             hijackFullscreenButton: hijackFullscreenButton,
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
-            enableLogging: enableLogging
+            enableLogging: enableLogging,
+            forceOriginalAudio: forceOriginalAudio
         )
         let script = PlayerWebView.initScript(options)
         Log.info("InitScriptOptions: \(options)")

@@ -5496,6 +5496,40 @@
         }
       }
     },
+    "forceOriginalAudio" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Originalaudio erzwingen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force Original Audio"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forzar audio original"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forcer l’audio original"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wymuś oryginalny dźwięk"
+          }
+        }
+      }
+    },
     "frequentlyAskedQuestions" : {
       "localizations" : {
         "de" : {
@@ -5730,108 +5764,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pełny ekran prawy"
-          }
-        }
-      }
-    },
-    "generatedAudioFaqA" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube aktiviert automatisch KI-generierte Audioausgabe und der neue Player zeigt möglicherweise keine Sprachoptionen an. Mögliche Lösungen:\n\n- Sprache in iOS-Einstellungen → Apps → Unwatched → Sprache ändern\n- Bei YouTube anmelden unter Bibliothek → YouTube Browser"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube auto-enables ai-generated audio and the new player may not show language options. Possible solutions are:\n- Changing language in iOS Settings → Apps → Unwatched → Language\n- Signing into YouTube under Library → Search YouTube"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube activa automáticamente el audio generado por IA y el nuevo reproductor puede no mostrar opciones de idioma. Posibles soluciones:\n\n- Cambiar idioma en Configuración iOS → Apps → Unwatched → Idioma\n- Iniciar sesión en YouTube en Biblioteca → Buscar YouTube"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube active automatiquement l'audio généré par IA et le nouveau lecteur peut ne pas afficher les options de langue. Solutions possibles :\n- Changer la langue dans Réglages iOS → Apps → Unwatched → Langue\n- Se connecter à YouTube sous Bibliothèque → Rechercher YouTube\n\n"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "YouTube automatycznie włącza audio generowane przez AI, a nowy odtwarzacz może nie wyświetlać opcji języka. Możliwe rozwiązania:\n\n- Zmiana języka w Ustawienia iOS → Aplikacje → Unwatched → Język\n- Zalogowanie się do YouTube w Biblioteka → Szukaj YouTube"
-          }
-        }
-      }
-    },
-    "generatedAudioFaqQ" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Warum werden manche Videos nicht in ihrer Originalsprache abgespielt?"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Why are some videos not playing in their original language?"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Por qué algunos videos no se reproducen en su idioma original?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pourquoi certaines vidéos ne sont-elles pas lues dans leur langue d'origine ?"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dlaczego niektóre filmy nie są odtwarzane w języku oryginalnym?"
-          }
-        }
-      }
-    },
-    "generatedAudioFaqT" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatisch übersetzte Audioausgabe"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto-translated Audio"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Audio traducido automáticamente"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Audio traduit automatiquement"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatycznie tłumaczone audio"
           }
         }
       }
