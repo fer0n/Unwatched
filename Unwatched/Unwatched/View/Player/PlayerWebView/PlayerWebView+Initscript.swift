@@ -19,7 +19,7 @@ extension PlayerWebView {
         let hijackFullscreenButton: Bool
         let fullscreenTitle: String
         let enableLogging: Bool
-        let forceOriginalAudio: Bool
+        let originalAudio: Bool
     }
 
     // swiftlint:disable function_body_length
@@ -36,7 +36,7 @@ extension PlayerWebView {
         const fullscreenTitle = "\(options.fullscreenTitle)";
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
-        const forceOriginalAudio = \(options.forceOriginalAudio);
+        const originalAudio = \(options.originalAudio);
 
         var video = null;
         let videoFindAttempts = 0;
@@ -443,7 +443,7 @@ extension PlayerWebView {
         }
 
         async function handleAudioTrack() {
-            if (!forceOriginalAudio) {
+            if (!originalAudio) {
                 return;
             }
             const player = document.getElementById("movie_player");

@@ -15,7 +15,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
-    @AppStorage(Const.forceOriginalAudio) var forceOriginalAudio: Bool = true
+    @AppStorage(Const.originalAudio) var originalAudio: Bool = false
 
     var body: some View {
         ZStack {
@@ -35,10 +35,10 @@ struct PlaybackSettingsView: View {
                 }
 
                 MySection(footer: "continuousPlayHelper") {
-                    Toggle(isOn: $forceOriginalAudio) {
+                    Toggle(isOn: $originalAudio) {
                         Text("forceOriginalAudio")
                     }
-                    .onChange(of: forceOriginalAudio) { _, _ in
+                    .onChange(of: originalAudio) { _, _ in
                         PlayerManager.reloadPlayer()
                     }
 

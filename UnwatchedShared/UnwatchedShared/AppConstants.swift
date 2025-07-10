@@ -227,7 +227,7 @@ public struct Const {
     public static let continuousPlay = "continuousPlay"
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
-    public static let forceOriginalAudio = "forceOriginalAudio"
+    public static let originalAudio = "originalAudio"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
 
     /// Legacy setting, moved to `defaultShortsSetting`
