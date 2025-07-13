@@ -35,7 +35,7 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
             #endif
         } else {
             self.placeholder()
-                .task {
+                .task(id: imageUrl) {
                     if image == nil, let url = imageUrl {
                         let task = ImageService.getImage(url, cacheManager)
                         if let taskResult = try? await task.value {

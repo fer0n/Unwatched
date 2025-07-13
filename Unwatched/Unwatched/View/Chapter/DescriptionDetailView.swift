@@ -79,7 +79,7 @@ struct DescriptionDetailHeaderView: View {
     }
 
     func publishedDateText(_ published: Date) -> String {
-        String(localized: "\(published.formattedRelative) ago")
+        published.formattedRelative
     }
 }
 

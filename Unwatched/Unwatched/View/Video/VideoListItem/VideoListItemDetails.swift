@@ -7,15 +7,12 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemDetails: View {
-    @Environment(NavigationManager.self) private var navManager
-
-    var video: VideoData
+    let video: VideoData
     var queueButtonSize: CGFloat?
-    var showVideoListOrder: Bool = false
 
-    @ScaledMetric var titleSize = 15
-    @ScaledMetric var subSize   = 14
-    @ScaledMetric var timeSize  = 12
+    @ScaledMetric private var titleSize = 15
+    @ScaledMetric private var subSize = 14
+    @ScaledMetric private var timeSize = 12
 
     private var videoTitle: String {
         video.title.isEmpty ? video.youtubeId : video.title
@@ -36,36 +33,31 @@ struct VideoListItemDetails: View {
                         .lineLimit(1)
                         .textCase(.uppercase)
                         .onTapGesture {
-                            pushSubscription(for: video.subscriptionData)
+                            VideoListItemDetails.handleSubscriptionTap(video.subscriptionData)
                         }
                 }
 
-                HStack(spacing: 5) {
-                    if showVideoListOrder,
-                       let order = video.queueEntryData?.order {
-                        Text(verbatim: "#\(order)")
-                    }
-
-                    if let published = video.publishedDate {
-                        Text("\(published.formattedRelative) ago")
-                            .accessibilityLabel(
-                                published.formatted(
-                                    .relative(
-                                        presentation: .numeric,
-                                        unitsStyle: .spellOut
-                                    )
+                if let published = video.publishedDate {
+                    Text(published.formattedRelative)
+                        .font(.system(size: timeSize))
+                        .accessibilityLabel(
+                            published.formatted(
+                                .relative(
+                                    presentation: .numeric,
+                                    unitsStyle: .spellOut
                                 )
                             )
-                    }
+                        )
                 }
-                .font(.system(size: timeSize))
             }
             .padding(.trailing, queueButtonSize)
+            .foregroundStyle(.secondary)
         }
-        .foregroundStyle(.secondary)
     }
 
-    private func pushSubscription(for sub: (any SubscriptionData)?) {
+    private static func handleSubscriptionTap(_ sub: (any SubscriptionData)?) {
+        guard let sub else { return }
+        let navManager = NavigationManager.shared
         if let sendable = sub as? SendableSubscription {
             navManager.pushSubscription(sendableSubscription: sendable)
         } else if let subscription = sub as? Subscription {

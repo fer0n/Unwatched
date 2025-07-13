@@ -8,12 +8,14 @@ import UnwatchedShared
 
 struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
+    @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
+    @AppStorage(Const.originalAudio) var originalAudio: Bool = false
 
     var body: some View {
         ZStack {
@@ -29,6 +31,19 @@ struct PlaybackSettingsView: View {
                             }
                         }
                         .pickerStyle(.menu)
+                    }
+                }
+
+                MySection(footer: "continuousPlayHelper") {
+                    Toggle(isOn: $originalAudio) {
+                        Text("forceOriginalAudio")
+                    }
+                    .onChange(of: originalAudio) { _, _ in
+                        PlayerManager.reloadPlayer()
+                    }
+
+                    Toggle(isOn: $continuousPlay) {
+                        Text("continuousPlay")
                     }
                 }
 

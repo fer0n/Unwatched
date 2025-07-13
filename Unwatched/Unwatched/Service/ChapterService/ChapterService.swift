@@ -232,8 +232,8 @@ struct ChapterService {
             $0.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
-        for chapter in (video?.chapters ?? []) {
-            guard let title = chapter.title else { continue }
+        for chapter in (video?.sortedChapters ?? []) {
+            guard let title = chapter.title, !title.isEmpty else { continue }
 
             if let matchingFilter = filterStrings.first(where: { title.localizedStandardContains($0) }) {
                 Log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")

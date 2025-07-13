@@ -23,8 +23,6 @@ struct ContentView: View {
     }
 
     var body: some View {
-        @Bindable var navManager = navManager
-
         GeometryReader { proxy in
             let isLandscape = proxy.size.width > proxy.size.height
             let landscapeFullscreen = !bigScreen && isLandscape

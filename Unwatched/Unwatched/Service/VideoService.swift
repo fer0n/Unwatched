@@ -411,4 +411,53 @@ extension VideoService {
             $0.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
+
+    @MainActor
+    static func updateVideoData(_ videoId: PersistentIdentifier?, videoData: FetchVideoData) -> Video? {
+        guard let videoId else {
+            Log.error("updateVideoData: video is nil")
+            return nil
+        }
+        let context = DataProvider.mainContext
+        guard let video: Video = context.existingModel(for: videoId) else {
+            return nil
+        }
+        if let thumbnailUrl = videoData.thumbnailUrl,
+           video.thumbnailUrl?.absoluteString.isEmpty != false {
+            video.thumbnailUrl = URL(string: thumbnailUrl)
+        }
+        if let title = videoData.title,
+           video.title.isEmpty != false {
+            video.title = title
+        }
+        if let channelId = videoData.channelId, video.subscription == nil {
+            var subscription = SubscriptionService.getRegularChannel(channelId)
+            if subscription == nil {
+                let newSubscription = Subscription(
+                    link: try? UrlService.getFeedUrlFromChannelId(channelId),
+                    title: videoData.channelTitle ?? "",
+                    isArchived: true,
+                    youtubeChannelId: channelId
+                )
+                context.insert(newSubscription)
+                subscription = newSubscription
+            }
+            guard let subscription else {
+                Log.error("updateVideoData: subscription is nil")
+                return nil
+            }
+            if subscription.videos != nil {
+                subscription.videos?.append(video)
+            } else {
+                subscription.videos = [video]
+            }
+            if subscription.modelContext == context {
+                Log.info("updateVideoData: subscription exists in same context")
+                video.subscription = subscription
+            }
+            video.youtubeChannelId = videoData.channelId
+        }
+        try? context.save()
+        return video
+    }
 }

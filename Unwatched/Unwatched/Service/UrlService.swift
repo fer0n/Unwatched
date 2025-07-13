@@ -194,13 +194,6 @@ struct UrlService {
         return nil
     }
 
-    static func getCleanTitle(_ title: String?) -> String? {
-        if let title {
-            return title.replacingOccurrences(of: " - YouTube", with: "")
-        }
-        return nil
-    }
-
     static func getPlaylistFeedUrl(_ playlistId: String) throws -> URL {
         if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?playlist_id=\(playlistId)") {
             return channelFeedUrl

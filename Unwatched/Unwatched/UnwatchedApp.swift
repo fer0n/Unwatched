@@ -34,13 +34,6 @@ struct UnwatchedApp: App {
                 .environment(player)
                 .environment(refresher)
                 .onAppear {
-                    if refresher.consumeTriggerPasteAction() {
-                        NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
-                    } else {
-                        // avoid fetching another video first
-                        player.restoreNowPlayingVideo()
-                    }
-
                     #if os(macOS)
                     appDelegate.handleAppear()
                     #endif

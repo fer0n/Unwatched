@@ -26,6 +26,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         workaroundInitialWebViewDelay()
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
+        SetupView.setupVideo()
         return true
     }
 

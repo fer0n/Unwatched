@@ -28,6 +28,9 @@ import UnwatchedShared
     @MainActor
     var nextChapter: Chapter?
 
+    @MainActor
+    var transcriptUrl: String?
+
     var seekAbsolute: Double?
     var seekRelative: Double?
     var embeddingDisabled: Bool = false
@@ -104,34 +107,61 @@ import UnwatchedShared
     }
 
     @MainActor
-    private func handleNewVideoSet(_ oldValue: Video?) {
-        currentEndTime = 0
-        withAnimation {
-            currentTime = video?.elapsedSeconds ?? 0
+    private func resetVideoIndependentValues() {
+        if currentEndTime != 0 {
+            currentEndTime = 0
         }
-        isPlaying = false
-        currentChapter = nil
-        nextChapter = nil
-        previousChapter = nil
+        let newTime = video?.elapsedSeconds ?? 0
+        if currentTime != newTime {
+            currentTime = newTime
+        }
+        if isPlaying != false {
+            isPlaying = false
+        }
+        if currentChapter != nil {
+            currentChapter = nil
+        }
+        if nextChapter != nil {
+            nextChapter = nil
+        }
+        if previousChapter != nil {
+            previousChapter = nil
+        }
+        if transcriptUrl != nil {
+            transcriptUrl = nil
+        }
         setVideoEnded(false)
         handleChapterChange()
+    }
+
+    @MainActor
+    private func handleNewVideoSet(_ oldValue: Video?) {
+        resetVideoIndependentValues()
         guard let video else {
             return
         }
-
-        aspectRatio = nil
-        if video.url == oldValue?.url {
-            Log.info("Tapped existing video")
-            self.play()
+        if video.youtubeId == oldValue?.youtubeId {
+            Log.info("Existing video set")
             return
         }
-        unstarted = true
+        if aspectRatio != nil {
+            aspectRatio = nil
+        }
+        if unstarted != true {
+            unstarted = true
+        }
         previousState.pipEnabled = false
-        canPlayPip = false
+        if canPlayPip != false {
+            canPlayPip = false
+        }
         handleChapterRefresh()
-        deferVideoDate = nil
-        withAnimation {
-            embeddingDisabled = false
+        if deferVideoDate != nil {
+            deferVideoDate = nil
+        }
+        if embeddingDisabled != false {
+            withAnimation {
+                embeddingDisabled = false
+            }
         }
     }
 
@@ -294,7 +324,7 @@ import UnwatchedShared
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
         Log.info("handleAspectRatio \(aspectRatio)")
-        guard let video = video,
+        guard let video,
               let subscription = video.subscription else {
             Log.info("No video/subscription to set aspect ratio for")
             return

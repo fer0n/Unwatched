@@ -12,9 +12,10 @@ struct SponsorBlockAPI {
 
     static func skipSegments(for videoID: String, allSegments: Bool) async throws -> [SponsorBlockSegmentModel] {
         let segmentsQuery = allSegments
-            ? #"&categories=["sponsor","intro","selfpromo","interaction","outro","preview","music_offtopic","filler"]"#
+            ? #"&categories=["sponsor","selfpromo","chapter"]"#
             : ""
-        let urlString = baseUrl + "skipSegments?videoID=\(videoID)" + segmentsQuery
+        let actionTypeQuery = allSegments ? #"&actionTypes=["chapter","skip"]"# : ""
+        let urlString = baseUrl + "skipSegments?videoID=\(videoID)" + segmentsQuery + actionTypeQuery
         guard let url = URL(string: urlString) else {
             throw SponsorBlockError.noValidUrl
         }
@@ -42,7 +43,7 @@ struct SponsorBlockAPI {
             let category = ChapterCategory.parse(segment.category)
 
             let chapter = SendableChapter(
-                title: nil,
+                title: category == .chapter ? segment.description : nil,
                 startTime: startTime,
                 endTime: endTime,
                 category: category

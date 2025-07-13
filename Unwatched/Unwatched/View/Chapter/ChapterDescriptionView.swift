@@ -8,8 +8,8 @@ import UnwatchedShared
 
 struct ChapterDescriptionView: View {
     @Environment(\.dismiss) var dismiss
-    @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
 
     let video: Video
     var bottomSpacer: CGFloat = 0
@@ -37,12 +37,18 @@ struct ChapterDescriptionView: View {
                             isTransparent: isTransparent
                         )
                         .padding(.vertical)
+
+                        Spacer()
+                            .frame(height: 7)
                     } else {
                         Spacer()
                             .frame(height: 7)
                     }
 
-                    DescriptionDetailView(description: video.videoDescription)
+                    TranscriptDescriptionSelection(
+                        video: video,
+                        isCurrentVideo: video.youtubeId == player.video?.youtubeId,
+                        )
                 }
                 .padding(.horizontal, isCompact ? 10 : 20)
                 .padding(.top, isCompact ? 15 : 30)

@@ -11,11 +11,12 @@ import UnwatchedShared
 struct QueueView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
-    @AppStorage(Const.showVideoListOrder) var showVideoListOrder: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
 
+    @Query(QueueView.descriptor, animation: .default)
     var queue: [QueueEntry]
+
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -47,7 +48,6 @@ struct QueueView: View {
                                         clearRole: .destructive,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
-                                        showVideoListOrder: showVideoListOrder,
                                         showDelete: false,
                                         )
                                 )
@@ -86,12 +86,14 @@ struct QueueView: View {
             navManager.setScrollId("top", ClearList.queue.rawValue)
         }
     }
+
+    static var descriptor: FetchDescriptor<QueueEntry> {
+        FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+    }
 }
 
 #Preview {
-    @Previewable @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
-
-    QueueView(queue: queue)
+    QueueView()
         .modelContainer(DataProvider.previewContainerFilled)
         .environment(NavigationManager())
         .environment(PlayerManager())
