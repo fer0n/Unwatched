@@ -36,6 +36,7 @@ extension Const {
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
+        Const.originalAudio: false,
         Const.hideMenuOnPlay: true,
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,

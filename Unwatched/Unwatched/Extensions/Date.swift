@@ -79,30 +79,7 @@ extension Date {
     }
 
     var formattedRelative: String {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents(
-            [
-                .second,
-                .minute,
-                .hour,
-                .day,
-                .year
-            ],
-            from: self,
-            to: Date()
-        )
-
-        if let years = components.year, years > 0 {
-            return "\(years)y"
-        } else if let days = components.day, days > 0 {
-            return "\(days)d"
-        } else if let hours = components.hour, hours > 0 {
-            return "\(hours)h"
-        } else if let minutes = components.minute, minutes > 0 {
-            return "\(minutes)m"
-        } else {
-            return "\(components.second ?? 0)s"
-        }
+        self.formatted(.relative(presentation: .numeric, unitsStyle: .narrow))
     }
 
     var formattedRelativeVerbatim: String {

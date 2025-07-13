@@ -29,11 +29,6 @@ struct FaqView: View {
             "pictureInPictureFaqA"
         ),
         FaqInfo(
-            "generatedAudioFaqT",
-            "generatedAudioFaqQ",
-            "generatedAudioFaqA"
-        ),
-        FaqInfo(
             "performanceIssuesFaqT",
             "performanceIssuesFaqQ",
             "performanceIssuesFaqA"

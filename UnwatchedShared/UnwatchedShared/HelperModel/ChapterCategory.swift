@@ -14,6 +14,7 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
     case outro
     case preview
     case musicOfftopic
+    case chapter
 
     case generated
 
@@ -35,6 +36,8 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return ".preview"
         case .musicOfftopic:
             return ".music_offtopic"
+        case .chapter:
+            return ".chapter"
         case .generated:
             return ".generated"
         }
@@ -66,6 +69,8 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
             return .preview
         case "music_offtopic":
             return .musicOfftopic
+        case "chapter":
+            return .chapter
         default:
             return nil
         }

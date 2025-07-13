@@ -245,6 +245,7 @@ extension PlayerManager {
                 let modelContext = DataProvider.mainContext
                 ChapterService.updateIfNeeded(newChapters, video, modelContext)
                 try modelContext.save()
+                ChapterService.filterChapters(in: video)
             } catch {
                 Log.error("Error while merging chapters: \(error)")
             }

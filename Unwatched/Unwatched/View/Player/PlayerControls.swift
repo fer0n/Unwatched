@@ -228,15 +228,6 @@ struct PlayerControls: View {
         )
     }
 
-    func onSleepTimerEnded(_ fadeOutSeconds: Double?) {
-        var seconds = player.currentTime ?? 0
-        player.pause()
-        if let fadeOutSeconds = fadeOutSeconds, fadeOutSeconds > seconds {
-            seconds -= fadeOutSeconds
-        }
-        player.updateElapsedTime(seconds)
-    }
-
     func handleTitleTap() {
         if compactSize {
             autoHideVM.showDescription = true

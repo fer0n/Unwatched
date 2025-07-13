@@ -36,27 +36,23 @@ struct SubscriptionInfoDetails: View {
                         .frame(maxHeight: .infinity)
                         .buttonStyle(CapsuleButtonStyle())
 
-                    if let url = UrlService.getYoutubeUrl(
-                        userName: subscription.youtubeUserName,
-                        channelId: subscription.youtubeChannelId,
-                        playlistId: subscription.youtubePlaylistId) {
-                        Button {
+                    Button {
+                        if let url = UrlService.getYoutubeUrl(
+                            userName: subscription.youtubeUserName,
+                            channelId: subscription.youtubeChannelId,
+                            playlistId: subscription.youtubePlaylistId) {
                             navManager.openUrlInApp(.url(url))
-                        } label: {
-                            Image(systemName: Const.appBrowserSF)
-                                .padding(10)
-                                .frame(maxHeight: .infinity)
                         }
-                        .accessibilityLabel("browser")
-                        .buttonStyle(CapsuleButtonStyle(primary: false))
+                    } label: {
+                        Image(systemName: Const.appBrowserSF)
+                            .padding(10)
+                            .frame(maxHeight: .infinity)
                     }
-                    if let urlString = UrlService.getYoutubeUrl(
-                        userName: subscription.youtubeUserName,
-                        channelId: subscription.youtubeChannelId,
-                        playlistId: subscription.youtubePlaylistId,
-                        mobile: false),
-                       let url = URL(string: urlString) {
-                        ShareLink(item: url) {
+                    .accessibilityLabel("browser")
+                    .buttonStyle(CapsuleButtonStyle(primary: false))
+
+                    if let shareURL {
+                        ShareLink(item: shareURL) {
                             Image(systemName: "square.and.arrow.up.fill")
                                 .padding(10)
                                 .frame(maxHeight: .infinity)
@@ -121,6 +117,17 @@ struct SubscriptionInfoDetails: View {
             .padding(.bottom, 15)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var shareURL: URL? {
+        guard let urlString = UrlService.getYoutubeUrl(
+            userName: subscription.youtubeUserName,
+            channelId: subscription.youtubeChannelId,
+            playlistId: subscription.youtubePlaylistId,
+            mobile: false
+        ) else { return nil }
+
+        return URL(string: urlString)
     }
 
     var workaroundPadding: CGFloat {

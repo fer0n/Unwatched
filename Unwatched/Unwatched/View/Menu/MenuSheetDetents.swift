@@ -19,7 +19,6 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
 
     func body(content: Content) -> some View {
         @Bindable var sheetPos = sheetPos
-        @Bindable var navManager = navManager
 
         content
             .presentationDetents(detents, selection: $sheetPos.selectedDetent)

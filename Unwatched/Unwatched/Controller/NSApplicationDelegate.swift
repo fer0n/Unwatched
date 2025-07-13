@@ -27,6 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         handleFullscreenOnLaunch()
 
         setActivationPolicy()
+
+        SetupView.setupVideo()
     }
 
     @MainActor

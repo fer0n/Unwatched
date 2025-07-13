@@ -10,7 +10,8 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
         [
             CachedImageSchemaV1.self,
             CachedImageSchemaV1p1.self,
-            CachedImageSchemaV1p2.self
+            CachedImageSchemaV1p2.self,
+            CachedImageSchemaV2.self,
         ]
     }
 
@@ -30,11 +31,19 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
         willMigrate: nil,
         didMigrate: nil
     )
+    
+    static let migrateCachedImageV1p2toV2 = MigrationStage.custom(
+        fromVersion: CachedImageSchemaV1p2.self,
+        toVersion: CachedImageSchemaV2.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
 
     public static var stages: [MigrationStage] {
         [
             migrateCachedImageV1toV1p1,
-            migrateCachedImageV1p1toV1p2
+            migrateCachedImageV1p1toV1p2,
+            migrateCachedImageV1p2toV2
         ]
     }
 }

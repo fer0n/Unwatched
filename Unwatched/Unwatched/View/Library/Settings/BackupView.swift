@@ -103,6 +103,7 @@ struct BackupView: View {
 
                 MySection {
                     DeleteImageCacheButton()
+                    DeleteTranscriptCacheButton()
 
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true

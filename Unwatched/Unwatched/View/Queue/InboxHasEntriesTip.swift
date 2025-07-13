@@ -9,12 +9,10 @@ import SwiftData
 import UnwatchedShared
 
 struct InboxHasEntriesTip: View {
-    @Query(animation: .default) var inbox: [InboxEntry]
+    @Query(descriptor, animation: .default) var inbox: [InboxEntry]
     var inboxTip = InboxHasVideosTip()
 
     var body: some View {
-        let inboxHasEntries = !inbox.isEmpty
-
         ZStack {
             if inboxHasEntries {
                 TipView(inboxTip, arrowEdge: arrowEdge)
@@ -43,5 +41,15 @@ struct InboxHasEntriesTip: View {
         #else
         .bottom
         #endif
+    }
+
+    var inboxHasEntries: Bool {
+        !inbox.isEmpty
+    }
+
+    static var descriptor: FetchDescriptor<InboxEntry> {
+        var descriptor = FetchDescriptor<InboxEntry>()
+        descriptor.fetchLimit = 1
+        return descriptor
     }
 }

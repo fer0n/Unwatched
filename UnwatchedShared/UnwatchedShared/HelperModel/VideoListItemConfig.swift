@@ -19,7 +19,6 @@ public struct VideoListItemConfig {
     public let clearAboveBelowList: ClearList?
     public let showQueueButton: Bool
     public let showContextMenu: Bool
-    public let showVideoListOrder: Bool
     public let showDelete: Bool
     public let async: Bool
 
@@ -37,7 +36,6 @@ public struct VideoListItemConfig {
         clearAboveBelowList: ClearList? = nil,
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
-        showVideoListOrder: Bool = false,
         showDelete: Bool = true,
         async: Bool = false
     ) {
@@ -58,7 +56,6 @@ public struct VideoListItemConfig {
         #else
         self.showContextMenu = true
         #endif
-        self.showVideoListOrder = showVideoListOrder
         self.showDelete = showDelete
         self.async = async
     }

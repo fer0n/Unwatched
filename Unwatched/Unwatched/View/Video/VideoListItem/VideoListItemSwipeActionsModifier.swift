@@ -119,9 +119,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 Log.error("performVideoAction: no video")
                 return
             }
-            handleIsNew(video, isNew)
             order = order ?? video.queueEntry?.order
             syncAction?(video)
+            handleIsNew(video, isNew)
             try? modelContext.save()
             config.onChange?(changeReason)
         }
@@ -145,7 +145,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func handleIsNew(_ video: Video, _ isNew: Bool?) {
         if let isNew,
            videoData.isNew != isNew {
-            video.isNew = isNew
+            withAnimation {
+                video.isNew = isNew
+            }
         }
     }
 

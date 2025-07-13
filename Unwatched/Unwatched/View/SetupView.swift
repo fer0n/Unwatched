@@ -95,6 +95,15 @@ struct SetupView: View {
         await ImageCacheManager.shared.persistCache()
         Log.info("saved state")
     }
+
+    static func setupVideo() {
+        if RefreshManager.shared.consumeTriggerPasteAction() {
+            NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
+        } else {
+            // avoid fetching another video first
+            PlayerManager.shared.restoreNowPlayingVideo()
+        }
+    }
 }
 
 #Preview {

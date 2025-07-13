@@ -12,7 +12,7 @@ public struct ImageService {
     public static func persistImages(
         cache: [String: ImageCacheInfo]
     ) async {
-        let container = DataProvider.shared.imageContainer
+        let container = DataProvider.shared.localCacheContainer
         let context = ModelContext(container)
 
         for info in cache.values {
@@ -53,7 +53,7 @@ public struct ImageService {
 
     public static func storeImages(_ images: [(url: URL, data: Data)]) {
         Task.detached {
-            let container = DataProvider.shared.imageContainer
+            let container = DataProvider.shared.localCacheContainer
             let context = ModelContext(container)
 
             for (url, data) in images {
@@ -66,7 +66,7 @@ public struct ImageService {
 
     public static func deleteImages(_ urls: [URL]) {
         Task {
-            let imageContainer = DataProvider.shared.imageContainer
+            let imageContainer = DataProvider.shared.localCacheContainer
             let context = ModelContext(imageContainer)
             for url in urls {
                 if let image = getCachedImage(for: url, context) {
@@ -87,7 +87,7 @@ public struct ImageService {
 
     public static func deleteAllImages() -> Task<(), Error> {
         return Task {
-            let imageContainer = DataProvider.shared.imageContainer
+            let imageContainer = DataProvider.shared.localCacheContainer
             let context = ModelContext(imageContainer)
             let fetch = FetchDescriptor<CachedImage>()
             let images = try context.fetch(fetch)
@@ -252,7 +252,7 @@ public struct ImageService {
             }
 
             // fetch from DB
-            let container = DataProvider.shared.imageContainer
+            let container = DataProvider.shared.localCacheContainer
             let context = ModelContext(container)
             if let model = ImageService.getCachedImage(for: url, context),
                let imageData = model.imageData {
