@@ -443,12 +443,16 @@ extension PlayerWebView {
         }
 
         async function handleAudioTrack() {
-            if (!originalAudio) {
-                return;
-            }
             const player = document.getElementById("movie_player");
             const tracks = player.getAvailableAudioTracks();
             const currentTrack = await player.getAudioTrack();
+            const captionTrack = getCaptionTrack(currentTrack);
+            const transcriptUrl = captionTrack?.url;
+            sendMessage("transcriptUrl", transcriptUrl ?? "");
+
+            if (!originalAudio) {
+                return;
+            }
 
             if (!tracks || !currentTrack) {
                 return;
@@ -462,6 +466,30 @@ extension PlayerWebView {
                 const isAudioTrackSet = await player.setAudioTrack(originalTrack);
                 if (isAudioTrackSet) {
                     sendMessage(`Audio track set to original: ${originalTrack.name}`);
+                }
+            }
+        }
+
+        function getCaptionTrack(currentTrack) {
+            const currentLocale = currentTrack?.Z?.languageCode
+            if (!currentTrack?.captionTracks) {
+                return null;
+            }
+            const firstTrack = currentTrack?.captionTracks?.[0];
+            if (!currentLocale) {
+                return firstTrack;
+            }
+            const tracks = currentTrack.captionTracks?.filter(track => track.languageCode === currentLocale);
+            if (tracks.length === 0) {
+                return firstTrack;
+            } else if (tracks.length === 1) {
+                return tracks[0];
+            } else {
+                const nonAutoTracks = tracks.filter(track => !track.vssId.startsWith('a.'));
+                if (nonAutoTracks.length > 0) {
+                    return nonAutoTracks[0];
+                } else {
+                    return nonAutoTracks[0];
                 }
             }
         }
@@ -873,8 +901,6 @@ extension PlayerWebView {
                 event.target.dispatchEvent(endEvent);
             }, 0);
         }
-
-
 
 
         // Error handling

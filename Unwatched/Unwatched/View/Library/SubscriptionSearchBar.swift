@@ -22,6 +22,7 @@ struct SubscriptionSearchBar: View {
                 .textInputAutocapitalization(.never)
                 #endif
                 .submitLabel(.done)
+
             TextFieldClearButton(text: $text.val)
                 .padding(.trailing, 10)
             Menu {

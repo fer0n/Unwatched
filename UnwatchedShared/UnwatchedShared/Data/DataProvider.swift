@@ -77,8 +77,8 @@ public final class DataProvider: Sendable {
         UnwatchedMigrationPlan.migrateV1p9toV1p10DidMigrate()
     }
 
-    public let imageContainer: ModelContainer = {
-        let schema = Schema([CachedImage.self])
+    public let localCacheContainer: ModelContainer = {
+        let schema = Schema([CachedImage.self, Transcript.self])
         let fileName = "imageCache.sqlite"
 
         #if os(tvOS)

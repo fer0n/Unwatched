@@ -28,6 +28,9 @@ import UnwatchedShared
     @MainActor
     var nextChapter: Chapter?
 
+    @MainActor
+    var transcriptUrl: String?
+
     var seekAbsolute: Double?
     var seekRelative: Double?
     var embeddingDisabled: Bool = false
@@ -123,6 +126,9 @@ import UnwatchedShared
         }
         if previousChapter != nil {
             previousChapter = nil
+        }
+        if transcriptUrl != nil {
+            transcriptUrl = nil
         }
         setVideoEnded(false)
         handleChapterChange()

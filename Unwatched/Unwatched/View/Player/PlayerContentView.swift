@@ -59,8 +59,8 @@ struct PlayerContentView: View {
                     ChapterDescriptionView(
                         video: video,
                         bottomSpacer: fadeOutHeight + Const.minSheetDetent,
-                        setShowMenu: setShowMenu
-                    )
+                        setShowMenu: setShowMenu,
+                        )
                     .tabItem {
                         Image(systemName: "checklist")
                             .fontWeight(.black)
