@@ -110,7 +110,7 @@ extension TranscriptView {
             isLoading = true
             defer { isLoading = false }
 
-            transcript = await TranscriptService.getTranscript(
+            transcript = try? await TranscriptService.getTranscript(
                 from: transcriptUrl,
                 youtubeId: youtubeId,
                 )
