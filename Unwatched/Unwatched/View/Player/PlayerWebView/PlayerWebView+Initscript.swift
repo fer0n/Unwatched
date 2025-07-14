@@ -445,7 +445,7 @@ extension PlayerWebView {
         async function handleAudioTrack() {
             const player = document.getElementById("movie_player");
             const tracks = player.getAvailableAudioTracks();
-            const currentTrack = await player.getAudioTrack();
+            const currentTrack = player.getAudioTrack();
             const captionTrack = getCaptionTrack(currentTrack);
             const transcriptUrl = captionTrack?.url;
             sendMessage("transcriptUrl", transcriptUrl ?? "");
@@ -471,13 +471,14 @@ extension PlayerWebView {
         }
 
         function getCaptionTrack(currentTrack) {
-            const currentLocale = currentTrack?.Z?.languageCode
+            let currentLocale = Object.values(currentTrack || {})
+                .find(value => value?.languageCode)
+                ?.languageCode;
             if (!currentTrack?.captionTracks) {
                 return null;
             }
-            const firstTrack = currentTrack?.captionTracks?.[0];
             if (!currentLocale) {
-                return firstTrack;
+                currentLocale = navigator.language?.split('-')?.[0] ?? "en";
             }
             const tracks = currentTrack.captionTracks?.filter(track => track.languageCode === currentLocale);
             if (tracks.length === 0) {
