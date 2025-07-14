@@ -41,6 +41,10 @@ struct ChapterDescriptionView: View {
                         Spacer()
                             .frame(height: 7)
                     } else {
+                        GenerateChaptersButton(
+                            video: player.video,
+                            transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,
+                            )
                         Spacer()
                             .frame(height: 7)
                     }
@@ -89,6 +93,7 @@ struct ChapterDescriptionView: View {
         }
     }
 }
+
 
 #Preview {
     ChapterDescriptionView(video: DataProvider.dummyVideo)
