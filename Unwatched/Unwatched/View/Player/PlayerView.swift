@@ -155,10 +155,7 @@ struct PlayerView: View {
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
-            .scaleEffect(!hideMiniPlayer ? 0.83 : 1)
-            .padding(.horizontal, !hideMiniPlayer ? -(107 * 0.17) / 2 : 0)
-            // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
-            // 107 width with 16/9 is the minimum size to still get the higher resolution
+            .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
             .onTapGesture {
                 if !hideMiniPlayer {
                     handleMiniPlayerTap()
@@ -201,6 +198,7 @@ struct PlayerView: View {
             HStack {
                 if !hideMiniPlayer {
                     thumbnailPlaceholder
+                        .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
                         .padding(.leading, 5)
                     miniPlayerContent
                 }
@@ -355,4 +353,14 @@ struct PlayerView: View {
         .environment(RefreshManager())
         .environment(ImageCacheManager())
         .tint(Color.neutralAccentColor)
+}
+
+extension View {
+    func thumbnailQualityWorkaround(enable: Bool) -> some View {
+        self
+            .scaleEffect(enable ? 0.83 : 1)
+            .padding(.horizontal, enable ? -(107 * 0.17) / 2 : 0)
+        // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
+        // 107 width with 16/9 is the minimum size to still get the higher resolution
+    }
 }

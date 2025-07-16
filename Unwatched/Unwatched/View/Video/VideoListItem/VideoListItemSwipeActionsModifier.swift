@@ -17,6 +17,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     let videoData: VideoData
     var config: VideoListItemConfig
+    let onChange: ((_ reason: ChangeReason?) -> Void)?
 
     func body(content: Content) -> some View {
         content
@@ -112,7 +113,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Task {
                 try? await task?.value
                 try? await isNewTask?.value
-                config.onChange?(changeReason)
+                onChange?(changeReason)
             }
         } else {
             guard let video = getVideo() else {
@@ -123,7 +124,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             syncAction?(video)
             handleIsNew(video, isNew)
             try? modelContext.save()
-            config.onChange?(changeReason)
+            onChange?(changeReason)
         }
         handlePotentialQueueChange(after: task, order: order)
     }
@@ -233,7 +234,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             let task = VideoService.setIsNew(videoId, isNew)
             Task {
                 try? await task.value
-                config.onChange?(nil)
+                onChange?(nil)
             }
         }
     }
@@ -291,14 +292,16 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             Log.error("clearList: no video")
             return
         }
-        config.onChange?(direction == .above ? .clearAbove : .clearBelow)
-        let task = VideoService.clearList(
+        onChange?(direction == .above ? .clearAbove : .clearBelow)
+        VideoService.clearList(
             list,
             direction,
             index: video.queueEntry?.order,
-            date: video.inboxEntry?.date)
+            date: video.inboxEntry?.date,
+            modelContext
+        )
         if list == .queue && direction == .above {
-            player.loadTopmostVideoFromQueue(after: task)
+            player.loadTopmostVideoFromQueue()
         }
     }
 
@@ -308,7 +311,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             withAnimation {
                 CleanupService.deleteVideo(video, modelContext)
                 try? modelContext.save()
-                config.onChange?(nil)
+                onChange?(nil)
             }
         }
     }
@@ -442,6 +445,7 @@ enum ClearDirection {
     return List {
         VideoListItem(
             video,
+            video.youtubeId,
             config: VideoListItemConfig(
                 hasInboxEntry: true,
                 hasQueueEntry: true,
@@ -450,6 +454,7 @@ enum ClearDirection {
                 clearAboveBelowList: .inbox
             )
         )
+        .equatable()
         .listRowSeparator(.hidden)
     }
     .listStyle(.plain)

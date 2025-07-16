@@ -302,8 +302,22 @@ extension VideoService {
 
     static func clearList(_ list: ClearList,
                           _ direction: ClearDirection,
-                          index: Int?,
-                          date: Date?) -> Task<(), Error> {
+                          index: Int? = nil,
+                          date: Date? = nil,
+                          _ modelContext: ModelContext) {
+        try? VideoActor.clearList(
+            list,
+            direction,
+            index: index,
+            date: date,
+            modelContext
+        )
+    }
+
+    static func clearListAsync(_ list: ClearList,
+                               _ direction: ClearDirection,
+                               index: Int?,
+                               date: Date?) -> Task<(), Error> {
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.clearList(list, direction, index: index, date: date)

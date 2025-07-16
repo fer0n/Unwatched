@@ -5,7 +5,18 @@
 
 import SwiftUI
 
-public struct VideoListItemConfig {
+public struct VideoListItemConfig: Equatable, Sendable {
+    public static func == (lhs: VideoListItemConfig, rhs: VideoListItemConfig) -> Bool {
+        lhs.hasInboxEntry == rhs.hasInboxEntry &&
+        lhs.hasQueueEntry == rhs.hasQueueEntry &&
+        lhs.videoDuration == rhs.videoDuration &&
+        lhs.watched == rhs.watched &&
+        lhs.deferred == rhs.deferred &&
+        lhs.isNew == rhs.isNew &&
+        lhs.showQueueButton == rhs.showQueueButton &&
+        lhs.showContextMenu == rhs.showContextMenu
+    }
+    
     public let hasInboxEntry: Bool?
     public let hasQueueEntry: Bool?
     public let videoDuration: Double?
@@ -15,7 +26,6 @@ public struct VideoListItemConfig {
     public let showAllStatus: Bool
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
-    public let onChange: ((_ reason: ChangeReason?) -> Void)?
     public let clearAboveBelowList: ClearList?
     public let showQueueButton: Bool
     public let showContextMenu: Bool
@@ -32,7 +42,6 @@ public struct VideoListItemConfig {
         showAllStatus: Bool = true,
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
-        onChange: ((_ reason: ChangeReason?) -> Void)? = nil,
         clearAboveBelowList: ClearList? = nil,
         showQueueButton: Bool = false,
         showContextMenu: Bool = true,
@@ -48,7 +57,6 @@ public struct VideoListItemConfig {
         self.showAllStatus = showAllStatus
         self.clearRole = clearRole
         self.queueRole = queueRole
-        self.onChange = onChange
         self.clearAboveBelowList = clearAboveBelowList
         self.showQueueButton = showQueueButton
         #if os(iOS)
@@ -61,7 +69,7 @@ public struct VideoListItemConfig {
     }
 }
 
-public enum ChangeReason {
+public enum ChangeReason: Sendable {
     case clear,
          queue,
          clearAbove,

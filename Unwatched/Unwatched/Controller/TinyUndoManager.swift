@@ -23,9 +23,14 @@ class TinyUndoManager {
         actions.append((reason, ids))
     }
 
-    func handleClearDirection(_ video: Video, inboxEntries: [InboxEntry], _ direction: ClearDirection) {
-        guard let date = video.publishedDate else {
-            Log.warning("handleClearDirection: Video \(video.youtubeId) has no published date")
+    func handleClearDirection(
+        _ youtubeId: String,
+        _ date: Date?,
+        _ inboxEntries: [InboxEntry],
+        _ direction: ClearDirection
+    ) {
+        guard let date else {
+            Log.warning("handleClearDirection: Video \(youtubeId) has no published date")
             return
         }
         let past = Date.distantPast

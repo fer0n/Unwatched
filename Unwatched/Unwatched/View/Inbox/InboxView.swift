@@ -55,24 +55,33 @@ struct InboxView: View {
                     ForEach(inboxEntries) { entry in
                         ZStack {
                             if let video = entry.video {
+                                let videoId = video.persistentModelID
+                                let youtubeId = video.youtubeId
+                                let date = video.publishedDate
+
                                 VideoListItem(
                                     video,
+                                    video.youtubeId,
                                     config: VideoListItemConfig(
                                         hasInboxEntry: true,
                                         isNew: video.isNew,
                                         showAllStatus: false,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
-                                        onChange: { handleChange($0, video) },
                                         clearAboveBelowList: .inbox,
                                         showQueueButton: showAddToQueueButton,
-                                        showDelete: false)
+                                        showDelete: false
+                                    ),
+                                    onChange: { reason in
+                                        handleChange(reason, videoId, youtubeId, date)
+                                    }
                                 )
+                                .equatable()
+                                .id(NavigationManager.getScrollId(video.youtubeId, ClearList.inbox.rawValue))
                             } else {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.inbox.rawValue))
                         .videoListItemEntry()
                     }
                     .listRowBackground(Color.backgroundColor)
@@ -116,19 +125,19 @@ struct InboxView: View {
         undoManager.handleAction(.clear, videoIds)
     }
 
-    func handleChange(_ reason: ChangeReason?, _ video: Video) {
+    func handleChange(_ reason: ChangeReason?, _ videoId: PersistentIdentifier, _ youtubeId: String, _ date: Date?) {
         guard let reason else {
             return
         }
         switch reason {
         case .queue, .clear:
-            undoManager.handleAction(reason, [video.persistentModelID])
+            undoManager.handleAction(reason, [videoId])
         case .clearAbove:
-            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .above)
+            undoManager.handleClearDirection(youtubeId, date, inboxEntries, .above)
         case .clearBelow:
-            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .below)
+            undoManager.handleClearDirection(youtubeId, date, inboxEntries, .below)
         default:
-            Log.warning("handleChange: Unsupported reason \(reason) for video \(video.youtubeId)")
+            Log.warning("handleChange: Unsupported reason \(reason) for video \(youtubeId)")
         }
     }
 

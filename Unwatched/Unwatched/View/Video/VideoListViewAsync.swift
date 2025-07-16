@@ -66,16 +66,18 @@ struct VideoListViewAsync: View {
                 watched: video.watchedDate != nil,
                 deferred: video.deferDate != nil,
                 isNew: video.isNew,
-                onChange: { _ in
-                    videoListVM.updateVideo(video)
-                },
                 async: true
             )
 
             VideoListItem(
                 video,
-                config: config
-            )
+                video.youtubeId,
+                config: config,
+                onChange: { _ in
+                    videoListVM.updateVideo(video)
+                },
+                )
+            .equatable()
             .videoListItemEntry()
             .onAppear {
                 videoListVM.loadMoreContentIfNeeded(currentItem: video)

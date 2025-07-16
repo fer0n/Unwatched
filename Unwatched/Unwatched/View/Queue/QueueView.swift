@@ -40,6 +40,7 @@ struct QueueView: View {
                             if let video = entry.video {
                                 VideoListItem(
                                     video,
+                                    video.youtubeId,
                                     config: VideoListItemConfig(
                                         hasQueueEntry: true,
                                         videoDuration: video.duration,
@@ -51,11 +52,12 @@ struct QueueView: View {
                                         showDelete: false,
                                         )
                                 )
+                                .equatable()
+                                .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                             } else {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                         .videoListItemEntry()
                     }
                     .moveQueueEntryModifier()

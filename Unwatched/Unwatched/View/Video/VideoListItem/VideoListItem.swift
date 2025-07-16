@@ -8,18 +8,31 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-struct VideoListItem: View {
+struct VideoListItem: View, Equatable {
+    nonisolated static func == (lhs: VideoListItem, rhs: VideoListItem) -> Bool {
+        lhs.config == rhs.config &&
+            lhs.youtubeId == rhs.youtubeId
+    }
+
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
-    @Environment(PlayerManager.self) private var player
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @ScaledMetric var queueButtonSize = 30
 
     let videoData: any VideoData
+    let youtubeId: String
     let config: VideoListItemConfig
+    let onChange: ((_ reason: ChangeReason?) -> Void)?
 
-    init(_ videoData: any VideoData, config: VideoListItemConfig) {
+    init(
+        _ videoData: any VideoData,
+        _ youtubeId: String,
+        config: VideoListItemConfig,
+        onChange: ((_ reason: ChangeReason?) -> Void)? = nil
+    ) {
         self.videoData = videoData
+        self.youtubeId = youtubeId
         self.config = config
+        self.onChange = onChange
     }
 
     private var normalSize: Bool {
@@ -48,8 +61,7 @@ struct VideoListItem: View {
                 .overlay(alignment: .topLeading) {
                     VideoListItemStatus(
                         showAllStatus: config.showAllStatus,
-                        youtubeId: videoData.youtubeId,
-                        playingVideoId: player.video?.youtubeId,
+                        youtubeId: youtubeId,
                         hasInboxEntry: config.hasInboxEntry,
                         hasQueueEntry: config.hasQueueEntry,
                         watched: config.watched,
@@ -77,7 +89,8 @@ struct VideoListItem: View {
         .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
             videoData: videoData,
-            config: config
+            config: config,
+            onChange: onChange
         ))
     }
 }
@@ -103,6 +116,7 @@ extension View {
     return List {
         VideoListItem(
             video,
+            video.youtubeId,
             config: VideoListItemConfig(
                 hasInboxEntry: false,
                 hasQueueEntry: true,
@@ -111,6 +125,7 @@ extension View {
                 showQueueButton: true
             )
         )
+        .equatable()
         .tint(.teal)
         .listRowSeparator(.hidden)
     }

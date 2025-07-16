@@ -366,19 +366,40 @@ extension VideoActor {
         }
     }
 
-    func clearList(_ list: ClearList, _ direction: ClearDirection, index: Int?, date: Date?) throws {
+    func clearList(
+        _ list: ClearList,
+        _ direction: ClearDirection,
+        index: Int? = nil,
+        date: Date? = nil
+    ) throws {
+        try VideoActor.clearList(
+            list,
+            direction,
+            index: index,
+            date: date,
+            modelContext
+        )
+    }
+
+    static func clearList(
+        _ list: ClearList,
+        _ direction: ClearDirection,
+        index: Int?,
+        date: Date?,
+        _ modelContext: ModelContext
+    ) throws {
         switch list {
         case .inbox:
-            clearInbox(direction, date: date)
+            clearInbox(direction, date: date, modelContext)
         case .queue:
-            clearQueue(direction, index: index)
+            clearQueue(direction, index: index, modelContext)
         @unknown default:
             Log.warning("Clear list value not implemented")
         }
         try modelContext.save()
     }
 
-    private func clearInbox(_ direction: ClearDirection, date: Date?) {
+    static func clearInbox(_ direction: ClearDirection, date: Date?, _ modelContext: ModelContext) {
         let past = Date.distantPast
         let dateL = date ?? past
         var filter: Predicate<InboxEntry>
@@ -394,7 +415,11 @@ extension VideoActor {
         }
     }
 
-    private func clearQueue(_ direction: ClearDirection, index: Int?) {
+    static func clearQueue(
+        _ direction: ClearDirection,
+        index: Int?,
+        _ modelContext: ModelContext
+    ) {
         var filter: Predicate<QueueEntry>
         if direction == .above {
             filter = #Predicate<QueueEntry> { $0.order < index ?? 0 }
