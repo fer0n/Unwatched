@@ -920,6 +920,7 @@ extension PlayerWebView {
             setTimeout(checkError, 10000);
         }
 
+
         // Handle link clicks
         document.addEventListener('click', function(event) {
             sendMessage("click");
@@ -927,18 +928,32 @@ extension PlayerWebView {
             let target = event.target;
             let link = null;
             if (target.tagName === 'A') {
-                link = target;
+                link = target?.href;
             } else if (target.parentNode?.tagName === 'A') {
-                link = target.parentNode;
+                link = target.parentNode?.href;
             } else if (target.parentNode?.parentNode?.tagName === 'A') {
-                link = target.parentNode.parentNode;
+                link = target.parentNode.parentNode?.href;
+            } else if (target.className == "ytmThumbnailEndscreenElementScrim") {
+                link = getLinkFromThumbnailEndscreenElementScrim(target);
             }
+
             if (link) {
                 event.preventDefault();
                 event.stopPropagation();
-                sendMessage("urlClicked", link.href);
+                sendMessage("urlClicked", link);
             }
         }, true);
+
+        function getLinkFromThumbnailEndscreenElementScrim(target) {
+            let container = target.closest('thumbnail-endscreen-element');
+            if (!container) return;
+            let img = container.querySelector('img[src*="i.ytimg.com/vi"]');
+            if (!img) return;
+            let match = img.src.match(new RegExp("vi(?:_webp)?/([^/]+)/"));
+            if (match && match[1]) {
+                return `https://www.youtube.com/watch?v=${match[1]}`;
+            }
+        }
     """
     }
     // swiftlint:enable function_body_length
