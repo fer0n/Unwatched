@@ -458,31 +458,30 @@ extension PlayerWebView {
                 return;
             }
             const originalTrack = getOriginalTrack(tracks);
-
             if (originalTrack) {
                 if (`${originalTrack}` === `${currentTrack}`) {
                     return;
                 }
                 const isAudioTrackSet = await player.setAudioTrack(originalTrack);
-                if (isAudioTrackSet) {
-                    sendMessage(`Audio track set to original: ${originalTrack.name}`);
+                if (isAudioTrackSet && enableLogging) {
+                    sendMessage('originalAudioTrack', originalTrack.name);
                 }
             }
         }
 
         function getCaptionTrack(currentTrack) {
-            let currentLocale = Object.values(currentTrack || {})
-                .find(value => value?.languageCode)
-                ?.languageCode;
             if (!currentTrack?.captionTracks) {
                 return null;
             }
+            let currentLocale = Object.values(currentTrack || {})
+                .find(value => value?.languageCode)
+                ?.languageCode;
             if (!currentLocale) {
                 currentLocale = navigator.language?.split('-')?.[0] ?? "en";
             }
             const tracks = currentTrack.captionTracks?.filter(track => track.languageCode === currentLocale);
             if (tracks.length === 0) {
-                return firstTrack;
+                return currentTrack.captionTracks[0];
             } else if (tracks.length === 1) {
                 return tracks[0];
             } else {
