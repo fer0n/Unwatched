@@ -194,6 +194,7 @@ struct PlayerControls: View {
                     .fontWeight(.bold)
                     .foregroundStyle(Color.automaticBlack.opacity(0.5))
                     .padding(8)
+                    .buttonStyle(.plain)
                 }
             }
             .opacity(showControls ? 1 : 0)

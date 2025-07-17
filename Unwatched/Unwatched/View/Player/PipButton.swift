@@ -21,6 +21,7 @@ struct PipButton: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help(helper)
         .accessibilityLabel(helper)
+        .buttonStyle(.plain)
     }
 
     var helper: String {

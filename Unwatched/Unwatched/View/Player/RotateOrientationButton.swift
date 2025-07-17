@@ -35,6 +35,7 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
         }
         .padding(-2)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .buttonStyle(.plain)
     }
 }
 
