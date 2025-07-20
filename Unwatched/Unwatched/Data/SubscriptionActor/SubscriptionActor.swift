@@ -136,9 +136,11 @@ actor SubscriptionActor {
     }
 
     static func getSubscription(url: URL,
+                                channelId: String? = nil,
                                 userName: String? = nil,
                                 playlistId: String? = nil) async throws -> SendableSubscription? {
         let feedUrl = try await SubscriptionActor.getChannelFeedFromUrl(url: url,
+                                                                        channelId: channelId,
                                                                         userName: userName,
                                                                         playlistId: playlistId)
         Log.info("getSubscription, feed: \(feedUrl.absoluteString)")
@@ -147,19 +149,27 @@ actor SubscriptionActor {
         return sendableSub
     }
 
-    static func getChannelFeedFromUrl(url: URL, userName: String?, playlistId: String?) async throws -> URL {
+    static func getChannelFeedFromUrl(
+        url: URL,
+        channelId: String?,
+        userName: String?,
+        playlistId: String?
+    ) async throws -> URL {
         Log.info("getChannelFeedFromUrl: \(url.absoluteString)")
         if UrlService.isYoutubeFeedUrl(url: url) {
             return url
         }
-        if let playlistId = playlistId, let feedUrl = try? UrlService.getPlaylistFeedUrl(playlistId) {
+        if let playlistId, let feedUrl = try? UrlService.getPlaylistFeedUrl(playlistId) {
             return feedUrl
         }
-        guard let userName = userName else {
+        if let channelId {
+            return try UrlService.getFeedUrlFromChannelId(channelId)
+        }
+        guard let userName else {
             throw SubscriptionError.failedGettingChannelIdFromUsername("Username was empty")
         }
-        let channelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
-        return try UrlService.getFeedUrlFromChannelId(channelId)
+        let loadedChannelId = try await YoutubeDataAPI.getYtChannelId(from: userName)
+        return try UrlService.getFeedUrlFromChannelId(loadedChannelId)
     }
 
     func getAllFeedUrls() throws -> [(title: String, link: URL?)] {
