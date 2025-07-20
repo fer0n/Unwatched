@@ -513,6 +513,8 @@
 		88CD38932E213D3400E7B21C /* TranscriptList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38912E213D3400E7B21C /* TranscriptList.swift */; };
 		88CD38952E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */; };
 		88CD38962E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */; };
+		88CD909E2E2BA56300CD756D /* getTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909D2E2BA56300CD756D /* getTranscript.swift */; };
+		88CD90A02E2BC74400CD756D /* setChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909F2E2BC74400CD756D /* setChapters.swift */; };
 		88D127C12D927C370052F42D /* PlayerShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D127C02D927C370052F42D /* PlayerShortcut.swift */; };
 		88D127C22D927C370052F42D /* PlayerShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D127C02D927C370052F42D /* PlayerShortcut.swift */; };
 		88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D29AE62B751B6900BDBFDF /* VideoSorting.swift */; };
@@ -922,6 +924,8 @@
 		88CD38912E213D3400E7B21C /* TranscriptList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptList.swift; sourceTree = "<group>"; };
 		88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTranscriptCacheButton.swift; sourceTree = "<group>"; };
 		88CD5B8A2C99A54D00B34DE6 /* UnwatchedShared.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = UnwatchedShared.xcodeproj; sourceTree = "<group>"; };
+		88CD909D2E2BA56300CD756D /* getTranscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getTranscript.swift; sourceTree = "<group>"; };
+		88CD909F2E2BC74400CD756D /* setChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = setChapters.swift; sourceTree = "<group>"; };
 		88D127C02D927C370052F42D /* PlayerShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerShortcut.swift; sourceTree = "<group>"; };
 		88D29AE62B751B6900BDBFDF /* VideoSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSorting.swift; sourceTree = "<group>"; };
 		88D29AEC2B757E5700BDBFDF /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
@@ -1364,6 +1368,8 @@
 				88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */,
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
 				887E82AB2CD8FC8B00B196EA /* GetCurrentVideo.swift */,
+				88CD909D2E2BA56300CD756D /* getTranscript.swift */,
+				88CD909F2E2BC74400CD756D /* setChapters.swift */,
 				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
 			);
 			path = "App Intents";
@@ -2504,6 +2510,7 @@
 				889DFB642E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
 				88D2B0B22E190E600024F8C0 /* FetchVideoData.swift in Sources */,
 				88F3AA912C998BFC0030B2EA /* VideoPlacement.swift in Sources */,
+				88CD90A02E2BC74400CD756D /* setChapters.swift in Sources */,
 				880505122C836882005F0972 /* FaqView.swift in Sources */,
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
@@ -2520,6 +2527,7 @@
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,
 				883D4CAA2CF4791300BB2581 /* PlayerContentView.swift in Sources */,
 				883EE0982B7B422A00D0A83A /* AsyncSharableUrl.swift in Sources */,
+				88CD909E2E2BA56300CD756D /* getTranscript.swift in Sources */,
 				886E79B72B46E0F900554E1F /* QueueView.swift in Sources */,
 				8808A9112B928CD8004D7CE2 /* ChapterList.swift in Sources */,
 				888322522B872EE1004E2DE4 /* BrowserUrl.swift in Sources */,
@@ -2825,7 +2833,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 264;
+				CURRENT_PROJECT_VERSION = 265;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -2873,7 +2881,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = AppIconMac;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 264;
+				CURRENT_PROJECT_VERSION = 265;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

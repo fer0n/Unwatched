@@ -11,7 +11,7 @@ struct AddYoutubeURL: AppIntent {
     static var title: LocalizedStringResource { "addYoutubeUrl" }
     static let description = IntentDescription("addYoutubeUrlDescription")
 
-    @Parameter(title: "youtubeUrl")
+    @Parameter(title: "youtubeVideoUrl")
     var youtubeUrl: URL
 
     @MainActor

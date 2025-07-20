@@ -480,4 +480,24 @@ extension VideoService {
         try? context.save()
         return video
     }
+
+    @MainActor
+    static func getVideoOrCurrent(_ videoUrl: URL?) throws -> Video {
+        if let videoUrl {
+            guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: videoUrl),
+                  let loadedVideo = VideoService.getVideo(for: youtubeId) else {
+                throw VideoError.noVideoFound
+            }
+            return loadedVideo
+        }
+
+        let context = DataProvider.mainContext
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        let entries = try context.fetch(fetch)
+        guard let fetchedVideo = entries.first?.video else {
+            throw VideoError.noVideoFound
+        }
+        return fetchedVideo
+    }
 }

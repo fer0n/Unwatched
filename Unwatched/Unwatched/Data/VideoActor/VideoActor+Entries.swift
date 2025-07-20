@@ -106,7 +106,7 @@ extension VideoActor {
 
         if video.videoDescription != updatedVideo.videoDescription {
             video.videoDescription = updatedVideo.videoDescription
-            deleteOldChapters(from: video)
+            CleanupService.deleteChapters(from: video, modelContext)
             let newChapters = updatedVideo.chapters.map {
                 let chapter = $0.getChapter
                 modelContext.insert(chapter)
@@ -115,16 +115,6 @@ extension VideoActor {
             video.chapters = newChapters
         }
         return deleteImage
-    }
-
-    private func deleteOldChapters(from video: Video) {
-        for chapter in video.chapters ?? [] {
-            modelContext.delete(chapter)
-        }
-        for chapter in video.mergedChapters ?? [] {
-            modelContext.delete(chapter)
-        }
-        video.sponserBlockUpdateDate = nil
     }
 
     func getMostRecentDate(_ videos: [SendableVideo]) -> Date? {

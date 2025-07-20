@@ -910,31 +910,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube URL hinzufügen"
+            "value" : "YouTube Video URL hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add YouTube URL"
+            "value" : "Add YouTube Video URL"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agregar URL de YouTube"
+            "value" : "Añadir URL del video de YouTube"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter une URL YouTube"
+            "value" : "Ajouter l’URL de la vidéo YouTube"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaj URL YouTube"
+            "value" : "Dodaj URL filmu z YouTube"
           }
         }
       }
@@ -2500,6 +2500,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ustawia rozdziały zawierające dowolne ze słów kluczowych jako nieaktywne po załadowaniu wideo do odtwarzacza. Użyj „,” aby oddzielić wiele słów kluczowych. Nie dotyczy segmentów SponsorBlock (oznaczonych „[Nawiasami]”)."
+          }
+        }
+      }
+    },
+    "chapterTimestamps" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel-Zeitstempel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapter Timestamps"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiempos de capítulo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horodatages des chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Znaczniki czasu rozdziałów"
+          }
+        }
+      }
+    },
+    "chapterTimestampsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-ähnliche Kapitelmarkierungen, z. B.:\n00:00 Intro\n01:32 Thema 1\n…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-style chapters markers, e.g.:\n\n00:00 Intro\n01:32 Topic 1\n…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marcadores de capítulos al estilo de YouTube, por ejemplo:\n00:00 Introducción\n01:32 Tema 1\n…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marqueurs de chapitres à la YouTube, par ex. :\n00:00 Intro\n01:32 Sujet 1\n…"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style YouTube, np.:\n00:00 Wstęp\n01:32 Temat 1\n…"
           }
         }
       }
@@ -5904,6 +5972,74 @@
         }
       }
     },
+    "getTranscript" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transkript abrufen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Transcript"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtener transcripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenir la transcription"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pobierz transkrypt"
+          }
+        }
+      }
+    },
+    "getTranscriptDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruft das Transkript des aktuellen Videos oder einer angegebenen URL ab. Das Video muss bereits hinzugefügt worden sein und ein Transkript verfügbar haben."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retrieves the transcript for the current video or a specified URL. The video must already be added and have a transcript available."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recupera la transcripción del video actual o de una URL especificada. El video debe estar ya añadido y tener una transcripción disponible."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupère la transcription de la vidéo actuelle ou d’une URL spécifiée. La vidéo doit déjà être ajoutée et avoir une transcription disponible."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pobiera transkrypt bieżącego filmu lub podanego adresu URL. Film musi być już dodany i mieć dostępny transkrypt."
+          }
+        }
+      }
+    },
     "googleTakeout" : {
       "localizations" : {
         "de" : {
@@ -7218,6 +7354,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przesunięcie w lewo wyczyści film, a przesunięcie w prawo da ci możliwość wstawienia go na szczyt lub na dół kolejki.\n\nKliknięcie filmu przeniesie go na szczyt kolejki i rozpocznie odtwarzanie."
+          }
+        }
+      }
+    },
+    "includeTimestamps" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitstempel einfügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Timestamps"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir marcas de tiempo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclure les horodatages"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dołącz znaczniki czasu"
+          }
+        }
+      }
+    },
+    "includeTimestampsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt der Transkription Zeitstempel hinzu."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adds timestamps to the transcript."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade marcas de tiempo a la transcripción."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoute des horodatages à la transcription."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dodaje znaczniki czasu do transkryptu."
           }
         }
       }
@@ -8986,6 +9190,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Informacje o nowych filmach będą aktualizowane w tle i wywołają powiadomienia, ale nie będzie to natychmiastowe."
+          }
+        }
+      }
+    },
+    "noTranscriptFound" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Transkript gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No transcript found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró transcripción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune transcription trouvée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono transkryptu"
           }
         }
       }
@@ -11570,6 +11808,108 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opinie i pomoc"
+          }
+        }
+      }
+    },
+    "setChapters" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel festlegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Chapters"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer capítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir les chapitres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustaw rozdziały"
+          }
+        }
+      }
+    },
+    "setChapters ${chapterTimestamps}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kapitel auf ${chapterTimestamps} festlegen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Chapters to ${chapterTimestamps}"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer capítulos en ${chapterTimestamps}"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir les chapitres sur ${chapterTimestamps}"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustaw rozdziały na ${chapterTimestamps}"
+          }
+        }
+      }
+    },
+    "setChaptersDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Legt Kapitel für das aktuelle Video fest oder für ein angegebenes Video, wenn eine URL bereitgestellt wird."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sets chapters for the current video, or for a specified video if a video URL is provided."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establece los capítulos para el video actual o para un video especificado si se proporciona una URL."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définit les chapitres pour la vidéo actuelle, ou pour une vidéo spécifiée si une URL est fournie."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ustawia rozdziały dla bieżącego filmu lub wskazanego filmu, jeśli podano adres URL."
           }
         }
       }
@@ -15298,6 +15638,40 @@
         }
       }
     },
+    "WatchInUnwatched ${youtubeUrl}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${youtubeUrl} in Unwatched ansehen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch ${youtubeUrl} in Unwatched"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver ${youtubeUrl} en Unwatched"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regarder ${youtubeUrl} dans Unwatched"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obejrzyj ${youtubeUrl} w Unwatched"
+          }
+        }
+      }
+    },
     "WatchInUnwatchedDescription" : {
       "localizations" : {
         "de" : {
@@ -15634,6 +16008,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL YouTube"
+          }
+        }
+      }
+    },
+    "youtubeVideoUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-Video-URL"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Video URL"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL del video de YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL de la vidéo YouTube"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL filmu z YouTube"
           }
         }
       }

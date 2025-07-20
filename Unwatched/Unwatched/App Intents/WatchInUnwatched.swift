@@ -13,7 +13,10 @@ struct WatchInUnwatched: AppIntent {
     static let description = IntentDescription("WatchInUnwatchedDescription")
     static var openAppWhenRun: Bool { true }
 
-    @Parameter(title: "youtubeUrl")
+    @Parameter(
+        title: "youtubeVideoUrl",
+        inputConnectionBehavior: .connectToPreviousIntentResult
+    )
     var youtubeUrl: URL
 
     @MainActor
@@ -27,6 +30,6 @@ struct WatchInUnwatched: AppIntent {
     }
 
     static var parameterSummary: some ParameterSummary {
-        Summary("WatchInUnwatched")
+        Summary("WatchInUnwatched \(\.$youtubeUrl)")
     }
 }
