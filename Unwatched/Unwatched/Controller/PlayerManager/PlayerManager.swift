@@ -136,12 +136,12 @@ import UnwatchedShared
 
     @MainActor
     private func handleNewVideoSet(_ oldValue: Video?) {
-        resetVideoIndependentValues()
-        guard let video else {
+        if video?.youtubeId == oldValue?.youtubeId {
+            Log.info("Existing video set")
             return
         }
-        if video.youtubeId == oldValue?.youtubeId {
-            Log.info("Existing video set")
+        resetVideoIndependentValues()
+        guard let video else {
             return
         }
         if aspectRatio != nil {
