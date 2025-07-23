@@ -46,10 +46,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         if mainWindow == nil {
             mainWindow = NSApp.keyWindow ?? NSApp.windows.first
             mainWindow?.delegate = self
-
-            // remove white border, especially in light mode
-            mainWindow?.backgroundColor = .clear
-            mainWindow?.isOpaque = false
         }
     }
 
