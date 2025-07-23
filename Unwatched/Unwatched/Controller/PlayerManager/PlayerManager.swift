@@ -141,7 +141,7 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
-        guard let video else {
+        guard video != nil else {
             return
         }
         if aspectRatio != nil {

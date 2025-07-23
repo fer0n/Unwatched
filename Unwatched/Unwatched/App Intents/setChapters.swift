@@ -43,7 +43,7 @@ struct SetChapters: AppIntent {
         video.chapters = chapterModels
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {
             PlayerManager.shared.video = video
-            PlayerManager.shared.handleChapterChange()
+            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
         }
 
         try context.save()
