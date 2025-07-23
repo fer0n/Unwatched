@@ -37,11 +37,17 @@ struct SettingsView: View {
                     }
                 }
 
-                MySection("shareSheet") {
+                MySection("shortcuts") {
                     Link(destination: UrlService.shareShortcutUrl) {
                         LibraryNavListItem(
                             "setupShareSheetAction",
                             systemName: "square.and.arrow.up.on.square.fill"
+                        )
+                    }
+                    Link(destination: UrlService.generateChaptersShortcutUrl) {
+                        LibraryNavListItem(
+                            "generateChaptersShortcut",
+                            systemName: "checklist"
                         )
                     }
                 }
