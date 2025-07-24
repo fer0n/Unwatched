@@ -26,19 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         restoreWindowFrame()
         handleFullscreenOnLaunch()
 
-        setActivationPolicy()
-
         SetupView.setupVideo()
-    }
-
-    @MainActor
-    func setActivationPolicy() {
-        let currentPolicy = NSApp.activationPolicy()
-        Log.info("setActivationPolicy: \(currentPolicy)")
-        if currentPolicy == .accessory {
-            // workaround: prevent window from opening itself in the background due to sync updates
-            NSApp.setActivationPolicy(.prohibited)
-        }
     }
 
     @MainActor
