@@ -17,7 +17,9 @@ struct UrlService {
     static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
     static let shareShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
-    static let generateChaptersShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/3c9b954b8d3642199106e1e619a1cb9c")
+    static let generateChaptersShortcutUrl = URL(
+        staticString: "https://www.icloud.com/shortcuts/9fba5a7488984df7921c5806f1e8595c"
+    )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
 
     static let writeReviewUrl = URL(staticString: "https://apps.apple.com/app/id6477287463?action=write-review")
