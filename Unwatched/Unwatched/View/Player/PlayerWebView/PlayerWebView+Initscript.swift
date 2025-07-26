@@ -115,7 +115,7 @@ extension PlayerWebView {
             if (isVideoElement(event)) {
                 handleOverlayTap();
             }
-        });
+        }, { passive: true });
 
         function isOverlayHealthy() {
             if (document.contains(overlay)) {
@@ -308,7 +308,7 @@ extension PlayerWebView {
                 sendMessage("play");
             }
             hideOverlay();
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener('pause', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 stopTimer();
@@ -316,12 +316,12 @@ extension PlayerWebView {
                 const payload = `${e.target.currentTime},${url}`;
                 sendMessage("pause", payload);
             }
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener('ended', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("ended");
             }
-        }, true);
+        }, { passive: true, capture: true });
 
         // meta data
         if (requiresFetchingVideoData) {
@@ -363,12 +363,12 @@ extension PlayerWebView {
                 // setting video time so early breaks the overlay reference
                 overlayHealthCheckPolling();
             }
-        }, { capture: true, once: true });
+        }, { capture: true, once: true, passive: true });
         document.addEventListener('loadeddata', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
             }
-        }, true);
+        }, { passive: true, capture: true });
 
 
         // Audio Tracks
@@ -500,17 +500,17 @@ extension PlayerWebView {
                     e.stopPropagation()
                 }, true)
             }
-        }, { capture: true, once: true });
+        }, { capture: true, once: true, passive: true });
         document.addEventListener("enterpictureinpicture", (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "enter");
             }
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener("leavepictureinpicture", (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "exit");
             }
-        }, true);
+        }, { passive: true, capture: true });
 
         // styling
         styling()
@@ -733,7 +733,7 @@ extension PlayerWebView {
                 if (isVideoElement(event)) {
                     handler(event);
                 }
-            }, true);
+            }, { passive: eventType === 'touchmove', capture: true });
         }
 
         addTouchEventListener('touchstart', event => {
@@ -937,7 +937,7 @@ extension PlayerWebView {
                 event.stopPropagation();
                 sendMessage("urlClicked", link);
             }
-        }, true);
+        }, { capture: true });
 
         function getLinkFromThumbnailEndscreenElementScrim(target) {
             let container = target.closest('thumbnail-endscreen-element');
