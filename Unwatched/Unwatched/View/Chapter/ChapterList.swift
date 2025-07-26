@@ -52,6 +52,15 @@ struct ChapterList: View {
                     }
                     .foregroundStyle(foregroundColor)
                     .tint(foregroundColor)
+                    .contextMenu {
+                        Button("copyUrl", systemImage: Const.copySF) {
+                            let text = UrlService.getShortenedUrl(
+                                video.youtubeId,
+                                timestamp: chapter.startTime,
+                                )
+                            ClipboardService.set(text)
+                        }
+                    }
                     .accessibilityActions {
                         Button("playChapter") {
                             setChapter(chapter)

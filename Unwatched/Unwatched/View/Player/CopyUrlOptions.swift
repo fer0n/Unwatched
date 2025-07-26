@@ -22,7 +22,7 @@ struct CopyUrlOptions: View {
                 options
             } label: {
                 Text("copyUrl")
-                Image(systemName: "document.on.document.fill")
+                Image(systemName: Const.copySF)
             }
         }
     }
