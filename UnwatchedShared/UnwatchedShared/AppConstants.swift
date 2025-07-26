@@ -26,6 +26,7 @@ public struct Const {
     public static let clearNoFillSF = "xmark"
     public static let checkmarkSF = "checkmark"
     public static let errorSF = "exclamationmark.triangle.fill"
+    public static let copySF = "document.on.document.fill"
 
     public static let bundleId = "com.pentlandFirth.Unwatched"
 
