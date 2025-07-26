@@ -135,7 +135,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             NotificationManager.changeBadgeNumber(by: -1)
             return (youtubeId, false)
         case Const.notificationActionClear:
-            VideoService.clearFromEverywhere(youtubeId)
+            _ = VideoService.clearFromEverywhereAsync(youtubeId)
             NotificationManager.changeBadgeNumber(by: -1)
             return (youtubeId, true)
         default:

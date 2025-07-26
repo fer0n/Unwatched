@@ -162,8 +162,8 @@ extension VideoService {
         return task
     }
 
-    static func clearFromEverywhere(_ youtubeId: String) {
-        _ = Task.detached {
+    static func clearFromEverywhereAsync(_ youtubeId: String) -> Task<Void, Error> {
+        return Task.detached {
             let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
                 let repo = VideoActor(modelContainer: DataProvider.shared.container)

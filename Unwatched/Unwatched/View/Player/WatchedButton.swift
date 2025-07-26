@@ -35,7 +35,7 @@ struct WatchedButton: View {
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel(LocalizedStringKey("markWatched"))
         .contextMenu {
-            if player.video != nil {
+            if let video = player.video {
                 Button {
                     player.clearVideo(modelContext)
                 } label: {
