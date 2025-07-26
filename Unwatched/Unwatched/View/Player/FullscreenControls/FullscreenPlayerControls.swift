@@ -41,7 +41,6 @@ struct FullscreenPlayerControls: View {
                         .resizable()
                         .frame(width: size, height: size)
                     ChapterTimeRemaining()
-                        .contentTransition(.numericText(countsDown: true))
                         .font(.system(size: 12).monospacedDigit())
                         .lineLimit(1)
                         .opacity(0.8)
