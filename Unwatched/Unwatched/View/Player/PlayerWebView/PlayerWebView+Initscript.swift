@@ -121,13 +121,10 @@ extension PlayerWebView {
             if (document.contains(overlay)) {
                 return true;
             }
-            console.log('isOverlayHealthy: query overlay');
             overlay = document.querySelector('#player-control-overlay');
             if (!overlay) {
-                console.log('isOverlayHealthy: not in DOM');
                 return false;
             }
-            console.log('isOverlayHealthy: repaired');
             setupOverlay();
             return true;
         }
@@ -136,13 +133,11 @@ extension PlayerWebView {
             let timers = [];
             function checkOverlay() {
                 const isHealthy = isOverlayHealthy();
-                console.log('checkOverlay, healthy:', isHealthy);
                 if (isHealthy) {
                     cancelChecks();
                 }
             }
             function cancelChecks() {
-                console.log("cancelChecks");
                 timers.forEach(clearTimeout);
                 timers = [];
             }
@@ -363,6 +358,7 @@ extension PlayerWebView {
                 sendMessage("duration", duration.toString());
                 e.target.currentTime = startAtTime;
                 handleAudioTrack();
+                hideOverlay();
 
                 // setting video time so early breaks the overlay reference
                 overlayHealthCheckPolling();
