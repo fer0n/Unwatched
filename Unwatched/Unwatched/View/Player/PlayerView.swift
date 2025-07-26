@@ -143,7 +143,9 @@ struct PlayerView: View {
                 FullscreenOverlayControls(
                     overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
-                    show: landscapeFullscreen || (!sheetPos.isMinimumSheet && navManager.showMenu),
+                    show: landscapeFullscreen
+                        || (!sheetPos.isMinimumSheet && navManager.showMenu)
+                        || navManager.playerTab == .chapterDescription,
                     markVideoWatched: markVideoWatched
                 )
 
