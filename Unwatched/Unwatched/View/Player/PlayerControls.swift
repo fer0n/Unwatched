@@ -23,8 +23,6 @@ struct PlayerControls: View {
     let enableHideControls: Bool
     let hideControls: Bool
 
-    let setShowMenu: () -> Void
-    let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
     @Binding var minHeight: CGFloat?
@@ -59,7 +57,6 @@ struct PlayerControls: View {
                     HStack(alignment: .center, spacing: 0) {
                         InteractiveSubscriptionTitle(
                             subscription: player.video?.subscription,
-                            setShowMenu: setShowMenu,
                             showImage: true
                         )
                         .font(.headline)
@@ -83,7 +80,6 @@ struct PlayerControls: View {
                 }
 
                 ChapterMiniControlView(
-                    setShowMenu: setShowMenu,
                     handleTitleTap: handleTitleTap,
                     limitHeight: horizontalLayout || player.isTallAspectRatio,
                     inlineTime: horizontalLayout || player.isTallAspectRatio,
@@ -125,8 +121,7 @@ struct PlayerControls: View {
 
                         PlayerMoreMenuButton(
                             sleepTimerVM: sleepTimerVM,
-                            markVideoWatched: markVideoWatched
-                        ) { image in
+                            ) { image in
                             image
                                 .playerToggleModifier(
                                     isOn: sleepTimerVM.isOn,
@@ -141,19 +136,13 @@ struct PlayerControls: View {
                     }
 
                     HStack(spacing: hasSmallControls ? speedSpacing : nil) {
-                        WatchedButton(
-                            markVideoWatched: markVideoWatched,
-                            isSmall: hasSmallControls
-                        )
-                        .frame(maxWidth: compactSize ? nil : .infinity)
+                        WatchedButton(isSmall: hasSmallControls)
+                            .frame(maxWidth: compactSize ? nil : .infinity)
 
                         PlayerControlsPlayButton(size: playButtonSize)
 
-                        NextVideoButton(
-                            markVideoWatched: markVideoWatched,
-                            isSmall: hasSmallControls
-                        )
-                        .frame(maxWidth: compactSize ? nil : .infinity)
+                        NextVideoButton(isSmall: hasSmallControls)
+                            .frame(maxWidth: compactSize ? nil : .infinity)
 
                         if enableHideControls && !hasLargeFont {
                             HideControlsButton(isSmall: hasSmallControls)
@@ -176,7 +165,7 @@ struct PlayerControls: View {
                 }
                 if !compactSize {
                     Button {
-                        setShowMenu()
+                        player.setShowMenu()
                     } label: {
                         VStack {
                             Image(systemName: "chevron.up")
@@ -266,8 +255,6 @@ struct PlayerControls: View {
                           limitWidth: false,
                           enableHideControls: false,
                           hideControls: true,
-                          setShowMenu: { },
-                          markVideoWatched: { _, _ in },
                           sleepTimerVM: SleepTimerViewModel(),
                           minHeight: .constant(0),
                           autoHideVM: .constant(AutoHideVM()))

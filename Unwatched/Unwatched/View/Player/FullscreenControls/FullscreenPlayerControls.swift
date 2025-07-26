@@ -10,7 +10,6 @@ struct FullscreenPlayerControls: View {
     @Environment(PlayerManager.self) var player
     @Binding var autoHideVM: AutoHideVM
 
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var arrowEdge: Edge
     @State var sleepTimerVM: SleepTimerViewModel
     let showLeft: Bool
@@ -24,7 +23,6 @@ struct FullscreenPlayerControls: View {
 
             PlayerMoreMenuButton(
                 sleepTimerVM: sleepTimerVM,
-                markVideoWatched: markVideoWatched,
                 extended: true,
                 isCircleVariant: true
             ) { image in
@@ -78,8 +76,7 @@ struct FullscreenPlayerControls: View {
             Spacer()
             Spacer()
 
-            CoreNextButton(markVideoWatched: markVideoWatched,
-                           extendedContextMenu: true,
+            CoreNextButton(extendedContextMenu: true,
                            isCircleVariant: true) { image, isOn in
                 image
                     .resizable()
@@ -111,7 +108,6 @@ struct FullscreenPlayerControls: View {
             .fill(.gray)
         FullscreenPlayerControls(
             autoHideVM: .constant(AutoHideVM()),
-            markVideoWatched: { _, _ in },
             arrowEdge: .trailing,
             sleepTimerVM: SleepTimerViewModel(),
             showLeft: true)

@@ -13,17 +13,14 @@ struct CoreNextButton<Content>: View where Content: View {
     @State var hapticToggle: Bool = false
 
     private let contentImage: ((Image, _ isOn: Bool) -> Content)
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     let extendedContextMenu: Bool
     let isCircleVariant: Bool
 
     init(
-        markVideoWatched: @escaping (_ showMenu: Bool, _ source: VideoSource) -> Void,
         extendedContextMenu: Bool = false,
         isCircleVariant: Bool = false,
         @ViewBuilder content: @escaping (Image, _ isOn: Bool) -> Content
     ) {
-        self.markVideoWatched = markVideoWatched
         self.extendedContextMenu = extendedContextMenu
         self.isCircleVariant = isCircleVariant
         self.contentImage = content
@@ -33,7 +30,7 @@ struct CoreNextButton<Content>: View where Content: View {
         let label = String(localized: "nextVideo")
 
         Button {
-            markVideoWatched(false, .userInteraction)
+            player.markVideoWatched(showMenu: false, source: .userInteraction)
             hapticToggle.toggle()
         } label: {
             contentImage(
@@ -89,7 +86,7 @@ struct CoreNextButton<Content>: View where Content: View {
                 Button("restartVideo", systemImage: "restart") {
                     player.restartVideo()
                 }
-                ExtendedPlayerActions(markVideoWatched: markVideoWatched)
+                ExtendedPlayerActions()
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
@@ -97,13 +94,14 @@ struct CoreNextButton<Content>: View where Content: View {
 }
 
 struct NextVideoButton: View {
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
+
+    @Environment(PlayerManager.self) var player
     var isSmall: Bool = false
     var stroke: Bool = true
     var backgroundColor: Color?
 
     var body: some View {
-        CoreNextButton(markVideoWatched: markVideoWatched) { image, isOn in
+        CoreNextButton { image, isOn in
             image
                 .playerToggleModifier(isOn: isOn,
                                       isSmall: isSmall,
@@ -115,7 +113,7 @@ struct NextVideoButton: View {
 }
 
 #Preview {
-    NextVideoButton(markVideoWatched: { _, _ in })
+    NextVideoButton()
         .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager())
 }

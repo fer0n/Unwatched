@@ -359,6 +359,50 @@ import UnwatchedShared
             }
         }
     }
+
+    @MainActor
+    func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
+        Log.info(">markVideoWatched")
+        if let video {
+            let modelContext = DataProvider.mainContext
+            try? modelContext.save()
+
+            #if os(macOS)
+            NavigationManager.shared.toggleSidebar(show: true)
+            #else
+            if showMenu {
+                setShowMenu()
+                if Const.returnToQueue.bool ?? false {
+                    NavigationManager.shared.navigateToQueue()
+                }
+            }
+            #endif
+
+            // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
+            VideoService.setVideoWatched(video, modelContext: modelContext)
+
+            autoSetNextVideo(source, modelContext)
+
+            // attempts clearing a second time in the background, as it's so unreliable
+            let videoId = video.id
+            try? modelContext.save()
+            _ = VideoService.setVideoWatchedAsync(videoId)
+        }
+    }
+
+    @MainActor
+    func setShowMenu() {
+        let sheetPos = SheetPositionReader.shared
+        updateElapsedTime()
+        if video != nil && !sheetPos.landscapeFullscreen {
+            if limitHeight {
+                sheetPos.setDetentMiniPlayer()
+            } else {
+                sheetPos.setDetentVideoPlayer()
+            }
+        }
+        NavigationManager.shared.showMenu = true
+    }
 }
 
 enum PlayerCodingKeys: CodingKey {
