@@ -219,6 +219,10 @@ import UnwatchedShared
         VideoService.clearEntries(from: video,
                                   modelContext: modelContext)
         loadTopmostVideoFromQueue(modelContext: modelContext)
+
+        // workaround: unreliable, do it twice
+        let task = VideoService.clearFromEverywhereAsync(video.youtubeId)
+        loadTopmostVideoFromQueue(after: task)
     }
 
     @MainActor
