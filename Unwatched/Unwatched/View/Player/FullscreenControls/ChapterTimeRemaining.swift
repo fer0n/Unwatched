@@ -10,5 +10,6 @@ struct ChapterTimeRemaining: View {
 
     var body: some View {
         Text(player.currentRemainingText ?? "")
+            .animation(nil, value: UUID())
     }
 }
