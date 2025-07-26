@@ -345,13 +345,13 @@ extension VideoService {
     static func getDurationText(for video: Video, duration: Double? = nil) -> (total: Double?, text: String?) {
         let duration = duration ?? video.duration
 
-        if let durationText = duration?.formattedSecondsColon {
+        if let durationText = duration?.formattedSecondsColon() {
             return (duration, durationText)
         }
 
         if let lastChapter = video.sortedChapters.last {
             let time = lastChapter.endTime ?? lastChapter.startTime
-            return (duration, ">\(time.formattedSecondsColon)")
+            return (duration, ">\(time.formattedSecondsColon())")
         }
 
         return (duration, nil)

@@ -19,7 +19,7 @@ struct VideoListItemDurationOverlay: View {
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue("#short")
             } else if let totalDuration {
-                Text(totalDuration.formattedSecondsColon)
+                Text(totalDuration.formattedSecondsColon())
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue(String(localized: "\(accessibilityDuration(totalDuration)) long"))
             } else if let roughDuration {
@@ -39,7 +39,7 @@ struct VideoListItemDurationOverlay: View {
 
     private func formatRoughDuration(_ duration: Double) -> some View {
         HStack(alignment: .center, spacing: 0) {
-            Text(duration.formattedSecondsColon)
+            Text(duration.formattedSecondsColon())
                 .foregroundStyle(.primary)
             Image(systemName: "plus")
                 .fontWeight(.semibold)

@@ -46,11 +46,10 @@ struct PlayerScrubber: View {
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
                         .contentTransition(.numericText(countsDown: false))
                 }
-                .opacity(showTime ? 1 : 0)
-                .animation(.default.speed(1), value: showTime ? 1 : 0)
+                .animation(.default.speed(1), value: showFuzzyTime ? 1 : 0)
                 .padding(.horizontal, scrubbingPadding)
                 .foregroundStyle(.secondary)
-                .font(.caption)
+                .font(.caption.monospacedDigit())
             }
 
             HStack {
@@ -119,7 +118,7 @@ struct PlayerScrubber: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(String(localized: "playerScrubber"))
         .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
-        .accessibilityValue(formattedCurrentTime)
+        .accessibilityValue(currentTime?.formattedSecondsColon() ?? "")
     }
 
     var isDisabled: Bool {
@@ -138,8 +137,8 @@ struct PlayerScrubber: View {
         isInactive ? currentScrubberWidth : (initialDragPosition ?? currentScrubberWidth) + dragOffset
     }
 
-    var showTime: Bool {
-        inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive)
+    var showFuzzyTime: Bool {
+        player.isPlaying && initialDragPosition == nil && !isGestureActive
     }
 
     var currentTime: Double? {
@@ -154,11 +153,11 @@ struct PlayerScrubber: View {
     }
 
     var formattedDuration: String {
-        player.video?.duration?.formattedSecondsColon ?? ""
+        player.video?.duration?.formattedSecondsColon() ?? ""
     }
 
     var formattedCurrentTime: String {
-        currentTime?.formattedSecondsColon ?? ""
+        currentTime?.formattedSecondsColon(fuzzy: showFuzzyTime) ?? ""
     }
 
     func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
@@ -272,7 +271,10 @@ struct PlayerScrubber: View {
 }
 
 #Preview {
-    PlayerScrubber(limitHeight: false)
+    let player = PlayerManager.getDummy()
+    player.currentTime = 33230
+
+    return PlayerScrubber(limitHeight: false)
         .frame(height: 150)
-        .environment(PlayerManager.getDummy())
+        .environment(player)
 }

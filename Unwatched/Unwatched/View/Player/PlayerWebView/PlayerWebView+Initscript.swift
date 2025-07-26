@@ -785,9 +785,7 @@ extension PlayerWebView {
                     sendError(error);
                     repairVideo("play");
                 });
-            if (overlayVisible) {
-                hideOverlay();
-            }
+            hideOverlay();
         }
 
         function handleTouchStart(event) {
