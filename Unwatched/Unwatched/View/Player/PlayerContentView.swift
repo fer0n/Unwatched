@@ -18,8 +18,6 @@ struct PlayerContentView: View {
     let enableHideControls: Bool
     let hideControls: Bool
 
-    let setShowMenu: () -> Void
-    let markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var sleepTimerVM: SleepTimerViewModel
 
     let fadeOutHeight: CGFloat = 55
@@ -37,15 +35,13 @@ struct PlayerContentView: View {
                                limitWidth: limitWidth,
                                enableHideControls: enableHideControls,
                                hideControls: hideControls,
-                               setShowMenu: setShowMenu,
-                               markVideoWatched: markVideoWatched,
                                sleepTimerVM: sleepTimerVM,
                                minHeight: $minHeight,
                                autoHideVM: $autoHideVM)
                     .padding(.vertical, compactSize ? 5 : 0)
                     .verticalSwipeGesture(
                         disableGesture: compactSize,
-                        onSwipeUp: setShowMenu,
+                        onSwipeUp: player.setShowMenu,
                         onSwipeDown: { }
                     )
                     .tabItem {
@@ -59,7 +55,6 @@ struct PlayerContentView: View {
                     ChapterDescriptionView(
                         video: video,
                         bottomSpacer: fadeOutHeight + Const.minSheetDetent,
-                        setShowMenu: setShowMenu,
                         )
                     .tabItem {
                         Image(systemName: "checklist")

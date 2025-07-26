@@ -32,7 +32,6 @@ struct FullscreenOverlayControls: View {
 
     var enabled: Bool
     var show: Bool
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
 
     var body: some View {
         ZStack {
@@ -56,7 +55,6 @@ struct FullscreenOverlayControls: View {
 
             HStack {
                 WatchedButton(
-                    markVideoWatched: markVideoWatched,
                     backgroundColor: .clear
                 )
                 .backgroundTransparentEffect(fallback: .ultraThinMaterial)
@@ -77,7 +75,6 @@ struct FullscreenOverlayControls: View {
                 .backgroundTransparentEffect(fallback: .regularMaterial)
 
                 NextVideoButton(
-                    markVideoWatched: markVideoWatched,
                     backgroundColor: .clear
                 )
                 .backgroundTransparentEffect(fallback: .ultraThinMaterial)
@@ -157,8 +154,7 @@ enum OverlayIcon {
             overlayVM: $overlayVM,
             enabled: true,
             show: true,
-            markVideoWatched: {_, _ in }
-        )
+            )
     }
     .environment(\.colorScheme, .dark)
     .environment(player)

@@ -30,8 +30,6 @@ struct PlayerView: View {
     @State var appNotificationVM = AppNotificationVM()
 
     var landscapeFullscreen = true
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
-    var setShowMenu: (() -> Void)?
     var enableHideControls: Bool
     var sleepTimerVM: SleepTimerViewModel
 
@@ -57,7 +55,6 @@ struct PlayerView: View {
 
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControlsWrapper(
-                            markVideoWatched: markVideoWatched,
                             autoHideVM: $autoHideVM,
                             sleepTimerVM: sleepTimerVM,
                             showLeft: showLeft)
@@ -135,7 +132,6 @@ struct PlayerView: View {
                 appNotificationVM: $appNotificationVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
-                setShowMenu: setShowMenu,
                 handleSwipe: handleSwipe
             )
             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
@@ -146,8 +142,7 @@ struct PlayerView: View {
                     show: landscapeFullscreen
                         || (!sheetPos.isMinimumSheet && navManager.showMenu)
                         || navManager.playerTab == .chapterDescription,
-                    markVideoWatched: markVideoWatched
-                )
+                    )
 
                 thumbnailPlaceholder
                     .opacity(showEmbeddedThumbnail ? 1 : 0)
@@ -297,7 +292,7 @@ struct PlayerView: View {
                 OrientationManager.changeOrientation(to: .landscapeRight)
                 #endif
             } else {
-                setShowMenu?()
+                player.setShowMenu()
             }
         case .down:
             #if os(macOS)
@@ -345,7 +340,6 @@ struct PlayerView: View {
 
     return PlayerView(autoHideVM: .constant(AutoHideVM()),
                       landscapeFullscreen: true,
-                      markVideoWatched: { _, _ in },
                       enableHideControls: false,
                       sleepTimerVM: SleepTimerViewModel())
         .modelContainer(container)

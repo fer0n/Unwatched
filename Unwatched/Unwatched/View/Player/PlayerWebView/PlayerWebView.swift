@@ -24,7 +24,6 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     let playerType: PlayerType
     let onVideoEnded: () -> Void
-    var setShowMenu: (() -> Void)?
     var handleSwipe: (SwipeDirecton) -> Void
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
