@@ -121,6 +121,9 @@ struct IOSSPlitView: View {
         }
         .environment(\.layoutDirection, .rightToLeft)
         .animation(.default, value: hideControlsFullscreen)
+        #if os(iOS)
+        .statusBar(hidden: hideControlsFullscreen && bigScreen)
+        #endif
     }
 
     var layout: AnyLayout {
