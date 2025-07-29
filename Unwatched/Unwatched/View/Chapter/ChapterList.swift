@@ -88,16 +88,12 @@ struct ChapterList: View {
     }
 
     func setChapter(_ chapter: Chapter) {
-        let isCurrentVideo = video.youtubeId == player.video?.youtubeId
-        if !isCurrentVideo {
+        if video != player.video {
             video.elapsedSeconds = chapter.startTime
             player.playVideo(video)
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }
         player.setChapter(chapter)
-        if isCurrentVideo {
-            player.play()
-        }
     }
 }
 
