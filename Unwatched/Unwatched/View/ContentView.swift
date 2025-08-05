@@ -81,5 +81,6 @@ struct ContentView: View {
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader.shared)
+        .environment(TinyUndoManager())
     // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
 }

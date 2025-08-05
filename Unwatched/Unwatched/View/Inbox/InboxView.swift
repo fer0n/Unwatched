@@ -72,7 +72,7 @@ struct InboxView: View {
                                         showQueueButton: showAddToQueueButton,
                                         showDelete: false
                                     ),
-                                    onChange: { reason in
+                                    onChange: { reason, _ in
                                         handleChange(reason, videoId, youtubeId, date)
                                     }
                                 )
@@ -90,9 +90,11 @@ struct InboxView: View {
                         HiddenEntriesInfo()
                     }
 
-                    ClearAllInboxEntriesButton(willClearAll: willClearAll)
-                        .disabled(!hasEntries)
-                        .opacity(hasEntries ? 1 : 0)
+                    ClearAllInboxEntriesButton(
+                        willClearAll: willClearAll
+                    )
+                    .disabled(!hasEntries)
+                    .opacity(hasEntries ? 1 : 0)
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
@@ -122,22 +124,27 @@ struct InboxView: View {
 
     func willClearAll() {
         let videoIds = inboxEntries.compactMap { $0.video?.persistentModelID }
-        undoManager.handleAction(.clear, videoIds)
+        undoManager.registerAction(.moveToInbox(videoIds))
     }
 
-    func handleChange(_ reason: ChangeReason?, _ videoId: PersistentIdentifier, _ youtubeId: String, _ date: Date?) {
+    func handleChange(
+        _ reason: VideoChangeReason?,
+        _ videoId: PersistentIdentifier,
+        _ youtubeId: String,
+        _ date: Date?
+    ) {
         guard let reason else {
             return
         }
         switch reason {
-        case .queue, .clear:
-            undoManager.handleAction(reason, [videoId])
+        case .clearEverywhere, .moveToQueue, .toggleWatched:
+            undoManager.registerAction(.moveToInbox([videoId]))
         case .clearAbove:
-            undoManager.handleClearDirection(youtubeId, date, inboxEntries, .above)
+            undoManager.handleInboxClearDirection(youtubeId, date, inboxEntries, .above)
         case .clearBelow:
-            undoManager.handleClearDirection(youtubeId, date, inboxEntries, .below)
-        default:
-            Log.warning("handleChange: Unsupported reason \(reason) for video \(youtubeId)")
+            undoManager.handleInboxClearDirection(youtubeId, date, inboxEntries, .below)
+        case .moveToInbox:
+            break
         }
     }
 

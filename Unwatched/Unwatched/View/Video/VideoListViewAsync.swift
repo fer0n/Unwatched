@@ -73,7 +73,7 @@ struct VideoListViewAsync: View {
                 video,
                 video.youtubeId,
                 config: config,
-                onChange: { _ in
+                onChange: { _, _ in
                     videoListVM.updateVideo(video)
                 },
                 )

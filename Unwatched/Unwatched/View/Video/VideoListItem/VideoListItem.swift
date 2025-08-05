@@ -21,13 +21,13 @@ struct VideoListItem: View, Equatable {
     let videoData: any VideoData
     let youtubeId: String
     let config: VideoListItemConfig
-    let onChange: ((_ reason: ChangeReason?) -> Void)?
+    let onChange: ((_ reason: VideoChangeReason?, _ order: Int?) -> Void)?
 
     init(
         _ videoData: any VideoData,
         _ youtubeId: String,
         config: VideoListItemConfig,
-        onChange: ((_ reason: ChangeReason?) -> Void)? = nil
+        onChange: ((_ reason: VideoChangeReason?, _ order: Int?) -> Void)? = nil
     ) {
         self.videoData = videoData
         self.youtubeId = youtubeId
