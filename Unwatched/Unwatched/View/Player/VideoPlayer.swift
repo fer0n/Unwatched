@@ -145,6 +145,7 @@ struct VideoPlayer: View {
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader())
+        .environment(TinyUndoManager())
         .tint(Color.neutralAccentColor)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }

@@ -9,21 +9,28 @@ import UnwatchedShared
 
 @Observable
 class TinyUndoManager {
-    var actions: [(ChangeReason, [PersistentIdentifier])] = []
+
+    @MainActor
+    static let shared = TinyUndoManager()
+
+    var actions: [UndoAction] = []
 
     var canUndo: Bool {
         !actions.isEmpty
     }
 
-    func handleAction(_ reason: ChangeReason?, _ ids: [PersistentIdentifier]) {
-        guard let reason, ids.count > 0 else {
+    func registerAction(_ undoAction: UndoAction?) {
+        guard let undoAction else {
             Log.info("No reason provided to undo action")
             return
         }
-        actions.append((reason, ids))
+        actions.append(undoAction)
+        if actions.count > 10 {
+            actions.removeFirst(actions.count - 10)
+        }
     }
 
-    func handleClearDirection(
+    func handleInboxClearDirection(
         _ youtubeId: String,
         _ date: Date?,
         _ inboxEntries: [InboxEntry],
@@ -43,27 +50,40 @@ class TinyUndoManager {
             Log.warning("Invalid clear direction: \(direction)")
             return
         }
-        handleAction(.clear, ids)
+        registerAction(.moveToInbox(ids))
+    }
+
+    func handleQueueClearDirection(
+        _ youtubeId: String,
+        _ queueEntries: [QueueEntry],
+        _ order: Int,
+        _ direction: ClearDirection) {
+        var ids = [PersistentIdentifier]()
+        var newOrder = order
+        if direction == .above {
+            ids = queueEntries.compactMap { $0.order < order ? $0.video?.persistentModelID : nil }
+            newOrder = max(0, order - ids.count)
+        } else if direction == .below {
+            ids = queueEntries.compactMap { $0.order > order ? $0.video?.persistentModelID : nil }
+            newOrder = order + 1
+        } else {
+            Log.warning("Invalid clear direction: \(direction)")
+            return
+        }
+        registerAction(.moveToQueue(ids, order: newOrder))
     }
 
     @MainActor
     func undo() {
-        guard let lastAction = actions.popLast() else {
+        guard let undoAction = actions.popLast() else {
             Log.info("No actions to undo")
             return
         }
-        let reason = lastAction.0
-        let ids = lastAction.1
+        let context = DataProvider.mainContext
+        var hasNowPlayingVideo = false
 
-        guard !ids.isEmpty else {
-            Log.info("No IDs to undo for reason: \(reason)")
-            return
-        }
-
-        switch reason {
-        case .clear, .queue:
-            let context = DataProvider.mainContext
-            var hasNowPlayingVideo = false
+        switch undoAction {
+        case .moveToInbox(let ids):
             for id in ids {
                 if let video: Video = context.existingModel(for: id) {
                     if !hasNowPlayingVideo {
@@ -74,11 +94,32 @@ class TinyUndoManager {
                     }
                 }
             }
-            if hasNowPlayingVideo {
-                PlayerManager.shared.loadTopmostVideoFromQueue()
+        case .moveToQueue(let ids, let order):
+            if order == 0 {
+                hasNowPlayingVideo = true
             }
-        default:
-            Log.warning("Undo action not implemented for reason: \(reason)")
+            var videos = [Video]()
+            for id in ids {
+                if let video: Video = context.existingModel(for: id) {
+                    videos.append(video)
+                }
+            }
+            withAnimation {
+                VideoService.insertQueueEntries(
+                    at: order,
+                    videos: videos,
+                    modelContext: context
+                )
+            }
+        }
+
+        if hasNowPlayingVideo {
+            PlayerManager.shared.loadTopmostVideoFromQueue()
         }
     }
+}
+
+public enum UndoAction: Sendable {
+    case moveToInbox(_ videoIds: [PersistentIdentifier]),
+         moveToQueue(_ videoIds: [PersistentIdentifier], order: Int)
 }

@@ -329,6 +329,10 @@ extension VideoActor {
 
                 let queueEntry: QueueEntry
                 if let existingQueueEntry = video.queueEntry {
+                    // workaround: context sometimes still contains an already deleted entry
+                    // (e.g. undo marking current video as watched)
+                    modelContext.insert(existingQueueEntry)
+
                     queueEntry = existingQueueEntry
                 } else {
                     let newQueueEntry = QueueEntry(video: video, order: 0)

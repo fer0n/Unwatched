@@ -5,27 +5,10 @@
 
 import SwiftUI
 
-struct InboxToolbar: ViewModifier {
-    @Environment(\.modelContext) var modelContext
+struct UndoToolbarButton: ToolbarContent {
     @Environment(TinyUndoManager.self) private var undoManager
 
-    var showCancelButton: Bool = false
-
-    func body(content: Content) -> some View {
-        content
-            .toolbar {
-                if showCancelButton {
-                    DismissToolbarButton()
-                }
-                undoRedoToolbarButton
-                ToolbarSpacerWorkaround()
-                RefreshToolbarButton()
-            }
-    }
-
-    var undoRedoToolbarButton: some ToolbarContent {
-        // Workaround: having this be its own view
-        // doesn't work for some reason
+    var body: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button {
                 undoManager.undo()
@@ -36,7 +19,30 @@ struct InboxToolbar: ViewModifier {
             .opacity(undoManager.canUndo ? 1 : 0)
             .font(.footnote)
             .fontWeight(.bold)
+            //            #if os(iOS)
+            //            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+            //            #else
+            //            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+            //                .buttonStyle(.borderless)
+            //            #endif
         }
+    }
+}
+
+struct InboxToolbar: ViewModifier {
+    @Environment(\.modelContext) var modelContext
+    var showCancelButton: Bool = false
+
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                if showCancelButton {
+                    DismissToolbarButton()
+                }
+                UndoToolbarButton()
+                ToolbarSpacerWorkaround()
+                RefreshToolbarButton()
+            }
     }
 }
 

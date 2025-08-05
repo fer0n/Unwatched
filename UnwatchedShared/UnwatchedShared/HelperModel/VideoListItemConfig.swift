@@ -69,9 +69,3 @@ public struct VideoListItemConfig: Equatable, Sendable {
     }
 }
 
-public enum ChangeReason: Sendable {
-    case clear,
-         queue,
-         clearAbove,
-         clearBelow
-}

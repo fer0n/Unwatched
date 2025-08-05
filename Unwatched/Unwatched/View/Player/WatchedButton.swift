@@ -19,6 +19,7 @@ struct WatchedButton: View {
         Button {
             player.markVideoWatched(showMenu: true, source: .nextUp)
             hapticToggle.toggle()
+            try? modelContext.save()
         } label: {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)
@@ -35,7 +36,7 @@ struct WatchedButton: View {
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel(LocalizedStringKey("markWatched"))
         .contextMenu {
-            if let video = player.video {
+            if player.video != nil {
                 Button {
                     player.clearVideo(modelContext)
                 } label: {

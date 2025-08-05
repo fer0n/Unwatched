@@ -391,6 +391,8 @@ import UnwatchedShared
             let videoId = video.id
             try? modelContext.save()
             _ = VideoService.setVideoWatchedAsync(videoId)
+
+            TinyUndoManager.shared.registerAction(.moveToQueue([videoId], order: 0))
         }
     }
 

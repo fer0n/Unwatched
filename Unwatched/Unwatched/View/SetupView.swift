@@ -22,7 +22,7 @@ struct SetupView: View {
     @State var sheetPos = SheetPositionReader.shared
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.shared
-    @State var undoManager = TinyUndoManager()
+    @State var undoManager = TinyUndoManager.shared
 
     var body: some View {
         ContentView()
