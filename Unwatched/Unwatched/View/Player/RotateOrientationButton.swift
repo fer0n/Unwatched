@@ -77,6 +77,7 @@ struct HideControlsButton: View {
                 .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
             }
         }
+        .buttonStyle(.plain)
         .geometryGroup()
     }
 
