@@ -8,7 +8,20 @@ import SwiftUI
 
 public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
     public static var schemas: [any VersionedSchema.Type] {
-        [UnwatchedSchemaV1.self, UnwatchedSchemaV1p1.self]
+        [
+            UnwatchedSchemaV1.self,
+            UnwatchedSchemaV1p1.self,
+            UnwatchedSchemaV1p2.self,
+            UnwatchedSchemaV1p3.self,
+            UnwatchedSchemaV1p4.self,
+            UnwatchedSchemaV1p5.self,
+            UnwatchedSchemaV1p6.self,
+            UnwatchedSchemaV1p7.self,
+            UnwatchedSchemaV1p8.self,
+            UnwatchedSchemaV1p9.self,
+            UnwatchedSchemaV1p10.self,
+            UnwatchedSchemaV1p11.self
+        ]
     }
 
     static let migrateV1toV1p1 = MigrationStage.custom(
