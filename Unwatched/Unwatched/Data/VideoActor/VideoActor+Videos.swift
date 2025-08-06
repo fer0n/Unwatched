@@ -225,11 +225,8 @@ import UnwatchedShared
                 group.addTask {
                     var updatedVideo = video
                     var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
-                    Log.info("shortsDetection-VideoCrawler [\(video.youtubeId)]: "
-                                + "\(isYtShort.debugDescription), \(video.thumbnailUrl?.absoluteString ?? "")")
                     if isYtShort == nil {
                         let (isShort, imageData) = await VideoActor.isYtShort(video.thumbnailUrl)
-                        Log.info("shortsDetection-VideoActor [\(video.youtubeId)]: \(isYtShort.debugDescription)")
                         isYtShort = isShort
                         updatedVideo.thumbnailData = imageData
                     }
@@ -250,7 +247,7 @@ import UnwatchedShared
         do {
             if let url = imageUrl {
                 let imageData = try await ImageService.loadImageData(url: url)
-                if let isShort = ImageService.isYtShort(imageData, url) {
+                if let isShort = ImageService.isYtShort(imageData) {
                     return (isShort, imageData)
                 }
             }

@@ -366,7 +366,7 @@ import UnwatchedShared
 
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
-        Log.info(">markVideoWatched")
+        Log.info("markVideoWatched")
         if let video {
             let modelContext = DataProvider.mainContext
             try? modelContext.save()

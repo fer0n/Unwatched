@@ -200,7 +200,7 @@ public struct ImageService {
         return true
     }
 
-    public static func isYtShort(_ imageData: Data, _ imageUrl: URL? = nil) -> Bool? {
+    public static func isYtShort(_ imageData: Data) -> Bool? {
         #if os(macOS)
         guard let image = NSImage(data: imageData) else {
             return nil
@@ -212,8 +212,6 @@ public struct ImageService {
         #endif
 
         let size = image.size
-        Log.info("isYtShort size [\(String(describing: imageUrl))]: \(size)")
-        
         let blackHorizontalBarsPoints = blackHorizontalBarsPoints(size)
         let blackHorizontalBarsPointsCount = blackHorizontalBarsPoints.count
         let blackContentBorderPoints = blackContentBorderPoints(size)
@@ -224,13 +222,11 @@ public struct ImageService {
         let blackContentBorderColors = Array(colors[blackHorizontalBarsPointsCount..<points.count])
 
         let hasBlackBars = hasBlackHorizontalBars(blackHorizontalBarsColors)
-        Log.info("hasBlackBars [\(String(describing: imageUrl))]: \(hasBlackBars)")
         if !hasBlackBars {
             return true
         }
 
         let hasBlackContentBorder = hasBlackContentBorder(blackContentBorderColors)
-        Log.info("hasBlackContentBorder [\(String(describing: imageUrl))]: \(hasBlackContentBorder)")
         if hasBlackContentBorder {
             return true
         }
