@@ -445,6 +445,8 @@
 		889D61692D521EF30070389D /* VideoListItemEntryModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */; };
 		889DFB642E0225FD00D694E0 /* TinyUndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */; };
 		889DFB652E0225FD00D694E0 /* TinyUndoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */; };
+		889F760D2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */; };
+		889F760E2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */; };
 		88A2921E2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */; };
 		88A2921F2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
@@ -879,6 +881,7 @@
 		889931DC2D732635009096AB /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
 		889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemEntryModifier.swift; sourceTree = "<group>"; };
 		889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyUndoManager.swift; sourceTree = "<group>"; };
+		889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRemoveNewViewModifier.swift; sourceTree = "<group>"; };
 		88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoChangeReason.swift; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
@@ -1106,6 +1109,7 @@
 			children = (
 				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
+				889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */,
 				88FB23692DD4BAD00066DB07 /* MultiPayload.swift */,
 				880F05412D90293D0049B902 /* ToggleSidebar.swift */,
 				880F03822D8EE73D0049B902 /* CursorHideModifier.swift */,
@@ -2119,6 +2123,7 @@
 				88F287722DEAF9AE00309C36 /* InboxToolbar.swift in Sources */,
 				889AF8D02C50ECA9001CEDE6 /* fullscreenSafeArea.swift in Sources */,
 				889AF8D12C50ECA9001CEDE6 /* MyForm.swift in Sources */,
+				889F760D2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */,
 				889AF8D22C50ECA9001CEDE6 /* SleepTimer.swift in Sources */,
 				889AF8D32C50ECA9001CEDE6 /* Alerter.swift in Sources */,
 				889AF8D42C50ECA9001CEDE6 /* ShareView.swift in Sources */,
@@ -2564,6 +2569,7 @@
 				88C5EF8B2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				8849F38F2DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				8804A3F22B8B898000D3F4F1 /* VideoListItemStatus.swift in Sources */,
+				889F760E2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */,
 				8899246B2C47FAE3001185A6 /* InboxTabItemView.swift in Sources */,
 				88BF31062CAE813400AE26EC /* LocalizedStringKey.swift in Sources */,
 				88DA0EBB2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,

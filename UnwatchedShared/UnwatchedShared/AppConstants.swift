@@ -223,6 +223,7 @@ public struct Const {
     public static let rotateOnPlay = "rotateOnPlay"
     public static let autoAirplayHD = "autoAirplayHD"
     public static let defaultVideoPlacement = "defaultVideoPlacement"
+    public static let autoClearNew = "autoClearNew"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"
     public static let autoRefresh = "refreshOnStartup"
