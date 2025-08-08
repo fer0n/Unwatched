@@ -11,10 +11,10 @@ struct SettingsWindowView: View {
 
     var body: some View {
         TabView {
-            VideoSettingsView()
+            GeneralSettingsView()
                 .settingsView()
                 .tabItem {
-                    Label("videoSettings", systemImage: Const.videoSettingsSF)
+                    Label("generalSettings", systemImage: Const.settingsViewSF)
                 }
 
             ScrollView {

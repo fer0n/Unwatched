@@ -9,7 +9,6 @@ import UnwatchedShared
 
 struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
@@ -34,9 +33,6 @@ struct AppearanceSettingsView: View {
                 }
 
                 MySection {
-                    Toggle(isOn: $showTabBarBadge) {
-                        Text("showTabBarBadge")
-                    }
                     #if os(iOS)
                     Toggle(isOn: $showTabBarLabels) {
                         Text("showTabBarLabels")

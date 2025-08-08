@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoSettingsView: View {
+struct GeneralSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
@@ -58,11 +58,11 @@ struct VideoSettingsView: View {
                     #endif
                 }
             }
-            .myNavigationTitle("videoSettings")
+            .myNavigationTitle("generalSettings")
         }
     }
 }
 
 #Preview {
-    VideoSettingsView()
+    GeneralSettingsView()
 }

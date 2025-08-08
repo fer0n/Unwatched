@@ -203,7 +203,6 @@ public struct Const {
 
     // Settings
     public static let notificationsSettingsSF = "app.badge"
-    public static let videoSettingsSF = "film.stack"
     public static let playbackSettingsSF = "play.fill"
     public static let filterSettingsSF = "line.3.horizontal.decrease"
     public static let appearanceSettingsSF = "paintbrush.fill"
