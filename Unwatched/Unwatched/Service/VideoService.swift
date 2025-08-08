@@ -500,4 +500,37 @@ extension VideoService {
         }
         return fetchedVideo
     }
+
+    @MainActor
+    static func clearNewStatus(for list: NavigationTab) {
+        Log.info("clearNewStatus for \(list)")
+        var descriptor: FetchDescriptor<Video>?
+        switch list {
+        case .inbox:
+            descriptor = FetchDescriptor<Video>(
+                predicate: #Predicate<Video> { $0.isNew && $0.inboxEntry != nil }
+            )
+        case .queue:
+            descriptor = FetchDescriptor<Video>(
+                predicate: #Predicate<Video> { $0.isNew && $0.queueEntry != nil }
+            )
+        default:
+            Log.error("clearNewStatus: Unsupported list type")
+            return
+        }
+        guard let descriptor else {
+            Log.error("clearNewStatus: Fetch descriptor is nil")
+            return
+        }
+        let context = DataProvider.mainContext
+        do {
+            let videos = try context.fetch(descriptor)
+            for video in videos {
+                video.isNew = false
+            }
+            try context.save()
+        } catch {
+            Log.error("clearNewStatus: Failed to fetch videos - \(error)")
+        }
+    }
 }

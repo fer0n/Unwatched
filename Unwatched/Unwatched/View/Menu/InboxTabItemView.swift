@@ -37,6 +37,7 @@ struct InboxTabItemViewModifier: ViewModifier {
                 tag: NavigationTab.inbox,
                 showBadge: showBadge && hasNewItems
             )
+            .autRemoveNewViewModifier(hasNewItems: hasNewItems, list: .inbox)
     }
 
     var getInboxSymbol: Image {
