@@ -14,6 +14,7 @@ struct NotificationSettingsView: View {
     @AppStorage(Const.videoAddedToInboxNotification) var videoAddedToInbox: Bool = false
     @AppStorage(Const.videoAddedToQueueNotification) var videoAddedToQueue: Bool = false
     @AppStorage(Const.showNotificationBadge) var showNotificationBadge: Bool = false
+    @AppStorage(Const.showTabBarBadge) var showTabBarBadge: Bool = true
 
     @State var notificationsDisabled = false
 
@@ -38,6 +39,9 @@ struct NotificationSettingsView: View {
                 MySection {
                     Toggle(isOn: $showNotificationBadge) {
                         Text("showNotificationBadge")
+                    }
+                    Toggle(isOn: $showTabBarBadge) {
+                        Text("showTabBarBadge")
                     }
                 }
             }
