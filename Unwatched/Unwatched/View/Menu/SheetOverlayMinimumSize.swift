@@ -32,7 +32,7 @@ struct SheetOverlayMinimumSize: View {
         }
         .transparentNavBarWorkaround()
         .opacity(show ? 1 : 0)
-        .presentationDragIndicator(show ? .visible : .hidden)
+        .presentationDragIndicator(.visible)
         .animation(.bouncy(duration: 0.3), value: sheetPos.isMinimumSheet)
     }
 
