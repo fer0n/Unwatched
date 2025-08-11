@@ -8,8 +8,9 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
-class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate {
     let parent: PlayerWebView
+    var zoomWorkaroundActive = false
     var updateTimeCounter: Int = 0
 
     init(_ parent: PlayerWebView) {
@@ -21,6 +22,27 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         Log.info("webViewWebContentProcessDidTerminate")
         parent.player.isLoading = true
         parent.loadWebContent(webView)
+    }
+
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        if scale <= 1 && !zoomWorkaroundActive {
+            // workaround: zoom is now messed up, requires continuously resetting it
+            let script = """
+                let previousWidth = window.innerWidth;
+                window.addEventListener('resize', (e) => {
+                    const change = Math.abs(window.innerWidth - previousWidth);
+                    sendMessage("resize change", change);
+                    if (change > 100 || change === 0) {
+                        // only send if the width changed significantly
+                        // (ignore mini player resize, only orientation change which is sometimes 0)
+                        sendMessage("resize");
+                    }
+                    previousWidth = window.innerWidth;
+                });
+            """
+            parent.evaluateJavaScript(parent.webView, script)
+            zoomWorkaroundActive = true
+        }
     }
 
     func userContentController(_ userContentController: WKUserContentController,

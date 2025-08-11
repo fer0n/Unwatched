@@ -15,7 +15,6 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 #endif
 
 struct PlayerWebView: PlatformViewRepresentable {
-    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @Environment(PlayerManager.self) var player
 
     @Binding var overlayVM: OverlayFullscreenVM
@@ -26,26 +25,30 @@ struct PlayerWebView: PlatformViewRepresentable {
     let onVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
 
-    func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
-        player.isLoading = true
-
+    @State var webView: WKWebView = {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.preferences.isTextInteractionEnabled = false
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
 
         #if os(iOS)
         webViewConfig.allowsPictureInPictureMediaPlayback = true
-        webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
+        webViewConfig.allowsInlineMediaPlayback = !(Const.playVideoFullscreen.bool ?? false)
         #endif
+
+        return WKWebView(frame: .zero, configuration: webViewConfig)
+    }()
+
+    func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
+        player.isLoading = true
 
         player.previousState.videoId = player.video?.youtubeId
         player.previousState.playbackSpeed = player.playbackSpeed
 
-        let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.navigationDelegate = coordinator
         webView.configuration.userContentController.add(coordinator, name: "iosListener")
 
         #if os(iOS)
+        webView.scrollView.delegate = coordinator
         webView.backgroundColor = UIColor.systemBackground
         webView.isOpaque = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
