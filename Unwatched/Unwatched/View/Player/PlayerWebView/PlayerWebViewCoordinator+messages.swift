@@ -61,8 +61,16 @@ extension PlayerWebViewCoordinator {
             handleFullscreen()
         case "transcriptUrl":
             handleTranscriptUrl(payload)
+        case "resize":
+            handleResize()
         default:
             break
+        }
+    }
+
+    func handleResize() {
+        if parent.webView.scrollView.zoomScale != 1.0 {
+            parent.webView.scrollView.setZoomScale(1.0, animated: true)
         }
     }
 
