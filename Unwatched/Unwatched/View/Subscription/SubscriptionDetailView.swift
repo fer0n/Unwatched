@@ -61,7 +61,7 @@ struct SubscriptionDetailView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .scrollEdgeEffectDisabled(!showTitle, for: .top)
+            .scrollEdgeEffectHidden(!showTitle, for: .top)
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)

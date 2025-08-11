@@ -67,7 +67,7 @@ struct MenuView: View {
                 )
                 .padding(.horizontal, -padding)
             }
-            .scrollEdgeEffectDisabled(for: .bottom)
+            .scrollEdgeEffectHidden(for: .bottom)
             .padding(.horizontal, padding)
             .popover(item: $navManager.videoDetail) { video in
                 ZStack {
