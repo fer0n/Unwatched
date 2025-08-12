@@ -273,6 +273,7 @@ public struct Const {
     public static let lightAppIcon = "lightAppIcon"
 
     public static let reloadVideoId = "reloadVideoId"
+    public static let playbackId = "playbackId"
     public static let sheetOpacity = "sheetOpacity"
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
 
