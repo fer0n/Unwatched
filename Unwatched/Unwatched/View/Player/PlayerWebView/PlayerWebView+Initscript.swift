@@ -20,6 +20,7 @@ extension PlayerWebView {
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
+        let playbackId: String
     }
 
     // swiftlint:disable function_body_length
@@ -37,6 +38,7 @@ extension PlayerWebView {
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
+        const playbackId = "\(options.playbackId)";
 
         var video = null;
         let videoFindAttempts = 0;
@@ -313,7 +315,7 @@ extension PlayerWebView {
             if (e.target.tagName === 'VIDEO') {
                 stopTimer();
                 const url = window.location.href;
-                const payload = `${e.target.currentTime},${url}`;
+                const payload = `${e.target.currentTime},${playbackId},${url}`;
                 sendMessage("pause", payload);
             }
         }, { passive: true, capture: true });
