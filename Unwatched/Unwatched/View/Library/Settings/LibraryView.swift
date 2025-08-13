@@ -45,15 +45,10 @@ struct LibraryView: View {
                     if showCancelButton {
                         DismissToolbarButton()
                     }
-                    SyncStatusToolbarInfo()
-
-                    if #available(iOS 26.0, *) {
-                        ToolbarSpacer(.fixed)
-                    }
                     #if os(iOS)
                     settingsToolbarButton
                     #endif
-                    RefreshToolbarButton()
+                    RefreshToolbarContent()
                 }
             }
             .tint(theme.color)
