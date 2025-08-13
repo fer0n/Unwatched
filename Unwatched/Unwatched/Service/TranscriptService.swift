@@ -131,7 +131,3 @@ struct TranscriptService {
         }
     }
 }
-
-enum TranscriptError: Error {
-    case noUrl
-}

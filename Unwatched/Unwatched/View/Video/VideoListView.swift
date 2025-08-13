@@ -22,6 +22,7 @@ struct VideoListView: View {
         ForEach(videos) { video in
             VideoListItem(
                 video,
+                video.youtubeId,
                 config: VideoListItemConfig(
                     hasInboxEntry: video.inboxEntry != nil,
                     hasQueueEntry: video.queueEntry != nil,
@@ -30,6 +31,7 @@ struct VideoListView: View {
                     isNew: video.isNew,
                     )
             )
+            .equatable()
             .videoListItemEntry()
         }
         .listRowBackground(Color.backgroundColor)

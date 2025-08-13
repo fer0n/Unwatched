@@ -5,10 +5,27 @@
 
 import SwiftUI
 
-struct InboxToolbar: ViewModifier {
-    @Environment(\.modelContext) var modelContext
+struct UndoToolbarButton: ToolbarContent {
     @Environment(TinyUndoManager.self) private var undoManager
 
+    var body: some ToolbarContent {
+        if undoManager.canUndo {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    undoManager.undo()
+                } label: {
+                    Image(systemName: "arrow.uturn.backward")
+                }
+                .accessibilityLabel("undo")
+                .font(.footnote)
+                .fontWeight(.bold)
+            }
+        }
+    }
+}
+
+struct InboxToolbar: ViewModifier {
+    @Environment(\.modelContext) var modelContext
     var showCancelButton: Bool = false
 
     func body(content: Content) -> some View {
@@ -17,29 +34,14 @@ struct InboxToolbar: ViewModifier {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
-                if modelContext.undoManager?.canUndo == true {
-                    undoRedoToolbarButton
-                }
+                UndoToolbarButton()
+                ToolbarSpacerWorkaround()
                 SyncStatusToolbarInfo()
-                ToolbarSpacer(.fixed)
+                if #available(iOS 26.0, *) {
+                    ToolbarSpacer(.fixed)
+                }
                 RefreshToolbarButton()
             }
-    }
-
-    var undoRedoToolbarButton: some ToolbarContent {
-        // Workaround: having this be its own view
-        // doesn't work for some reason
-        ToolbarItem(placement: .cancellationAction) {
-            Button {
-                undoManager.undo()
-            } label: {
-                Image(systemName: "arrow.uturn.backward")
-            }
-            .accessibilityLabel("undo")
-            .opacity(undoManager.canUndo ? 1 : 0)
-            .font(.footnote)
-            .fontWeight(.bold)
-        }
     }
 }
 

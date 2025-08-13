@@ -28,8 +28,6 @@ struct ChapterListItem: View {
                 if let short = timeInfo.short, let verbose = timeInfo.verbose {
                     Text(short)
                         .font(.subheadline.monospacedDigit())
-                        .animation(.default, value: short)
-                        .contentTransition(.numericText(countsDown: true))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .accessibilityElement()

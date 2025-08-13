@@ -61,9 +61,19 @@ extension PlayerWebViewCoordinator {
             handleFullscreen()
         case "transcriptUrl":
             handleTranscriptUrl(payload)
+        case "resize":
+            handleResize()
         default:
             break
         }
+    }
+
+    func handleResize() {
+        #if os(iOS)
+        if parent.webView.scrollView.zoomScale != 1.0 {
+            parent.webView.scrollView.setZoomScale(1.0, animated: true)
+        }
+        #endif
     }
 
     func handleTranscriptUrl(_ payload: String?) {
@@ -242,8 +252,25 @@ extension PlayerWebViewCoordinator {
     }
 
     func handlePause(_ payload: String?) {
+        guard let payload else {
+            Log.warning("No payload given for handlePause")
+            return
+        }
+        let payloadArray = payload.split(separator: ",").map { String($0) }
+        let payloadPlaybackId = payloadArray[safe: 1]
+        let playbackId = UserDefaults.standard.string(forKey: Const.playbackId) ?? ""
+        if payloadPlaybackId != playbackId {
+            Log.info("handlePause: playbackId mismatch, not pausing")
+            return
+        }
         parent.player.pause()
-        handleTimeUpdate(payload, persist: true)
+
+        let timeString = payloadArray[safe: 0]
+        if let string = payloadArray[safe: 2],
+           let url = URL(string: string),
+           let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
+            handleTimeUpdate(timeString, persist: true, youtubeId: videoId)
+        }
     }
 
     func handlePlaybackSpeed(_ payload: String?) {
@@ -313,31 +340,17 @@ extension PlayerWebViewCoordinator {
         }
     }
 
-    func handleTimeUpdate(_ payload: String?, persist: Bool = false) {
-        guard let payload else {
-            return
-        }
-        // "paused:2161.00033421,https://www.youtube.com/watch?t=2161&v=dKbT0iFia0I"
-        let payloadArray = payload.split(separator: ",")
-        let timeString = payloadArray[safe: 0]
-        let urlString = payloadArray[safe: 1]
-        guard let time = timeString.flatMap({ Double($0) }) else {
+    func handleTimeUpdate(_ timeString: String?, persist: Bool = false, youtubeId: String? = nil) {
+        guard let timeString, let time = Double(timeString) else {
             return
         }
         if parent.player.isPlaying {
             parent.player.monitorChapters(time: time)
         }
-
         updateTimeCounter += 1
-        if persist,
-           let urlString,
-           let url = URL(string: String(urlString)),
-           let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
+        if persist || updateTimeCounter >= Const.updateDbTimeSeconds {
             updateTimeCounter = 0
-            parent.player.updateElapsedTime(time, videoId: videoId)
-        } else if updateTimeCounter >= Const.updateDbTimeSeconds {
-            updateTimeCounter = 0
-            parent.player.updateElapsedTime(time)
+            parent.player.updateElapsedTime(time, videoId: youtubeId)
         }
     }
 }

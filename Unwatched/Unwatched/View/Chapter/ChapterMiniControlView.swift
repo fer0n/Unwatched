@@ -16,7 +16,6 @@ struct ChapterMiniControlView: View {
 
     @State var triggerFeedback = false
 
-    var setShowMenu: () -> Void
     var handleTitleTap: () -> Void
     var limitHeight = false
     var inlineTime = false
@@ -154,7 +153,7 @@ struct ChapterMiniControlView: View {
 
     func openSubscription(_ sub: Subscription) {
         navManager.pushSubscription(subscription: sub)
-        setShowMenu()
+        player.setShowMenu()
     }
 
     @ViewBuilder var title: some View {
@@ -177,14 +176,13 @@ struct ChapterMiniControlRemainingText: View {
         ChapterTimeRemaining()
             .font(.system(size: 12).monospacedDigit())
             .fontWidth(.condensed)
-            .contentTransition(.numericText(countsDown: true))
             .foregroundStyle(.secondary)
             .lineLimit(1)
     }
 }
 
 #Preview {
-    ChapterMiniControlView(setShowMenu: {}, handleTitleTap: {})
+    ChapterMiniControlView(handleTitleTap: {})
         .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager.getDummy())

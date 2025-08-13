@@ -46,7 +46,10 @@ struct LibraryView: View {
                         DismissToolbarButton()
                     }
                     SyncStatusToolbarInfo()
-                    ToolbarSpacer(.fixed)
+
+                    if #available(iOS 26.0, *) {
+                        ToolbarSpacer(.fixed)
+                    }
                     #if os(iOS)
                     settingsToolbarButton
                     #endif

@@ -8,10 +8,8 @@ import UnwatchedShared
 
 struct FullscreenPlayerControlsWrapper: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
-
     @Environment(PlayerManager.self) var player
 
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     @Binding var autoHideVM: AutoHideVM
     var sleepTimerVM: SleepTimerViewModel
     var showLeft = false
@@ -23,7 +21,6 @@ struct FullscreenPlayerControlsWrapper: View {
         if fullscreenControlsSetting != .disabled {
             FullscreenPlayerControls(
                 autoHideVM: $autoHideVM,
-                markVideoWatched: markVideoWatched,
                 arrowEdge: arrowEdge,
                 sleepTimerVM: sleepTimerVM,
                 showLeft: showLeft

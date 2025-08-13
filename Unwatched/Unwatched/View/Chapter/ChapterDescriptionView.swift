@@ -13,7 +13,6 @@ struct ChapterDescriptionView: View {
 
     let video: Video
     var bottomSpacer: CGFloat = 0
-    var setShowMenu: (() -> Void)?
     var isCompact = false
     var scrollToCurrent = false
     var isTransparent = false
@@ -27,8 +26,7 @@ struct ChapterDescriptionView: View {
                     DescriptionDetailHeaderView(
                         video: video,
                         smallTitle: isCompact,
-                        onTitleTap: onTitleTap,
-                        setShowMenu: setShowMenu)
+                        onTitleTap: onTitleTap)
 
                     if hasChapters {
                         ChapterList(

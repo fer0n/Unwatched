@@ -26,6 +26,7 @@ public struct Const {
     public static let clearNoFillSF = "xmark"
     public static let checkmarkSF = "checkmark"
     public static let errorSF = "exclamationmark.triangle.fill"
+    public static let copySF = "document.on.document.fill"
 
     public static let bundleId = "com.pentlandFirth.Unwatched"
 
@@ -201,7 +202,6 @@ public struct Const {
 
     // Settings
     public static let notificationsSettingsSF = "app.badge"
-    public static let videoSettingsSF = "film.stack"
     public static let playbackSettingsSF = "play.fill"
     public static let filterSettingsSF = "line.3.horizontal.decrease"
     public static let appearanceSettingsSF = "paintbrush.fill"
@@ -222,6 +222,7 @@ public struct Const {
     public static let rotateOnPlay = "rotateOnPlay"
     public static let autoAirplayHD = "autoAirplayHD"
     public static let defaultVideoPlacement = "defaultVideoPlacement"
+    public static let autoClearNew = "autoClearNew"
     public static let playbackSpeed = "playbackSpeed"
     public static let continuousPlay = "continuousPlay"
     public static let autoRefresh = "refreshOnStartup"
@@ -271,6 +272,7 @@ public struct Const {
     public static let lightAppIcon = "lightAppIcon"
 
     public static let reloadVideoId = "reloadVideoId"
+    public static let playbackId = "playbackId"
     public static let sheetOpacity = "sheetOpacity"
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
 

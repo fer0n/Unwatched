@@ -7,12 +7,12 @@ import SwiftUI
 import UnwatchedShared
 
 struct InteractiveSubscriptionTitle: View, Equatable {
+    @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
 
     let subscription: Subscription?
-    let setShowMenu: (() -> Void)?
     var showImage = false
 
     var body: some View {
@@ -68,7 +68,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
             navManager.pushSubscription(subscription: sub)
         }
         navManager.videoDetail = nil
-        setShowMenu?()
+        player.setShowMenu()
     }
 
     static func == (lhs: InteractiveSubscriptionTitle, rhs: InteractiveSubscriptionTitle) -> Bool {

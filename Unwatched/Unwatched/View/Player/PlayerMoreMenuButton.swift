@@ -16,7 +16,6 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     @State var showDeferDateSelector: Bool = false
     @State var sleepTimerVM: SleepTimerViewModel
 
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var extended = false
     var isCircleVariant = false
     let contentImage: ((Image) -> Content)
@@ -40,7 +39,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
             Divider()
             if extended {
-                ExtendedPlayerActions(markVideoWatched: markVideoWatched)
+                ExtendedPlayerActions()
             }
 
             Divider()
@@ -153,11 +152,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 }
 
 #Preview {
-    func doNothing(_ showMenu: Bool, _ source: VideoSource) {}
-
-    return PlayerMoreMenuButton(
-        sleepTimerVM: SleepTimerViewModel(),
-        markVideoWatched: doNothing) { image in
+    PlayerMoreMenuButton(
+        sleepTimerVM: SleepTimerViewModel()) { image in
         image
     }
     .environment(PlayerManager.getDummy())

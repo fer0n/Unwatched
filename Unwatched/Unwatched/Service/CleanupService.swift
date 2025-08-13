@@ -84,6 +84,16 @@ struct CleanupService {
         modelContext.delete(video)
         try? modelContext.save()
     }
+
+    static func deleteChapters(from video: Video, _ modelContext: ModelContext) {
+        for chapter in video.chapters ?? [] {
+            modelContext.delete(chapter)
+        }
+        for chapter in video.mergedChapters ?? [] {
+            modelContext.delete(chapter)
+        }
+        video.sponserBlockUpdateDate = nil
+    }
 }
 
 @ModelActor actor CleanupActor {

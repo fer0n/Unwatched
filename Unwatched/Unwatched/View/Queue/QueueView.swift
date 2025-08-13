@@ -12,7 +12,9 @@ struct QueueView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
+    @Environment(TinyUndoManager.self) private var undoManager
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.modelContext) private var modelContext
 
     @Query(QueueView.descriptor, animation: .default)
     var queue: [QueueEntry]
@@ -38,8 +40,12 @@ struct QueueView: View {
                     ForEach(queue) { entry in
                         ZStack {
                             if let video = entry.video {
+                                let videoId = video.persistentModelID
+                                let youtubeId = video.youtubeId
+
                                 VideoListItem(
                                     video,
+                                    video.youtubeId,
                                     config: VideoListItemConfig(
                                         hasQueueEntry: true,
                                         videoDuration: video.duration,
@@ -49,20 +55,26 @@ struct QueueView: View {
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
                                         showDelete: false,
-                                        )
+                                        ),
+                                    onChange: { reason, order in
+                                        handleChange(reason, videoId, youtubeId, order ?? entry.order)
+                                    }
                                 )
+                                .equatable()
+                                .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                             } else {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.queue.rawValue))
                         .videoListItemEntry()
                     }
                     .moveQueueEntryModifier()
                     .listRowBackground(Color.backgroundColor)
 
                     if !queue.isEmpty {
-                        ClearAllQueueEntriesButton()
+                        ClearAllQueueEntriesButton(
+                            willClearAll: willClearAll
+                        )
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -74,8 +86,10 @@ struct QueueView: View {
                 if showCancelButton {
                     DismissToolbarButton()
                 }
+                ToolbarSpacerWorkaround()
                 SyncStatusToolbarInfo()
                 ToolbarSpacer(.fixed)
+                UndoToolbarButton()
                 RefreshToolbarButton()
             }
             .tint(theme.color)
@@ -90,6 +104,34 @@ struct QueueView: View {
     static var descriptor: FetchDescriptor<QueueEntry> {
         FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
     }
+
+    func willClearAll() {
+        let videoIds = queue.compactMap { $0.video?.persistentModelID }
+        undoManager.registerAction(.moveToInbox(videoIds))
+    }
+
+    func handleChange(
+        _ reason: VideoChangeReason?,
+        _ videoId: PersistentIdentifier,
+        _ youtubeId: String,
+        _ order: Int
+    ) {
+        guard let reason else {
+            return
+        }
+        switch reason {
+        case .clearEverywhere, .moveToInbox, .toggleWatched:
+            undoManager.registerAction(
+                .moveToQueue([videoId], order: order)
+            )
+        case .clearAbove:
+            undoManager.handleQueueClearDirection(youtubeId, queue, order, .above)
+        case .clearBelow:
+            undoManager.handleQueueClearDirection(youtubeId, queue, order, .below)
+        case .moveToQueue:
+            break
+        }
+    }
 }
 
 #Preview {
@@ -99,4 +141,5 @@ struct QueueView: View {
         .environment(PlayerManager())
         .environment(RefreshManager())
         .environment(ImageCacheManager())
+        .environment(TinyUndoManager())
 }

@@ -16,12 +16,12 @@ struct SettingsView: View {
 
             MyForm {
                 MySection("app") {
-                    NavigationLink(value: LibraryDestination.settingsNotifications) {
-                        Label("notifications", systemImage: Const.notificationsSettingsSF)
+                    NavigationLink(value: LibraryDestination.settingsNewVideos) {
+                        Label("generalSettings", systemImage: Const.settingsViewSF)
                     }
 
-                    NavigationLink(value: LibraryDestination.settingsNewVideos) {
-                        Label("videoSettings", systemImage: Const.videoSettingsSF)
+                    NavigationLink(value: LibraryDestination.settingsNotifications) {
+                        Label("notifications", systemImage: Const.notificationsSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.settingsPlayback) {
@@ -37,11 +37,17 @@ struct SettingsView: View {
                     }
                 }
 
-                MySection("shareSheet") {
+                MySection("shortcuts") {
                     Link(destination: UrlService.shareShortcutUrl) {
                         LibraryNavListItem(
                             "setupShareSheetAction",
                             systemName: "square.and.arrow.up.on.square.fill"
+                        )
+                    }
+                    Link(destination: UrlService.generateChaptersShortcutUrl) {
+                        LibraryNavListItem(
+                            "generateChaptersShortcut",
+                            systemName: "checklist"
                         )
                     }
                 }

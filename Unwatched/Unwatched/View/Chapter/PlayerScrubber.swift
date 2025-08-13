@@ -38,30 +38,27 @@ struct PlayerScrubber: View {
             if !inlineTime {
                 HStack {
                     Text(formattedCurrentTime)
+                        .animation(nil, value: UUID())
                         .matchedGeometryEffect(id: "currentTime", in: namespace)
-                        .contentTransition(.numericText(countsDown: false))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Spacer()
 
                     Text(formattedDuration)
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
-                        .contentTransition(.numericText(countsDown: false))
                 }
-                .opacity(showTime ? 1 : 0)
-                .animation(.default.speed(1), value: showTime ? 1 : 0)
                 .padding(.horizontal, scrubbingPadding)
                 .foregroundStyle(.secondary)
-                .font(.caption)
+                .font(.caption.monospacedDigit())
             }
 
             HStack {
                 if inlineTime {
                     Text(formattedCurrentTime)
+                        .animation(nil, value: UUID())
                         .foregroundStyle(.secondary)
-                        .font(.subheadline.monospacedDigit())
+                        .font(.caption.monospacedDigit())
                         .fixedSize()
                         .matchedGeometryEffect(id: "currentTime", in: namespace)
-                        .animation(.default, value: formattedCurrentTime == " ")
-                        .contentTransition(.numericText(countsDown: true))
                 }
 
                 ZStack {
@@ -76,7 +73,6 @@ struct PlayerScrubber: View {
                                 .frame(width: currentScrubberPosition)
                             Color.clear
                         }
-
                         ProgressBarChapterIndicators(
                             video: player.video,
                             height: scrubberHeight,
@@ -109,8 +105,7 @@ struct PlayerScrubber: View {
                 if inlineTime {
                     Text(formattedDuration)
                         .foregroundStyle(.secondary)
-                        .font(.subheadline.monospacedDigit())
-                        .contentTransition(.numericText(countsDown: true))
+                        .font(.caption.monospacedDigit())
                         .fixedSize()
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
                 }
@@ -119,7 +114,7 @@ struct PlayerScrubber: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(String(localized: "playerScrubber"))
         .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
-        .accessibilityValue(formattedCurrentTime)
+        .accessibilityValue(currentTime?.formattedSecondsColon ?? "")
     }
 
     var isDisabled: Bool {
@@ -136,10 +131,6 @@ struct PlayerScrubber: View {
 
     var draggedScrubberWidth: CGFloat {
         isInactive ? currentScrubberWidth : (initialDragPosition ?? currentScrubberWidth) + dragOffset
-    }
-
-    var showTime: Bool {
-        inlineTime || (!player.isPlaying || initialDragPosition != nil || isGestureActive)
     }
 
     var currentTime: Double? {
@@ -272,7 +263,10 @@ struct PlayerScrubber: View {
 }
 
 #Preview {
-    PlayerScrubber(limitHeight: false)
+    let player = PlayerManager.getDummy()
+    player.currentTime = 33230
+
+    return PlayerScrubber(limitHeight: false)
         .frame(height: 150)
-        .environment(PlayerManager.getDummy())
+        .environment(player)
 }

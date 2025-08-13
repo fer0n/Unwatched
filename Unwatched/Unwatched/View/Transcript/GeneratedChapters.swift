@@ -6,6 +6,7 @@
 import FoundationModels
 import UnwatchedShared
 
+@available(iOS 26.0, *)
 @Generable
 struct ChapterGeneration {
     var chapters: [GeneratedChapter]

@@ -20,6 +20,7 @@ extension PlayerWebView {
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
+        let playbackId: String
     }
 
     // swiftlint:disable function_body_length
@@ -37,6 +38,7 @@ extension PlayerWebView {
         const timerInterval = \(Const.elapsedTimeMonitorSeconds * 1000);
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
+        const playbackId = "\(options.playbackId)";
 
         var video = null;
         let videoFindAttempts = 0;
@@ -115,19 +117,16 @@ extension PlayerWebView {
             if (isVideoElement(event)) {
                 handleOverlayTap();
             }
-        });
+        }, { passive: true });
 
         function isOverlayHealthy() {
             if (document.contains(overlay)) {
                 return true;
             }
-            console.log('isOverlayHealthy: query overlay');
             overlay = document.querySelector('#player-control-overlay');
             if (!overlay) {
-                console.log('isOverlayHealthy: not in DOM');
                 return false;
             }
-            console.log('isOverlayHealthy: repaired');
             setupOverlay();
             return true;
         }
@@ -136,13 +135,11 @@ extension PlayerWebView {
             let timers = [];
             function checkOverlay() {
                 const isHealthy = isOverlayHealthy();
-                console.log('checkOverlay, healthy:', isHealthy);
                 if (isHealthy) {
                     cancelChecks();
                 }
             }
             function cancelChecks() {
-                console.log("cancelChecks");
                 timers.forEach(clearTimeout);
                 timers = [];
             }
@@ -313,20 +310,20 @@ extension PlayerWebView {
                 sendMessage("play");
             }
             hideOverlay();
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener('pause', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 stopTimer();
                 const url = window.location.href;
-                const payload = `${e.target.currentTime},${url}`;
+                const payload = `${e.target.currentTime},${playbackId},${url}`;
                 sendMessage("pause", payload);
             }
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener('ended', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("ended");
             }
-        }, true);
+        }, { passive: true, capture: true });
 
         // meta data
         if (requiresFetchingVideoData) {
@@ -363,16 +360,17 @@ extension PlayerWebView {
                 sendMessage("duration", duration.toString());
                 e.target.currentTime = startAtTime;
                 handleAudioTrack();
+                hideOverlay();
 
                 // setting video time so early breaks the overlay reference
                 overlayHealthCheckPolling();
             }
-        }, { capture: true, once: true });
+        }, { capture: true, once: true, passive: true });
         document.addEventListener('loadeddata', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
             }
-        }, true);
+        }, { passive: true, capture: true });
 
 
         // Audio Tracks
@@ -445,7 +443,7 @@ extension PlayerWebView {
         async function handleAudioTrack() {
             const player = document.getElementById("movie_player");
             const tracks = player.getAvailableAudioTracks();
-            const currentTrack = await player.getAudioTrack();
+            const currentTrack = player.getAudioTrack();
             const captionTrack = getCaptionTrack(currentTrack);
             const transcriptUrl = captionTrack?.url;
             sendMessage("transcriptUrl", transcriptUrl ?? "");
@@ -458,30 +456,30 @@ extension PlayerWebView {
                 return;
             }
             const originalTrack = getOriginalTrack(tracks);
-
             if (originalTrack) {
                 if (`${originalTrack}` === `${currentTrack}`) {
                     return;
                 }
                 const isAudioTrackSet = await player.setAudioTrack(originalTrack);
-                if (isAudioTrackSet) {
-                    sendMessage(`Audio track set to original: ${originalTrack.name}`);
+                if (isAudioTrackSet && enableLogging) {
+                    sendMessage('originalAudioTrack', originalTrack.name);
                 }
             }
         }
 
         function getCaptionTrack(currentTrack) {
-            const currentLocale = currentTrack?.Z?.languageCode
             if (!currentTrack?.captionTracks) {
                 return null;
             }
-            const firstTrack = currentTrack?.captionTracks?.[0];
+            let currentLocale = Object.values(currentTrack || {})
+                .find(value => value?.languageCode)
+                ?.languageCode;
             if (!currentLocale) {
-                return firstTrack;
+                currentLocale = navigator.language?.split('-')?.[0] ?? "en";
             }
             const tracks = currentTrack.captionTracks?.filter(track => track.languageCode === currentLocale);
             if (tracks.length === 0) {
-                return firstTrack;
+                return currentTrack.captionTracks[0];
             } else if (tracks.length === 1) {
                 return tracks[0];
             } else {
@@ -504,17 +502,17 @@ extension PlayerWebView {
                     e.stopPropagation()
                 }, true)
             }
-        }, { capture: true, once: true });
+        }, { capture: true, once: true, passive: true });
         document.addEventListener("enterpictureinpicture", (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "enter");
             }
-        }, true);
+        }, { passive: true, capture: true });
         document.addEventListener("leavepictureinpicture", (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("pip", "exit");
             }
-        }, true);
+        }, { passive: true, capture: true });
 
         // styling
         styling()
@@ -737,7 +735,7 @@ extension PlayerWebView {
                 if (isVideoElement(event)) {
                     handler(event);
                 }
-            }, true);
+            }, { passive: eventType === 'touchmove', capture: true });
         }
 
         addTouchEventListener('touchstart', event => {
@@ -789,9 +787,7 @@ extension PlayerWebView {
                     sendError(error);
                     repairVideo("play");
                 });
-            if (overlayVisible) {
-                hideOverlay();
-            }
+            hideOverlay();
         }
 
         function handleTouchStart(event) {
@@ -919,6 +915,7 @@ extension PlayerWebView {
             setTimeout(checkError, 10000);
         }
 
+
         // Handle link clicks
         document.addEventListener('click', function(event) {
             sendMessage("click");
@@ -926,18 +923,32 @@ extension PlayerWebView {
             let target = event.target;
             let link = null;
             if (target.tagName === 'A') {
-                link = target;
+                link = target?.href;
             } else if (target.parentNode?.tagName === 'A') {
-                link = target.parentNode;
+                link = target.parentNode?.href;
             } else if (target.parentNode?.parentNode?.tagName === 'A') {
-                link = target.parentNode.parentNode;
+                link = target.parentNode.parentNode?.href;
+            } else if (target.className == "ytmThumbnailEndscreenElementScrim") {
+                link = getLinkFromThumbnailEndscreenElementScrim(target);
             }
+
             if (link) {
                 event.preventDefault();
                 event.stopPropagation();
-                sendMessage("urlClicked", link.href);
+                sendMessage("urlClicked", link);
             }
-        }, true);
+        }, { capture: true });
+
+        function getLinkFromThumbnailEndscreenElementScrim(target) {
+            let container = target.closest('thumbnail-endscreen-element');
+            if (!container) return;
+            let img = container.querySelector('img[src*="i.ytimg.com/vi"]');
+            if (!img) return;
+            let match = img.src.match(new RegExp("vi(?:_webp)?/([^/]+)/"));
+            if (match && match[1]) {
+                return `https://www.youtube.com/watch?v=${match[1]}`;
+            }
+        }
     """
     }
     // swiftlint:enable function_body_length

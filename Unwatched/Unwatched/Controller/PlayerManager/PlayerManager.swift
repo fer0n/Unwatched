@@ -136,12 +136,12 @@ import UnwatchedShared
 
     @MainActor
     private func handleNewVideoSet(_ oldValue: Video?) {
-        resetVideoIndependentValues()
-        guard let video else {
+        if video?.youtubeId == oldValue?.youtubeId {
+            Log.info("Existing video set")
             return
         }
-        if video.youtubeId == oldValue?.youtubeId {
-            Log.info("Existing video set")
+        resetVideoIndependentValues()
+        guard video != nil else {
             return
         }
         if aspectRatio != nil {
@@ -219,6 +219,10 @@ import UnwatchedShared
         VideoService.clearEntries(from: video,
                                   modelContext: modelContext)
         loadTopmostVideoFromQueue(modelContext: modelContext)
+
+        // workaround: unreliable, do it twice
+        let task = VideoService.clearFromEverywhereAsync(video.youtubeId)
+        loadTopmostVideoFromQueue(after: task)
     }
 
     @MainActor
@@ -358,6 +362,52 @@ import UnwatchedShared
                 self.aspectRatio = aspectRatio
             }
         }
+    }
+
+    @MainActor
+    func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
+        Log.info("markVideoWatched")
+        if let video {
+            let modelContext = DataProvider.mainContext
+            try? modelContext.save()
+
+            #if os(macOS)
+            NavigationManager.shared.toggleSidebar(show: true)
+            #else
+            if showMenu {
+                setShowMenu()
+                if Const.returnToQueue.bool ?? false {
+                    NavigationManager.shared.navigateToQueue()
+                }
+            }
+            #endif
+
+            // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
+            VideoService.setVideoWatched(video, modelContext: modelContext)
+
+            autoSetNextVideo(source, modelContext)
+
+            // attempts clearing a second time in the background, as it's so unreliable
+            let videoId = video.id
+            try? modelContext.save()
+            _ = VideoService.setVideoWatchedAsync(videoId)
+
+            TinyUndoManager.shared.registerAction(.moveToQueue([videoId], order: 0))
+        }
+    }
+
+    @MainActor
+    func setShowMenu() {
+        let sheetPos = SheetPositionReader.shared
+        updateElapsedTime()
+        if video != nil && !sheetPos.landscapeFullscreen {
+            if limitHeight {
+                sheetPos.setDetentMiniPlayer()
+            } else {
+                sheetPos.setDetentVideoPlayer()
+            }
+        }
+        NavigationManager.shared.showMenu = true
     }
 }
 

@@ -162,8 +162,8 @@ extension VideoService {
         return task
     }
 
-    static func clearFromEverywhere(_ youtubeId: String) {
-        _ = Task.detached {
+    static func clearFromEverywhereAsync(_ youtubeId: String) -> Task<Void, Error> {
+        return Task.detached {
             let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
                 let repo = VideoActor(modelContainer: DataProvider.shared.container)
@@ -227,12 +227,18 @@ extension VideoService {
 
     static func addForeignUrls(_ urls: [URL],
                                in videoPlacement: VideoPlacementArea,
-                               at index: Int = 1) -> Task<(), Error> {
+                               at index: Int = 1,
+                               markAsNew: Bool = false
+    ) -> Task<(), Error> {
         Log.info("addForeignUrls")
-
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            try await repo.addForeignUrls(urls, in: videoPlacement, at: index)
+            try await repo.addForeignUrls(
+                urls,
+                in: videoPlacement,
+                at: index,
+                markAsNew: markAsNew
+            )
         }
         return task
     }
@@ -296,8 +302,22 @@ extension VideoService {
 
     static func clearList(_ list: ClearList,
                           _ direction: ClearDirection,
-                          index: Int?,
-                          date: Date?) -> Task<(), Error> {
+                          index: Int? = nil,
+                          date: Date? = nil,
+                          _ modelContext: ModelContext) {
+        try? VideoActor.clearList(
+            list,
+            direction,
+            index: index,
+            date: date,
+            modelContext
+        )
+    }
+
+    static func clearListAsync(_ list: ClearList,
+                               _ direction: ClearDirection,
+                               index: Int?,
+                               date: Date?) -> Task<(), Error> {
         let task = Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
             try await repo.clearList(list, direction, index: index, date: date)
@@ -459,5 +479,58 @@ extension VideoService {
         }
         try? context.save()
         return video
+    }
+
+    @MainActor
+    static func getVideoOrCurrent(_ videoUrl: URL?) throws -> Video {
+        if let videoUrl {
+            guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: videoUrl),
+                  let loadedVideo = VideoService.getVideo(for: youtubeId) else {
+                throw VideoError.noVideoFound
+            }
+            return loadedVideo
+        }
+
+        let context = DataProvider.mainContext
+        let sort = SortDescriptor<QueueEntry>(\.order)
+        let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
+        let entries = try context.fetch(fetch)
+        guard let fetchedVideo = entries.first?.video else {
+            throw VideoError.noVideoFound
+        }
+        return fetchedVideo
+    }
+
+    @MainActor
+    static func clearNewStatus(for list: NavigationTab) {
+        Log.info("clearNewStatus for \(list)")
+        var descriptor: FetchDescriptor<Video>?
+        switch list {
+        case .inbox:
+            descriptor = FetchDescriptor<Video>(
+                predicate: #Predicate<Video> { $0.isNew && $0.inboxEntry != nil }
+            )
+        case .queue:
+            descriptor = FetchDescriptor<Video>(
+                predicate: #Predicate<Video> { $0.isNew && $0.queueEntry != nil }
+            )
+        default:
+            Log.error("clearNewStatus: Unsupported list type")
+            return
+        }
+        guard let descriptor else {
+            Log.error("clearNewStatus: Fetch descriptor is nil")
+            return
+        }
+        let context = DataProvider.mainContext
+        do {
+            let videos = try context.fetch(descriptor)
+            for video in videos {
+                video.isNew = false
+            }
+            try context.save()
+        } catch {
+            Log.error("clearNewStatus: Failed to fetch videos - \(error)")
+        }
     }
 }

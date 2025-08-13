@@ -30,8 +30,6 @@ struct PlayerView: View {
     @State var appNotificationVM = AppNotificationVM()
 
     var landscapeFullscreen = true
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
-    var setShowMenu: (() -> Void)?
     var enableHideControls: Bool
     var sleepTimerVM: SleepTimerViewModel
 
@@ -55,7 +53,6 @@ struct PlayerView: View {
 
                     if landscapeFullscreen && showFullscreenControls {
                         FullscreenPlayerControlsWrapper(
-                            markVideoWatched: markVideoWatched,
                             autoHideVM: $autoHideVM,
                             sleepTimerVM: sleepTimerVM,
                             showLeft: showLeft)
@@ -133,7 +130,6 @@ struct PlayerView: View {
                 appNotificationVM: $appNotificationVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
-                setShowMenu: setShowMenu,
                 handleSwipe: handleSwipe
             )
             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
@@ -141,9 +137,10 @@ struct PlayerView: View {
                 FullscreenOverlayControls(
                     overlayVM: $overlayVM,
                     enabled: showFullscreenControls,
-                    show: landscapeFullscreen || (!sheetPos.isMinimumSheet && navManager.showMenu),
-                    markVideoWatched: markVideoWatched
-                )
+                    show: landscapeFullscreen
+                        || (!sheetPos.isMinimumSheet && navManager.showMenu)
+                        || navManager.playerTab == .chapterDescription,
+                    )
 
                 thumbnailPlaceholder
                     .opacity(showEmbeddedThumbnail ? 1 : 0)
@@ -153,10 +150,7 @@ struct PlayerView: View {
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
-            .scaleEffect(!hideMiniPlayer ? 0.83 : 1)
-            .padding(.horizontal, !hideMiniPlayer ? -(107 * 0.17) / 2 : 0)
-            // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
-            // 107 width with 16/9 is the minimum size to still get the higher resolution
+            .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
             .onTapGesture {
                 if !hideMiniPlayer {
                     handleMiniPlayerTap()
@@ -199,6 +193,7 @@ struct PlayerView: View {
             HStack {
                 if !hideMiniPlayer {
                     thumbnailPlaceholder
+                        .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
                         .padding(.leading, 5)
                     miniPlayerContent
                 }
@@ -295,7 +290,7 @@ struct PlayerView: View {
                 OrientationManager.changeOrientation(to: .landscapeRight)
                 #endif
             } else {
-                setShowMenu?()
+                player.setShowMenu()
             }
         case .down:
             #if os(macOS)
@@ -343,7 +338,6 @@ struct PlayerView: View {
 
     return PlayerView(autoHideVM: .constant(AutoHideVM()),
                       landscapeFullscreen: true,
-                      markVideoWatched: { _, _ in },
                       enableHideControls: false,
                       sleepTimerVM: SleepTimerViewModel())
         .modelContainer(container)
@@ -353,4 +347,14 @@ struct PlayerView: View {
         .environment(RefreshManager())
         .environment(ImageCacheManager())
         .tint(Color.neutralAccentColor)
+}
+
+extension View {
+    func thumbnailQualityWorkaround(enable: Bool) -> some View {
+        self
+            .scaleEffect(enable ? 0.83 : 1)
+            .padding(.horizontal, enable ? -(107 * 0.17) / 2 : 0)
+        // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
+        // 107 width with 16/9 is the minimum size to still get the higher resolution
+    }
 }
