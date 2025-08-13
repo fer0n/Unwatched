@@ -86,7 +86,7 @@ struct DeferDateSelector: View {
             .datePickerStyle(.graphical)
             #endif
             .labelsHidden()
-            .myNavigationTitle("deferVideo", showBack: false)
+            .myNavigationTitle("deferVideo")
             .padding(.horizontal)
             .disabled(date == nil)
 

@@ -39,7 +39,7 @@ struct LibraryView: View {
                 .onAppear {
                     navManager.topListItemId = topListItemId
                 }
-                .myNavigationTitle("library", showBack: false)
+                .myNavigationTitle("library")
                 .libraryDestination()
                 .toolbar {
                     if showCancelButton {

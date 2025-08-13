@@ -103,7 +103,7 @@ struct InboxView: View {
                 navManager.setScrollId("top", ClearList.inbox.rawValue)
             }
             .inboxToolbar(showCancelButton)
-            .myNavigationTitle("inbox", showBack: false)
+            .myNavigationTitle("inbox")
             .sendableSubscriptionDestination()
             .tint(theme.color)
         }
