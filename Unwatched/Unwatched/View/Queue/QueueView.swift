@@ -80,7 +80,7 @@ struct QueueView: View {
                 .scrollContentBackground(.hidden)
                 .disabled(queue.isEmpty)
             }
-            .myNavigationTitle("queue", showBack: false)
+            .myNavigationTitle("queue")
             .sendableSubscriptionDestination()
             .toolbar {
                 if showCancelButton {

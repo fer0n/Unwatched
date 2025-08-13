@@ -15,7 +15,7 @@ struct SheetOverlayMinimumSize: View {
         NavigationStack {
             Color.backgroundColor
                 .ignoresSafeArea(.all)
-                .myNavigationTitle(currentTab.stringKey, showBack: false)
+                .myNavigationTitle(currentTab.stringKey)
                 .toolbar {
                     RefreshToolbarContent()
                 }

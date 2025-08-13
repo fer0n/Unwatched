@@ -11,7 +11,6 @@ struct MyNavigationTitle: ViewModifier {
 
     var title: LocalizedStringKey?
     var opaque: Bool = false
-    var showBack: Bool = true
     var titleHidden = false
 
     func body(content: Content) -> some View {
@@ -34,7 +33,6 @@ struct MyNavigationTitle: ViewModifier {
                     }
                 }
             }
-            .toolbarRole(showBack ? .editor : .automatic)
         #else
         .navigationTitle(title ?? "")
         #endif
@@ -52,16 +50,21 @@ struct MyNavigationTitle: ViewModifier {
 extension View {
     func myNavigationTitle(_ title: LocalizedStringKey? = nil,
                            opaque: Bool = false,
-                           showBack: Bool = true,
                            titleHidden: Bool = false
     ) -> some View {
         self.modifier(
             MyNavigationTitle(
                 title: title,
                 opaque: opaque,
-                showBack: showBack,
                 titleHidden: titleHidden
             )
         )
+    }
+}
+
+#Preview {
+    NavigationStack {
+        Color.backgroundColor
+            .myNavigationTitle("Title here")
     }
 }
