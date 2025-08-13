@@ -34,8 +34,24 @@ struct MenuViewSheet: ViewModifier {
                     )
                     .opacity(landscapeFullscreen ? 0 : 1)
                 }
+                .modifier(MenuSheetDragIndicator())
                 .environment(\.colorScheme, colorScheme)
             }
+    }
+}
+
+struct MenuSheetDragIndicator: ViewModifier {
+    @Environment(NavigationManager.self) var navManager
+    @Environment(PlayerManager.self) var player
+    @Environment(SheetPositionReader.self) var sheetPos
+
+    func body(content: Content) -> some View {
+        content
+            .presentationDragIndicator(
+                navManager.tab == .browser || (sheetPos.isMinimumSheet && player.video != nil)
+                    ? .visible
+                    : .hidden
+            )
     }
 }
 

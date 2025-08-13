@@ -106,7 +106,7 @@ extension VideoActor {
 
         if video.videoDescription != updatedVideo.videoDescription {
             video.videoDescription = updatedVideo.videoDescription
-            deleteOldChapters(from: video)
+            CleanupService.deleteChapters(from: video, modelContext)
             let newChapters = updatedVideo.chapters.map {
                 let chapter = $0.getChapter
                 modelContext.insert(chapter)
@@ -115,16 +115,6 @@ extension VideoActor {
             video.chapters = newChapters
         }
         return deleteImage
-    }
-
-    private func deleteOldChapters(from video: Video) {
-        for chapter in video.chapters ?? [] {
-            modelContext.delete(chapter)
-        }
-        for chapter in video.mergedChapters ?? [] {
-            modelContext.delete(chapter)
-        }
-        video.sponserBlockUpdateDate = nil
     }
 
     func getMostRecentDate(_ videos: [SendableVideo]) -> Date? {
@@ -339,6 +329,10 @@ extension VideoActor {
 
                 let queueEntry: QueueEntry
                 if let existingQueueEntry = video.queueEntry {
+                    // workaround: context sometimes still contains an already deleted entry
+                    // (e.g. undo marking current video as watched)
+                    modelContext.insert(existingQueueEntry)
+
                     queueEntry = existingQueueEntry
                 } else {
                     let newQueueEntry = QueueEntry(video: video, order: 0)
@@ -366,19 +360,40 @@ extension VideoActor {
         }
     }
 
-    func clearList(_ list: ClearList, _ direction: ClearDirection, index: Int?, date: Date?) throws {
+    func clearList(
+        _ list: ClearList,
+        _ direction: ClearDirection,
+        index: Int? = nil,
+        date: Date? = nil
+    ) throws {
+        try VideoActor.clearList(
+            list,
+            direction,
+            index: index,
+            date: date,
+            modelContext
+        )
+    }
+
+    static func clearList(
+        _ list: ClearList,
+        _ direction: ClearDirection,
+        index: Int?,
+        date: Date?,
+        _ modelContext: ModelContext
+    ) throws {
         switch list {
         case .inbox:
-            clearInbox(direction, date: date)
+            clearInbox(direction, date: date, modelContext)
         case .queue:
-            clearQueue(direction, index: index)
+            clearQueue(direction, index: index, modelContext)
         @unknown default:
             Log.warning("Clear list value not implemented")
         }
         try modelContext.save()
     }
 
-    private func clearInbox(_ direction: ClearDirection, date: Date?) {
+    static func clearInbox(_ direction: ClearDirection, date: Date?, _ modelContext: ModelContext) {
         let past = Date.distantPast
         let dateL = date ?? past
         var filter: Predicate<InboxEntry>
@@ -394,7 +409,11 @@ extension VideoActor {
         }
     }
 
-    private func clearQueue(_ direction: ClearDirection, index: Int?) {
+    static func clearQueue(
+        _ direction: ClearDirection,
+        index: Int?,
+        _ modelContext: ModelContext
+    ) {
         var filter: Predicate<QueueEntry>
         if direction == .above {
             filter = #Predicate<QueueEntry> { $0.order < index ?? 0 }

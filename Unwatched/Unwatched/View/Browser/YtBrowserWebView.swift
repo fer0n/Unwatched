@@ -10,6 +10,7 @@ import UnwatchedShared
 
 struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
     @Binding var url: BrowserUrl?
 
@@ -117,11 +118,37 @@ struct YtBrowserWebView: PlatformViewRepresentable {
                 return
             }
 
+            if parent.defaultShortsSetting == .hide {
+                injectHideShortsCSS(webView)
+            }
+
             Log.info("about to extract info")
             let info = getInfoFromUrl(url)
             if info.userName != nil || info.channelId != nil || info.playlistId != nil {
                 // is username page, reload the page
                 extractSubscriptionInfo(webView, info)
+            }
+        }
+
+        func injectHideShortsCSS(_ webView: WKWebView) {
+            let script = """
+            (function() {
+                var style = document.createElement('style');
+                style.textContent = `
+                    .rich-section-content:has(.shortsLockupViewModelHost),
+                    .reel-shelf-items {
+                        display: none !important;
+                    }
+                `
+                document.head.appendChild(style);
+            })();
+            """
+            webView.evaluateJavaScript(script) { (_, error) in
+                if let error {
+                    Log.error("Failed to inject CSS: \(error)")
+                } else {
+                    Log.info("Successfully injected CSS to hide Shorts")
+                }
             }
         }
 

@@ -35,6 +35,7 @@ struct ChapterList: View {
                         spacing: padding,
                         currentTime: isCurrent ? player.currentTime : nil,
                         )
+                    .animation(nil, value: player.currentTime)
                     .padding(.horizontal, padding + 2)
                     .padding(.vertical, padding)
                     .padding(.trailing, 4)
@@ -54,6 +55,15 @@ struct ChapterList: View {
                     }
                     .foregroundStyle(foregroundColor)
                     .tint(foregroundColor)
+                    .contextMenu {
+                        Button("copyUrl", systemImage: Const.copySF) {
+                            let text = UrlService.getShortenedUrl(
+                                video.youtubeId,
+                                timestamp: chapter.startTime,
+                                )
+                            ClipboardService.set(text)
+                        }
+                    }
                     .accessibilityActions {
                         Button("playChapter") {
                             setChapter(chapter)

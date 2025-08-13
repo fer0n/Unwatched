@@ -33,7 +33,7 @@ extension View {
                 case .settingsNotifications:
                     NotificationSettingsView()
                 case .settingsNewVideos:
-                    VideoSettingsView()
+                    GeneralSettingsView()
                 case .settingsAppearance:
                     AppearanceSettingsView()
                 case .settingsPlayback:

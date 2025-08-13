@@ -32,6 +32,7 @@ struct QueueTabItemViewModifier: ViewModifier {
                 tag: NavigationTab.queue,
                 showBadge: showBadge && hasNewItems
             )
+            .autRemoveNewViewModifier(hasNewItems: hasNewItems, list: .queue)
     }
 
     var hasNewItems: Bool {

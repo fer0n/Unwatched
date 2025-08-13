@@ -1164,8 +1164,19 @@ final class ChapterServiceTests: XCTestCase {
                     ),
                     SendableChapter(title: "Encounter: Dinosaurs", startTime: 8 * 60, endTime: nil)
                 ]
-            )
+            ),
+            (
+                """
+                decimals
 
+                0:00.0 Intro
+                1:30.345 Overview
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30 + 0.345),
+                    SendableChapter(title: "Overview", startTime: 1 * 60 + 30 + 0.345, endTime: nil),
+                ]
+            ),
         ]
 
         for (description, expected) in testValues {

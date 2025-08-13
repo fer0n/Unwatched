@@ -45,6 +45,18 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             shortTitle: "previousChapter",
             systemImageName: "chevron.left.2"
         )
+        AppShortcut(
+            intent: GetTranscript(),
+            phrases: ["Get Video Transcript from ${applicationName}"],
+            shortTitle: "getTranscript",
+            systemImageName: "text.page"
+        )
+        AppShortcut(
+            intent: SetChapters(),
+            phrases: ["Set chapters in ${applicationName}"],
+            shortTitle: "setChapters",
+            systemImageName: "checklist.unchecked"
+        )
     }
 
     static let shortcutTileColor: ShortcutTileColor = .teal

@@ -12,14 +12,14 @@ struct WatchedButton: View {
     @Environment(PlayerManager.self) var player
     @State var hapticToggle: Bool = false
 
-    var markVideoWatched: (_ showMenu: Bool, _ source: VideoSource) -> Void
     var isSmall = false
     var backgroundColor: Color?
 
     var body: some View {
         Button {
-            markVideoWatched(true, .nextUp)
+            player.markVideoWatched(showMenu: true, source: .nextUp)
             hapticToggle.toggle()
+            try? modelContext.save()
         } label: {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)
@@ -52,7 +52,7 @@ struct WatchedButton: View {
 }
 
 #Preview {
-    WatchedButton(markVideoWatched: { _, _ in })
+    WatchedButton()
         .environment(PlayerManager())
         .modelContainer(DataProvider.previewContainerFilled)
 }

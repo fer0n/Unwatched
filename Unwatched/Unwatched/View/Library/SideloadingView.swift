@@ -23,6 +23,7 @@ struct SideloadingView: View {
                     ForEach(sortedVideos) { video in
                         VideoListItem(
                             video,
+                            video.youtubeId,
                             config: VideoListItemConfig(
                                 hasInboxEntry: video.inboxEntry != nil,
                                 hasQueueEntry: video.queueEntry != nil,
@@ -31,6 +32,7 @@ struct SideloadingView: View {
                                 isNew: video.isNew,
                                 )
                         )
+                        .equatable()
                         .videoListItemEntry()
                     }
                     .listRowBackground(Color.backgroundColor)

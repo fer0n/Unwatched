@@ -33,7 +33,6 @@ struct DescriptionDetailHeaderView: View {
     let video: Video
     var smallTitle = false
     let onTitleTap: () -> Void
-    let setShowMenu: (() -> Void)?
 
     var body: some View {
         Button {
@@ -57,8 +56,7 @@ struct DescriptionDetailHeaderView: View {
 
         VStack(alignment: .leading) {
             InteractiveSubscriptionTitle(
-                subscription: video.subscription,
-                setShowMenu: setShowMenu
+                subscription: video.subscription
             )
             .equatable()
             if let published = video.publishedDate {

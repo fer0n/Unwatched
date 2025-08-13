@@ -7,9 +7,10 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemStatus: View {
+    @Environment(PlayerManager.self) private var player
+
     var showAllStatus: Bool = true
     var youtubeId: String
-    var playingVideoId: String?
 
     var hasInboxEntry: Bool?
     var hasQueueEntry: Bool?
@@ -37,7 +38,7 @@ struct VideoListItemStatus: View {
     var videoStatusSystemName: (status: String?, color: Color)? {
         let defaultColor = Color.green
         if showAllStatus {
-            if youtubeId == playingVideoId {
+            if youtubeId == player.video?.youtubeId {
                 return ("play.circle.fill", defaultColor)
             }
             if hasInboxEntry == true {

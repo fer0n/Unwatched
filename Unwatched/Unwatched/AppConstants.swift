@@ -24,8 +24,9 @@ extension Const {
         Const.videoAddedToQueueNotification: false,
         Const.showNotificationBadge: false,
 
-        // Videos
+        // General
         Const.defaultVideoPlacement: VideoPlacement.inbox.rawValue,
+        Const.autoClearNew: false,
         Const.autoRefresh: true,
         Const.requireClearConfirmation: true,
         Const.showAddToQueueButton: false,

@@ -35,3 +35,9 @@ public extension Color {
         )
     }
 }
+
+extension View {
+    func debug() -> some View {
+        self.border(Color.random())
+    }
+}

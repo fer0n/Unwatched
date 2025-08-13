@@ -55,10 +55,12 @@ extension SubscriptionActor {
     ) async -> (SubscriptionState, SendableSubscription?) {
         var subState = SubscriptionState(url: url)
         do {
+            subState.channelId = UrlService.getChannelIdFromUrl(url)
             subState.userName = UrlService.getChannelUserNameFromUrl(url)
             subState.playlistId = UrlService.getPlaylistIdFromUrl(url)
 
             if let title = getTitleIfSubscriptionExists(
+                channelId: subState.channelId,
                 userName: subState.userName,
                 playlistId: subState.playlistId,
                 unarchiveSubIfAvailable
@@ -70,6 +72,7 @@ extension SubscriptionActor {
             }
 
             if let sendableSub = try await SubscriptionActor.getSubscription(url: url,
+                                                                             channelId: subState.channelId,
                                                                              userName: subState.userName,
                                                                              playlistId: subState.playlistId) {
                 let channelId = sendableSub.youtubeChannelId

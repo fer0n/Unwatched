@@ -295,6 +295,7 @@ public struct SubscriptionState: Identifiable, Sendable {
     public var id = UUID()
     public var url: URL?
     public var title: String?
+    public var channelId: String?
     public var userName: String?
     public var playlistId: String?
     public var error: String?
@@ -305,6 +306,7 @@ public struct SubscriptionState: Identifiable, Sendable {
         id: UUID = UUID(),
         url: URL? = nil,
         title: String? = nil,
+        channelId: String? = nil,
         userName: String? = nil,
         playlistId: String? = nil,
         error: String? = nil,
@@ -314,6 +316,7 @@ public struct SubscriptionState: Identifiable, Sendable {
         self.id = id
         self.url = url
         self.title = title
+        self.channelId = channelId
         self.userName = userName
         self.playlistId = playlistId
         self.error = error

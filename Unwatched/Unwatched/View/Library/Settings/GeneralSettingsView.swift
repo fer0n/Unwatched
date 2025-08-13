@@ -6,8 +6,9 @@
 import SwiftUI
 import UnwatchedShared
 
-struct VideoSettingsView: View {
+struct GeneralSettingsView: View {
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
+    @AppStorage(Const.autoClearNew) var autoClearNew: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
@@ -27,6 +28,9 @@ struct VideoSettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    Toggle(isOn: $autoClearNew) {
+                        Text("autoClearNew")
+                    }
                 }
 
                 MySection("refresh", footer: "allowRefreshDuringSyncFooter") {
@@ -58,11 +62,11 @@ struct VideoSettingsView: View {
                     #endif
                 }
             }
-            .myNavigationTitle("videoSettings")
+            .myNavigationTitle("generalSettings")
         }
     }
 }
 
 #Preview {
-    VideoSettingsView()
+    GeneralSettingsView()
 }

@@ -10,7 +10,9 @@ import UnwatchedShared
 
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
-                        at index: Int) async throws {
+                        at index: Int,
+                        markAsNew: Bool
+    ) async throws {
         var videoIds = [(videoId: String, startAt: Double?)]()
         var playlistIds = [String]()
 
@@ -28,7 +30,12 @@ import UnwatchedShared
         }
 
         if !videoIds.isEmpty {
-            try await addForeignVideos(videoIds: videoIds, in: videoplacement, at: index)
+            try await addForeignVideos(
+                videoIds: videoIds,
+                in: videoplacement,
+                at: index,
+                markAsNew: markAsNew
+            )
         }
 
         for playlistId in playlistIds {
@@ -69,7 +76,9 @@ import UnwatchedShared
 
     private func addForeignVideos(videoIds: [(String, Double?)],
                                   in videoplacement: VideoPlacementArea,
-                                  at index: Int) async throws {
+                                  at index: Int,
+                                  markAsNew: Bool
+    ) async throws {
         Log.info("addForeignVideos?")
         var videos = [Video]()
         for (youtubeId, startAt) in videoIds {
@@ -90,7 +99,9 @@ import UnwatchedShared
             }
             videos.append(video)
         }
-        setVideosNew(videos)
+        if markAsNew {
+            setVideosNew(videos)
+        }
         addVideosTo(videos, placement: videoplacement, index: index)
     }
 

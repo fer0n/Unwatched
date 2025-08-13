@@ -65,6 +65,7 @@ struct AirPlayView: View {
                 .fontWeight(.black)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+        .buttonStyle(.plain)
     }
 }
 #endif

@@ -14,11 +14,11 @@ struct ChapterService {
         let input = description
         do {
             let regexTimeThenTitle = try NSRegularExpression(
-                pattern: #"^\s*\W*?(\d+(?:\:\d+)+)[:\])|\-—–]*\s*[:\])|\-—–]?\s*(.+)(?<![,:;\s])[:\|\-—–]?\s*\n?(https?:\/\/[^\s)]+)?"#,
+                pattern: #"^\s*\W*?(\d+(?:\:\d+)+(?:\.\d+)?)[:\])|\-—–]*\s*[:\])|\-—–]?\s*(.+)(?<![,:;\s])[:\|\-—–]?\s*\n?(https?:\/\/[^\s)]+)?"#,
                 options: [.anchorsMatchLines]
             )
             let regexTitleThenTime = try NSRegularExpression(
-                pattern: #"^[-–:•]?\h*(.+?)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+)\s*$"#,
+                pattern: #"^[-–:•]?\h*(.+?)(?<![-– :•])[-– :•]+\s?(\d+(?:\:\d+)+(?:\.\d+)?)\s*$"#,
                 options: [.anchorsMatchLines]
             )
 
@@ -131,6 +131,30 @@ struct ChapterService {
 
         default:
             return nil
+        }
+    }
+
+    static func secondsToTimestamp(_ seconds: Double, includeMilliseconds: Bool = false) -> String {
+        let hours = Int(seconds / 3600)
+        let minutes = Int((seconds.truncatingRemainder(dividingBy: 3600)) / 60)
+        let secs = seconds.truncatingRemainder(dividingBy: 60)
+
+        if includeMilliseconds {
+            let wholeSeconds = Int(secs)
+            let milliseconds = Int((secs - Double(wholeSeconds)) * 1000)
+
+            if hours > 0 {
+                return String(format: "%02d:%02d:%02d.%03d", hours, minutes, wholeSeconds, milliseconds)
+            } else {
+                return String(format: "%02d:%02d.%03d", minutes, wholeSeconds, milliseconds)
+            }
+        } else {
+            let wholeSeconds = Int(secs)
+            if hours > 0 {
+                return String(format: "%02d:%02d:%02d", hours, minutes, wholeSeconds)
+            } else {
+                return String(format: "%02d:%02d", minutes, wholeSeconds)
+            }
         }
     }
 

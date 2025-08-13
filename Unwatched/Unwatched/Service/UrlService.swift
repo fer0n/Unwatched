@@ -17,6 +17,9 @@ struct UrlService {
     static let youtubeStartPageString = "https://m.youtube.com?autoplay=0"
 
     static let shareShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
+    static let generateChaptersShortcutUrl = URL(
+        staticString: "https://www.icloud.com/shortcuts/9fba5a7488984df7921c5806f1e8595c"
+    )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
 
     static let writeReviewUrl = URL(staticString: "https://apps.apple.com/app/id6477287463?action=write-review")
@@ -76,7 +79,7 @@ struct UrlService {
     }
 
     static func stringContainsUrl (_ text: String) -> Bool {
-        let regex = #"https:\/\/\w+\.\w+"#
+        let regex = #"https?:\/\/\w+\.\w+"#
         return text.matching(regex: regex) != nil
     }
 
@@ -172,10 +175,7 @@ struct UrlService {
 
     static func getChannelIdFromUrl(_ url: String) -> String? {
         // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        if let channelId = url.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#) {
-            return channelId
-        }
-        return nil
+        return url.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#)
     }
 
     static func getPlaylistIdFromUrl(_ url: URL) -> String? {

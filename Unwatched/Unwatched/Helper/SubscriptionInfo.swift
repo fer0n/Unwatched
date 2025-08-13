@@ -20,11 +20,11 @@ struct SubscriptionInfo {
             if _rssFeedUrl != nil {
                 return _rssFeedUrl
             }
-            if let playlistId = playlistId,
+            if let playlistId,
                let url = try? UrlService.getPlaylistFeedUrl(playlistId) {
                 return url
             }
-            if let channelId = channelId {
+            if let channelId {
                 return try? UrlService.getFeedUrlFromChannelId(channelId)
             }
             return nil

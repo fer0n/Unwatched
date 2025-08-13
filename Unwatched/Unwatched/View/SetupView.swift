@@ -22,7 +22,7 @@ struct SetupView: View {
     @State var sheetPos = SheetPositionReader.shared
     @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.shared
-    @State var undoManager = TinyUndoManager()
+    @State var undoManager = TinyUndoManager.shared
 
     var body: some View {
         ContentView()
@@ -36,6 +36,10 @@ struct SetupView: View {
             .environment(undoManager)
             .alert(isPresented: $alerter.isShowingAlert) {
                 alerter.alert ?? Alert(title: Text(verbatim: ""))
+            }
+            .onOpenURL { url in
+                Log.info("onOpenURL: \(url)")
+                handleDeepLink(url: url)
             }
             #if os(iOS)
             .onChange(of: scenePhase, initial: true) {
@@ -73,6 +77,27 @@ struct SetupView: View {
             }
     }
 
+    func handleDeepLink(url: URL) {
+        guard let host = url.host else { return }
+        switch host {
+        case "play":
+            // unwatched://play?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
+            guard
+                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                let queryItems = components.queryItems,
+                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
+                let youtubeUrl = URL(string: youtubeUrlString)
+            else {
+                Log.error("No youtube URL found in deep link: \(url)")
+                return
+            }
+            let userInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl]
+            NotificationCenter.default.post(name: .watchInUnwatched, object: nil, userInfo: userInfo)
+        default:
+            break
+        }
+    }
+
     static func handleAppClosed() {
         Log.info("handleAppClosed")
         #if os(iOS)
@@ -97,6 +122,7 @@ struct SetupView: View {
     }
 
     static func setupVideo() {
+        Log.info("setupVideo")
         if RefreshManager.shared.consumeTriggerPasteAction() {
             NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
         } else {

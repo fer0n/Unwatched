@@ -21,9 +21,10 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
                 Image(systemName: Const.enableFullscreenSF)
             )
         }
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
         .help("fullscreenRight")
         .accessibilityLabel("fullscreenRight")
-        .padding(2)
         .contextMenu {
             Button {
                 #if os(iOS)
@@ -33,8 +34,8 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
                 Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
             }
         }
-        .padding(-2)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+
     }
 }
 
@@ -76,6 +77,7 @@ struct HideControlsButton: View {
                 .keyboardShortcut(hideControlsFullscreen ? .escape : "v", modifiers: [])
             }
         }
+        .buttonStyle(.plain)
         .geometryGroup()
     }
 

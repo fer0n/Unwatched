@@ -71,6 +71,10 @@ public struct Device {
     public static let deviceName: String = {
         Host.current().localizedName ?? "Mac"
     }()
+    
+    #elseif os(tvOS)
+    public static let isIphone: Bool = false
+    public static let systemVersion = "tvOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
     #endif
 
     @MainActor
@@ -90,6 +94,8 @@ public struct Device {
             return modelName
         }
         return "Mac"
+        #elseif os(tvOS)
+        return "Apple TV"
         #endif
     }()
 }

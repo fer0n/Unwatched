@@ -55,24 +55,33 @@ struct InboxView: View {
                     ForEach(inboxEntries) { entry in
                         ZStack {
                             if let video = entry.video {
+                                let videoId = video.persistentModelID
+                                let youtubeId = video.youtubeId
+                                let date = video.publishedDate
+
                                 VideoListItem(
                                     video,
+                                    video.youtubeId,
                                     config: VideoListItemConfig(
                                         hasInboxEntry: true,
                                         isNew: video.isNew,
                                         showAllStatus: false,
                                         clearRole: .destructive,
                                         queueRole: .destructive,
-                                        onChange: { handleChange($0, video) },
                                         clearAboveBelowList: .inbox,
                                         showQueueButton: showAddToQueueButton,
-                                        showDelete: false)
+                                        showDelete: false
+                                    ),
+                                    onChange: { reason, _ in
+                                        handleChange(reason, videoId, youtubeId, date)
+                                    }
                                 )
+                                .equatable()
+                                .id(NavigationManager.getScrollId(video.youtubeId, ClearList.inbox.rawValue))
                             } else {
                                 EmptyEntry(entry)
                             }
                         }
-                        .id(NavigationManager.getScrollId(entry.video?.youtubeId, ClearList.inbox.rawValue))
                         .videoListItemEntry()
                     }
                     .listRowBackground(Color.backgroundColor)
@@ -81,9 +90,11 @@ struct InboxView: View {
                         HiddenEntriesInfo()
                     }
 
-                    ClearAllInboxEntriesButton(willClearAll: willClearAll)
-                        .disabled(!hasEntries)
-                        .opacity(hasEntries ? 1 : 0)
+                    ClearAllInboxEntriesButton(
+                        willClearAll: willClearAll
+                    )
+                    .disabled(!hasEntries)
+                    .opacity(hasEntries ? 1 : 0)
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
@@ -113,22 +124,27 @@ struct InboxView: View {
 
     func willClearAll() {
         let videoIds = inboxEntries.compactMap { $0.video?.persistentModelID }
-        undoManager.handleAction(.clear, videoIds)
+        undoManager.registerAction(.moveToInbox(videoIds))
     }
 
-    func handleChange(_ reason: ChangeReason?, _ video: Video) {
+    func handleChange(
+        _ reason: VideoChangeReason?,
+        _ videoId: PersistentIdentifier,
+        _ youtubeId: String,
+        _ date: Date?
+    ) {
         guard let reason else {
             return
         }
         switch reason {
-        case .queue, .clear:
-            undoManager.handleAction(reason, [video.persistentModelID])
+        case .clearEverywhere, .moveToQueue, .toggleWatched:
+            undoManager.registerAction(.moveToInbox([videoId]))
         case .clearAbove:
-            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .above)
+            undoManager.handleInboxClearDirection(youtubeId, date, inboxEntries, .above)
         case .clearBelow:
-            undoManager.handleClearDirection(video, inboxEntries: inboxEntries, .below)
-        default:
-            Log.warning("handleChange: Unsupported reason \(reason) for video \(video.youtubeId)")
+            undoManager.handleInboxClearDirection(youtubeId, date, inboxEntries, .below)
+        case .moveToInbox:
+            break
         }
     }
 
