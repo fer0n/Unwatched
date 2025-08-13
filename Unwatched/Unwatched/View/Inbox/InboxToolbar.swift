@@ -36,11 +36,7 @@ struct InboxToolbar: ViewModifier {
                 }
                 UndoToolbarButton()
                 ToolbarSpacerWorkaround()
-                SyncStatusToolbarInfo()
-                if #available(iOS 26.0, *) {
-                    ToolbarSpacer(.fixed)
-                }
-                RefreshToolbarButton()
+                RefreshToolbarContent()
             }
     }
 }
@@ -48,5 +44,29 @@ struct InboxToolbar: ViewModifier {
 extension View {
     func inboxToolbar(_ showCancelButton: Bool = false) -> some View {
         modifier(InboxToolbar(showCancelButton: showCancelButton))
+    }
+}
+import UnwatchedShared
+
+#Preview {
+    @Previewable @State var show = true
+
+    NavigationStack {
+        Button("Toggle Toolbar") {
+            withAnimation {
+                show.toggle()
+            }
+        }
+
+        Text("Inbox Toolbar Preview")
+            .toolbar {
+                ToolbarItemGroup {
+                    if show {
+                        Image(systemName: "icloud.fill")
+                    }
+
+                    Image(systemName: Const.refreshSF)
+                }
+            }
     }
 }

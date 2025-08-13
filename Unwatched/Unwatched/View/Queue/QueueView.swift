@@ -87,10 +87,8 @@ struct QueueView: View {
                     DismissToolbarButton()
                 }
                 ToolbarSpacerWorkaround()
-                SyncStatusToolbarInfo()
-                ToolbarSpacer(.fixed)
                 UndoToolbarButton()
-                RefreshToolbarButton()
+                RefreshToolbarContent()
             }
             .tint(theme.color)
         }

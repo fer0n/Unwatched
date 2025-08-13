@@ -112,7 +112,7 @@
 		883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8052B5A8FFA00028D52 /* VideoListView.swift */; };
 		883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8072B5AE47E00028D52 /* MenuView.swift */; };
 		883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */; };
-		883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */; };
+		883CA8132B5B382900028D52 /* RefreshToolbarContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */; };
 		883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */; };
 		883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8162B5BA94900028D52 /* SheetPositionReader.swift */; };
 		883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */; };
@@ -307,7 +307,7 @@
 		889AF8DD2C50ECA9001CEDE6 /* NewVideosNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9182B95116A004D7CE2 /* NewVideosNotificationInfo.swift */; };
 		889AF8DE2C50ECA9001CEDE6 /* HandleVideoUrlDropModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */; };
 		889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */; };
-		889AF8E02C50ECA9001CEDE6 /* RefreshToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */; };
+		889AF8E02C50ECA9001CEDE6 /* RefreshToolbarContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */; };
 		889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */; };
 		889AF8E22C50ECA9001CEDE6 /* BrowserUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888322512B872EE1004E2DE4 /* BrowserUrl.swift */; };
 		889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899247B2C48552D001185A6 /* MySection.swift */; };
@@ -759,7 +759,7 @@
 		883CA8052B5A8FFA00028D52 /* VideoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListView.swift; sourceTree = "<group>"; };
 		883CA8072B5AE47E00028D52 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		883CA8092B5AFB4100028D52 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
-		883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshToolbarButton.swift; sourceTree = "<group>"; };
+		883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshToolbarContent.swift; sourceTree = "<group>"; };
 		883CA8142B5B907000028D52 /* InnerHeightPreferenceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InnerHeightPreferenceChange.swift; sourceTree = "<group>"; };
 		883CA8162B5BA94900028D52 /* SheetPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetPositionReader.swift; sourceTree = "<group>"; };
 		883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMiniControlView.swift; sourceTree = "<group>"; };
@@ -1146,7 +1146,7 @@
 				888C49CA2B602B4500CDEC76 /* CapsulePicker.swift */,
 				88D8584F2B55AB4D0047E0E6 /* DateTimeConversion.swift */,
 				88D34D742B58F86800533B74 /* Alerter.swift */,
-				883CA8122B5B382900028D52 /* RefreshToolbarButton.swift */,
+				883CA8122B5B382900028D52 /* RefreshToolbarContent.swift */,
 				889931D62D731AB0009096AB /* PreviousState.swift */,
 				889931D92D731AC5009096AB /* PlayerType.swift */,
 				883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */,
@@ -2198,7 +2198,7 @@
 				8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
 				889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */,
-				889AF8E02C50ECA9001CEDE6 /* RefreshToolbarButton.swift in Sources */,
+				889AF8E02C50ECA9001CEDE6 /* RefreshToolbarContent.swift in Sources */,
 				889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */,
 				889AF8E22C50ECA9001CEDE6 /* BrowserUrl.swift in Sources */,
 				889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */,
@@ -2399,7 +2399,7 @@
 				8898B6822B48466700348D01 /* VideoCrawlerError.swift in Sources */,
 				88F2876A2DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
 				88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
-				883CA8132B5B382900028D52 /* RefreshToolbarButton.swift in Sources */,
+				883CA8132B5B382900028D52 /* RefreshToolbarContent.swift in Sources */,
 				887E72922B91ED9500928946 /* FullscreenPlayerControls.swift in Sources */,
 				88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */,
 				8898B6842B4846D000348D01 /* SubscriptionError.swift in Sources */,

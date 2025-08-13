@@ -72,9 +72,7 @@ struct SubscriptionDetailView: View {
         )
         .toolbar {
             if !subscription.isArchived {
-                SyncStatusToolbarInfo()
-                ToolbarSpacer(.fixed)
-                RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
+                RefreshToolbarContent(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
         .task(id: loadNewVideosTask) {
