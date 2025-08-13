@@ -144,6 +144,13 @@ struct PlayerView: View {
 
                 thumbnailPlaceholder
                     .opacity(showEmbeddedThumbnail ? 1 : 0)
+
+                if !hideMiniPlayer {
+                    Color.black.opacity(0.000001)
+                        .onTapGesture {
+                            handleMiniPlayerTap()
+                        }
+                }
             }
             .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
             .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
@@ -151,11 +158,6 @@ struct PlayerView: View {
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
             .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
-            .onTapGesture {
-                if !hideMiniPlayer {
-                    handleMiniPlayerTap()
-                }
-            }
             .padding(.leading, !hideMiniPlayer ? 5 : 0)
 
             if !hideMiniPlayer {
