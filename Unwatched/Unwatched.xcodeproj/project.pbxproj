@@ -1025,7 +1025,6 @@
 		881931D12E4C9FC900DB3843 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				AppIcon.icon,
 				IconBlue.icon,
 			);
 			target = 886F01F82CA5B34600EF2EEA /* UnwatchedTV */;
