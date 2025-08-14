@@ -9,32 +9,9 @@ import AVKit
 import UnwatchedShared
 import OSLog
 
-struct AirPlayViewModifier: ViewModifier {
-    @Environment(PlayerManager.self) var player
-
-    func body(content: Content) -> some View {
-        content
-            .playerToggleModifier(isOn: isOn, isSmall: true)
-            .contextMenu {
-                Section("autoAirplayHDHelperShort") {
-                    Button {
-                        player.setAirplayHD(!isOn)
-                    } label: {
-                        Text(isOn ? "airplayHDOn" : "airplayHDOff")
-                    }
-                }
-            }
-    }
-
-    var isOn: Bool {
-        player.airplayHD
-    }
-}
-
 struct AirPlayButton: View {
     var body: some View {
         AirPlayView()
-            .modifier(AirPlayViewModifier())
             .help("airPlay")
             .accessibilityElement()
             .accessibilityAddTraits(.isButton)
@@ -43,6 +20,8 @@ struct AirPlayButton: View {
 }
 
 struct AirPlayView: View {
+    @Environment(PlayerManager.self) var player
+
     @State private var routePickerView: AVRoutePickerView?
     @State var hapticToggle = false
 
@@ -61,11 +40,33 @@ struct AirPlayView: View {
             hapticToggle.toggle()
             (button as? UIButton)?.sendActions(for: .touchUpInside)
         } label: {
-            Image(systemName: "airplay.video")
+            Image(systemName: symbolname)
                 .fontWeight(.black)
+                .playerToggleModifier(isOn: isOn, isSmall: true)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .buttonStyle(.plain)
+        .contextMenu {
+            Section("autoAirplayHDHelperShort") {
+                Button {
+                    player.setAirplayHD(!isOn)
+                } label: {
+                    Text(isOn ? "airplayHDOn" : "airplayHDOff")
+                }
+            }
+        }
+    }
+
+    var isOn: Bool {
+        player.airplayHD
+    }
+
+    var symbolname: String {
+        if #available(iOS 18.0, *) {
+            return "airplay.video"
+        } else {
+            return "airplayvideo"
+        }
     }
 }
 #endif
