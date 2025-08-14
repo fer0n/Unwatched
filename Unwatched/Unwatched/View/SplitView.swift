@@ -90,6 +90,7 @@ struct IOSSPlitView: View {
             VideoPlayer(
                 compactSize: bigScreen,
                 horizontalLayout: hideControlsFullscreen && isLandscape,
+                limitWidth: limitWidth,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen
             )
@@ -98,9 +99,7 @@ struct IOSSPlitView: View {
 
             if bigScreen && !hideControlsFullscreen {
                 MenuView(isSidebar: true)
-                    .frame(maxWidth: isLandscape
-                            ? min(proxy.size.width * 0.4, sidebarWidth)
-                            : nil,
+                    .frame(maxWidth: menuWidth,
                            maxHeight: isLandscape
                             ? nil
                             : proxy.size.height * 0.4)
@@ -128,11 +127,21 @@ struct IOSSPlitView: View {
 
     var layout: AnyLayout {
         isLandscape
-            ? AnyLayout(HStackLayout())
+            ? AnyLayout(HStackLayout(spacing: 3))
             : AnyLayout(VStackLayout())
     }
 
     var sidebarWidth: Double {
         dynamicTypeSize >= .accessibility1 ? 410 : 360
+    }
+
+    var limitWidth: Bool {
+        dynamicTypeSize > .large || (bigScreen && (proxy.size.width - (menuWidth ?? 0)) < 720)
+    }
+
+    var menuWidth: CGFloat? {
+        isLandscape
+            ? min(proxy.size.width * 0.4, sidebarWidth)
+            : nil
     }
 }

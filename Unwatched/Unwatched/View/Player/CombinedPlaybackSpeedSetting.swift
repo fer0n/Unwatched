@@ -80,7 +80,7 @@ struct CombinedPlaybackSpeedSetting: View {
                 .disabled(player.temporaryPlaybackSpeed != nil)
                 .padding(.vertical)
             } else {
-                HStack(spacing: -6) {
+                HStack(spacing: -8) {
                     SpeedControlView(
                         selectedSpeed: $selectedSpeed,
                         indicatorSpacing: indicatorSpacing
@@ -101,7 +101,6 @@ struct CombinedPlaybackSpeedSetting: View {
                         } label: {
                             Image(systemName: "waveform")
                                 .font(.title3)
-                                .padding(8)
                                 .speedSettingsImageStyle(
                                     isOn: player.temporaryPlaybackSpeed != nil,
                                     imageOn: "gauge.with.needle.fill",
