@@ -13,7 +13,6 @@ struct PlayerControls: View {
     @Environment(PlayerManager.self) var player
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
-    @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
     @ScaledMetric var speedSpacingScaled = 8
 
@@ -28,10 +27,6 @@ struct PlayerControls: View {
     @Binding var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
 
-    var hasLargeFont: Bool {
-        dynamicTypeSize > .large && !hideControlsFullscreen
-    }
-
     var speedSpacing: CGFloat {
         speedSpacingScaled + (showRotateFullscreen || compactSize ? -2 : 2)
     }
@@ -43,7 +38,7 @@ struct PlayerControls: View {
     }
 
     var body: some View {
-        let layout = compactSize && !hasLargeFont
+        let layout = compactSize
             ? AnyLayout(HStackLayout(spacing: 20))
             : AnyLayout(VStackLayout(spacing: player.isTallAspectRatio ? 15 : 25))
 
@@ -97,11 +92,7 @@ struct PlayerControls: View {
                             spacing: speedSpacing,
                             showTemporarySpeed: compactSize,
                             limitWidth: limitWidth,
-                            indicatorSpacing: player.embeddingDisabled
-                                ? 2
-                                : compactSize
-                                ? 2.5
-                                : 2,
+                            indicatorSpacing: 2,
                             isTransparent: false
                         )
                         .fixedSize(horizontal: compactSize, vertical: false)
@@ -113,10 +104,6 @@ struct PlayerControls: View {
 
                         if compactSize {
                             DescriptionButton(show: $autoHideVM.showDescription)
-                        }
-
-                        if enableHideControls && hasLargeFont {
-                            HideControlsButton(isSmall: true)
                         }
 
                         PlayerMoreMenuButton(
@@ -144,7 +131,7 @@ struct PlayerControls: View {
                         NextVideoButton(isSmall: hasSmallControls)
                             .frame(maxWidth: compactSize ? nil : .infinity)
 
-                        if enableHideControls && !hasLargeFont {
+                        if enableHideControls {
                             HideControlsButton(isSmall: hasSmallControls)
                         }
                     }

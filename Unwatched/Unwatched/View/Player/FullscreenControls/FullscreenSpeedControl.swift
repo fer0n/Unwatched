@@ -27,9 +27,9 @@ struct CompactFullscreenSpeedControl: View {
                 CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                     .padding(.horizontal)
                     .frame(width: 350)
-                    .environment(\.colorScheme, .dark)
                     .presentationCompactAdaptation(.popover)
                     .fontWeight(nil)
+                    .preferredColorScheme(.dark)
             }
     }
 
