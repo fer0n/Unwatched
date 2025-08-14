@@ -42,7 +42,7 @@ struct SpeedSliderThumb: View {
         if let controlMinXLocal = viewModel.controlMinX {
             let floatingText = getFloatingText()
             ZStack {
-                if #available(iOS 26, *) {
+                if #available(iOS 26, macOS 26.0, *) {
                     thumbBackground
                         .glassEffect(.regular.tint(.white).interactive())
                 } else {

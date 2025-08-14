@@ -67,7 +67,15 @@ struct MenuView: View {
                 )
                 .padding(.horizontal, -padding)
             }
-            .scrollEdgeEffectHidden(for: .bottom)
+            #if os(iOS)
+            .apply {
+                if #available(iOS 26.0, *) {
+                    $0.scrollEdgeEffectHidden(for: .bottom)
+                } else {
+                    $0
+                }
+            }
+            #endif
             .padding(.horizontal, padding)
             .popover(item: $navManager.videoDetail) { video in
                 ZStack {
