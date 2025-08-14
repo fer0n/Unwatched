@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 import FoundationModels
 
+@available(iOS 26.0, macOS 26.0, *)
 struct GenerateChaptersButton: View {
     var video: Video?
     var transcriptUrl: String?

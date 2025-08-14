@@ -8,6 +8,7 @@ import UnwatchedShared
 import Playgrounds
 
 // swiftlint:disable all
+@available(iOS 26.0, macOS 26.0, *)
 struct GenerationService {
     public static func extractChaptersFromTranscripts(
         _ videoTitle: String,
@@ -40,6 +41,7 @@ struct GenerationService {
 }
 
 
+@available(iOS 26.0, macOS 26.0, *)
 #Playground {
     let instructions = """
     Break the transcript into a few broad, well-sized sections (based on the timestamps in seconds). Each section should reflect a natural break or shift in topic, pacing, or structure. Use short, general-purpose titles like “Intro,” “Hands-On Impressions,” “Gameplay,” “Final Thoughts,” or similar — not detailed summaries. Avoid combining unrelated topics or making the chapters too short.

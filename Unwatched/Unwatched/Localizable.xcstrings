@@ -5973,7 +5973,14 @@
       }
     },
     "generateChaptersFromTranscript" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generate Chapters"
+          }
+        }
+      }
     },
     "generateChaptersShortcut" : {
       "localizations" : {
@@ -9334,7 +9341,14 @@
       }
     },
     "noTranscriptUrl" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Transcript URL"
+          }
+        }
+      }
     },
     "notSupported" : {
       "localizations" : {

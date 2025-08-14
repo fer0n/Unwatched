@@ -77,6 +77,7 @@ struct TranscriptService {
         }
     }
 
+    @available(iOS 26.0, macOS 26.0, *)
     static func generateAiChapters(for video: Video,
                                    transcriptUrl: String?,
                                    progress: @escaping @Sendable (_ fraction: Double) -> Void

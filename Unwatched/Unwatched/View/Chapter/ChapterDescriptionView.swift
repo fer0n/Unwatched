@@ -38,7 +38,7 @@ struct ChapterDescriptionView: View {
 
                         Spacer()
                             .frame(height: 7)
-                    } else {
+                    } else if #available(iOS 26, macOS 26.0, *) {
                         GenerateChaptersButton(
                             video: player.video,
                             transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,

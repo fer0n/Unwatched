@@ -61,7 +61,14 @@ struct SubscriptionDetailView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .scrollEdgeEffectHidden(!showTitle, for: .top)
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0
+                        .scrollEdgeEffectHidden(!showTitle, for: .top)
+                } else {
+                    $0
+                }
+            }
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
