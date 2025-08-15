@@ -24,7 +24,7 @@ struct GenerateChaptersButton: View {
     }
 
     var body: some View {
-        if #available(iOS 26, *), model.availability == .available {
+        if model.availability == .available {
             generateChaptersButton
         }
     }
