@@ -50,9 +50,10 @@ struct GetTranscript: AppIntent {
     }
 }
 
-enum TranscriptError: Error, CustomLocalizedStringResourceConvertible {
+enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, LocalizedError {
     case notFound
     case noUrl
+    case emptyTranscript
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -60,6 +61,12 @@ enum TranscriptError: Error, CustomLocalizedStringResourceConvertible {
             return "noTranscriptFound"
         case .noUrl:
             return "noTranscriptUrl"
+        case .emptyTranscript:
+            return "emptyTranscript"
         }
+    }
+
+    var errorDescription: String? {
+        return String(localized: localizedStringResource)
     }
 }

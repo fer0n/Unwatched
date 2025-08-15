@@ -4850,6 +4850,16 @@
         }
       }
     },
+    "emptyTranscript" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Transcript"
+          }
+        }
+      }
+    },
     "emptyYoutubeId" : {
       "localizations" : {
         "de" : {

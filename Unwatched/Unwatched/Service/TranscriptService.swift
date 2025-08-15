@@ -89,6 +89,9 @@ struct TranscriptService {
 
         let task: Task<[SendableChapter]?, Error> = Task.detached {
             let transript = try await getTranscript(from: transcriptUrl, youtubeId: youtubeId)
+            if transript.isEmpty {
+                throw TranscriptError.emptyTranscript
+            }
             progress(0.2)
             guard let generatedChapters = try await GenerationService.extractChaptersFromTranscripts(
                 videoTitle,
