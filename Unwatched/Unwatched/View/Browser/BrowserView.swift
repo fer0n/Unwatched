@@ -11,6 +11,9 @@ import OSLog
 import UnwatchedShared
 
 struct BrowserView: View, KeyboardReadable {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @AppStorage(Const.dropVideosTip) var dropVideosTip: Bool = true
+
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(RefreshManager.self) var refresher
@@ -18,6 +21,7 @@ struct BrowserView: View, KeyboardReadable {
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
+    @State var avm = AddVideoViewModel()
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
@@ -34,7 +38,9 @@ struct BrowserView: View, KeyboardReadable {
         GeometryReader { geometry in
             VStack {
                 if showHeader {
-                    BrowserViewHeader()
+                    DropUrlArea($avm, $dropVideosTip) {
+                        BrowserViewHeader()
+                    }
                 }
 
                 ZStack {
@@ -81,11 +87,21 @@ struct BrowserView: View, KeyboardReadable {
                         }
                     }
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(color: .automaticBlack.opacity(0.25), radius: 2)
             }
             .animation(.default, value: enableBottomPadding)
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
-        .background(Color.youtubeWebBackground)
+        .background {
+            VStack(spacing: 0) {
+                avm.showDropArea || dropVideosTip
+                    ? theme.darkColor
+                    : Color.youtubeWebBackground
+
+                Color.youtubeWebBackground
+            }
+        }
         .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
             await subscribeManager.setIsSubscribed(browserManager.info)
@@ -210,10 +226,14 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
-        .modelContainer(DataProvider.previewContainer)
-        .environment(ImageCacheManager())
-        .environment(RefreshManager())
-        .environment(PlayerManager())
-        .environment(NavigationManager())
+    Text("hello")
+        .sheet(isPresented: .constant(true)) {
+            BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
+                .modelContainer(DataProvider.previewContainer)
+                .environment(ImageCacheManager())
+                .environment(RefreshManager())
+                .environment(PlayerManager())
+                .environment(NavigationManager())
+            // .presentationDragIndicator(.visible)
+        }
 }

@@ -15,7 +15,6 @@ struct AddVideoButton: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.dismiss) var dismiss
 
-    @State var showHelp = false
     @State var showInsert = false
     @State var hapticToggle = false
 
@@ -87,15 +86,8 @@ struct AddVideoButton: View {
 
     var addVideoButton: some View {
         ZStack {
-            Circle()
-                .fill(.black.opacity(0.000001))
-                .frame(width: backgroundSize, height: backgroundSize)
             Button {
-                if isVideoUrl || isPlaylistUrl {
-                    _ = addTimestampedUrl()
-                } else {
-                    showHelp = true
-                }
+                _ = addTimestampedUrl()
             } label: {
                 Image(systemName: avm.isSuccess == true
                         ? "checkmark"
@@ -114,41 +106,14 @@ struct AddVideoButton: View {
             .buttonStyle(.plain)
             .accessibilityLabel("dropVideoToQueue")
         }
-        .background {
-            // Workaround: isDragOver = true get's stuck otherwise
-            Circle()
-                .fill(avm.isDragOver ? theme.darkColor : Color.neutralAccentColor)
-                .frame(width: backgroundSize, height: backgroundSize)
-                .animation(.default, value: avm.isDragOver)
-        }
-        .frame(width: backgroundSize, height: backgroundSize)
-        .dropDestination(for: URL.self) { items, _ in
-            Task {
-                await avm.addUrls(items)
-            }
-            return true
-        } isTargeted: { targeted in
-            avm.isDragOver = targeted
-
-            if targeted {
-                showInsert = targeted
-            } else {
-                Task {
-                    do {
-                        try await Task.sleep(s: 0.5)
-                        showInsert = targeted
-                    }
-                }
-            }
-        }
-        .popover(isPresented: $showHelp) {
-            Text("dropVideosTip")
-                .padding()
-                .presentationCompactAdaptation(.popover)
-                .foregroundStyle(Color.neutralAccentColor)
-                .fontWeight(.semibold)
-        }
         .frame(width: size, height: size)
+        .background {
+            Circle()
+                .fill(Color.neutralAccentColor)
+                .frame(width: size * 2, height: size * 2)
+
+        }
+        .opacity(isVideoUrl || isPlaylistUrl || showInsert ? 1 : 0)
     }
 
     var youtubeUrl: URL? {
@@ -157,10 +122,6 @@ struct AddVideoButton: View {
 
     var isVideoUrl: Bool {
         browserManager.isVideoUrl
-    }
-
-    var backgroundSize: CGFloat {
-        avm.isDragOver ? 6 * size : 2 * size
     }
 
     var isPlaylistUrl: Bool {

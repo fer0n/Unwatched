@@ -13,22 +13,13 @@ struct BrowserViewHeader: View {
         Button {
             dismiss()
         } label: {
-            HStack {
-                let bigScreen = sizeClass == .regular
-                if bigScreen {
-                    Label("close", systemImage: "chevron.down")
-                        .labelStyle(.titleAndIcon)
-                        .padding(10)
-                } else {
-                    Image(systemName: "chevron.down")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .padding(7)
-                }
-            }
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity)
+            Color.secondary
+                .opacity(0.5)
+                .frame(width: 36, height: 5)
+                .clipShape(Capsule())
+                .padding(.top, 5)
+                .padding(.bottom, 20)
+                .frame(maxWidth: .infinity)
         }
         .accessibilityLabel("close")
         .keyboardShortcut(.escape, modifiers: [])

@@ -34,22 +34,9 @@ struct MenuViewSheet: ViewModifier {
                     )
                     .opacity(landscapeFullscreen ? 0 : 1)
                 }
-                .modifier(MenuSheetDragIndicator())
+                .presentationDragIndicator(.hidden)
                 .environment(\.colorScheme, colorScheme)
             }
-    }
-}
-
-struct MenuSheetDragIndicator: ViewModifier {
-    @Environment(NavigationManager.self) var navManager
-
-    func body(content: Content) -> some View {
-        content
-            .presentationDragIndicator(
-                navManager.tab == .browser
-                    ? .visible
-                    : .hidden
-            )
     }
 }
 
