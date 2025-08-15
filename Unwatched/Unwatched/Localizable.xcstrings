@@ -4510,40 +4510,6 @@
         }
       }
     },
-    "dropVideoUrlsHere" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Video zur Warteschlange hinzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add Videos To Queue"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agregar videos a la cola"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ajouter des vidéos à la file d'attente"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dodaj filmy do kolejki"
-          }
-        }
-      }
-    },
     "duplicatesFaqA" : {
       "localizations" : {
         "de" : {

@@ -57,7 +57,7 @@ struct MenuView: View {
 
                 BrowserView(
                     url: $navManager.openTabBrowserUrl,
-                    showHeader: false,
+                    showHeader: true,
                     safeArea: false
                 )
                 .tabItemView(
