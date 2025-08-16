@@ -92,8 +92,9 @@ struct RefreshToolbarContent: ToolbarContent {
             #if os(iOS)
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
                 .symbolEffect(.pulse,
-                              options: .speed(0.7),
+                              options: .speed(0.8),
                               isActive: refresher.isSyncingIcloud)
+                .saturation(refresher.isSyncingIcloud ? 0 : 1)
             #else
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
                 .buttonStyle(.borderless)
