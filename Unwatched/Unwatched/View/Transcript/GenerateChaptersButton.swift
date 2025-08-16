@@ -26,6 +26,9 @@ struct GenerateChaptersButton: View {
     var body: some View {
         if model.availability == .available {
             generateChaptersButton
+                .task(id: video?.youtubeId) {
+                    errorMessage = nil
+                }
         }
     }
 
