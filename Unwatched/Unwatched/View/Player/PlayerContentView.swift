@@ -20,7 +20,8 @@ struct PlayerContentView: View {
 
     var sleepTimerVM: SleepTimerViewModel
 
-    let fadeOutHeight: CGFloat = 25
+    let fadeOutHeight: CGFloat = Const.iOS26 ? 25 : 35
+    let proxy: GeometryProxy?
 
     @State var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
@@ -83,11 +84,24 @@ struct PlayerContentView: View {
 
             if !hidePlayerPageIndicator {
                 pageControl
-                    .padding(.bottom, compactSize ? 0 : Const.minSheetDetent - 30)
+                    .padding(
+                        .bottom,
+                        compactSize
+                            ? 0
+                            : (Const.minSheetDetent - (Const.iOS26 ? 25 : 3)
+                                + (ignoresBottomSafeArea
+                                    ? proxy?.safeAreaInsets.bottom ?? 0
+                                    : 0))
+                    )
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .opacity(navManager.showMenu ? 1 : 0)
             }
         }
+        .ignoresSafeArea(edges: ignoresBottomSafeArea ? .bottom : [])
+    }
+
+    var ignoresBottomSafeArea: Bool {
+        Const.iOS26
     }
 
     var pageControl: some View {
@@ -122,13 +136,14 @@ struct PlayerContentView: View {
         }
     }
 
+    @ViewBuilder
     var bottomShadow: some View {
         VStack(spacing: 0) {
             Spacer()
 
             Color.black
                 .allowsHitTesting(false)
-                .frame(height: Const.minSheetDetent + fadeOutHeight)
+                .frame(height: shadowHeight)
                 .mask(LinearGradient(gradient: Gradient(
                     stops: [
                         .init(color: .black.opacity(0.9), location: 0),
@@ -136,6 +151,17 @@ struct PlayerContentView: View {
                         .init(color: .clear, location: 1)
                     ]
                 ), startPoint: .bottom, endPoint: .top))
+        }
+    }
+
+    var shadowHeight: CGFloat {
+        if !Const.iOS26 {
+            hidePlayerPageIndicator ? 0 : Const.minSheetDetent + fadeOutHeight
+        } else {
+            (ignoresBottomSafeArea ? proxy?.safeAreaInsets.bottom ?? 0 : 0)
+                + (hidePlayerPageIndicator
+                    ? Const.minSheetDetent
+                    : Const.minSheetDetent + fadeOutHeight)
         }
     }
 }

@@ -184,6 +184,7 @@ struct PlayerControls: View {
                     .foregroundStyle(Color.automaticBlack.opacity(0.5))
                     .padding(8)
                     .buttonStyle(.plain)
+                    .opacity(navManager.showMenu ? 0 : 1)
                 }
             }
             .opacity(showControls ? 1 : 0)

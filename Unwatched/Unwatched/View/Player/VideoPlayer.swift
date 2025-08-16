@@ -24,6 +24,7 @@ struct VideoPlayer: View {
     var limitWidth = false
     var landscapeFullscreen = true
     let hideControls: Bool
+    var proxy: GeometryProxy? = nil
 
     var body: some View {
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
@@ -65,7 +66,10 @@ struct VideoPlayer: View {
                                       horizontalLayout: horizontalLayout,
                                       enableHideControls: enableHideControls,
                                       hideControls: hideControls,
-                                      sleepTimerVM: sleepTimerVM, autoHideVM: $autoHideVM)
+                                      sleepTimerVM: sleepTimerVM,
+                                      proxy: proxy,
+                                      autoHideVM: $autoHideVM,
+                                      )
                 }
             }
         }
@@ -134,18 +138,21 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(compactSize: false,
-                horizontalLayout: false,
-                limitWidth: false,
-                landscapeFullscreen: false,
-                hideControls: false)
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager.getDummy())
-        .environment(PlayerManager.getDummy())
-        .environment(ImageCacheManager())
-        .environment(RefreshManager())
-        .environment(SheetPositionReader())
-        .environment(TinyUndoManager())
-        .tint(Color.neutralAccentColor)
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+    GeometryReader { proxy in
+        VideoPlayer(compactSize: false,
+                    horizontalLayout: false,
+                    limitWidth: false,
+                    landscapeFullscreen: false,
+                    hideControls: false,
+                    proxy: proxy)
+            .modelContainer(DataProvider.previewContainer)
+            .environment(NavigationManager.getDummy())
+            .environment(PlayerManager.getDummy())
+            .environment(ImageCacheManager())
+            .environment(RefreshManager())
+            .environment(SheetPositionReader())
+            .environment(TinyUndoManager())
+            .tint(Color.neutralAccentColor)
+        // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+    }
 }
