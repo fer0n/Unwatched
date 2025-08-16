@@ -91,7 +91,8 @@ struct IOSSPlitView: View {
                 compactSize: bigScreen,
                 horizontalLayout: hideControlsFullscreen && isLandscape,
                 landscapeFullscreen: landscapeFullscreen,
-                hideControls: hideControlsFullscreen
+                hideControls: hideControlsFullscreen,
+                proxy: proxy
             )
             .frame(maxHeight: .infinity)
             .environment(\.layoutDirection, .leftToRight)
