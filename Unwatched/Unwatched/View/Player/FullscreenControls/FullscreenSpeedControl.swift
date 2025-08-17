@@ -28,9 +28,9 @@ struct CompactFullscreenSpeedControl: View {
                     .padding(.horizontal)
                     .frame(width: 350)
                     .presentationBackground(Const.iOS26 ? .clear : .black)
-                    .environment(\.colorScheme, .dark)
                     .presentationCompactAdaptation(.popover)
                     .fontWeight(nil)
+                    .preferredColorScheme(.dark)
             }
     }
 
