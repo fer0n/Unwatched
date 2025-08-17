@@ -21,8 +21,6 @@ struct MenuViewSheet: ViewModifier {
         content
             .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
                 ZStack {
-                    Color.backgroundColor.ignoresSafeArea(.all)
-
                     MenuView(showCancelButton: landscapeFullscreen)
                         .transparentNavBarWorkaround()
                         .menuSheetDetents(allowMaxSheetHeight: allowMaxSheetHeight,

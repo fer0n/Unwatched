@@ -57,9 +57,6 @@ import UnwatchedShared
     }
 
     func getSubscriptionSystemName() -> String {
-        if isLoading {
-            return "ellipsis"
-        }
         if isSubscribedSuccess == true {
             return "checkmark"
         }

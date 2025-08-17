@@ -193,6 +193,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
                 } else {
                     Log.warning("no result received: \(result.debugDescription)")
                 }
+                self.parent.browserManager.hasCheckedInfo = true
             }
         }
 
@@ -265,7 +266,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
                 url,
                 previousUserName: parent.browserManager.desktopUserName
             )
-            guard let userName = userName else {
+            guard let userName else {
                 parent.browserManager.clearInfo()
                 Log.info("no user name found")
                 return false

@@ -16,6 +16,8 @@ import UnwatchedShared
     var isMobileVersion = true
     var isVideoUrl = false
 
+    var hasCheckedInfo = false
+
     @MainActor
     @ObservationIgnored weak var webView: WKWebView?
 
@@ -23,7 +25,13 @@ import UnwatchedShared
         if info?.playlistId != nil {
             return "Playlist\(info?.title != nil ? " (\(info?.title ?? ""))" : "")"
         }
-        return info?.title ?? info?.userName ?? info?.channelId ?? info?.rssFeed
+        if let name = info?.title ?? info?.userName {
+            return name
+        }
+        if hasCheckedInfo {
+            return info?.channelId ?? info?.rssFeed
+        }
+        return nil
     }
 
     func setFoundInfo(_ info: SubscriptionInfo) {
@@ -33,6 +41,7 @@ import UnwatchedShared
     func clearInfo() {
         self.info = nil
         self.desktopUserName = nil
+        self.hasCheckedInfo = false
     }
 
     @MainActor

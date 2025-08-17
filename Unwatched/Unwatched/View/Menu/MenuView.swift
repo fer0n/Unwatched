@@ -96,9 +96,6 @@ struct MenuView: View {
         .id(videoListFormat == .compact) // workaround: expansive thumbnail size when switching setting
         #endif
         .browserViewSheet(navManager: $navManager)
-        .background {
-            Color.backgroundColor.ignoresSafeArea(.all)
-        }
         #if os(iOS)
         .setTabBarAppearance(disableScrollAppearance: isSidebar)
         #endif
