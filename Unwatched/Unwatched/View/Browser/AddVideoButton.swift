@@ -34,7 +34,6 @@ struct AddVideoButton: View {
                 .opacity(isVideoUrl ? 1 : 0)
                 .animation(.default, value: isVideoUrl)
             }
-            .foregroundStyle(Color.backgroundColor)
             .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
     }
 
@@ -51,7 +50,16 @@ struct AddVideoButton: View {
                 .fontWeight(.heavy)
                 .frame(width: size * 2, height: size * 2)
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+        }
+        .apply {
+            if #available(iOS 26.0, macOS 26.0, *) {
+                $0
+                    .foregroundStyle(.primary, Color.clear)
+                    .glassEffect(.regular.interactive())
+            } else {
+                $0
+                    .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+            }
         }
         .buttonStyle(.plain)
     }
@@ -76,44 +84,41 @@ struct AddVideoButton: View {
                 .padding(7)
         }
         .buttonStyle(.plain)
-        .background {
-            Circle()
-                .fill(Color.neutralAccentColor)
-                .frame(width: size * 2, height: size * 2)
-
-        }
+        .myButtonStyle(size)
     }
 
     var addVideoButton: some View {
         ZStack {
-            Button {
-                _ = addTimestampedUrl()
-            } label: {
-                Image(systemName: avm.isSuccess == true
-                        ? "checkmark"
-                        : avm.isSuccess == false
-                        ? Const.clearNoFillSF
-                        : isVideoUrl || isPlaylistUrl || showInsert
-                        ? Const.queueTopSF
-                        : avm.isLoading
-                        ? "ellipsis"
-                        : "circle.circle")
-                    .fontWeight(.semibold)
-                    .contentTransition(.symbolEffect(.replace))
-                    .frame(width: size, height: size)
-                    .padding(7)
+            // workaround: avoid animation on appear
+            if isVideoUrl || isPlaylistUrl || showInsert {
+                Button {
+                    _ = addTimestampedUrl()
+                } label: {
+                    Image(systemName: addVideoSymbol)
+                        .fontWeight(.semibold)
+                        .contentTransition(.symbolEffect(.replace))
+                        .frame(width: size, height: size)
+                        .padding(7)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("dropVideoToQueue")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("dropVideoToQueue")
         }
         .frame(width: size, height: size)
-        .background {
-            Circle()
-                .fill(Color.neutralAccentColor)
-                .frame(width: size * 2, height: size * 2)
-
-        }
+        .myButtonStyle(size)
         .opacity(isVideoUrl || isPlaylistUrl || showInsert ? 1 : 0)
+    }
+
+    var addVideoSymbol: String {
+        avm.isSuccess == true
+            ? "checkmark"
+            : avm.isSuccess == false
+            ? Const.clearNoFillSF
+            : isVideoUrl || isPlaylistUrl || showInsert
+            ? Const.queueTopSF
+            : avm.isLoading
+            ? "ellipsis"
+            : "circle.circle"
     }
 
     var youtubeUrl: URL? {
@@ -151,10 +156,37 @@ struct AddVideoButton: View {
     }
 }
 
+private extension View {
+    func myButtonStyle(_ size: Double) -> some View {
+        self
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0
+                        .frame(width: size * 2, height: size * 2)
+                        .glassEffect(.regular.interactive())
+                        .foregroundStyle(.primary)
+                } else {
+                    $0
+                        .background {
+                            Circle()
+                                .fill(Color.neutralAccentColor)
+                                .frame(width: size * 2, height: size * 2)
+
+                        }
+                        .foregroundStyle(Color.backgroundColor)
+                }
+            }
+            .contentShape(Rectangle())
+    }
+}
+
 #Preview {
-    HStack {
+    @Previewable @State var browserManager = BrowserManager()
+    browserManager.isVideoUrl = true
+
+    return HStack {
         Spacer()
-        AddVideoButton(browserManager: .constant(BrowserManager()))
+        AddVideoButton(browserManager: $browserManager)
             .padding(20)
     }
     .environment(PlayerManager())

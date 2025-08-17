@@ -149,6 +149,7 @@ struct BrowserView: View, KeyboardReadable {
                     let systemName = subscribeManager.getSubscriptionSystemName()
                     Image(systemName: systemName)
                         .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.pulse, isActive: subscribeManager.isLoading)
                     Text(text)
                         .lineLimit(2)
                 }
@@ -226,7 +227,7 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    Text("hello")
+    ZStack {}
         .sheet(isPresented: .constant(true)) {
             BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
                 .modelContainer(DataProvider.previewContainer)
@@ -234,6 +235,5 @@ struct BrowserView: View, KeyboardReadable {
                 .environment(RefreshManager())
                 .environment(PlayerManager())
                 .environment(NavigationManager())
-            // .presentationDragIndicator(.visible)
         }
 }
