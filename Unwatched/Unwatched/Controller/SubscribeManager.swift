@@ -67,8 +67,8 @@ import UnwatchedShared
     }
 
     func unsubscribe(_ info: SubscriptionInfo) async {
-        guard info.channelId != nil && info.playlistId != nil else {
-            Log.warning("addNewSubscription has no container/channelId/playlistId")
+        if info.channelId == nil && info.playlistId == nil {
+            Log.warning("unsubscribe - SubscriptionInfo has no channelId/playlistId: \(info)")
             return
         }
         isSubscribedSuccess = nil
