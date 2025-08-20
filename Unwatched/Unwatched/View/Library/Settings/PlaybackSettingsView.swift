@@ -17,9 +17,12 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = false
 
+    @Environment(PlayerManager.self) var player
+
     var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
+            @Bindable var player = player
 
             MyForm {
                 if Device.supportsFullscreenControls {
@@ -40,6 +43,10 @@ struct PlaybackSettingsView: View {
                     }
                     .onChange(of: originalAudio) { _, _ in
                         PlayerManager.reloadPlayer()
+                    }
+
+                    Toggle(isOn: $player.isRepeating) {
+                        Text("loopVideo")
                     }
 
                     Toggle(isOn: $continuousPlay) {
