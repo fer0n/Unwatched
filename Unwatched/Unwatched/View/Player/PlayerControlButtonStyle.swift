@@ -20,6 +20,13 @@ struct PlayerControlButtonStyle: ViewModifier {
                 color.opacity(isEnabled ? 1 : 0.5),
                 Color.backgroundColor
             )
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0.glassEffect(.regular, in: Circle())
+                } else {
+                    $0
+                }
+            }
             .overlay {
                 ZStack {
                     Circle().fill(Color.playerBackground)

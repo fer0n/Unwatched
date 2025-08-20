@@ -40,6 +40,7 @@ struct FullscreenPlayerControls: View {
                     image
                         .resizable()
                         .frame(width: size, height: size)
+                        .modifier(PlayerControlButtonStyle())
                     ChapterTimeRemaining()
                         .font(.system(size: 12).monospacedDigit())
                         .lineLimit(1)
@@ -48,7 +49,6 @@ struct FullscreenPlayerControls: View {
                         .fontWeight(.medium)
                         .foregroundStyle(Color.foregroundGray.opacity(0.5))
                 }
-                .modifier(PlayerControlButtonStyle())
             }
             .opacity(hasChapters ? 1 : 0)
             .disabled(player.nextChapter == nil)
