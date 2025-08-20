@@ -21,10 +21,12 @@ struct FilterSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection {
-                    Text("settingsSync")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .foregroundStyle(.secondary)
+                if #unavailable(iOS 26.0) {
+                    MySection {
+                        Text("settingsSync")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
@@ -74,6 +76,13 @@ struct FilterSettingsView: View {
             )
         }
         .myNavigationTitle("filterSettings")
+        .apply {
+            if #available(iOS 26.0, *) {
+                $0.navigationSubtitle("settingsSync")
+            } else {
+                $0
+            }
+        }
     }
 
     func checkShortsInInbox() {
