@@ -123,7 +123,7 @@ struct PlayerContentView: View {
         VStack(spacing: 0) {
             Color.black
                 .allowsHitTesting(false)
-                .frame(height: 80)
+                .frame(height: 60)
                 .mask(LinearGradient(gradient: Gradient(
                     stops: [
                         .init(color: .black.opacity(0.9), location: 0),

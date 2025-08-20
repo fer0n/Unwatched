@@ -142,7 +142,7 @@ struct BrowserView: View, KeyboardReadable {
                 } label: {
                     Text(verbatim: error)
                 }
-                .buttonStyle(CapsuleButtonStyle())
+                .buttonStyle(CapsuleButtonStyle(interactive: true))
             }
             Button(action: handleAddSubButton) {
                 HStack {
@@ -155,7 +155,7 @@ struct BrowserView: View, KeyboardReadable {
                 }
                 .padding(10)
             }
-            .buttonStyle(CapsuleButtonStyle())
+            .buttonStyle(CapsuleButtonStyle(interactive: true))
             .bold()
         }
     }
