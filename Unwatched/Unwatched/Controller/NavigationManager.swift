@@ -224,6 +224,9 @@ import UnwatchedShared
             toggleSidebar(show: false)
             #else
             withAnimation {
+                if Device.isIpad {
+                    UserDefaults.standard.set(true, forKey: Const.hideControlsFullscreen)
+                }
                 SheetPositionReader.shared.setDetentMinimumSheet()
             }
             #endif
