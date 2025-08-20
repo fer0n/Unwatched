@@ -36,7 +36,7 @@ struct UrlService {
 
     static func getEmailUrl(title: String? = nil, body: String) -> URL {
         let subject = title != nil ? "subject=\(title ?? "")&" : ""
-        return URL(string: "mailto:unwatched.app@gmail.com?\(subject)body=\n\n\(body)")!
+        return URL(string: "mailto:unwatched@icloud.com?\(subject)body=\n\n\(body)")!
     }
 
     static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double? = nil) -> String {
