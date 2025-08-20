@@ -365,7 +365,9 @@ import UnwatchedShared
             }
         }
     }
+}
 
+extension PlayerManager {
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
         Log.info("markVideoWatched")
@@ -408,6 +410,9 @@ import UnwatchedShared
             } else {
                 sheetPos.setDetentVideoPlayer()
             }
+        }
+        if Device.isIpad {
+            UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         }
         NavigationManager.shared.showMenu = true
     }

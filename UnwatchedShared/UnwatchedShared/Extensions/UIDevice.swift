@@ -36,6 +36,11 @@ public struct Device {
     public static let isIphone: Bool = {
         UIDevice.modelName.contains("iPhone")
     }()
+    
+    @MainActor
+    public static let isIpad: Bool = {
+        UIDevice.modelName.contains("iPad")
+    }()
 
     @MainActor
     public static let supportsFullscreenControls: Bool = {
