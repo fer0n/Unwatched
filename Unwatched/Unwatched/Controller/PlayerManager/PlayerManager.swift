@@ -92,11 +92,13 @@ import UnwatchedShared
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PlayerCodingKeys.self)
         pipEnabled = try container.decode(Bool.self, forKey: .pipEnabled)
+        isRepeating = try container.decodeIfPresent(Bool.self, forKey: .isRepeating) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: PlayerCodingKeys.self)
         try container.encode(pipEnabled, forKey: .pipEnabled)
+        try container.encodeIfPresent(isRepeating, forKey: .isRepeating)
     }
 
     @MainActor
@@ -412,5 +414,6 @@ import UnwatchedShared
 }
 
 enum PlayerCodingKeys: CodingKey {
-    case pipEnabled
+    case pipEnabled,
+         isRepeating
 }
