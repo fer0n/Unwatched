@@ -26,6 +26,7 @@
 		880505132C836882005F0972 /* FaqView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505112C836882005F0972 /* FaqView.swift */; };
 		88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
 		88080D522CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
+		880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
 		8808A9112B928CD8004D7CE2 /* ChapterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9102B928CD8004D7CE2 /* ChapterList.swift */; };
 		8808A9152B937C66004D7CE2 /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9142B937C66004D7CE2 /* PresentationDetent.swift */; };
 		8808A9172B93CDBA004D7CE2 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */; };
@@ -699,6 +700,7 @@
 		8805050B2C830A96005F0972 /* VideoListItemThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemThumbnail.swift; sourceTree = "<group>"; };
 		880505112C836882005F0972 /* FaqView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaqView.swift; sourceTree = "<group>"; };
 		88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearanceModifier.swift; sourceTree = "<group>"; };
+		880882062E564EBF008C38DA /* SetContinuousPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContinuousPlay.swift; sourceTree = "<group>"; };
 		8808A9102B928CD8004D7CE2 /* ChapterList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterList.swift; sourceTree = "<group>"; };
 		8808A9142B937C66004D7CE2 /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -1389,6 +1391,7 @@
 				88CD909D2E2BA56300CD756D /* getTranscript.swift */,
 				88CD909F2E2BC74400CD756D /* setChapters.swift */,
 				887E82AD2CD8FD2F00B196EA /* WatchInUnwatched.swift */,
+				880882062E564EBF008C38DA /* SetContinuousPlay.swift */,
 			);
 			path = "App Intents";
 			sourceTree = "<group>";
@@ -2454,6 +2457,7 @@
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,
 				8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
+				880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */,
 				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,
 				883D5E002BE0B95800989313 /* TabItemView.swift in Sources */,
 				88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */,

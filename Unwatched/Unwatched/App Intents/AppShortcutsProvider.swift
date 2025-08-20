@@ -57,6 +57,12 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             shortTitle: "setChapters",
             systemImageName: "checklist.unchecked"
         )
+        AppShortcut(
+            intent: SetContinuousPlay(),
+            phrases: ["Set continuous play in ${applicationName}"],
+            shortTitle: "setContinuousPlay",
+            systemImageName: "text.line.first.and.arrowtriangle.forward"
+        )
     }
 
     static let shortcutTileColor: ShortcutTileColor = .teal
