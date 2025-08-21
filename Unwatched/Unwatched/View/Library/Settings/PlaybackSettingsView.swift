@@ -37,7 +37,8 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection(footer: "continuousPlayHelper") {
+                #if os(iOS)
+                MySection {
                     Toggle(isOn: $originalAudio) {
                         Text("forceOriginalAudio")
                     }
@@ -45,6 +46,13 @@ struct PlaybackSettingsView: View {
                         PlayerManager.reloadPlayer()
                     }
 
+                    Toggle(isOn: $playVideoFullscreen) {
+                        Text("startVideosInFullscreen")
+                    }
+                }
+                #endif
+
+                MySection(footer: "continuousPlayHelper") {
                     Toggle(isOn: $player.isRepeating) {
                         Text("loopVideo")
                     }
@@ -70,15 +78,9 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                #if os(iOS)
-                MySection {
-                    Toggle(isOn: $playVideoFullscreen) {
-                        Text("startVideosInFullscreen")
-                    }
-                }
-                #endif
-
                 HideControlsSettings()
+
+                TemporaryPlaybackSpeedSettings()
 
                 #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {
@@ -102,34 +104,7 @@ struct PlaybackSettingsView: View {
     }
 }
 
-struct HideControlsSettings: View {
-    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
-    @AppStorage(Const.minimalPlayerUI) var minimalPlayerUI: Bool = false
-    @Environment(PlayerManager.self) var player
-
-    var body: some View {
-        MySection("hideControls") {
-            Toggle(isOn: $disableCaptions) {
-                Text("disableCaptions")
-            }
-            .onChange(of: disableCaptions) {
-                reloadPlayer()
-            }
-
-            Toggle(isOn: $minimalPlayerUI) {
-                Text("minimalPlayerUI")
-            }
-            .onChange(of: minimalPlayerUI) {
-                reloadPlayer()
-            }
-        }
-    }
-
-    func reloadPlayer() {
-        player.hotReloadPlayer()
-    }
-}
-
 #Preview {
     PlaybackSettingsView()
+        .environment(PlayerManager())
 }
