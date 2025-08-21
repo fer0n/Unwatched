@@ -52,7 +52,6 @@ extension Const {
         Const.browserAsTab: false,
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.sheetOpacity: false,
         Const.hidePlayerPageIndicator: false,
         Const.videoListFormat: VideoListFormat.compact.rawValue,
         Const.lightModeTheme: AppAppearance.unwatched.rawValue,

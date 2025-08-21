@@ -12288,40 +12288,6 @@
         }
       }
     },
-    "sheetOpacity" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Transparente Navigationsleiste"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Translucent Navigationbar"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barra de navegación translúcida"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barre de navigation translucide"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Półprzezroczysty pasek nawigacji"
-          }
-        }
-      }
-    },
     "shortcuts" : {
       "localizations" : {
         "de" : {
