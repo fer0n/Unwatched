@@ -13713,40 +13713,6 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vorübergehend schneller"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temporary Speed Up"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aceleración temporal"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Accélération temporaire"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tymczasowe przyspieszenie"
-          }
-        }
-      }
-    },
-    "temporarySpeedUp" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
             "value" : "Vorübergehend langsamer"
           }
         },
@@ -13772,6 +13738,84 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tymczasowe zwolnienie"
+          }
+        }
+      }
+    },
+    "temporarySpeed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorübergehende Abspielgeschwindigkeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary Playback Speed"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velocidad de reproducción temporal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vitesse de lecture temporaire"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tymczasowa prędkość odtwarzania"
+          }
+        }
+      }
+    },
+    "temporarySpeedHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long press the video right/left to speed up/slow down playback. If the current playback speed if above 1×, it will slow down to 1× instead."
+          }
+        }
+      }
+    },
+    "temporarySpeedUp" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorübergehend schneller"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temporary Speed Up"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceleración temporal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accélération temporaire"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tymczasowe przyspieszenie"
           }
         }
       }
@@ -14376,40 +14420,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przełącz panel boczny"
-          }
-        }
-      }
-    },
-    "toggleTemporarySpeed" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorübergehende Abspielgeschwindigkeit"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Temporary Playback Speed"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Velocidad de reproducción temporal"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitesse de lecture temporaire"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tymczasowa prędkość odtwarzania"
           }
         }
       }

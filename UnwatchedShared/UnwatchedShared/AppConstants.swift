@@ -229,6 +229,8 @@ public struct Const {
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
+    public static let temporarySpeedUp = "temporarySpeedUp"
+    public static let temporarySlowDown = "temporarySlowDown"
 
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"

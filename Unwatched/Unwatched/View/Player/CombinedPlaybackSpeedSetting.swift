@@ -108,8 +108,8 @@ struct CombinedPlaybackSpeedSetting: View {
                                 )
                         }
                         .buttonStyle(.plain)
-                        .help("toggleTemporarySpeed")
-                        .accessibilityLabel("toggleTemporarySpeed")
+                        .help("temporarySpeed")
+                        .accessibilityLabel("temporarySpeed")
                     }
                 }
                 .speedSelectionBackground(isTransparent: isTransparent)

@@ -41,6 +41,8 @@ extension Const {
         Const.hideMenuOnPlay: true,
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,
+        Const.temporarySpeedUp: Const.speedMax,
+        Const.temporarySlowDown: Const.speedMin,
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
         Const.minimalPlayerUI: false,

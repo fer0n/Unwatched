@@ -27,6 +27,10 @@
 		88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
 		88080D522CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
 		880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
+		8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
+		8808820B2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
+		8808820D2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */; };
+		8808820E2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */; };
 		8808A9112B928CD8004D7CE2 /* ChapterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9102B928CD8004D7CE2 /* ChapterList.swift */; };
 		8808A9152B937C66004D7CE2 /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9142B937C66004D7CE2 /* PresentationDetent.swift */; };
 		8808A9172B93CDBA004D7CE2 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */; };
@@ -701,6 +705,8 @@
 		880505112C836882005F0972 /* FaqView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaqView.swift; sourceTree = "<group>"; };
 		88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearanceModifier.swift; sourceTree = "<group>"; };
 		880882062E564EBF008C38DA /* SetContinuousPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContinuousPlay.swift; sourceTree = "<group>"; };
+		880882092E565AD8008C38DA /* HideControlsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideControlsSettings.swift; sourceTree = "<group>"; };
+		8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryPlaybackSpeedSettings.swift; sourceTree = "<group>"; };
 		8808A9102B928CD8004D7CE2 /* ChapterList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterList.swift; sourceTree = "<group>"; };
 		8808A9142B937C66004D7CE2 /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		8808A9162B93CDBA004D7CE2 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -1435,6 +1441,8 @@
 				88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */,
 				8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */,
 				888F74AA2BA1FEC600B94822 /* PlaybackSettingsView.swift */,
+				8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */,
+				880882092E565AD8008C38DA /* HideControlsSettings.swift */,
 				88017FD62B96161B00192AEA /* DebugView.swift */,
 				88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */,
 				888F74A82BA1FD8400B94822 /* GeneralSettingsView.swift */,
@@ -2074,6 +2082,7 @@
 				880505012C81E4BC005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				889AF9642C50ED0D001CEDE6 /* YtChannelId.swift in Sources */,
 				889AF9652C50ED0D001CEDE6 /* YtVideoInfo.swift in Sources */,
+				8808820B2E565AD8008C38DA /* HideControlsSettings.swift in Sources */,
 				889AF9662C50ED0D001CEDE6 /* YtPlaylistItems.swift in Sources */,
 				889AF9672C50ED0D001CEDE6 /* YoutubeDataAPI.swift in Sources */,
 				8868181D2D7756E900E06A0D /* ExportSubscriptionsShareLink.swift in Sources */,
@@ -2254,6 +2263,7 @@
 				889AF90F2C50ECE7001CEDE6 /* LibraryNavListItem.swift in Sources */,
 				88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */,
 				885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */,
+				8808820E2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */,
 				88F3AA9F2C998FFD0030B2EA /* PreviewData.swift in Sources */,
 				88899D992E035EA1002C05BC /* TitleFilterContent.swift in Sources */,
 				88F73D8F2D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
@@ -2520,6 +2530,7 @@
 				88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
+				8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */,
 				888B091E2E2382810014C66C /* TranscriptActor.swift in Sources */,
 				88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */,
 				88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */,
@@ -2603,6 +2614,7 @@
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
 				886817892D77379800E06A0D /* AppCommands.swift in Sources */,
 				88904B092C089DE500F95C67 /* SubscriptionSpeedSetting.swift in Sources */,
+				8808820D2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */,
 				88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */,
 				CD5AF8462C8AD25A00D18628 /* PlayerManager+Playback.swift in Sources */,
 				88D858592B55AC820047E0E6 /* YtErrorResponseBody.swift in Sources */,
