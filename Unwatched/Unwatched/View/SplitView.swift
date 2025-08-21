@@ -93,8 +93,7 @@ struct IOSSPlitView: View {
                 limitWidth: limitWidth,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen,
-                proxy: proxy
-            )
+                )
             .frame(maxHeight: .infinity)
             .environment(\.layoutDirection, .leftToRight)
 

@@ -24,7 +24,6 @@ struct VideoPlayer: View {
     var limitWidth = false
     var landscapeFullscreen = true
     let hideControls: Bool
-    var proxy: GeometryProxy? = nil
 
     var body: some View {
         let enableHideControls = Device.requiresFullscreenWebWorkaround && compactSize
@@ -67,7 +66,6 @@ struct VideoPlayer: View {
                                       enableHideControls: enableHideControls,
                                       hideControls: hideControls,
                                       sleepTimerVM: sleepTimerVM,
-                                      proxy: proxy,
                                       autoHideVM: $autoHideVM,
                                       )
                 }
@@ -138,21 +136,36 @@ struct VideoPlayer: View {
 }
 
 #Preview {
+    @Previewable @State var player = PlayerManager.getDummy()
+
     GeometryReader { proxy in
         VideoPlayer(compactSize: false,
                     horizontalLayout: false,
                     limitWidth: false,
                     landscapeFullscreen: false,
                     hideControls: false,
-                    proxy: proxy)
-            .modelContainer(DataProvider.previewContainer)
-            .environment(NavigationManager.getDummy())
-            .environment(PlayerManager.getDummy())
-            .environment(ImageCacheManager())
-            .environment(RefreshManager())
-            .environment(SheetPositionReader())
-            .environment(TinyUndoManager())
-            .tint(Color.neutralAccentColor)
+                    //                    proxy: proxy
+                    )
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager.getDummy())
+        .environment(player)
+        .environment(ImageCacheManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader())
+        .environment(TinyUndoManager())
+        .tint(Color.neutralAccentColor)
         // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+
+        Button {
+            withAnimation {
+                if player.aspectRatio ?? 1 <= 1.5 {
+                    player.handleAspectRatio(16/9)
+                } else {
+                    player.handleAspectRatio(4/3)
+                }
+            }
+        } label: {
+            Text(verbatim: "switch")
+        }
     }
 }
