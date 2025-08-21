@@ -7,10 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct MyNavigationTitle: ViewModifier {
-    @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
-
     var title: LocalizedStringKey?
-    var opaque: Bool = false
     var titleHidden = false
 
     func body(content: Content) -> some View {
@@ -42,20 +39,17 @@ struct MyNavigationTitle: ViewModifier {
         if #available(iOS 26, *) {
             Color.clear
         } else {
-            Color.backgroundColor.opacity(sheetOpacity || opaque ? Const.sheetOpacityValue : 1)
+            Color.backgroundColor.opacity(1)
         }
     }
 }
 
 extension View {
-    func myNavigationTitle(_ title: LocalizedStringKey? = nil,
-                           opaque: Bool = false,
-                           titleHidden: Bool = false
+    func myNavigationTitle(_ title: LocalizedStringKey? = nil, titleHidden: Bool = false
     ) -> some View {
         self.modifier(
             MyNavigationTitle(
                 title: title,
-                opaque: opaque,
                 titleHidden: titleHidden
             )
         )

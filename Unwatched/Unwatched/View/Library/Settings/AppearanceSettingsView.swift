@@ -11,7 +11,6 @@ struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
-    @AppStorage(Const.sheetOpacity) var sheetOpacity: Bool = false
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
     @AppStorage(Const.hidePlayerPageIndicator) var hidePlayerPageIndicator: Bool = false
 
@@ -36,9 +35,6 @@ struct AppearanceSettingsView: View {
                     #if os(iOS)
                     Toggle(isOn: $showTabBarLabels) {
                         Text("showTabBarLabels")
-                    }
-                    Toggle(isOn: $sheetOpacity) {
-                        Text("sheetOpacity")
                     }
                     Toggle(isOn: $hidePlayerPageIndicator) {
                         Text("hidePlayerPageIndicator")
