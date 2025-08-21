@@ -99,9 +99,11 @@ struct UrlService {
             return res
         }
 
+        // https://www.youtube.com/live/l6p4bWw_oEk?t=1h54m11s
+
         // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
-        let embedRegex = #"(?:https\:\/\/)?(?:www\.)?youtube\.com\/embed\/([^\s\/\?\n]+)"#
-        if let res = url.absoluteString.matching(regex: embedRegex) {
+        let embedOrLiveRegex = #"(?:https:\/\/)?(?:www\.)?youtube\.com\/(?:live|embed)\/([^\s\/\?\n]+)"#
+        if let res = url.absoluteString.matching(regex: embedOrLiveRegex) {
             return res
         }
 
