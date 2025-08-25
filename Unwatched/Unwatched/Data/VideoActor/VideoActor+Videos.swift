@@ -224,7 +224,11 @@ import UnwatchedShared
             for (index, video) in videos.enumerated() {
                 group.addTask {
                     var updatedVideo = video
-                    var isYtShort = VideoCrawler.isYtShort(video.title, description: video.videoDescription)
+                    var isYtShort = VideoCrawler.isYtShort(
+                        video.title,
+                        description: video.videoDescription,
+                        link: video.url
+                    )
                     if isYtShort == nil {
                         let (isShort, imageData) = await VideoActor.isYtShort(video.thumbnailUrl)
                         isYtShort = isShort
