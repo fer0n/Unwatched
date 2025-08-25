@@ -120,6 +120,11 @@ struct UrlService {
         return nil
     }
 
+    static func isYtShortUrl(url: URL) -> Bool {
+        // https://www.youtube.com/shorts/rCllEeHXjUw
+        return url.absoluteString.contains("/shorts/")
+    }
+
     static func isYoutubeVideoUrl(url: URL) -> Bool {
         self.getYoutubeIdFromUrl(url: url) != nil
     }

@@ -48,7 +48,10 @@ struct VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
-    static func isYtShort(_ title: String, description: String?) -> Bool? {
+    static func isYtShort(_ title: String, description: String?, link: URL?) -> Bool? {
+        if let link {
+            return UrlService.isYtShortUrl(url: link)
+        }
         // search title and desc for #short -> definitly short
         let regexYtShort = #"#[sS]horts"#
         if title.matching(regex: regexYtShort) != nil {
