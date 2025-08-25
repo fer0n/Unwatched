@@ -35,14 +35,18 @@ struct ChapterDescriptionView: View {
                             isTransparent: isTransparent
                         )
                         .padding(.vertical)
+                    }
 
-                        Spacer()
-                            .frame(height: 7)
-                    } else if #available(iOS 26, macOS 26.0, *) {
-                        GenerateChaptersButton(
-                            video: player.video,
-                            transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,
-                            )
+                    if showGenerateButton {
+                        if #available(iOS 26, macOS 26.0, *) {
+                            GenerateChaptersButton(
+                                video: player.video,
+                                transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,
+                                )
+                        }
+                    }
+
+                    if hasChapters || showGenerateButton {
                         Spacer()
                             .frame(height: 7)
                     }
@@ -63,7 +67,7 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .onAppear {
-                if hasChapters && player.video == video {
+                if hasChapters && player.video?.youtubeId == video.youtubeId {
                     let anchor: UnitPoint?
                     if scrollToCurrent {
                         anchor = .center
@@ -89,6 +93,13 @@ struct ChapterDescriptionView: View {
             navManager.openUrlInApp(.url(url))
             navManager.videoDetail = nil
         }
+    }
+
+    var showGenerateButton: Bool {
+        if #available(iOS 26, macOS 26.0, *), video.chapters?.isEmpty != false {
+            return true
+        }
+        return false
     }
 }
 
