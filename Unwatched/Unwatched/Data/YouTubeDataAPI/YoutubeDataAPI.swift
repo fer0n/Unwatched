@@ -74,7 +74,7 @@ struct YoutubeDataAPI {
             return nil
         }()
         let url: URL? = {
-            if let stringUrl = snippet.thumbnails.medium?.url {
+            if let stringUrl = snippet.thumbnails.high?.url {
                 return URL(string: stringUrl)
             }
             return nil

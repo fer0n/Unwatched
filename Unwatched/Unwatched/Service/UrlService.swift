@@ -127,6 +127,23 @@ struct UrlService {
         return url.absoluteString.contains("/shorts/")
     }
 
+    static func getAsLargeThumbnailUrl(_ imageUrl: URL?) -> URL? {
+        // default: https://i.ytimg.com/vi/88bMVbx1dzM/hqdefault.jpg
+        // or       https://i.ytimg.com/vi/88bMVbx1dzM/mqdefault.jpg
+
+        // larger: https://i.ytimg.com/vi/88bMVbx1dzM/sddefault.jpg
+        // largest: https://i.ytimg.com/vi/88bMVbx1dzM/maxresdefault.jpg
+
+        guard let imageUrl else { return nil }
+        let urlString = imageUrl.absoluteString
+        let qualities = ["hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
+
+        for quality in qualities where urlString.contains(quality) {
+            return URL(string: urlString.replacingOccurrences(of: quality, with: "sddefault.jpg"))
+        }
+        return imageUrl
+    }
+
     static func isYoutubeVideoUrl(url: URL) -> Bool {
         self.getYoutubeIdFromUrl(url: url) != nil
     }
