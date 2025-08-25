@@ -55,7 +55,8 @@ struct VideoListItem: View, Equatable {
                 VideoListItemThumbnail(
                     videoData,
                     config: config,
-                    size: compactFormat ? CGSize(width: 168, height: 94.5) : nil
+                    size: compactFormat ? CGSize(width: 168, height: 94.5) : nil,
+                    largeThumbnail: !compactFormat
                 )
                 .padding([.vertical, .leading], 5)
                 .overlay(alignment: .topLeading) {
