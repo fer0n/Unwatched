@@ -20,12 +20,12 @@ struct YtVideoInfo: Codable {
 }
 
 struct YtVideoSnippet: Codable {
-    struct Medium: Codable {
+    struct High: Codable {
         let url: String
     }
 
     struct Thumbnails: Codable {
-        let medium: Medium?
+        let high: High?
     }
 
     let title: String

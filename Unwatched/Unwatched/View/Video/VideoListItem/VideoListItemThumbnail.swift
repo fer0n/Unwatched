@@ -10,21 +10,31 @@ struct VideoListItemThumbnail: View {
     let video: VideoData
     let config: VideoListItemConfig
     let fixedSize: CGSize?
+    let largeThumbnail: Bool
 
     @State var width: CGFloat?
 
     init(
         _ video: VideoData,
         config: VideoListItemConfig,
-        size: CGSize? = nil
+        size: CGSize? = nil,
+        largeThumbnail: Bool = false
     ) {
         self.video = video
         self.config = config
         self.fixedSize = size
+        self.largeThumbnail = largeThumbnail
+    }
+
+    var imageUrl: URL? {
+        let url = !largeThumbnail
+            ? video.thumbnailUrl
+            : UrlService.getAsLargeThumbnailUrl(video.thumbnailUrl)
+        return url
     }
 
     var body: some View {
-        CachedImageView(imageUrl: video.thumbnailUrl) { image in
+        CachedImageView(imageUrl: imageUrl) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
