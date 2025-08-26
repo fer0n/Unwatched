@@ -28,7 +28,14 @@ struct VideoCrawler {
 
     static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
-        return rssParserDelegate.videos
+        return rssParserDelegate.videos.map {
+            var video = $0
+            if let url = $0.url {
+                // RSS feeds apparently include "/shorts/" urls now
+                video.isYtShort = UrlService.isYtShortUrl(url: url)
+            }
+            return video
+        }
     }
 
     static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
@@ -48,10 +55,7 @@ struct VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
-    static func isYtShort(_ title: String, description: String?, link: URL?) -> Bool? {
-        if let link {
-            return UrlService.isYtShortUrl(url: link)
-        }
+    static func isYtShort(_ title: String, description: String?) -> Bool? {
         // search title and desc for #short -> definitly short
         let regexYtShort = #"#[sS]horts"#
         if title.matching(regex: regexYtShort) != nil {
