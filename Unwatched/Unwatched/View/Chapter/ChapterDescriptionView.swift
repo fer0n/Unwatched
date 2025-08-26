@@ -103,7 +103,6 @@ struct ChapterDescriptionView: View {
     }
 }
 
-
 #Preview {
     ChapterDescriptionView(video: DataProvider.dummyVideo)
         .modelContainer(DataProvider.previewContainerFilled)

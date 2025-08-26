@@ -14,6 +14,7 @@ struct MenuViewSheet: ViewModifier {
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
     var disableSheet: Bool
+    var proxy: GeometryProxy
 
     func body(content: Content) -> some View {
         @Bindable var navManager = navManager
@@ -25,7 +26,8 @@ struct MenuViewSheet: ViewModifier {
                         .transparentNavBarWorkaround()
                         .menuSheetDetents(allowMaxSheetHeight: allowMaxSheetHeight,
                                           allowPlayerControlHeight: allowPlayerControlHeight,
-                                          landscapeFullscreen: landscapeFullscreen)
+                                          landscapeFullscreen: landscapeFullscreen,
+                                          proxy: proxy)
 
                     SheetOverlayMinimumSize(
                         currentTab: navManager.tab
@@ -42,10 +44,12 @@ extension View {
     func menuViewSheet(allowMaxSheetHeight: Bool,
                        allowPlayerControlHeight: Bool,
                        landscapeFullscreen: Bool,
-                       disableSheet: Bool) -> some View {
+                       disableSheet: Bool,
+                       proxy: GeometryProxy) -> some View {
         self.modifier(MenuViewSheet(allowMaxSheetHeight: allowMaxSheetHeight,
                                     allowPlayerControlHeight: allowPlayerControlHeight,
                                     landscapeFullscreen: landscapeFullscreen,
-                                    disableSheet: disableSheet))
+                                    disableSheet: disableSheet,
+                                    proxy: proxy))
     }
 }
