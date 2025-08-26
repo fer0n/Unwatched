@@ -61,7 +61,8 @@ struct ContentView: View {
                 allowPlayerControlHeight: !player.embeddingDisabled
                     && player.videoAspectRatio > Const.tallestAspectRatio,
                 landscapeFullscreen: landscapeFullscreen,
-                disableSheet: bigScreen
+                disableSheet: bigScreen,
+                proxy: proxy
             )
         }
         .setColorScheme()

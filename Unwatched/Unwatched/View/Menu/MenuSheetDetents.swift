@@ -16,6 +16,7 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
     var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
+    var proxy: GeometryProxy
 
     func body(content: Content) -> some View {
         @Bindable var sheetPos = sheetPos
@@ -24,7 +25,14 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
             .presentationDetents(detents, selection: $sheetPos.selectedDetent)
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
-            .onGlobalMinYChange(action: sheetPos.handleSheetMinYUpdate)
+            .ignoresSafeArea(.all)
+            .onGlobalMinYChange(action: {
+                // workaround: for some reason, when switching to landscape this jumps
+                // to the safe area value and causes a sensory feedback trigger
+                if $0 != proxy.safeAreaInsets.bottom {
+                    sheetPos.handleSheetMinYUpdate($0)
+                }
+            })
             // no cancel button shown in landscape
             .interactiveDismissDisabled(!landscapeFullscreen && player.video != nil)
             .disabled(
@@ -75,13 +83,15 @@ extension View {
     func menuSheetDetents(
         allowMaxSheetHeight: Bool = false,
         allowPlayerControlHeight: Bool = false,
-        landscapeFullscreen: Bool = false
+        landscapeFullscreen: Bool = false,
+        proxy: GeometryProxy
     ) -> some View {
         self.modifier(
             MenuSheetDetents(
                 allowMaxSheetHeight: allowMaxSheetHeight,
                 allowPlayerControlHeight: allowPlayerControlHeight,
-                landscapeFullscreen: landscapeFullscreen
+                landscapeFullscreen: landscapeFullscreen,
+                proxy: proxy
             )
         )
     }
