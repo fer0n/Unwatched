@@ -73,6 +73,12 @@ struct UnwatchedApp: App {
                 .environment(\.colorScheme, .light)
         }
         .windowResizability(.contentSize)
+
+        Window("unwatchedPremium", id: Const.windowPremium) {
+            PremiumOfferView()
+                .frame(width: 450, height: 650)
+        }
+        .windowResizability(.contentSize)
         #endif
     }
 }

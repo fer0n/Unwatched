@@ -21,6 +21,7 @@ import UnwatchedShared
     var openWindow: OpenWindowAction?
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
+    var showPremiumOffer = false
 
     var isMacosFullscreen = false
 

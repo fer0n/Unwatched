@@ -4,10 +4,12 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 struct MySection<Content: View>: View {
     let content: Content
     var title: LocalizedStringKey = ""
+    var showPremiumIndicator = false
     var footer: LocalizedStringKey?
     var hasPadding = true
 
@@ -27,10 +29,12 @@ struct MySection<Content: View>: View {
     init(_ title: LocalizedStringKey = "",
          footer: LocalizedStringKey?,
          hasPadding: Bool = true,
+         showPremiumIndicator: Bool = false,
          @ViewBuilder content: () -> Content) {
         self.title = title
         self.footer = footer
         self.hasPadding = hasPadding
+        self.showPremiumIndicator = showPremiumIndicator
         self.content = content()
     }
 
@@ -48,8 +52,7 @@ struct MySection<Content: View>: View {
             Section {
                 content
             } header: {
-                Text(title)
-                    .fontWeight(.semibold)
+                header
             } footer: {
                 Text(footer)
             }
@@ -58,10 +61,24 @@ struct MySection<Content: View>: View {
             Section {
                 content
             } header: {
-                Text(title)
-                    .fontWeight(.semibold)
+                header
             }
             .listRowBackground(Color.insetBackgroundColor)
+        }
+    }
+
+    @ViewBuilder
+    var header: some View {
+        if !showPremiumIndicator {
+            Text(title)
+                .fontWeight(.semibold)
+        } else {
+            HStack {
+                Text(title)
+                    .fontWeight(.semibold)
+                Spacer()
+                Image(systemName: Const.premiumIndicatorSF)
+            }
         }
     }
 

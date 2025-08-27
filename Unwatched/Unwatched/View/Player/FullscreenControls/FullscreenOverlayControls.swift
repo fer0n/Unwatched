@@ -92,7 +92,7 @@ struct FullscreenOverlayControls: View {
 extension View {
     func backgroundTransparentEffect(fallback: Material) -> some View {
         self.apply {
-            if #available(iOS 26, *) {
+            if #available(iOS 26, macOS 26, *) {
                 $0
                     .contentShape(Circle())
                     .glassEffect()

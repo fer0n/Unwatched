@@ -12,6 +12,7 @@ final class Alerter {
         didSet { isShowingAlert = alert != nil }
     }
     var isShowingAlert = false
+    var showPremium = false
 
     func showError(_ error: Error) {
         alert = Alert(title: Text("errorOccured"), message: Text(error.localizedDescription))

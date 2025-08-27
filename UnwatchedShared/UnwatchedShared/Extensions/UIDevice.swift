@@ -72,6 +72,7 @@ public struct Device {
     public static let supportsFullscreenControls: Bool = true
     public static let requiresFullscreenWebWorkaround: Bool = false
     public static let isMac: Bool = true
+    public static let isIpad: Bool = false
 
     public static let deviceName: String = {
         Host.current().localizedName ?? "Mac"
