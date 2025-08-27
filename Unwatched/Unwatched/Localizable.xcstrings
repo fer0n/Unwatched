@@ -2096,6 +2096,16 @@
         }
       }
     },
+    "cancelFreeTrial" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel Free Trial"
+          }
+        }
+      }
+    },
     "categoryFiller" : {
       "localizations" : {
         "de" : {
@@ -2504,6 +2514,16 @@
         }
       }
     },
+    "chapterFilterDesc" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically skip chapters based on keywords."
+          }
+        }
+      }
+    },
     "chapterFilterFooter" : {
       "localizations" : {
         "de" : {
@@ -2534,6 +2554,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ustawia rozdziały zawierające dowolne ze słów kluczowych jako nieaktywne po załadowaniu wideo do odtwarzacza. Użyj „,” aby oddzielić wiele słów kluczowych. Nie dotyczy segmentów SponsorBlock (oznaczonych „[Nawiasami]”)."
+          }
+        }
+      }
+    },
+    "chapterFilterTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Skip Chapters"
           }
         }
       }
@@ -3588,6 +3618,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niestandardowe dla kanału"
+          }
+        }
+      }
+    },
+    "customTemporaryPlaybackSpeedDesc" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust the temporary speed to anything you like."
+          }
+        }
+      }
+    },
+    "customTemporaryPlaybackSpeedTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Temporary Speed"
           }
         }
       }
@@ -5700,6 +5750,16 @@
         }
       }
     },
+    "freeTrialActive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free Trial Active"
+          }
+        }
+      }
+    },
     "frequentlyAskedQuestions" : {
       "localizations" : {
         "de" : {
@@ -7660,6 +7720,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Najnowsze kopie zapasowe Unwatched"
+          }
+        }
+      }
+    },
+    "learnMore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn More"
           }
         }
       }
@@ -10550,6 +10620,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "YouTube ID może być błędne: %@"
+          }
+        }
+      }
+    },
+    "premiumOfferDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched will remain free, but my goal is to eventually make development more sustainable by offering paid access to additional features.\n\nTo avoid taking existing features away or holding back new ones, I’m adding this premium tier as an unlimited free trial for the time being.\n\nI hope you’re enjoying the app as much as I am :)\n\n– Michael"
+          }
+        }
+      }
+    },
+    "premiumOfferHeader" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is this?"
+          }
+        }
+      }
+    },
+    "premiumOfferSubtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium currently only exists as a free trial, without a paid subscription. Once that changes, the free trial will end automatically with no action required."
           }
         }
       }
@@ -13470,6 +13570,26 @@
         }
       }
     },
+    "supportDevelopmentDesc" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contribute to ongoing development and updates."
+          }
+        }
+      }
+    },
+    "supportDevelopmentTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support Development"
+          }
+        }
+      }
+    },
     "swipeUpToSelect" : {
       "localizations" : {
         "de" : {
@@ -14458,6 +14578,16 @@
         }
       }
     },
+    "tryForFree" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Free Trial"
+          }
+        }
+      }
+    },
     "tutorialHelper" : {
       "localizations" : {
         "de" : {
@@ -14624,6 +14754,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cofnij"
+          }
+        }
+      }
+    },
+    "unlockEverythingDesc" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get all current and upcoming features."
+          }
+        }
+      }
+    },
+    "unlockEverythingTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock Everything"
           }
         }
       }
@@ -14862,6 +15012,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mastodon"
+          }
+        }
+      }
+    },
+    "unwatchedPremium" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Premium"
+          }
+        }
+      }
+    },
+    "unwatchedPremiumBody" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A subscription to Unwatched Premium (currently free) is required to access all features. Without a subscription you can continue to use the basic features for free."
+          }
+        }
+      }
+    },
+    "unwatchedPremiumSubtitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This feature is only available with Unwatched Premium."
           }
         }
       }
@@ -15474,6 +15654,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtr tytułu wideo"
+          }
+        }
+      }
+    },
+    "videoTitleFilterDesc" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep new videos from showing up in your Queue/Inbox by matching keywords."
           }
         }
       }

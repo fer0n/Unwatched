@@ -8,6 +8,7 @@ import OSLog
 import UnwatchedShared
 
 struct SettingsView: View {
+    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     var body: some View {
@@ -15,6 +16,10 @@ struct SettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
+                MySection {
+                    PremiumNavListItem()
+                }
+
                 MySection("app") {
                     NavigationLink(value: LibraryDestination.settingsNewVideos) {
                         Label("generalSettings", systemImage: Const.settingsViewSF)
@@ -103,6 +108,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.backgroundColor)
             }
             .myNavigationTitle("settings")
+            .tint(theme.color)
         }
     }
 }

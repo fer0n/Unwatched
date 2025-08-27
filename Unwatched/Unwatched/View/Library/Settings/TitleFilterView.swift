@@ -10,13 +10,14 @@ struct TitleFilterView: View {
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
 
     var body: some View {
-        MySection(footer: "videoTitleFilterFooter") {
+        MySection(footer: "videoTitleFilterFooter", showPremiumIndicator: true) {
             TextField("keywords", text: $filterVideoTitleText)
                 .autocorrectionDisabled()
                 #if os(iOS)
                 .textInputAutocapitalization(.never)
                 .submitLabel(.done)
-            #endif
+                #endif
+                .requiresPremium(filterVideoTitleText.isEmpty)
         }
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 public struct Const {
     public static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     public static let youtubePremium = "youtubePremium"
+    public static let unwatchedPremiumAcknowledged = "unwatchedPremiumAcknowledged"
     public static let skipSponsorSegments = "skipSponsorSegments"
     public static let skipChapterText = "skipChapterText"
     public static let filterVideoTitleText = "filterVideoTitleText"
@@ -161,6 +162,7 @@ public struct Const {
     public static let settingsViewSF = "gearshape.fill"
     public static let allVideosViewSF = "square.stack.3d.down.forward.fill"
     public static let watchHistoryViewSF = "checkmark.circle"
+    public static let premiumIndicatorSF = "star.circle.fill"
 
     public static let sideloadSF = "arrow.right.circle"
 
@@ -213,6 +215,7 @@ public struct Const {
     public static let windowImportSubs = "windowImportSubs"
     public static let windowBrowser = "windowBrowser"
     public static let mainWindowFrame = "mainWindowFrame"
+    public static let windowPremium = "windowPremium"
 
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"

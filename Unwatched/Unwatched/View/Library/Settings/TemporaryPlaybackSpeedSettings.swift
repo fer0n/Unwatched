@@ -11,7 +11,11 @@ struct TemporaryPlaybackSpeedSettings: View {
     @AppStorage(Const.temporarySlowDown) var temporarySlowDown: Double = Const.speedMin
 
     var body: some View {
-        MySection("playbackSpeed", footer: Device.isMac ? nil : "temporarySpeedHelper") {
+        MySection(
+            "playbackSpeed",
+            footer: Device.isMac ? nil : "temporarySpeedHelper",
+            showPremiumIndicator: true
+        ) {
             Picker("temporarySpeedUp", selection: $temporarySpeedUp) {
                 ForEach(speeds, id: \.self) { speed in
                     Text(format(speed))
@@ -28,6 +32,7 @@ struct TemporaryPlaybackSpeedSettings: View {
             }
             .pickerStyle(.menu)
         }
+        .requiresPremium()
     }
 
     func format(_ speed: Double) -> String {

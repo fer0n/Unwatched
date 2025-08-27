@@ -52,13 +52,14 @@ struct FilterSettingsView: View {
                 TitleFilterView()
                 #endif
 
-                MySection("chapterFilter", footer: "chapterFilterFooter") {
+                MySection("chapterFilter", footer: "chapterFilterFooter", showPremiumIndicator: true) {
                     TextField("keywords", text: $skipChapterText)
                         .autocorrectionDisabled()
                         #if os(iOS)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.done)
-                    #endif
+                        #endif
+                        .requiresPremium(skipChapterText.isEmpty)
                 }
 
                 SponsorBlockSettingsView()

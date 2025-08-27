@@ -9,6 +9,64 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
+struct CustomAlerter: ViewModifier {
+    @State var alerter: Alerter = Alerter()
+
+    func body(content: Content) -> some View {
+        content
+            .alert(isPresented: $alerter.isShowingAlert) {
+                alerter.alert ?? Alert(title: Text(verbatim: ""))
+            }
+            .environment(alerter)
+            .overlay {
+                PremiumPopupMessage(dismiss: {
+                    alerter.showPremium = false
+                })
+                .frame(minWidth: 0, idealWidth: 300, maxWidth: 300)
+                .fixedSize()
+                .padding(.horizontal, 20)
+                .padding(.vertical, 30)
+                .apply {
+                    if #available(iOS 26, macOS 26, *) {
+                        $0
+                            .glassEffect(in: RoundedRectangle(cornerRadius: 40, style: .continuous))
+                            .glassEffectTransition(.materialize )
+                    } else {
+                        $0
+                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .shadow(radius: 10)
+                            .background(Color.insetBackgroundColor)
+                    }
+                }
+                .opacity(alerter.showPremium ? 1 : 0)
+                .scaleEffect(alerter.showPremium ? 1 : 0.9)
+                .animation(.default, value: alerter.showPremium)
+            }
+    }
+}
+
+struct PreviewAlerter: View {
+    @Environment(Alerter.self) var alerter
+
+    var body: some View {
+        Button {
+            SheetPositionReader.shared.setDetentMinimumSheet()
+            Task {
+                alerter.showPremium = true
+            }
+        } label: {
+            Text(verbatim: "Show Alert")
+        }
+    }
+}
+
+#Preview {
+    PreviewAlerter()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .modifier(CustomAlerter())
+        .environment(Alerter())
+}
+
 struct SetupView: View {
     @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
     @Environment(\.scenePhase) var scenePhase
@@ -20,7 +78,6 @@ struct SetupView: View {
 
     @State var imageCacheManager = ImageCacheManager.shared
     @State var sheetPos = SheetPositionReader.shared
-    @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.shared
     @State var undoManager = TinyUndoManager.shared
 
@@ -28,15 +85,12 @@ struct SetupView: View {
         ContentView()
             .tint(theme.color)
             .environment(sheetPos)
-            .environment(alerter)
             .watchNotificationHandler()
             .environment(navManager)
             .environment(\.originalColorScheme, colorScheme)
             .environment(imageCacheManager)
             .environment(undoManager)
-            .alert(isPresented: $alerter.isShowingAlert) {
-                alerter.alert ?? Alert(title: Text(verbatim: ""))
-            }
+            .modifier(CustomAlerter())
             .onOpenURL { url in
                 Log.info("onOpenURL: \(url)")
                 handleDeepLink(url: url)
