@@ -41,6 +41,7 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
                     && navManager.openTabBrowserUrl == nil
                     && !landscapeFullscreen
                     && player.video != nil
+                    && !navManager.showPremiumOffer
             )
             #if os(iOS)
             .onReceive(keyboardPublisher) { newIsKeyboardVisible in

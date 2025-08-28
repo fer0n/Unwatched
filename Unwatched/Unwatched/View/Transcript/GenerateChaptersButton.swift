@@ -40,16 +40,25 @@ struct GenerateChaptersButton: View {
                 VStack(spacing: 0) {
                     Text("generateChaptersFromTranscript")
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 10)
 
-                    if let errorMessage {
-                        Text(verbatim: errorMessage)
-                            .padding([.horizontal, .bottom])
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(errorMessage ?? String(localized: "experimental"))
+                        .padding(.horizontal)
+                        .foregroundStyle(.secondary)
                 }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 10)
                 .opacity(isLoading ? 0 : 1)
+
+                Image(systemName: Const.premiumIndicatorSF)
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.secondary)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .topTrailing
+                    )
+                    .padding(5)
+                    .opacity(errorMessage == nil ? 1 : 0)
 
                 if isLoading {
                     CircularProgressView(progress: $progress, stops: [0.19, 0.9])
@@ -60,7 +69,8 @@ struct GenerateChaptersButton: View {
             .animation(.default, value: isLoading)
             .animation(.default, value: errorMessage == nil)
             .background(
-                RoundedRectangle(cornerRadius: ChapterList.itemRadius).fill(Color.insetBackgroundColor)
+                RoundedRectangle(cornerRadius: ChapterList.itemRadius)
+                    .fill(Color.insetBackgroundColor)
             )
         }
         .buttonStyle(.plain)

@@ -15,7 +15,6 @@ struct DebugView: View {
     #endif
 
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
-    @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
@@ -40,12 +39,6 @@ struct DebugView: View {
                 MySection("notifications") {
                     Toggle(isOn: $monitorBackgroundFetches) {
                         Text("monitorBackgroundFetches")
-                    }
-                }
-
-                MySection {
-                    Toggle(isOn: $premium) {
-                        Text("unwatchedPremium")
                     }
                 }
 
