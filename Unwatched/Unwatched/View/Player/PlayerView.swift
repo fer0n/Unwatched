@@ -157,7 +157,7 @@ struct PlayerView: View {
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
-            .padding(.leading, !hideMiniPlayer ? 5 : 0)
+            .padding(.leading, !hideMiniPlayer ? miniPlayerHorizontalPadding : 0)
 
             if !hideMiniPlayer {
                 miniPlayerContent
@@ -213,9 +213,28 @@ struct PlayerView: View {
                 .contentShape(Rectangle())
                 .onTapGesture(perform: handleMiniPlayerTap)
 
-            PlayButton(size: 30, enableHelper: false)
-                .fontWeight(.black)
-                .padding(.trailing, 5)
+            CorePlayButton(
+                circleVariant: true,
+                enableHaptics: true,
+                enableHelperPopup: false,
+            ) { image in
+                image
+                    .resizable()
+                    .frame(width: 45, height: 45)
+                    .symbolRenderingMode(.palette)
+                    .apply {
+                        if #available(iOS 26.0, macOS 26.0, *) {
+                            $0
+                                .foregroundStyle(.automaticBlack, .clear)
+                                .glassEffect(.regular.interactive(), in: Circle())
+                        } else {
+                            $0
+                                .foregroundStyle(.automaticWhite, .automaticBlack)
+                        }
+                    }
+                    .fontWeight(.black)
+            }
+            .padding(.trailing, miniPlayerHorizontalPadding)
         }
     }
 
@@ -314,6 +333,10 @@ struct PlayerView: View {
                 overlayVM.show(.previous)
             }
         }
+    }
+
+    var miniPlayerHorizontalPadding: CGFloat {
+        15
     }
 }
 
