@@ -122,16 +122,7 @@ struct TranscriptService {
                 Log.info("generateAiChapters: video not found")
                 return
             }
-
-            let chapterModels = chapters.map { $0.getChapter }
-            for model in chapterModels {
-                modelContext.insert(model)
-            }
-            video.chapters = chapterModels
-            try? modelContext.save()
-            if video.youtubeId == PlayerManager.shared.video?.youtubeId {
-                PlayerManager.shared.video = video
-            }
+            ChapterService.insertChapters(chapters, for: video, in: modelContext)
         }
     }
 }

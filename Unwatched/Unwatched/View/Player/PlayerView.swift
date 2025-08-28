@@ -217,7 +217,7 @@ struct PlayerView: View {
                 circleVariant: true,
                 enableHaptics: true,
                 enableHelperPopup: false,
-            ) { image in
+                ) { image in
                 image
                     .resizable()
                     .frame(width: 45, height: 45)

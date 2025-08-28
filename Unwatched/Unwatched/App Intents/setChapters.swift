@@ -29,24 +29,7 @@ struct SetChapters: AppIntent {
         let chapters = ChapterService.extractChapters(from: chapterTimestamps, videoDuration: video.duration)
         let context = DataProvider.mainContext
 
-        var chapterModels: [Chapter] = []
-        for chapter in chapters {
-            let chapterModel = chapter.getChapter
-            context.insert(chapterModel)
-            chapterModels.append(chapterModel)
-        }
-
-        if !chapterModels.isEmpty {
-            CleanupService.deleteChapters(from: video, context)
-        }
-
-        video.chapters = chapterModels
-        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
-            PlayerManager.shared.video = video
-            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-        }
-
-        try context.save()
+        ChapterService.insertChapters(chapters, for: video, in: context)
         return .result()
     }
 
