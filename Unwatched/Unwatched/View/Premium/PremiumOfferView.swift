@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct PremiumOfferView: View {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
+    @AppStorage(Const.hidePremium) var hidePremium: Bool = false
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     var body: some View {
@@ -84,6 +85,22 @@ struct PremiumOfferView: View {
 
                 Text("premiumOfferDescription")
                     .foregroundStyle(.secondary)
+
+                Spacer()
+                    .frame(height: 50)
+
+                VStack {
+                    Text("hidePremiumOfferDescription")
+                        .foregroundStyle(.secondary)
+                    Toggle(isOn: $hidePremium) {
+                        Text("hidePremiumOffer")
+                    }
+                }
+                .tint(theme.color)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 15)
+                .background(theme.darkColor.mix(with: .black, by: 0.45))
+                .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
 
                 Spacer()
                     .frame(height: 150)

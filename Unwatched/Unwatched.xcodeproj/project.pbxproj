@@ -96,8 +96,8 @@
 		88339AA32E5B87A500B295B7 /* PopupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AA12E5B87A500B295B7 /* PopupPresenter.swift */; };
 		88339AAB2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAA2E5BA6EA00B295B7 /* PremiumOfferView.swift */; };
 		88339AAC2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAA2E5BA6EA00B295B7 /* PremiumOfferView.swift */; };
-		88339AAE2E5BA72200B295B7 /* RequiresPremiumModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAD2E5BA72200B295B7 /* RequiresPremiumModifier.swift */; };
-		88339AAF2E5BA72200B295B7 /* RequiresPremiumModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAD2E5BA72200B295B7 /* RequiresPremiumModifier.swift */; };
+		88339AAE2E5BA72200B295B7 /* PremiumModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAD2E5BA72200B295B7 /* PremiumModifier.swift */; };
+		88339AAF2E5BA72200B295B7 /* PremiumModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AAD2E5BA72200B295B7 /* PremiumModifier.swift */; };
 		88339AB42E5BA94800B295B7 /* PremiumOfferSheetModifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AB32E5BA94800B295B7 /* PremiumOfferSheetModifer.swift */; };
 		88339AB52E5BA94800B295B7 /* PremiumOfferSheetModifer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AB32E5BA94800B295B7 /* PremiumOfferSheetModifer.swift */; };
 		88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */; };
@@ -771,7 +771,7 @@
 		883327FE2B8DB286001B3895 /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 		88339AA12E5B87A500B295B7 /* PopupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresenter.swift; sourceTree = "<group>"; };
 		88339AAA2E5BA6EA00B295B7 /* PremiumOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumOfferView.swift; sourceTree = "<group>"; };
-		88339AAD2E5BA72200B295B7 /* RequiresPremiumModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiresPremiumModifier.swift; sourceTree = "<group>"; };
+		88339AAD2E5BA72200B295B7 /* PremiumModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumModifier.swift; sourceTree = "<group>"; };
 		88339AB32E5BA94800B295B7 /* PremiumOfferSheetModifer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumOfferSheetModifer.swift; sourceTree = "<group>"; };
 		88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UNNotificationAttachment.swift; sourceTree = "<group>"; };
 		88358A7C2C65561B00AF71F8 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
@@ -1385,7 +1385,7 @@
 				883A0F6F2E5F5D9E000CE416 /* PremiumNavListItem.swift */,
 				8843E1012E57D00B00A303F5 /* PremiumPopupMessage.swift */,
 				88339AB32E5BA94800B295B7 /* PremiumOfferSheetModifer.swift */,
-				88339AAD2E5BA72200B295B7 /* RequiresPremiumModifier.swift */,
+				88339AAD2E5BA72200B295B7 /* PremiumModifier.swift */,
 				88339AAA2E5BA6EA00B295B7 /* PremiumOfferView.swift */,
 				883A0F732E5F7333000CE416 /* RequiresPremiumActionMac.swift */,
 			);
@@ -2106,7 +2106,7 @@
 				889AF9402C50ECF5001CEDE6 /* SubscriptionInfoDetails.swift in Sources */,
 				8891AAEF2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */,
 				8802F84F2C691A51008A7778 /* ImageServiceTests.swift in Sources */,
-				88339AAF2E5BA72200B295B7 /* RequiresPremiumModifier.swift in Sources */,
+				88339AAF2E5BA72200B295B7 /* PremiumModifier.swift in Sources */,
 				889AF9412C50ECF5001CEDE6 /* ChangeChapterButtonStyle.swift in Sources */,
 				CD03C1DE2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */,
 				889AF9422C50ECF5001CEDE6 /* YtBrowserWebView.swift in Sources */,
@@ -2471,7 +2471,7 @@
 				88CD388D2E213D0B00E7B21C /* TranscriptSearch.swift in Sources */,
 				88373C1F2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
 				881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */,
-				88339AAE2E5BA72200B295B7 /* RequiresPremiumModifier.swift in Sources */,
+				88339AAE2E5BA72200B295B7 /* PremiumModifier.swift in Sources */,
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
 				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,

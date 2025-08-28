@@ -34,6 +34,7 @@ struct FilterSettingsView: View {
                     NavigationLink(value: LibraryDestination.titleFilter) {
                         Text("videoTitle")
                     }
+                    .containsPremium()
                     #endif
                     Picker("shortsSetting", selection: $defaultShortsSetting) {
                         ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
@@ -58,9 +59,9 @@ struct FilterSettingsView: View {
                         #if os(iOS)
                         .textInputAutocapitalization(.never)
                         .submitLabel(.done)
-                        #endif
-                        .requiresPremium(skipChapterText.isEmpty)
+                    #endif
                 }
+                .requiresPremium(skipChapterText.isEmpty)
 
                 SponsorBlockSettingsView()
             }
