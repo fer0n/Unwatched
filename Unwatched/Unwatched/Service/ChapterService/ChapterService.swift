@@ -265,4 +265,26 @@ struct ChapterService {
             }
         }
     }
+
+    @MainActor
+    static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
+        var chapterModels: [Chapter] = []
+        for chapter in chapters {
+            let chapterModel = chapter.getChapter
+            context.insert(chapterModel)
+            chapterModels.append(chapterModel)
+        }
+
+        if !chapterModels.isEmpty {
+            CleanupService.deleteChapters(from: video, context)
+        }
+
+        video.chapters = chapterModels
+        try? context.save()
+
+        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
+            PlayerManager.shared.video = video
+            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
+        }
+    }
 }
