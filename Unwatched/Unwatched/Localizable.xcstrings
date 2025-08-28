@@ -2514,16 +2514,6 @@
         }
       }
     },
-    "chapterFilterDesc" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatically skip chapters based on keywords."
-          }
-        }
-      }
-    },
     "chapterFilterFooter" : {
       "localizations" : {
         "de" : {
@@ -3618,16 +3608,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niestandardowe dla kanału"
-          }
-        }
-      }
-    },
-    "customTemporaryPlaybackSpeedDesc" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Adjust the temporary speed to anything you like."
           }
         }
       }
@@ -5372,6 +5352,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rozszerzony"
+          }
+        }
+      }
+    },
+    "experimental" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Via Apple Intelligence (Experimental)"
           }
         }
       }
@@ -15654,16 +15644,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtr tytułu wideo"
-          }
-        }
-      }
-    },
-    "videoTitleFilterDesc" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep new videos from showing up in your Queue/Inbox by matching keywords."
           }
         }
       }

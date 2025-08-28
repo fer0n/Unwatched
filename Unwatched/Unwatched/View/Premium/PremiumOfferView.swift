@@ -35,8 +35,8 @@ struct PremiumOfferView: View {
                     .frame(height: 50)
 
                 MySection {
-                    VStack(alignment: .leading, spacing: 25) {
-                        ForEach(PremiumFeature.allCases, id: \.self) { feature in
+                    VStack(alignment: .leading, spacing: 15) {
+                        ForEach(PremiumFeatureLarge.allCases, id: \.self) { feature in
                             HStack(alignment: .top) {
                                 Image(systemName: feature.icon)
                                     .frame(maxWidth: 40, alignment: .center)
@@ -51,6 +51,22 @@ struct PremiumOfferView: View {
                                     Text(feature.description)
                                         .foregroundStyle(.secondary)
                                 }
+                            }
+                            .padding(.bottom, 10)
+                        }
+
+                        Spacer()
+
+                        ForEach(PremiumFeature.allCases, id: \.self) { feature in
+                            HStack(alignment: .center) {
+                                Image(systemName: feature.icon)
+                                    .frame(maxWidth: 40, alignment: .center)
+                                    .font(.title)
+                                    .symbolVariant(.fill)
+
+                                Text(feature.title)
+                                    .font(.headline)
+                                    .fontWeight(.bold)
                             }
                         }
                     }
@@ -110,8 +126,8 @@ struct PremiumOfferView: View {
 
 #Preview {
     PremiumOfferView()
-        .frame(
-            width: 450,
-            height: 650
-        )
+    //        .frame(
+    //            width: 450,
+    //            height: 650
+    //        )
 }

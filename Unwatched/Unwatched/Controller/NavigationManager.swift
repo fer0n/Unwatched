@@ -273,6 +273,7 @@ import UnwatchedShared
     static func getDummy(_ showMenu: Bool = true) -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = showMenu
+        navManager.playerTab = .chapterDescription
         return navManager
     }
 }
