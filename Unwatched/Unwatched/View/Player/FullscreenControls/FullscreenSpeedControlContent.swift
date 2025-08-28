@@ -52,8 +52,8 @@ struct FullscreenSpeedControlContent: View {
         .frame(width: 50, height: 50)
         .frame(width: viewModel.isScrolling ? nil : 22, height: viewModel.isScrolling ? nil : 22)
         .frame(width: 30, height: 30)
-        .onChange(of: viewModel.currentPage) {
-            guard let currentPage = viewModel.currentPage else {
+        .onChange(of: viewModel.currentPage) { old, _ in
+            guard let currentPage = viewModel.currentPage, old != nil else {
                 return
             }
             triggerInteraction()
