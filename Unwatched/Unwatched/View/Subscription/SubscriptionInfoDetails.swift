@@ -107,6 +107,7 @@ struct SubscriptionInfoDetails: View {
                             showFilter: $showFilter,
                             hasFilter: !subscription.filterText.isEmpty
                         )
+                        .containsPremium()
 
                         Spacer()
                             .padding(.trailing, padding + workaroundPadding)

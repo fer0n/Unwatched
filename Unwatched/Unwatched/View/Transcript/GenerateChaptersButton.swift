@@ -29,6 +29,7 @@ struct GenerateChaptersButton: View {
                 .task(id: video?.youtubeId) {
                     errorMessage = nil
                 }
+                .requiresPremium()
         }
     }
 
@@ -37,16 +38,14 @@ struct GenerateChaptersButton: View {
             generateChapters()
         } label: {
             ZStack {
-                VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("generateChaptersFromTranscript")
-                        .frame(maxWidth: .infinity)
-
                     Text(errorMessage ?? String(localized: "experimental"))
-                        .padding(.horizontal)
                         .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 10)
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 15)
                 .opacity(isLoading ? 0 : 1)
 
                 Image(systemName: Const.premiumIndicatorSF)

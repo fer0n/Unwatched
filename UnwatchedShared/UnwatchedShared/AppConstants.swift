@@ -11,6 +11,7 @@ public struct Const {
     public static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     public static let youtubePremium = "youtubePremium"
     public static let unwatchedPremiumAcknowledged = "unwatchedPremiumAcknowledged"
+    public static let hidePremium = "hidePremium"
     public static let skipSponsorSegments = "skipSponsorSegments"
     public static let skipChapterText = "skipChapterText"
     public static let filterVideoTitleText = "filterVideoTitleText"

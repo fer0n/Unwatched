@@ -6558,6 +6558,26 @@
         }
       }
     },
+    "hidePremiumOffer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Premium Features"
+          }
+        }
+      }
+    },
+    "hidePremiumOfferDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not interested? That’s okay. If you want, you can hide all premium features. After all, Unwatched is about enjoying your videos in peace."
+          }
+        }
+      }
+    },
     "hideShorts" : {
       "localizations" : {
         "de" : {
