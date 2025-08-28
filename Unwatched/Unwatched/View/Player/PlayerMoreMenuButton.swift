@@ -67,9 +67,9 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         }
                     }
                 }
+                .buttonStyle(.plain)
         }
         .menuIndicator(.hidden)
-        .buttonStyle(.plain)
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help("moreOptions")

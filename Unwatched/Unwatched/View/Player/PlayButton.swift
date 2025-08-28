@@ -51,7 +51,9 @@ struct CorePlayButton<Content>: View where Content: View {
         .accessibilityLabel(player.isPlaying ? "pause" : "play")
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .contextMenu {
-            PlayButtonContextMenu()
+            if enableHelperPopup {
+                PlayButtonContextMenu()
+            }
         }
         .keyboardShortcut(.space, modifiers: [])
     }
@@ -97,6 +99,13 @@ struct PlayButton: View {
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(.automaticWhite, .automaticBlack)
                 .fontWeight(.black)
+        }
+        .apply {
+            if #available(iOS 26.0, macOS 26.0, *) {
+                $0.glassEffect(in: Circle())
+            } else {
+                $0
+            }
         }
     }
 }

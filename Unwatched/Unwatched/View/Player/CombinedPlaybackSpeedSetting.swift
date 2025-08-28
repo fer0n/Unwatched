@@ -113,6 +113,13 @@ struct CombinedPlaybackSpeedSetting: View {
                     }
                 }
                 .speedSelectionBackground(isTransparent: isTransparent)
+                .apply {
+                    if #available(iOS 26.0, macOS 26.0, *) {
+                        $0.glassEffect(in: Capsule())
+                    } else {
+                        $0
+                    }
+                }
                 .fixedSize(horizontal: false, vertical: true)
             }
         }

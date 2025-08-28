@@ -45,6 +45,13 @@ struct PlayerToggleModifier: ViewModifier {
             .opacity(isEnabled ? 1 : 0.4)
             .background(background.padding(-5))
             .clipShape(Circle())
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0.glassEffect(in: Circle())
+                } else {
+                    $0
+                }
+            }
     }
 
     var size: CGFloat {
