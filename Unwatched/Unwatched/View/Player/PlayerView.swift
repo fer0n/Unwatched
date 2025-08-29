@@ -212,6 +212,7 @@ struct PlayerView: View {
                 .fontWeight(.medium)
                 .contentShape(Rectangle())
                 .onTapGesture(perform: handleMiniPlayerTap)
+                .lineLimit(2)
 
             CorePlayButton(
                 circleVariant: true,

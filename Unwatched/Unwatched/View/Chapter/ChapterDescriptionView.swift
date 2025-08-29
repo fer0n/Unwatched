@@ -73,7 +73,7 @@ struct ChapterDescriptionView: View {
                         anchor = .center
                     } else if navManager.scrollToCurrentChapter {
                         navManager.scrollToCurrentChapter = false
-                        anchor = .top
+                        anchor = .center
                     } else {
                         return
                     }
