@@ -1061,10 +1061,35 @@
 			);
 			target = 886F01F82CA5B34600EF2EEA /* UnwatchedTV */;
 		};
+		88D749E12E62EEDE0018E1E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Release/IconBlackWhite.icon,
+				Release/IconBlackWhiteLight.icon,
+				Release/IconBlueLight.icon,
+				Release/IconDarkGreen.icon,
+				Release/IconDarkGreenLight.icon,
+				Release/IconGreen.icon,
+				Release/IconGreenLight.icon,
+				Release/IconMint.icon,
+				Release/IconMintLight.icon,
+				Release/IconOrange.icon,
+				Release/IconOrangeLight.icon,
+				Release/IconPurple.icon,
+				Release/IconPurpleLight.icon,
+				Release/IconRed.icon,
+				Release/IconRedLight.icon,
+				Release/IconTeal.icon,
+				Release/IconTealLight.icon,
+				Release/IconYellow.icon,
+				Release/IconYellowLight.icon,
+			);
+			target = 88DFC0AA2B44843A001895C8 /* Unwatched */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
+		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88D749E12E62EEDE0018E1E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
 		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
