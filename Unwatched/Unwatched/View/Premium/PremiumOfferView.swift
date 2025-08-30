@@ -36,13 +36,14 @@ struct PremiumOfferView: View {
                     .frame(height: 50)
 
                 MySection {
-                    VStack(alignment: .leading, spacing: 15) {
+                    VStack(alignment: .leading, spacing: 10) {
                         ForEach(PremiumFeatureLarge.allCases, id: \.self) { feature in
                             HStack(alignment: .top) {
                                 Image(systemName: feature.icon)
                                     .frame(maxWidth: 40, alignment: .center)
                                     .font(.largeTitle)
                                     .symbolVariant(.fill)
+                                    .fontWeight(.bold)
 
                                 VStack(alignment: .leading) {
                                     Text(feature.title)
@@ -64,6 +65,7 @@ struct PremiumOfferView: View {
                                     .frame(maxWidth: 40, alignment: .center)
                                     .font(.title)
                                     .symbolVariant(.fill)
+                                    .fontWeight(.bold)
 
                                 Text(feature.title)
                                     .font(.headline)
@@ -72,7 +74,7 @@ struct PremiumOfferView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
+                    .padding(.horizontal, 15)
                 }
 
                 Spacer()
@@ -95,6 +97,7 @@ struct PremiumOfferView: View {
                     Toggle(isOn: $hidePremium) {
                         Text("hidePremiumOffer")
                     }
+                    .tint(theme.darkColor.mix(with: .black, by: 0.8))
                 }
                 .tint(theme.color)
                 .padding(.horizontal, 20)
