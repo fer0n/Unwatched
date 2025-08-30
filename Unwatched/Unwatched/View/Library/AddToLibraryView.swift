@@ -36,8 +36,9 @@ struct AddToLibraryView: View {
                     Text("browser")
                         .foregroundStyle(Color.neutralAccentColor)
                 } icon: {
-                    Image(systemName: Const.appBrowserSF)
+                    Image(systemName: Const.youtubeSF)
                         .tint(theme.color)
+                        .fontWeight(.black)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())

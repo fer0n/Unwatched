@@ -61,7 +61,7 @@ struct MenuView: View {
                     safeArea: false
                 )
                 .tabItemView(
-                    image: Image(systemName: Const.appBrowserSF),
+                    image: Image(systemName: Const.youtubeSF),
                     tag: NavigationTab.browser,
                     show: browserAsTab
                 )

@@ -44,7 +44,8 @@ struct SubscriptionInfoDetails: View {
                             navManager.openUrlInApp(.url(url))
                         }
                     } label: {
-                        Image(systemName: Const.appBrowserSF)
+                        Image(systemName: Const.youtubeSF)
+                            .fontWeight(.black)
                             .padding(10)
                             .frame(maxHeight: .infinity)
                     }
