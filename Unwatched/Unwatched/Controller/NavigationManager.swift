@@ -220,6 +220,10 @@ import UnwatchedShared
             searchFocused = false
         }
 
+        if openBrowserUrl != nil {
+            openBrowserUrl = nil
+        }
+
         if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)

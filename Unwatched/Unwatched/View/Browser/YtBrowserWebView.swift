@@ -10,11 +10,16 @@ import UnwatchedShared
 
 struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
+
+    @Environment(PlayerManager.self) var player
+    @Environment(NavigationManager.self) var navManager
 
     @Binding var url: BrowserUrl?
 
     var startUrl: BrowserUrl?
+    var onDismiss: (() -> Void)?
     @Binding var browserManager: BrowserManager
 
     init(
@@ -22,7 +27,8 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             nil
         ),
         startUrl: BrowserUrl? = nil,
-        browserManager: Binding<BrowserManager>
+        browserManager: Binding<BrowserManager>,
+        onDismiss: (() -> Void)? = nil
     ) {
         self._url = url
         self.startUrl = startUrl
@@ -30,6 +36,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             self.startUrl = url.wrappedValue
         }
         self._browserManager = browserManager
+        self.onDismiss = onDismiss
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
@@ -44,6 +51,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = coordinator
+        webView.configuration.userContentController.add(coordinator, name: "iosListener")
 
         #if os(iOS)
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
@@ -93,7 +101,28 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate {
+    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+        func userContentController(_ userContentController: WKUserContentController,
+                                   didReceive message: WKScriptMessage) {
+            Log.info("Intercepted video click: \(message.body)")
+            guard let text = message.body as? String, let url = URL(string: text) else {
+                Log.warning("no video id found")
+                return
+            }
+            let task = VideoService.addForeignUrls(
+                [url],
+                in: .queue,
+                at: 0
+            )
+            parent.player.loadTopmostVideoFromQueue(
+                after: task,
+                source: .userInteraction,
+                playIfCurrent: true
+            )
+            parent.navManager.handlePlay()
+            parent.onDismiss?()
+        }
+
         var parent: YtBrowserWebView
         var observation: NSKeyValueObservation?
         var isFirstLoad = true
@@ -120,6 +149,10 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
             if parent.defaultShortsSetting == .hide {
                 injectHideShortsCSS(webView)
+            }
+
+            if parent.playBrowserVideosInApp {
+                injectVideoInterceptionScript(webView)
             }
 
             Log.info("about to extract info")
@@ -150,6 +183,22 @@ struct YtBrowserWebView: PlatformViewRepresentable {
                     Log.info("Successfully injected CSS to hide Shorts")
                 }
             }
+        }
+
+        func injectVideoInterceptionScript(_ webView: WKWebView) {
+            let script = """
+                (function() {
+                    document.addEventListener('click', function(e) {
+                        const videoLink = e.target.closest('a[href*="/watch?v="]')?.href;
+                        if (videoLink) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.webkit.messageHandlers.iosListener.postMessage(videoLink);
+                        }
+                    }, true);
+                })();
+                """
+            webView.evaluateJavaScript(script + " undefined;")
         }
 
         func getInfoFromUrl(_ url: URL) -> SubscriptionInfo {

@@ -20,8 +20,14 @@ struct MySection<Content: View>: View {
     }
 
     // For content with a String
-    init(_ title: LocalizedStringKey, hasPadding: Bool = true, @ViewBuilder content: () -> Content) {
+    init(
+        _ title: LocalizedStringKey,
+        showPremiumIndicator: Bool = false,
+        hasPadding: Bool = true,
+        @ViewBuilder content: () -> Content
+    ) {
         self.content = content()
+        self.showPremiumIndicator = showPremiumIndicator
         self.hasPadding = hasPadding
         self.title = title
     }

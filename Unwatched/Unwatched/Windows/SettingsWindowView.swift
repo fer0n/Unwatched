@@ -26,11 +26,14 @@ struct SettingsWindowView: View {
                 Label("appearance", systemImage: Const.appearanceSettingsSF)
             }
 
-            PlaybackSettingsView()
-                .settingsView()
-                .tabItem {
-                    Label("playback", systemImage: Const.playbackSettingsSF)
-                }
+            ScrollView {
+                PlaybackSettingsView()
+                    .settingsView()
+                    .padding(.vertical)
+            }
+            .tabItem {
+                Label("playback", systemImage: Const.playbackSettingsSF)
+            }
 
             ScrollView {
                 FilterSettingsView()
