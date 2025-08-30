@@ -96,8 +96,8 @@ public struct Const {
         2.9,
         3
     ]
-    public static let speedMin: Double = 0.2
-    public static let speedMax: Double = 3
+    public static let speedMin: Double = 0.6
+    public static let speedMax: Double = 2
 
     /// The margin at which it will skip to the chapter start instead of the previous chapter
     public static let previousChapterDelaySeconds: Double = 4
