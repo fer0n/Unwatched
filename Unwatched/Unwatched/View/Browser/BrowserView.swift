@@ -13,10 +13,12 @@ import UnwatchedShared
 struct BrowserView: View, KeyboardReadable {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.dropVideosTip) var dropVideosTip: Bool = true
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
 
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(RefreshManager.self) var refresher
+    @Environment(\.dismissWindow) private var dismissWindow
 
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
@@ -46,7 +48,9 @@ struct BrowserView: View, KeyboardReadable {
                 ZStack {
                     YtBrowserWebView(url: url,
                                      startUrl: startUrl,
-                                     browserManager: $browserManager)
+                                     browserManager: $browserManager,
+                                     onDismiss: handleDismiss)
+                        .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
@@ -65,8 +69,12 @@ struct BrowserView: View, KeyboardReadable {
                                     Spacer()
                                 }
 
-                                AddVideoButton(browserManager: $browserManager, size: size)
-                                    .padding(size)
+                                AddVideoButton(
+                                    browserManager: $browserManager,
+                                    size: size,
+                                    onDismiss: handleDismiss,
+                                    )
+                                .padding(size)
                             }
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
@@ -87,7 +95,9 @@ struct BrowserView: View, KeyboardReadable {
                         }
                     }
                 }
+                #if os(iOS)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
+                #endif
                 .shadow(color: .automaticBlack.opacity(0.25), radius: 2)
             }
             .animation(.default, value: enableBottomPadding)
@@ -132,6 +142,12 @@ struct BrowserView: View, KeyboardReadable {
             }
             browserManager.stopPlayback()
         }
+    }
+
+    func handleDismiss() {
+        #if os(macOS)
+        dismissWindow(id: Const.windowBrowser)
+        #endif
     }
 
     func addSubButton(_ text: String) -> some View {

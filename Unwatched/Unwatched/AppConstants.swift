@@ -47,6 +47,7 @@ extension Const {
         Const.disableCaptions: false,
         Const.minimalPlayerUI: false,
         Const.autoAirplayHD: false,
+        Const.playBrowserVideosInApp: false,
 
         // Appearance
         Const.browserAsTab: false,

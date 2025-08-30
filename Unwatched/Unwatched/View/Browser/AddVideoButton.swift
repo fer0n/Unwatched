@@ -13,7 +13,6 @@ struct AddVideoButton: View {
 
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-    @Environment(\.dismiss) var dismiss
 
     @State var showInsert = false
     @State var hapticToggle = false
@@ -21,6 +20,7 @@ struct AddVideoButton: View {
     @Binding var browserManager: BrowserManager
 
     var size: Double = 20
+    var onDismiss: (() -> Void)?
 
     var body: some View {
         addVideoButton
@@ -41,7 +41,7 @@ struct AddVideoButton: View {
         Button {
             if let youtubeUrl {
                 UrlService.open(youtubeUrl)
-                dismiss()
+                onDismiss?()
             }
         } label: {
             Image(systemName: "safari.fill")
@@ -76,7 +76,7 @@ struct AddVideoButton: View {
                 playIfCurrent: true
             )
             navManager.handlePlay()
-            dismiss()
+            onDismiss?()
         } label: {
             Image(systemName: "play.fill")
                 .fontWeight(.heavy)

@@ -231,6 +231,7 @@ public struct Const {
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
+    public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let temporarySpeedUp = "temporarySpeedUp"
     public static let temporarySlowDown = "temporarySlowDown"

@@ -2028,6 +2028,16 @@
         }
       }
     },
+    "browserPlayback" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browser Playback"
+          }
+        }
+      }
+    },
     "browserShort" : {
       "localizations" : {
         "de" : {
@@ -10324,6 +10334,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Prędkość %lf x"
+          }
+        }
+      }
+    },
+    "playBrowserVideosInApp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Browser Videos in App"
           }
         }
       }

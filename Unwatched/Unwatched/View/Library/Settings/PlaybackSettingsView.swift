@@ -16,6 +16,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = false
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
 
     @Environment(PlayerManager.self) var player
 
@@ -81,6 +82,13 @@ struct PlaybackSettingsView: View {
                 HideControlsSettings()
 
                 TemporaryPlaybackSpeedSettings()
+
+                MySection("browserPlayback", showPremiumIndicator: true) {
+                    Toggle(isOn: $playBrowserVideosInApp) {
+                        Text("playBrowserVideosInApp")
+                    }
+                }
+                .requiresPremium(!playBrowserVideosInApp)
 
                 #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {
