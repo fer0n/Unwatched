@@ -7,14 +7,13 @@ import SwiftUI
 import UnwatchedShared
 
 struct SpeedControlView: View {
-    @State var viewModel = SpeedControlViewModel()
-
+    @Binding var viewModel: SpeedControlViewModel
     @Binding var selectedSpeed: Double
-    @ScaledMetric var thumbSize: CGFloat = 35
+
+    var thumbSize: CGFloat
 
     let frameHeight: CGFloat = 35
-    let coordinateSpace: NamedCoordinateSpace = .named("speed")
-    let borderWidth: CGFloat = 2
+    let coordinateSpace: NamedCoordinateSpace
     var indicatorSpacing: CGFloat = 2
 
     var body: some View {
@@ -50,18 +49,10 @@ struct SpeedControlView: View {
                     }
                 }
             }
-
-            SpeedSliderThumb(
-                viewModel: $viewModel,
-                selectedSpeed: $selectedSpeed,
-                thumbSize: thumbSize,
-                coordinateSpace: coordinateSpace
-            )
         }
-        .coordinateSpace(.named("speed"))
+        .coordinateSpace(coordinateSpace)
         .opacity(viewModel.showContent ? 1 : 0)
         .animation(.default, value: viewModel.showContent)
-        .padding(borderWidth)
         .accessibilityElement(children: .combine)
         .accessibilityValue(String(format: "%.1f", selectedSpeed))
         .accessibilityLabel("playbackSpeed")
@@ -124,12 +115,12 @@ struct SpeedPreferenceKey: PreferenceKey {
     }
 }
 
-#Preview {
-    @Previewable @State var selected: Double = 1.3
-
-    SpeedControlView(selectedSpeed: $selected)
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager())
-        .frame(width: 100)
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-}
+// #Preview {
+//    @Previewable @State var selected: Double = 1.3
+//
+//    SpeedControlView(selectedSpeed: $selected)
+//        .modelContainer(DataProvider.previewContainer)
+//        .environment(NavigationManager())
+//        .frame(width: 100)
+//    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+// }
