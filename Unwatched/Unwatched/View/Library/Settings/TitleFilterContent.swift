@@ -32,7 +32,7 @@ struct TitleFilterContent: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding(10)
-        .background(Color.insetBackground)
+        .background(Color.insetBackgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .listRowBackground(Color.backgroundColor)
         .listRowSeparator(.hidden)

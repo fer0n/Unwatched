@@ -27,7 +27,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
         Color.backgroundColor
 
         ZStack {
-            Color.insetBackground
+            Color.insetBackgroundColor
 
             VStack {
                 Text("emptyEntry")

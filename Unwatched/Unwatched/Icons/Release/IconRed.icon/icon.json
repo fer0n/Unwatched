@@ -48,7 +48,16 @@
           "glass" : true,
           "hidden" : false,
           "image-name" : "4_icon_sr.svg",
-          "name" : "4_icon_sr"
+          "name" : "4_icon_sr",
+          "opacity-specializations" : [
+            {
+              "value" : 1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ]
         }
       ],
       "lighting" : "individual",
@@ -77,8 +86,8 @@
             {
               "value" : {
                 "linear-gradient" : [
-                  "display-p3:0.33333,0.71765,0.94510,1.00000",
-                  "display-p3:0.19892,0.73512,0.85246,1.00000"
+                  "display-p3:0.77255,0.16078,0.08627,1.00000",
+                  "display-p3:0.75294,0.16863,0.20392,1.00000"
                 ]
               }
             },
@@ -121,7 +130,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.26667,0.57255,0.75686,1.00000"
+                "solid" : "display-p3:0.61961,0.12941,0.07059,1.00000"
               }
             },
             {
@@ -168,7 +177,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.20000,0.43137,0.56863,1.00000"
+                "solid" : "display-p3:0.46275,0.09804,0.05098,1.00000"
               }
             },
             {

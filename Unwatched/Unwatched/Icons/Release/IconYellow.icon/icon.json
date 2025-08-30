@@ -29,7 +29,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.05098,0.05490,0.06275,1.00000"
+                "solid" : "display-p3:0.03406,0.03747,0.04111,1.00000"
               }
             },
             {
@@ -48,7 +48,16 @@
           "glass" : true,
           "hidden" : false,
           "image-name" : "4_icon_sr.svg",
-          "name" : "4_icon_sr"
+          "name" : "4_icon_sr",
+          "opacity-specializations" : [
+            {
+              "value" : 0.9
+            },
+            {
+              "appearance" : "dark",
+              "value" : 1
+            }
+          ]
         }
       ],
       "lighting" : "individual",
@@ -66,7 +75,7 @@
       "specular" : false,
       "translucency" : {
         "enabled" : true,
-        "value" : 0.45
+        "value" : 0.45000000000000007
       }
     },
     {
@@ -77,8 +86,8 @@
             {
               "value" : {
                 "linear-gradient" : [
-                  "display-p3:0.33333,0.71765,0.94510,1.00000",
-                  "display-p3:0.19892,0.73512,0.85246,1.00000"
+                  "display-p3:0.85098,0.71765,0.24314,1.00000",
+                  "display-p3:0.85098,0.64314,0.17255,1.00000"
                 ]
               }
             },
@@ -121,7 +130,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.26667,0.57255,0.75686,1.00000"
+                "solid" : "display-p3:0.68235,0.57255,0.19608,1.00000"
               }
             },
             {
@@ -168,7 +177,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.20000,0.43137,0.56863,1.00000"
+                "solid" : "display-p3:0.50980,0.43137,0.14510,1.00000"
               }
             },
             {
