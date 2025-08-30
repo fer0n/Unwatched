@@ -103,7 +103,9 @@ struct PlayerScrubber: View {
                         .onEnded(handleEnded)
                 )
                 .disabled(isDisabled)
+                #if os(iOS)
                 .animation(.default.speed(2), value: currentScrubberHeight)
+                #endif
 
                 if inlineTime {
                     Text(formattedDuration)

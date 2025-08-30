@@ -10,6 +10,8 @@ import SwiftData
 import UnwatchedShared
 
 struct DropUrlArea<Content: View>: View {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
     @Binding var avm: AddVideoViewModel
     @Binding var dropVideosTip: Bool
 
@@ -42,7 +44,6 @@ struct DropUrlArea<Content: View>: View {
                     if dropVideosTip {
                         Text("dropVideosTip")
                             .presentationCompactAdaptation(.popover)
-                            .foregroundStyle(Color.neutralAccentColor)
                             .fontWeight(.semibold)
                     }
                 }
@@ -77,6 +78,7 @@ struct DropUrlArea<Content: View>: View {
         .task(id: avm.isSuccess) {
             await avm.handleSuccessChange()
         }
+        .foregroundStyle(theme.contrastColor)
     }
 
     var dropAreaContent: some View {
@@ -105,6 +107,5 @@ struct DropUrlArea<Content: View>: View {
                 }
             }
         }
-        .foregroundStyle(.white)
     }
 }

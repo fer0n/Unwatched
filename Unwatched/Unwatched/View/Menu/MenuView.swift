@@ -97,6 +97,9 @@ struct MenuView: View {
         #endif
         .browserViewSheet(navManager: $navManager)
         .premiumOfferSheet()
+        .background {
+            Color.backgroundColor.ignoresSafeArea(.all)
+        }
         #if os(iOS)
         .setTabBarAppearance(disableScrollAppearance: isSidebar)
         #endif

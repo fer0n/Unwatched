@@ -68,17 +68,16 @@ struct ChapterDescriptionView: View {
             }
             .onAppear {
                 if hasChapters && player.video?.youtubeId == video.youtubeId {
-                    let anchor: UnitPoint?
                     if scrollToCurrent {
-                        anchor = .center
                     } else if navManager.scrollToCurrentChapter {
                         navManager.scrollToCurrentChapter = false
-                        anchor = .center
                     } else {
                         return
                     }
+                    let chapter = player.previousChapter ?? player.currentChapter
+                    let anchor: UnitPoint = player.previousChapter == nil ? .center : .top
                     proxy.scrollTo(
-                        player.currentChapter?.persistentModelID,
+                        chapter?.persistentModelID,
                         anchor: anchor
                     )
                 }
