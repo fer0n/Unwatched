@@ -52,6 +52,7 @@ struct QueueView: View {
                                         isNew: video.isNew,
                                         showAllStatus: false,
                                         clearRole: .destructive,
+                                        queueRole: .destructive,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
                                         showDelete: false,
