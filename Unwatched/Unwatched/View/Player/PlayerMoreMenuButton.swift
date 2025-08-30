@@ -52,7 +52,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     openUrl(url)
                 } label: {
                     Text("openInAppBrowser")
-                    Image(systemName: Const.appBrowserSF)
+                    Image(systemName: Const.youtubeSF)
                         .padding(5)
                 }
             }

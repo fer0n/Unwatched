@@ -186,7 +186,7 @@ public struct Const {
     public static let videoDescriptionCircleSF = "custom.line.3.text.circle.fill"
     public static let chaptersSF = "checklist.checked"
 
-    public static let appBrowserSF = "play.rectangle.fill"
+    public static let youtubeSF = "play.rectangle.fill"
 
     public static let nextChapterSF = "chevron.right.2"
     public static let previousChapterSF = "chevron.left.2"
@@ -200,7 +200,6 @@ public struct Const {
     public static let reloadSF = "arrow.clockwise"
     public static let reloadCircleSF = "arrow.clockwise.circle.fill"
     public static let shareSF = "square.and.arrow.up.fill"
-    public static let videoSF = "play.rectangle.fill"
     public static let channelSF = "person.fill"
 
     // Settings
