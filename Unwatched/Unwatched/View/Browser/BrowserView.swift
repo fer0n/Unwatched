@@ -11,10 +11,7 @@ import OSLog
 import UnwatchedShared
 
 struct BrowserView: View, KeyboardReadable {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.dropVideosTip) var dropVideosTip: Bool = true
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
-
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(RefreshManager.self) var refresher
@@ -23,7 +20,7 @@ struct BrowserView: View, KeyboardReadable {
     @State var browserManager = BrowserManager()
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-    @State var avm = AddVideoViewModel()
+    @State var appNotificationVM = AppNotificationVM()
 
     var url: Binding<BrowserUrl?> = .constant(nil)
     var startUrl: BrowserUrl?
@@ -38,17 +35,16 @@ struct BrowserView: View, KeyboardReadable {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack {
+            VStack(spacing: 0) {
                 if showHeader {
-                    DropUrlArea($avm, $dropVideosTip) {
-                        BrowserViewHeader()
-                    }
+                    BrowserViewHeader()
                 }
 
                 ZStack {
                     YtBrowserWebView(url: url,
                                      startUrl: startUrl,
                                      browserManager: $browserManager,
+                                     appNotificationVM: $appNotificationVM,
                                      onDismiss: handleDismiss)
                         .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
@@ -72,9 +68,8 @@ struct BrowserView: View, KeyboardReadable {
                                 AddVideoButton(
                                     browserManager: $browserManager,
                                     size: size,
-                                    onDismiss: handleDismiss,
-                                    )
-                                .padding(size)
+                                    onDismiss: handleDismiss)
+                                    .padding(size)
                             }
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
                             .frame(maxWidth: .infinity)
@@ -95,23 +90,13 @@ struct BrowserView: View, KeyboardReadable {
                         }
                     }
                 }
-                #if os(iOS)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                #endif
-                .shadow(color: .automaticBlack.opacity(0.25), radius: 2)
+                .clipShape(RoundedRectangle(cornerRadius: showHeader ? 15 : 0))
             }
             .animation(.default, value: enableBottomPadding)
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
-        .background {
-            VStack(spacing: 0) {
-                avm.showDropArea || dropVideosTip
-                    ? theme.darkColor
-                    : Color.youtubeWebBackground
-
-                Color.youtubeWebBackground
-            }
-        }
+        .background(Color.youtubeWebBackground)
+        .appNotificationOverlay($appNotificationVM, topPadding: 20)
         .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
             await subscribeManager.setIsSubscribed(browserManager.info)
@@ -234,6 +219,9 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     var supportsSplitView: Bool {
+        #if os(macOS)
+        return false
+        #endif
         return horizontalSizeClass == .regular
     }
 

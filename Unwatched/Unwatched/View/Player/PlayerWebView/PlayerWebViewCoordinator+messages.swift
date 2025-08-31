@@ -143,21 +143,11 @@ extension PlayerWebViewCoordinator {
         }
 
         let task = VideoService.addForeignUrls([url], in: .queue)
-        let notification = AppNotificationData(
-            title: "addingVideo",
-            isLoading: true,
-            timeout: 0
-        )
-        parent.appNotificationVM.show(notification)
+        parent.appNotificationVM.show(.addingVideo)
         Task {
             do {
                 try await task.value
-                let notification = AppNotificationData(
-                    title: "addedVideo",
-                    icon: Const.checkmarkSF,
-                    timeout: 1
-                )
-                parent.appNotificationVM.show(notification)
+                parent.appNotificationVM.show(.addedVideo)
             } catch { }
         }
     }

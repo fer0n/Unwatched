@@ -13,10 +13,6 @@ struct BrowserViewHeader: View {
         Button {
             dismiss()
         } label: {
-            #if os(macOS)
-            Spacer()
-                .frame(height: 20)
-            #else
             let bigScreen = sizeClass == .regular
             if bigScreen {
                 Label("close", systemImage: "chevron.down")
@@ -30,10 +26,9 @@ struct BrowserViewHeader: View {
                     .frame(width: 36, height: 5)
                     .clipShape(Capsule())
                     .padding(.top, 5)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 10)
                     .frame(maxWidth: .infinity)
             }
-            #endif
         }
         .accessibilityLabel("close")
         .keyboardShortcut(.escape, modifiers: [])

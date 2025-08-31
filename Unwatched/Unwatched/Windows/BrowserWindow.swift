@@ -13,7 +13,7 @@ struct BrowserWindow: View {
     var body: some View {
         BrowserView(
             startUrl: navManager.openBrowserUrl ?? .youtubeStartPage,
-            showHeader: true
+            showHeader: false
         )
         .id(navManager.openBrowserUrl?.getUrlString)
         .environment(imageCache)

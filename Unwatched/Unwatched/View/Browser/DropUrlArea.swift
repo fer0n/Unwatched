@@ -11,60 +11,35 @@ import UnwatchedShared
 
 struct DropUrlArea<Content: View>: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-
-    @Binding var avm: AddVideoViewModel
-    @Binding var dropVideosTip: Bool
+    @State var avm = AddVideoViewModel()
 
     let content: Content
 
-    init(
-        _ avm: Binding<AddVideoViewModel>,
-        _ dropVideosTip: Binding<Bool>,
-        @ViewBuilder content: () -> Content
-    ) {
-        self._avm = avm
-        self._dropVideosTip = dropVideosTip
+    init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
 
-    var showDropArea: Bool {
-        avm.showDropArea || dropVideosTip
-    }
-
     var body: some View {
+        let showDropArea = avm.isDragOver || avm.isLoading || avm.isSuccess != nil
+
         VStack {
             if showDropArea {
                 Spacer()
-                    .frame(height: 20)
+                    .frame(height: 40)
             }
             if showDropArea {
-                VStack(spacing: 0) {
-                    dropAreaContent
+                dropAreaContent
+                    .frame(maxWidth: .infinity)
 
-                    if dropVideosTip {
-                        Text("dropVideosTip")
-                            .presentationCompactAdaptation(.popover)
-                            .fontWeight(.semibold)
-                    }
-                }
-                .frame(maxWidth: .infinity)
                 Spacer()
-                    .frame(height: 20)
+                    .frame(height: 40)
             } else {
                 content
             }
         }
-        .onTapGesture {
-            withAnimation {
-                dropVideosTip = false
-            }
-        }
-        .contentShape(Rectangle())
+        .background(showDropArea ? theme.darkColor : .clear)
         .tint(.neutralAccentColor)
         .dropDestination(for: URL.self) { items, _ in
-            if dropVideosTip {
-                dropVideosTip = false
-            }
             Task {
                 await avm.addUrls(items)
             }
@@ -101,11 +76,21 @@ struct DropUrlArea<Content: View>: View {
                     .accessibilityLabel("failed")
             } else {
                 VStack {
-                    Image(systemName: Const.queueTopSF)
-                        .font(.headline)
+                    Image(systemName: Const.queueTagSF)
+                        .resizable()
+                        .scaledToFit()
                         .frame(width: 30, height: 30)
+                    Text("dropVideoUrlsHere")
+                        .fontWeight(.medium)
                 }
             }
         }
     }
+}
+
+#Preview {
+    DropUrlArea {
+        Text(verbatim: "hello")
+    }
+    .modelContainer(DataProvider.previewContainer)
 }

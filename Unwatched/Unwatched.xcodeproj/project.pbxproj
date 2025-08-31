@@ -583,6 +583,10 @@
 		88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
 		88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
 		88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
+		88EE64BA2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */; };
+		88EE64BB2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */; };
+		88EE64BE2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */; };
+		88EE64BF2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */; };
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
@@ -1005,6 +1009,8 @@
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
 		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
+		88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebViewCoordinator.swift; sourceTree = "<group>"; };
+		88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuAction.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
@@ -1835,6 +1841,8 @@
 				88F1EE522B5D3211009866A0 /* BrowserView.swift */,
 				88F3868D2BBE8B07009F9811 /* DropUrlArea.swift */,
 				88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */,
+				88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */,
+				88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */,
 				88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */,
 				881F57402C4A5DD800559BF9 /* BrowserViewHeader.swift */,
 			);
@@ -2090,6 +2098,7 @@
 				88F3AAA12C9990E60030B2EA /* TestData.swift in Sources */,
 				88899D962E035E6A002C05BC /* SubscriptionTitleFitlerPreview.swift in Sources */,
 				889AF9502C50ED05001CEDE6 /* CleanupService.swift in Sources */,
+				88EE64BE2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
 				88CD38762E20782500E7B21C /* TranscriptView.swift in Sources */,
 				889AF9512C50ED05001CEDE6 /* VideoListItemMoreMenu.swift in Sources */,
 				889AF9522C50ED05001CEDE6 /* SetupView.swift in Sources */,
@@ -2112,6 +2121,7 @@
 				889AF95F2C50ED05001CEDE6 /* ClearAllVideosButton.swift in Sources */,
 				889AF9602C50ED05001CEDE6 /* VideoActor+Videos.swift in Sources */,
 				889AF9612C50ED05001CEDE6 /* UrlService.swift in Sources */,
+				88EE64BB2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */,
 				887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				88373C262C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
 				88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,
@@ -2531,6 +2541,7 @@
 				8891F0B62B4F03B40098A3FB /* YoutubeDataAPI.swift in Sources */,
 				88F3868E2BBE8B07009F9811 /* DropUrlArea.swift in Sources */,
 				88F1EE532B5D3211009866A0 /* BrowserView.swift in Sources */,
+				88EE64BA2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */,
 				88899D972E035E6A002C05BC /* SubscriptionTitleFitlerPreview.swift in Sources */,
 				88C194742BBFC8440073E2E1 /* SubscriptionActor+Info.swift in Sources */,
 				88F3AA8B2C998B040030B2EA /* Color.swift in Sources */,
@@ -2587,6 +2598,7 @@
 				881EEE552D02F0D40028EAF8 /* AddSubscription.swift in Sources */,
 				88373C0F2C8AF60600ACBB3B /* NextChapterButton.swift in Sources */,
 				887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */,
+				88EE64BF2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
 				88E589B32D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */,

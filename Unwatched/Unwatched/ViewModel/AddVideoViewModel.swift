@@ -13,10 +13,6 @@ import UnwatchedShared
     var isLoading = false
     var isSuccess: Bool?
 
-    var showDropArea: Bool {
-        isDragOver || isLoading || isSuccess != nil
-    }
-
     @MainActor func addUrls(_ urls: [URL], at index: Int = 1) async {
         Log.info("handleUrlDrop inbox \(urls)")
         if urls.count == 0 {

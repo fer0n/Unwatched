@@ -31,6 +31,7 @@ struct SubscriptionService {
 
     static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
                                 subscriptionId: PersistentIdentifier? = nil) async throws {
+        Log.info("addSubscription")
         guard subscriptionInfo != nil || subscriptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
