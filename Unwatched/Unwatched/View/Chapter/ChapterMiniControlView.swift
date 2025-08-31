@@ -33,16 +33,14 @@ struct ChapterMiniControlView: View {
 
             Grid(horizontalSpacing: 5, verticalSpacing: 0) {
                 GridRow {
-                    if hasChapters {
-                        PreviousChapterButton { image in
-                            image
-                                .font(.system(size: 20))
-                        }
-                        .buttonStyle(ChangeChapterButtonStyle(size: chapterButtonSize))
-                        .disabled(player.previousChapterDisabled)
-                    } else {
-                        Color.clear.fixedSize()
+                    PreviousChapterButton { image in
+                        image
+                            .font(.system(size: 20))
                     }
+                    .buttonStyle(ChangeChapterButtonStyle(size: chapterButtonSize))
+                    .disabled(player.previousChapterDisabled)
+                    .opacity(hasChapters ? 1 : 0)
+                    .frame(maxWidth: hasChapters ? nil : 0)
 
                     let link = player.currentChapter?.link
                     HStack(spacing: 5) {
@@ -54,7 +52,6 @@ struct ChapterMiniControlView: View {
                                     Text(chapt.titleTextForced)
                                 } else {
                                     title
-                                        .padding(.vertical, 5)
                                 }
                             }
                             .padding(.vertical, 2)
@@ -88,32 +85,32 @@ struct ChapterMiniControlView: View {
                         }
                     }
                     .frame(maxWidth: link == nil ? nil : .infinity)
-                    .geometryGroup()
-
-                    if hasChapters {
-                        HStack(spacing: limitHeight ? 0 : -5) {
-                            NextChapterButton { image in
-                                image
-                                    .font(.system(size: 20))
-                            }
-                            .buttonStyle(ChangeChapterButtonStyle(
-                                chapter: player.currentChapter,
-                                size: chapterButtonSize
-                            ))
-                            .disabled(player.nextChapter == nil)
-
-                            if inlineTime {
-                                ChapterMiniControlRemainingText()
-                                    .matchedGeometryEffect(id: "remainingText", in: namespace)
-                                    .allowsHitTesting(false)
-                            }
-                        }
-                        .accessibilityElement()
-                        .accessibilityAddTraits(.isButton)
-                        .accessibilityLabel("nextChapter")
-                    } else {
-                        Color.clear.fixedSize()
+                    .if(!Device.isIphone) {
+                        $0.geometryGroup()
                     }
+
+                    HStack(spacing: limitHeight ? 0 : -5) {
+                        NextChapterButton { image in
+                            image
+                                .font(.system(size: 20))
+                        }
+                        .buttonStyle(ChangeChapterButtonStyle(
+                            chapter: player.currentChapter,
+                            size: chapterButtonSize
+                        ))
+                        .disabled(player.nextChapter == nil)
+
+                        if inlineTime {
+                            ChapterMiniControlRemainingText()
+                                .matchedGeometryEffect(id: "remainingText", in: namespace)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                    .accessibilityElement()
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityLabel("nextChapter")
+                    .opacity(hasChapters ? 1 : 0)
+                    .frame(maxWidth: hasChapters ? nil : 0)
                 }
 
                 if !inlineTime {
