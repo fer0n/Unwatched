@@ -84,8 +84,16 @@ extension YtBrowserWebView {
 
         private func handleVideoLinkMessage(_ message: WKScriptMessage) {
             Log.info("Intercepted video click: \(message.body)")
-            guard let text = message.body as? String, let url = URL(string: text) else {
-                Log.warning("no video id found")
+
+            guard let bodyString = message.body as? String,
+                  let data = bodyString.data(using: .utf8),
+                  let clickData = try? JSONDecoder().decode(VideoClickData.self, from: data) else {
+                Log.warning("Failed to decode message body")
+                return
+            }
+
+            guard let url = URL(string: clickData.url) else {
+                Log.warning("no url found")
                 return
             }
             let task = VideoService.addForeignUrls(
@@ -93,13 +101,26 @@ extension YtBrowserWebView {
                 in: .queue,
                 at: 0
             )
-            parent.player.loadTopmostVideoFromQueue(
-                after: task,
-                source: .userInteraction,
-                playIfCurrent: true
-            )
-            parent.navManager.handlePlay()
-            parent.onDismiss?()
+            Task {
+                try? await task.value
+                parent.player.loadTopmostVideoFromQueue(
+                    source: .userInteraction,
+                    playIfCurrent: true
+                )
+                if let videoDuration = parent.player.video?.duration {
+                    // Try to find a video with a matching duration, best way I could find
+                    // to match the clicked video with the one that has auto played partially
+                    for state in clickData.videos where (
+                        state.duration >= videoDuration - 1
+                            && state.duration <= videoDuration) {
+                        parent.player.video?.elapsedSeconds = state.currentTime
+                        parent.player.currentTime = state.currentTime
+                        break
+                    }
+                }
+                parent.navManager.handlePlay()
+                parent.onDismiss?()
+            }
         }
 
         #if os(macOS)
@@ -142,7 +163,21 @@ extension YtBrowserWebView {
                         if (videoLink) {
                             e.preventDefault();
                             e.stopPropagation();
-                            window.webkit.messageHandlers.iosListener.postMessage(videoLink);
+
+                            const videos = Array.from(document.querySelectorAll('video'));
+                            const videoStates = videos
+                                .filter(v => v.duration)
+                                .map(v => ({
+                                    duration: v.duration,
+                                    currentTime: v.currentTime
+                                }));
+
+                            window.webkit.messageHandlers.iosListener.postMessage(
+                                JSON.stringify({
+                                    url: videoLink,
+                                    videos: videoStates
+                                })
+                            );
                         }
                     }, true);
                 })();
@@ -555,6 +590,15 @@ var image = document.querySelector('link[rel="image_src"]')?.getAttribute('href'
 [channelId, description, rssFeed, title, image];
 """
     }
+}
+
+struct VideoClickData: Codable {
+    struct VideoState: Codable {
+        let duration: Double
+        let currentTime: Double
+    }
+    let url: String
+    let videos: [VideoState]
 }
 
 // #Preview {
