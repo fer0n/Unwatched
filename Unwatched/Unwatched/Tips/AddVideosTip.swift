@@ -18,7 +18,6 @@ struct AddVideosTip: Tip {
     var actions: [Action] {
         Action {
             Text("setupShareSheetAction")
-                .foregroundStyle(.teal)
         }
     }
 }

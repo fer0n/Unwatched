@@ -25,8 +25,7 @@ struct AddFeedsMenu: View {
                 }
                 importSubscriptionsButton
                 AddVideosButton()
-                    .tint(theme.color)
-                    .foregroundStyle(theme.contrastColor)
+                    .foregroundStyle(.primary)
             } label: {
                 Image(systemName: "ellipsis")
                     .frame(maxHeight: .infinity)
@@ -71,8 +70,7 @@ struct AddFeedsMenu: View {
                 .frame(maxWidth: .infinity)
         }
         .accessibilityLabel("importFromYoutube")
-        .tint(theme.color)
-        .foregroundStyle(theme.contrastColor)
+        .foregroundStyle(.primary)
         .buttonStyle(.bordered)
     }
 }
