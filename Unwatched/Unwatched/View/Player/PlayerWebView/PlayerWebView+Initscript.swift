@@ -214,8 +214,8 @@ extension PlayerWebView {
         };
 
         function hideOverlay() {
-            isOverlayHealthy();
-            if (!overlayVisible || !isNewEmbedding) return;
+            const isHealthy = isOverlayHealthy();
+            if ((isHealthy && !overlayVisible) || !isNewEmbedding) return;
             allowFadeinChanges = true;
             overlay.classList.remove('fadein');
             allowFadeinChanges = false;
