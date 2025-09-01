@@ -4,10 +4,7 @@ import UnwatchedShared
 
 struct YoutubeDataAPI {
     static var apiKey: String {
-        guard let apiKey = Credentials.apiKey else {
-            fatalError("youtube-api-key environment varible not set")
-        }
-        return apiKey
+        Credentials.youtubeApiKey
     }
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
