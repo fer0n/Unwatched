@@ -15,6 +15,7 @@ struct SetContinuousPlay: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        Signal.signalBool("Shortcut.ContinuousPlay", value: value)
         UserDefaults.standard.set(value, forKey: Const.continuousPlay)
         return .result()
     }

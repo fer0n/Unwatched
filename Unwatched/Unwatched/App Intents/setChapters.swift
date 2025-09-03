@@ -24,6 +24,7 @@ struct SetChapters: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        Signal.log("Shortcut.SetChapters")
         let video = try VideoService.getVideoOrCurrent(videoUrl)
 
         let chapters = ChapterService.extractChapters(from: chapterTimestamps, videoDuration: video.duration)

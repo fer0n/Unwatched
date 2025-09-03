@@ -1211,6 +1211,108 @@
         }
       }
     },
+    "analytics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutz & Analytics"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy & Analytics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacidad y analíticas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confidentialité et analyses"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prywatność i analityka"
+          }
+        }
+      }
+    },
+    "analyticsHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched verwendet datenschutzfreundliche, anonyme Analysen, um die App zu verbessern. Du kannst das jederzeit ausschalten. [Datenschutzerklärung](https://telemetrydeck.com/privacy)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched uses privacy-first, anonymous analytics to improve the app. You can turn this off anytime. [Privacy Policy](https://telemetrydeck.com/privacy)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched utiliza analíticas anónimas y respetuosas con la privacidad para mejorar la app. Puedes desactivarlas en cualquier momento. [Política de privacidad](https://telemetrydeck.com/privacy)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched utilise des analyses anonymes et respectueuses de la vie privée pour améliorer l’app. Tu peux les désactiver à tout moment. [Politique de confidentialité](https://telemetrydeck.com/privacy)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched korzysta z anonimowej, przyjaznej dla prywatności analityki, aby ulepszać aplikację. Możesz to wyłączyć w dowolnym momencie. [Polityka prywatności](https://telemetrydeck.com/privacy)"
+          }
+        }
+      }
+    },
+    "anonymousAnalytics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anonyme Analytics"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anonymous Analytics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analíticas anónimas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyses anonymes"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anonimowa analityka"
+          }
+        }
+      }
+    },
     "app" : {
       "localizations" : {
         "de" : {

@@ -15,7 +15,9 @@ extension Const {
         Const.skipChapterText: "",
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
-        Const.skipSponsorSegments: false
+        Const.skipSponsorSegments: false,
+        Const.unwatchedPremiumAcknowledged: false
+
     ]
 
     static let settingsDefaults: [String: Sendable] = [
@@ -65,6 +67,9 @@ extension Const {
         Const.automaticBackups: true,
         Const.exludeWatchHistoryInBackup: false,
         Const.minimalBackups: true,
-        Const.autoDeleteBackups: false
+        Const.autoDeleteBackups: false,
+
+        // Premium
+        Const.hidePremium: false
     ]
 }

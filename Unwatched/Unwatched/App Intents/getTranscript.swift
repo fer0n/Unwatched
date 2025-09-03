@@ -20,6 +20,7 @@ struct GetTranscript: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
+        Signal.log("Shortcut.GetTranscript")
         let video = try VideoService.getVideoOrCurrent(videoUrl)
         var transcriptUrl: String?
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {

@@ -21,6 +21,7 @@ struct RequiresPremiumModifier: ViewModifier {
                 #if os(iOS)
                 .onTapGesture {
                     if isLocked {
+                        Signal.log("Premium.ShowPopup")
                         let presenter = PopupPresenter()
                         presenter.show { dismiss in
                             PremiumPopupMessage(dismiss: {

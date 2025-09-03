@@ -97,6 +97,7 @@ struct PremiumOfferView: View {
                     Toggle(isOn: $hidePremium) {
                         Text("hidePremiumOffer")
                     }
+                    .signalToggle("Premium.Hide", isOn: hidePremium)
                     .tint(theme.darkColor.mix(with: .black, by: 0.8))
                 }
                 .tint(theme.color)
@@ -112,6 +113,7 @@ struct PremiumOfferView: View {
         }
         .overlay {
             Button {
+                Signal.signalBool("Premium.Subscribe", value: !premium)
                 premium.toggle()
             } label: {
                 Text(premium ? "cancelFreeTrial" : "tryForFree")

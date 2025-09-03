@@ -16,6 +16,13 @@ struct SubscriptionService {
         return subs
     }
 
+    static func getActiveSubscriptionCount() -> Task<Int?, Never> {
+        Task.detached {
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            return await repo.getActiveSubscriptionCount()
+        }
+    }
+
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)

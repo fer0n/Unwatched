@@ -26,6 +26,15 @@ actor SubscriptionActor {
         return subs?.compactMap { $0.toExport } ?? []
     }
 
+    func getActiveSubscriptionCount() -> Int? {
+        let fetch = FetchDescriptor<Subscription>(
+            predicate: #Predicate {
+                $0.isArchived == false
+            }
+        )
+        return try? modelContext.fetchCount(fetch)
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now

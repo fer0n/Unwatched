@@ -84,6 +84,7 @@ extension YtBrowserWebView {
 
         private func handleVideoLinkMessage(_ message: WKScriptMessage) {
             Log.info("Intercepted video click: \(message.body)")
+            Signal.log("Browser.VideoLinkIntercepted")
 
             guard let bodyString = message.body as? String,
                   let data = bodyString.data(using: .utf8),
@@ -364,6 +365,7 @@ extension YtBrowserWebView {
                     Log.error("Failed to add subscription: \(error)")
                 }
             }
+            Signal.log("Browser.ContextMenu.Subscribe")
         }
 
         /// Handle queue next action
@@ -383,6 +385,7 @@ extension YtBrowserWebView {
                     }
                 }
             }
+            Signal.log("Browser.ContextMenu.QueueNext")
         }
 
         /// Handle add to inbox action
@@ -402,6 +405,7 @@ extension YtBrowserWebView {
                     }
                 }
             }
+            Signal.log("Browser.ContextMenu.AddToInbox")
         }
 
         // MARK: - Context Menu Handling (iOS)

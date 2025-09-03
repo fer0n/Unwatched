@@ -31,6 +31,7 @@ struct AddToLibraryView: View {
         if showBrowser {
             Button(action: {
                 navManager.openUrlInApp(.youtubeStartPage)
+                Signal.log("Library.OpenBrowser")
             }, label: {
                 Label {
                     Text("browser")

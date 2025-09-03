@@ -21,6 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Log.info("applicationDidFinishLaunching")
+        Signal.setup()
         setupWindowDelegate()
 
         restoreWindowFrame()

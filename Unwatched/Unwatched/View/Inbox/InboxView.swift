@@ -102,6 +102,17 @@ struct InboxView: View {
             .onAppear {
                 navManager.setScrollId("top", ClearList.inbox.rawValue)
             }
+            .onDisappear {
+                let signalType = "Inbox.Count"
+                let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
+                    signalType: signalType,
+                    interval: .daily
+                )
+                if shouldSend {
+                    let rounded = round(Double(inboxEntries.count) / 10) * 10
+                    Signal.log(signalType, parameters: ["Inbox.Count.Value": "\(rounded)"])
+                }
+            }
             .inboxToolbar(showCancelButton)
             .myNavigationTitle("inbox")
             .sendableSubscriptionDestination()

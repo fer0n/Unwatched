@@ -39,6 +39,7 @@ struct AddVideoButton: View {
 
     var openInBrowserButton: some View {
         Button {
+            Signal.log("Browser.OpenInBrowser")
             if let youtubeUrl {
                 UrlService.open(youtubeUrl)
                 onDismiss?()
@@ -77,6 +78,7 @@ struct AddVideoButton: View {
             )
             navManager.handlePlay()
             onDismiss?()
+            Signal.log("Browser.PlayNow")
         } label: {
             Image(systemName: "play.fill")
                 .fontWeight(.heavy)
@@ -93,6 +95,7 @@ struct AddVideoButton: View {
             if isVideoUrl || isPlaylistUrl || showInsert {
                 Button {
                     _ = addTimestampedUrl()
+                    Signal.log("Browser.AddVideo")
                 } label: {
                     Image(systemName: addVideoSymbol)
                         .fontWeight(.semibold)

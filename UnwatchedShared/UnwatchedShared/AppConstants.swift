@@ -257,6 +257,7 @@ public struct Const {
     public static let minimalBackups = "minimalBackups"
     public static let exludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     public static let autoDeleteBackups = "autoDeleteBackups"
+    public static let analytics = "analytics"
 
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     public static let sideloadingSortOrder = "sideloadingSortOrder"

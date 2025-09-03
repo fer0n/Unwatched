@@ -170,7 +170,10 @@
 		885249422D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
 		8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
 		8852B02C2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
+		885714882E658911006D1EE9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 885714872E658911006D1EE9 /* TelemetryDeck */; };
 		88571E7C2E659447006D1EE9 /* credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88571ADD2E658FDA006D1EE9 /* credentials.swift */; };
+		885723032E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
+		885723042E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
 		8866B6942CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
@@ -820,6 +823,7 @@
 		885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentNavBarWorkaround.swift; sourceTree = "<group>"; };
 		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
 		88571ADD2E658FDA006D1EE9 /* credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = credentials.swift; sourceTree = "<group>"; };
+		885723012E6596F6006D1EE9 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		88632AF42B64FD8200C93F82 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
 		8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreMenuButton.swift; sourceTree = "<group>"; };
 		8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDeleteBackupView.swift; sourceTree = "<group>"; };
@@ -1123,6 +1127,7 @@
 			files = (
 				88B7FFA22C99DE9600CD917E /* UnwatchedShared.framework in Frameworks */,
 				88BB6D122D8C069200A90CCF /* CloudKit.framework in Frameworks */,
+				885714882E658911006D1EE9 /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1179,6 +1184,7 @@
 		88143EB52B4A7FEF00829E13 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				885723012E6596F6006D1EE9 /* Signal.swift */,
 				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
 				88339AA12E5B87A500B295B7 /* PopupPresenter.swift */,
@@ -1978,6 +1984,9 @@
 				es,
 			);
 			mainGroup = 88DFC0A22B44843A001895C8;
+			packageReferences = (
+				885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
+			);
 			productRefGroup = 88DFC0AC2B44843A001895C8 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -2133,6 +2142,7 @@
 				CDA07A392C601F590009BFEC /* DataSpeedTests.swift in Sources */,
 				889AF93C2C50ECF5001CEDE6 /* InteractiveSubscriptionTitle.swift in Sources */,
 				889AF93D2C50ECF5001CEDE6 /* BrowserView.swift in Sources */,
+				885723032E6596FA006D1EE9 /* Signal.swift in Sources */,
 				889AF93E2C50ECF5001CEDE6 /* DropUrlArea.swift in Sources */,
 				880C211A2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */,
 				889AF93F2C50ECF5001CEDE6 /* VideoListView.swift in Sources */,
@@ -2521,6 +2531,7 @@
 				88A2921E2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */,
 				88D8584D2B559DCC0047E0E6 /* VideoError.swift in Sources */,
 				8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */,
+				885723042E6596FA006D1EE9 /* Signal.swift in Sources */,
 				88CD387B2E20E59100E7B21C /* PlayerError.swift in Sources */,
 				88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */,
 				880505032C83016B005F0972 /* QueueVideoButton.swift in Sources */,
@@ -3102,6 +3113,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		885714872E658911006D1EE9 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 88DFC0A32B44843A001895C8 /* Project object */;
 }

@@ -56,6 +56,7 @@ struct AddFeedsMenu: View {
         Button {
             navManager.showMenu = true
             navManager.openUrlInApp(.youtubeStartPage)
+            Signal.log("Onboarding.BrowseYoutube")
         } label: {
             Text("browser")
         }
@@ -65,6 +66,7 @@ struct AddFeedsMenu: View {
     var importSubscriptionsButton: some View {
         Button {
             showImportSheet = true
+            Signal.log("Onboarding.ImportSubscriptions")
         } label: {
             Label("importFromYoutube", systemImage: "square.and.arrow.down.fill")
                 .frame(maxWidth: .infinity)
