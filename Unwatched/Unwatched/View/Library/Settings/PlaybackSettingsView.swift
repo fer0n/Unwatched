@@ -83,7 +83,11 @@ struct PlaybackSettingsView: View {
 
                 TemporaryPlaybackSpeedSettings()
 
-                MySection("browserPlayback", showPremiumIndicator: true) {
+                MySection(
+                    "browserPlayback",
+                    footer: "$browserPlaybackFooter",
+                    showPremiumIndicator: true
+                ) {
                     Toggle(isOn: $playBrowserVideosInApp) {
                         Text("playBrowserVideosInApp")
                     }

@@ -225,6 +225,40 @@
         }
       }
     },
+    "$browserPlaybackFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Tippen auf ein Video im in-App Browser wird das Video direkt im Unwatched-Player abgespielt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapping on a video inside the in-App Browser will close the browser and play it inside Unwatched’s player instead."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al tocar un vídeo dentro del navegador integrado, este se cerrará y se reproducirá en el reproductor de Unwatched."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En appuyant sur une vidéo dans le navigateur intégré, celui-ci se fermera et la lira à la place dans le lecteur d’Unwatched."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stuknięcie wideo w przeglądarce w aplikacji zamknie ją i odtworzy film w odtwarzaczu Unwatched."
+          }
+        }
+      }
+    },
     "active" : {
       "localizations" : {
         "de" : {
@@ -8210,10 +8244,34 @@
     },
     "loading" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laden"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Loading"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cargando"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ładowanie"
           }
         }
       }
