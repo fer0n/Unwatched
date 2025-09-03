@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		88014D202E68D300000FAA00 /* credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88571ADD2E658FDA006D1EE9 /* credentials.swift */; };
+		88014D212E68D339000FAA00 /* getTranscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CD909D2E2BA56300CD756D /* getTranscript.swift */; };
+		88014D232E68D454000FAA00 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 88014D222E68D454000FAA00 /* TelemetryDeck */; };
 		88017FD72B96161B00192AEA /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88017FD62B96161B00192AEA /* DebugView.swift */; };
 		8802F84F2C691A51008A7778 /* ImageServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802F84E2C691A51008A7778 /* ImageServiceTests.swift */; };
 		8802F8512C6950A3008A7778 /* HideShortsTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802F8502C6950A2008A7778 /* HideShortsTip.swift */; };
@@ -1063,6 +1066,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		88014D1F2E68D226000FAA00 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppIcon.icon,
+			);
+			target = 882FBA7C2B905F2500213CEF /* UnwatchedUITests */;
+		};
 		886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -1098,7 +1108,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88D749E12E62EEDE0018E1E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
+		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88D749E12E62EEDE0018E1E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 88014D1F2E68D226000FAA00 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
 		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
@@ -1110,6 +1120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88014D232E68D454000FAA00 /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2244,6 +2255,7 @@
 				889AF8D42C50ECA9001CEDE6 /* ShareView.swift in Sources */,
 				889AF8D52C50ECA9001CEDE6 /* SheetPositionReader.swift in Sources */,
 				889AF8D62C50ECA9001CEDE6 /* AddVideosTip.swift in Sources */,
+				88014D212E68D339000FAA00 /* getTranscript.swift in Sources */,
 				889AF8D72C50ECA9001CEDE6 /* AnimationCompletionCallback.swift in Sources */,
 				88CD38812E20E5B400E7B21C /* SwipeDirecton.swift in Sources */,
 				88899D942E035E54002C05BC /* TitleFilterView.swift in Sources */,
@@ -2312,6 +2324,7 @@
 				889AF8F92C50ECCA001CEDE6 /* PlayerManager+Chapters.swift in Sources */,
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
 				883A0F712E5F5D9E000CE416 /* PremiumNavListItem.swift in Sources */,
+				88014D202E68D300000FAA00 /* credentials.swift in Sources */,
 				88F2876D2DEAF3E600309C36 /* ClearAllInboxEntriesButton.swift in Sources */,
 				889AF8FA2C50ECCA001CEDE6 /* UIApplicationDelegate.swift in Sources */,
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
@@ -2983,6 +2996,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 279;
@@ -3030,6 +3044,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 279;
@@ -3126,6 +3141,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		88014D222E68D454000FAA00 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
 		885714872E658911006D1EE9 /* TelemetryDeck */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
