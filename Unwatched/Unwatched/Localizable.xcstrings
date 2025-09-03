@@ -9602,6 +9602,108 @@
         }
       }
     },
+    "notAllVideosFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube stellt nur die 15 neuesten Videos bereit, die nach dem Laden in der App bleiben. Du kannst alle Videos über den In-App-Browser ansehen und sie manuell von der Videoseite oder durch langes Drücken auf ein Video hinzufügen.\n\nBei Playlists gilt: Wenn neue Videos nicht erscheinen, kannst du die komplette Playlist hinzufügen, indem du die URL in der Bibliothek einfügst, den Kanal abonnieren und Videos filtern, oder den Ersteller bitten, neue Videos oben statt unten hinzuzufügen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube only provides the 15 most recent videos, which stay in the app once loaded. You can view all videos via the in-App browser and add them manually from the video page or by long-pressing a video.\n\nFor playlists, if new videos don’t appear, you can: add the full playlist by pasting the URL in Library, subscribe to the channel and filter videos, or ask the creator to add new videos at the top instead of the bottom."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube solo ofrece los 15 vídeos más recientes, que permanecen en la app una vez cargados. Puedes ver todos los vídeos desde el navegador integrado y añadirlos manualmente desde la página del vídeo o manteniendo presionado un vídeo.\n\nEn el caso de listas de reproducción, si no aparecen los vídeos nuevos, puedes: añadir la lista completa pegando la URL en la biblioteca, suscribirte al canal y filtrar los vídeos, o pedir al creador que ponga los vídeos nuevos arriba en lugar de abajo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube ne fournit que les 15 vidéos les plus récentes, qui restent dans l’app une fois chargées. Tu peux consulter toutes les vidéos via le navigateur intégré et les ajouter manuellement depuis la page de la vidéo ou en maintenant une vidéo appuyée.\n\nPour les playlists, si de nouvelles vidéos n’apparaissent pas, tu peux : ajouter la playlist complète en collant son URL dans la bibliothèque, t’abonner à la chaîne et filtrer les vidéos, ou demander au créateur d’ajouter les nouvelles vidéos en haut plutôt qu’en bas."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube udostępnia tylko 15 najnowszych filmów, które pozostają w aplikacji po załadowaniu. Możesz obejrzeć wszystkie filmy w przeglądarce w aplikacji i dodać je ręcznie z poziomu strony filmu lub poprzez dłuższe przytrzymanie filmu.\n\nW przypadku playlist, jeśli nowe filmy się nie pojawiają, możesz: dodać całą playlistę, wklejając jej adres URL w Bibliotece, zasubskrybować kanał i filtrować filmy albo poprosić twórcę, aby dodawał nowe filmy na górze zamiast na dole."
+          }
+        }
+      }
+    },
+    "notAllVideosFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Warum zeigt die Playlist/das Abo nicht alle Videos?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Why does the playlist/subscription not show all videos?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Por qué la lista de reproducción/suscripción no muestra todos los vídeos?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pourquoi la playlist/l’abonnement n’affiche-t-il pas toutes les vidéos ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dlaczego playlista/subskrypcja nie pokazuje wszystkich filmów?"
+          }
+        }
+      }
+    },
+    "notAllVideosFaqT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht alle Videos sichtbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not all videos visible"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No todos los vídeos son visibles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les vidéos ne sont pas visibles"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie wszystkie filmy są widoczne"
+          }
+        }
+      }
+    },
     "notifications" : {
       "localizations" : {
         "de" : {
@@ -10355,31 +10457,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden."
+            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden.\n\nUm Audio im Hintergrund abzuspielen, tippe nach dem Verlassen der App auf “Play” — auf dem Sperrbildschirm, im Kontrollzentrum oder an Kopfhörern."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing."
+            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nTo play audio in the background, press play after leaving the app—on the lock screen, in Control Center, or with your headphones."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video."
+            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video.\n\nPara reproducir audio en segundo plano, pulsa reproducir tras salir de la app — en la pantalla de bloqueo, en el centro de control o con tus auriculares."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il existe plusieurs façons de démarrer le mode Picture-in-Picture (incrustation d'image) :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. À partir de là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture de la vidéo."
+            "value" : "Il existe plusieurs façons de démarrer le mode Picture-in-Picture (incrustation d'image) :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. À partir de là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture de la vidéo.\n\nPour lire l’audio en arrière-plan, appuyez sur lecture après avoir quitté l’app — sur l’écran verrouillé, dans le centre de contrôle ou avec vos écouteurs."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie."
+            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nAby odtwarzać dźwięk w tle, naciśnij play po wyjściu z aplikacji — na ekranie blokady, w centrum sterowania lub za pomocą słuchawek."
           }
         }
       }
