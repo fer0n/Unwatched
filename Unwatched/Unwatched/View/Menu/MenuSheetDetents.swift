@@ -38,7 +38,7 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
             .disabled(
                 sheetPos.isMinimumSheet
                     && !navManager.hasSheetOpen
-                    && navManager.openTabBrowserUrl == nil
+                    && !navManager.showBrowser
                     && !landscapeFullscreen
                     && player.video != nil
                     && !navManager.showPremiumOffer

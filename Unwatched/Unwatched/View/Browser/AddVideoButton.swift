@@ -17,7 +17,7 @@ struct AddVideoButton: View {
     @State var showInsert = false
     @State var hapticToggle = false
 
-    @Binding var browserManager: BrowserManager
+    @Environment(BrowserManager.self) var browserManager
 
     var size: Double = 20
     var onDismiss: (() -> Void)?
@@ -189,9 +189,10 @@ private extension View {
 
     return HStack {
         Spacer()
-        AddVideoButton(browserManager: $browserManager)
+        AddVideoButton()
             .padding(20)
     }
     .environment(PlayerManager())
     .environment(NavigationManager())
+    .environment(browserManager)
 }

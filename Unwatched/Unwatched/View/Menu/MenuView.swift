@@ -56,7 +56,6 @@ struct MenuView: View {
                     .padding(.horizontal, -padding)
 
                 BrowserView(
-                    url: $navManager.openTabBrowserUrl,
                     showHeader: true,
                     safeArea: false
                 )

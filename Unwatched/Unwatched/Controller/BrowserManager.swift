@@ -8,8 +8,27 @@ import WebKit
 import UnwatchedShared
 
 @Observable class BrowserManager {
+    @MainActor static var shared = BrowserManager()
+
     var info: SubscriptionInfo?
-    var currentUrl: URL?
+    var currentUrl: URL? {
+        didSet {
+            Task { @MainActor in
+                if let webView, let currentUrl {
+                    let request = URLRequest(url: currentUrl)
+                    webView.load(request)
+                }
+            }
+        }
+    }
+
+    var currentBrowerUrl: BrowserUrl? {
+        if let currentUrl {
+            .url(currentUrl.absoluteString)
+        } else {
+            nil
+        }
+    }
 
     var desktopUserName: String?
     var firstPageLoaded = false
@@ -19,7 +38,7 @@ import UnwatchedShared
     var hasCheckedInfo = false
 
     @MainActor
-    @ObservationIgnored weak var webView: WKWebView?
+    @ObservationIgnored var webView: WKWebView?
 
     var channelTextRepresentation: String? {
         if info?.playlistId != nil {

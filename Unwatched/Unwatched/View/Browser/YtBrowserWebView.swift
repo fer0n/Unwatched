@@ -17,33 +17,26 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
 
-    @Binding var url: BrowserUrl?
     @Binding var appNotificationVM: AppNotificationVM
 
-    var startUrl: BrowserUrl?
     var onDismiss: (() -> Void)?
-    @Binding var browserManager: BrowserManager
+    @Bindable var browserManager: BrowserManager
 
     init(
-        url: Binding<BrowserUrl?> = .constant(
-            nil
-        ),
-        startUrl: BrowserUrl? = nil,
-        browserManager: Binding<BrowserManager>,
+        browserManager: Bindable<BrowserManager>,
         appNotificationVM: Binding<AppNotificationVM>,
         onDismiss: (() -> Void)? = nil
     ) {
-        self._url = url
-        self.startUrl = startUrl
-        if startUrl == nil {
-            self.startUrl = url.wrappedValue
-        }
         self._browserManager = browserManager
         self._appNotificationVM = appNotificationVM
         self.onDismiss = onDismiss
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
+        if let view = browserManager.webView {
+            return view
+        }
+
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
 
@@ -67,10 +60,9 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         #endif
 
         coordinator.startObserving(webView: webView)
-        if let requestUrl = (startUrl ?? url ?? BrowserUrl.youtubeStartPage).getUrl {
+        if let requestUrl = (browserManager.currentBrowerUrl ?? BrowserUrl.youtubeStartPage).getUrl {
             let request = URLRequest(url: requestUrl)
             webView.load(request)
-            url = nil
         }
 
         browserManager.webView = webView
@@ -78,13 +70,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
     }
 
-    func updateView(_ view: WKWebView) {
-        if url != nil, let requestUrl = url?.getUrl {
-            let request = URLRequest(url: requestUrl)
-            view.load(request)
-            url = nil
-        }
-    }
+    func updateView(_ view: WKWebView) { }
 
     #if os(macOS)
     func makeNSView(context: Context) -> WKWebView {

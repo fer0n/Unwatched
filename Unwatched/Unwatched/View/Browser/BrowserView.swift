@@ -17,13 +17,10 @@ struct BrowserView: View, KeyboardReadable {
     @Environment(RefreshManager.self) var refresher
     @Environment(\.dismissWindow) private var dismissWindow
 
-    @State var browserManager = BrowserManager()
+    @Environment(BrowserManager.self) var browserManager
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
     @State var appNotificationVM = AppNotificationVM()
-
-    var url: Binding<BrowserUrl?> = .constant(nil)
-    var startUrl: BrowserUrl?
 
     var showHeader = true
     var safeArea = true
@@ -34,6 +31,8 @@ struct BrowserView: View, KeyboardReadable {
     let size: Double = 20
 
     var body: some View {
+        @Bindable var browserManager = browserManager
+
         GeometryReader { geometry in
             VStack(spacing: 0) {
                 if showHeader {
@@ -41,9 +40,7 @@ struct BrowserView: View, KeyboardReadable {
                 }
 
                 ZStack {
-                    YtBrowserWebView(url: url,
-                                     startUrl: startUrl,
-                                     browserManager: $browserManager,
+                    YtBrowserWebView(browserManager: $browserManager,
                                      appNotificationVM: $appNotificationVM,
                                      onDismiss: handleDismiss)
                         .id("\(playBrowserVideosInApp ? "inApp" : "external")")
@@ -73,7 +70,6 @@ struct BrowserView: View, KeyboardReadable {
                                 }
 
                                 AddVideoButton(
-                                    browserManager: $browserManager,
                                     size: size,
                                     onDismiss: handleDismiss)
                                     .padding(size)
@@ -241,11 +237,12 @@ struct BrowserView: View, KeyboardReadable {
 #Preview {
     ZStack {}
         .sheet(isPresented: .constant(true)) {
-            BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
+            BrowserView()
                 .modelContainer(DataProvider.previewContainer)
                 .environment(ImageCacheManager())
                 .environment(RefreshManager())
                 .environment(PlayerManager())
                 .environment(NavigationManager())
+                .environment(BrowserManager())
         }
 }

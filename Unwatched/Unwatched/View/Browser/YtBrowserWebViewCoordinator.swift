@@ -243,7 +243,6 @@ extension YtBrowserWebView {
         }
 
         func handleCurrentUrl(_ url: URL) {
-            parent.browserManager.currentUrl = url
             parent.browserManager.isVideoUrl = UrlService.getYoutubeIdFromUrl(url: url) != nil
         }
 
