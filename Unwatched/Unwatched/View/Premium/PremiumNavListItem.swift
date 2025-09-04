@@ -7,8 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct PremiumNavListItem: View {
-    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @Environment(NavigationManager.self) var navManager
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
 
     var body: some View {

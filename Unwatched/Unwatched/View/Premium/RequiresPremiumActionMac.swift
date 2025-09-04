@@ -28,7 +28,7 @@ struct RequiresPremiumActionMac: ViewModifier {
                     // nothing
                 }
             }, message: {
-                Text("unwatchedPremiumSubtitle")
+                Text("unwatchedPremiumBody")
             })
     }
 }

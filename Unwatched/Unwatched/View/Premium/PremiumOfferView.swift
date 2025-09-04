@@ -14,12 +14,16 @@ struct PremiumOfferView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(verbatim: "Unwatched")
-                        .fontWeight(.black)
-                    HStack {
-                        Image(systemName: Const.premiumIndicatorSF)
-                            .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 5) {
+                    Image(systemName: Const.premiumIndicatorSF)
+                        .resizable()
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(theme.color, theme.color.opacity(0.2))
+                        .frame(width: 50, height: 50)
+                    HStack(spacing: 5) {
+                        Text(verbatim: "Unwatched")
+                            .fontWeight(.black)
+
                         Text(verbatim: "Premium")
                             .foregroundStyle(.secondary)
                             .fontWeight(.bold)
@@ -129,7 +133,8 @@ struct PremiumOfferView: View {
             .background(.white, in: Capsule())
             #endif
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .padding(5)
+            .padding(25)
+            .edgesIgnoringSafeArea(.bottom)
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: premium)
         .tint(theme.darkContrastColor)

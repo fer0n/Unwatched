@@ -13,24 +13,23 @@ struct PremiumPopupMessage: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
-            HStack {
-                Image(systemName: Const.premiumIndicatorSF)
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(theme.contrastColor, theme.color)
-                PremiumWordLogo()
-            }
-            .font(.title2)
+            Image(systemName: Const.premiumIndicatorSF)
+                .resizable()
+                .symbolRenderingMode(.palette)
+                .foregroundStyle(theme.color, theme.color.opacity(0.2))
+                .frame(width: 45, height: 45)
 
-            Text("unwatchedPremiumSubtitle")
-                .font(.headline)
-                .foregroundStyle(.secondary)
+            PremiumWordLogo()
+                .font(.title)
 
             Text("unwatchedPremiumBody")
+                .font(.headline)
+                .padding(.bottom)
 
             Button {
                 dismiss()
                 Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(300))
+                    NavigationManager.shared.showMenu = true
                     NavigationManager.shared.showPremiumOffer = true
                 }
             } label: {
@@ -53,22 +52,26 @@ struct PremiumPopupMessage: View {
         .apply {
             if #available(iOS 26, macOS 26, *) {
                 $0
-                    .glassEffect(in: RoundedRectangle(cornerRadius: 40, style: .continuous))
+                    .glassEffect(in: clipShape)
                     .glassEffectTransition(.materialize )
             } else {
                 $0
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .shadow(radius: 10)
                     .background(Color.insetBackgroundColor)
+                    .clipShape(clipShape)
+                    .shadow(radius: 10)
             }
         }
         .tint(theme.darkColor)
+    }
+
+    var clipShape: some Shape {
+        RoundedRectangle(cornerRadius: 40, style: .continuous)
     }
 }
 
 struct PremiumWordLogo: View {
     var body: some View {
-        HStack {
+        HStack(spacing: 5) {
             Text(verbatim: "Unwatched")
                 .fontWeight(.black)
 

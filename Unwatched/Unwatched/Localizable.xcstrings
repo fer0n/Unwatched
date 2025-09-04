@@ -15813,65 +15813,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Für den Zugriff auf alle Funktionen ist ein Abonnement von Unwatched Premium (derzeit kostenlos) erforderlich. Ohne Abonnement können die Basisfunktionen weiterhin kostenlos verwendet werden."
+            "value" : "Schalte diese Funktion mit Unwatched Premium frei. Du kannst es jetzt kostenlos ausprobieren."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A subscription to Unwatched Premium (currently free) is required to access all features. Without a subscription you can continue to use the basic features for free."
+            "value" : "Unlock this feature with Unwatched Premium. You can try it for free now."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se requiere una suscripción a Unwatched Premium (actualmente gratuita) para acceder a todas las funciones. Sin una suscripción, puedes seguir usando gratis las funciones básicas."
+            "value" : "Desbloquea esta función con Unwatched Premium. Puedes probarlo gratis ahora."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un abonnement à Unwatched Premium (actuellement gratuit) est nécessaire pour accéder à toutes les fonctionnalités. Sans abonnement, vous pouvez continuer à utiliser gratuitement les fonctionnalités de base."
+            "value" : "Débloquez cette fonctionnalité avec Unwatched Premium. Vous pouvez l’essayer gratuitement dès maintenant."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aby uzyskać dostęp do wszystkich funkcji, wymagane jest subskrybowanie Unwatched Premium (obecnie darmowe). Bez subskrypcji możesz nadal korzystać z podstawowych funkcji za darmo."
-          }
-        }
-      }
-    },
-    "unwatchedPremiumSubtitle" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Funktion ist nur mit Unwatched Premium verfügbar."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This feature is only available with Unwatched Premium."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esta función solo está disponible con Unwatched Premium."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cette fonctionnalité est uniquement disponible avec Unwatched Premium."
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ta funkcja jest dostępna tylko z Unwatched Premium."
+            "value" : "Odblokuj tę funkcję dzięki Unwatched Premium. Możesz wypróbować to za darmo już teraz."
           }
         }
       }

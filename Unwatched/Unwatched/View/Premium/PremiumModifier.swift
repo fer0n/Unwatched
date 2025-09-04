@@ -9,7 +9,9 @@ import UnwatchedShared
 struct RequiresPremiumModifier: ViewModifier {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @AppStorage(Const.hidePremium) var hidePremium: Bool = false
+
     let enabled: Bool
+    var onInteraction: (() -> Void)?
 
     func body(content: Content) -> some View {
         if !(hidePremium && isLocked) {
@@ -22,6 +24,7 @@ struct RequiresPremiumModifier: ViewModifier {
                 .onTapGesture {
                     if isLocked {
                         Signal.log("Premium.ShowPopup")
+                        onInteraction?()
                         let presenter = PopupPresenter()
                         presenter.show { dismiss in
                             PremiumPopupMessage(dismiss: {
@@ -54,8 +57,14 @@ struct ContainsPremium: ViewModifier {
 }
 
 extension View {
-    func requiresPremium(_ enabled: Bool = true) -> some View {
-        self.modifier(RequiresPremiumModifier(enabled: enabled))
+    func requiresPremium(
+        _ enabled: Bool = true,
+        onInteraction: (() -> Void)? = nil
+    ) -> some View {
+        self.modifier(RequiresPremiumModifier(
+            enabled: enabled,
+            onInteraction: onInteraction
+        ))
     }
 
     func containsPremium() -> some View {

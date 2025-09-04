@@ -43,6 +43,9 @@ struct ChapterDescriptionView: View {
                                 video: player.video,
                                 transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,
                                 )
+                            .requiresPremium() {
+                                dismiss()
+                            }
                         }
                     }
 

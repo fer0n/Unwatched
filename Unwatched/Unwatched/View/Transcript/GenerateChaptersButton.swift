@@ -29,7 +29,6 @@ struct GenerateChaptersButton: View {
                 .task(id: video?.youtubeId) {
                     errorMessage = nil
                 }
-                .requiresPremium()
         }
     }
 

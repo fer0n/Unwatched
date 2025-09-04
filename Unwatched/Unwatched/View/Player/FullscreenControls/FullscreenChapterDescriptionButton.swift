@@ -61,8 +61,9 @@ struct FullscreenChapterDescriptionButton: View {
                 #if os(iOS)
                 .apply {
                     if #available(iOS 26.0, *) {
-                        $0
-                            .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
+                        $0.navigationTransition(
+                            .zoom(sourceID: transitionId, in: namespace)
+                        )
                     } else {
                         $0
                     }
