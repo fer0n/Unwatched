@@ -366,6 +366,6 @@ extension PlayerManager {
             return
         }
         let context = DataProvider.mainContext
-        loadTopmostVideoFromQueue(modelContext: context, updateTime: true)
+        loadTopmostVideoFromQueue(modelContext: context, updateTime: false)
     }
 }
