@@ -54,6 +54,7 @@ struct LibraryView: View {
             .tint(theme.color)
         }
         .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
+
     }
 
     var settingsToolbarButton: some ToolbarContent {

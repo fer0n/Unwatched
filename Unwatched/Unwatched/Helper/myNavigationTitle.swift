@@ -32,6 +32,7 @@ struct MyNavigationTitle: ViewModifier {
             }
         #else
         .navigationTitle(title ?? "")
+        .updateNavTitle(title, titleHidden: titleHidden)
         #endif
     }
 

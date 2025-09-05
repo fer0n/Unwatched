@@ -158,6 +158,9 @@ struct PlayerView: View {
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
             .padding(.leading, !hideMiniPlayer ? miniPlayerHorizontalPadding : 0)
+            #if os(macOS)
+            .padding(.horizontal, 5)
+            #endif
 
             if !hideMiniPlayer {
                 miniPlayerContent

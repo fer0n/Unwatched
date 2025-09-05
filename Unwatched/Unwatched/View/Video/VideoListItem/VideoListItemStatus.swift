@@ -21,6 +21,23 @@ struct VideoListItemStatus: View {
     @ScaledMetric var size = 23
 
     var body: some View {
+        #if os(macOS)
+        if let statusInfo = videoStatusSystemName,
+           let status = statusInfo.status {
+            ZStack {
+                statusInfo.color
+                    .clipShape(Circle())
+
+                Image(systemName: status)
+                    .resizable()
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.white, statusInfo.color)
+            }
+            .frame(width: size, height: size)
+            .padding(2)
+            .accessibilityLabel("videoStatus")
+        }
+        #else
         if let statusInfo = videoStatusSystemName,
            let status = statusInfo.status {
             Image(systemName: status)
@@ -29,10 +46,8 @@ struct VideoListItemStatus: View {
                 .foregroundStyle(.white, statusInfo.color)
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
-                #if os(macOS)
-                .padding(2)
-            #endif
         }
+        #endif
     }
 
     var videoStatusSystemName: (status: String?, color: Color)? {

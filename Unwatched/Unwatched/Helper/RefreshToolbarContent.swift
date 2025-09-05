@@ -97,7 +97,6 @@ struct RefreshToolbarContent: ToolbarContent {
                 .saturation(refresher.isSyncingIcloud ? 0 : 1)
             #else
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
-                .buttonStyle(.borderless)
             #endif
         }
     }

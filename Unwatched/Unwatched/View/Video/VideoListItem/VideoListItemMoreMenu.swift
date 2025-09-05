@@ -32,8 +32,10 @@ struct VideoListItemMoreMenuView: View {
             #else
             videoActions
             Divider()
-            Button("viewChannel") {
+            Button {
                 viewChannel?()
+            } label: {
+                Label("viewChannel", systemImage: Const.channelSF)
             }
             Divider()
             #endif

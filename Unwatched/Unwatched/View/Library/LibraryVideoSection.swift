@@ -8,7 +8,6 @@ import SwiftData
 import UnwatchedShared
 
 struct LibraryVideoSection: View {
-
     var body: some View {
         MySection("videos", hasPadding: false) {
             NavigationLink(value: LibraryDestination.allVideos) {

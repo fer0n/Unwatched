@@ -41,19 +41,16 @@ struct MenuView: View {
             }) {
                 QueueTabItemView(
                     showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge,
-                    horizontalpadding: -padding
+                    showBadge: showTabBarBadge
                 )
 
                 InboxTabItemView(
                     showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge,
-                    horizontalpadding: -padding
+                    showBadge: showTabBarBadge
                 )
 
                 LibraryView(showCancelButton: shouldShowCancelButton)
                     .tabItemView(image: Image(systemName: "books.vertical"), tag: NavigationTab.library)
-                    .padding(.horizontal, -padding)
 
                 BrowserView(
                     showHeader: true,
@@ -64,7 +61,6 @@ struct MenuView: View {
                     tag: NavigationTab.browser,
                     show: browserAsTab
                 )
-                .padding(.horizontal, -padding)
             }
             #if os(iOS)
             .apply {
@@ -75,7 +71,6 @@ struct MenuView: View {
                 }
             }
             #endif
-            .padding(.horizontal, padding)
             .popover(item: $navManager.videoDetail) { video in
                 ZStack {
                     Color.backgroundColor.ignoresSafeArea(.all)
@@ -117,14 +112,6 @@ struct MenuView: View {
                 }
             }
         }
-    }
-
-    var padding: CGFloat {
-        #if os(macOS)
-        15
-        #else
-        0
-        #endif
     }
 }
 
