@@ -29,13 +29,13 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "display-p3:0.05098,0.05490,0.06275,1.00000"
+                "solid" : "display-p3:0.00000,0.00000,0.00000,0.80137"
               }
             },
             {
               "appearance" : "dark",
               "value" : {
-                "solid" : "display-p3:0.00000,0.00000,0.00000,1.00000"
+                "solid" : "display-p3:0.00000,0.00000,0.00000,0.90468"
               }
             },
             {
@@ -65,7 +65,7 @@
       },
       "specular" : false,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.45
       }
     },
@@ -108,7 +108,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.3
       }
     },
@@ -151,7 +151,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.7
       }
     },
@@ -204,7 +204,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.8
       }
     }

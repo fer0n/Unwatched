@@ -38,7 +38,7 @@
             {
               "appearance" : "dark",
               "value" : {
-                "solid" : "display-p3:0.00000,0.00000,0.00000,1.00000"
+                "solid" : "display-p3:0.00000,0.00000,0.00000,0.90468"
               }
             },
             {
@@ -69,7 +69,7 @@
       },
       "specular" : false,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.45
       }
     },
@@ -118,7 +118,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.3
       }
     },
@@ -167,7 +167,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.3
       }
     },
@@ -227,7 +227,7 @@
       },
       "specular" : true,
       "translucency" : {
-        "enabled" : true,
+        "enabled" : false,
         "value" : 0.3
       }
     }
