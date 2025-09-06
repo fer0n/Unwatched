@@ -265,6 +265,8 @@ extension PlayerWebView {
         // Check video state
         function sendVideoState(v, message = "checkVideoState") {
             let info = {
+                containsOverlay: document.contains(overlay),
+                overlayVisible: overlayVisible,
                 inDom: document.contains(v),
                 sameVideo: video === v,
                 video: !!v,
