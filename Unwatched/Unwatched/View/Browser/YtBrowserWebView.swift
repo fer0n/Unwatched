@@ -33,24 +33,33 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {
-        if let view = browserManager.webView {
-            return view
+        let webView: WKWebView
+
+        if let existingWebView = browserManager.webView {
+            webView = existingWebView
+        } else {
+            let webViewConfig = WKWebViewConfiguration()
+            webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
+
+            #if os(iOS)
+            webViewConfig.allowsPictureInPictureMediaPlayback = true
+            webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
+            #endif
+
+            webView = WKWebView(frame: .zero, configuration: webViewConfig)
+            webView.allowsBackForwardNavigationGestures = true
+
+            if let requestUrl = (browserManager.currentBrowerUrl ?? BrowserUrl.youtubeStartPage).getUrl {
+                let request = URLRequest(url: requestUrl)
+                webView.load(request)
+            }
+            webView.configuration.userContentController.add(coordinator, name: "iosListener")
+            #if os(macOS)
+            webView.configuration.userContentController.add(coordinator, name: "contextMenuListener")
+            #endif
+
+            browserManager.webView = webView
         }
-
-        let webViewConfig = WKWebViewConfiguration()
-        webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
-
-        #if os(iOS)
-        webViewConfig.allowsPictureInPictureMediaPlayback = true
-        webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
-        #endif
-
-        let webView = WKWebView(frame: .zero, configuration: webViewConfig)
-        webView.allowsBackForwardNavigationGestures = true
-        webView.configuration.userContentController.add(coordinator, name: "iosListener")
-        #if os(macOS)
-        webView.configuration.userContentController.add(coordinator, name: "contextMenuListener")
-        #endif
         webView.navigationDelegate = coordinator
         webView.uiDelegate = coordinator
 
@@ -60,14 +69,8 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         #endif
 
         coordinator.startObserving(webView: webView)
-        if let requestUrl = (browserManager.currentBrowerUrl ?? BrowserUrl.youtubeStartPage).getUrl {
-            let request = URLRequest(url: requestUrl)
-            webView.load(request)
-        }
 
-        browserManager.webView = webView
         return webView
-
     }
 
     func updateView(_ view: WKWebView) { }
@@ -97,7 +100,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 }
 
 // #Preview {
-//    BrowserView(url: .contant(BrowserUrl.youtubeStartPage))
+//    BrowserView(url: .constant(BrowserUrl.youtubeStartPage))
 //        .modelContainer(DataController.previewContainer)
 //        .environment(RefreshManager())
 // }
