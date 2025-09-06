@@ -39,6 +39,8 @@ public struct Const {
     public static let minSheetDetent: CGFloat = Const.iOS26 ? 75 : 50
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
+    /// Max video IDs supported by a single YouTube API request
+    public static let maxVideoIdsPerRequest = 50
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]

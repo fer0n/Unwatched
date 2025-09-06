@@ -11,7 +11,7 @@ import UnwatchedShared
 class ExportableTests: XCTestCase {
     func testLegacyBackup() async {
         let data = (try? DataSpeedTests.loadFileData(for: "backup-legacy.json"))!
-        await VideoService.deleteEverything()
+        await CleanupService.deleteEverything()
         UserDataService.importBackup(data)
         let context = DataProvider.newContext()
 
@@ -85,7 +85,7 @@ class ExportableTests: XCTestCase {
 
         do {
             let data = try UserDataService.exportUserData()
-            await VideoService.deleteEverything()
+            await CleanupService.deleteEverything()
             UserDataService.importBackup(data)
             let fetch = FetchDescriptor<Subscription>()
             let subs = try? context.fetch(fetch)

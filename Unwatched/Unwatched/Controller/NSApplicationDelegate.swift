@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
         restoreWindowFrame()
         handleFullscreenOnLaunch()
 
-        SetupView.setupVideo()
+        SetupView.onLaunch()
     }
 
     @MainActor

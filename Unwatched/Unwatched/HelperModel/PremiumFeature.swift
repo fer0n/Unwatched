@@ -41,7 +41,8 @@ enum PremiumFeature: String, CaseIterable {
     case customTemporaryPlaybackSpeed,
          videoTitleFilter,
          chapterFilter,
-         playBrowserVideosInApp
+         playBrowserVideosInApp,
+         seeVideoDuration
 
     var title: String {
         switch self {
@@ -53,6 +54,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "chapterFilterTitle")
         case .playBrowserVideosInApp:
             return String(localized: "playBrowserVideosInApp")
+        case .seeVideoDuration:
+            return String(localized: "seeVideoDurationTitle")
         }
     }
 
@@ -66,6 +69,8 @@ enum PremiumFeature: String, CaseIterable {
             return "chevron.forward.circle.fill"
         case .playBrowserVideosInApp:
             return "play.fill"
+        case .seeVideoDuration:
+            return "clock.fill"
         }
     }
 }

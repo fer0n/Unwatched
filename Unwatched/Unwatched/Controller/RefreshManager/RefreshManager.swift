@@ -96,14 +96,15 @@ actor RefreshActor {
         }
         do {
             let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: subscriptionIds
+                subscriptionIds: subscriptionIds,
+                fetchDurations: true
             )
             _ = try await task.value
         } catch {
             Log.info("Error during refresh: \(error)")
         }
-
         await cleanup(hardRefresh: hardRefresh)
+        VideoService.fetchVideoDurationsQueueInbox()
     }
 
     func handleAutoBackup() {
@@ -278,7 +279,9 @@ extension RefreshManager {
 
             NotificationManager.notifyRun(.start)
 
-            let task = VideoService.loadNewVideosInBg()
+            let task = VideoService.loadNewVideosInBg(fetchDurations: false)
+            // batch fetch durations only when necessary, e.g. when opening the app
+
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if newVideos.videoCount > 0 {

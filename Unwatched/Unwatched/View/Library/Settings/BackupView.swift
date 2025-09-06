@@ -112,6 +112,7 @@ struct BackupView: View {
                 MySection {
                     DeleteImageCacheButton()
                     DeleteTranscriptCacheButton()
+                    DeleteEverythingExceptSubsButton()
 
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
@@ -283,7 +284,7 @@ struct BackupView: View {
             player.video = nil
         }
         let task = Task {
-            await VideoService.deleteEverything()
+            await CleanupService.deleteEverything()
         }
         isDeletingEverythingTask = task
         return task

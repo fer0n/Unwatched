@@ -311,6 +311,8 @@
 		889931DB2D731AC5009096AB /* PlayerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889931D92D731AC5009096AB /* PlayerType.swift */; };
 		889931DD2D732642009096AB /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889931DC2D732635009096AB /* ClipboardService.swift */; };
 		889931DE2D732642009096AB /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889931DC2D732635009096AB /* ClipboardService.swift */; };
+		889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889A84E62E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift */; };
+		889A84E82E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889A84E62E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift */; };
 		889AF8AB2C50EC47001CEDE6 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
 		889AF8AC2C50EC88001CEDE6 /* RSSParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D438A62B45ADBD00482F29 /* RSSParserDelegate.swift */; };
 		889AF8CB2C50ECA9001CEDE6 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513E2B59D9A8006384E4 /* Task.swift */; };
@@ -928,6 +930,7 @@
 		889931D62D731AB0009096AB /* PreviousState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousState.swift; sourceTree = "<group>"; };
 		889931D92D731AC5009096AB /* PlayerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerType.swift; sourceTree = "<group>"; };
 		889931DC2D732635009096AB /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
+		889A84E62E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteEverythingExceptSubsButton.swift; sourceTree = "<group>"; };
 		889D61672D521EF30070389D /* VideoListItemEntryModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemEntryModifier.swift; sourceTree = "<group>"; };
 		889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyUndoManager.swift; sourceTree = "<group>"; };
 		889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRemoveNewViewModifier.swift; sourceTree = "<group>"; };
@@ -1502,6 +1505,7 @@
 				888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */,
 				88632AF42B64FD8200C93F82 /* BackupView.swift */,
 				88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */,
+				889A84E62E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift */,
 				88CD38942E21480200E7B21C /* DeleteTranscriptCacheButton.swift */,
 				88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */,
 				8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */,
@@ -2285,6 +2289,7 @@
 				88339AB42E5BA94800B295B7 /* PremiumOfferSheetModifer.swift in Sources */,
 				8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
+				889A84E82E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */,
 				889AF8E02C50ECA9001CEDE6 /* RefreshToolbarContent.swift in Sources */,
 				889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */,
@@ -2440,6 +2445,7 @@
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */,
+				889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				88D858552B55AC280047E0E6 /* YtChannelInfo.swift in Sources */,
 				887E82B02CD8FD8800B196EA /* Notification.swift in Sources */,
 				8891F0BA2B4F54940098A3FB /* Double.swift in Sources */,

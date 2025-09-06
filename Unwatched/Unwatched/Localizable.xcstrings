@@ -4272,6 +4272,40 @@
         }
       }
     },
+    "deleteEverythingExceptSubs" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles außer Abos löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Everything Except Subscriptions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar todo excepto suscripciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer tout sauf les abonnements"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń wszystko oprócz subskrypcji"
+          }
+        }
+      }
+    },
     "deleteImageCache" : {
       "localizations" : {
         "de" : {
@@ -4889,31 +4923,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \"+\"-Zeit angezeigt."
+            "value" : "YouTube-RSS-Feeds enthalten keine Video-Dauern. Sobald das Video im Player geladen ist, wird die Dauer angezeigt.\n\nBei Videos mit Kapiteln wird die Startzeit des letzten Kapitels als ungefähre Dauer verwendet und als minimale \"+\"-Zeit angezeigt.\n\nMit Unwatched Premium zeigen neue Videos automatisch ihre volle Dauer an."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time."
+            "value" : "YouTube RSS feeds don't include video durations. Once the video loads in the player, the duration will appear.\n\nFor videos with chapters, the start time of the last chapter is used as an approximate duration, shown as the minimum \"+\" time.\n\nWith Unwatched Premium, new videos automatically display their full duration."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los feeds RSS de YouTube no incluyen la duración de los videos. Una vez que el video se carga en el reproductor, la duración aparecerá.\n\nPara los videos con capítulos, se utiliza la hora de inicio del último capítulo como una duración aproximada, mostrada como el tiempo mínimo con “+”."
+            "value" : "Los feeds RSS de YouTube no incluyen la duración de los videos. Una vez que el video se carga en el reproductor, la duración aparecerá.\n\nPara los videos con capítulos, se utiliza la hora de inicio del último capítulo como una duración aproximada, mostrada como el tiempo mínimo con “+”.\n\nUnwatched Premium, los nuevos videos muestran automáticamente su duración completa."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les flux RSS de YouTube ne contiennent pas la durée des vidéos. Une fois les vidéos chargés dans le lecteur, la durée apparaîtra. Pour les vidéos avec des chapitres, l’heure de début du dernier chapitre est utilisée comme durée approximative, indiquée comme temps minimum \"+\"."
+            "value" : "Les flux RSS de YouTube ne contiennent pas la durée des vidéos. Une fois les vidéos chargés dans le lecteur, la durée apparaîtra. \n\nPour les vidéos avec des chapitres, l’heure de début du dernier chapitre est utilisée comme durée approximative, indiquée comme temps minimum \"+\".\n\nAvec Unwatched Premium, les nouvelles vidéos affichent automatiquement leur durée complète."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kanały RSS YouTube nie zawierają długości filmów. Gdy film zostanie załadowany w odtwarzaczu, pojawi się jego długość.\n\nW przypadku filmów z rozdziałami, czas rozpoczęcia ostatniego rozdziału jest używany jako przybliżona długość, wyświetlana jako minimalny czas \"+\"."
+            "value" : "Kanały RSS YouTube nie zawierają długości filmów. Gdy film zostanie załadowany w odtwarzaczu, pojawi się jego długość.\n\nW przypadku filmów z rozdziałami, czas rozpoczęcia ostatniego rozdziału jest używany jako przybliżona długość, wyświetlana jako minimalny czas \"+\".\n\nUnwatched Premium nowe filmy automatycznie wyświetlają pełny czas trwania."
           }
         }
       }
@@ -11540,6 +11574,40 @@
         }
       }
     },
+    "reallyDelete" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wirklich löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Really Delete?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar de verdad?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraiment supprimer ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Naprawdę usunąć?"
+          }
+        }
+      }
+    },
     "reallyDeleteVideo" : {
       "localizations" : {
         "de" : {
@@ -12522,6 +12590,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przewiń do przodu (%llds)"
+          }
+        }
+      }
+    },
+    "seeVideoDurationTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer neuer Videos"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durations for New Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duración de los nuevos videos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durées des nouvelles vidéos"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czas trwania nowych filmów"
           }
         }
       }

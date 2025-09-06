@@ -120,7 +120,10 @@ import UnwatchedShared
         return videos?.first
     }
 
-    func loadVideos(_ subscriptionIds: [PersistentIdentifier]?) async throws -> NewVideosNotificationInfo {
+    func loadVideos(
+        _ subscriptionIds: [PersistentIdentifier]?,
+        fetchDurations: Bool
+    ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
 
@@ -139,16 +142,24 @@ import UnwatchedShared
                 }
             }
 
+            var newVideoInfo = [(loadedVideos: [Video], addedVideos: [Video])]()
             for try await (sub, videos) in group {
-                let countNewVideos = await handleNewVideosGetCount(
+                let result = await handleNewVideos(
                     sub,
                     videos,
                     defaultPlacement: placementInfo
                 )
-                if countNewVideos > 0 {
+                if result.addedVideos.count > 0 {
                     // save sooner if videos got added
                     try modelContext.save()
                 }
+                newVideoInfo.append(result)
+            }
+            if fetchDurations {
+                try await handleFetchDurationsLoaded(
+                    newVideoInfo,
+                    onlyForAdded: subscriptionIds == nil // for all if specific subscription
+                )
             }
         }
 
@@ -158,14 +169,40 @@ import UnwatchedShared
         return newVideos
     }
 
-    public func handleNewVideosGetCount(
+    private func handleFetchDurationsLoaded(
+        _ newVideoInfo: [(loadedVideos: [Video], addedVideos: [Video])],
+        onlyForAdded: Bool = true
+    ) async throws {
+        Log.info("handleFetchDurationsLoaded")
+        var videos = newVideoInfo.flatMap { $0.addedVideos }
+
+        let maxRequest = Const.maxVideoIdsPerRequest
+        let remainder = videos.count % maxRequest
+        let countToFetch = remainder > 0 ? maxRequest - remainder : 0
+
+        if countToFetch > 0 {
+            let loadedVideos = newVideoInfo.flatMap { $0.loadedVideos }
+            let uniqueVideos = Dictionary(grouping: loadedVideos, by: \.youtubeId)
+                .compactMap { $0.value.first }
+            let existingIds = Set(videos.map { $0.youtubeId })
+            let additionalVideos = uniqueVideos.filter { !existingIds.contains($0.youtubeId) }
+            videos.append(contentsOf: additionalVideos.prefix(countToFetch))
+        }
+
+        let videoInfo = try await fetchVideoDurations(for: videos)
+        Task { @MainActor in
+            await VideoService.forceUpdateDurations(videoInfo)
+        }
+    }
+
+    public func handleNewVideos(
         _ sub: SendableSubscription,
         _ videos: [SendableVideo],
         defaultPlacement: DefaultVideoPlacement
-    ) async -> Int {
+    ) async -> (loadedVideos: [Video], addedVideos: [Video]) {
         guard let subModel = getSubscription(via: sub) else {
             Log.info("missing info when trying to load videos")
-            return 0
+            return ([], [])
         }
         let mostRecentDate = getMostRecentDate(videos)
         var videos = updateYtChannelId(in: videos, subModel)
@@ -175,13 +212,12 @@ import UnwatchedShared
         cacheImages(for: videos, subModel)
 
         let videoModels = insertVideoModels(from: videos, to: subModel)
-
-        let addedVideoCount = triageSubscriptionVideos(subModel,
-                                                       videos: videoModels,
-                                                       defaultPlacement: defaultPlacement)
+        let addedVideos = triageSubscriptionVideos(subModel,
+                                                   videos: videoModels,
+                                                   defaultPlacement: defaultPlacement)
         subModel.mostRecentVideoDate = mostRecentDate
         updateRecentVideoDate(subModel, mostRecentDate)
-        return addedVideoCount
+        return (videoModels, addedVideos)
     }
 
     private func updateYtChannelId(in videos: [SendableVideo], _ sub: Subscription) -> [SendableVideo] {

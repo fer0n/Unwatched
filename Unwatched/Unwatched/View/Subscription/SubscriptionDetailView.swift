@@ -128,7 +128,9 @@ struct SubscriptionDetailView: View {
         let subId = subscription.persistentModelID
         loadNewVideosTask = Task {
             let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: [subId])
+                subscriptionIds: [subId],
+                fetchDurations: true
+            )
             _ = try? await task.value
         }
     }

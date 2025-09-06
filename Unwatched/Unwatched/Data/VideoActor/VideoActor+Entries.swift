@@ -146,7 +146,7 @@ extension VideoActor {
 
     func triageSubscriptionVideos(_ sub: Subscription,
                                   videos: [Video],
-                                  defaultPlacement: DefaultVideoPlacement) -> Int {
+                                  defaultPlacement: DefaultVideoPlacement) -> [Video] {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
         let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
 
@@ -164,13 +164,13 @@ extension VideoActor {
             defaultPlacement.hideShorts
         )
 
-        let count = addSingleVideoTo(
+        let addedVideos = addSingleVideoTo(
             videosToAdd,
             videoPlacement: placement,
             hideShorts: hideShorts,
             isNew: true
         )
-        return count
+        return addedVideos
     }
 
     func handleVideoPlacement(_ videos: [Video], placement: VideoPlacement) {
@@ -192,8 +192,8 @@ extension VideoActor {
         videoPlacement: VideoPlacement,
         hideShorts: Bool,
         isNew: Bool,
-        ) -> Int {
-        var addedVideosCount = 0
+        ) -> [Video] {
+        var addedVideos: [Video] = []
         // check setting for ytShort, use individual setting in that case
         for video in videos {
             let placement: VideoPlacement = (video.isYtShort == true && hideShorts)
@@ -203,9 +203,9 @@ extension VideoActor {
                 video.isNew = isNew
             }
             handleVideoPlacement([video], placement: placement)
-            addedVideosCount += 1
+            addedVideos.append(video)
         }
-        return addedVideosCount
+        return addedVideos
     }
 
     func addVideosTo(_ videos: [Video], placement: VideoPlacementArea, index: Int = 1) {
@@ -469,5 +469,39 @@ extension VideoActor {
     func inboxShortsCount() -> Int? {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.isYtShort == true })
         return try? modelContext.fetchCount(fetch)
+    }
+
+    func fetchVideoDurationsQueueInbox() async throws -> [(PersistentIdentifier, Double)] {
+        Log.info("fetchVideoDurationsQueueInbox")
+        let inboxFetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.duration == nil })
+        let inboxEntries = try modelContext.fetch(inboxFetch)
+        var videosToProcess = inboxEntries.compactMap { $0.video }
+
+        let queueFetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.duration == nil })
+        let queueEntries = try modelContext.fetch(queueFetch)
+        videosToProcess.append(contentsOf: queueEntries.compactMap { $0.video })
+
+        let uniqueVideos = Array(Set(videosToProcess))
+        return try await fetchVideoDurations(for: uniqueVideos)
+    }
+
+    func fetchVideoDurations(for videos: [Video]) async throws -> [(PersistentIdentifier, Double)] {
+        Log.info("fetchUpdateDurations, videos: \(videos.count)")
+        guard !videos.isEmpty else {
+            Log.info("fetchUpdateDurations, no videos without duration")
+            return []
+        }
+        let ids = videos.map { $0.youtubeId }
+        let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
+        let videoLookup = Dictionary(uniqueKeysWithValues: videos.map { ($0.youtubeId, $0) })
+
+        var results = [(PersistentIdentifier, Double)]()
+        for info in infos {
+            if let video = videoLookup[info.id] {
+                video.duration = info.duration
+                results.append((video.persistentModelID, info.duration))
+            }
+        }
+        return results
     }
 }
