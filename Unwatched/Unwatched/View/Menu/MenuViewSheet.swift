@@ -10,8 +10,6 @@ struct MenuViewSheet: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.colorScheme) var colorScheme
 
-    @State var browserManager = BrowserManager.shared
-
     var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
@@ -30,7 +28,6 @@ struct MenuViewSheet: ViewModifier {
                                           allowPlayerControlHeight: allowPlayerControlHeight,
                                           landscapeFullscreen: landscapeFullscreen,
                                           proxy: proxy)
-                        .environment(browserManager)
 
                     SheetOverlayMinimumSize(
                         currentTab: navManager.tab

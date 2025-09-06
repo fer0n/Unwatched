@@ -18,6 +18,7 @@ struct SetupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.openWindow) var openWindow
 
+    @State var browserManager = BrowserManager.shared
     #if os(macOS)
     @State var navTitleManager = NavigationTitleManager()
     #endif
@@ -35,6 +36,7 @@ struct SetupView: View {
             .environment(\.originalColorScheme, colorScheme)
             .environment(imageCacheManager)
             .environment(undoManager)
+            .environment(browserManager)
             .modifier(CustomAlerter())
             #if os(macOS)
             .environment(navTitleManager)
