@@ -16,30 +16,7 @@ struct Signal {
         config.defaultSignalPrefix = "Unwatched."
         config.defaultParameterPrefix = "Unwatched."
         TelemetryDeck.initialize(config: config)
-        sendSettings()
         #endif
-    }
-
-    static func sendSettings() {
-        let signalType = "SettingsSnapshot"
-        let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
-            signalType: signalType,
-            interval: .fortNightly
-        )
-        if shouldSend {
-            let nonDefault = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
-            log(signalType, parameters: nonDefault)
-            signalSubscriptionCount()
-        }
-    }
-
-    static func signalSubscriptionCount() {
-        let task = SubscriptionService.getActiveSubscriptionCount()
-        Task {
-            let count = await task.value
-            let rounded = round(Double(count ?? 0) / 10) * 10
-            log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(rounded)"])
-        }
     }
 
     static func signalBool(_ signalName: String, value: Bool) {

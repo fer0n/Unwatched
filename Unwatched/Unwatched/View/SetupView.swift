@@ -134,6 +134,29 @@ struct SetupView: View {
             PlayerManager.shared.restoreNowPlayingVideo()
         }
         VideoService.fetchVideoDurationsQueueInbox()
+        sendSettings()
+    }
+
+    static func sendSettings() {
+        let signalType = "SettingsSnapshot"
+        let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
+            signalType: signalType,
+            interval: .fortNightly
+        )
+        if shouldSend {
+            let nonDefault = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
+            Signal.log(signalType, parameters: nonDefault)
+            signalSubscriptionCount()
+        }
+    }
+
+    static func signalSubscriptionCount() {
+        let task = SubscriptionService.getActiveSubscriptionCount()
+        Task {
+            let count = await task.value
+            let rounded = round(Double(count ?? 0) / 10) * 10
+            Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(rounded)"])
+        }
     }
 }
 
