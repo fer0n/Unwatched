@@ -50,7 +50,6 @@
 		880A0AB62E6D8ADB00264C03 /* UnwatchedWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 880A0AA32E6D8AD800264C03 /* UnwatchedWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		880A0AC22E6D978900264C03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88DFC0B42B44843C001895C8 /* Assets.xcassets */; };
 		880A0BF02E6D9C3200264C03 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 880A0AA42E6D8AD800264C03 /* WidgetKit.framework */; };
-		880A0BF12E6D9C3200264C03 /* WidgetKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 880A0AA42E6D8AD800264C03 /* WidgetKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		880C211A2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */; };
 		880C211B2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C21192D7ECE5A00E859A5 /* DismissSheetButton.swift */; };
 		880C211E2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880C211D2D7ECEB500E859A5 /* DeferDateButtonStyle.swift */; };
@@ -184,11 +183,7 @@
 		885723042E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
-		8865E7EA2E6DA16300E821E2 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		8865E7EB2E6DA17400E821E2 /* credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88571ADD2E658FDA006D1EE9 /* credentials.swift */; };
-		8865E7ED2E6DA23500E821E2 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 8865E7EC2E6DA23500E821E2 /* TelemetryDeck */; };
-		8865E7EE2E6DA5A500E821E2 /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; };
-		8865E7EF2E6DA5A500E821E2 /* UnwatchedShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8866B6942CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
 		8866B6952CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
 		8867F5432BC7ABD9008EC182 /* AutoDeleteBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */; };
@@ -725,18 +720,6 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		880A0BEF2E6D9C1700264C03 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				880A0BF12E6D9C3200264C03 /* WidgetKit.framework in Embed Frameworks */,
-				8865E7EF2E6DA5A500E821E2 /* UnwatchedShared.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		886F020F2CA5B3B000EF2EEA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1158,8 +1141,6 @@
 			files = (
 				880A0AA72E6D8AD900264C03 /* SwiftUI.framework in Frameworks */,
 				880A0BF02E6D9C3200264C03 /* WidgetKit.framework in Frameworks */,
-				8865E7ED2E6DA23500E821E2 /* TelemetryDeck in Frameworks */,
-				8865E7EE2E6DA5A500E821E2 /* UnwatchedShared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1951,7 +1932,6 @@
 				880A0A9F2E6D8AD800264C03 /* Sources */,
 				880A0AA02E6D8AD800264C03 /* Frameworks */,
 				880A0AA12E6D8AD800264C03 /* Resources */,
-				880A0BEF2E6D9C1700264C03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1962,7 +1942,6 @@
 			);
 			name = UnwatchedWidgetExtension;
 			packageProductDependencies = (
-				8865E7EC2E6DA23500E821E2 /* TelemetryDeck */,
 			);
 			productName = UnwatchedWidgetExtension;
 			productReference = 880A0AA32E6D8AD800264C03 /* UnwatchedWidgetExtension.appex */;
@@ -2190,7 +2169,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8865E7EA2E6DA16300E821E2 /* Signal.swift in Sources */,
 				8865E7EB2E6DA17400E821E2 /* credentials.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3343,11 +3321,6 @@
 			productName = TelemetryDeck;
 		};
 		885714872E658911006D1EE9 /* TelemetryDeck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
-			productName = TelemetryDeck;
-		};
-		8865E7EC2E6DA23500E821E2 /* TelemetryDeck */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
 			productName = TelemetryDeck;
