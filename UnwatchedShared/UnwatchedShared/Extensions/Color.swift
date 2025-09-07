@@ -10,13 +10,17 @@ public extension Color {
         self == .black
     }
     
-    func mix(with color: Color, by percentage: Double) -> Color {
+    func myMix(with color: Color, by percentage: Double) -> Color {
+        if #available(iOS 18, macOS 15, tvOS 18, *) {
+            return self.mix(with: color, by: percentage)
+        }
+        
         let clampedPercentage = min(max(percentage, 0), 1)
 
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         let components1 = UIColor(self).cgColor.components!
         let components2 = UIColor(color).cgColor.components!
-        #else
+        #elseif os(macOS)
         let components1 = NSColor(self).cgColor.components!
         let components2 = NSColor(color).cgColor.components!
         #endif

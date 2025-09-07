@@ -102,12 +102,12 @@ struct PremiumOfferView: View {
                         Text("hidePremiumOffer")
                     }
                     .signalToggle("Premium.Hide", isOn: hidePremium)
-                    .tint(theme.darkColor.mix(with: .black, by: 0.8))
+                    .tint(theme.darkColor.myMix(with: .black, by: 0.8))
                 }
                 .tint(theme.color)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
-                .background(theme.darkColor.mix(with: .black, by: 0.45))
+                .background(theme.darkColor.myMix(with: .black, by: 0.45))
                 .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
 
                 Spacer()
@@ -147,7 +147,7 @@ struct PremiumOfferView: View {
     }
 
     var backgroundColor: Color {
-        theme.darkColor.mix(with: .black, by: 0.4)
+        theme.darkColor.myMix(with: .black, by: 0.4)
     }
 }
 
