@@ -11,14 +11,14 @@ import UnwatchedShared
     @MainActor static var shared = BrowserManager()
 
     var info: SubscriptionInfo?
-    var currentUrl: URL? {
-        didSet {
-            Task { @MainActor in
-                if let webView, let currentUrl {
-                    let request = URLRequest(url: currentUrl)
-                    webView.load(request)
-                }
-            }
+    var currentUrl: URL?
+
+    @MainActor
+    func loadUrl(_ url: URL?) {
+        if let webView, let url {
+            currentUrl = url
+            let request = URLRequest(url: url)
+            webView.load(request)
         }
     }
 

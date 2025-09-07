@@ -169,7 +169,7 @@ import UnwatchedShared
             isOnTopView = presentedLibrary.isEmpty
         case .browser:
             Task { @MainActor in
-                BrowserManager.shared.currentUrl = BrowserUrl.youtubeStartPage.getUrl
+                BrowserManager.shared.loadUrl(BrowserUrl.youtubeStartPage.getUrl)
             }
         }
 
@@ -200,12 +200,12 @@ import UnwatchedShared
     func openUrlInApp(_ url: BrowserUrl) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
-            BrowserManager.shared.currentUrl = url.getUrl
+            BrowserManager.shared.loadUrl(url.getUrl)
             tab = .browser
             SheetPositionReader.shared.setDetentMiniPlayer()
             showMenu = true
         } else {
-            BrowserManager.shared.currentUrl = url.getUrl
+            BrowserManager.shared.loadUrl(url.getUrl)
             showBrowser = true
             #if os(macOS)
             openWindow?(id: Const.windowBrowser)

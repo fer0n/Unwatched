@@ -28,7 +28,7 @@ struct AddVideoButton: View {
                 ZStack {
                     openInBrowserButton
                         .offset(y: -(2 * 35 + 2 * size))
-                    playNowButton
+                    PlayNowButton(size: size, onDismiss: onDismiss)
                         .offset(y: -(35 + size))
                 }
                 .opacity(isVideoUrl ? 1 : 0)
@@ -63,30 +63,6 @@ struct AddVideoButton: View {
             }
         }
         .buttonStyle(.plain)
-    }
-
-    var playNowButton: some View {
-        Button {
-            hapticToggle.toggle()
-            // play now
-            let task = addTimestampedUrl(at: 0)
-
-            player.loadTopmostVideoFromQueue(
-                after: task,
-                source: .userInteraction,
-                playIfCurrent: true
-            )
-            navManager.handlePlay()
-            onDismiss?()
-            Signal.log("Browser.PlayNow")
-        } label: {
-            Image(systemName: "play.fill")
-                .fontWeight(.heavy)
-                .frame(width: size, height: size)
-                .padding(7)
-        }
-        .buttonStyle(.plain)
-        .myButtonStyle(size)
     }
 
     var addVideoButton: some View {
