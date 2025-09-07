@@ -66,7 +66,7 @@ struct ContentView: View {
             )
         }
         .setColorScheme()
-        .ignoresSafeArea(bigScreen ? .keyboard : [])
+        .ignoresSafeArea(.keyboard)
         .onSizeChange { newSize in
             sheetPos.sheetHeight = newSize.height
         }
