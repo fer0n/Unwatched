@@ -35,7 +35,7 @@ extension ThemeColor {
         }
     }
 
-    var appIconName: String {
+    var appIconName: String? {
         let lightAppIcon = UserDefaults.standard.bool(forKey: Const.lightAppIcon)
         let suffix = lightAppIcon ? "Light" : ""
 
@@ -53,7 +53,10 @@ extension ThemeColor {
         case .mint:
             return "IconMint" + suffix
         case .teal:
-            return "IconTeal" + suffix
+            if lightAppIcon {
+                return "IconTealLight"
+            }
+            return nil
         case .blue:
             return "IconBlue" + suffix
         case .purple:

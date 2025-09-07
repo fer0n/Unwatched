@@ -1115,13 +1115,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		88014D1F2E68D226000FAA00 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AppIcon.icon,
-			);
-			target = 882FBA7C2B905F2500213CEF /* UnwatchedUITests */;
-		};
 		880A0ABA2E6D8ADB00264C03 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -1129,7 +1122,7 @@
 			);
 			target = 880A0AA22E6D8AD800264C03 /* UnwatchedWidgetExtension */;
 		};
-		880A0AC12E6D978100264C03 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		8865F0242E6DBA4E00E821E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIcon.icon,
@@ -1147,7 +1140,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		880A0AA82E6D8AD900264C03 /* UnwatchedWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (880A0ABA2E6D8ADB00264C03 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnwatchedWidget; sourceTree = "<group>"; };
-		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88014D1F2E68D226000FAA00 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 880A0AC12E6D978100264C03 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
+		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (8865F0242E6DBA4E00E821E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
 		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
