@@ -1,12 +1,12 @@
 //
-//  OpenAppWidgetEntryView.swift
+//  OpenAppWidgetView.swift
 //  Unwatched
 //
 
 import SwiftUI
 import WidgetKit
 
-struct OpenAppWidgetEntryView: View {
+struct OpenAppWidgetView: View {
     var body: some View {
         ZStack {
             AccessoryWidgetBackground()
@@ -14,6 +14,7 @@ struct OpenAppWidgetEntryView: View {
                 .resizable()
                 .scaledToFit()
                 .padding(12)
+                .padding(.bottom, 2)
         }
         .widgetAccentable()
         .containerBackground(.regularMaterial, for: .widget)

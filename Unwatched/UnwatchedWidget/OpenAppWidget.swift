@@ -11,7 +11,7 @@ struct OpenAppWidget: Widget {
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { _ in
-            OpenAppWidgetEntryView()
+            OpenAppWidgetView()
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("openApp")

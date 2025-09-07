@@ -113,7 +113,7 @@ extension VideoService {
     static func fetchVideoDurationsQueueInbox() {
         let task: Task<[(PersistentIdentifier, Double)], Error> = Task.detached {
             guard NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
-                Log.info("fetchUpdateDurations: not premium user")
+                Log.info("fetchUpdateDurations: no premium user")
                 return []
             }
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
