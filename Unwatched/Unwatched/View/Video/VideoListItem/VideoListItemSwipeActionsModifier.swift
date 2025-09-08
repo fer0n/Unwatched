@@ -399,7 +399,7 @@ struct TrailingSwipeActionsView: View {
             } label: {
                 Image(Const.videoDescriptionSF)
             }
-            .tint(theme.color.myMix(with: Color.black, by: 0.5))
+            .tint(theme.color.myMix(with: Color.black, by: 0.3))
             .accessibilityLabel("videoDescription")
         }
     }
@@ -426,7 +426,7 @@ struct TrailingSwipeActionsView: View {
         } label: {
             Image(systemName: "ellipsis")
         }
-        .tint(theme.color.myMix(with: Color.black, by: 0.7))
+        .tint(theme.color.myMix(with: Color.black, by: 0.5))
     }
 }
 

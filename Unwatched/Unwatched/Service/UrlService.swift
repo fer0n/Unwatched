@@ -27,6 +27,7 @@ struct UrlService {
     static let mastodonUrl = URL(staticString: "https://indieapps.space/@unwatched")
     static let blueskyUrl = URL(staticString: "https://bsky.app/profile/unwatched.bsky.social")
     static let releasesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/releases")
+    static let privacyUrl = URL(staticString: "https://github.com/fer0n/Unwatched/wiki/Privacy-Policy")
 
     static let issuesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/issues")
 

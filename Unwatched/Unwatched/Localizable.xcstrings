@@ -1211,70 +1211,36 @@
         }
       }
     },
-    "analytics" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Datenschutz & Analytics"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privacy & Analytics"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Privacidad y analíticas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confidentialité et analyses"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prywatność i analityka"
-          }
-        }
-      }
-    },
     "analyticsHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched verwendet datenschutzfreundliche, anonyme Analysen, um die App zu verbessern. Du kannst das jederzeit ausschalten. [Datenschutzerklärung](https://telemetrydeck.com/privacy)"
+            "value" : "Unwatched verwendet anonyme, datenschutzfreundliche Analysen, um die App zu verbessern. Du kannst das jederzeit ausschalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched uses privacy-first, anonymous analytics to improve the app. You can turn this off anytime. [Privacy Policy](https://telemetrydeck.com/privacy)"
+            "value" : "Unwatched uses privacy-first, anonymous analytics to improve the app. You can turn this off anytime."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched utiliza analíticas anónimas y respetuosas con la privacidad para mejorar la app. Puedes desactivarlas en cualquier momento. [Política de privacidad](https://telemetrydeck.com/privacy)"
+            "value" : "Unwatched utiliza análisis anónimos y respetuosos con la privacidad para mejorar la app. Puedes desactivarlos en cualquier momento."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched utilise des analyses anonymes et respectueuses de la vie privée pour améliorer l’app. Tu peux les désactiver à tout moment. [Politique de confidentialité](https://telemetrydeck.com/privacy)"
+            "value" : "Unwatched utilise des analyses anonymes et respectueuses de la vie privée pour améliorer l’app. Tu peux les désactiver à tout moment."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched korzysta z anonimowej, przyjaznej dla prywatności analityki, aby ulepszać aplikację. Możesz to wyłączyć w dowolnym momencie. [Polityka prywatności](https://telemetrydeck.com/privacy)"
+            "value" : "Unwatched korzysta z anonimowych analiz z poszanowaniem prywatności, aby ulepszać aplikację. Możesz to wyłączyć w każdej chwili."
           }
         }
       }
@@ -2271,7 +2237,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlose Testversion kündigen"
+            "value" : "Probe­abo kündigen"
           }
         },
         "en" : {
@@ -6045,7 +6011,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kostenlose Testversion aktiv"
+            "value" : "Probe­abo aktiv"
           }
         },
         "en" : {
@@ -6921,31 +6887,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein Interesse? Kein Problem. Wenn du möchtest, kannst du alle Premium-Funktionen ausblenden. Schließlich geht es bei Unwatched darum, deine Videos in Ruhe zu genießen."
+            "value" : "Kein Interesse? Wenn du willst, kannst du alle Premium-Funktionen ausblenden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not interested? That’s okay. If you want, you can hide all premium features. After all, Unwatched is about enjoying your videos in peace."
+            "value" : "Not interested? If you want, you can hide all premium features."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿No te interesa? No pasa nada. Si quieres, puedes ocultar todas las funciones premium. Al fin y al cabo, Unwatched trata de disfrutar de tus videos en paz."
+            "value" : "¿No te interesa? Si quieres, puedes ocultar todas las funciones premium."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pas intéressé ? Pas de souci. Si vous voulez, vous pouvez masquer toutes les fonctions premium. Après tout, Unwatched, c’est profiter de vos vidéos en toute tranquillité."
+            "value" : "Pas intéressé(e) ? Si tu veux, tu peux masquer toutes les fonctionnalités premium."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie jesteś zainteresowany? W porządku. Jeśli chcesz, możesz ukryć wszystkie funkcje premium. W końcu Unwatched służy temu, aby spokojnie cieszyć się filmami."
+            "value" : "Nie jesteś zainteresowany? Jeśli chcesz, możesz ukryć wszystkie funkcje premium."
           }
         }
       }
@@ -11205,31 +11171,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched bleibt kostenlos, aber mein Ziel ist es, die Entwicklung langfristig nachhaltiger zu machen, indem es einen kostenpflichtigen Zugang zu zusätzlichen Funktionen gibt.\n\nUm keine bestehenden Funktionen zu entfernen oder neue zurückzuhalten, gibt es Premium vorerst als unbegrenzte, kostenlose Testphase.\n\nBei Fragen freue ich mich über eine Nachricht: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\nDanke,\nMichael"
+            "value" : "Unwatched bleibt kostenlos, aber mein Ziel ist es, die Entwicklung langfristig nachhaltiger zu machen, indem es einen kostenpflichtigen Zugang zu zusätzlichen Funktionen gibt.\n\nUm keine bestehenden Funktionen zu entfernen oder neue zurückzuhalten, gibt es Premium vorerst als unbegrenzte, kostenlose Testphase.\n\nBei Fragen freue ich mich über eine Nachricht: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\n– Michael"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched will remain free, but my goal is to eventually make development more sustainable by offering paid access to additional features.\n\nTo avoid taking existing features away or holding back new ones, I’m adding this premium tier as an unlimited free trial for the time being.\n\nIf you have any questions please let me know: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\nThanks,\nMichael"
+            "value" : "Unwatched will remain free, but my goal is to eventually make development more sustainable by offering paid access to additional features.\n\nTo avoid taking existing features away or holding back new ones, I’m adding this premium tier as an unlimited free trial for the time being.\n\nIf you have any questions please let me know: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\n– Michael"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched seguirá siendo gratuito, pero mi objetivo es hacer que el desarrollo sea más sostenible ofreciendo acceso de pago a funciones adicionales.\n\nPara evitar eliminar funciones existentes o retrasar nuevas, estoy añadiendo este nivel premium como una prueba gratuita ilimitada por el momento.\n\nSi tienes alguna pregunta, por favor escríbeme: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\nGracias,\nMichael"
+            "value" : "Unwatched seguirá siendo gratuito, pero mi objetivo es hacer que el desarrollo sea más sostenible ofreciendo acceso de pago a funciones adicionales.\n\nPara evitar eliminar funciones existentes o retrasar nuevas, estoy añadiendo este nivel premium como una prueba gratuita ilimitada por el momento.\n\nSi tienes alguna pregunta, por favor escríbeme: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\n– Michael"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched restera gratuit, mais mon objectif est de rendre le développement plus durable en proposant un accès payant à des fonctionnalités supplémentaires.\n\nPour éviter de supprimer des fonctionnalités existantes ou de retarder de nouvelles, j’ajoute pour l’instant ce niveau premium en essai gratuit illimité.\n\nSi vous avez des questions, n’hésitez pas à me contacter : [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\nMerci,\nMichael"
+            "value" : "Unwatched restera gratuit, mais mon objectif est de rendre le développement plus durable en proposant un accès payant à des fonctionnalités supplémentaires.\n\nPour éviter de supprimer des fonctionnalités existantes ou de retarder de nouvelles, j’ajoute pour l’instant ce niveau premium en essai gratuit illimité.\n\nSi vous avez des questions, n’hésitez pas à me contacter : [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\n– Michael"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unwatched pozostanie darmowy, ale moim celem jest uczynienie rozwoju bardziej zrównoważonym poprzez oferowanie płatnego dostępu do dodatkowych funkcji.\n\nAby nie zabierać istniejących funkcji ani nie opóźniać nowych, wprowadzam obecnie ten poziom premium jako nieograniczoną darmową wersję próbną.\n\nJeśli masz pytania, napisz do mnie: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\nDzięki,\nMichael"
+            "value" : "Unwatched pozostanie darmowy, ale moim celem jest uczynienie rozwoju bardziej zrównoważonym poprzez oferowanie płatnego dostępu do dodatkowych funkcji.\n\nAby nie zabierać istniejących funkcji ani nie opóźniać nowych, wprowadzam obecnie ten poziom premium jako nieograniczoną darmową wersję próbną.\n\nJeśli masz pytania, napisz do mnie: [unwatched@icloud.com](mailto:unwatched@icloud.com).\n\n– Michael"
           }
         }
       }
@@ -11366,6 +11332,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jeśli dostępny, przechodzi do poprzedniego rozdziału wideo."
+          }
+        }
+      }
+    },
+    "privacyPolicy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzerklärung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polityka prywatności"
           }
         }
       }
@@ -11740,6 +11740,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odśwież"
+          }
+        }
+      }
+    },
+    "releases" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuigkeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What’s new"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novedades"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveautés"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowości"
           }
         }
       }

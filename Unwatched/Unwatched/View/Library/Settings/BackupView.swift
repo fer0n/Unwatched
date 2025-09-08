@@ -19,7 +19,6 @@ struct BackupView: View {
     @State var isDeletingEverythingTask: Task<(), Never>?
     @State var hasicloudDirectory = true
     @State var isExporting = false
-    @AppStorage(Const.analytics) var analytics = true
 
     var body: some View {
         let backupType = Const.backupType ?? .json
@@ -101,13 +100,6 @@ struct BackupView: View {
                 }
 
                 AutoDeleteBackupView()
-
-                MySection("analytics", footer: "analyticsHelper") {
-                    Toggle(isOn: $analytics) {
-                        Text("anonymousAnalytics")
-                    }
-                    .signalToggle("Analytics", isOn: analytics)
-                }
 
                 MySection {
                     DeleteImageCacheButton()

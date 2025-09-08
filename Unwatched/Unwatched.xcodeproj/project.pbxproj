@@ -88,6 +88,8 @@
 		881F57452C4A8C6E00559BF9 /* RotateOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */; };
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
+		8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		882966F62CCE1F9400E96D3C /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882966F52CCE1F9100E96D3C /* View.swift */; };
 		882966F72CCE1F9400E96D3C /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882966F52CCE1F9100E96D3C /* View.swift */; };
 		88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */; };
@@ -801,6 +803,7 @@
 		881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateOrientationButton.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsView.swift; sourceTree = "<group>"; };
 		882966F52CCE1F9100E96D3C /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionMiniProgressBar.swift; sourceTree = "<group>"; };
 		882A75092C74A6A40051BBF0 /* ChapterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterService.swift; sourceTree = "<group>"; };
@@ -1568,6 +1571,7 @@
 				88899D952E035E6A002C05BC /* SubscriptionTitleFitlerPreview.swift */,
 				88CC8FD72CE3BDB300F6F49D /* SponsorBlockSettingsView.swift */,
 				880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */,
+				8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */,
 				88373C212C8C2A9200ACBB3B /* HelpView.swift */,
 				880505112C836882005F0972 /* FaqView.swift */,
 				88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */,
@@ -2446,6 +2450,7 @@
 				88373C232C8C2A9200ACBB3B /* HelpView.swift in Sources */,
 				889AF9052C50ECD4001CEDE6 /* SetupShareSheetAction.swift in Sources */,
 				CDEB17722C5CCB5800E6FE66 /* VideoCrawlerTests.swift in Sources */,
+				8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
 				889AF9062C50ECD4001CEDE6 /* AddVideosButton.swift in Sources */,
 				889AF90F2C50ECE7001CEDE6 /* LibraryNavListItem.swift in Sources */,
@@ -2663,6 +2668,7 @@
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,
+				8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
 				880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */,
 				88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */,

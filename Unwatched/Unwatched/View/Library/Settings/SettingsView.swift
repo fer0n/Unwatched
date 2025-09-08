@@ -87,6 +87,14 @@ struct SettingsView: View {
                     }
                 }
 
+                Link(destination: UrlService.releasesUrl) {
+                    LibraryNavListItem(
+                        "releases",
+                        systemName: "sparkles.2"
+                    )
+                }
+                .listRowBackground(Color.insetBackgroundColor)
+
                 Section {
                     ZStack {
                         UserTipsView()
@@ -96,6 +104,11 @@ struct SettingsView: View {
                 .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
                 .listRowInsets(EdgeInsets())
                 .foregroundStyle(theme.darkContrastColor)
+
+                NavigationLink(value: LibraryDestination.privacy) {
+                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: Const.debugSettingsSF)

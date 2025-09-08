@@ -45,6 +45,8 @@ extension View {
                         FilterSettingsView()
                     case .titleFilter:
                         GlobalTitleFilterWithPreview()
+                    case .privacy:
+                        PrivacySettingsView()
                     }
                 }
                 #if os(macOS)
@@ -70,5 +72,6 @@ enum LibraryDestination: Codable {
          debug,
          help,
          filter,
-         titleFilter
+         titleFilter,
+         privacy
 }

@@ -21,8 +21,10 @@ struct OpenAppWidgetView: View {
     }
 }
 
+#if os(iOS)
 #Preview(as: .accessoryCircular, widget: {
     OpenAppWidget()
 }, timeline: {
     SimpleEntry(date: Date())
 })
+#endif

@@ -200,7 +200,7 @@ extension PlayerManager {
             setChapter(previous)
             return true
         }
-        
+
         Signal.log("Player.PreviousChapter", throttle: .daily)
         return false
     }

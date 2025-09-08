@@ -15,9 +15,13 @@ struct OpenAppWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("openApp")
+        #if os(iOS)
         .supportedFamilies([
             .accessoryCircular
         ])
+        #elseif os(macOS)
+        .supportedFamilies([])
+        #endif
     }
 }
 

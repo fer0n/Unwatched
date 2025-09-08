@@ -98,6 +98,8 @@ struct PremiumOfferView: View {
                 VStack {
                     Text("hidePremiumOfferDescription")
                         .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
                     Toggle(isOn: $hidePremium) {
                         Text("hidePremiumOffer")
                     }
