@@ -21,6 +21,7 @@ struct RequiresPremiumActionMac: ViewModifier {
             }
             .alert("unwatchedPremium", isPresented: $showAlert, actions: {
                 Button("learnMore") {
+                    Signal.log("Premium.LearnMore")
                     openWindow(id: Const.windowPremium)
                 }
 

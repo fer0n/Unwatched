@@ -217,6 +217,7 @@ extension PlayerManager {
         } else {
             temporaryPlaybackSpeed = tempSpeedUpValue
         }
+        Signal.log("Player.setTemporarySpeed", throttle: .daily)
     }
 
     func temporarySpeedUp() {
@@ -291,6 +292,7 @@ extension PlayerManager {
         if temporaryPlaybackSpeed != nil {
             return
         }
+        Signal.log("Player.setPlaybackSpeed", throttle: .daily)
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {

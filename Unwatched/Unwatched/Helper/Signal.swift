@@ -25,8 +25,13 @@ struct Signal {
         #endif
     }
 
-    static func log(_ signalName: String, parameters: [String: String] = [:]) {
+    static func log(_ signalName: String, parameters: [String: String] = [:], throttle: SignalInterval? = nil) {
         #if os(iOS)
+        if let throttle {
+            if !UserDefaults.standard.shouldSendThrottledSignal(signalType: signalName, interval: throttle) {
+                return
+            }
+        }
         if !(Const.analytics.bool ?? true) { return }
         Log.info("Signal: \(signalName)")
         TelemetryDeck.signal(signalName, parameters: parameters)

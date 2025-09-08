@@ -15,8 +15,7 @@ extension Const {
         Const.skipChapterText: "",
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
-        Const.skipSponsorSegments: false,
-        Const.unwatchedPremiumAcknowledged: false
+        Const.skipSponsorSegments: false
 
     ]
 
@@ -70,6 +69,7 @@ extension Const {
         Const.autoDeleteBackups: false,
 
         // Premium
+        Const.unwatchedPremiumAcknowledged: false,
         Const.hidePremium: false
     ]
 }

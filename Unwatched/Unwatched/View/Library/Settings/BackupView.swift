@@ -241,6 +241,7 @@ struct BackupView: View {
     }
 
     func restoreBackup(_ file: URL) {
+        Signal.log("Backup.Restore")
         let task = deleteEverything()
         doWithFileData(file, after: task) { data in
             UserDataService.importBackup(data)

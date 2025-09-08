@@ -31,7 +31,7 @@ struct AddToLibraryView: View {
         if showBrowser {
             Button(action: {
                 navManager.showBrowser = true
-                Signal.log("Library.OpenBrowser")
+                Signal.log("Library.OpenBrowser", throttle: .daily)
             }, label: {
                 Label {
                     Text("browser")

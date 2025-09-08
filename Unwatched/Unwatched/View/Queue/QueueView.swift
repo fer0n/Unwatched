@@ -99,15 +99,11 @@ struct QueueView: View {
             navManager.setScrollId("top", ClearList.queue.rawValue)
         }
         .onDisappear {
-            let signalType = "Queue.Count"
-            let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
-                signalType: signalType,
-                interval: .daily
+            Signal.log(
+                "Queue.Count",
+                parameters: ["Queue.Count.Value": "\(queue.count)"],
+                throttle: .daily
             )
-            if shouldSend {
-                let rounded = round(Double(queue.count) / 10) * 10
-                Signal.log(signalType, parameters: ["Queue.Count.Value": "\(rounded)"])
-            }
         }
     }
 

@@ -153,9 +153,9 @@ struct SetupView: View {
     static func signalSubscriptionCount() {
         let task = SubscriptionService.getActiveSubscriptionCount()
         Task {
-            let count = await task.value
-            let rounded = round(Double(count ?? 0) / 10) * 10
-            Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(rounded)"])
+            if let count = await task.value {
+                Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(count)"])
+            }
         }
     }
 }

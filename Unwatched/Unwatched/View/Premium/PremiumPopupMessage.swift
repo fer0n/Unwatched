@@ -27,6 +27,7 @@ struct PremiumPopupMessage: View {
                 .padding(.bottom)
 
             Button {
+                Signal.log("Premium.LearnMore")
                 dismiss()
                 Task { @MainActor in
                     NavigationManager.shared.showMenu = true
