@@ -58,6 +58,12 @@ struct SettingsWindowView: View {
                 .tabItem {
                     Label("debug", systemImage: Const.debugSettingsSF)
                 }
+
+            PrivacySettingsView()
+                .settingsView()
+                .tabItem {
+                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                }
         }
         .background(Color.backgroundColor)
         .frame(width: 700, height: 500)
