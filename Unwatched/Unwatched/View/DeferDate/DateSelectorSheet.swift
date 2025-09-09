@@ -30,7 +30,7 @@ struct DateSelectorSheet: ViewModifier {
                     .fixedSize(horizontal: false, vertical: true)
                     .onSizeChange { size in
                         Task {
-                            // workaround: without Taskt, the sheet height is stuck on 0
+                            // workaround: without a Task, the sheet height is stuck on 0
                             sheetHeight = size.height
                         }
                     }

@@ -29,7 +29,6 @@ import UnwatchedShared
     @ObservationIgnored var scrollToCurrentChapter = false
 
     var tab = NavigationTab.queue
-    var searchFocused = false
 
     var askForReviewPoints = 0
 
@@ -217,10 +216,6 @@ import UnwatchedShared
     func handlePlay() {
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
         let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
-
-        if searchFocused {
-            searchFocused = false
-        }
 
         if showBrowser != false {
             showBrowser = false

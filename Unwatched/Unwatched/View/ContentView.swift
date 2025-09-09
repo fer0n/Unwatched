@@ -57,7 +57,7 @@ struct ContentView: View {
                 }
             }
             .menuViewSheet(
-                allowMaxSheetHeight: videoExists && !navManager.searchFocused,
+                allowMaxSheetHeight: videoExists,
                 allowPlayerControlHeight: !player.embeddingDisabled
                     && player.videoAspectRatio > Const.tallestAspectRatio,
                 landscapeFullscreen: landscapeFullscreen,
@@ -66,10 +66,10 @@ struct ContentView: View {
             )
         }
         .setColorScheme()
-        .ignoresSafeArea(.keyboard)
         .onSizeChange { newSize in
             sheetPos.sheetHeight = newSize.height
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 

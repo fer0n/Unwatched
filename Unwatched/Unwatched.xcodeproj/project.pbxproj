@@ -482,6 +482,8 @@
 		889F760E2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */; };
 		88A2921E2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */; };
 		88A2921F2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */; };
+		88A4F40C2E6F89650074126C /* AnimatableDetents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A4F40B2E6F89650074126C /* AnimatableDetents.swift */; };
+		88A4F40D2E6F89650074126C /* AnimatableDetents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A4F40B2E6F89650074126C /* AnimatableDetents.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88ABDF452D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
@@ -966,6 +968,7 @@
 		889DFB632E0225FD00D694E0 /* TinyUndoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyUndoManager.swift; sourceTree = "<group>"; };
 		889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRemoveNewViewModifier.swift; sourceTree = "<group>"; };
 		88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoChangeReason.swift; sourceTree = "<group>"; };
+		88A4F40B2E6F89650074126C /* AnimatableDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableDetents.swift; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -1448,6 +1451,7 @@
 			children = (
 				889924872C48E75F001185A6 /* MenuViewSheet.swift */,
 				887EB2DD2CFE167600F9D517 /* MenuSheetDetents.swift */,
+				88A4F40B2E6F89650074126C /* AnimatableDetents.swift */,
 				881F573E2C4A5D3300559BF9 /* BrowserViewSheet.swift */,
 				883CA8072B5AE47E00028D52 /* MenuView.swift */,
 				883D5DFF2BE0B95800989313 /* TabItemView.swift */,
@@ -2311,6 +2315,7 @@
 				889AF9302C50ECEE001CEDE6 /* ChapterTimeRemaining.swift in Sources */,
 				88358A7B2C64EBAC00AF71F8 /* UNNotificationAttachment.swift in Sources */,
 				889AF9312C50ECEE001CEDE6 /* VideoPlayer.swift in Sources */,
+				88A4F40C2E6F89650074126C /* AnimatableDetents.swift in Sources */,
 				880C211E2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */,
 				880C21222D7ECEDE00E859A5 /* DateSelectorSheet.swift in Sources */,
 				88F3AA8C2C998B040030B2EA /* Color.swift in Sources */,
@@ -2833,6 +2838,7 @@
 				883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */,
 				883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */,
 				88CD38852E20E66300E7B21C /* TranscriptService.swift in Sources */,
+				88A4F40D2E6F89650074126C /* AnimatableDetents.swift in Sources */,
 				CD03C1DD2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */,
 				887EB2DF2CFE167700F9D517 /* MenuSheetDetents.swift in Sources */,
 				881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */,

@@ -72,11 +72,6 @@ struct VideoPlayer: View {
             }
         }
         .tint(.neutralAccentColor)
-        .onChange(of: navManager.showMenu) {
-            if navManager.showMenu == false {
-                sheetPos.updatePlayerControlHeight()
-            }
-        }
         .onChange(of: player.isPlaying) {
             if player.video?.isNew == true {
                 player.video?.isNew = false

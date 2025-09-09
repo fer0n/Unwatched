@@ -6,12 +6,10 @@
 import SwiftUI
 import UnwatchedShared
 
-struct MenuSheetDetents: ViewModifier, KeyboardReadable {
+struct MenuSheetDetents: ViewModifier {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
-
-    @State private var isKeyboardVisible = false
 
     var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
@@ -22,7 +20,14 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
         @Bindable var sheetPos = sheetPos
 
         content
-            .presentationDetents(detents, selection: $sheetPos.selectedDetent)
+            .modifier(AnimatableDetents(
+                selectedDetent: $sheetPos.selectedDetent,
+                allowMinSheet: sheetPos.allowMinSheet,
+                allowMaxSheetHeight: allowMaxSheetHeight,
+                allowPlayerControlHeight: allowPlayerControlHeight,
+                maxSheetHeight: sheetPos.maxSheetHeight,
+                playerControlHeight: sheetPos.playerControlHeight,
+                ))
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
             .ignoresSafeArea(.all)
@@ -43,40 +48,13 @@ struct MenuSheetDetents: ViewModifier, KeyboardReadable {
                     && player.video != nil
                     && !navManager.showPremiumOffer
             )
-            #if os(iOS)
-            .onReceive(keyboardPublisher) { newIsKeyboardVisible in
-                isKeyboardVisible = newIsKeyboardVisible
-            }
-            #endif
-            .onChange(of: detents, initial: true) {
-                if !detents.contains(sheetPos.selectedDetent)
-                    && !(navManager.hasSheetOpen || navManager.tab == .browser) {
-                    if detents.contains(.height(sheetPos.maxSheetHeight)) {
-                        sheetPos.selectedDetent = .height(sheetPos.maxSheetHeight)
-                    } else {
-                        sheetPos.selectedDetent = detents.first ?? .large
-                    }
-                }
-            }
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))
+                    && sheetPos.allowMinSheet
             }
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.swipedBelow) { _, _ in
                 !landscapeFullscreen
             }
-    }
-
-    var detents: Set<PresentationDetent> {
-        allowMaxSheetHeight
-            ? Set([.height(Const.minSheetDetent), .height(sheetPos.maxSheetHeight)])
-            .union(
-                allowPlayerControlHeight
-                    ? [.height(sheetPos.playerControlHeight)]
-                    : []
-
-            )
-            .union(isKeyboardVisible ? [.large] : [])
-            : [.large]
     }
 }
 
