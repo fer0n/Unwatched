@@ -150,7 +150,7 @@ class ExportableTests: XCTestCase {
         ]
 
         let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShorts: false, filterVideoTitleText: "")
-        await repo.handleNewVideosGetCount(sendableSub, videos, defaultPlacement: placement)
+        _ = await repo.handleNewVideos(sendableSub, videos, defaultPlacement: placement)
         try? await repo.modelContext.save()
 
         // make sure all videos have been added

@@ -105,16 +105,36 @@ extension VideoActor {
         }
 
         if video.videoDescription != updatedVideo.videoDescription {
-            video.videoDescription = updatedVideo.videoDescription
+            updateDescriptionAndChapters(video, updatedVideo)
+        }
+        return deleteImage
+    }
+
+    func updateDescriptionAndChapters(_ video: Video, _ updatedVideo: SendableVideo) {
+        video.videoDescription = updatedVideo.videoDescription
+        let currentChapters = video.chapters ?? []
+        let newChapters = updatedVideo.chapters
+
+        var shouldUpdateChapters: Bool = false
+        if currentChapters.isEmpty {
+            shouldUpdateChapters = true
+        } else if newChapters.isEmpty {
+            shouldUpdateChapters = false
+        } else {
+            // only correct existing chapters, don't replace custom ones
+            let similarity = ChapterService.chaptersSimilarity(newChapters, currentChapters)
+            shouldUpdateChapters = similarity > 0.6
+        }
+
+        if shouldUpdateChapters {
             CleanupService.deleteChapters(from: video, modelContext)
-            let newChapters = updatedVideo.chapters.map {
+            let newChapterModels = newChapters.map {
                 let chapter = $0.getChapter
                 modelContext.insert(chapter)
                 return chapter
             }
-            video.chapters = newChapters
+            video.chapters = newChapterModels
         }
-        return deleteImage
     }
 
     func getMostRecentDate(_ videos: [SendableVideo]) -> Date? {

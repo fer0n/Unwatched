@@ -221,6 +221,17 @@ struct ChapterService {
         }
     }
 
+    // function that detects what percentage of chapters are equal between two arrays
+    static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
+        guard !chapters1.isEmpty, !chapters2.isEmpty else { return 0.0 }
+        let minCount = min(chapters1.count, chapters2.count)
+        var equalCount = 0
+        for index in 0..<minCount where chapterEqual(chapters1[index], chapters2[index]) {
+            equalCount += 1
+        }
+        return Double(equalCount) / Double(minCount)
+    }
+
     private static var skipSponsorBlock: Bool {
         if NSUbiquitousKeyValueStore.default.bool(forKey: Const.skipSponsorSegments) {
             return true
