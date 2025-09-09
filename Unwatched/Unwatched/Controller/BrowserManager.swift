@@ -15,8 +15,8 @@ import UnwatchedShared
 
     @MainActor
     func loadUrl(_ url: URL?) {
+        currentUrl = url
         if let webView, let url {
-            currentUrl = url
             let request = URLRequest(url: url)
             webView.load(request)
         }
