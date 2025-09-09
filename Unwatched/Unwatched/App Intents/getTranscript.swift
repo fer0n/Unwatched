@@ -10,7 +10,9 @@ import UnwatchedShared
 
 struct GetTranscript: AppIntent {
     static var title: LocalizedStringResource { "getTranscript" }
-    static let description = IntentDescription("getTranscriptDescription")
+    static let description = IntentDescription(
+        "\(LocalizedStringResource("getTranscriptDescription")) \(LocalizedStringResource("requiresUnwatchedPremium"))"
+    )
 
     @Parameter(title: "youtubeVideoUrl")
     var videoUrl: URL?
@@ -21,6 +23,12 @@ struct GetTranscript: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
         Signal.log("Shortcut.GetTranscript")
+
+        let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+        guard hasPremium else {
+            throw IntentError.requiresUnwatchedPremium
+        }
+
         let video = try VideoService.getVideoOrCurrent(videoUrl)
         var transcriptUrl: String?
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {

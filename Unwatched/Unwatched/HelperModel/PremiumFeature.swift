@@ -42,7 +42,8 @@ enum PremiumFeature: String, CaseIterable {
          videoTitleFilter,
          chapterFilter,
          playBrowserVideosInApp,
-         seeVideoDuration
+         seeVideoDuration,
+         generateChaptersFromTranscript
 
     var title: String {
         switch self {
@@ -56,6 +57,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "playBrowserVideosInApp")
         case .seeVideoDuration:
             return String(localized: "seeVideoDurationTitle")
+        case .generateChaptersFromTranscript:
+            return String(localized: "generateChaptersFromTranscript")
         }
     }
 
@@ -71,6 +74,8 @@ enum PremiumFeature: String, CaseIterable {
             return "play.fill"
         case .seeVideoDuration:
             return "clock.fill"
+        case .generateChaptersFromTranscript:
+            return "sparkles.2"
         }
     }
 }

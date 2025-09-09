@@ -55,6 +55,7 @@ struct SettingsView: View {
                             systemName: "checklist"
                         )
                     }
+                    .requiresPremium()
                 }
 
                 MySection("userData") {

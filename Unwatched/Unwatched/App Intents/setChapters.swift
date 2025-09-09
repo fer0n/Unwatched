@@ -10,7 +10,9 @@ import UnwatchedShared
 
 struct SetChapters: AppIntent {
     static var title: LocalizedStringResource { "setChapters" }
-    static let description = IntentDescription("setChaptersDescription")
+    static let description = IntentDescription(
+        "\(LocalizedStringResource("setChaptersDescription")) \(LocalizedStringResource("requiresUnwatchedPremium"))"
+    )
 
     @Parameter(
         title: "chapterTimestamps",
@@ -25,6 +27,12 @@ struct SetChapters: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         Signal.log("Shortcut.SetChapters")
+
+        let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+        guard hasPremium else {
+            throw IntentError.requiresUnwatchedPremium
+        }
+
         let video = try VideoService.getVideoOrCurrent(videoUrl)
 
         let chapters = ChapterService.extractChapters(from: chapterTimestamps, videoDuration: video.duration)

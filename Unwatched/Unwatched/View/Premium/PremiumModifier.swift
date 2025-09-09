@@ -21,19 +21,23 @@ struct RequiresPremiumModifier: ViewModifier {
                 .disabled(isLocked)
                 .contentShape(Rectangle())
                 #if os(iOS)
-                .onTapGesture {
+                .apply {
                     if isLocked {
-                        Signal.log("Premium.ShowPopup")
-                        onInteraction?()
-                        let presenter = PopupPresenter()
-                        presenter.show { dismiss in
-                            PremiumPopupMessage(dismiss: {
-                                dismiss()
-                            })
+                        $0.onTapGesture {
+                            Signal.log("Premium.ShowPopup")
+                            onInteraction?()
+                            let presenter = PopupPresenter()
+                            presenter.show { dismiss in
+                                PremiumPopupMessage(dismiss: {
+                                    dismiss()
+                                })
+                            }
                         }
-
+                    } else {
+                        $0
                     }
                 }
+
             #else
             .modifier(RequiresPremiumActionMac(isLocked: isLocked))
             #endif

@@ -608,6 +608,8 @@
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
+		88F1AC2B2E70D5F800676C26 /* IntentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1AC2A2E70D5F800676C26 /* IntentError.swift */; };
+		88F1AC2C2E70D5F800676C26 /* IntentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1AC2A2E70D5F800676C26 /* IntentError.swift */; };
 		88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */; };
 		88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */; };
 		88F1EE502B5D31D6009866A0 /* BrowserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */; };
@@ -1060,6 +1062,7 @@
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
+		88F1AC2A2E70D5F800676C26 /* IntentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentError.swift; sourceTree = "<group>"; };
 		88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNotAvailableView.swift; sourceTree = "<group>"; };
 		88F1EE4D2B5C6CBC009866A0 /* YtBrowserWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebView.swift; sourceTree = "<group>"; };
 		88F1EE4F2B5D31D6009866A0 /* BrowserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserManager.swift; sourceTree = "<group>"; };
@@ -1626,6 +1629,7 @@
 				8847772F2D2150060044E812 /* UserDataServiceError.swift */,
 				8898B6832B4846D000348D01 /* SubscriptionError.swift */,
 				88D8584C2B559DCC0047E0E6 /* VideoError.swift */,
+				88F1AC2A2E70D5F800676C26 /* IntentError.swift */,
 				88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */,
 			);
 			path = Errors;
@@ -2488,6 +2492,7 @@
 				889AF9172C50ECE7001CEDE6 /* DebugView.swift in Sources */,
 				88373C202C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
 				889AF9182C50ECE7001CEDE6 /* SubscriptionListSection.swift in Sources */,
+				88F1AC2C2E70D5F800676C26 /* IntentError.swift in Sources */,
 				88F85F502E100B1F00FB15A1 /* ChapterControlError.swift in Sources */,
 				889AF9192C50ECE7001CEDE6 /* LibraryDestination.swift in Sources */,
 				889AF91A2C50ECE7001CEDE6 /* BookmarkedVideosView.swift in Sources */,
@@ -2655,6 +2660,7 @@
 				881942A32C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */,
 				882A750A2C74A6A40051BBF0 /* ChapterService.swift in Sources */,
+				88F1AC2B2E70D5F800676C26 /* IntentError.swift in Sources */,
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
 				88373C252C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
 				889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
