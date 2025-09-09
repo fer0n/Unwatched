@@ -35,26 +35,34 @@ import UnwatchedShared
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
     @ObservationIgnored var playerContentViewHeight: CGFloat?
 
+    @ObservationIgnored var debouncedPlayerControlHeight: Task<(), Never>?
+
     @MainActor
     func setPlayerControlHeight(_ height: CGFloat) {
-        Task {
-            // workaround: without task, sheet disappear animation breaks
-            // when video aspect ratio is different for the new video
-            if selectedDetent != .height(playerControlHeight) || playerControlHeight == .zero {
-                playerControlHeight = height
-            } else {
-                // workaround: without this, the sheet jumps to the smallest detent
-                // when animating the sheet height change
-                allowMinSheet = false
-                withAnimation(.default.speed(2)) {
-                    playerControlHeight = height
-                }
-                selectedDetent = .height(height)
-                try await Task.sleep(for: .milliseconds(600))
-                selectedDetent = .height(height)
+        debouncedPlayerControlHeight?.cancel()
+        debouncedPlayerControlHeight = Task {
+            do {
+                // debounce changes
                 try await Task.sleep(for: .milliseconds(100))
-                allowMinSheet = true
-            }
+
+                // workaround: without task, sheet disappear animation breaks
+                // when video aspect ratio is different for the new video
+                if selectedDetent != .height(playerControlHeight) || playerControlHeight == .zero {
+                    playerControlHeight = height
+                } else {
+                    // workaround: without this, the sheet jumps to the smallest detent
+                    // when animating the sheet height change
+                    allowMinSheet = false
+                    withAnimation(.default.speed(2)) {
+                        playerControlHeight = height
+                    }
+                    selectedDetent = .height(height)
+                    try await Task.sleep(for: .milliseconds(600))
+                    selectedDetent = .height(height)
+                    try await Task.sleep(for: .milliseconds(100))
+                    allowMinSheet = true
+                }
+            } catch {}
         }
     }
 
