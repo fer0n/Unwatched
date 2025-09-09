@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct SettingsWindowView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @State var navTitleManager = NavigationTitleManager()
 
     var body: some View {
         TabView {
@@ -65,6 +66,7 @@ struct SettingsWindowView: View {
                     Label("privacyPolicy", systemImage: "checkmark.shield.fill")
                 }
         }
+        .environment(navTitleManager)
         .background(Color.backgroundColor)
         .frame(width: 700, height: 500)
         .tint(theme.color)
