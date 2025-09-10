@@ -1049,36 +1049,36 @@
         }
       }
     },
-    "addYoutubeUrl ${youtubeUrl}" : {
+    "addYoutubeUrl ${youtubeUrl} to ${destination}" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video ${youtubeUrl} hinzufügen"
+            "value" : "Video von ${youtubeUrl} zur ${destination} hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add video from ${youtubeUrl}"
+            "value" : "Add video from ${youtubeUrl} to ${destination}"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agregar video desde ${youtubeUrl}"
+            "value" : "Añadir vídeo desde ${youtubeUrl} a ${destination}"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajouter une vidéo depuis ${youtubeUrl}"
+            "value" : "Ajouter la vidéo depuis ${youtubeUrl} vers ${destination}"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaj film z ${youtubeUrl}"
+            "value" : "Dodaj wideo z ${youtubeUrl} do ${destination}"
           }
         }
       }
@@ -1088,31 +1088,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fügt das Video als nächstes Video auf die Warteschlange/Queue"
+            "value" : "Fügt das Video zur angegebenen Liste hinzu"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adds the video to the top of the Queue"
+            "value" : "Adds the video to the specified destination"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agrega el video al principio de la cola"
+            "value" : "Añade el vídeo al destino especificado"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajoute la vidéo en haut de la file d’attente"
+            "value" : "Ajoute la vidéo à la destination spécifiée"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dodaje film na szczyt kolejki"
+            "value" : "Dodaje wideo do określonego miejsca docelowego"
           }
         }
       }
@@ -4514,6 +4514,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odznacz wszystkie"
+          }
+        }
+      }
+    },
+    "destination" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destination"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destino"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destination"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miejsce docelowe"
           }
         }
       }
