@@ -513,7 +513,8 @@ extension VideoActor {
         }
         let ids = videos.map { $0.youtubeId }
         let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
-        let videoLookup = Dictionary(uniqueKeysWithValues: videos.map { ($0.youtubeId, $0) })
+        let uniqueVideos = Dictionary(grouping: videos, by: { $0.youtubeId }).compactMap { $0.value.first }
+        let videoLookup = Dictionary(uniqueKeysWithValues: uniqueVideos.map { ($0.youtubeId, $0) })
 
         var results = [(PersistentIdentifier, Double)]()
         for info in infos {
