@@ -37,7 +37,7 @@ struct SheetOverlayMinimumSize: View {
     }
 
     var show: Bool {
-        sheetPos.isMinimumSheet && player.video != nil
+        sheetPos.isMinimumSheet
     }
 }
 

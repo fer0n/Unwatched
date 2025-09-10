@@ -25,9 +25,10 @@ struct AnimatableDetents: ViewModifier, @preconcurrency Animatable {
     }
 
     var detents: Set<PresentationDetent> {
-        Set<PresentationDetent>()
+        allowMaxSheetHeight ? Set([.height(maxSheetHeight)])
             .union(allowMinSheet ? [.height(Const.minSheetDetent)] : [])
             .union(allowMaxSheetHeight ? [.height(maxSheetHeight)] : [])
             .union(allowPlayerControlHeight ? [.height(animatableData)] : [])
+            : [.large]
     }
 }

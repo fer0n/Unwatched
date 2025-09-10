@@ -45,7 +45,6 @@ struct MenuSheetDetents: ViewModifier {
                     && !navManager.hasSheetOpen
                     && !navManager.showBrowser
                     && !landscapeFullscreen
-                    && player.video != nil
                     && !navManager.showPremiumOffer
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
