@@ -9,7 +9,7 @@ import UnwatchedShared
 struct BrowserWindow: View {
     @State var imageCache = ImageCacheManager.shared
     @State var navManager = NavigationManager.shared
-    @State var browserManager = BrowserManager()
+    @State var browserManager = BrowserManager.shared
 
     var body: some View {
         BrowserView(showHeader: false)
