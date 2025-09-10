@@ -43,6 +43,7 @@ extension PlayerWebView {
         var video = null;
         let videoFindAttempts = 0;
         var isSwiping = false;
+        let overlayVisible = null;
 
         let overlay = document.querySelector('#player-control-overlay');
         let isNewEmbedding = !!overlay; // initially found means new embedding player
@@ -101,7 +102,7 @@ extension PlayerWebView {
         }
 
         // Overlay control
-        let overlayVisible = overlay && overlay.classList.contains('fadein');
+        overlayVisible = overlay && overlay.classList.contains('fadein');
         let overlayHideTimer = null;
         let lastTapDate = null;
         let consecutiveSingleTaps = 0;
