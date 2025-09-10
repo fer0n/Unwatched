@@ -17,6 +17,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var youtubeChannelId: String?
     public var feedTitle: String?
     public var duration: Double?
+    public var noDuration: Bool?
     public var elapsedSeconds: Double?
     public var chapters = [SendableChapter]()
 
@@ -77,6 +78,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             updatedDate: self.updatedDate,
             youtubeChannelId: youtubeChannelId ?? self.youtubeChannelId,
             duration: duration ?? self.duration,
+            noDuration: self.noDuration,
             elapsedSeconds: self.elapsedSeconds,
             videoDescription: description,
             chapters: newChapters.map { $0.getChapter },
@@ -98,6 +100,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         youtubeChannelId: String? = nil,
         feedTitle: String? = nil,
         duration: Double? = nil,
+        noDuration: Bool? = nil,
         elapsedSeconds: Double? = nil,
         chapters: [SendableChapter] = [SendableChapter](),
         publishedDate: Date? = nil,
@@ -121,6 +124,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         self.youtubeChannelId = youtubeChannelId
         self.feedTitle = feedTitle
         self.duration = duration
+        self.noDuration = noDuration
         self.elapsedSeconds = elapsedSeconds
         self.chapters = chapters
         self.publishedDate = publishedDate
@@ -148,6 +152,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         thumbnailUrl = try container.decodeIfPresent(URL.self, forKey: .thumbnailUrl)
         youtubeChannelId = try container.decodeIfPresent(String.self, forKey: .youtubeChannelId)
         duration = try container.decodeIfPresent(Double.self, forKey: .duration)
+        noDuration = try container.decodeIfPresent(Bool.self, forKey: .noDuration)
         elapsedSeconds = try container.decodeIfPresent(Double.self, forKey: .elapsedSeconds)
         publishedDate = try container.decodeIfPresent(Date.self, forKey: .publishedDate)
         updatedDate = try container.decodeIfPresent(Date.self, forKey: .updatedDate)
@@ -170,6 +175,7 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         try container.encodeIfPresent(thumbnailUrl, forKey: .thumbnailUrl)
         try container.encodeIfPresent(youtubeChannelId, forKey: .youtubeChannelId)
         try container.encodeIfPresent(duration, forKey: .duration)
+        try container.encodeIfPresent(noDuration, forKey: .noDuration)
         try container.encodeIfPresent(elapsedSeconds, forKey: .elapsedSeconds)
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
         try container.encodeIfPresent(updatedDate, forKey: .updatedDate)
@@ -192,6 +198,7 @@ enum SendableVideoCodingKeys: String, CodingKey {
          thumbnailUrl,
          youtubeChannelId,
          duration,
+         noDuration,
          elapsedSeconds,
          publishedDate,
          updatedDate,

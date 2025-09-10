@@ -32,6 +32,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     public var deferDate: Date?
     public var updatedDate: Date?
     public var duration: Double?
+    public var apiUpdatedDate: Date?
+    public var noDuration: Bool?
     public var elapsedSeconds: Double?
     public var videoDescription: String?
     public var watchedDate: Date?
@@ -110,6 +112,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
             thumbnailUrl: thumbnailUrl,
             youtubeChannelId: youtubeChannelId,
             duration: duration,
+            noDuration: noDuration,
             elapsedSeconds: elapsedSeconds,
             publishedDate: publishedDate,
             updatedDate: updatedDate,
@@ -139,6 +142,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 updatedDate: Date? = nil,
                 youtubeChannelId: String? = nil,
                 duration: Double? = nil,
+                noDuration: Bool? = nil,
                 elapsedSeconds: Double? = nil,
                 videoDescription: String? = nil,
                 chapters: [Chapter] = [],
@@ -157,6 +161,7 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.publishedDate = publishedDate
         self.updatedDate = updatedDate
         self.duration = duration
+        self.noDuration = noDuration
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
         self.chapters = chapters

@@ -491,38 +491,118 @@ extension VideoActor {
         return try? modelContext.fetchCount(fetch)
     }
 
-    func fetchVideoDurationsQueueInbox() async throws -> [(PersistentIdentifier, Double)] {
-        Log.info("fetchVideoDurationsQueueInbox")
+    func getEntryVideosWithoutDuration() -> [Video] {
         let inboxFetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.video?.duration == nil })
-        let inboxEntries = try modelContext.fetch(inboxFetch)
-        var videosToProcess = inboxEntries.compactMap { $0.video }
+        let inboxEntries = try? modelContext.fetch(inboxFetch)
+        var videosToProcess = inboxEntries?.compactMap { $0.video } ?? []
 
         let queueFetch = FetchDescriptor<QueueEntry>(predicate: #Predicate { $0.video?.duration == nil })
-        let queueEntries = try modelContext.fetch(queueFetch)
-        videosToProcess.append(contentsOf: queueEntries.compactMap { $0.video })
+        let queueEntries = try? modelContext.fetch(queueFetch)
+        videosToProcess.append(contentsOf: queueEntries?.compactMap { $0.video } ?? [])
 
         let uniqueVideos = Array(Set(videosToProcess))
-        return try await fetchVideoDurations(for: uniqueVideos)
+        return uniqueVideos
     }
 
-    func fetchVideoDurations(for videos: [Video]) async throws -> [(PersistentIdentifier, Double)] {
+    func fetchVideoDurationsQueueInbox() async throws -> [VideoDurationInfo] {
+        Log.info("fetchVideoDurationsQueueInbox")
+        return try await fetchVideoDurations(for: [], includeEntries: true)
+    }
+
+    private func getVideosToFetchDurationFor(
+        _ videos: [Video],
+        optional optionalVideos: [Video],
+        includeEntries: Bool = true
+    ) -> [Video] {
+        var checkVideos = videos
+        var toFetchVideos = Set<Video>()
+
+        if includeEntries {
+            let entryVideos = getEntryVideosWithoutDuration()
+            checkVideos.append(contentsOf: entryVideos)
+            Log.info("getVideosToFetchDurationFor: \(entryVideos.count) entry videos without duration")
+        }
+
+        let staleCutoffDate = Date().addingTimeInterval(-Const.durationFetchInterval)
+        var availableOptionalVideos = Set<Video>(optionalVideos)
+
+        for video in checkVideos {
+            if shouldFetchDurationForVideo(video, cutoffDate: staleCutoffDate) {
+                toFetchVideos.insert(video)
+            } else {
+                // videos without duration, but already checked recently
+                availableOptionalVideos.insert(video)
+            }
+        }
+        availableOptionalVideos = availableOptionalVideos.subtracting(toFetchVideos)
+
+        // Fill remaining slots up to maxRequest boundary
+        let maxRequest = Const.maxVideoIdsPerRequest
+        let currentCount = toFetchVideos.count
+        let slotsToFill = calculateSlotsToFill(currentCount: currentCount, maxRequest: maxRequest)
+        if slotsToFill > 0 {
+            let additionalVideos = Array(availableOptionalVideos.prefix(slotsToFill))
+            toFetchVideos.formUnion(additionalVideos)
+            Log.info("getVideosToFetchDurationFor: \(additionalVideos.count) batch filler")
+        }
+
+        let result = Array(toFetchVideos)
+        Log.info("getVideosToFetchDurationFor: Total: \(result.count)")
+        return result
+    }
+
+    private func shouldFetchDurationForVideo(_ video: Video, cutoffDate: Date) -> Bool {
+        guard let apiUpdatedDate = video.apiUpdatedDate else {
+            return true // No update date means we should fetch
+        }
+        return apiUpdatedDate < cutoffDate
+    }
+
+    private func calculateSlotsToFill(currentCount: Int, maxRequest: Int) -> Int {
+        let remainder = currentCount % maxRequest
+        return remainder > 0 ? maxRequest - remainder : 0
+    }
+
+    /// Fetch durations for videos without duration set
+    /// - Parameters:
+    ///  - videos: videos to check for duration
+    ///  - optionalVideos: videos that will be checked if the request limit is not yet reached
+    func fetchVideoDurations(
+        for videos: [Video],
+        optional optionalVideos: [Video] = [],
+        includeEntries: Bool = true,
+        ) async throws -> [VideoDurationInfo] {
         Log.info("fetchUpdateDurations, videos: \(videos.count)")
-        guard !videos.isEmpty else {
+        guard !videos.isEmpty || includeEntries else {
             Log.info("fetchUpdateDurations, no videos without duration")
             return []
         }
-        let ids = videos.map { $0.youtubeId }
-        let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
-        let uniqueVideos = Dictionary(grouping: videos, by: { $0.youtubeId }).compactMap { $0.value.first }
-        let videoLookup = Dictionary(uniqueKeysWithValues: uniqueVideos.map { ($0.youtubeId, $0) })
 
-        var results = [(PersistentIdentifier, Double)]()
+        let filteredVideos = getVideosToFetchDurationFor(
+            videos,
+            optional: optionalVideos,
+            includeEntries: includeEntries
+        )
+        print("filteredVideos: \(filteredVideos.count)")
+        let ids = filteredVideos.map { $0.youtubeId }
+        let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
+        // make sure all loaded videos are considered updated, there might be deleted videos
+        // that are not in the response
+        filteredVideos.forEach { $0.apiUpdatedDate = Date() }
+
+        let videoLookup = Dictionary(uniqueKeysWithValues: filteredVideos.map { ($0.youtubeId, $0) })
+
+        var results = [VideoDurationInfo]()
         for info in infos {
-            if let video = videoLookup[info.id] {
+            if let video = videoLookup[info.youtubeId] {
                 video.duration = info.duration
-                results.append((video.persistentModelID, info.duration))
+                var newInfo = info
+                newInfo.persistentId = video.persistentModelID
+
+                results.append(newInfo)
             }
         }
+        try modelContext.save()
         return results
     }
 }

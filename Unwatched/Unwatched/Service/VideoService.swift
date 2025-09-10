@@ -111,7 +111,7 @@ extension VideoService {
     }
 
     static func fetchVideoDurationsQueueInbox() {
-        let task: Task<[(PersistentIdentifier, Double)], Error> = Task.detached {
+        let task: Task<[VideoDurationInfo], Error> = Task.detached {
             guard NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
                 Log.info("fetchUpdateDurations: no premium user")
                 return []
@@ -130,15 +130,24 @@ extension VideoService {
     }
 
     @MainActor
-    static func forceUpdateDurations(_ updateInfo: [(PersistentIdentifier, Double)]) async {
+    static func forceUpdateDurations(_ updateInfo: [VideoDurationInfo]) async {
+        print("forceUpdateDurations, \(updateInfo)")
         let context = DataProvider.mainContext
-        for (modelId, duration) in updateInfo {
-            if let video: Video = context.existingModel(for: modelId) {
-                if video.duration != duration {
+        for info in updateInfo {
+            if let persistentId = info.persistentId,
+               let video: Video = context.existingModel(for: persistentId) {
+                if video.duration != info.duration {
                     withAnimation {
-                        video.duration = duration
+                        video.duration = info.duration
                     }
                 }
+                if video.noDuration != info.noDuration {
+                    withAnimation {
+                        video.noDuration = info.noDuration
+                    }
+                }
+            } else {
+                Log.warning("forceUpdateDurations: video not found/no persistentId")
             }
         }
         try? context.save()

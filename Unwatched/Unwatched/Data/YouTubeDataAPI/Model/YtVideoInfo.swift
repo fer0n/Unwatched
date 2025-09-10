@@ -6,7 +6,7 @@
 import Foundation
 
 struct ContentDetails: Codable {
-    let duration: String
+    let duration: String?
 }
 
 struct YtVideoInfo: Codable {

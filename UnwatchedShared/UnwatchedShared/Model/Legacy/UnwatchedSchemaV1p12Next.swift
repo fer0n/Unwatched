@@ -44,6 +44,8 @@
 //        public var deferDate: Date?
 //        public var updatedDate: Date?
 //        public var duration: Double?
+//        public var apiUpdateDate: Date?
+//        public var noDuration: Bool?
 //        public var elapsedSeconds: Double?
 //        public var videoDescription: String?
 //        public var watchedDate: Date?

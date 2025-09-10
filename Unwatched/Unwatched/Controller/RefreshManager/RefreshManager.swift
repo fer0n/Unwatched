@@ -104,7 +104,6 @@ actor RefreshActor {
             Log.info("Error during refresh: \(error)")
         }
         await cleanup(hardRefresh: hardRefresh)
-        VideoService.fetchVideoDurationsQueueInbox()
     }
 
     func handleAutoBackup() {

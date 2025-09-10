@@ -15,13 +15,18 @@ struct VideoListItemDurationOverlay: View {
     var body: some View {
         ZStack {
             if video.isYtShort == true {
-                Text("#s")
+                Text(verbatim: "#s")
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue("#short")
             } else if let totalDuration {
                 Text(totalDuration.formattedSecondsColon)
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue(String(localized: "\(accessibilityDuration(totalDuration)) long"))
+            } else if video.noDuration == true {
+                Image(systemName: "dot.radiowaves.left.and.right")
+                .accessibilityElement(children: .ignore)
+                .accessibilityValue("Live/Upcoming")
+                .padding(.vertical, 4)
             } else if let roughDuration {
                 formatRoughDuration(roughDuration)
             }

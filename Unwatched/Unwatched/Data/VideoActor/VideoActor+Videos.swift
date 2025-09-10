@@ -174,22 +174,9 @@ import UnwatchedShared
         onlyForAdded: Bool = true
     ) async throws {
         Log.info("handleFetchDurationsLoaded")
-        var videos = newVideoInfo.flatMap { $0.addedVideos }
-
-        let maxRequest = Const.maxVideoIdsPerRequest
-        let remainder = videos.count % maxRequest
-        let countToFetch = remainder > 0 ? maxRequest - remainder : 0
-
-        if countToFetch > 0 {
-            let loadedVideos = newVideoInfo.flatMap { $0.loadedVideos }
-            let uniqueVideos = Dictionary(grouping: loadedVideos, by: \.youtubeId)
-                .compactMap { $0.value.first }
-            let existingIds = Set(videos.map { $0.youtubeId })
-            let additionalVideos = uniqueVideos.filter { !existingIds.contains($0.youtubeId) }
-            videos.append(contentsOf: additionalVideos.prefix(countToFetch))
-        }
-
-        let videoInfo = try await fetchVideoDurations(for: videos)
+        let videos = newVideoInfo.flatMap { $0.addedVideos }
+        let optionalVideos = newVideoInfo.flatMap { $0.loadedVideos }
+        let videoInfo = try await fetchVideoDurations(for: videos, optional: optionalVideos)
         Task { @MainActor in
             await VideoService.forceUpdateDurations(videoInfo)
         }

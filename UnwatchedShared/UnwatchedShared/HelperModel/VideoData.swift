@@ -9,6 +9,7 @@ public protocol VideoData {
     var title: String { get }
     var elapsedSeconds: Double? { get }
     var duration: Double? { get }
+    var noDuration: Bool? { get }
     var isYtShort: Bool? { get }
     var thumbnailUrl: URL? { get }
     var youtubeId: String { get }
