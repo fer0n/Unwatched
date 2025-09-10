@@ -7,6 +7,8 @@ import TipKit
 import UnwatchedShared
 
 struct HideShortsTip: Tip {
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
+
     var title: Text {
         Text("hideShortsTip")
     }
@@ -22,7 +24,7 @@ struct HideShortsTip: Tip {
     var actions: [Action] {
         Action {
             Text("hideShortsTipAction")
-                .foregroundStyle(.teal)
+                .foregroundStyle(theme.contrastColor)
         }
     }
 
@@ -41,6 +43,7 @@ struct HideShortsTip: Tip {
 struct HideShortsTipView: View {
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
     @Environment(\.modelContext) var modelContext
+    @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     var hideShortsTip = HideShortsTip()
 
@@ -58,12 +61,25 @@ struct HideShortsTipView: View {
         }
         .tipBackground(Color.insetBackgroundColor)
         .listRowBackground(Color.backgroundColor)
+        .tint(theme.color)
     }
 }
 
 #Preview {
-    let tip = HideShortsTip()
-    return HStack {
-        TipView(tip)
+    HStack {
+        TipView(HideShortsTip())
     }
+    .task {
+        try? await Tips.configure(
+            [
+                .displayFrequency(
+                    .immediate
+                ),
+                .datastoreLocation(
+                    .applicationDefault
+                )
+            ]
+        )
+    }
+    .tint(ThemeColor().color)
 }
