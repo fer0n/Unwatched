@@ -185,6 +185,8 @@
 		885723042E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		88632AF52B64FD8200C93F82 /* BackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* BackupView.swift */; };
+		886555322E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */; };
+		886555332E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */; };
 		8865E7EB2E6DA17400E821E2 /* credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88571ADD2E658FDA006D1EE9 /* credentials.swift */; };
 		8866B6942CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
 		8866B6952CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */; };
@@ -867,6 +869,7 @@
 		88571ADD2E658FDA006D1EE9 /* credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = credentials.swift; sourceTree = "<group>"; };
 		885723012E6596F6006D1EE9 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		88632AF42B64FD8200C93F82 /* BackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupView.swift; sourceTree = "<group>"; };
+		886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterSettingsMenu.swift; sourceTree = "<group>"; };
 		8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreMenuButton.swift; sourceTree = "<group>"; };
 		8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDeleteBackupView.swift; sourceTree = "<group>"; };
 		886817872D77379800E06A0D /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
@@ -1714,6 +1717,7 @@
 				88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */,
 				8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */,
 				88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */,
+				886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */,
 			);
 			path = Chapter;
 			sourceTree = "<group>";
@@ -2361,6 +2365,7 @@
 				889AF8D72C50ECA9001CEDE6 /* AnimationCompletionCallback.swift in Sources */,
 				88CD38812E20E5B400E7B21C /* SwipeDirecton.swift in Sources */,
 				88899D942E035E54002C05BC /* TitleFilterView.swift in Sources */,
+				886555322E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */,
 				889AF8D82C50ECA9001CEDE6 /* PlayerToggleStyle.swift in Sources */,
 				88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
 				886818232D77586700E06A0D /* ImportSubscriptionsWindow.swift in Sources */,
@@ -2761,6 +2766,7 @@
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
 				88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
+				886555332E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
 				883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */,
@@ -2997,7 +3003,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_ENTITLEMENTS = tvOS/tvOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"tvOS/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_PREVIEWS = YES;
@@ -3029,7 +3035,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_ENTITLEMENTS = tvOS/tvOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"tvOS/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
 				ENABLE_PREVIEWS = YES;

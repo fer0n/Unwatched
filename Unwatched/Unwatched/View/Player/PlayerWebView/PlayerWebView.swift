@@ -16,10 +16,10 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 
 struct PlayerWebView: PlatformViewRepresentable {
     @Environment(PlayerManager.self) var player
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
-    @Binding var appNotificationVM: AppNotificationVM
 
     let playerType: PlayerType
     let onVideoEnded: () -> Void
@@ -241,7 +241,6 @@ struct PlayerWebView: PlatformViewRepresentable {
         PlayerWebView(
             overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
-            appNotificationVM: .constant(AppNotificationVM()),
             playerType: .youtubeEmbedded,
             onVideoEnded: {
 

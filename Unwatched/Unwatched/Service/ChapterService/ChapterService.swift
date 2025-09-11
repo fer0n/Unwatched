@@ -298,4 +298,11 @@ struct ChapterService {
             PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
         }
     }
+
+    @MainActor
+    static func restoreChapters(for video: Video) {
+        let context = DataProvider.mainContext
+        let chapters = extractChapters(from: video.videoDescription ?? "", videoDuration: video.duration)
+        insertChapters(chapters, for: video, in: context)
+    }
 }

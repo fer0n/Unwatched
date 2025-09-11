@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterDescriptionView: View {
-    @Environment(\.dismiss) var dismiss
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
 
@@ -34,25 +33,14 @@ struct ChapterDescriptionView: View {
                             isCompact: isCompact,
                             isTransparent: isTransparent
                         )
-                        .padding(.vertical)
+                        .padding(.top)
+                        .padding(.bottom, 5)
                     }
 
-                    if showGenerateButton {
-                        if #available(iOS 26, macOS 26.0, *) {
-                            GenerateChaptersButton(
-                                video: player.video,
-                                transcriptUrl: video.youtubeId == player.video?.youtubeId ? player.transcriptUrl : nil,
-                                )
-                            .requiresPremium() {
-                                dismiss()
-                            }
-                        }
-                    }
+                    ChapterSettingsMenu(video: player.video)
 
-                    if hasChapters || showGenerateButton {
-                        Spacer()
-                            .frame(height: 7)
-                    }
+                    Spacer()
+                        .frame(height: 10)
 
                     TranscriptDescriptionSelection(
                         video: video,
@@ -96,13 +84,6 @@ struct ChapterDescriptionView: View {
             navManager.videoDetail = nil
         }
     }
-
-    var showGenerateButton: Bool {
-        if #available(iOS 26, macOS 26.0, *), video.chapters?.isEmpty != false {
-            return true
-        }
-        return false
-    }
 }
 
 #Preview {
@@ -114,4 +95,5 @@ struct ChapterDescriptionView: View {
         .environment(SubscribeManager())
         .environment(ImageCacheManager())
         .environment(SheetPositionReader())
+        .appNotificationOverlay(.constant(AppNotificationVM()))
 }

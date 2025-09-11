@@ -27,7 +27,6 @@ struct PlayerView: View {
     @State var orientation = OrientationManager.shared
     #endif
     @State var overlayVM = OverlayFullscreenVM.shared
-    @State var appNotificationVM = AppNotificationVM()
 
     var landscapeFullscreen = true
     var enableHideControls: Bool
@@ -85,7 +84,6 @@ struct PlayerView: View {
                 }
             }
         }
-        .appNotificationOverlay($appNotificationVM)
         .dateSelectorSheet()
         .persistentSystemOverlays(
             landscapeFullscreen || controlsHidden
@@ -127,7 +125,6 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
-                appNotificationVM: $appNotificationVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe
@@ -176,7 +173,6 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
-                appNotificationVM: $appNotificationVM,
                 playerType: .youtube,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe

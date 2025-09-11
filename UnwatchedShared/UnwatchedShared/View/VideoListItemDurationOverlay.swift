@@ -18,22 +18,23 @@ struct VideoListItemDurationOverlay: View {
                 Text(verbatim: "#s")
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue("#short")
+                    .padding(.horizontal, padding)
             } else if let totalDuration {
                 Text(totalDuration.formattedSecondsColon)
                     .accessibilityElement(children: .ignore)
                     .accessibilityValue(String(localized: "\(accessibilityDuration(totalDuration)) long"))
+                    .padding(.horizontal, padding)
             } else if video.noDuration == true {
                 Image(systemName: "dot.radiowaves.left.and.right")
                 .accessibilityElement(children: .ignore)
                 .accessibilityValue("Live/Upcoming")
-                .padding(.vertical, 4)
+                .padding(3)
             } else if let roughDuration {
                 formatRoughDuration(roughDuration)
             }
         }
         .font(.subheadline)
         .foregroundStyle(.primary.opacity(0.9))
-        .padding(.horizontal, padding)
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
     }

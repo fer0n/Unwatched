@@ -53,7 +53,7 @@ struct FilterSettingsView: View {
                 TitleFilterView()
                 #endif
 
-                MySection("chapterFilter", footer: "chapterFilterFooter", showPremiumIndicator: true) {
+                MySection("chapters", footer: "chapterFilterFooter", showPremiumIndicator: true) {
                     TextField("keywords", text: $skipChapterText)
                         .autocorrectionDisabled()
                         #if os(iOS)

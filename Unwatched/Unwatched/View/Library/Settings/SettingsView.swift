@@ -51,8 +51,8 @@ struct SettingsView: View {
                     }
                     Link(destination: UrlService.generateChaptersShortcutUrl) {
                         LibraryNavListItem(
-                            "generateChaptersShortcut",
-                            systemName: "checklist"
+                            "generateChapters",
+                            systemName: "sparkles"
                         )
                     }
                     .requiresPremium()

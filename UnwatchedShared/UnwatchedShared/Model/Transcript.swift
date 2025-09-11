@@ -33,7 +33,7 @@ public struct TranscriptEntry: Sendable, Identifiable, Codable {
     }
     
     public var minimalTextRepresentation: String {
-        "\(String(format: "%.2f", start)): \(text)"
+        "\(Int(start)): \(text)"
     }
     
     private enum CodingKeys: String, CodingKey {

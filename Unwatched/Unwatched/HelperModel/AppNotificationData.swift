@@ -9,6 +9,7 @@ import UnwatchedShared
 struct AppNotificationData {
     let title: LocalizedStringKey
     var error: Error?
+    var isError: Bool = false
     var icon: String?
     var isLoading: Bool = false
     var timeout: TimeInterval = 3.0
@@ -51,6 +52,7 @@ enum DefaultNotification {
             return AppNotificationData(
                 title: "errorOccured",
                 error: error,
+                isError: true,
                 icon: Const.errorSF,
                 timeout: 10
             )

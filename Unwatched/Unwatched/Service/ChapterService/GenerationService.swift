@@ -9,7 +9,7 @@ import Playgrounds
 
 @available(iOS 26.0, macOS 26.0, *)
 struct GenerationService {
-    static let characterLimit = 7000 // 4096 token limit * roughly 4 characters per token
+    static let characterLimit = 8000 // 4096 token limit * roughly 4 characters per token
 
     public static func getUsableChunks(_ transcript: [TranscriptEntry]) -> [[TranscriptEntry]] {
         var chunks: [[TranscriptEntry]] = []
@@ -53,7 +53,24 @@ struct GenerationService {
             Log.info("chunk \(transcriptRepresentation)")
             // swiftlint:disable all
             var instructions = """
-            Break the transcript into a few broad, well-sized sections (based on the timestamps in seconds). Each section should reflect a natural break or shift in topic, pacing, or structure. Use short, general-purpose titles — not detailed summaries. Avoid combining unrelated topics or making the chapters too short.
+            You are a video content analyzer specializing in creating chapter breakdowns from transcripts. Your job is to identify natural content segments and create meaningful chapter divisions that help viewers navigate video content efficiently.
+
+            ## Primary Task
+            Analyze the provided video transcript and generate a chapter structure by identifying distinct topics, themes, or content shifts. Create chapter titles and timestamps that accurately reflect the content flow and major discussion points.
+
+            ## Processing Guidelines
+            - Read through the entire transcript to understand the overall content flow
+            - Identify natural breaking points where topics change or new themes are introduced
+            - Pay attention to transition phrases that often signal a new section
+            - Avoid chapters that are too short
+            - Create descriptive but concise chapter titles that clearly indicate what content is covered
+
+            ## Style Preferences
+            - Keep chapter titles concise but informative (1-3 words typically)
+            - Ensure titles are scannable and useful for navigation
+
+            Quality Standards:
+            Prioritize accuracy and usefulness over speed. Each chapter should represent a meaningful content segment that viewers would actually want to jump to directly.
             """
             // swiftlint:enable all
             if !isFirstChunk {
@@ -105,14 +122,18 @@ struct GenerationService {
 // swiftlint:disable all
 @available(iOS 26.0, macOS 26.0, *)
 #Playground {
-    let transcriptUrl = "https://www.youtube.com/api/timedtext?v=JUG1PlqAUJk&ei=0u6gaI2CBaLnxN8Pw__cSQ&caps=asr&opi=112496729&xoaf=5&xospf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1755402562&sparams=ip,ipbits,expire,v,ei,caps,opi,xoaf&signature=54ADDF3B0429D37E727CDE8DB462A03E47D51B25.784B8086812A945E32E192A61F3FE287244FE385&key=yt8&kind=asr&lang=en&variant=punctuated"
+    let transcriptUrl = "https://www.youtube.com/api/timedtext?v=5e2CQ1RknaA&ei=R7PCaMOpC9746dsP06ehkQI&caps=asr&opi=112496729&xoaf=4&hl=en&ip=0.0.0.0&ipbits=0&expire=1757615543&sparams=ip,ipbits,expire,v,ei,caps,opi,xoaf&signature=A669B5833AC344AA82FCA68BDA075ACDA5536334.5E69237930330880C165DA80C950E19C09DE2D27&key=yt8&kind=asr&lang=en"
 
-    let transript = try await TranscriptService.getTranscript(from: transcriptUrl, youtubeId: "youtubeId")
+    let transript = try await TranscriptService.getTranscript(from: transcriptUrl, youtubeId: "5e2CQ1RknaA")
 
-    let generatedChapters = try await GenerationService.extractChaptersFromTranscripts(
+    guard let generatedChapters = try await GenerationService.extractChaptersFromTranscripts(
         "videoTitle",
         transript
-    )
-    print("generatedChapters", generatedChapters)
+    ) else {
+        return
+    }
+    for chapter in generatedChapters {
+        print("\(chapter.startTime) - \(chapter.title ?? "-")")
+    }
 }
 // swiftlint:enable all

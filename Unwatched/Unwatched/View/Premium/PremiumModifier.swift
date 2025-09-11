@@ -49,6 +49,30 @@ struct RequiresPremiumModifier: ViewModifier {
     }
 }
 
+@MainActor
+func guardPremium(onInteraction: (() -> Void)? = nil) -> Bool {
+    let premium = NSUbiquitousKeyValueStore.default.bool(
+        forKey: Const.unwatchedPremiumAcknowledged
+    )
+    if !premium {
+        Signal.log("Premium.ShowPopup")
+        onInteraction?()
+
+        #if os(iOS)
+        let presenter = PopupPresenter()
+        presenter.show { dismiss in
+            PremiumPopupMessage(dismiss: {
+                dismiss()
+            })
+        }
+        #elseif os(macOS)
+        // skipping the "learn more" popup on macOS for now
+        NavigationManager.shared.openWindow?(id: Const.windowPremium)
+        #endif
+    }
+    return premium
+}
+
 struct ContainsPremium: ViewModifier {
     @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @AppStorage(Const.hidePremium) var hidePremium: Bool = false

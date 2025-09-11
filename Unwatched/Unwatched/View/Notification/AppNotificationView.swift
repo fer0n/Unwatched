@@ -38,14 +38,14 @@ struct AppNotificationView: View {
                 $0
                     .foregroundStyle(.primary)
                     .glassEffect(
-                        .regular.tint(notification?.error != nil ? .red : .clear).interactive(),
+                        .regular.tint(notification?.isError == true ? .red : .clear).interactive(),
                         in: clipShape
                     )
             } else {
                 $0
                     .foregroundStyle(.white)
                     .background(
-                        notification?.error != nil
+                        notification?.isError == true
                             ? .red
                             : .black.opacity(0.2)
                     )
@@ -105,12 +105,18 @@ struct AppNotificationView: View {
                 }
 
                 Button {
-                    appNotificationVM.show(.error(VideoError.emptyYoutubeId))
+                    appNotificationVM.show("Some error", isError: true)
                 } label: {
                     Text(verbatim: "Error")
                 }
                 .onAppear {
-                    appNotificationVM.show(.loading) // error(VideoError.emptyYoutubeId))
+                    appNotificationVM.show("Some error", isError: true)
+                }
+
+                Button {
+                    appNotificationVM.show(.error(VideoError.emptyYoutubeId))
+                } label: {
+                    Text(verbatim: "Error")
                 }
 
                 Button {

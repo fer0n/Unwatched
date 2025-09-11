@@ -92,7 +92,7 @@ struct PlayerContentView: View {
                     .opacity(navManager.showMenu ? 1 : 0)
             }
         }
-        // TODO: enable safe area? Last checked on iOS 26 beta 7 (flickering issue)
+        // TODO: enable safe area? Last checked on iOS 26 beta 8 (flickering issue)
         // .ignoresSafeArea(edges: Const.iOS26 ? .bottom : [])
     }
 
