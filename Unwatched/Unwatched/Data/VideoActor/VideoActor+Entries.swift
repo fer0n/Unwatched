@@ -515,7 +515,8 @@ extension VideoActor {
         includeEntries: Bool = true
     ) -> [Video] {
         var checkVideos = videos
-        var toFetchVideos = Set<Video>()
+        var toFetchVideos: [Video] = []
+        var seenYouTubeIds = Set<String>()
 
         if includeEntries {
             let entryVideos = getEntryVideosWithoutDuration()
@@ -524,17 +525,30 @@ extension VideoActor {
         }
 
         let staleCutoffDate = Date().addingTimeInterval(-Const.durationFetchInterval)
-        var availableOptionalVideos = Set<Video>(optionalVideos)
-
+        var availableOptionalVideos: [Video] = []
+        // Process checkVideos and ensure unique youtubeIds
         for video in checkVideos {
+            guard !seenYouTubeIds.contains(video.youtubeId) else { continue }
+            seenYouTubeIds.insert(video.youtubeId)
+            
             if shouldFetchDurationForVideo(video, cutoffDate: staleCutoffDate) {
-                toFetchVideos.insert(video)
+                toFetchVideos.append(video)
             } else {
                 // videos without duration, but already checked recently
-                availableOptionalVideos.insert(video)
+                availableOptionalVideos.append(video)
             }
         }
-        availableOptionalVideos = availableOptionalVideos.subtracting(toFetchVideos)
+        
+        // Add unique optional videos
+        for video in optionalVideos {
+            guard !seenYouTubeIds.contains(video.youtubeId) else { continue }
+            seenYouTubeIds.insert(video.youtubeId)
+            availableOptionalVideos.append(video)
+        }
+        
+        // Remove videos that are already in toFetchVideos from availableOptionalVideos
+        let toFetchYouTubeIds = Set(toFetchVideos.map { $0.youtubeId })
+        availableOptionalVideos = availableOptionalVideos.filter { !toFetchYouTubeIds.contains($0.youtubeId) }
 
         // Fill remaining slots up to maxRequest boundary
         let maxRequest = Const.maxVideoIdsPerRequest
@@ -542,13 +556,12 @@ extension VideoActor {
         let slotsToFill = calculateSlotsToFill(currentCount: currentCount, maxRequest: maxRequest)
         if slotsToFill > 0 {
             let additionalVideos = Array(availableOptionalVideos.prefix(slotsToFill))
-            toFetchVideos.formUnion(additionalVideos)
+            toFetchVideos.append(contentsOf: additionalVideos)
             Log.info("getVideosToFetchDurationFor: \(additionalVideos.count) batch filler")
         }
 
-        let result = Array(toFetchVideos)
-        Log.info("getVideosToFetchDurationFor: Total: \(result.count)")
-        return result
+        Log.info("getVideosToFetchDurationFor: Total: \(toFetchVideos.count)")
+        return toFetchVideos
     }
 
     private func shouldFetchDurationForVideo(_ video: Video, cutoffDate: Date) -> Bool {
