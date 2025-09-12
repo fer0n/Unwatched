@@ -39,10 +39,10 @@ extension DataProvider {
 
         try? container.mainContext.save()
 
-        //        let jsonData = TestData.backup.data(using: .utf8)!
-        //        UserDataService.importBackup(jsonData)
-        //
-        //        try? container.mainContext.save()
+        let jsonData = TestData.backup.data(using: .utf8)!
+        UserDataService.importBackup(jsonData)
+
+        try? container.mainContext.save()
         return container
     }()
 }

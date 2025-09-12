@@ -9,7 +9,7 @@ import Playgrounds
 
 @available(iOS 26.0, macOS 26.0, *)
 struct GenerationService {
-    static let characterLimit = 8000 // 4096 token limit * roughly 4 characters per token
+    static let characterLimit = 7000 // 4096 token limit * roughly 4 characters per token
 
     public static func getUsableChunks(_ transcript: [TranscriptEntry]) -> [[TranscriptEntry]] {
         var chunks: [[TranscriptEntry]] = []
