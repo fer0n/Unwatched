@@ -589,7 +589,10 @@ extension VideoActor {
         // that are not in the response
         filteredVideos.forEach { $0.apiUpdatedDate = Date() }
 
-        let videoLookup = Dictionary(uniqueKeysWithValues: filteredVideos.map { ($0.youtubeId, $0) })
+        let videoLookup = Dictionary(
+            filteredVideos.map { ($0.youtubeId, $0) },
+            uniquingKeysWith: { _, new in new }
+        )
 
         var results = [VideoDurationInfo]()
         for info in infos {
