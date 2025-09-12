@@ -583,7 +583,6 @@ extension VideoActor {
             optional: optionalVideos,
             includeEntries: includeEntries
         )
-        print("filteredVideos: \(filteredVideos.count)")
         let ids = filteredVideos.map { $0.youtubeId }
         let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
         // make sure all loaded videos are considered updated, there might be deleted videos
