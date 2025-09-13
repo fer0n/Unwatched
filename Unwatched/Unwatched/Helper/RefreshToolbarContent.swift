@@ -21,7 +21,7 @@ struct CoreRefreshButton: View {
                     await refresh()
                 }
             } label: {
-                if #available(iOS 18, *) {
+                if #available(iOS 18, macOS 15, *) {
                     Image(systemName: Const.refreshSF)
                         .symbolEffect(.rotate,
                                       options: .speed(1.5),
@@ -60,7 +60,7 @@ struct CoreRefreshButton: View {
     }
 
     private var supportsIos18: Bool {
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18.0, macOS 15, *) {
             return true
         }
         return false
@@ -89,15 +89,11 @@ struct RefreshToolbarContent: ToolbarContent {
 
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .confirmationAction) {
-            #if os(iOS)
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
                 .symbolEffect(.pulse,
                               options: .speed(0.8),
                               isActive: refresher.isSyncingIcloud)
                 .saturation(refresher.isSyncingIcloud ? 0 : 1)
-            #else
-            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
-            #endif
         }
     }
 }
