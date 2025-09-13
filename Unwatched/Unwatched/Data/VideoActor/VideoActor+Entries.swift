@@ -530,7 +530,7 @@ extension VideoActor {
         for video in checkVideos {
             guard !seenYouTubeIds.contains(video.youtubeId) else { continue }
             seenYouTubeIds.insert(video.youtubeId)
-            
+
             if shouldFetchDurationForVideo(video, cutoffDate: staleCutoffDate) {
                 toFetchVideos.append(video)
             } else {
@@ -538,14 +538,14 @@ extension VideoActor {
                 availableOptionalVideos.append(video)
             }
         }
-        
+
         // Add unique optional videos
         for video in optionalVideos {
             guard !seenYouTubeIds.contains(video.youtubeId) else { continue }
             seenYouTubeIds.insert(video.youtubeId)
             availableOptionalVideos.append(video)
         }
-        
+
         // Remove videos that are already in toFetchVideos from availableOptionalVideos
         let toFetchYouTubeIds = Set(toFetchVideos.map { $0.youtubeId })
         availableOptionalVideos = availableOptionalVideos.filter { !toFetchYouTubeIds.contains($0.youtubeId) }

@@ -40,7 +40,6 @@ struct LibraryView: View {
                     navManager.topListItemId = topListItemId
                 }
                 .myNavigationTitle("library")
-                .libraryDestination()
                 .toolbar {
                     if showCancelButton {
                         DismissToolbarButton()
@@ -52,9 +51,9 @@ struct LibraryView: View {
                 }
             }
             .tint(theme.color)
+            .libraryDestination()
         }
         .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
-
     }
 
     var settingsToolbarButton: some ToolbarContent {

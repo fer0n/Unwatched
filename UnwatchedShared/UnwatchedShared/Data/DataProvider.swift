@@ -139,7 +139,7 @@ public final class DataProvider: Sendable {
             do {
                 return try ModelContainer(for: schema, configurations: [modelConfiguration])
             } catch {
-                fatalError("Could not create ModelContainer: \(error)")
+                fatalError("Could not create preview ModelContainer: \(error)")
             }
         }()
         return sharedModelContainer
