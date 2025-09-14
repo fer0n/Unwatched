@@ -21,7 +21,7 @@ struct Signal {
 
     static func signalBool(_ signalName: String, value: Bool) {
         #if os(iOS)
-        TelemetryDeck.signal("\(signalName).\(value ? "Enabled" : "Disabled")")
+        TelemetryDeck.signal(signalName, parameters: ["value": value ? "On" : "Off"])
         #endif
     }
 
@@ -42,7 +42,7 @@ struct Signal {
 extension View {
     func signalToggle(_ name: String, isOn: Bool) -> some View {
         self.onChange(of: isOn) {
-            Signal.log("\(name).\(isOn ? "Enabled" : "Disabled")")
+            Signal.log(name, parameters: ["value": isOn ? "On" : "Off"])
         }
     }
 }
