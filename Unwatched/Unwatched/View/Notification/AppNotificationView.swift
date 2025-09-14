@@ -96,63 +96,68 @@ struct PreviewableAppNotificationView: View {
     @Environment(AppNotificationVM.self) var appNotificationVM
 
     var body: some View {
-        ZStack {}
-            .sheet(isPresented: .constant(true)) {
-                VStack {
-                    Button {
-                        appNotificationVM.show(AppNotificationData(
-                            title: "success",
-                            icon: "checkmark",
-                            timeout: 2.0
-                        ))
-                    } label: {
-                        Text(verbatim: "Simple")
-                    }
 
-                    Button {
-                        appNotificationVM.show("Some error", isError: true)
-                    } label: {
-                        Text(verbatim: "Error")
-                    }
-                    .onAppear {
-                        appNotificationVM.show("Some error", isError: true)
-                    }
-
-                    Button {
-                        appNotificationVM.show(.error(VideoError.emptyYoutubeId))
-                    } label: {
-                        Text(verbatim: "Error")
-                    }
-
-                    Button {
-                        appNotificationVM.show(AppNotificationData(
-                            title: "loading",
-                            icon: "arrow.clockwise",
-                            isLoading: true,
-                            timeout: 0
-                        ))
-                    } label: {
-                        Text(verbatim: "Loading")
-                    }
-
-                    Button {
-                        appNotificationVM.show(.addingVideo)
-                        Task {
-                            do {
-                                try await Task.sleep(for: .seconds(0.1))
-                                appNotificationVM.show(.addedVideo)
-                            } catch { }
-                        }
-                    } label: {
-                        Text(verbatim: "full test")
-                    }
-                }
-                .frame(maxHeight: .infinity)
+        VStack {
+            Button {
+                appNotificationVM.show(AppNotificationData(
+                    title: "success",
+                    icon: "checkmark",
+                    timeout: 2.0
+                ))
+            } label: {
+                Text(verbatim: "Simple")
             }
+
+            Button {
+                appNotificationVM.show("Some error", isError: true)
+            } label: {
+                Text(verbatim: "Error")
+            }
+
+            Button {
+                appNotificationVM.show(.error(VideoError.emptyYoutubeId))
+            } label: {
+                Text(verbatim: "Error")
+            }
+
+            Button {
+                appNotificationVM.show(AppNotificationData(
+                    title: "loading",
+                    icon: "arrow.clockwise",
+                    isLoading: true,
+                    timeout: 0
+                ))
+            } label: {
+                Text(verbatim: "Loading")
+            }
+
+            Button {
+                fullTest()
+            } label: {
+                Text(verbatim: "full test")
+            }
+        }
+        .onAppear {
+            fullTest()
+        }
+        .frame(maxHeight: .infinity)
+    }
+
+    func fullTest() {
+        appNotificationVM.show(.addingVideo)
+        Task {
+            do {
+                try await Task.sleep(for: .seconds(0.1))
+                appNotificationVM.show(.addedVideo)
+            } catch { }
+        }
     }
 }
 
 #Preview {
-    PreviewableAppNotificationView()
-        .appNotificationOverlay()
+    ZStack {}
+        .sheet(isPresented: .constant(true)) {
+            PreviewableAppNotificationView()
+                .appNotificationOverlay(topPadding: 20)
+        }
 }
