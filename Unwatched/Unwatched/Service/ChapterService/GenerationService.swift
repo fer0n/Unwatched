@@ -73,14 +73,12 @@ struct GenerationService {
             Prioritize accuracy and usefulness over speed. Each chapter should represent a meaningful content segment that viewers would actually want to jump to directly.
             """
             // swiftlint:enable all
-            if !isFirstChunk {
+            if !isFirstChunk, let lastChapter = chapters.last {
                 let additionalInstructions = """
 
-                This is a continuation, the chapters so far are:
+                This is a continuation, the most recent chapter is:
 
-                \(chapters.map(\.description).joined(separator: "\n"))
-
-                Do not repeat them, simply continue where they stopped.
+                \(lastChapter.title)
                 """
                 instructions += additionalInstructions
             }
@@ -98,7 +96,26 @@ struct GenerationService {
             isFirstChunk = false
         }
 
-        return chapters.map { $0.toSendableChapter }
+        return cleanChapters(chapters)
+    }
+
+    private static func cleanChapters(_ chapters: [GeneratedChapter]) -> [SendableChapter] {
+        let uniqueChapters = Array(Set(chapters))
+            .sorted(by: { $0.startTime < $1.startTime })
+
+        var sendable: [SendableChapter] = []
+        for chapter in uniqueChapters {
+            if let last = sendable.last, last.title == chapter.title {
+                // Remove consecutive chapters with the same title
+                // Might happen when processing in chunks
+                continue
+            }
+            sendable.append(chapter.toSendableChapter)
+        }
+        if !sendable.isEmpty {
+            sendable[0].startTime = 0
+        }
+        return sendable
     }
 
     private static func getChapters(
@@ -109,13 +126,7 @@ struct GenerationService {
         Log.info("instructions \(instructions) \n\nprompt \(prompt)")
         let session = LanguageModelSession(instructions: instructions)
         let response = try await session.respond(to: prompt, generating: ChapterGeneration.self)
-        var chapters = response.content.chapters
-
-        if !chapters.isEmpty && isStart {
-            // first chapter should always start at 0
-            chapters[0].startTime = 0
-        }
-        return chapters
+        return response.content.chapters
     }
 }
 

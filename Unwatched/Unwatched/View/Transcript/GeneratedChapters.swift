@@ -14,7 +14,7 @@ struct ChapterGeneration {
 
 @available(iOS 26.0, macOS 26.0, *)
 @Generable(description: "A video chapter")
-struct GeneratedChapter: CustomStringConvertible {
+struct GeneratedChapter: CustomStringConvertible, Hashable {
 
     @Guide(description: "Short and concise chapter title")
     public var title: String

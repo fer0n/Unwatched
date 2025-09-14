@@ -79,10 +79,17 @@ struct ChapterService {
     }
 
     static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
-        var chapters = chapters
+        var chapters = {
+            if let videoDuration {
+                chapters.filter { $0.startTime < videoDuration }
+            } else {
+                chapters
+            }
+        }()
+
         for index in 0..<chapters.count {
             if index == chapters.count - 1 {
-                if let videoDuration = videoDuration {
+                if let videoDuration {
                     chapters[index].duration = videoDuration - chapters[index].startTime
                     chapters[index].endTime = videoDuration
                 } else {
