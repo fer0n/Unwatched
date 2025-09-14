@@ -82,6 +82,7 @@ struct MenuView: View {
                 .presentationCompactAdaptation(
                     Device.isMac ? .popover : .sheet
                 )
+                .appNotificationOverlay(topPadding: 10)
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)

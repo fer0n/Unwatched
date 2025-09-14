@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct AppNotificationOverlayModifier: ViewModifier {
-    @Binding var appNotificationVM: AppNotificationVM
+    @State var appNotificationVM = AppNotificationVM()
     var topPadding: CGFloat
 
     func body(content: Content) -> some View {
@@ -25,9 +25,8 @@ struct AppNotificationOverlayModifier: ViewModifier {
 }
 
 extension View {
-    func appNotificationOverlay(_ appNotificationVM: Binding<AppNotificationVM>, topPadding: CGFloat = 2) -> some View {
+    func appNotificationOverlay(topPadding: CGFloat = 2) -> some View {
         modifier(AppNotificationOverlayModifier(
-                    appNotificationVM: appNotificationVM,
                     topPadding: topPadding)
         )
     }

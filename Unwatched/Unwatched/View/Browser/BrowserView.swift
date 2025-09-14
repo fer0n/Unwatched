@@ -20,7 +20,6 @@ struct BrowserView: View, KeyboardReadable {
     @Environment(BrowserManager.self) var browserManager
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-    @State var appNotificationVM = AppNotificationVM()
 
     var showHeader = true
     var safeArea = true
@@ -41,7 +40,6 @@ struct BrowserView: View, KeyboardReadable {
 
                 ZStack {
                     YtBrowserWebView(browserManager: $browserManager,
-                                     appNotificationVM: $appNotificationVM,
                                      onDismiss: handleDismiss)
                         .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
@@ -99,7 +97,7 @@ struct BrowserView: View, KeyboardReadable {
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
         .background(Color.youtubeWebBackground)
-        .appNotificationOverlay($appNotificationVM, topPadding: 20)
+        .appNotificationOverlay(topPadding: 20)
         .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
             await subscribeManager.setIsSubscribed(browserManager.info)

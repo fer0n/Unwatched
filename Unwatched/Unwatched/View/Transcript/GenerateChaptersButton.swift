@@ -87,10 +87,8 @@ struct GenerateChaptersButton: View {
 }
 
 #Preview {
-    @Previewable @State var appNotificationVM = AppNotificationVM()
     if #available (iOS 26.0, macOS 26.0, *) {
         GenerateChaptersButton(viewModel: .constant(GenerateChaptersButtonViewModel()), video: nil, transcriptUrl: nil)
-            .appNotificationOverlay($appNotificationVM)
-
+            .appNotificationOverlay()
     }
 }

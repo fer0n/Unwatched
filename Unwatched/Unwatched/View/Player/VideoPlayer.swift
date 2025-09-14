@@ -18,7 +18,6 @@ struct VideoPlayer: View {
 
     @State var sleepTimerVM = SleepTimerViewModel()
     @State var autoHideVM = AutoHideVM.shared
-    @State var appNotificationVM = AppNotificationVM()
 
     var compactSize = false
     var horizontalLayout = false
@@ -72,7 +71,7 @@ struct VideoPlayer: View {
                 }
             }
         }
-        .appNotificationOverlay($appNotificationVM)
+        .appNotificationOverlay()
         .tint(.neutralAccentColor)
         .onChange(of: player.isPlaying) {
             if player.video?.isNew == true {

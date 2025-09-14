@@ -95,5 +95,5 @@ struct ChapterDescriptionView: View {
         .environment(SubscribeManager())
         .environment(ImageCacheManager())
         .environment(SheetPositionReader())
-        .appNotificationOverlay(.constant(AppNotificationVM()))
+        .appNotificationOverlay()
 }

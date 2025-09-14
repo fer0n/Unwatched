@@ -19,35 +19,6 @@ struct ChapterSettingsMenu: View {
 
     var body: some View {
         Menu {
-            Section {
-                let transcriptUrl = video?.youtubeId == player.video?.youtubeId
-                    ? player.transcriptUrl
-                    : nil
-
-                if #available(iOS 26, macOS 26.0, *) {
-                    GenerateChaptersButton(
-                        viewModel: $viewModel,
-                        video: video,
-                        transcriptUrl: transcriptUrl,
-                        )
-                }
-                Button {
-                    let hasAccess = guardPremium {
-                        dismiss()
-                    }
-                    guard hasAccess else { return }
-                    openURL(UrlService.generateChaptersShortcutUrl)
-                } label: {
-                    Text("cloudAI")
-                    Text("shortcut")
-                    Image(systemName: "sparkles")
-                }
-            } header: {
-                Text(verbatim: "\(String(localized: "generateChapters")) ✪")
-            }
-            .tint(.white)
-            .containsPremium()
-
             Button {
                 guard let video else {
                     Log.warning("restoreChapters: No video")
@@ -59,7 +30,37 @@ struct ChapterSettingsMenu: View {
             } label: {
                 Label("restoreChapters", systemImage: "arrow.uturn.backward")
             }
-            .tint(.white)
+            .tint(Color.automaticBlack)
+
+            Section {
+                Button {
+                    let hasAccess = guardPremium {
+                        dismiss()
+                    }
+                    guard hasAccess else { return }
+                    openURL(UrlService.generateChaptersShortcutUrl)
+                } label: {
+                    Text("cloudAI")
+                    Text("shortcut")
+                    Image(systemName: "sparkles")
+                }
+
+                let transcriptUrl = video?.youtubeId == player.video?.youtubeId
+                    ? player.transcriptUrl
+                    : nil
+                if #available(iOS 26, macOS 26.0, *) {
+                    GenerateChaptersButton(
+                        viewModel: $viewModel,
+                        video: video,
+                        transcriptUrl: transcriptUrl,
+                        )
+                }
+            } header: {
+                Text(verbatim: "\(String(localized: "generateChapters")) ✪")
+            }
+            .tint(Color.automaticBlack)
+            .containsPremium()
+
         } label: {
             Image(systemName: "gearshape.fill")
                 .apply {
@@ -71,12 +72,9 @@ struct ChapterSettingsMenu: View {
                 }
             Text("chapters")
         }
+        .foregroundStyle(Color.automaticBlack)
         .tint(Color.insetBackgroundColor)
-        #if os(iOS)
-        .menuOrder(.priority)
-        #elseif os(macOS)
         .menuOrder(.fixed)
-        #endif
         .buttonStyle(.borderedProminent)
         .frame(maxWidth: .infinity, alignment: .center)
         .task(id: viewModel.errorMessage) {
@@ -91,4 +89,5 @@ struct ChapterSettingsMenu: View {
 #Preview {
     ChapterSettingsMenu(video: Video.getDummy())
         .environment(PlayerManager.getDummy())
+        .appNotificationOverlay()
 }

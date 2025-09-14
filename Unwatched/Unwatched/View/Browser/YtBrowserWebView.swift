@@ -16,19 +16,16 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-
-    @Binding var appNotificationVM: AppNotificationVM
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
     var onDismiss: (() -> Void)?
     @Bindable var browserManager: BrowserManager
 
     init(
         browserManager: Bindable<BrowserManager>,
-        appNotificationVM: Binding<AppNotificationVM>,
         onDismiss: (() -> Void)? = nil
     ) {
         self._browserManager = browserManager
-        self._appNotificationVM = appNotificationVM
         self.onDismiss = onDismiss
     }
 
