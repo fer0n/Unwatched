@@ -31,6 +31,7 @@ struct VideoListItemDurationOverlay: View {
                 .padding(3)
             } else if let roughDuration {
                 formatRoughDuration(roughDuration)
+                    .padding(.horizontal, padding)
             }
         }
         .font(.subheadline)

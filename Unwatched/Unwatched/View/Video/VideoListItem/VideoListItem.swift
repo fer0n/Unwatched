@@ -113,7 +113,7 @@ extension View {
     video.duration = nil // 130
     video.elapsedSeconds = 0.1
     video.isYtShort = false
-    video.noDuration = true
+    video.noDuration = false
 
     return List {
         VideoListItem(
