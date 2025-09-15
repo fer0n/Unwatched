@@ -5,7 +5,7 @@
 <h1 align="center"/>Unwatched</h1>
 
 <p align="center">
-  RSS feed based YouTube video player for iOS
+  RSS feed based YouTube video player for iOS, iPadOS, tvOS, macOS
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 
 Add Videos to watch them later or follow YouTube channels!
 
-Available on the App Store for free: [Download](https://apps.apple.com/app/id6477287463).
+Download for free on the App Store: [Download](https://apps.apple.com/app/id6477287463).
 
 ## KEY FEATURES
 
