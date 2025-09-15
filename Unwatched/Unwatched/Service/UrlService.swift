@@ -291,4 +291,21 @@ struct UrlService {
         NSWorkspace.shared.open(url)
         #endif
     }
+
+    static func isEqual(_ url1: URL?, _ url2: URL?, ignoreHost: Bool = false) -> Bool {
+        guard let url1, let url2 else { return false }
+        if ignoreHost {
+            let normalized1 = pathOnly(url1)
+            let normalized2 = pathOnly(url2)
+            return normalized1 == normalized2
+        }
+        return url1 == url2
+    }
+
+    static func pathOnly(_ url: URL?) -> String? {
+        guard let url, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            return url?.absoluteString
+        }
+        return components.path + (components.query ?? "")
+    }
 }

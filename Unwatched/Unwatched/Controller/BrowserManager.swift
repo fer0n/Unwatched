@@ -15,6 +15,10 @@ import UnwatchedShared
 
     @MainActor
     func loadUrl(_ url: URL?) {
+        if UrlService.isEqual(currentUrl, url, ignoreHost: true) {
+            Log.info("loadUrl: same url, not reloading")
+            return
+        }
         currentUrl = url
         if let webView, let url {
             let request = URLRequest(url: url)
