@@ -33,6 +33,7 @@ struct QueueVideoButton: View {
                 }
                 .foregroundStyle(.secondary)
         })
+        .buttonStyle(.plain)
         .onTapGesture(perform: addToTopQueue)
         .accessibilityLabel("queueNext")
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)

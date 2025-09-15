@@ -61,4 +61,29 @@ extension UserDataService {
             }
         }
     }
+
+    static func getNonDefaultSettings(prefixValue: String?) -> [String: String] {
+        var result = [String: String]()
+        // Check local settings
+        for (key, defaultValue) in Const.settingsDefaults {
+            if let currentValue = UserDefaults.standard.object(forKey: key) {
+                let currentAnyCodable = AnyCodable(currentValue)
+                let defaultAnyCodable = AnyCodable(defaultValue)
+                if currentAnyCodable != defaultAnyCodable {
+                    result[key] = "\(prefixValue ?? "")\(currentAnyCodable.asString)"
+                }
+            }
+        }
+        // Check synced settings
+        for (key, defaultValue) in Const.syncedSettingsDefaults {
+            if let currentValue = NSUbiquitousKeyValueStore.default.object(forKey: key) {
+                let currentAnyCodable = AnyCodable(currentValue)
+                let defaultAnyCodable = AnyCodable(defaultValue)
+                if currentAnyCodable != defaultAnyCodable {
+                    result[key] = "\(prefixValue ?? "")\(currentAnyCodable.asString)"
+                }
+            }
+        }
+        return result
+    }
 }

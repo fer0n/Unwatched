@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterDescriptionView: View {
-    @Environment(\.dismiss) var dismiss
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
 
@@ -34,14 +33,14 @@ struct ChapterDescriptionView: View {
                             isCompact: isCompact,
                             isTransparent: isTransparent
                         )
-                        .padding(.vertical)
-
-                        Spacer()
-                            .frame(height: 7)
-                    } else {
-                        Spacer()
-                            .frame(height: 7)
+                        .padding(.top)
+                        .padding(.bottom, 5)
                     }
+
+                    ChapterSettingsMenu(video: player.video)
+
+                    Spacer()
+                        .frame(height: 10)
 
                     TranscriptDescriptionSelection(
                         video: video,
@@ -59,18 +58,17 @@ struct ChapterDescriptionView: View {
                     .frame(maxWidth: .infinity)
             }
             .onAppear {
-                if hasChapters && player.video == video {
-                    let anchor: UnitPoint?
+                if hasChapters && player.video?.youtubeId == video.youtubeId {
                     if scrollToCurrent {
-                        anchor = .center
                     } else if navManager.scrollToCurrentChapter {
                         navManager.scrollToCurrentChapter = false
-                        anchor = .top
                     } else {
                         return
                     }
+                    let chapter = player.previousChapter ?? player.currentChapter
+                    let anchor: UnitPoint = player.previousChapter == nil ? .center : .top
                     proxy.scrollTo(
-                        player.currentChapter?.persistentModelID,
+                        chapter?.persistentModelID,
                         anchor: anchor
                     )
                 }
@@ -97,4 +95,5 @@ struct ChapterDescriptionView: View {
         .environment(SubscribeManager())
         .environment(ImageCacheManager())
         .environment(SheetPositionReader())
+        .appNotificationOverlay()
 }

@@ -30,14 +30,16 @@ struct AddToLibraryView: View {
     var body: some View {
         if showBrowser {
             Button(action: {
-                navManager.openUrlInApp(.youtubeStartPage)
+                navManager.showBrowser = true
+                Signal.log("Library.OpenBrowser", throttle: .daily)
             }, label: {
                 Label {
                     Text("browser")
                         .foregroundStyle(Color.neutralAccentColor)
                 } icon: {
-                    Image(systemName: Const.appBrowserSF)
+                    Image(systemName: Const.youtubeSF)
                         .tint(theme.color)
+                        .fontWeight(.black)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())

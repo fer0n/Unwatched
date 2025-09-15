@@ -20,10 +20,11 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedSchemaV1p8.self,
             UnwatchedSchemaV1p9.self,
             UnwatchedSchemaV1p10.self,
-            UnwatchedSchemaV1p11.self
+            UnwatchedSchemaV1p11.self,
+            UnwatchedSchemaV1p12.self
         ]
     }
-
+    
     static let migrateV1toV1p1 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1.self,
         toVersion: UnwatchedSchemaV1p1.self,
@@ -32,7 +33,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             try? context.save()
         }, didMigrate: nil
     )
-
+    
     static var watchedDates = [PersistentIdentifier: Date]()
     static let migrateV1p1toV1p2 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p1.self,
@@ -52,7 +53,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
                 }
                 try? context.delete(model: UnwatchedSchemaV1.WatchEntry.self)
             }
-
+            
             try? context.save()
         },
         didMigrate: { context in
@@ -64,14 +65,14 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             try? context.save()
         }
     )
-
+    
     public static var migrateV1p2toV1p3 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p2.self,
         toVersion: UnwatchedSchemaV1p3.self,
         willMigrate: nil,
         didMigrate: nil
     )
-
+    
     public static var migrateV1p3toV1p4 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p3.self,
         toVersion: UnwatchedSchemaV1p4.self,
@@ -82,7 +83,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateHideShortsSetting()
         }
     )
-
+    
     private static func migrateHideShortsSetting() {
         if UserDefaults.standard.object(forKey: Const.defaultShortsSetting) == nil {
             let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
@@ -90,21 +91,21 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UserDefaults.standard.setValue(shortSetting.rawValue, forKey: Const.defaultShortsSetting)
         }
     }
-
+    
     public static var migrateV1p4toV1p5 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p4.self,
         toVersion: UnwatchedSchemaV1p5.self,
         willMigrate: nil,
         didMigrate: nil
     )
-
+    
     public static var migrateV1p5toV1p6 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p5.self,
         toVersion: UnwatchedSchemaV1p6.self,
         willMigrate: nil,
         didMigrate: nil
     )
-
+    
     static var subPlaceVideosIn = [String: Int]()
     public static var migrateV1p6toV1p7 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p6.self,
@@ -148,7 +149,7 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         try? context.save()
         UnwatchedMigrationPlan.subPlaceVideosIn = [:]
     }
-
+    
     public static var migrateV1p7toV1p8 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p7.self,
         toVersion: UnwatchedSchemaV1p8.self,
@@ -158,14 +159,14 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UserDefaults.standard.setValue(!enableYtWatchHistory, forKeyPath: Const.useNoCookieUrl)
         }
     )
-
+    
     public static var migrateV1p8toV1p9 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p8.self,
         toVersion: UnwatchedSchemaV1p9.self,
         willMigrate: nil,
         didMigrate: nil
     )
-
+    
     public static var migrateV1p9toV1p10 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p9.self,
         toVersion: UnwatchedSchemaV1p10.self,
@@ -209,10 +210,17 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
         UserDefaults.standard.set(true, forKey: "v1p9toV1p10DidMigrate")
     }
-
+    
     public static var migrateV1p10toV1p11 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p10.self,
         toVersion: UnwatchedSchemaV1p11.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
+    
+    public static var migrateV1p11toV1p12 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p11.self,
+        toVersion: UnwatchedSchemaV1p12.self,
         willMigrate: nil,
         didMigrate: nil
     )
@@ -229,7 +237,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p7toV1p8,
             migrateV1p8toV1p9,
             migrateV1p9toV1p10,
-            migrateV1p10toV1p11
+            migrateV1p10toV1p11,
+            migrateV1p11toV1p12
         ]
     }
 }

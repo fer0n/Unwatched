@@ -16,6 +16,13 @@ struct SubscriptionService {
         return subs
     }
 
+    static func getActiveSubscriptionCount() -> Task<Int?, Never> {
+        Task.detached {
+            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            return await repo.getActiveSubscriptionCount()
+        }
+    }
+
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
         let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
@@ -31,6 +38,7 @@ struct SubscriptionService {
 
     static func addSubscription(subscriptionInfo: SubscriptionInfo? = nil,
                                 subscriptionId: PersistentIdentifier? = nil) async throws {
+        Log.info("addSubscription")
         guard subscriptionInfo != nil || subscriptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }

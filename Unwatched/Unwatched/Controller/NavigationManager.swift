@@ -16,11 +16,11 @@ import UnwatchedShared
     }()
 
     var showMenu = false
-    var openBrowserUrl: BrowserUrl?
-    var openTabBrowserUrl: BrowserUrl?
+    var showBrowser = false
     var openWindow: OpenWindowAction?
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
+    var showPremiumOffer = false
 
     var isMacosFullscreen = false
 
@@ -29,7 +29,6 @@ import UnwatchedShared
     @ObservationIgnored var scrollToCurrentChapter = false
 
     var tab = NavigationTab.queue
-    var searchFocused = false
 
     var askForReviewPoints = 0
 
@@ -168,7 +167,9 @@ import UnwatchedShared
         case .library:
             isOnTopView = presentedLibrary.isEmpty
         case .browser:
-            openTabBrowserUrl = .youtubeStartPage
+            Task { @MainActor in
+                BrowserManager.shared.loadUrl(BrowserUrl.youtubeStartPage.getUrl)
+            }
         }
 
         if !isOnTopView, #unavailable(iOS 18) {
@@ -198,12 +199,13 @@ import UnwatchedShared
     func openUrlInApp(_ url: BrowserUrl) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
-            SheetPositionReader.shared.setDetentMiniPlayer()
-            openTabBrowserUrl = url
+            BrowserManager.shared.loadUrl(url.getUrl)
             tab = .browser
+            SheetPositionReader.shared.setDetentMiniPlayer()
             showMenu = true
         } else {
-            openBrowserUrl = url
+            BrowserManager.shared.loadUrl(url.getUrl)
+            showBrowser = true
             #if os(macOS)
             openWindow?(id: Const.windowBrowser)
             #endif
@@ -215,8 +217,8 @@ import UnwatchedShared
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
         let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
 
-        if searchFocused {
-            searchFocused = false
+        if showBrowser != false {
+            showBrowser = false
         }
 
         if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
@@ -224,6 +226,9 @@ import UnwatchedShared
             toggleSidebar(show: false)
             #else
             withAnimation {
+                if Device.isIpad {
+                    UserDefaults.standard.set(true, forKey: Const.hideControlsFullscreen)
+                }
                 SheetPositionReader.shared.setDetentMinimumSheet()
             }
             #endif
@@ -263,12 +268,13 @@ import UnwatchedShared
     }
 
     var hasSheetOpen: Bool {
-        videoDetail != nil || openBrowserUrl != nil
+        videoDetail != nil || showBrowser == true
     }
 
     static func getDummy(_ showMenu: Bool = true) -> NavigationManager {
         let navManager = NavigationManager()
         navManager.showMenu = showMenu
+        // navManager.playerTab = .chapterDescription
         return navManager
     }
 }

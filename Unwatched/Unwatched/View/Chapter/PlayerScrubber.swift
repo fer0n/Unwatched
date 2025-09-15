@@ -23,7 +23,6 @@ struct PlayerScrubber: View {
     }
 
     let inlineTime: Bool
-    let thumbWidth: CGFloat = 4
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
 
@@ -32,9 +31,9 @@ struct PlayerScrubber: View {
 
     var body: some View {
         let boundedPosition = getWithinBounds(draggedScrubberWidth, maxValue: scrubberWidth)
-        let currentScrubberPosition = scrubbingPadding + boundedPosition
+        let currentScrubberPosition = boundedPosition
 
-        VStack(spacing: 2) {
+        VStack(spacing: 1) {
             if !inlineTime {
                 HStack {
                     Text(formattedCurrentTime)
@@ -62,45 +61,51 @@ struct PlayerScrubber: View {
                 }
 
                 ZStack {
-                    Color.foregroundGray.opacity(0.2)
+                    Color.foregroundGray.opacity(Const.iOS26
+                                                    ? (isGestureActive ? 0.15 : 0.1)
+                                                    : (isGestureActive ? 0.25 : 0.2))
 
                     if let video = player.video,
                        let total = video.duration {
 
                         HStack(spacing: 0) {
                             Color.foregroundGray
-                                .opacity(0.3)
+                                .opacity(isGestureActive ? 0.5 : 0.3)
                                 .frame(width: currentScrubberPosition)
                             Color.clear
                         }
+
                         ProgressBarChapterIndicators(
                             video: player.video,
-                            height: scrubberHeight,
+                            height: currentScrubberHeight,
                             width: scrubberWidth,
                             duration: total
                         )
-                        .padding(.horizontal, scrubbingPadding)
                     }
                 }
                 .onSizeChange { geometry in
                     viewSize = geometry
                 }
+                .frame(height: currentScrubberHeight)
+                .clipShape(clipShape)
+                .apply {
+                    if #available(iOS 26.0, macOS 26.0, *) {
+                        $0.glassEffect(.regular, in: clipShape)
+                    } else {
+                        $0
+                    }
+                }
                 .frame(height: scrubberHeight)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged(handleChanged)
                         .onEnded(handleEnded)
                 )
-                .overlay {
-                    thumb
-                        .position(
-                            x: currentScrubberPosition,
-                            y: scrubberHeight / 2
-                        )
-                }
                 .disabled(isDisabled)
-                .animation(.default.speed(3), value: isInactive)
+                #if os(iOS)
+                .animation(.default.speed(2), value: currentScrubberHeight)
+                #endif
 
                 if inlineTime {
                     Text(formattedDuration)
@@ -111,10 +116,23 @@ struct PlayerScrubber: View {
                 }
             }
         }
+        .sensoryFeedback(
+            Const.sensoryFeedback,
+            trigger: initialDragPosition
+        ) { $1 != nil }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: isGestureActive)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(String(localized: "playerScrubber"))
         .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
         .accessibilityValue(currentTime?.formattedSecondsColon ?? "")
+    }
+
+    var currentScrubberHeight: CGFloat {
+        scrubberHeight - (isGestureActive ? 0 : 2)
+    }
+
+    var clipShape: some Shape {
+        Capsule()
     }
 
     var isDisabled: Bool {
@@ -122,7 +140,7 @@ struct PlayerScrubber: View {
     }
 
     var scrubberWidth: CGFloat {
-        max(0, viewSize.width - scrubbingPadding * 2)
+        max(0, viewSize.width)
     }
 
     var currentScrubberWidth: CGFloat {
@@ -169,7 +187,7 @@ struct PlayerScrubber: View {
             if enableTapScrubbing {
                 if value.translation == .zero {
                     // Initial click - move to clicked position
-                    let position = max(0, min(value.location.x - scrubbingPadding, scrubberWidth))
+                    let position = max(0, min(value.location.x, scrubberWidth))
                     if let duration = player.video?.duration,
                        let newTime = getTimeFromPosition(position) {
                         let floatDuration = CGFloat(duration)
@@ -180,7 +198,7 @@ struct PlayerScrubber: View {
                     }
                 }
                 // Set initial position for dragging
-                let position = max(0, min(value.location.x - scrubbingPadding, scrubberWidth))
+                let position = max(0, min(value.location.x, scrubberWidth))
                 initialDragPosition = position
             } else {
                 initialDragPosition = getCurrentPosition()
@@ -241,24 +259,6 @@ struct PlayerScrubber: View {
             return Double(position / scrubberWidth) * total
         }
         return nil
-    }
-
-    var thumb: some View {
-        Capsule()
-            .fill(
-                isDisabled || isInactive || (isGestureActive && initialDragPosition == nil)
-                    ? .foregroundGray
-                    : Color.automaticBlack
-            )
-            .frame(
-                width: thumbWidth * (!isGestureActive ? 1 : 1.4),
-                height: scrubberHeight * (!isGestureActive ? 1 : 1.3)
-            )
-            .sensoryFeedback(
-                Const.sensoryFeedback,
-                trigger: initialDragPosition
-            ) { $1 != nil }
-            .sensoryFeedback(Const.sensoryFeedback, trigger: isGestureActive)
     }
 }
 

@@ -12,39 +12,46 @@ extension View {
         self
             .sendableSubscriptionDestination()
             .navigationDestination(for: LibraryDestination.self) { value in
-                switch value {
-                case .allVideos:
-                    AllVideosView()
-                case .watchHistory:
-                    WatchHistoryView()
-                case .sideloading:
-                    SideloadingView()
-                case .settings:
-                    SettingsView()
-                case .userData:
-                    BackupView()
-                case .bookmarkedVideos:
-                    BookmarkedVideosView()
-                case .importSubscriptions:
-                    ImportSubscriptionsView(importButtonPadding: true)
-                        .myNavigationTitle("importSubscriptions")
-                case .debug:
-                    DebugView()
-                case .settingsNotifications:
-                    NotificationSettingsView()
-                case .settingsNewVideos:
-                    GeneralSettingsView()
-                case .settingsAppearance:
-                    AppearanceSettingsView()
-                case .settingsPlayback:
-                    PlaybackSettingsView()
-                case .help:
-                    HelpView()
-                case .filter:
-                    FilterSettingsView()
-                case .titleFilter:
-                    GlobalTitleFilterWithPreview()
+                ZStack {
+                    switch value {
+                    case .allVideos:
+                        AllVideosView()
+                    case .watchHistory:
+                        WatchHistoryView()
+                    case .sideloading:
+                        SideloadingView()
+                    case .settings:
+                        SettingsView()
+                    case .userData:
+                        BackupView()
+                    case .bookmarkedVideos:
+                        BookmarkedVideosView()
+                    case .importSubscriptions:
+                        ImportSubscriptionsView(importButtonPadding: true)
+                            .myNavigationTitle("importSubscriptions")
+                    case .debug:
+                        DebugView()
+                    case .settingsNotifications:
+                        NotificationSettingsView()
+                    case .settingsNewVideos:
+                        GeneralSettingsView()
+                    case .settingsAppearance:
+                        AppearanceSettingsView()
+                    case .settingsPlayback:
+                        PlaybackSettingsView()
+                    case .help:
+                        HelpView()
+                    case .filter:
+                        FilterSettingsView()
+                    case .titleFilter:
+                        GlobalTitleFilterWithPreview()
+                    case .privacy:
+                        PrivacySettingsView()
+                    }
                 }
+                #if os(macOS)
+                .navigationStackWorkaround()
+                #endif
             }
     }
     // swiftlint:enable cyclomatic_complexity
@@ -65,5 +72,6 @@ enum LibraryDestination: Codable {
          debug,
          help,
          filter,
-         titleFilter
+         titleFilter,
+         privacy
 }

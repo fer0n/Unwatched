@@ -18,9 +18,12 @@ struct SetupView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.openWindow) var openWindow
 
+    @State var browserManager = BrowserManager.shared
+    #if os(macOS)
+    @State var navTitleManager = NavigationTitleManager()
+    #endif
     @State var imageCacheManager = ImageCacheManager.shared
     @State var sheetPos = SheetPositionReader.shared
-    @State var alerter: Alerter = Alerter()
     @State var navManager = NavigationManager.shared
     @State var undoManager = TinyUndoManager.shared
 
@@ -28,15 +31,16 @@ struct SetupView: View {
         ContentView()
             .tint(theme.color)
             .environment(sheetPos)
-            .environment(alerter)
             .watchNotificationHandler()
             .environment(navManager)
             .environment(\.originalColorScheme, colorScheme)
             .environment(imageCacheManager)
             .environment(undoManager)
-            .alert(isPresented: $alerter.isShowingAlert) {
-                alerter.alert ?? Alert(title: Text(verbatim: ""))
-            }
+            .environment(browserManager)
+            .modifier(CustomAlerter())
+            #if os(macOS)
+            .environment(navTitleManager)
+            #endif
             .onOpenURL { url in
                 Log.info("onOpenURL: \(url)")
                 handleDeepLink(url: url)
@@ -121,13 +125,37 @@ struct SetupView: View {
         Log.info("saved state")
     }
 
-    static func setupVideo() {
+    static func onLaunch() {
         Log.info("setupVideo")
         if RefreshManager.shared.consumeTriggerPasteAction() {
             NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
         } else {
             // avoid fetching another video first
             PlayerManager.shared.restoreNowPlayingVideo()
+        }
+        VideoService.fetchVideoDurationsQueueInbox()
+        sendSettings()
+    }
+
+    static func sendSettings() {
+        let signalType = "SettingsSnapshot"
+        let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
+            signalType: signalType,
+            interval: .fortNightly
+        )
+        if shouldSend {
+            let nonDefault = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
+            Signal.log(signalType, parameters: nonDefault)
+            signalSubscriptionCount()
+        }
+    }
+
+    static func signalSubscriptionCount() {
+        let task = SubscriptionService.getActiveSubscriptionCount()
+        Task {
+            if let count = await task.value {
+                Signal.log("SubscriptionCount", parameters: ["SubscriptionCount.Value": "\(count)"])
+            }
         }
     }
 }

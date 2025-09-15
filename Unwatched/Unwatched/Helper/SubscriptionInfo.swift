@@ -15,26 +15,7 @@ struct SubscriptionInfo {
     var playlistId: String?
     var imageUrl: URL?
 
-    var rssFeedUrl: URL? {
-        get {
-            if _rssFeedUrl != nil {
-                return _rssFeedUrl
-            }
-            if let playlistId,
-               let url = try? UrlService.getPlaylistFeedUrl(playlistId) {
-                return url
-            }
-            if let channelId {
-                return try? UrlService.getFeedUrlFromChannelId(channelId)
-            }
-            return nil
-        }
-        set {
-            _rssFeedUrl = newValue
-        }
-    }
-
-    private var _rssFeedUrl: URL?
+    var rssFeedUrl: URL?
 
     init(
         _ url: URL?,
@@ -66,5 +47,29 @@ struct SubscriptionInfo {
 
     init(rssFeedUrl: URL?) {
         self.rssFeedUrl = rssFeedUrl
+    }
+
+    func getRssFeedUrl() async -> URL? {
+        if let rssFeedUrl {
+            return rssFeedUrl
+        }
+        if let playlistId,
+           let url = try? UrlService.getPlaylistFeedUrl(playlistId) {
+            return url
+        }
+        if let channelId {
+            return try? UrlService.getFeedUrlFromChannelId(channelId)
+        }
+        if let userName {
+            if let url {
+                return try? await SubscriptionActor.getChannelFeedFromUrl(
+                    url: url,
+                    channelId: channelId,
+                    userName: userName,
+                    playlistId: playlistId
+                )
+            }
+        }
+        return nil
     }
 }

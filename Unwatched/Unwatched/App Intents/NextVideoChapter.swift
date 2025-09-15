@@ -13,6 +13,7 @@ struct NextVideoChapter: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        Signal.log("Shortcut.NextChapter")
         let success = PlayerManager.shared.goToNextChapter()
         if !success {
             throw ChapterControlError.noNextChapter

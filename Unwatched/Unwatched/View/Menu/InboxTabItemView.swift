@@ -10,11 +10,9 @@ import UnwatchedShared
 struct InboxTabItemView: View {
     let showCancelButton: Bool
     let showBadge: Bool
-    let horizontalpadding: CGFloat
 
     var body: some View {
         InboxView(showCancelButton: showCancelButton)
-            .padding(.horizontal, horizontalpadding)
             .modifier(InboxTabItemViewModifier(showBadge: showBadge))
     }
 }

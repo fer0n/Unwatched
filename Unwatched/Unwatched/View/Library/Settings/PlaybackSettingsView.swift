@@ -16,10 +16,14 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = false
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
+
+    @Environment(PlayerManager.self) var player
 
     var body: some View {
         ZStack {
             Color.backgroundColor.ignoresSafeArea(.all)
+            @Bindable var player = player
 
             MyForm {
                 if Device.supportsFullscreenControls {
@@ -34,12 +38,24 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                MySection(footer: "continuousPlayHelper") {
+                #if os(iOS)
+                MySection {
                     Toggle(isOn: $originalAudio) {
                         Text("forceOriginalAudio")
                     }
                     .onChange(of: originalAudio) { _, _ in
                         PlayerManager.reloadPlayer()
+                    }
+
+                    Toggle(isOn: $playVideoFullscreen) {
+                        Text("startVideosInFullscreen")
+                    }
+                }
+                #endif
+
+                MySection(footer: "continuousPlayHelper") {
+                    Toggle(isOn: $player.isRepeating) {
+                        Text("loopVideo")
                     }
 
                     Toggle(isOn: $continuousPlay) {
@@ -63,15 +79,20 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                #if os(iOS)
-                MySection {
-                    Toggle(isOn: $playVideoFullscreen) {
-                        Text("startVideosInFullscreen")
+                HideControlsSettings()
+
+                TemporaryPlaybackSpeedSettings()
+
+                MySection(
+                    "browserPlayback",
+                    footer: "$browserPlaybackFooter",
+                    showPremiumIndicator: true
+                ) {
+                    Toggle(isOn: $playBrowserVideosInApp) {
+                        Text("playBrowserVideosInApp")
                     }
                 }
-                #endif
-
-                HideControlsSettings()
+                .requiresPremium(!playBrowserVideosInApp)
 
                 #if os(iOS)
                 MySection(footer: "autoAirplayHDHelper") {
@@ -95,34 +116,7 @@ struct PlaybackSettingsView: View {
     }
 }
 
-struct HideControlsSettings: View {
-    @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
-    @AppStorage(Const.minimalPlayerUI) var minimalPlayerUI: Bool = false
-    @Environment(PlayerManager.self) var player
-
-    var body: some View {
-        MySection("hideControls") {
-            Toggle(isOn: $disableCaptions) {
-                Text("disableCaptions")
-            }
-            .onChange(of: disableCaptions) {
-                reloadPlayer()
-            }
-
-            Toggle(isOn: $minimalPlayerUI) {
-                Text("minimalPlayerUI")
-            }
-            .onChange(of: minimalPlayerUI) {
-                reloadPlayer()
-            }
-        }
-    }
-
-    func reloadPlayer() {
-        player.hotReloadPlayer()
-    }
-}
-
 #Preview {
     PlaybackSettingsView()
+        .environment(PlayerManager())
 }

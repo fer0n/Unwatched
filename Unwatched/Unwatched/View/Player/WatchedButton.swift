@@ -20,6 +20,7 @@ struct WatchedButton: View {
             player.markVideoWatched(showMenu: true, source: .nextUp)
             hapticToggle.toggle()
             try? modelContext.save()
+            Signal.log("Player.WatchedVideo", throttle: .daily)
         } label: {
             Image(systemName: "checkmark")
                 .fontWeight(.bold)

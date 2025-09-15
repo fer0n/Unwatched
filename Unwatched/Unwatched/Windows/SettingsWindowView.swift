@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct SettingsWindowView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @State var navTitleManager = NavigationTitleManager()
 
     var body: some View {
         TabView {
@@ -26,11 +27,14 @@ struct SettingsWindowView: View {
                 Label("appearance", systemImage: Const.appearanceSettingsSF)
             }
 
-            PlaybackSettingsView()
-                .settingsView()
-                .tabItem {
-                    Label("playback", systemImage: Const.playbackSettingsSF)
-                }
+            ScrollView {
+                PlaybackSettingsView()
+                    .settingsView()
+                    .padding(.vertical)
+            }
+            .tabItem {
+                Label("playback", systemImage: Const.playbackSettingsSF)
+            }
 
             ScrollView {
                 FilterSettingsView()
@@ -55,7 +59,14 @@ struct SettingsWindowView: View {
                 .tabItem {
                     Label("debug", systemImage: Const.debugSettingsSF)
                 }
+
+            PrivacySettingsView()
+                .settingsView()
+                .tabItem {
+                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                }
         }
+        .environment(navTitleManager)
         .background(Color.backgroundColor)
         .frame(width: 700, height: 500)
         .tint(theme.color)

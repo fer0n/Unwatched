@@ -43,6 +43,7 @@ extension PlayerWebView {
         var video = null;
         let videoFindAttempts = 0;
         var isSwiping = false;
+        let overlayVisible = null;
 
         let overlay = document.querySelector('#player-control-overlay');
         let isNewEmbedding = !!overlay; // initially found means new embedding player
@@ -101,7 +102,7 @@ extension PlayerWebView {
         }
 
         // Overlay control
-        let overlayVisible = overlay && overlay.classList.contains('fadein');
+        overlayVisible = overlay && overlay.classList.contains('fadein');
         let overlayHideTimer = null;
         let lastTapDate = null;
         let consecutiveSingleTaps = 0;
@@ -214,8 +215,8 @@ extension PlayerWebView {
         };
 
         function hideOverlay() {
-            isOverlayHealthy();
-            if (!overlayVisible || !isNewEmbedding) return;
+            const isHealthy = isOverlayHealthy();
+            if ((isHealthy && !overlayVisible) || !isNewEmbedding) return;
             allowFadeinChanges = true;
             overlay.classList.remove('fadein');
             allowFadeinChanges = false;
@@ -265,6 +266,8 @@ extension PlayerWebView {
         // Check video state
         function sendVideoState(v, message = "checkVideoState") {
             let info = {
+                containsOverlay: document.contains(overlay),
+                overlayVisible: overlayVisible,
                 inDom: document.contains(v),
                 sameVideo: video === v,
                 video: !!v,

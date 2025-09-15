@@ -26,27 +26,33 @@ struct AppNotificationView: View {
             }
 
             if let error = notification?.error {
-                Button {
-                    reportMessage(error)
-                } label: {
-                    Image(systemName: "arrowshape.turn.up.right.fill")
-                    Text("reportAnIssue")
-                }
-                .buttonStyle(.bordered)
-                .tint(.black)
-                .buttonBorderShape(.capsule)
+                Text(verbatim: error.localizedDescription)
+                    .foregroundStyle(.secondary)
+                    .frame(idealWidth: 250, maxWidth: 250)
             }
         }
-        .foregroundStyle(.white)
         .padding(.horizontal, 15)
         .padding(.vertical, 10)
-        .background(
-            notification?.error != nil
-                ? .red
-                : .black.opacity(0.2)
-        )
-        .background(.regularMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
+        .apply {
+            if #available(iOS 26, macOS 26, *) {
+                $0
+                    .foregroundStyle(hasError ? .white : .primary)
+                    .glassEffect(
+                        .regular.tint(hasError ? .red : .clear).interactive(),
+                        in: clipShape
+                    )
+            } else {
+                $0
+                    .foregroundStyle(.white)
+                    .background(
+                        hasError
+                            ? .red
+                            : .black.opacity(0.2)
+                    )
+                    .background(.regularMaterial)
+                    .clipShape(clipShape)
+            }
+        }
         .fixedSize()
         .simultaneousGesture(
             DragGesture()
@@ -58,6 +64,20 @@ struct AppNotificationView: View {
                     }
                 }
         )
+    }
+
+    var hasError: Bool {
+        notification?.isError == true
+    }
+
+    var clipShape: some Shape {
+        RoundedRectangle(cornerRadius: 25, style: .continuous)
+    }
+
+    var color: Color {
+        notification?.error != nil
+            ? .red
+            : .black.opacity(0.2)
     }
 
     func reportMessage(_ error: Error) {
@@ -72,70 +92,72 @@ struct AppNotificationView: View {
     }
 }
 
-#Preview {
-    @Previewable @State var appNotificationVM = AppNotificationVM()
+struct PreviewableAppNotificationView: View {
+    @Environment(AppNotificationVM.self) var appNotificationVM
 
-    let errorMessage = AppNotificationData(
-        title: "errorOccured",
-        error: VideoError.emptyYoutubeId,
-        icon: Const.errorSF,
-        timeout: 0
-    )
+    var body: some View {
 
-    return VStack {
-        Button {
-            appNotificationVM.show(AppNotificationData(
-                title: "success",
-                icon: "checkmark",
-                timeout: 2.0
-            ))
-        } label: {
-            Text(verbatim: "Simple")
-        }
+        VStack {
+            Button {
+                appNotificationVM.show(AppNotificationData(
+                    title: "success",
+                    icon: "checkmark",
+                    timeout: 2.0
+                ))
+            } label: {
+                Text(verbatim: "Simple")
+            }
 
-        Button {
-            appNotificationVM.show(errorMessage)
-        } label: {
-            Text(verbatim: "Error")
+            Button {
+                appNotificationVM.show("Some error", isError: true)
+            } label: {
+                Text(verbatim: "Error")
+            }
+
+            Button {
+                appNotificationVM.show(.error(VideoError.emptyYoutubeId))
+            } label: {
+                Text(verbatim: "Error")
+            }
+
+            Button {
+                appNotificationVM.show(AppNotificationData(
+                    title: "loading",
+                    icon: "arrow.clockwise",
+                    isLoading: true,
+                    timeout: 0
+                ))
+            } label: {
+                Text(verbatim: "Loading")
+            }
+
+            Button {
+                fullTest()
+            } label: {
+                Text(verbatim: "full test")
+            }
         }
         .onAppear {
-            appNotificationVM.show(errorMessage)
+            fullTest()
         }
+        .frame(maxHeight: .infinity)
+    }
 
-        Button {
-            appNotificationVM.show(AppNotificationData(
-                title: "Processing",
-                icon: "arrow.clockwise",
-                isLoading: true,
-                timeout: 0
-            ))
-        } label: {
-            Text(verbatim: "Loading")
-        }
-
-        Button {
-            let notification = AppNotificationData(
-                title: "addingVideo",
-                icon: Const.queueTopSF,
-                isLoading: true,
-                timeout: 0
-            )
-            appNotificationVM.show(notification)
-            Task {
-                do {
-                    try await Task.sleep(for: .seconds(0.1))
-                    let notification = AppNotificationData(
-                        title: "addedVideo",
-                        icon: Const.checkmarkSF,
-                        timeout: 2
-                    )
-                    appNotificationVM.show(notification)
-                } catch { }
-            }
-        } label: {
-            Text(verbatim: "full test")
+    func fullTest() {
+        appNotificationVM.show(.addingVideo)
+        Task {
+            do {
+                try await Task.sleep(for: .seconds(0.1))
+                appNotificationVM.show(.addedVideo)
+            } catch { }
         }
     }
-    .frame(maxHeight: .infinity)
-    .appNotificationOverlay($appNotificationVM)
+}
+
+#Preview {
+    ZStack {}
+        .sheet(isPresented: .constant(true)) {
+            PreviewableAppNotificationView()
+                .appNotificationOverlay(topPadding: 20)
+        }
 }

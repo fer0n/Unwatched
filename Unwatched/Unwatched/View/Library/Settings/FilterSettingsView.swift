@@ -21,10 +21,12 @@ struct FilterSettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
-                MySection {
-                    Text("settingsSync")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .foregroundStyle(.secondary)
+                if #unavailable(iOS 26.0) {
+                    MySection {
+                        Text("settingsSync")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
@@ -32,6 +34,7 @@ struct FilterSettingsView: View {
                     NavigationLink(value: LibraryDestination.titleFilter) {
                         Text("videoTitle")
                     }
+                    .containsPremium()
                     #endif
                     Picker("shortsSetting", selection: $defaultShortsSetting) {
                         ForEach(ShortsSetting.allCases.filter { $0 != .defaultSetting }, id: \.self) {
@@ -50,7 +53,7 @@ struct FilterSettingsView: View {
                 TitleFilterView()
                 #endif
 
-                MySection("chapterFilter", footer: "chapterFilterFooter") {
+                MySection("chapters", footer: "chapterFilterFooter", showPremiumIndicator: true) {
                     TextField("keywords", text: $skipChapterText)
                         .autocorrectionDisabled()
                         #if os(iOS)
@@ -58,6 +61,7 @@ struct FilterSettingsView: View {
                         .submitLabel(.done)
                     #endif
                 }
+                .requiresPremium(skipChapterText.isEmpty)
 
                 SponsorBlockSettingsView()
             }
@@ -74,6 +78,13 @@ struct FilterSettingsView: View {
             )
         }
         .myNavigationTitle("filterSettings")
+        .apply {
+            if #available(iOS 26.0, *) {
+                $0.navigationSubtitle("settingsSync")
+            } else {
+                $0
+            }
+        }
     }
 
     func checkShortsInInbox() {

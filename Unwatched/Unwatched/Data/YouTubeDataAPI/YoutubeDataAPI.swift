@@ -3,9 +3,8 @@ import OSLog
 import UnwatchedShared
 
 struct YoutubeDataAPI {
-    static var apiKey: String {
-        Credentials.youtubeApiKey
-    }
+    static let apiKey = Credentials.youtubeApiKey
+    static let premiumApiKey = Credentials.unwatchedPremiumApiKey
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
@@ -60,6 +59,57 @@ struct YoutubeDataAPI {
         }
 
         throw VideoError.noVideoFound
+    }
+
+    static func getYtVideoDurations(_ ids: [String]) async throws -> [VideoDurationInfo] {
+        Log.info("getYtVideoDurations, for: \(ids.count)")
+        let idsPerRequest = Const.maxVideoIdsPerRequest
+
+        return try await withThrowingTaskGroup(of: [VideoDurationInfo].self) { group in
+            for index in stride(from: 0, to: ids.count, by: idsPerRequest) {
+                let endIndex = min(index + idsPerRequest, ids.count)
+                let batchIds = Array(ids[index..<endIndex])
+
+                group.addTask {
+                    let idString = batchIds.joined(separator: ",")
+                    let apiUrl = "\(baseUrl)videos?key=\(premiumApiKey)&id=\(idString)&part=contentDetails"
+                    Log.info("Fetching durations for batch \(index/idsPerRequest + 1)")
+                    var batchResults: [VideoDurationInfo] = []
+
+                    do {
+                        let response = try await YoutubeDataAPI.handleYoutubeRequest(
+                            url: apiUrl,
+                            model: YtVideoDurations.self
+                        )
+                        for item in response.items {
+                            var durationSeconds: Double?
+                            let duration = item.contentDetails.duration
+                            if let duration {
+                                durationSeconds = parseDurationToSeconds(duration)
+                            } else {
+                                Log.warning("Failed to parse duration for video ID: \(item.id)")
+                            }
+                            batchResults.append(VideoDurationInfo(
+                                youtubeId: item.id,
+                                duration: durationSeconds,
+                                noDuration: duration == "P0D"
+                            ))
+                        }
+                        return batchResults
+                    } catch {
+                        Log.error("Error fetching durations for batch: \(error)")
+                        throw error
+                    }
+                }
+            }
+
+            var allResults: [VideoDurationInfo] = []
+            for try await batchResult in group {
+                allResults.append(contentsOf: batchResult)
+            }
+
+            return allResults
+        }
     }
 
     static func createVideo(_ snippet: YtVideoSnippet, videoId: String, duration: String? = nil) -> SendableVideo {
@@ -124,4 +174,14 @@ struct YoutubeDataAPI {
         Log.info("Amount of imported videos: \(result.count)")
         return result
     }
+}
+
+import SwiftData
+
+struct VideoDurationInfo {
+    let youtubeId: String
+    let duration: Double?
+    let noDuration: Bool?
+    var persistentId: PersistentIdentifier?
+    let updatedDate = Date()
 }

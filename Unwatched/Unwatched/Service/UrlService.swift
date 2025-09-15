@@ -18,7 +18,9 @@ struct UrlService {
 
     static let shareShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
     static let generateChaptersShortcutUrl = URL(
-        staticString: "https://www.icloud.com/shortcuts/9cb5cc2ada7548e796a0d1fdfd940fcf"
+        staticString: Const.iOS26
+            ? "https://www.icloud.com/shortcuts/8af0a874625d4d8d9e9ea819ee307559"
+            : "https://www.icloud.com/shortcuts/9cb5cc2ada7548e796a0d1fdfd940fcf"
     )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
 
@@ -27,6 +29,7 @@ struct UrlService {
     static let mastodonUrl = URL(staticString: "https://indieapps.space/@unwatched")
     static let blueskyUrl = URL(staticString: "https://bsky.app/profile/unwatched.bsky.social")
     static let releasesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/releases")
+    static let privacyUrl = URL(staticString: "https://github.com/fer0n/Unwatched/wiki/Privacy-Policy")
 
     static let issuesUrl = URL(staticString: "https://github.com/fer0n/Unwatched/issues")
 
@@ -287,5 +290,22 @@ struct UrlService {
         #else
         NSWorkspace.shared.open(url)
         #endif
+    }
+
+    static func isEqual(_ url1: URL?, _ url2: URL?, ignoreHost: Bool = false) -> Bool {
+        guard let url1, let url2 else { return false }
+        if ignoreHost {
+            let normalized1 = pathOnly(url1)
+            let normalized2 = pathOnly(url2)
+            return normalized1 == normalized2
+        }
+        return url1 == url2
+    }
+
+    static func pathOnly(_ url: URL?) -> String? {
+        guard let url, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            return url?.absoluteString
+        }
+        return components.path + (components.query ?? "")
     }
 }

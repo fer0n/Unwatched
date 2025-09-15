@@ -30,6 +30,7 @@ struct DropUrlArea<Content: View>: View {
             if showDropArea {
                 dropAreaContent
                     .frame(maxWidth: .infinity)
+
                 Spacer()
                     .frame(height: 40)
             } else {
@@ -52,6 +53,7 @@ struct DropUrlArea<Content: View>: View {
         .task(id: avm.isSuccess) {
             await avm.handleSuccessChange()
         }
+        .foregroundStyle(theme.contrastColor)
     }
 
     var dropAreaContent: some View {
@@ -83,7 +85,6 @@ struct DropUrlArea<Content: View>: View {
                 }
             }
         }
-        .foregroundStyle(.white)
     }
 }
 

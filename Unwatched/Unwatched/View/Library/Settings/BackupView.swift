@@ -104,6 +104,7 @@ struct BackupView: View {
                 MySection {
                     DeleteImageCacheButton()
                     DeleteTranscriptCacheButton()
+                    DeleteEverythingExceptSubsButton()
 
                     Button(role: .destructive, action: {
                         showDeleteConfirmation = true
@@ -232,6 +233,7 @@ struct BackupView: View {
     }
 
     func restoreBackup(_ file: URL) {
+        Signal.log("Backup.Restore")
         let task = deleteEverything()
         doWithFileData(file, after: task) { data in
             UserDataService.importBackup(data)
@@ -275,7 +277,7 @@ struct BackupView: View {
             player.video = nil
         }
         let task = Task {
-            await VideoService.deleteEverything()
+            await CleanupService.deleteEverything()
         }
         isDeletingEverythingTask = task
         return task

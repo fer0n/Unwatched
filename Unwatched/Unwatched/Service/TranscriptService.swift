@@ -7,10 +7,10 @@ import UnwatchedShared
 import SwiftData
 
 struct TranscriptService {
-    static func getTranscript(from url: String?, youtubeId: String) async -> [TranscriptEntry]? {
+    static func getTranscript(from url: String?, youtubeId: String) async throws -> [TranscriptEntry] {
         Log.info("getTranscript from \(url ?? "–") for \(youtubeId)")
         let imageContainer = DataProvider.shared.localCacheContainer
-        let task: Task<[TranscriptEntry]?, Error> = Task.detached {
+        let task: Task<[TranscriptEntry], Error> = Task.detached {
             let repo = TranscriptActor(modelContainer: imageContainer)
             if let cache = await repo.getTranscript(for: youtubeId) {
                 return cache
@@ -26,13 +26,9 @@ struct TranscriptService {
                 await repo.cacheTranscript(loaded, for: youtubeId)
                 return loaded
             }
-            return nil
+            throw TranscriptError.noUrl
         }
-        guard let transcriptEntries = try? await task.value else {
-            Log.error("Failed to load transcript from \(url ?? "–")")
-            return nil
-        }
-        return transcriptEntries
+        return try await task.value
     }
 
     private static func loadTranscript(from url: URL) async throws -> [TranscriptEntry] {
@@ -78,6 +74,55 @@ struct TranscriptService {
                 context.delete(transcript)
             }
             try context.save()
+        }
+    }
+
+    @available(iOS 26.0, macOS 26.0, *)
+    static func generateAiChapters(for video: Video,
+                                   transcriptUrl: String?,
+                                   progress: @escaping @Sendable (_ fraction: Double) -> Void
+    ) -> Task<(), Error> {
+        let youtubeId = video.youtubeId
+        let videoId = video.persistentModelID
+        let duration = video.duration
+        let videoTitle = video.title
+
+        let task: Task<[SendableChapter]?, Error> = Task.detached {
+            let transript = try await getTranscript(from: transcriptUrl, youtubeId: youtubeId)
+            if transript.isEmpty {
+                throw TranscriptError.emptyTranscript
+            }
+            progress(0.2)
+            guard let generatedChapters = try await GenerationService.extractChaptersFromTranscripts(
+                videoTitle,
+                transript
+            ) else {
+                Log.info("generateAiChapters: no chapters generated")
+                return nil
+            }
+
+            print("generatedChapters", generatedChapters)
+            let cleaned = ChapterService.updateDurationAndEndTime(in: generatedChapters, videoDuration: duration)
+            print("cleaned", cleaned)
+            return cleaned
+        }
+
+        return Task { @MainActor in
+            defer { progress(1) }
+            guard let chapters = try await task.value else {
+                Log.info("generateAiChapters: no chapters")
+                return
+            }
+            progress(0.95)
+            print("chapters", chapters)
+            let modelContext = DataProvider.mainContext
+            let video: Video? = modelContext.existingModel(for: videoId)
+
+            guard let video else {
+                Log.info("generateAiChapters: video not found")
+                return
+            }
+            ChapterService.insertChapters(chapters, for: video, in: modelContext)
         }
     }
 }

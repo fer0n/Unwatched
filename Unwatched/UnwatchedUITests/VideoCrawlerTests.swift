@@ -87,6 +87,40 @@ class VideoCrawlerTests: XCTestCase {
         XCTAssertEqual(firstVideo.publishedDate, publishedDate)
         XCTAssertEqual(firstVideo.updatedDate, updatedDate)
     }
+
+    func testfetchVideoDurationsQueueInbox() {
+        let context = DataProvider.newContext()
+        let video = Video.getDummy()
+        context.insert(video)
+
+        let queueEntry = QueueEntry(video: video, order: 1)
+        context.insert(queueEntry)
+        let queueEntry2 = QueueEntry(video: video, order: 2)
+        context.insert(queueEntry2)
+
+        VideoService.fetchVideoDurationsQueueInbox()
+    }
+
+    func testFetchVideoDurations() {
+        Task { @MainActor in
+            let context = DataProvider.mainContext
+            let video = Video.getDummy()
+            context.insert(video)
+
+            let queueEntry = QueueEntry(video: video, order: 1)
+            context.insert(queueEntry)
+            let queueEntry2 = QueueEntry(video: video, order: 2)
+            context.insert(queueEntry2)
+
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            do {
+                let result = try await repo.fetchVideoDurations(for: [video], optional: [video])
+                print("result", result)
+            } catch {
+                XCTFail("\(error)")
+            }
+        }
+    }
 }
 
 // swiftlint:disable all

@@ -10,7 +10,9 @@ import UnwatchedShared
 
 struct GetTranscript: AppIntent {
     static var title: LocalizedStringResource { "getTranscript" }
-    static let description = IntentDescription("getTranscriptDescription")
+    static let description = IntentDescription(
+        "\(LocalizedStringResource("getTranscriptDescription")) \(LocalizedStringResource("requiresUnwatchedPremium"))"
+    )
 
     @Parameter(title: "youtubeVideoUrl")
     var videoUrl: URL?
@@ -20,18 +22,23 @@ struct GetTranscript: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
+        Signal.log("Shortcut.GetTranscript")
+
+        let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
+        guard hasPremium else {
+            throw IntentError.requiresUnwatchedPremium
+        }
+
         let video = try VideoService.getVideoOrCurrent(videoUrl)
         var transcriptUrl: String?
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {
             transcriptUrl = PlayerManager.shared.transcriptUrl
         }
 
-        guard let transcript = await TranscriptService.getTranscript(
+        let transcript = try await TranscriptService.getTranscript(
             from: transcriptUrl,
             youtubeId: video.youtubeId
-        ) else {
-            throw TranscriptError.notFound
-        }
+        )
 
         let text: String = {
             if includeTimestamps == true {
@@ -52,13 +59,23 @@ struct GetTranscript: AppIntent {
     }
 }
 
-enum TranscriptError: Error, CustomLocalizedStringResourceConvertible {
+enum TranscriptError: Error, CustomLocalizedStringResourceConvertible, LocalizedError {
     case notFound
+    case noUrl
+    case emptyTranscript
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
         case .notFound:
             return "noTranscriptFound"
+        case .noUrl:
+            return "noTranscriptUrl"
+        case .emptyTranscript:
+            return "emptyTranscript"
         }
+    }
+
+    var errorDescription: String? {
+        return String(localized: localizedStringResource)
     }
 }

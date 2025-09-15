@@ -9,22 +9,17 @@ struct UndoToolbarButton: ToolbarContent {
     @Environment(TinyUndoManager.self) private var undoManager
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .cancellationAction) {
-            Button {
-                undoManager.undo()
-            } label: {
-                Image(systemName: "arrow.uturn.backward")
+        if undoManager.canUndo {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    undoManager.undo()
+                } label: {
+                    Image(systemName: "arrow.uturn.backward")
+                }
+                .accessibilityLabel("undo")
+                .font(.footnote)
+                .fontWeight(.bold)
             }
-            .accessibilityLabel("undo")
-            .opacity(undoManager.canUndo ? 1 : 0)
-            .font(.footnote)
-            .fontWeight(.bold)
-            //            #if os(iOS)
-            //            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
-            //            #else
-            //            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
-            //                .buttonStyle(.borderless)
-            //            #endif
         }
     }
 }
@@ -41,7 +36,7 @@ struct InboxToolbar: ViewModifier {
                 }
                 UndoToolbarButton()
                 ToolbarSpacerWorkaround()
-                RefreshToolbarButton()
+                RefreshToolbarContent()
             }
     }
 }
@@ -49,5 +44,29 @@ struct InboxToolbar: ViewModifier {
 extension View {
     func inboxToolbar(_ showCancelButton: Bool = false) -> some View {
         modifier(InboxToolbar(showCancelButton: showCancelButton))
+    }
+}
+import UnwatchedShared
+
+#Preview {
+    @Previewable @State var show = true
+
+    NavigationStack {
+        Button("Toggle Toolbar") {
+            withAnimation {
+                show.toggle()
+            }
+        }
+
+        Text("Inbox Toolbar Preview")
+            .toolbar {
+                ToolbarItemGroup {
+                    if show {
+                        Image(systemName: "icloud.fill")
+                    }
+
+                    Image(systemName: Const.refreshSF)
+                }
+            }
     }
 }

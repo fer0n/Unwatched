@@ -1276,6 +1276,73 @@ final class ChapterServiceTests: XCTestCase {
             )
         }
     }
+
+    // Check if the end time of the current chapter and the start time of the next chapter are within tolerance
+    func testChaptersSimilarity_allEqual() {
+        let chapters1: [SendableChapter] = [
+            .init(0, to: 10, "Intro"),
+            .init(10, to: 20, "Middle"),
+            .init(20, to: 30, "End")
+        ]
+        let chapters2: [Chapter] = [
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
+            Chapter(title: "End", time: 20, endTime: 30, category: nil)
+        ]
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 1.0)
+    }
+
+    func testChaptersSimilarity_noneEqual() {
+        let chapters1: [SendableChapter] = [
+            .init(0, to: 10, "Intro"),
+            .init(10, to: 20, "Middle"),
+            .init(20, to: 30, "End")
+        ]
+        let chapters2: [Chapter] = [
+            Chapter(title: "A", time: 100, endTime: 110, category: nil),
+            Chapter(title: "B", time: 110, endTime: 120, category: nil),
+            Chapter(title: "C", time: 120, endTime: 130, category: nil)
+        ]
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 0.0)
+    }
+
+    func testChaptersSimilarity_partialEqual() {
+        let chapters1: [SendableChapter] = [
+            .init(0, to: 10, "Intro"),
+            .init(10, to: 20, "Middle"),
+            .init(20, to: 30, "End")
+        ]
+        let chapters2: [Chapter] = [
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "B", time: 110, endTime: 120, category: nil),
+            Chapter(title: "End", time: 20, endTime: 30, category: nil)
+        ]
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 2.0 / 3.0)
+    }
+
+    func testChaptersSimilarity_emptyArrays() {
+        let chapters1: [SendableChapter] = []
+        let chapters2: [Chapter] = []
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 0.0)
+    }
+
+    func testChaptersSimilarity_differentLengths() {
+        let chapters1: [SendableChapter] = [
+            .init(0, to: 10, "Intro"),
+            .init(10, to: 20, "Middle")
+        ]
+        let chapters2: [Chapter] = [
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
+            Chapter(title: "End", time: 20, endTime: 30, category: nil)
+        ]
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 1.0)
+    }
 }
 
 struct ChapterServiceTestData {

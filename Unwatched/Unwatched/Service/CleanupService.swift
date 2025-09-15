@@ -94,6 +94,33 @@ struct CleanupService {
         }
         video.sponserBlockUpdateDate = nil
     }
+
+    static func deleteEverything(except model: (any PersistentModel.Type)? = nil) async {
+        let context = DataProvider.newContext()
+        do {
+            if model != QueueEntry.self {
+                try context.delete(model: QueueEntry.self)
+            }
+            if model != InboxEntry.self {
+                try context.delete(model: InboxEntry.self)
+            }
+            if model != Subscription.self {
+                try context.delete(model: Subscription.self)
+            }
+            if model != Video.self {
+                try context.delete(model: Chapter.self)
+            }
+            if model != Video.self {
+                try context.delete(model: Video.self)
+            }
+            try context.save()
+        } catch {
+            Log.error("Failed to delete everything")
+        }
+
+        _ = ImageService.deleteAllImages()
+        _ = TranscriptService.deleteCache()
+    }
 }
 
 @ModelActor actor CleanupActor {

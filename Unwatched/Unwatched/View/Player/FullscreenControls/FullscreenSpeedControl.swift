@@ -27,6 +27,7 @@ struct CompactFullscreenSpeedControl: View {
                 CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                     .padding(.horizontal)
                     .frame(width: 350)
+                    .presentationBackground(Const.iOS26 ? .clear : .black)
                     .presentationCompactAdaptation(.popover)
                     .fontWeight(nil)
                     .preferredColorScheme(.dark)
@@ -40,6 +41,9 @@ struct CompactFullscreenSpeedControl: View {
 }
 
 struct FullscreenSpeedControl: View {
+    @Namespace private var namespace
+    let transitionId = "popoverTransition"
+
     @Environment(PlayerManager.self) var player
     @State var showSpeedControl = false
     @Binding var autoHideVM: AutoHideVM
@@ -87,6 +91,13 @@ struct FullscreenSpeedControl: View {
         )
         .frame(width: 35)
         .fontWeight(.medium)
+        .apply {
+            if #available(iOS 26.0, *) {
+                $0.matchedTransitionSource(id: transitionId, in: namespace)
+            } else {
+                $0
+            }
+        }
         .padding(.horizontal) // workaround: safearea pushing content in pop over
         .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
             CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
@@ -101,6 +112,15 @@ struct FullscreenSpeedControl: View {
                     autoHideVM.keepVisible = false
                 }
                 .fontWeight(nil)
+                #if os(iOS)
+                .apply {
+                    if #available(iOS 26.0, *) {
+                        $0.navigationTransition(.zoom(sourceID: transitionId, in: namespace))
+                    } else {
+                        $0
+                    }
+                }
+            #endif
         }
         .accessibilityLabel(accessibilityLabel)
         .accessibilityAction {

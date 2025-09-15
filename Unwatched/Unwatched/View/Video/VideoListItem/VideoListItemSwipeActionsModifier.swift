@@ -333,20 +333,20 @@ struct LeadingSwipeActionsView: View {
                    label: {
                     Image(systemName: Const.queueTopSF)
                    })
-                .tint(theme.color.mix(with: Color.black, by: 0.1))
+                .tint(theme.color.myMix(with: Color.black, by: 0.1))
                 .accessibilityLabel("queueNext")
             Button(role: config.queueRole,
                    action: addVideoToBottomQueue,
                    label: {
                     Image(systemName: Const.queueBottomSF)
                    })
-                .tint(theme.color.mix(with: Color.black, by: 0.3))
+                .tint(theme.color.myMix(with: Color.black, by: 0.3))
                 .accessibilityLabel("queueLast")
             if config.isNew == true {
                 Button(action: toggleIsNew) {
                     Image(systemName: Const.removeNewSF)
                 }
-                .tint(theme.color.mix(with: Color.black, by: 0.5))
+                .tint(theme.color.myMix(with: Color.black, by: 0.5))
                 .accessibilityLabel("removeIsNew")
             }
         }
@@ -376,12 +376,12 @@ struct TrailingSwipeActionsView: View {
             if canBeCleared {
                 Button(
                     "clearVideo",
-                    systemImage: Const.clearSF,
+                    systemImage: Const.clearNoFillSF,
                     role: config.clearRole,
                     action: clearVideoEverywhere
                 )
                 .labelStyle(.iconOnly)
-                .tint(theme.color.mix(with: Color.black, by: 0.9))
+                .tint(theme.color.myMix(with: Color.black, by: 0.9))
             }
             #if os(iOS)
             moreMenu
@@ -397,9 +397,9 @@ struct TrailingSwipeActionsView: View {
                 navManager.videoDetail = video
                 video.isNew = false
             } label: {
-                Image(systemName: "text.bubble.fill")
+                Image(Const.videoDescriptionSF)
             }
-            .tint(theme.color.mix(with: Color.black, by: 0.5))
+            .tint(theme.color.myMix(with: Color.black, by: 0.3))
             .accessibilityLabel("videoDescription")
         }
     }
@@ -424,9 +424,9 @@ struct TrailingSwipeActionsView: View {
                 deleteVideo: deleteVideo
             )
         } label: {
-            Image(systemName: "ellipsis.circle.fill")
+            Image(systemName: "ellipsis")
         }
-        .tint(theme.color.mix(with: Color.black, by: 0.7))
+        .tint(theme.color.myMix(with: Color.black, by: 0.5))
     }
 }
 

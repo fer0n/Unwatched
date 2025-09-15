@@ -23,10 +23,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        Signal.setup()
         workaroundInitialWebViewDelay()
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
-        SetupView.setupVideo()
+        SetupView.onLaunch()
         return true
     }
 

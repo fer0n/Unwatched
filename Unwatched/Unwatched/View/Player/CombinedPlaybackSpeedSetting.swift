@@ -47,10 +47,16 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
 
 struct CombinedPlaybackSpeedSetting: View {
     @Environment(PlayerManager.self) var player
+    @ScaledMetric var thumbSize: CGFloat = 35
+    let coordinateSpace: NamedCoordinateSpace = .named("speed")
 
     @Binding var selectedSpeed: Double
     @Binding var isOn: Bool
     @Binding var hapticToggle: Bool
+
+    @State var viewModel = SpeedControlViewModel()
+
+    let borderWidth: CGFloat = 2
     var hasHaptics = true
 
     var spacing: CGFloat = 10
@@ -67,10 +73,23 @@ struct CombinedPlaybackSpeedSetting: View {
             } else if isExpanded {
                 VStack {
                     SpeedControlView(
+                        viewModel: $viewModel,
                         selectedSpeed: $selectedSpeed,
-                        indicatorSpacing: indicatorSpacing
-                    )
+                        thumbSize: thumbSize,
+                        coordinateSpace: coordinateSpace,
+                        indicatorSpacing: indicatorSpacing,
+                        )
+                    .padding(borderWidth)
                     .speedSelectionBackground(isTransparent: isTransparent)
+                    .overlay {
+                        SpeedSliderThumb(
+                            viewModel: $viewModel,
+                            selectedSpeed: $selectedSpeed,
+                            thumbSize: thumbSize,
+                            coordinateSpace: coordinateSpace
+                        )
+                        .padding(borderWidth)
+                    }
 
                     CustomSettingsButton(isOn: $isOn)
                         .tint(Color.foregroundGray.opacity(0.5))
@@ -82,7 +101,10 @@ struct CombinedPlaybackSpeedSetting: View {
             } else {
                 HStack(spacing: -8) {
                     SpeedControlView(
+                        viewModel: $viewModel,
                         selectedSpeed: $selectedSpeed,
+                        thumbSize: thumbSize,
+                        coordinateSpace: coordinateSpace,
                         indicatorSpacing: indicatorSpacing
                     )
                     CustomSettingsButton(isOn: $isOn)
@@ -108,12 +130,29 @@ struct CombinedPlaybackSpeedSetting: View {
                                 )
                         }
                         .buttonStyle(.plain)
-                        .help("toggleTemporarySpeed")
-                        .accessibilityLabel("toggleTemporarySpeed")
+                        .help("temporarySpeed")
+                        .accessibilityLabel("temporarySpeed")
                     }
                 }
+                .padding(borderWidth)
                 .speedSelectionBackground(isTransparent: isTransparent)
+                .apply {
+                    if #available(iOS 26.0, macOS 26.0, *) {
+                        $0.glassEffect(in: Capsule())
+                    } else {
+                        $0
+                    }
+                }
                 .fixedSize(horizontal: false, vertical: true)
+                .overlay {
+                    SpeedSliderThumb(
+                        viewModel: $viewModel,
+                        selectedSpeed: $selectedSpeed,
+                        thumbSize: thumbSize,
+                        coordinateSpace: coordinateSpace
+                    )
+                    .padding(borderWidth)
+                }
             }
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle) { _, _ in

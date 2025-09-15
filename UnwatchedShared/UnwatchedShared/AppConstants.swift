@@ -10,6 +10,8 @@ import SwiftUI
 public struct Const {
     public static let mergeSponsorBlockChapters = "mergeSponsorBlockChapters"
     public static let youtubePremium = "youtubePremium"
+    public static let unwatchedPremiumAcknowledged = "unwatchedPremiumAcknowledged"
+    public static let hidePremium = "hidePremium"
     public static let skipSponsorSegments = "skipSponsorSegments"
     public static let skipChapterText = "skipChapterText"
     public static let filterVideoTitleText = "filterVideoTitleText"
@@ -33,11 +35,12 @@ public struct Const {
     public static let dotString = "•"
     public static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
-    public static let playerAboveSheetHeight: CGFloat = 60
-    public static let minSheetDetent: CGFloat = 50
-    public static let playerControlPadding: CGFloat = 2
+    public static let playerAboveSheetHeight: CGFloat = 75
+    public static let minSheetDetent: CGFloat = Const.iOS26 ? 75 : 50
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
+    /// Max video IDs supported by a single YouTube API request
+    public static let maxVideoIdsPerRequest = 50
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
@@ -52,6 +55,9 @@ public struct Const {
     public static let markAsWatched = "markAsWatched"
     public static let descriptionPopover = "descriptionPopover"
 
+    /// Cooldown period before fetching the duration again (might happen sooner if batched with other requests)
+    public static let durationFetchInterval: Double = 12 * 60 * 60 // 10 hours
+    
     /// When seeking to the end, the video will seek to duraiton - thisBuffer
     public static let seekToEndBuffer: CGFloat = 0.5
 
@@ -95,8 +101,8 @@ public struct Const {
         2.9,
         3
     ]
-    public static let speedMin: Double = 0.2
-    public static let speedMax: Double = 3
+    public static let speedMin: Double = 0.6
+    public static let speedMax: Double = 2
 
     /// The margin at which it will skip to the chapter start instead of the previous chapter
     public static let previousChapterDelaySeconds: Double = 4
@@ -162,6 +168,7 @@ public struct Const {
     public static let settingsViewSF = "gearshape.fill"
     public static let allVideosViewSF = "square.stack.3d.down.forward.fill"
     public static let watchHistoryViewSF = "checkmark.circle"
+    public static let premiumIndicatorSF = "star.circle.fill"
 
     public static let sideloadSF = "arrow.right.circle"
 
@@ -184,7 +191,7 @@ public struct Const {
     public static let videoDescriptionCircleSF = "custom.line.3.text.circle.fill"
     public static let chaptersSF = "checklist.checked"
 
-    public static let appBrowserSF = "play.rectangle.fill"
+    public static let youtubeSF = "play.rectangle.fill"
 
     public static let nextChapterSF = "chevron.right.2"
     public static let previousChapterSF = "chevron.left.2"
@@ -198,7 +205,6 @@ public struct Const {
     public static let reloadSF = "arrow.clockwise"
     public static let reloadCircleSF = "arrow.clockwise.circle.fill"
     public static let shareSF = "square.and.arrow.up.fill"
-    public static let videoSF = "play.rectangle.fill"
     public static let channelSF = "person.fill"
 
     // Settings
@@ -214,6 +220,7 @@ public struct Const {
     public static let windowImportSubs = "windowImportSubs"
     public static let windowBrowser = "windowBrowser"
     public static let mainWindowFrame = "mainWindowFrame"
+    public static let windowPremium = "windowPremium"
 
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"
@@ -229,7 +236,10 @@ public struct Const {
     public static let autoRefresh = "refreshOnStartup"
     public static let enableLogging = "enableLogging"
     public static let originalAudio = "originalAudio"
+    public static let playBrowserVideosInApp = "playBrowserVideosInApp"
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
+    public static let temporarySpeedUp = "temporarySpeedUp"
+    public static let temporarySlowDown = "temporarySlowDown"
 
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"
@@ -252,6 +262,7 @@ public struct Const {
     public static let minimalBackups = "minimalBackups"
     public static let exludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     public static let autoDeleteBackups = "autoDeleteBackups"
+    public static let analytics = "analytics"
 
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     public static let sideloadingSortOrder = "sideloadingSortOrder"
@@ -274,7 +285,6 @@ public struct Const {
 
     public static let reloadVideoId = "reloadVideoId"
     public static let playbackId = "playbackId"
-    public static let sheetOpacity = "sheetOpacity"
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
 
     public static let videoListFormat = "videoListFormat"

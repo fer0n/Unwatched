@@ -8,6 +8,7 @@ import OSLog
 import UnwatchedShared
 
 struct SettingsView: View {
+    @Environment(NavigationManager.self) var navManager
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     var body: some View {
@@ -15,6 +16,10 @@ struct SettingsView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
+                MySection {
+                    PremiumNavListItem()
+                }
+
                 MySection("app") {
                     NavigationLink(value: LibraryDestination.settingsNewVideos) {
                         Label("generalSettings", systemImage: Const.settingsViewSF)
@@ -46,10 +51,11 @@ struct SettingsView: View {
                     }
                     Link(destination: UrlService.generateChaptersShortcutUrl) {
                         LibraryNavListItem(
-                            "generateChaptersShortcut",
-                            systemName: "checklist"
+                            "generateChapters",
+                            systemName: "sparkles"
                         )
                     }
+                    .requiresPremium()
                 }
 
                 MySection("userData") {
@@ -82,15 +88,28 @@ struct SettingsView: View {
                     }
                 }
 
+                Link(destination: UrlService.releasesUrl) {
+                    LibraryNavListItem(
+                        "releases",
+                        systemName: "sparkles.2"
+                    )
+                }
+                .listRowBackground(Color.insetBackgroundColor)
+
                 Section {
                     ZStack {
                         UserTipsView()
                             .padding(.top)
                     }
                 }
-                .listRowBackground(theme.color.mix(with: .black, by: 0.4))
+                .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
                 .listRowInsets(EdgeInsets())
                 .foregroundStyle(theme.darkContrastColor)
+
+                NavigationLink(value: LibraryDestination.privacy) {
+                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                }
+                .listRowBackground(Color.insetBackgroundColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: Const.debugSettingsSF)
@@ -103,6 +122,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.backgroundColor)
             }
             .myNavigationTitle("settings")
+            .tint(theme.color)
         }
     }
 }

@@ -9,19 +9,12 @@ import UnwatchedShared
 
 struct CoreRefreshButton: View {
     @Environment(\.modelContext) var modelContext
-
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
     @State private var rotation = 0.0
 
     var body: some View {
         HStack {
-            Image(systemName: "icloud.fill")
-                .symbolEffect(.pulse, options: .speed(0.7).repeating)
-                .accessibilityLabel("syncing")
-                .opacity(refresher.isSyncingIcloud ? 0.5 : 0)
-                .animation(.default, value: refresher.isSyncingIcloud)
-
             Button {
                 try? modelContext.save()
                 Task { @MainActor in
@@ -90,13 +83,17 @@ struct CoreRefreshButton: View {
     }
 }
 
-struct RefreshToolbarButton: ToolbarContent {
+struct RefreshToolbarContent: ToolbarContent {
+    @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .confirmationAction) {
+        ToolbarItemGroup(placement: .confirmationAction) {
             #if os(iOS)
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+                .symbolEffect(.pulse,
+                              options: .speed(0.7),
+                              isActive: refresher.isSyncingIcloud)
             #else
             CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
                 .buttonStyle(.borderless)

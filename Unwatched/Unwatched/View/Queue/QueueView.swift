@@ -52,6 +52,7 @@ struct QueueView: View {
                                         isNew: video.isNew,
                                         showAllStatus: false,
                                         clearRole: .destructive,
+                                        queueRole: .destructive,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
                                         showDelete: false,
@@ -80,7 +81,7 @@ struct QueueView: View {
                 .scrollContentBackground(.hidden)
                 .disabled(queue.isEmpty)
             }
-            .myNavigationTitle("queue", showBack: false)
+            .myNavigationTitle("queue")
             .sendableSubscriptionDestination()
             .toolbar {
                 if showCancelButton {
@@ -88,7 +89,7 @@ struct QueueView: View {
                 }
                 ToolbarSpacerWorkaround()
                 UndoToolbarButton()
-                RefreshToolbarButton()
+                RefreshToolbarContent()
             }
             .tint(theme.color)
         }
@@ -96,6 +97,13 @@ struct QueueView: View {
         .listStyle(.plain)
         .onAppear {
             navManager.setScrollId("top", ClearList.queue.rawValue)
+        }
+        .onDisappear {
+            Signal.log(
+                "Queue.Count",
+                parameters: ["Queue.Count.Value": "\(queue.count)"],
+                throttle: .daily
+            )
         }
     }
 

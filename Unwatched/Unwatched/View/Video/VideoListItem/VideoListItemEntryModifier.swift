@@ -8,21 +8,27 @@ import UnwatchedShared
 
 extension View {
     func videoListItemEntry() -> some View {
-        let padding: CGFloat = 12
-
-        return self
+        self
             #if os(iOS)
-            .padding(.vertical, -2)
+            .listRowInsets(.init(
+                top: 5,
+                leading: 10,
+                bottom: 5,
+                trailing: 10
+            ))
+            .padding(5)
+            #else
+            .listRowInsets(.init(
+            top: 5,
+            leading: 5,
+            bottom: 5,
+            trailing: 5
+            ))
             #endif
-            .padding(padding)
             .listRowSeparator(.hidden)
             .contentShape(
                 .dragPreview,
-                RoundedRectangle(cornerRadius: Const.videoCornerRadius + padding)
+                RoundedRectangle(cornerRadius: Const.videoCornerRadius + 5)
             )
-            .padding(-padding)
-            #if os(macOS)
-            .padding(3)
-        #endif
     }
 }

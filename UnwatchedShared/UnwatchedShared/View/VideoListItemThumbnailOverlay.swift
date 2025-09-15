@@ -81,7 +81,12 @@ public struct VideoListItemThumbnailOverlay: View {
     }
 
     private var hasDuration: Bool {
-        showDuration && (roughDuration != nil || (videoDuration ?? video.duration) != nil || video.isYtShort == true)
+        showDuration && (
+            roughDuration != nil
+            || (videoDuration ?? video.duration) != nil
+            || video.isYtShort == true
+            || video.noDuration == true
+        )
     }
 
     private var cleanedProgress: Double? {

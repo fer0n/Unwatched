@@ -101,7 +101,7 @@ struct UserTipsView: View {
             UserTipsView()
                 .padding(.top)
         }
-        .listRowBackground(Color.teal.mix(with: .black, by: 0.4))
+        .listRowBackground(Color.teal.myMix(with: .black, by: 0.4))
         .listRowInsets(EdgeInsets())
         .foregroundStyle(.white)
         // .foregroundStyle(theme.darkContrastColor)

@@ -11,16 +11,15 @@ import OSLog
 import UnwatchedShared
 
 struct BrowserView: View, KeyboardReadable {
+    @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @Environment(ImageCacheManager.self) var cacheManager
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(RefreshManager.self) var refresher
+    @Environment(\.dismissWindow) private var dismissWindow
 
-    @State var browserManager = BrowserManager()
+    @Environment(BrowserManager.self) var browserManager
     @State var subscribeManager = SubscribeManager(isLoading: true)
     @State private var isKeyboardVisible = false
-
-    var url: Binding<BrowserUrl?> = .constant(nil)
-    var startUrl: BrowserUrl?
 
     var showHeader = true
     var safeArea = true
@@ -31,16 +30,18 @@ struct BrowserView: View, KeyboardReadable {
     let size: Double = 20
 
     var body: some View {
+        @Bindable var browserManager = browserManager
+
         GeometryReader { geometry in
-            VStack {
+            VStack(spacing: 0) {
                 if showHeader {
                     BrowserViewHeader()
                 }
 
                 ZStack {
-                    YtBrowserWebView(url: url,
-                                     startUrl: startUrl,
-                                     browserManager: $browserManager)
+                    YtBrowserWebView(browserManager: $browserManager,
+                                     onDismiss: handleDismiss)
+                        .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
                         VStack {
                             Spacer()
@@ -53,13 +54,22 @@ struct BrowserView: View, KeyboardReadable {
                                 if let text = subscriptionText, !isKeyboardVisible {
                                     addSubButton(text)
                                         .popoverTip(addButtonTip, arrowEdge: .bottom)
+                                        .apply {
+                                            if #available(iOS 26, macOS 26, *) {
+                                                $0.tipBackgroundInteraction(.enabled)
+                                            } else {
+                                                $0
+                                            }
+                                        }
                                         .disabled(subscribeManager.isLoading)
                                         .frame(maxWidth: .infinity, alignment: .center)
                                 } else {
                                     Spacer()
                                 }
 
-                                AddVideoButton(browserManager: $browserManager, size: size)
+                                AddVideoButton(
+                                    size: size,
+                                    onDismiss: handleDismiss)
                                     .padding(size)
                             }
                             .padding(.horizontal, supportsSplitView ? 110 : 0)
@@ -81,11 +91,13 @@ struct BrowserView: View, KeyboardReadable {
                         }
                     }
                 }
+                .clipShape(RoundedRectangle(cornerRadius: showHeader ? 15 : 0))
             }
             .animation(.default, value: enableBottomPadding)
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
         .background(Color.youtubeWebBackground)
+        .appNotificationOverlay(topPadding: 20)
         .task(id: browserManager.info?.channelId) {
             subscribeManager.reset()
             await subscribeManager.setIsSubscribed(browserManager.info)
@@ -118,6 +130,12 @@ struct BrowserView: View, KeyboardReadable {
         }
     }
 
+    func handleDismiss() {
+        #if os(macOS)
+        dismissWindow(id: Const.windowBrowser)
+        #endif
+    }
+
     func addSubButton(_ text: String) -> some View {
         VStack {
             if let error = subscribeManager.errorMessage {
@@ -126,19 +144,20 @@ struct BrowserView: View, KeyboardReadable {
                 } label: {
                     Text(verbatim: error)
                 }
-                .buttonStyle(CapsuleButtonStyle())
+                .buttonStyle(CapsuleButtonStyle(interactive: true))
             }
             Button(action: handleAddSubButton) {
                 HStack {
                     let systemName = subscribeManager.getSubscriptionSystemName()
                     Image(systemName: systemName)
                         .contentTransition(.symbolEffect(.replace))
+                        .symbolEffect(.pulse, isActive: subscribeManager.isLoading)
                     Text(text)
                         .lineLimit(2)
                 }
                 .padding(10)
             }
-            .buttonStyle(CapsuleButtonStyle())
+            .buttonStyle(CapsuleButtonStyle(interactive: true))
             .bold()
         }
     }
@@ -180,6 +199,7 @@ struct BrowserView: View, KeyboardReadable {
         Task {
             await handleSubscriptionChange(browserManager.info)
         }
+        Signal.log("Browser.AddSubscription")
     }
 
     func handleSubscriptionChange(_ info: SubscriptionInfo?) async {
@@ -201,6 +221,9 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     var supportsSplitView: Bool {
+        #if os(macOS)
+        return false
+        #endif
         return horizontalSizeClass == .regular
     }
 
@@ -210,10 +233,14 @@ struct BrowserView: View, KeyboardReadable {
 }
 
 #Preview {
-    BrowserView(startUrl: BrowserUrl.url("https://www.youtube.com/@BeardoBenjo"))
-        .modelContainer(DataProvider.previewContainer)
-        .environment(ImageCacheManager())
-        .environment(RefreshManager())
-        .environment(PlayerManager())
-        .environment(NavigationManager())
+    ZStack {}
+        .sheet(isPresented: .constant(true)) {
+            BrowserView()
+                .modelContainer(DataProvider.previewContainer)
+                .environment(ImageCacheManager())
+                .environment(RefreshManager())
+                .environment(PlayerManager())
+                .environment(NavigationManager())
+                .environment(BrowserManager())
+        }
 }

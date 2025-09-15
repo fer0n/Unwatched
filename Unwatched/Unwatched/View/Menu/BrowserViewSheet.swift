@@ -18,8 +18,8 @@ struct BrowserViewSheet: ViewModifier {
         if bigScreen {
             content
                 #if os(iOS)
-                .fullScreenCover(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(startUrl: browserUrl)
+                .fullScreenCover(isPresented: navManager.showBrowser) {
+                    BrowserView()
                 }
             // workaround: at a certain width, the YouTube search bar doesn't work (can't be tapped)
             // on iPad, this is the regular ".sheet" width. It still happens with the fullScreenCover
@@ -27,8 +27,8 @@ struct BrowserViewSheet: ViewModifier {
             #endif
         } else {
             content
-                .sheet(item: navManager.openBrowserUrl) { browserUrl in
-                    BrowserView(startUrl: browserUrl)
+                .sheet(isPresented: navManager.showBrowser) {
+                    BrowserView()
                         .environment(\.colorScheme, colorScheme)
                 }
         }

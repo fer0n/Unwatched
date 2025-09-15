@@ -10,11 +10,9 @@ import UnwatchedShared
 struct QueueTabItemView: View {
     let showCancelButton: Bool
     let showBadge: Bool
-    let horizontalpadding: CGFloat
 
     var body: some View {
         QueueView(showCancelButton: showCancelButton)
-            .padding(.horizontal, horizontalpadding)
             .modifier(QueueTabItemViewModifier(showBadge: showBadge))
     }
 }

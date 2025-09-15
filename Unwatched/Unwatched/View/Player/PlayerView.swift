@@ -27,7 +27,6 @@ struct PlayerView: View {
     @State var orientation = OrientationManager.shared
     #endif
     @State var overlayVM = OverlayFullscreenVM.shared
-    @State var appNotificationVM = AppNotificationVM()
 
     var landscapeFullscreen = true
     var enableHideControls: Bool
@@ -46,10 +45,8 @@ struct PlayerView: View {
                     if player.embeddingDisabled {
                         playerWebsite
                             .environment(\.layoutDirection, .leftToRight)
-                            .zIndex(1)
                     } else {
                         playerEmbedded
-                            .zIndex(1)
                             .environment(\.layoutDirection, .leftToRight)
                     }
 
@@ -87,7 +84,6 @@ struct PlayerView: View {
                 }
             }
         }
-        .appNotificationOverlay($appNotificationVM)
         .dateSelectorSheet()
         .persistentSystemOverlays(
             landscapeFullscreen || controlsHidden
@@ -129,7 +125,6 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
-                appNotificationVM: $appNotificationVM,
                 playerType: .youtubeEmbedded,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe
@@ -146,19 +141,23 @@ struct PlayerView: View {
 
                 thumbnailPlaceholder
                     .opacity(showEmbeddedThumbnail ? 1 : 0)
+
+                if !hideMiniPlayer {
+                    Color.black.opacity(0.000001)
+                        .onTapGesture {
+                            handleMiniPlayerTap()
+                        }
+                }
             }
             .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
             .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(width: !hideMiniPlayer ? 107 : nil,
                    height: !hideMiniPlayer ? 60 : nil)
-            .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
-            .onTapGesture {
-                if !hideMiniPlayer {
-                    handleMiniPlayerTap()
-                }
-            }
-            .padding(.leading, !hideMiniPlayer ? 5 : 0)
+            .padding(.leading, !hideMiniPlayer ? miniPlayerHorizontalPadding : 0)
+            #if os(macOS)
+            .padding(.horizontal, 5)
+            #endif
 
             if !hideMiniPlayer {
                 miniPlayerContent
@@ -174,7 +173,6 @@ struct PlayerView: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
-                appNotificationVM: $appNotificationVM,
                 playerType: .youtube,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe
@@ -195,7 +193,6 @@ struct PlayerView: View {
             HStack {
                 if !hideMiniPlayer {
                     thumbnailPlaceholder
-                        .thumbnailQualityWorkaround(enable: !hideMiniPlayer)
                         .padding(.leading, 5)
                     miniPlayerContent
                 }
@@ -214,10 +211,30 @@ struct PlayerView: View {
                 .fontWeight(.medium)
                 .contentShape(Rectangle())
                 .onTapGesture(perform: handleMiniPlayerTap)
+                .lineLimit(2)
 
-            PlayButton(size: 30, enableHelper: false)
-                .fontWeight(.black)
-                .padding(.trailing, 5)
+            CorePlayButton(
+                circleVariant: true,
+                enableHaptics: true,
+                enableHelperPopup: false,
+                ) { image in
+                image
+                    .resizable()
+                    .frame(width: 45, height: 45)
+                    .symbolRenderingMode(.palette)
+                    .apply {
+                        if #available(iOS 26.0, macOS 26.0, *) {
+                            $0
+                                .foregroundStyle(.automaticBlack, .clear)
+                                .glassEffect(.regular.interactive(), in: Circle())
+                        } else {
+                            $0
+                                .foregroundStyle(.automaticWhite, .automaticBlack)
+                        }
+                    }
+                    .fontWeight(.black)
+            }
+            .padding(.trailing, miniPlayerHorizontalPadding)
         }
     }
 
@@ -317,6 +334,10 @@ struct PlayerView: View {
             }
         }
     }
+
+    var miniPlayerHorizontalPadding: CGFloat {
+        15
+    }
 }
 
 #Preview {
@@ -349,14 +370,4 @@ struct PlayerView: View {
         .environment(RefreshManager())
         .environment(ImageCacheManager())
         .tint(Color.neutralAccentColor)
-}
-
-extension View {
-    func thumbnailQualityWorkaround(enable: Bool) -> some View {
-        self
-            .scaleEffect(enable ? 0.83 : 1)
-            .padding(.horizontal, enable ? -(107 * 0.17) / 2 : 0)
-        // ^ workaround: if website is loaded while being mini, the cover image resolution is too low
-        // 107 width with 16/9 is the minimum size to still get the higher resolution
-    }
 }

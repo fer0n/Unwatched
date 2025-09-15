@@ -26,13 +26,18 @@ struct TitleFilterContent: View {
             Text("videoTitleFilterFooter")
                 .foregroundColor(.secondary)
                 .font(.footnote)
+
+            Image(systemName: Const.premiumIndicatorSF)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding(10)
-        .background(Color.insetBackground)
+        .background(Color.insetBackgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .listRowBackground(Color.backgroundColor)
         .listRowSeparator(.hidden)
         .padding(.bottom, 15)
+        .requiresPremium(filterText.isEmpty)
         .task {
             updateFilterStrings()
             let sorting = [SortDescriptor<Video>(\.publishedDate, order: .reverse)]

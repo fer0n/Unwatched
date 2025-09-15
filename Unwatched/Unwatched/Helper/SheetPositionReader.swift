@@ -25,29 +25,44 @@ import UnwatchedShared
     // Sheet animation and height detection
     var swipedBelow: Bool = true
     var playerControlHeight: CGFloat = .zero
+
+    @MainActor
+    var allowMinSheet: Bool = true
+
     @ObservationIgnored var landscapeFullscreen: Bool = false
-    @ObservationIgnored var debouncedPlayerControlHeight: CGFloat = .zero
-    var selectedDetent: PresentationDetent = .height(Const.minSheetDetent) {
-        didSet {
-            if !isVideoPlayer {
-                updatePlayerControlHeight()
-            }
-        }
-    }
+    var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
     @ObservationIgnored var playerContentViewHeight: CGFloat?
 
-    func setPlayerControlHeight(_ height: CGFloat) {
-        debouncedPlayerControlHeight = height
-        if playerControlHeight == .zero || !isVideoPlayer {
-            playerControlHeight = height
-        }
-    }
+    @ObservationIgnored var debouncedPlayerControlHeight: Task<(), Never>?
 
-    func updatePlayerControlHeight() {
-        if playerControlHeight != debouncedPlayerControlHeight {
-            playerControlHeight = debouncedPlayerControlHeight
+    @MainActor
+    func setPlayerControlHeight(_ height: CGFloat) {
+        debouncedPlayerControlHeight?.cancel()
+        debouncedPlayerControlHeight = Task {
+            do {
+                // debounce changes
+                try await Task.sleep(for: .milliseconds(100))
+
+                // workaround: without task, sheet disappear animation breaks
+                // when video aspect ratio is different for the new video
+                if selectedDetent != .height(playerControlHeight) || playerControlHeight == .zero {
+                    playerControlHeight = height
+                } else {
+                    // workaround: without this, the sheet jumps to the smallest detent
+                    // when animating the sheet height change
+                    allowMinSheet = false
+                    withAnimation(.default.speed(2)) {
+                        playerControlHeight = height
+                    }
+                    selectedDetent = .height(height)
+                    try await Task.sleep(for: .milliseconds(600))
+                    selectedDetent = .height(height)
+                    try await Task.sleep(for: .milliseconds(100))
+                    allowMinSheet = true
+                }
+            } catch {}
         }
     }
 

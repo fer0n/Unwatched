@@ -9,11 +9,11 @@ import Foundation
 // PT3H2M27S
 func parseDurationToSeconds(_ duration: String) -> Double? {
     // Check if the string starts with "PT" and ends with "S"
-    guard duration.hasPrefix("PT"), duration.hasSuffix("S") else {
+    guard duration.hasPrefix("PT") else {
         return nil
     }
 
-    // Remove "PT" and "S" from the string
+    // Remove "PT" from the string
     var durationString = duration.replacingOccurrences(of: "PT", with: "")
 
     var totalSeconds: Double = 0

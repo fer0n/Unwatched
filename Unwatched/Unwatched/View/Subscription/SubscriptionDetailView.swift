@@ -61,6 +61,14 @@ struct SubscriptionDetailView: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0
+                        .scrollEdgeEffectHidden(!showTitle, for: .top)
+                } else {
+                    $0
+                }
+            }
         }
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
@@ -71,7 +79,7 @@ struct SubscriptionDetailView: View {
         )
         .toolbar {
             if !subscription.isArchived {
-                RefreshToolbarButton(refreshOnlySubscription: subscription.persistentModelID)
+                RefreshToolbarContent(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
         .task(id: loadNewVideosTask) {
@@ -120,7 +128,9 @@ struct SubscriptionDetailView: View {
         let subId = subscription.persistentModelID
         loadNewVideosTask = Task {
             let task = VideoService.loadNewVideosInBg(
-                subscriptionIds: [subId])
+                subscriptionIds: [subId],
+                fetchDurations: true
+            )
             _ = try? await task.value
         }
     }

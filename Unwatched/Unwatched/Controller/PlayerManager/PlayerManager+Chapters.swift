@@ -174,6 +174,7 @@ extension PlayerManager {
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
+            Signal.log("Player.NextChapter", throttle: .daily)
             return true
         }
         return false
@@ -186,7 +187,7 @@ extension PlayerManager {
             return false
         }
 
-        if let currentTime = currentTime,
+        if let currentTime,
            (currentTime - current.startTime) >= Const.previousChapterDelaySeconds * playbackSpeed {
             setChapter(current)
             return true
@@ -199,6 +200,8 @@ extension PlayerManager {
             setChapter(previous)
             return true
         }
+
+        Signal.log("Player.PreviousChapter", throttle: .daily)
         return false
     }
 

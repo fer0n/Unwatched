@@ -36,6 +36,11 @@ public struct Device {
     public static let isIphone: Bool = {
         UIDevice.modelName.contains("iPhone")
     }()
+    
+    @MainActor
+    public static let isIpad: Bool = {
+        UIDevice.modelName.contains("iPad")
+    }()
 
     @MainActor
     public static let supportsFullscreenControls: Bool = {
@@ -67,6 +72,7 @@ public struct Device {
     public static let supportsFullscreenControls: Bool = true
     public static let requiresFullscreenWebWorkaround: Bool = false
     public static let isMac: Bool = true
+    public static let isIpad: Bool = false
 
     public static let deviceName: String = {
         Host.current().localizedName ?? "Mac"

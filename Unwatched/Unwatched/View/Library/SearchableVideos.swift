@@ -14,15 +14,6 @@ struct SearchableVideos: View {
         EmptyView()
             #if os(iOS)
             .searchable(text: $text.val,
-                        isPresented: Binding(
-                            get: {
-                                navManager.searchFocused
-                            },
-                            set: {  newValue in
-                                if navManager.searchFocused != newValue {
-                                    navManager.searchFocused = newValue
-                                }
-                            }),
                         placement: .navigationBarDrawer(displayMode: .always))
             .autocorrectionDisabled()
             .textInputAutocapitalization(.never)

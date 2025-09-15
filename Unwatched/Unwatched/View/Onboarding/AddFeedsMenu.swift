@@ -25,8 +25,7 @@ struct AddFeedsMenu: View {
                 }
                 importSubscriptionsButton
                 AddVideosButton()
-                    .tint(theme.color)
-                    .foregroundStyle(theme.contrastColor)
+                    .foregroundStyle(.primary)
             } label: {
                 Image(systemName: "ellipsis")
                     .frame(maxHeight: .infinity)
@@ -40,7 +39,7 @@ struct AddFeedsMenu: View {
                     showImportSheet = false
                     onSuccess?()
                 })
-                .myNavigationTitle("importSubscriptions", showBack: false)
+                .myNavigationTitle("importSubscriptions")
                 .toolbar {
                     DismissToolbarButton {
                         showImportSheet = false
@@ -56,7 +55,8 @@ struct AddFeedsMenu: View {
     var browseYoutubeButton: some View {
         Button {
             navManager.showMenu = true
-            navManager.openUrlInApp(.youtubeStartPage)
+            navManager.showBrowser = true
+            Signal.log("Onboarding.BrowseYoutube")
         } label: {
             Text("browser")
         }
@@ -66,13 +66,13 @@ struct AddFeedsMenu: View {
     var importSubscriptionsButton: some View {
         Button {
             showImportSheet = true
+            Signal.log("Onboarding.ImportSubscriptions")
         } label: {
             Label("importFromYoutube", systemImage: "square.and.arrow.down.fill")
                 .frame(maxWidth: .infinity)
         }
         .accessibilityLabel("importFromYoutube")
-        .tint(theme.color)
-        .foregroundStyle(theme.contrastColor)
+        .foregroundStyle(.primary)
         .buttonStyle(.bordered)
     }
 }

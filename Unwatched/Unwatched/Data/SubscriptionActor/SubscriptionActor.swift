@@ -26,6 +26,15 @@ actor SubscriptionActor {
         return subs?.compactMap { $0.toExport } ?? []
     }
 
+    func getActiveSubscriptionCount() -> Int? {
+        let fetch = FetchDescriptor<Subscription>(
+            predicate: #Predicate {
+                $0.isArchived == false
+            }
+        )
+        return try? modelContext.fetchCount(fetch)
+    }
+
     func unarchive(_ sub: Subscription) {
         sub.isArchived = false
         sub.subscribedDate = .now
@@ -50,6 +59,10 @@ actor SubscriptionActor {
             fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
                 $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
             })
+        } else if let userName = info?.userName {
+            fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && $0.youtubeUserName == userName
+            })
         } else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
@@ -61,16 +74,17 @@ actor SubscriptionActor {
             try modelContext.save()
             return
         }
-        guard let subscriptionInfo = info else {
+        guard var info else {
             Log.info("no channel info here")
             return
         }
         // if it doesn't exist get url and run the regular subscription flow
-        if subscriptionInfo.rssFeed == nil {
+        info.rssFeedUrl = await info.getRssFeedUrl()
+        if info.rssFeedUrl == nil {
             throw SubscriptionError.notSupported
         }
 
-        let subStates = try await addSubscriptions(subscriptionInfo: [subscriptionInfo])
+        let subStates = try await addSubscriptions(subscriptionInfo: [info])
         if let first = subStates.first {
             if !(first.success || first.alreadyAdded) {
                 throw SubscriptionError.couldNotSubscribe(first.error ?? "unknown")
@@ -88,7 +102,7 @@ actor SubscriptionActor {
         try await withThrowingTaskGroup(of: (SubscriptionState, SendableSubscription?).self) { group in
             if !subscriptionInfo.isEmpty {
                 for info in subscriptionInfo {
-                    if let url = info.rssFeedUrl ?? info.url {
+                    if let url = await info.getRssFeedUrl() ?? info.url {
                         group.addTask {
                             var (subState, sendableSub) = await self.loadSubscriptionInfo(
                                 from: url,

@@ -110,9 +110,10 @@ extension View {
     guard let video = videos?.first else {
         return Text("noVideoFound")
     }
-    video.duration = 130
+    video.duration = nil // 130
     video.elapsedSeconds = 0.1
     video.isYtShort = false
+    video.noDuration = true
 
     return List {
         VideoListItem(

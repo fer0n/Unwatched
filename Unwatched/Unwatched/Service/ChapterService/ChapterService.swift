@@ -79,10 +79,17 @@ struct ChapterService {
     }
 
     static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
-        var chapters = chapters
+        var chapters = {
+            if let videoDuration {
+                chapters.filter { $0.startTime < videoDuration }
+            } else {
+                chapters
+            }
+        }()
+
         for index in 0..<chapters.count {
             if index == chapters.count - 1 {
-                if let videoDuration = videoDuration {
+                if let videoDuration {
                     chapters[index].duration = videoDuration - chapters[index].startTime
                     chapters[index].endTime = videoDuration
                 } else {
@@ -221,6 +228,17 @@ struct ChapterService {
         }
     }
 
+    // function that detects what percentage of chapters are equal between two arrays
+    static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
+        guard !chapters1.isEmpty, !chapters2.isEmpty else { return 0.0 }
+        let minCount = min(chapters1.count, chapters2.count)
+        var equalCount = 0
+        for index in 0..<minCount where chapterEqual(chapters1[index], chapters2[index]) {
+            equalCount += 1
+        }
+        return Double(equalCount) / Double(minCount)
+    }
+
     private static var skipSponsorBlock: Bool {
         if NSUbiquitousKeyValueStore.default.bool(forKey: Const.skipSponsorSegments) {
             return true
@@ -264,5 +282,34 @@ struct ChapterService {
                 chapter.isActive = false
             }
         }
+    }
+
+    @MainActor
+    static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
+        var chapterModels: [Chapter] = []
+        for chapter in chapters {
+            let chapterModel = chapter.getChapter
+            context.insert(chapterModel)
+            chapterModels.append(chapterModel)
+        }
+
+        if !chapterModels.isEmpty {
+            CleanupService.deleteChapters(from: video, context)
+        }
+
+        video.chapters = chapterModels
+        try? context.save()
+
+        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
+            PlayerManager.shared.video = video
+            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
+        }
+    }
+
+    @MainActor
+    static func restoreChapters(for video: Video) {
+        let context = DataProvider.mainContext
+        let chapters = extractChapters(from: video.videoDescription ?? "", videoDuration: video.duration)
+        insertChapters(chapters, for: video, in: context)
     }
 }

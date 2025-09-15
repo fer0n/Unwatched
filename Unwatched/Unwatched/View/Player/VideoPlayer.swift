@@ -65,16 +65,14 @@ struct VideoPlayer: View {
                                       horizontalLayout: horizontalLayout,
                                       enableHideControls: enableHideControls,
                                       hideControls: hideControls,
-                                      sleepTimerVM: sleepTimerVM, autoHideVM: $autoHideVM)
+                                      sleepTimerVM: sleepTimerVM,
+                                      autoHideVM: $autoHideVM,
+                                      )
                 }
             }
         }
+        .appNotificationOverlay()
         .tint(.neutralAccentColor)
-        .onChange(of: navManager.showMenu) {
-            if navManager.showMenu == false {
-                sheetPos.updatePlayerControlHeight()
-            }
-        }
         .onChange(of: player.isPlaying) {
             if player.video?.isNew == true {
                 player.video?.isNew = false
@@ -134,18 +132,36 @@ struct VideoPlayer: View {
 }
 
 #Preview {
-    VideoPlayer(compactSize: false,
-                horizontalLayout: false,
-                limitWidth: false,
-                landscapeFullscreen: false,
-                hideControls: false)
+    @Previewable @State var player = PlayerManager.getDummy()
+
+    GeometryReader { proxy in
+        VideoPlayer(compactSize: false,
+                    horizontalLayout: false,
+                    limitWidth: false,
+                    landscapeFullscreen: false,
+                    hideControls: false,
+                    //                    proxy: proxy
+                    )
         .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager.getDummy())
-        .environment(PlayerManager.getDummy())
+        .environment(NavigationManager.getDummy(true))
+        .environment(player)
         .environment(ImageCacheManager())
         .environment(RefreshManager())
         .environment(SheetPositionReader())
         .environment(TinyUndoManager())
         .tint(Color.neutralAccentColor)
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+        // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+
+        //        Button {
+        //            withAnimation {
+        //                if player.aspectRatio ?? 1 <= 1.5 {
+        //                    player.handleAspectRatio(16/9)
+        //                } else {
+        //                    player.handleAspectRatio(4/3)
+        //                }
+        //            }
+        //        } label: {
+        //            Text(verbatim: "switch")
+        //        }
+    }
 }

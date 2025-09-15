@@ -39,20 +39,19 @@ struct LibraryView: View {
                 .onAppear {
                     navManager.topListItemId = topListItemId
                 }
-                .myNavigationTitle("library", showBack: false)
-                .libraryDestination()
+                .myNavigationTitle("library")
                 .toolbar {
                     if showCancelButton {
                         DismissToolbarButton()
                     }
-                    ToolbarSpacerWorkaround()
                     #if os(iOS)
                     settingsToolbarButton
                     #endif
-                    RefreshToolbarButton()
+                    RefreshToolbarContent()
                 }
             }
             .tint(theme.color)
+            .libraryDestination()
         }
         .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
     }

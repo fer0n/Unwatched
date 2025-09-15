@@ -16,6 +16,8 @@ extension DataProvider {
     @MainActor
     static let previewContainerFilled: ModelContainer = {
         var container = previewContainer
+
+        #if DEBUG
         let video = dummyVideo
         container.mainContext.insert(video)
 
@@ -39,10 +41,11 @@ extension DataProvider {
 
         try? container.mainContext.save()
 
-        //        let jsonData = TestData.backup.data(using: .utf8)!
-        //        UserDataService.importBackup(jsonData)
-        //
-        //        try? container.mainContext.save()
+        let jsonData = TestData.backup.data(using: .utf8)!
+        UserDataService.importBackup(jsonData)
+
+        try? container.mainContext.save()
+        #endif
         return container
     }()
 }

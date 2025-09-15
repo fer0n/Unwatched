@@ -8,6 +8,9 @@ import SwiftUI
 import UnwatchedShared
 
 struct SubscriptionSpeedSetting: View {
+    @Namespace private var namespace
+    let transitionId = "popoverTransition"
+
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(PlayerManager.self) var player
 
@@ -25,6 +28,13 @@ struct SubscriptionSpeedSetting: View {
                 text = String(localized: "defaultSpeed\(SpeedControlViewModel.formatSpeed(player.defaultPlaybackSpeed))")
             }
             return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
+        }
+        .apply {
+            if #available(iOS 26.0, *) {
+                $0.matchedTransitionSource(id: transitionId, in: namespace)
+            } else {
+                $0
+            }
         }
         .popover(isPresented: $showSpeedControl, arrowEdge: .bottom) {
             ZStack {
@@ -62,6 +72,15 @@ struct SubscriptionSpeedSetting: View {
             .if(!Const.iOS26) { view in
                 view.presentationBackground(.ultraThinMaterial)
             }
+            #if os(iOS)
+            .apply {
+                if #available(iOS 26.0, *) {
+                    $0.navigationTransition(.zoom(sourceID: transitionId, in: namespace))
+                } else {
+                    $0
+                }
+            }
+            #endif
         }
         .tint(theme.color)
     }

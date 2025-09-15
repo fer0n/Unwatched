@@ -13,15 +13,14 @@ struct AddVideoButton: View {
 
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-    @Environment(\.dismiss) var dismiss
 
-    @State var showHelp = false
     @State var showInsert = false
     @State var hapticToggle = false
 
-    @Binding var browserManager: BrowserManager
+    @Environment(BrowserManager.self) var browserManager
 
     var size: Double = 20
+    var onDismiss: (() -> Void)?
 
     var body: some View {
         addVideoButton
@@ -29,21 +28,21 @@ struct AddVideoButton: View {
                 ZStack {
                     openInBrowserButton
                         .offset(y: -(2 * 35 + 2 * size))
-                    playNowButton
+                    PlayNowButton(size: size, onDismiss: onDismiss)
                         .offset(y: -(35 + size))
                 }
                 .opacity(isVideoUrl ? 1 : 0)
                 .animation(.default, value: isVideoUrl)
             }
-            .foregroundStyle(Color.backgroundColor)
             .sensoryFeedback(Const.sensoryFeedback, trigger: avm.isDragOver || hapticToggle)
     }
 
     var openInBrowserButton: some View {
         Button {
+            Signal.log("Browser.OpenInBrowser")
             if let youtubeUrl {
                 UrlService.open(youtubeUrl)
-                dismiss()
+                onDismiss?()
             }
         } label: {
             Image(systemName: "safari.fill")
@@ -52,103 +51,53 @@ struct AddVideoButton: View {
                 .fontWeight(.heavy)
                 .frame(width: size * 2, height: size * 2)
                 .symbolRenderingMode(.palette)
-                .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+        }
+        .apply {
+            if #available(iOS 26.0, macOS 26.0, *) {
+                $0
+                    .foregroundStyle(.primary, Color.clear)
+                    .glassEffect(.regular.interactive())
+            } else {
+                $0
+                    .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+            }
         }
         .buttonStyle(.plain)
-    }
-
-    var playNowButton: some View {
-        Button {
-            hapticToggle.toggle()
-            // play now
-            let task = addTimestampedUrl(at: 0)
-
-            player.loadTopmostVideoFromQueue(
-                after: task,
-                source: .userInteraction,
-                playIfCurrent: true
-            )
-            navManager.handlePlay()
-            dismiss()
-        } label: {
-            Image(systemName: "play.fill")
-                .fontWeight(.heavy)
-                .frame(width: size, height: size)
-                .padding(7)
-        }
-        .buttonStyle(.plain)
-        .background {
-            Circle()
-                .fill(Color.neutralAccentColor)
-                .frame(width: size * 2, height: size * 2)
-
-        }
     }
 
     var addVideoButton: some View {
         ZStack {
-            Circle()
-                .fill(.black.opacity(0.000001))
-                .frame(width: backgroundSize, height: backgroundSize)
-            Button {
-                if isVideoUrl || isPlaylistUrl {
+            // workaround: avoid animation on appear
+            if isVideoUrl || isPlaylistUrl || showInsert {
+                Button {
                     _ = addTimestampedUrl()
-                } else {
-                    showHelp = true
+                    Signal.log("Browser.AddVideo")
+                } label: {
+                    Image(systemName: addVideoSymbol)
+                        .fontWeight(.semibold)
+                        .contentTransition(.symbolEffect(.replace))
+                        .frame(width: size, height: size)
+                        .padding(7)
                 }
-            } label: {
-                Image(systemName: avm.isSuccess == true
-                        ? "checkmark"
-                        : avm.isSuccess == false
-                        ? Const.clearNoFillSF
-                        : isVideoUrl || isPlaylistUrl || showInsert
-                        ? Const.queueTopSF
-                        : avm.isLoading
-                        ? "ellipsis"
-                        : "circle.circle")
-                    .fontWeight(.semibold)
-                    .contentTransition(.symbolEffect(.replace))
-                    .frame(width: size, height: size)
-                    .padding(7)
+                .buttonStyle(.plain)
+                .accessibilityLabel("dropVideoToQueue")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("dropVideoToQueue")
-        }
-        .background {
-            // Workaround: isDragOver = true get's stuck otherwise
-            Circle()
-                .fill(avm.isDragOver ? theme.darkColor : Color.neutralAccentColor)
-                .frame(width: backgroundSize, height: backgroundSize)
-                .animation(.default, value: avm.isDragOver)
-        }
-        .frame(width: backgroundSize, height: backgroundSize)
-        .dropDestination(for: URL.self) { items, _ in
-            Task {
-                await avm.addUrls(items)
-            }
-            return true
-        } isTargeted: { targeted in
-            avm.isDragOver = targeted
-
-            if targeted {
-                showInsert = targeted
-            } else {
-                Task {
-                    do {
-                        try await Task.sleep(s: 0.5)
-                        showInsert = targeted
-                    }
-                }
-            }
-        }
-        .popover(isPresented: $showHelp) {
-            Text("dropVideosTip")
-                .padding()
-                .presentationCompactAdaptation(.popover)
-                .foregroundStyle(Color.neutralAccentColor)
-                .fontWeight(.semibold)
         }
         .frame(width: size, height: size)
+        .myButtonStyle(size)
+        .opacity(isVideoUrl || isPlaylistUrl || showInsert ? 1 : 0)
+    }
+
+    var addVideoSymbol: String {
+        avm.isSuccess == true
+            ? "checkmark"
+            : avm.isSuccess == false
+            ? Const.clearNoFillSF
+            : isVideoUrl || isPlaylistUrl || showInsert
+            ? Const.queueTopSF
+            : avm.isLoading
+            ? "ellipsis"
+            : "circle.circle"
     }
 
     var youtubeUrl: URL? {
@@ -157,10 +106,6 @@ struct AddVideoButton: View {
 
     var isVideoUrl: Bool {
         browserManager.isVideoUrl
-    }
-
-    var backgroundSize: CGFloat {
-        avm.isDragOver ? 6 * size : 2 * size
     }
 
     var isPlaylistUrl: Bool {
@@ -190,12 +135,40 @@ struct AddVideoButton: View {
     }
 }
 
+private extension View {
+    func myButtonStyle(_ size: Double) -> some View {
+        self
+            .apply {
+                if #available(iOS 26.0, macOS 26.0, *) {
+                    $0
+                        .frame(width: size * 2, height: size * 2)
+                        .glassEffect(.regular.interactive())
+                        .foregroundStyle(.primary)
+                } else {
+                    $0
+                        .background {
+                            Circle()
+                                .fill(Color.neutralAccentColor)
+                                .frame(width: size * 2, height: size * 2)
+
+                        }
+                        .foregroundStyle(Color.backgroundColor)
+                }
+            }
+            .contentShape(Rectangle())
+    }
+}
+
 #Preview {
-    HStack {
+    @Previewable @State var browserManager = BrowserManager()
+    browserManager.isVideoUrl = true
+
+    return HStack {
         Spacer()
-        AddVideoButton(browserManager: .constant(BrowserManager()))
+        AddVideoButton()
             .padding(20)
     }
     .environment(PlayerManager())
     .environment(NavigationManager())
+    .environment(browserManager)
 }

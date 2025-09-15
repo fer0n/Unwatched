@@ -43,7 +43,7 @@ struct MacOSSplitView: View {
                 .environment(\.colorScheme, .dark)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .edgesIgnoringSafeArea(.all)
+            .edgesIgnoringSafeArea(.vertical)
         }
     }
 
@@ -92,8 +92,8 @@ struct IOSSPlitView: View {
                 horizontalLayout: hideControlsFullscreen && isLandscape,
                 limitWidth: limitWidth,
                 landscapeFullscreen: landscapeFullscreen,
-                hideControls: hideControlsFullscreen
-            )
+                hideControls: hideControlsFullscreen,
+                )
             .frame(maxHeight: .infinity)
             .environment(\.layoutDirection, .leftToRight)
 

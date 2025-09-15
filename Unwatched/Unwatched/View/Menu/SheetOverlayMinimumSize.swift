@@ -15,9 +15,9 @@ struct SheetOverlayMinimumSize: View {
         NavigationStack {
             Color.backgroundColor
                 .ignoresSafeArea(.all)
-                .myNavigationTitle(currentTab.stringKey, showBack: false)
+                .myNavigationTitle(currentTab.stringKey)
                 .toolbar {
-                    RefreshToolbarButton()
+                    RefreshToolbarContent()
                 }
                 .disabled(true)
         }
@@ -37,7 +37,7 @@ struct SheetOverlayMinimumSize: View {
     }
 
     var show: Bool {
-        sheetPos.isMinimumSheet && player.video != nil
+        sheetPos.isMinimumSheet
     }
 }
 

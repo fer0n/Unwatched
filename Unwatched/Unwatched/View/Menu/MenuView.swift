@@ -41,33 +41,36 @@ struct MenuView: View {
             }) {
                 QueueTabItemView(
                     showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge,
-                    horizontalpadding: -padding
+                    showBadge: showTabBarBadge
                 )
 
                 InboxTabItemView(
                     showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge,
-                    horizontalpadding: -padding
+                    showBadge: showTabBarBadge
                 )
 
                 LibraryView(showCancelButton: shouldShowCancelButton)
                     .tabItemView(image: Image(systemName: "books.vertical"), tag: NavigationTab.library)
-                    .padding(.horizontal, -padding)
 
                 BrowserView(
-                    url: $navManager.openTabBrowserUrl,
-                    showHeader: false,
+                    showHeader: true,
                     safeArea: false
                 )
                 .tabItemView(
-                    image: Image(systemName: Const.appBrowserSF),
+                    image: Image(systemName: Const.youtubeSF),
                     tag: NavigationTab.browser,
                     show: browserAsTab
                 )
-                .padding(.horizontal, -padding)
             }
-            .padding(.horizontal, padding)
+            #if os(iOS)
+            .apply {
+                if #available(iOS 26.0, *) {
+                    $0.scrollEdgeEffectHidden(for: .bottom)
+                } else {
+                    $0
+                }
+            }
+            #endif
             .popover(item: $navManager.videoDetail) { video in
                 ZStack {
                     Color.backgroundColor.ignoresSafeArea(.all)
@@ -79,6 +82,7 @@ struct MenuView: View {
                 .presentationCompactAdaptation(
                     Device.isMac ? .popover : .sheet
                 )
+                .appNotificationOverlay(topPadding: 10)
             }
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
@@ -87,6 +91,7 @@ struct MenuView: View {
         .id(videoListFormat == .compact) // workaround: expansive thumbnail size when switching setting
         #endif
         .browserViewSheet(navManager: $navManager)
+        .premiumOfferSheet()
         .background {
             Color.backgroundColor.ignoresSafeArea(.all)
         }
@@ -108,14 +113,6 @@ struct MenuView: View {
                 }
             }
         }
-    }
-
-    var padding: CGFloat {
-        #if os(macOS)
-        15
-        #else
-        0
-        #endif
     }
 }
 

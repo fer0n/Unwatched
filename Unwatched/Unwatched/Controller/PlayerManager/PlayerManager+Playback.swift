@@ -215,18 +215,19 @@ extension PlayerManager {
         if temporarySlowDownThreshold {
             temporaryPlaybackSpeed = 1
         } else {
-            temporaryPlaybackSpeed = Const.speedMax
+            temporaryPlaybackSpeed = tempSpeedUpValue
         }
+        Signal.log("Player.setTemporarySpeed", throttle: .daily)
     }
 
     func temporarySpeedUp() {
-        temporaryPlaybackSpeed = Const.speedMax
+        temporaryPlaybackSpeed = tempSpeedUpValue
     }
 
     @MainActor
     func temporarySlowDown() {
         if unmodifiedPlaybackSpeed <= 1 {
-            temporaryPlaybackSpeed = Const.speedMin
+            temporaryPlaybackSpeed = tempSlowDownValue
         } else {
             temporaryPlaybackSpeed = 1
         }
@@ -248,16 +249,24 @@ extension PlayerManager {
         }
     }
 
+    var tempSpeedUpValue: Double {
+        UserDefaults.standard.value(forKey: Const.temporarySpeedUp) as? Double ?? Const.speedMax
+    }
+
+    var tempSlowDownValue: Double {
+        UserDefaults.standard.value(forKey: Const.temporarySlowDown) as? Double ?? Const.speedMin
+    }
+
     @MainActor
     func tempSpeedChange(faster: Bool = false) {
         if faster {
-            if temporaryPlaybackSpeed == Const.speedMax {
+            if temporaryPlaybackSpeed == tempSpeedUpValue {
                 temporaryPlaybackSpeed = nil
             } else {
                 temporarySpeedUp()
             }
         } else {
-            if [1, Const.speedMin].contains(temporaryPlaybackSpeed) {
+            if [1, tempSlowDownValue].contains(temporaryPlaybackSpeed) {
                 temporaryPlaybackSpeed = nil
             } else {
                 temporarySlowDown()
@@ -283,6 +292,7 @@ extension PlayerManager {
         if temporaryPlaybackSpeed != nil {
             return
         }
+        Signal.log("Player.setPlaybackSpeed", throttle: .daily)
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {
@@ -358,6 +368,6 @@ extension PlayerManager {
             return
         }
         let context = DataProvider.mainContext
-        loadTopmostVideoFromQueue(modelContext: context, updateTime: true)
+        loadTopmostVideoFromQueue(modelContext: context, updateTime: false)
     }
 }

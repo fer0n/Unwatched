@@ -15,6 +15,8 @@ struct ChapterList: View {
     var isCompact = false
     var isTransparent = false
 
+    static let itemRadius: CGFloat = 15
+
     var padding: CGFloat {
         isCompact ? 4 : 6
     }
@@ -39,7 +41,7 @@ struct ChapterList: View {
                     .padding(.trailing, 4)
                     .background(
                         backgroundColor
-                            .clipShape(.rect(cornerRadius: 15.0))
+                            .clipShape(.rect(cornerRadius: ChapterList.itemRadius))
                             .opacity(chapter.isActive ? 1 : 0.6)
                             .opacity(isTransparent ? 0.7 : 1)
                     )

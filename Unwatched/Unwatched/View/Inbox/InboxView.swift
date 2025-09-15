@@ -102,8 +102,15 @@ struct InboxView: View {
             .onAppear {
                 navManager.setScrollId("top", ClearList.inbox.rawValue)
             }
+            .onDisappear {
+                Signal.log(
+                    "Inbox.Count",
+                    parameters: ["Inbox.Count.Value": "\(inboxEntries.count)"],
+                    throttle: .daily
+                )
+            }
             .inboxToolbar(showCancelButton)
-            .myNavigationTitle("inbox", showBack: false)
+            .myNavigationTitle("inbox")
             .sendableSubscriptionDestination()
             .tint(theme.color)
         }

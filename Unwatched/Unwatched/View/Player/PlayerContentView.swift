@@ -19,8 +19,7 @@ struct PlayerContentView: View {
     let hideControls: Bool
 
     var sleepTimerVM: SleepTimerViewModel
-
-    let fadeOutHeight: CGFloat = 55
+    let fadeOutHeight: CGFloat = Const.iOS26 ? 25 : 35
 
     @State var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
@@ -56,6 +55,9 @@ struct PlayerContentView: View {
                         video: video,
                         bottomSpacer: fadeOutHeight + Const.minSheetDetent,
                         )
+                    .overlay {
+                        topShadow
+                    }
                     .tabItem {
                         Image(systemName: "checklist")
                             .fontWeight(.black)
@@ -80,11 +82,18 @@ struct PlayerContentView: View {
 
             if !hidePlayerPageIndicator {
                 pageControl
-                    .padding(.bottom, compactSize ? 0 : Const.minSheetDetent - 3)
+                    .padding(
+                        .bottom,
+                        compactSize
+                            ? 0
+                            : (Const.minSheetDetent - (Const.iOS26 ? 25 : 3))
+                    )
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .opacity(navManager.showMenu ? 1 : 0)
             }
         }
+        // TODO: enable safe area? Last checked on iOS 26 beta 8 (flickering issue)
+        // .ignoresSafeArea(edges: Const.iOS26 ? .bottom : [])
     }
 
     var pageControl: some View {
@@ -102,23 +111,48 @@ struct PlayerContentView: View {
         .clipShape(Capsule())
     }
 
-    var bottomShadow: some View {
+    var topShadow: some View {
         VStack(spacing: 0) {
-            Spacer()
-
             Color.black
                 .allowsHitTesting(false)
-                .frame(height: fadeOutHeight)
+                .frame(height: 60)
                 .mask(LinearGradient(gradient: Gradient(
                     stops: [
                         .init(color: .black.opacity(0.9), location: 0),
                         .init(color: .black.opacity(0.3), location: 0.55),
                         .init(color: .clear, location: 1)
                     ]
-                ), startPoint: .bottom, endPoint: .top))
+                ), startPoint: .top, endPoint: .bottom))
+
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    var bottomShadow: some View {
+        VStack(spacing: 0) {
+            Spacer()
 
             Color.black
-                .frame(height: compactSize ? 0 : Const.minSheetDetent - 10)
+                .allowsHitTesting(false)
+                .frame(height: shadowHeight)
+                .mask(LinearGradient(gradient: Gradient(
+                    stops: [
+                        .init(color: .black.opacity(0.9), location: 0),
+                        .init(color: .black.opacity(0.5), location: 0.8),
+                        .init(color: .clear, location: 1)
+                    ]
+                ), startPoint: .bottom, endPoint: .top))
+        }
+    }
+
+    var shadowHeight: CGFloat {
+        if !Const.iOS26 {
+            hidePlayerPageIndicator ? 0 : Const.minSheetDetent + fadeOutHeight
+        } else {
+            (hidePlayerPageIndicator
+                ? Const.minSheetDetent
+                : Const.minSheetDetent + fadeOutHeight)
         }
     }
 }

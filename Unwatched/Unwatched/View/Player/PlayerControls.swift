@@ -171,6 +171,7 @@ struct PlayerControls: View {
                     .foregroundStyle(Color.automaticBlack.opacity(0.5))
                     .padding(8)
                     .buttonStyle(.plain)
+                    .opacity(navManager.showMenu ? 0 : 1)
                 }
             }
             .opacity(showControls ? 1 : 0)
@@ -181,7 +182,7 @@ struct PlayerControls: View {
         .padding(.bottom, compactSize ? 0 : 5 )
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .onSizeChange { size in
-            sheetPos.setPlayerControlHeight(size.height - Const.playerControlPadding)
+            sheetPos.setPlayerControlHeight(size.height)
             if player.limitHeight || compactSize {
                 minHeight = size.height
             }

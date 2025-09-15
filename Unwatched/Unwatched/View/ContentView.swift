@@ -57,18 +57,19 @@ struct ContentView: View {
                 }
             }
             .menuViewSheet(
-                allowMaxSheetHeight: videoExists && !navManager.searchFocused,
+                allowMaxSheetHeight: videoExists,
                 allowPlayerControlHeight: !player.embeddingDisabled
-                    && player.videoAspectRatio > Const.tallestAspectRatio,
+                    && player.videoAspectRatio > Const.tallestAspectRatio && videoExists,
                 landscapeFullscreen: landscapeFullscreen,
-                disableSheet: bigScreen
+                disableSheet: bigScreen,
+                proxy: proxy
             )
         }
         .setColorScheme()
-        .ignoresSafeArea(bigScreen ? .keyboard : [])
         .onSizeChange { newSize in
             sheetPos.sheetHeight = newSize.height
         }
+        .ignoresSafeArea(.keyboard)
     }
 }
 

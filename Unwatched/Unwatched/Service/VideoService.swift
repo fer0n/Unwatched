@@ -5,14 +5,17 @@ import UnwatchedShared
 
 extension VideoService {
     static func loadNewVideosInBg(
-        subscriptionIds: [PersistentIdentifier]? = nil
+        subscriptionIds: [PersistentIdentifier]? = nil,
+        fetchDurations: Bool
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Log.info("loadNewVideosInBg")
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
             do {
                 return try await repo.loadVideos(
-                    subscriptionIds
+                    subscriptionIds,
+                    fetchDurations: hasPremium && fetchDurations
                 )
             } catch {
                 Log.error("\(error)")
@@ -105,6 +108,49 @@ extension VideoService {
         for entry in entries {
             deleteQueueEntry(entry, updateOrder: updateOrder, modelContext: modelContext)
         }
+    }
+
+    static func fetchVideoDurationsQueueInbox() {
+        guard NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged) else {
+            Log.info("fetchUpdateDurations: no premium user")
+            return
+        }
+        let task: Task<[VideoDurationInfo], Error> = Task.detached {
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            return try await repo.fetchVideoDurationsQueueInbox()
+        }
+        Task { @MainActor in
+            do {
+                let results = try await task.value
+                await forceUpdateDurations(results)
+            } catch {
+                Log.error("fetchUpdateDurations error: \(error)")
+            }
+        }
+    }
+
+    @MainActor
+    static func forceUpdateDurations(_ updateInfo: [VideoDurationInfo]) async {
+        print("forceUpdateDurations, \(updateInfo)")
+        let context = DataProvider.mainContext
+        for info in updateInfo {
+            if let persistentId = info.persistentId,
+               let video: Video = context.existingModel(for: persistentId) {
+                if video.duration != info.duration {
+                    withAnimation {
+                        video.duration = info.duration
+                    }
+                }
+                if video.noDuration != info.noDuration {
+                    withAnimation {
+                        video.noDuration = info.noDuration
+                    }
+                }
+            } else {
+                Log.warning("forceUpdateDurations: video not found/no persistentId")
+            }
+        }
+        try? context.save()
     }
 
     static func updateDuration(_ video: Video, duration: Double) {
@@ -266,22 +312,6 @@ extension VideoService {
         fetch.fetchLimit = 2
         let entries = try? modelContext.fetch(fetch)
         return (entries?.first?.video, entries?.last?.video)
-    }
-
-    static func deleteEverything() async {
-        let context = DataProvider.newContext()
-        do {
-            try context.delete(model: QueueEntry.self)
-            try context.delete(model: InboxEntry.self)
-            try context.delete(model: Subscription.self)
-            try context.delete(model: Chapter.self)
-            try context.delete(model: Video.self)
-            try context.save()
-        } catch {
-            Log.error("Failed to delete everything")
-        }
-
-        _ = ImageService.deleteAllImages()
     }
 
     static func toggleBookmarkFetch(_ videoId: PersistentIdentifier, _ context: ModelContext) -> (Task<(), Error>)? {

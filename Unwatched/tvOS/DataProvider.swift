@@ -11,8 +11,10 @@ extension DataProvider {
     @MainActor
     public static let previewContainerFilled: ModelContainer = {
         var container = previewContainer
+        #if DEBUG
         let context = container.mainContext
         fillWithTestData(context)
+        #endif
         return container
     }()
 

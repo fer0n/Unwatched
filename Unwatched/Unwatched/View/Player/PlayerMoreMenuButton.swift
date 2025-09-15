@@ -52,7 +52,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     openUrl(url)
                 } label: {
                     Text("openInAppBrowser")
-                    Image(systemName: Const.appBrowserSF)
+                    Image(systemName: Const.youtubeSF)
                         .padding(5)
                 }
             }
@@ -68,8 +68,10 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     }
                 }
         }
-        .menuIndicator(.hidden)
+        #if os(macOS)
         .buttonStyle(.plain)
+        #endif
+        .menuIndicator(.hidden)
         .environment(\.menuOrder, .fixed)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help("moreOptions")

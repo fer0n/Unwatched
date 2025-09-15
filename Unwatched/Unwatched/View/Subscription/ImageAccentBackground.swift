@@ -16,7 +16,9 @@ struct ImageAccentBackground: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            #if os(iOS)
             .padding(.top, gradientStart)
+            #endif
             .background(
                 LinearGradient(
                     colors: [color ?? Color.automaticWhite, Color.backgroundColor],
@@ -27,9 +29,11 @@ struct ImageAccentBackground: ViewModifier {
                 .padding(.horizontal, -15)
                 #endif
             )
+            #if os(iOS)
             .padding(.top, topPadding - gradientStart)
             .listRowInsets(EdgeInsets(top: -topPadding, leading: 0, bottom: 0, trailing: 0))
             .listRowSeparator(.hidden)
+            #endif
             .task {
                 guard let url, color == nil else { return }
                 let task = await ImageService.getAccentColor(from: url, imageCacheManager)

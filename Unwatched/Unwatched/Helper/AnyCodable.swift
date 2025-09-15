@@ -3,7 +3,7 @@
 //  Unwatched
 //
 
-struct AnyCodable: Codable {
+struct AnyCodable: Codable, Equatable {
     let value: Any
 
     init(_ value: Any) {
@@ -43,6 +43,36 @@ struct AnyCodable: Codable {
                     debugDescription: "Unsupported type"
                 )
             )
+        }
+    }
+
+    static func == (lhs: AnyCodable, rhs: AnyCodable) -> Bool {
+        switch (lhs.value, rhs.value) {
+        case (let left as Int, let right as Int):
+            return left == right
+        case (let left as Double, let right as Double):
+            return left == right
+        case (let left as String, let right as String):
+            return left == right
+        case (let left as Bool, let right as Bool):
+            return left == right
+        default:
+            return false
+        }
+    }
+
+    var asString: String {
+        switch value {
+        case let intValue as Int:
+            return String(intValue)
+        case let doubleValue as Double:
+            return String(doubleValue)
+        case let stringValue as String:
+            return stringValue
+        case let boolValue as Bool:
+            return String(boolValue)
+        default:
+            return ""
         }
     }
 }

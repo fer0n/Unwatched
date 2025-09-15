@@ -16,6 +16,7 @@ extension Const {
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
         Const.skipSponsorSegments: false
+
     ]
 
     static let settingsDefaults: [String: Sendable] = [
@@ -41,16 +42,18 @@ extension Const {
         Const.hideMenuOnPlay: true,
         Const.returnToQueue: false,
         Const.rotateOnPlay: false,
+        Const.temporarySpeedUp: Const.speedMax,
+        Const.temporarySlowDown: Const.speedMin,
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
         Const.minimalPlayerUI: false,
         Const.autoAirplayHD: false,
+        Const.playBrowserVideosInApp: false,
 
         // Appearance
         Const.browserAsTab: false,
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
-        Const.sheetOpacity: false,
         Const.hidePlayerPageIndicator: false,
         Const.videoListFormat: VideoListFormat.compact.rawValue,
         Const.lightModeTheme: AppAppearance.unwatched.rawValue,
@@ -63,6 +66,10 @@ extension Const {
         Const.automaticBackups: true,
         Const.exludeWatchHistoryInBackup: false,
         Const.minimalBackups: true,
-        Const.autoDeleteBackups: false
+        Const.autoDeleteBackups: false,
+
+        // Premium
+        Const.unwatchedPremiumAcknowledged: false,
+        Const.hidePremium: false
     ]
 }

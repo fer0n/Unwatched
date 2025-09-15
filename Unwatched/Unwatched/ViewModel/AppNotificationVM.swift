@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 @Observable class AppNotificationVM {
     var isPresented: Bool = false
@@ -16,6 +17,27 @@ import SwiftUI
     func show(_ notification: AppNotificationData) {
         Task {
             await handleShow(notification)
+        }
+    }
+
+    @MainActor
+    func show(_ title: String, isError: Bool = false) {
+        Task {
+            await handleShow(
+                AppNotificationData(
+                    title: LocalizedStringKey(title),
+                    isError: isError,
+                    icon: isError ? Const.errorSF : nil,
+                    timeout: isError ? 4 : 3,
+                    )
+            )
+        }
+    }
+
+    @MainActor
+    func show(_ defaultNotification: DefaultNotification) {
+        Task {
+            await handleShow(defaultNotification.notification)
         }
     }
 
