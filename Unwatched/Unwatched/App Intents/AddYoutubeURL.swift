@@ -23,7 +23,7 @@ struct AddYoutubeURL: AppIntent {
         let task = VideoService.addForeignUrls(
             [youtubeUrl],
             in: destination.toCollection(),
-            markAsNew: true
+            markAsNew: false
         )
         try await task.value
         UserDefaults.standard.set(true, forKey: Const.shortcutHasBeenUsed)
