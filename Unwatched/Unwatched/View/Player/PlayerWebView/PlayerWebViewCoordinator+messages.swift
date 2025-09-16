@@ -133,8 +133,13 @@ extension PlayerWebViewCoordinator {
 
     func handleUrlClicked(_ payload: String?) {
         guard let payload,
-              let url = URL(string: payload),
-              let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
+              let url = URL(string: payload) else {
+            return
+        }
+
+        guard let youtubeId = UrlService.getYoutubeIdFromUrl(url: url) else {
+            Log.info("handleUrlClicked: not a youtube url")
+            NavigationManager.shared.openUrlInApp(.url(payload))
             return
         }
         if youtubeId == parent.player.video?.youtubeId {

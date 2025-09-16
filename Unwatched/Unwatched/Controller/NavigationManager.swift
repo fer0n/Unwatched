@@ -206,6 +206,7 @@ import UnwatchedShared
         } else {
             BrowserManager.shared.loadUrl(url.getUrl)
             showBrowser = true
+            showMenu = true
             #if os(macOS)
             openWindow?(id: Const.windowBrowser)
             #endif
