@@ -17,7 +17,7 @@ public struct VideoListItemThumbnailOverlay: View {
     var fixedProgressbarHeight: CGFloat?
 
     @ScaledMetric var progressbarHeight: CGFloat = 5
-    @ScaledMetric var padding: CGFloat = 4
+    @ScaledMetric var padding: CGFloat = 3
     @ScaledMetric var radius: CGFloat = 6
 
     public init(
@@ -59,10 +59,10 @@ public struct VideoListItemThumbnailOverlay: View {
                 videoDuration: videoDuration,
                 roughDuration: roughDuration,
                 radius: radius,
-                padding: padding
+                padding: padding 
             )
-            .padding(.bottom, padding + barHeight)
-            .padding(.trailing, padding)
+            .padding(.bottom, padding + barHeight + 1)
+            .padding(.trailing, padding + 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         }
     }
