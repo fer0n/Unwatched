@@ -310,10 +310,14 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     func deleteVideo() {
         if let video = getVideo() {
             clearVideoEverywhere()
+            let hasQueueEntry = video.queueEntry != nil
             withAnimation {
                 CleanupService.deleteVideo(video, modelContext)
                 try? modelContext.save()
                 onChange?(nil, video.queueEntry?.order)
+            }
+            if hasQueueEntry {
+                player.loadTopmostVideoFromQueue()
             }
         }
     }
