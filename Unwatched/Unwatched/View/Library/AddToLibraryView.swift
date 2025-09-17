@@ -30,7 +30,7 @@ struct AddToLibraryView: View {
     var body: some View {
         if showBrowser {
             Button(action: {
-                navManager.showBrowser = true
+                navManager.openUrlInApp(nil)
                 Signal.log("Library.OpenBrowser", throttle: .daily)
             }, label: {
                 Label {

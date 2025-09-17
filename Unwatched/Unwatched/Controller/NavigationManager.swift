@@ -196,15 +196,19 @@ import UnwatchedShared
     }
 
     @MainActor
-    func openUrlInApp(_ url: BrowserUrl) {
+    func openUrlInApp(_ url: BrowserUrl?) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
-            BrowserManager.shared.loadUrl(url.getUrl)
+            if let url {
+                BrowserManager.shared.loadUrl(url.getUrl)
+            }
             tab = .browser
             SheetPositionReader.shared.setDetentMiniPlayer()
             showMenu = true
         } else {
-            BrowserManager.shared.loadUrl(url.getUrl)
+            if let url {
+                BrowserManager.shared.loadUrl(url.getUrl)
+            }
             showBrowser = true
             showMenu = true
             #if os(macOS)

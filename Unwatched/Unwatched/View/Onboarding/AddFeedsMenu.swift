@@ -54,8 +54,7 @@ struct AddFeedsMenu: View {
 
     var browseYoutubeButton: some View {
         Button {
-            navManager.showMenu = true
-            navManager.showBrowser = true
+            navManager.openUrlInApp(nil)
             Signal.log("Onboarding.BrowseYoutube")
         } label: {
             Text("browser")
