@@ -526,7 +526,7 @@ extension PlayerWebView {
                     * {
                         cursor: default !important;
                     }
-                    .ytp-pause-overlay, .branding-img {
+                    .ytp-pause-overlay, .branding-img, .ytp-ad-progress-list {
                         display: none !important;
                     }
                     @media (max-width: 200px) {
