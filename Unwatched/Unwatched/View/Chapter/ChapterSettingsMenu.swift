@@ -75,7 +75,14 @@ struct ChapterSettingsMenu: View {
         .foregroundStyle(Color.automaticBlack)
         .tint(Color.insetBackgroundColor)
         .menuOrder(.fixed)
+        #if os(macOS)
+        .buttonStyle(.plain)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .background(Color.insetBackgroundColor, in: .capsule)
+        #else
         .buttonStyle(.borderedProminent)
+        #endif
         .frame(maxWidth: .infinity, alignment: .center)
         .task(id: viewModel.errorMessage) {
             if let message = viewModel.errorMessage {
