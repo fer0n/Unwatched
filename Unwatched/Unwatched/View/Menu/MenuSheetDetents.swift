@@ -11,7 +11,6 @@ struct MenuSheetDetents: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
 
-    var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
     var proxy: GeometryProxy
@@ -22,8 +21,7 @@ struct MenuSheetDetents: ViewModifier {
         content
             .modifier(AnimatableDetents(
                 selectedDetent: $sheetPos.selectedDetent,
-                allowMinSheet: sheetPos.allowMinSheet,
-                allowMaxSheetHeight: allowMaxSheetHeight,
+                allowMinSheet: sheetPos.allowMinSheet && player.video != nil,
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 maxSheetHeight: sheetPos.maxSheetHeight,
                 playerControlHeight: sheetPos.playerControlHeight,
@@ -39,13 +37,14 @@ struct MenuSheetDetents: ViewModifier {
                 }
             })
             // no cancel button shown in landscape
-            .interactiveDismissDisabled(!landscapeFullscreen && player.video != nil)
+            .interactiveDismissDisabled(!landscapeFullscreen || player.video == nil)
             .disabled(
                 sheetPos.isMinimumSheet
                     && !navManager.hasSheetOpen
                     && !navManager.showBrowser
                     && !landscapeFullscreen
                     && !navManager.showPremiumOffer
+                    && player.video != nil
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))
@@ -59,14 +58,12 @@ struct MenuSheetDetents: ViewModifier {
 
 extension View {
     func menuSheetDetents(
-        allowMaxSheetHeight: Bool = false,
         allowPlayerControlHeight: Bool = false,
         landscapeFullscreen: Bool = false,
         proxy: GeometryProxy
     ) -> some View {
         self.modifier(
             MenuSheetDetents(
-                allowMaxSheetHeight: allowMaxSheetHeight,
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 landscapeFullscreen: landscapeFullscreen,
                 proxy: proxy

@@ -167,7 +167,7 @@ struct PlayerScrubber: View {
     }
 
     var formattedCurrentTime: String {
-        currentTime?.formattedSecondsColon ?? ""
+        player.video != nil ? currentTime?.formattedSecondsColon ?? "" : ""
     }
 
     func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {

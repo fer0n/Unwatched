@@ -9,8 +9,8 @@ import UnwatchedShared
 struct MenuViewSheet: ViewModifier {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.colorScheme) var colorScheme
+    @Environment(PlayerManager.self) var player
 
-    var allowMaxSheetHeight: Bool
     var allowPlayerControlHeight: Bool
     var landscapeFullscreen: Bool
     var disableSheet: Bool
@@ -22,12 +22,13 @@ struct MenuViewSheet: ViewModifier {
         content
             .sheet(isPresented: disableSheet ? .constant(false) : $navManager.showMenu) {
                 ZStack {
-                    MenuView(showCancelButton: landscapeFullscreen)
+                    MenuView(showCancelButton: landscapeFullscreen && player.video != nil)
                         .transparentNavBarWorkaround()
-                        .menuSheetDetents(allowMaxSheetHeight: allowMaxSheetHeight,
-                                          allowPlayerControlHeight: allowPlayerControlHeight,
-                                          landscapeFullscreen: landscapeFullscreen,
-                                          proxy: proxy)
+                        .menuSheetDetents(
+                            allowPlayerControlHeight: allowPlayerControlHeight,
+                            landscapeFullscreen: landscapeFullscreen,
+                            proxy: proxy
+                        )
 
                     SheetOverlayMinimumSize(
                         currentTab: navManager.tab
@@ -41,13 +42,11 @@ struct MenuViewSheet: ViewModifier {
 }
 
 extension View {
-    func menuViewSheet(allowMaxSheetHeight: Bool,
-                       allowPlayerControlHeight: Bool,
+    func menuViewSheet(allowPlayerControlHeight: Bool,
                        landscapeFullscreen: Bool,
                        disableSheet: Bool,
                        proxy: GeometryProxy) -> some View {
-        self.modifier(MenuViewSheet(allowMaxSheetHeight: allowMaxSheetHeight,
-                                    allowPlayerControlHeight: allowPlayerControlHeight,
+        self.modifier(MenuViewSheet(allowPlayerControlHeight: allowPlayerControlHeight,
                                     landscapeFullscreen: landscapeFullscreen,
                                     disableSheet: disableSheet,
                                     proxy: proxy))

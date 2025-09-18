@@ -44,7 +44,13 @@ public struct Const {
     public static let tapDestination = "tapDestination"
     public static let defaultVideoAspectRatio: Double = 16/9
     public static let videoAspectRatios: [Double] = [18/9, 4/3]
+    
+    /// Video thumbnail list item corner radius
     public static let videoCornerRadius: CGFloat = 15
+    
+    ///
+    public static let videoPlayerCornerRadius: CGFloat = 9
+    
     public static let consideredWideAspectRatio: Double = 18/9
     public static let consideredTallAspectRatio: Double = 1
     public static let tallestAspectRatio: Double = 0.7

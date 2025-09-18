@@ -404,7 +404,7 @@ extension PlayerManager {
     func setShowMenu() {
         let sheetPos = SheetPositionReader.shared
         updateElapsedTime()
-        if video != nil && !sheetPos.landscapeFullscreen {
+        if !sheetPos.landscapeFullscreen {
             if limitHeight {
                 sheetPos.setDetentMiniPlayer()
             } else {

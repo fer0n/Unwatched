@@ -45,7 +45,6 @@ struct PlayerControls: View {
         let outerLayout = horizontalLayout
             ? AnyLayout(HStackLayout(spacing: 10))
             : AnyLayout(VStackLayout(spacing: 0))
-
         ZStack {
             outerLayout {
                 if showRotateFullscreen && !player.embeddingDisabled && !player.isTallAspectRatio {
@@ -67,6 +66,7 @@ struct PlayerControls: View {
                                 .font(.system(size: 18, weight: .medium))
                                 .padding()
                         }
+                        .opacity(player.video != nil ? 1 : 0)
                     }
                 }
 

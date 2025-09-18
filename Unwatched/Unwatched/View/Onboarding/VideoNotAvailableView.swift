@@ -20,64 +20,22 @@ struct VideoNotAvailableView: View {
     @State private var isDropTarget: Bool = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                if showTutorial {
-                    Spacer()
-                }
-                Spacer()
-                Image("unwatched-logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
-                    .foregroundStyle(theme.color)
-                    .accessibilityLabel("unwatchedLogo")
-                Spacer()
-                    .frame(height: 30)
-                Text("Unwatched")
-                    .font(.title)
-                    .fontWeight(.heavy)
-                Spacer()
-            }
-            Spacer()
-
-            if showTutorial {
-                Text("tutorialHelper")
-                    .multilineTextAlignment(.center)
-                    .font(.headline)
-                    .padding()
-                AddFeedsMenu(includeShareSheet: true, onSuccess: {
-                    navManager.navigateTo(.inbox)
-                })
-                .tint(Color.neutralAccentColor)
-                .foregroundStyle(Color.backgroundColor)
-                .fontWeight(.medium)
-                .padding(.vertical, 40)
-            } else {
-                Spacer()
-                    .frame(height: 30)
-            }
-
-            VStack(spacing: showTutorial ? 0 : 5) {
-                Image(systemName: "chevron.up")
-                    .font(.system(size: showTutorial ? 30 : 50))
-                Text(showTutorial ? "skip" : "swipeUpToSelect")
-                    .padding(.bottom, 3)
-                    .fixedSize()
-            }
-            .font(.caption)
-            .textCase(.uppercase)
-            .padding(.top, showTutorial ? 10 : 0)
-            .padding(.bottom, 40)
-            .onTapGesture {
-                showMenu()
-                Task {
-                    try? await Task.sleep(s: 1)
-                    withAnimation {
-                        showTutorial = false
-                    }
-                }
-            }
+        GeometryReader { proxy in
+            Image(systemName: "checkmark.rectangle.stack.fill")
+                .resizable()
+                .scaledToFit()
+                .symbolVariant(.fill)
+                .fontWeight(.black)
+                .frame(width: proxy.size.width * 0.3)
+                .foregroundStyle(theme.color)
+                .opacity(0.8)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .center
+                )
+                .opacity(sheetPos.swipedBelow ? 1 : 0)
+                .animation(.bouncy, value: sheetPos.swipedBelow)
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
@@ -88,39 +46,32 @@ struct VideoNotAvailableView: View {
                     .fill(
                         LinearGradient(
                             colors: [
+                                theme.darkColor,
                                 .black.myMix(
                                     with: theme.darkColor,
-                                    by: 0.2
+                                    by: 0.8
                                 ),
-                                theme.darkColor
+                                .black
                             ],
                             startPoint: .top,
                             endPoint: .bottom
                         )
                     )
-                    .opacity(isDropTarget ? 0.6 : 0.4)
-                    .animation(.bouncy(duration: 1.5), value: navManager.showMenu)
+                    .animation(.bouncy, value: sheetPos.swipedBelow)
+                    .opacity(!sheetPos.swipedBelow ? 0.3 : isDropTarget ? 0.6 : 1)
+                    .animation(.default.speed(0.5), value: sheetPos.swipedBelow)
             }
+            .edgesIgnoringSafeArea(.all)
+            .padding(.bottom, -120)
         )
         .overlay {
             dropOverlay
         }
-        .handleVideoUrlDrop(.queue, isTargeted: handleIsTargeted)
-        .ignoresSafeArea(.all)
         .onTapGesture {
-            if !showTutorial {
-                showMenu()
-            }
+            showMenu()
         }
-        .gesture(
-            DragGesture(minimumDistance: 30, coordinateSpace: .local)
-                .updating($dragState) { value, state, _ in
-                    state = value.translation.height
-                    if state < -30 {
-                        showMenu()
-                    }
-                }
-        )
+        .opacity(0.7)
+        .handleVideoUrlDrop(.queue, isTargeted: handleIsTargeted)
         .environment(\.colorScheme, .dark)
     }
 

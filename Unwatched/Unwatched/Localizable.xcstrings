@@ -9751,13 +9751,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Füge Videos manuell hinzu oder automatisch durch Abos."
+            "value" : "Videos manuell oder über Abos hinzufügen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add videos manually or by adding subscriptions."
+            "value" : "Add videos manually or via subscriptions."
           }
         },
         "es" : {
@@ -13886,40 +13886,6 @@
         }
       }
     },
-    "skip" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Überspringen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skip"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Omitir"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passer"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pomiń"
-          }
-        }
-      }
-    },
     "skipSponsorSegments" : {
       "localizations" : {
         "de" : {
@@ -14630,40 +14596,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wspieraj rozwój"
-          }
-        }
-      }
-    },
-    "swipeUpToSelect" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Swipe nach oben"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Swipe up"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deslizar hacia arriba"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glisser vers le haut"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Przesuń w górę"
           }
         }
       }
@@ -15680,40 +15612,6 @@
         }
       }
     },
-    "tutorialHelper" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Durchsuche YouTube, um deine \nLieblingskanäle zu Unwatched hinzuzufügen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search YouTube to quickly add your\nfavorite channels to Unwatched"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Busca en YouTube para añadir rápidamente tus\ncanales favoritos a Unwatched"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recherchez sur YouTube pour ajouter rapidement vos chaînes préférées à Unwatched"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Szukaj na YouTube, aby dodać\nswoje ulubione kanały do Unwatched"
-          }
-        }
-      }
-    },
     "tvOsFaqA" : {
       "localizations" : {
         "de" : {
@@ -15952,40 +15850,6 @@
         }
       }
     },
-    "Unwatched" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched"
-          }
-        }
-      }
-    },
     "unwatchedHelp" : {
       "localizations" : {
         "de" : {
@@ -16016,40 +15880,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched Pomoc"
-          }
-        }
-      }
-    },
-    "unwatchedLogo" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched Logo"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwatched Logo"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logotipo de Unwatched"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logo Unwatched"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logo Unwatched"
           }
         }
       }

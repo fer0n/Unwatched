@@ -31,6 +31,7 @@ struct PlayerView: View {
     var landscapeFullscreen = true
     var enableHideControls: Bool
     var sleepTimerVM: SleepTimerViewModel
+    var compactSize: Bool
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -40,48 +41,51 @@ struct PlayerView: View {
                 landscapeFullscreen: landscapeFullscreen
             )
 
-            if player.video != nil {
-                HStack(spacing: 0) {
-                    if player.embeddingDisabled {
-                        playerWebsite
-                            .environment(\.layoutDirection, .leftToRight)
-                    } else {
-                        playerEmbedded
-                            .environment(\.layoutDirection, .leftToRight)
-                    }
+            HStack(spacing: 0) {
+                if player.video == nil && !compactSize {
+                    VideoNotAvailableView()
+                        .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                } else if !player.embeddingDisabled {
+                    playerEmbedded
+                        .environment(\.layoutDirection, .leftToRight)
+                } else {
+                    playerWebsite
+                        .environment(\.layoutDirection, .leftToRight)
+                }
 
-                    if landscapeFullscreen && showFullscreenControls {
-                        FullscreenPlayerControlsWrapper(
-                            autoHideVM: $autoHideVM,
-                            sleepTimerVM: sleepTimerVM,
-                            showLeft: showLeft)
-                            .environment(\.layoutDirection, .leftToRight)
-                    }
+                if landscapeFullscreen && showFullscreenControls {
+                    FullscreenPlayerControlsWrapper(
+                        autoHideVM: $autoHideVM,
+                        sleepTimerVM: sleepTimerVM,
+                        showLeft: showLeft)
+                        .environment(\.layoutDirection, .leftToRight)
                 }
-                #if os(iOS)
-                .environment(\.layoutDirection, showLeft
-                                ? .rightToLeft
-                                : .leftToRight)
-                #endif
-                .frame(maxWidth: !showFullscreenControls
-                        ? .infinity
-                        : nil)
-                .fullscreenSafeArea(enable: landscapeFullscreen)
-                // force reload if value changed (requires settings update)
-                .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
-                .onChange(of: reloadVideoId) {
-                    autoHideVM.reset()
-                }
-                .onChange(of: playVideoFullscreen) {
-                    player.handleHotSwap()
-                }
-                .overlay {
+            }
+            #if os(iOS)
+            .environment(\.layoutDirection, showLeft
+                            ? .rightToLeft
+                            : .leftToRight)
+            #endif
+            .frame(maxWidth: !showFullscreenControls
+                    ? .infinity
+                    : nil)
+            .fullscreenSafeArea(enable: landscapeFullscreen)
+            // force reload if value changed (requires settings update)
+            .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
+            .onChange(of: reloadVideoId) {
+                autoHideVM.reset()
+            }
+            .onChange(of: playVideoFullscreen) {
+                player.handleHotSwap()
+            }
+            .overlay {
+                if player.video != nil {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
-                .onChange(of: landscapeFullscreen, initial: true) {
-                    sheetPos.landscapeFullscreen = landscapeFullscreen
-                }
+            }
+            .onChange(of: landscapeFullscreen, initial: true) {
+                sheetPos.landscapeFullscreen = landscapeFullscreen
             }
         }
         .dateSelectorSheet()
@@ -122,34 +126,39 @@ struct PlayerView: View {
     @MainActor
     var playerEmbedded: some View {
         HStack {
-            PlayerWebView(
-                overlayVM: $overlayVM,
-                autoHideVM: $autoHideVM,
-                playerType: .youtubeEmbedded,
-                onVideoEnded: handleVideoEnded,
-                handleSwipe: handleSwipe
-            )
-            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
-            .overlay {
-                FullscreenOverlayControls(
+            ZStack {
+                PlayerWebView(
                     overlayVM: $overlayVM,
-                    enabled: showFullscreenControls,
-                    show: landscapeFullscreen
-                        || (!sheetPos.isMinimumSheet && navManager.showMenu)
-                        || navManager.playerTab == .chapterDescription,
-                    )
+                    autoHideVM: $autoHideVM,
+                    playerType: .youtubeEmbedded,
+                    onVideoEnded: handleVideoEnded,
+                    handleSwipe: handleSwipe
+                )
+                .overlay {
+                    FullscreenOverlayControls(
+                        overlayVM: $overlayVM,
+                        enabled: showFullscreenControls,
+                        show: landscapeFullscreen
+                            || (!sheetPos.isMinimumSheet && navManager.showMenu)
+                            || navManager.playerTab == .chapterDescription,
+                        )
 
-                thumbnailPlaceholder
-                    .opacity(showEmbeddedThumbnail ? 1 : 0)
+                    thumbnailPlaceholder
+                        .opacity(showEmbeddedThumbnail ? 1 : 0)
 
-                if !hideMiniPlayer {
-                    Color.black.opacity(0.000001)
-                        .onTapGesture {
-                            handleMiniPlayerTap()
-                        }
+                    if !hideMiniPlayer {
+                        Color.black.opacity(0.000001)
+                            .onTapGesture {
+                                handleMiniPlayerTap()
+                            }
+                    }
                 }
+                .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                .clipShape(RoundedRectangle(
+                            cornerRadius: Const.videoPlayerCornerRadius,
+                            style: .continuous)
+                )
             }
-            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
             .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
             .frame(width: !hideMiniPlayer ? 107 : nil,
@@ -205,37 +214,36 @@ struct PlayerView: View {
     }
 
     @ViewBuilder var miniPlayerContent: some View {
-        if let video = player.video {
-            Text(video.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fontWeight(.medium)
-                .contentShape(Rectangle())
-                .onTapGesture(perform: handleMiniPlayerTap)
-                .lineLimit(2)
+        Text(verbatim: player.video?.title ?? "")
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .fontWeight(.medium)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: handleMiniPlayerTap)
+            .lineLimit(2)
 
-            CorePlayButton(
-                circleVariant: true,
-                enableHaptics: true,
-                enableHelperPopup: false,
-                ) { image in
-                image
-                    .resizable()
-                    .frame(width: 45, height: 45)
-                    .symbolRenderingMode(.palette)
-                    .apply {
-                        if #available(iOS 26.0, macOS 26.0, *) {
-                            $0
-                                .foregroundStyle(.automaticBlack, .clear)
-                                .glassEffect(.regular.interactive(), in: Circle())
-                        } else {
-                            $0
-                                .foregroundStyle(.automaticWhite, .automaticBlack)
-                        }
+        CorePlayButton(
+            circleVariant: true,
+            enableHaptics: true,
+            enableHelperPopup: false,
+            ) { image in
+            image
+                .resizable()
+                .frame(width: 45, height: 45)
+                .symbolRenderingMode(.palette)
+                .apply {
+                    if #available(iOS 26.0, macOS 26.0, *) {
+                        $0
+                            .foregroundStyle(.automaticBlack, .clear)
+                            .glassEffect(.regular.interactive(), in: Circle())
+                    } else {
+                        $0
+                            .foregroundStyle(.automaticWhite, .automaticBlack)
                     }
-                    .fontWeight(.black)
-            }
-            .padding(.trailing, miniPlayerHorizontalPadding)
+                }
+                .fontWeight(.black)
         }
+        .padding(.trailing, miniPlayerHorizontalPadding)
+
     }
 
     var thumbnailPlaceholder: some View {
@@ -249,7 +257,10 @@ struct PlayerView: View {
             Color.backgroundColor
         }
         .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
-        .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
+        .clipShape(RoundedRectangle(
+                    cornerRadius: Const.videoPlayerCornerRadius,
+                    style: .continuous)
+        )
         .onTapGesture(perform: handleMiniPlayerTap)
         .id(player.video?.thumbnailUrl)
     }
@@ -362,7 +373,8 @@ struct PlayerView: View {
     return PlayerView(autoHideVM: .constant(AutoHideVM()),
                       landscapeFullscreen: true,
                       enableHideControls: false,
-                      sleepTimerVM: SleepTimerViewModel())
+                      sleepTimerVM: SleepTimerViewModel(),
+                      compactSize: false)
         .modelContainer(container)
         .environment(NavigationManager.getDummy())
         .environment(player)

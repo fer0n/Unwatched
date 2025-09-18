@@ -50,7 +50,9 @@ import UnwatchedShared
             return loadedNavManager
         } else {
             Log.info("navManager not found")
-            return NavigationManager()
+            let newNavigationManager = NavigationManager()
+            newNavigationManager.showMenu = true
+            return newNavigationManager
         }
     }
 

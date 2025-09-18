@@ -42,7 +42,9 @@ struct VideoPlayer: View {
             PlayerView(autoHideVM: $autoHideVM,
                        landscapeFullscreen: landscapeFullscreen,
                        enableHideControls: enableHideControls,
-                       sleepTimerVM: sleepTimerVM)
+                       sleepTimerVM: sleepTimerVM,
+                       compactSize: compactSize)
+                .zIndex(1)
                 .layoutPriority(2)
 
             if !landscapeFullscreen {

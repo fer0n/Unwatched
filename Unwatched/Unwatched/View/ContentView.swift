@@ -42,10 +42,6 @@ struct ContentView: View {
                     landscapeFullscreen: landscapeFullscreen
                 )
                 #endif
-
-                if !bigScreen && !videoExists {
-                    VideoNotAvailableView()
-                }
             }
             #if os(iOS)
             .environment(\.colorScheme, .dark)
@@ -57,9 +53,8 @@ struct ContentView: View {
                 }
             }
             .menuViewSheet(
-                allowMaxSheetHeight: videoExists,
                 allowPlayerControlHeight: !player.embeddingDisabled
-                    && player.videoAspectRatio > Const.tallestAspectRatio && videoExists,
+                    && player.videoAspectRatio > Const.tallestAspectRatio,
                 landscapeFullscreen: landscapeFullscreen,
                 disableSheet: bigScreen,
                 proxy: proxy
@@ -75,8 +70,8 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(DataProvider.previewContainerFilled)
-        .environment(NavigationManager.getDummy(false))
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager.getDummy(true))
         .environment(Alerter())
         .environment(PlayerManager.getDummy())
         .environment(ImageCacheManager())

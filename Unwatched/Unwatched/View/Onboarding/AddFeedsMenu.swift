@@ -13,25 +13,24 @@ struct AddFeedsMenu: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
 
     @State var showImportSheet = false
-    var includeShareSheet = false
     var onSuccess: (() -> Void)?
 
     var body: some View {
         HStack {
             browseYoutubeButton
             Menu {
-                if includeShareSheet {
-                    SetupShareSheetAction()
-                }
+                SetupShareSheetAction()
                 importSubscriptionsButton
                 AddVideosButton()
                     .foregroundStyle(.primary)
             } label: {
                 Image(systemName: "ellipsis")
-                    .frame(maxHeight: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .buttonStyle(.bordered)
+            .aspectRatio(1, contentMode: .fill)
+            .buttonStyle(.borderedProminent)
         }
+        .tint(theme.color)
         .fixedSize()
         .sheet(isPresented: $showImportSheet) {
             NavigationStack {
@@ -58,6 +57,8 @@ struct AddFeedsMenu: View {
             Signal.log("Onboarding.BrowseYoutube")
         } label: {
             Text("browser")
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
         }
         .buttonStyle(.borderedProminent)
     }
