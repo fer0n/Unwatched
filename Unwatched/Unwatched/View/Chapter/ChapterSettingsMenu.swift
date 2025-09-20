@@ -7,12 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterSettingsMenu: View {
-    @CloudStorage(Const.skipChapterText) var skipChapterText: String = ""
-    @Environment(PlayerManager.self) var player
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.openURL) var openURL
     @Environment(AppNotificationVM.self) var appNotificationVM
-
     @State var viewModel = GenerateChaptersButtonViewModel()
 
     let video: Video?
@@ -33,28 +28,9 @@ struct ChapterSettingsMenu: View {
             .tint(Color.automaticBlack)
 
             Section {
-                Button {
-                    let hasAccess = guardPremium {
-                        dismiss()
-                    }
-                    guard hasAccess else { return }
-                    openURL(UrlService.generateChaptersShortcutUrl)
-                } label: {
-                    Text("cloudAI")
-                    Text("shortcut")
-                    Image(systemName: "sparkles")
-                }
+                CloudAiButton()
+                GenerateChaptersMenuButton(viewModel: $viewModel, video: video)
 
-                let transcriptUrl = video?.youtubeId == player.video?.youtubeId
-                    ? player.transcriptUrl
-                    : nil
-                if #available(iOS 26, macOS 26.0, *) {
-                    GenerateChaptersButton(
-                        viewModel: $viewModel,
-                        video: video,
-                        transcriptUrl: transcriptUrl,
-                        )
-                }
             } header: {
                 Text(verbatim: "\(String(localized: "generateChapters")) ✪")
             }
@@ -88,6 +64,45 @@ struct ChapterSettingsMenu: View {
             if let message = viewModel.errorMessage {
                 appNotificationVM.show(message, isError: true)
             }
+        }
+    }
+}
+
+struct GenerateChaptersMenuButton: View {
+    @Environment(PlayerManager.self) var player
+    @Binding var viewModel: GenerateChaptersButtonViewModel
+
+    let video: Video?
+
+    var body: some View {
+        let transcriptUrl = video?.youtubeId == player.video?.youtubeId
+            ? player.transcriptUrl
+            : nil
+        if #available(iOS 26, macOS 26.0, *) {
+            GenerateChaptersButton(
+                viewModel: $viewModel,
+                video: video,
+                transcriptUrl: transcriptUrl,
+                )
+        }
+    }
+}
+
+struct CloudAiButton: View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.openURL) var openURL
+
+    var body: some View {
+        Button {
+            let hasAccess = guardPremium {
+                dismiss()
+            }
+            guard hasAccess else { return }
+            openURL(UrlService.generateChaptersShortcutUrl)
+        } label: {
+            Text("cloudAI")
+            Text("shortcut")
+            Image(systemName: "sparkles")
         }
     }
 }

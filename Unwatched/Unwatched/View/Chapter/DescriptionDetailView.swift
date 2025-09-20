@@ -12,7 +12,7 @@ struct DescriptionDetailView: View {
     var description: String?
 
     var body: some View {
-        LazyVStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             if let description {
                 let texts = description.split(separator: "\n", omittingEmptySubsequences: false)
                 ForEach(Array(texts.enumerated()), id: \.offset) { _, text in
