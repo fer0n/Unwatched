@@ -14,6 +14,10 @@ typealias PlatformViewRepresentable = UIViewRepresentable
 typealias PlatformViewRepresentable = NSViewRepresentable
 #endif
 
+@Observable class WebViewState {
+    @ObservationIgnored var webView: WKWebView?
+}
+
 struct PlayerWebView: PlatformViewRepresentable {
     @Environment(PlayerManager.self) var player
     @Environment(AppNotificationVM.self) var appNotificationVM
@@ -25,7 +29,9 @@ struct PlayerWebView: PlatformViewRepresentable {
     let onVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
 
-    @State var webView: WKWebView = {
+    @State var webViewState = WebViewState()
+
+    func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.preferences.isTextInteractionEnabled = false
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
@@ -35,10 +41,9 @@ struct PlayerWebView: PlatformViewRepresentable {
         webViewConfig.allowsInlineMediaPlayback = !(Const.playVideoFullscreen.bool ?? false)
         #endif
 
-        return WKWebView(frame: .zero, configuration: webViewConfig)
-    }()
+        let webView = WKWebView(frame: .zero, configuration: webViewConfig)
+        webViewState.webView = webView
 
-    func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
         player.isLoading = true
 
         player.previousState.videoId = player.video?.youtubeId

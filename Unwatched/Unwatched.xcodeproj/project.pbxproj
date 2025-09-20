@@ -582,6 +582,14 @@
 		88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
 		88DB36932D561B55007CF5F8 /* DescriptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB36912D561B55007CF5F8 /* DescriptionButton.swift */; };
 		88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */; };
+		88DD14752E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */; };
+		88DD14762E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */; };
+		88DD14782E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */; };
+		88DD14792E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */; };
+		88DD147B2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */; };
+		88DD147C2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */; };
+		88DD147E2E7E99A4007BA1F4 /* PlayerWebsite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */; };
+		88DD147F2E7E99A4007BA1F4 /* PlayerWebsite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */; };
 		88DFC0AF2B44843A001895C8 /* UnwatchedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */; };
 		88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
 		88DFC0B52B44843C001895C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88DFC0B42B44843C001895C8 /* Assets.xcassets */; };
@@ -1044,6 +1052,10 @@
 		88DA0EB92CC8F7C50041841E /* VideoListViewAsync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListViewAsync.swift; sourceTree = "<group>"; };
 		88DB36912D561B55007CF5F8 /* DescriptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionButton.swift; sourceTree = "<group>"; };
 		88DB7EB82BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemSwipeActionsModifier.swift; sourceTree = "<group>"; };
+		88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEmbedded.swift; sourceTree = "<group>"; };
+		88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailPlaceholder.swift; sourceTree = "<group>"; };
+		88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContent.swift; sourceTree = "<group>"; };
+		88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebsite.swift; sourceTree = "<group>"; };
 		88DFC0AB2B44843A001895C8 /* Unwatched.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Unwatched.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88DFC0AE2B44843A001895C8 /* UnwatchedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedApp.swift; sourceTree = "<group>"; };
 		88DFC0B02B44843A001895C8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -1347,6 +1359,10 @@
 				889924762C484766001185A6 /* FullscreenControls */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				88B0C1612C427940006D2423 /* PlayerView.swift */,
+				88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */,
+				88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */,
+				88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */,
+				88DD14772E7E9865007BA1F4 /* ThumbnailPlaceholder.swift */,
 				886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */,
 				8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */,
 				88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */,
@@ -2244,6 +2260,7 @@
 				889AF95E2C50ED05001CEDE6 /* VideoListItemSwipeActionsModifier.swift in Sources */,
 				889AF95F2C50ED05001CEDE6 /* ClearAllVideosButton.swift in Sources */,
 				889AF9602C50ED05001CEDE6 /* VideoActor+Videos.swift in Sources */,
+				88DD14782E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */,
 				889AF9612C50ED05001CEDE6 /* UrlService.swift in Sources */,
 				88EE64BB2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */,
 				887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
@@ -2295,6 +2312,7 @@
 				889AF94A2C50ECF5001CEDE6 /* SubscriptionDetailView.swift in Sources */,
 				88E589B42D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */,
 				8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */,
+				88DD147C2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,
 				889AF94B2C50ECF5001CEDE6 /* ChapterMiniControlView.swift in Sources */,
 				889AF94C2C50ECF5001CEDE6 /* SubscriptionListItem.swift in Sources */,
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailView.swift in Sources */,
@@ -2415,6 +2433,7 @@
 				889AF8E12C50ECA9001CEDE6 /* InnerHeightPreferenceChange.swift in Sources */,
 				889AF8E22C50ECA9001CEDE6 /* BrowserUrl.swift in Sources */,
 				889AF8E32C50ECA9001CEDE6 /* MySection.swift in Sources */,
+				88DD14762E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */,
 				889AF8E42C50ECA9001CEDE6 /* AsyncButton.swift in Sources */,
 				8868178C2D773BD300E06A0D /* FaqWindow.swift in Sources */,
 				88F287692DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
@@ -2504,6 +2523,7 @@
 				88CD37012E203FB200E7B21C /* PlayerWebView+Initscript.swift in Sources */,
 				88373C1D2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
 				889AF91B2C50ECE7001CEDE6 /* BackupSettings.swift in Sources */,
+				88DD147F2E7E99A4007BA1F4 /* PlayerWebsite.swift in Sources */,
 				889AF91C2C50ECE7001CEDE6 /* LibraryVideoSection.swift in Sources */,
 				889AF91D2C50ECE7001CEDE6 /* SearchableVideos.swift in Sources */,
 				889AF91E2C50ECE7001CEDE6 /* DeleteImageCacheButton.swift in Sources */,
@@ -2603,6 +2623,7 @@
 				88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */,
 				886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */,
 				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
+				88DD147E2E7E99A4007BA1F4 /* PlayerWebsite.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
 				887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				889931D72D731AB0009096AB /* PreviousState.swift in Sources */,
@@ -2669,6 +2690,7 @@
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
 				88373C252C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
 				889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
+				88DD14752E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */,
 				889924862C485E3B001185A6 /* LibraryVideoSection.swift in Sources */,
 				88899D902E035E1B002C05BC /* SubscriptionTitleFilterButton.swift in Sources */,
 				88CAEC382BA49D63000202D9 /* ShareView.swift in Sources */,
@@ -2787,6 +2809,7 @@
 				88D2B0B22E190E600024F8C0 /* FetchVideoData.swift in Sources */,
 				88F3AA912C998BFC0030B2EA /* VideoPlacement.swift in Sources */,
 				88CD90A02E2BC74400CD756D /* setChapters.swift in Sources */,
+				88DD14792E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */,
 				880505122C836882005F0972 /* FaqView.swift in Sources */,
 				8899247E2C48553F001185A6 /* MyForm.swift in Sources */,
 				883CA8152B5B907000028D52 /* InnerHeightPreferenceChange.swift in Sources */,
@@ -2798,6 +2821,7 @@
 				88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
 				88D858532B55ABD50047E0E6 /* YtVideoInfo.swift in Sources */,
 				887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */,
+				88DD147B2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,
 				885249422D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */,
 				88CD38822E20E5B400E7B21C /* SwipeDirecton.swift in Sources */,
 				88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */,
@@ -3195,7 +3219,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 294;
+				CURRENT_PROJECT_VERSION = 295;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3243,7 +3267,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 294;
+				CURRENT_PROJECT_VERSION = 295;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

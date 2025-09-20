@@ -70,8 +70,8 @@ extension PlayerWebViewCoordinator {
 
     func handleResize() {
         #if os(iOS)
-        if parent.webView.scrollView.zoomScale != 1.0 {
-            parent.webView.scrollView.setZoomScale(1.0, animated: true)
+        if parent.webViewState.webView?.scrollView.zoomScale != 1.0 {
+            parent.webViewState.webView?.scrollView.setZoomScale(1.0, animated: true)
         }
         #endif
     }

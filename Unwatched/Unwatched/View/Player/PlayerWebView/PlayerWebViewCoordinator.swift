@@ -81,6 +81,11 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
 extension PlayerWebViewCoordinator: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         if scale <= 1 && !zoomWorkaroundActive {
+            guard let webView = parent.webViewState.webView else {
+                Log.error("scrollViewDidEndZooming: no webView")
+                return
+            }
+
             // workaround: zoom is now messed up, requires continuously resetting it
             let script = """
                 let previousWidth = window.innerWidth;
@@ -95,7 +100,7 @@ extension PlayerWebViewCoordinator: UIScrollViewDelegate {
                     previousWidth = window.innerWidth;
                 });
             """
-            parent.evaluateJavaScript(parent.webView, script)
+            parent.evaluateJavaScript(webView, script)
             zoomWorkaroundActive = true
         }
     }

@@ -46,11 +46,28 @@ struct PlayerView: View {
                     VideoNotAvailableView()
                         .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                 } else if !player.embeddingDisabled {
-                    playerEmbedded
-                        .environment(\.layoutDirection, .leftToRight)
+                    PlayerEmbedded(
+                        autoHideVM: $autoHideVM,
+                        overlayVM: $overlayVM,
+                        handleVideoEnded: handleVideoEnded,
+                        handleSwipe: handleSwipe,
+                        showFullscreenControls: showFullscreenControls,
+                        landscapeFullscreen: landscapeFullscreen,
+                        showEmbeddedThumbnail: showEmbeddedThumbnail,
+                        hideMiniPlayer: hideMiniPlayer,
+                        handleMiniPlayerTap: handleMiniPlayerTap
+                    )
+                    .environment(\.layoutDirection, .leftToRight)
                 } else {
-                    playerWebsite
-                        .environment(\.layoutDirection, .leftToRight)
+                    PlayerWebsite(
+                        autoHideVM: $autoHideVM,
+                        overlayVM: $overlayVM,
+                        handleVideoEnded: handleVideoEnded,
+                        handleSwipe: handleSwipe,
+                        hideMiniPlayer: hideMiniPlayer,
+                        handleMiniPlayerTap: handleMiniPlayerTap
+                    )
+                    .environment(\.layoutDirection, .leftToRight)
                 }
 
                 if landscapeFullscreen && showFullscreenControls {
@@ -121,148 +138,6 @@ struct PlayerView: View {
     var controlsHidden: Bool {
         !(fullscreenControlsSetting == .enabled || autoHideVM.showControls)
             && hideControlsFullscreen
-    }
-
-    @MainActor
-    var playerEmbedded: some View {
-        HStack {
-            ZStack {
-                PlayerWebView(
-                    overlayVM: $overlayVM,
-                    autoHideVM: $autoHideVM,
-                    playerType: .youtubeEmbedded,
-                    onVideoEnded: handleVideoEnded,
-                    handleSwipe: handleSwipe
-                )
-                .overlay {
-                    FullscreenOverlayControls(
-                        overlayVM: $overlayVM,
-                        enabled: showFullscreenControls,
-                        show: landscapeFullscreen
-                            || (!sheetPos.isMinimumSheet && navManager.showMenu)
-                            || navManager.playerTab == .chapterDescription,
-                        )
-
-                    thumbnailPlaceholder
-                        .opacity(showEmbeddedThumbnail ? 1 : 0)
-
-                    if !hideMiniPlayer {
-                        Color.black.opacity(0.000001)
-                            .onTapGesture {
-                                handleMiniPlayerTap()
-                            }
-                    }
-                }
-                .aspectRatio(player.videoAspectRatio, contentMode: .fit)
-                .clipShape(RoundedRectangle(
-                            cornerRadius: Const.videoPlayerCornerRadius,
-                            style: .continuous)
-                )
-            }
-            .frame(maxHeight: landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-            .frame(maxWidth: !landscapeFullscreen && !hideMiniPlayer ? .infinity : nil)
-            .frame(width: !hideMiniPlayer ? 107 : nil,
-                   height: !hideMiniPlayer ? 60 : nil)
-            .padding(.leading, !hideMiniPlayer ? miniPlayerHorizontalPadding : 0)
-            #if os(macOS)
-            .padding(.horizontal, 5)
-            #endif
-
-            if !hideMiniPlayer {
-                miniPlayerContent
-            }
-        }
-        .animation(.bouncy(duration: 0.4), value: hideMiniPlayer)
-        .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
-    }
-
-    @MainActor
-    var playerWebsite: some View {
-        ZStack {
-            PlayerWebView(
-                overlayVM: $overlayVM,
-                autoHideVM: $autoHideVM,
-                playerType: .youtube,
-                onVideoEnded: handleVideoEnded,
-                handleSwipe: handleSwipe
-            )
-            .frame(maxHeight: .infinity)
-            .frame(maxWidth: .infinity)
-            .mask(LinearGradient(gradient: Gradient(
-                stops: [
-                    .init(color: .black, location: 0),
-                    .init(color: .black, location: 0.9),
-                    .init(color: .clear, location: 1)
-                ]
-            ), startPoint: .top, endPoint: .bottom))
-
-            Color.black
-                .opacity(!hideMiniPlayer ? 1 : 0)
-
-            HStack {
-                if !hideMiniPlayer {
-                    thumbnailPlaceholder
-                        .padding(.leading, 5)
-                    miniPlayerContent
-                }
-            }
-            .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
-            .frame(maxHeight: .infinity, alignment: .top)
-            .opacity(!hideMiniPlayer ? 1 : 0)
-        }
-        .animation(.easeInOut(duration: 0.4), value: !hideMiniPlayer)
-    }
-
-    @ViewBuilder var miniPlayerContent: some View {
-        Text(verbatim: player.video?.title ?? "")
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .fontWeight(.medium)
-            .contentShape(Rectangle())
-            .onTapGesture(perform: handleMiniPlayerTap)
-            .lineLimit(2)
-
-        CorePlayButton(
-            circleVariant: true,
-            enableHaptics: true,
-            enableHelperPopup: false,
-            ) { image in
-            image
-                .resizable()
-                .frame(width: 45, height: 45)
-                .symbolRenderingMode(.palette)
-                .apply {
-                    if #available(iOS 26.0, macOS 26.0, *) {
-                        $0
-                            .foregroundStyle(.automaticBlack, .clear)
-                            .glassEffect(.regular.interactive(), in: Circle())
-                    } else {
-                        $0
-                            .foregroundStyle(.automaticWhite, .automaticBlack)
-                    }
-                }
-                .fontWeight(.black)
-        }
-        .padding(.trailing, miniPlayerHorizontalPadding)
-
-    }
-
-    var thumbnailPlaceholder: some View {
-        CachedImageView(imageUrl: player.video?.thumbnailUrl) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: !hideMiniPlayer ? 107 : nil,
-                       height: !hideMiniPlayer ? 60 : nil)
-        } placeholder: {
-            Color.backgroundColor
-        }
-        .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
-        .clipShape(RoundedRectangle(
-                    cornerRadius: Const.videoPlayerCornerRadius,
-                    style: .continuous)
-        )
-        .onTapGesture(perform: handleMiniPlayerTap)
-        .id(player.video?.thumbnailUrl)
     }
 
     var showEmbeddedThumbnail: Bool {
@@ -346,9 +221,7 @@ struct PlayerView: View {
         }
     }
 
-    var miniPlayerHorizontalPadding: CGFloat {
-        15
-    }
+    static let miniPlayerHorizontalPadding: CGFloat = 15
 }
 
 #Preview {
