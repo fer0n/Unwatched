@@ -9,6 +9,8 @@ import UnwatchedShared
 
 struct GlobalTitleFilterWithPreview: View {
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
+    @CloudStorage(Const.allowOnMatch) var allowOnMatch: Bool = false
+
     @State var videoListVM = VideoListVM(initialBatchSize: 500)
 
     var body: some View {
@@ -18,8 +20,9 @@ struct GlobalTitleFilterWithPreview: View {
             List {
                 TitleFilterContent(
                     filterText: $filterVideoTitleText,
-                    videoListVM: $videoListVM
-                )
+                    videoListVM: $videoListVM,
+                    allowOnMatch: $allowOnMatch,
+                    )
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)

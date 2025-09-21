@@ -9,6 +9,7 @@ import UnwatchedShared
 struct TitleFilterContent: View {
     @Binding var filterText: String
     @Binding var videoListVM: VideoListVM
+    @Binding var allowOnMatch: Bool
 
     var filter: Predicate<Video>?
 
@@ -16,27 +17,36 @@ struct TitleFilterContent: View {
 
     var body: some View {
         VStack {
-            TextField("keywords", text: $filterText)
-                .autocorrectionDisabled()
-                #if os(iOS)
-                .textInputAutocapitalization(.never)
-                .submitLabel(.done)
-            #endif
+            VStack {
+                Picker("filterMode", selection: $allowOnMatch) {
+                    Text("contains")
+                        .tag(true)
+                    Text("doesNotContain")
+                        .tag(false)
+                }
+                .pickerStyle(.menu)
+
+                Divider()
+
+                TextField("keywords", text: $filterText)
+                    .autocorrectionDisabled()
+                    #if os(iOS)
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.done)
+                #endif
+            }
+            .padding()
+            .background(Color.insetBackgroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
 
             Text("videoTitleFilterFooter")
                 .foregroundColor(.secondary)
                 .font(.footnote)
-
-            Image(systemName: Const.premiumIndicatorSF)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.horizontal)
+                .padding(.bottom, 15)
         }
-        .padding(10)
-        .background(Color.insetBackgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .listRowBackground(Color.backgroundColor)
         .listRowSeparator(.hidden)
-        .padding(.bottom, 15)
+        .listRowBackground(Color.backgroundColor)
         .requiresPremium(filterText.isEmpty)
         .task {
             updateFilterStrings()
@@ -64,7 +74,6 @@ struct TitleFilterContent: View {
 
         AsyncPlaceholderWorkaround(videoListVM: $videoListVM)
             .listRowSeparator(.hidden)
-
     }
 
     func updateFilterStrings() {

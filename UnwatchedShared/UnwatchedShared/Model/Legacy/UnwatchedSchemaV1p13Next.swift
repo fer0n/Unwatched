@@ -44,10 +44,9 @@
 //        public var deferDate: Date?
 //        public var updatedDate: Date?
 //        public var duration: Double?
-//        public var apiUpdateDate: Date?
 //        public var noDuration: Bool?
 //        public var elapsedSeconds: Double?
-//        public var videoDescription: String?
+//        public var videoDescription: String? 
 //        public var watchedDate: Date?
 //        public var subscription: Subscription?
 //        public var youtubeChannelId: String?
@@ -105,6 +104,7 @@
 //        public var author: String?
 //        public var subscribedDate: Date?
 //        public var filterText: String = ""
+//        public var allowOnMatch: Bool = false
 //        public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
 //        public var isArchived: Bool = false
 //

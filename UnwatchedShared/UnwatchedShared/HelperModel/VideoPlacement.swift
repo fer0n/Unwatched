@@ -31,13 +31,20 @@ public enum VideoPlacement: Int, Codable, CaseIterable, Sendable {
 }
 
 public struct DefaultVideoPlacement {
-    public init(videoPlacement: VideoPlacement, hideShorts: Bool, filterVideoTitleText: String) {
+    public init(
+        videoPlacement: VideoPlacement,
+        hideShorts: Bool,
+        filterVideoTitleText: String,
+        allowOnMatch: Bool
+    ) {
         self.videoPlacement = videoPlacement
         self.hideShorts = hideShorts
         self.filterVideoTitleText = filterVideoTitleText
+        self.allowOnMatch = allowOnMatch
     }
 
     public var videoPlacement: VideoPlacement
     public var hideShorts: Bool
     public var filterVideoTitleText: String
+    public var allowOnMatch: Bool
 }

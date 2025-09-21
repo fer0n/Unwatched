@@ -45,7 +45,14 @@ struct SubscriptionDetailView: View {
                         showFilter = false
                     } label: {
                         Text("filterPreviewClose")
-                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.horizontal, 5)
+                    }
+                    .apply {
+                        if #available(iOS 26.0, macOS 26.0, *) {
+                            $0.glassEffect(.regular.interactive())
+                        } else {
+                            $0
+                        }
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
@@ -53,6 +60,7 @@ struct SubscriptionDetailView: View {
                     .tint(Color.insetBackgroundColor)
                     .listRowBackground(Color.backgroundColor)
                     .listRowSeparator(.hidden)
+                    .frame(maxWidth: .infinity, alignment: .center)
 
                     SubscriptionTitleFitlerPreview(subscription: subscription)
                         .listRowSeparator(.hidden)

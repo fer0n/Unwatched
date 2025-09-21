@@ -158,10 +158,24 @@ extension VideoActor {
         _ sub: Subscription,
         _ defaultPlacement: DefaultVideoPlacement
     ) -> [Video] {
-        let filterStrings = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText) + VideoService.getVideoTitleFilter(sub.filterText)
-        return videos.filter { video in
-            return !filterStrings.contains(where: { video.title.localizedStandardContains($0) })
-        }
+        let filterStringsGlobal = VideoService.getVideoTitleFilter(defaultPlacement.filterVideoTitleText)
+        let filterStringsSub = VideoService.getVideoTitleFilter(sub.filterText)
+
+        return videos
+            .filter { video in
+                let hasMatch = filterStringsGlobal.contains(where: { video.title.localizedStandardContains($0) })
+                if defaultPlacement.allowOnMatch {
+                    return hasMatch
+                }
+                return !hasMatch
+            }
+            .filter { video in
+                let hasMatch = filterStringsSub.contains(where: { video.title.localizedStandardContains($0) })
+                if sub.allowOnMatch {
+                    return hasMatch
+                }
+                return !hasMatch
+            }
     }
 
     func triageSubscriptionVideos(_ sub: Subscription,

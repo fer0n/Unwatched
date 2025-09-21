@@ -13,6 +13,7 @@ extension Const {
         // Filter
         Const.defaultShortsSetting: ShortsSetting.defaultSetting.rawValue,
         Const.skipChapterText: "",
+        Const.allowOnMatch: false,
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
         Const.skipSponsorSegments: false

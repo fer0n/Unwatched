@@ -295,11 +295,13 @@ import UnwatchedShared
         let showShorts = shortsSetting != .hide
 
         let filterVideoTitleText = NSUbiquitousKeyValueStore.default.string(forKey: Const.filterVideoTitleText) ?? ""
+        let allowOnMatch = NSUbiquitousKeyValueStore.default.bool(forKey: Const.allowOnMatch)
 
         let info = DefaultVideoPlacement(
             videoPlacement: videoPlacement,
             hideShorts: !showShorts,
-            filterVideoTitleText: filterVideoTitleText
+            filterVideoTitleText: filterVideoTitleText,
+            allowOnMatch: allowOnMatch
         )
         return info
     }

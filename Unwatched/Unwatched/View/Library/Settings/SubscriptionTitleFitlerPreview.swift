@@ -14,6 +14,7 @@ struct SubscriptionTitleFitlerPreview: View {
         TitleFilterContent(
             filterText: $subscription.filterText,
             videoListVM: $videoListVM,
+            allowOnMatch: $subscription.allowOnMatch,
             filter: videoFilter
         )
 

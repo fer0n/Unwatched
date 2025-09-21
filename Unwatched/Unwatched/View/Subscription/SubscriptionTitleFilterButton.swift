@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct SubscriptionTitleFilterButton: View {
+    @CloudStorage(Const.unwatchedPremiumAcknowledged) var premium: Bool = false
     @Binding var showFilter: Bool
     var hasFilter: Bool
 
@@ -15,7 +16,9 @@ struct SubscriptionTitleFilterButton: View {
             showFilter.toggle()
         } label: {
             CapsuleMenuLabel(
-                systemImage: "line.3.horizontal.decrease",
+                systemImage: !premium
+                    ? Const.premiumIndicatorSF
+                    : "line.3.horizontal.decrease",
                 menuLabel: "filterSettings",
                 text: text
             )

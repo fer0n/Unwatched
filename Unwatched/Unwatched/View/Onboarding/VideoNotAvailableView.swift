@@ -58,7 +58,7 @@ struct VideoNotAvailableView: View {
                         )
                     )
                     .animation(.bouncy, value: sheetPos.swipedBelow)
-                    .opacity(!sheetPos.swipedBelow ? 0.3 : isDropTarget ? 0.6 : 1)
+                    .opacity(!sheetPos.swipedBelow ? 0.7 : isDropTarget ? 0.6 : 1)
                     .animation(.default.speed(0.5), value: sheetPos.swipedBelow)
             }
             .edgesIgnoringSafeArea(.all)

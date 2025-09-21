@@ -32,7 +32,11 @@ struct FilterSettingsView: View {
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
                     #if os(iOS)
                     NavigationLink(value: LibraryDestination.titleFilter) {
-                        Text("videoTitle")
+                        HStack {
+                            Text("videoTitle")
+                            Image(systemName: Const.premiumIndicatorSF)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .containsPremium()
                     #endif

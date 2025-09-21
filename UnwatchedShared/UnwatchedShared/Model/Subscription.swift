@@ -24,6 +24,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var author: String?
     public var subscribedDate: Date?
     public var filterText: String = ""
+    public var allowOnMatch: Bool = false
 
     public var _videoPlacement: Int? = VideoPlacement.defaultPlacement.rawValue
     public var videoPlacement: VideoPlacement {
@@ -85,6 +86,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
                 author: String? = nil,
                 subscribedDate: Date? = .now,
                 filterText: String = "",
+                allowOnMatch: Bool = false,
                 videoPlacement: VideoPlacement = .defaultPlacement,
                 isArchived: Bool = false,
 
@@ -101,6 +103,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
         self.author = author
         self.subscribedDate = subscribedDate
         self.filterText = filterText
+        self.allowOnMatch = allowOnMatch
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
 
@@ -122,6 +125,7 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
             author: author,
             subscribedDate: subscribedDate,
             filterText: filterText,
+            allowOnMatch: allowOnMatch,
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
@@ -144,6 +148,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
     public var author: String?
     public var subscribedDate: Date? = .now
     public var filterText: String = ""
+    public var allowOnMatch: Bool = false
     public var videoPlacement: VideoPlacement
     public var isArchived: Bool
 
@@ -168,6 +173,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         author: String? = nil,
         subscribedDate: Date? = nil,
         filterText: String = "",
+        allowOnMatch: Bool = false,
         videoPlacement: VideoPlacement = VideoPlacement.defaultPlacement,
         isArchived: Bool = false,
         customSpeedSetting: Double? = nil,
@@ -185,6 +191,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         self.author = author
         self.subscribedDate = subscribedDate
         self.filterText = filterText
+        self.allowOnMatch = allowOnMatch
         self.videoPlacement = videoPlacement
         self.isArchived = isArchived
         self.customSpeedSetting = customSpeedSetting
@@ -215,6 +222,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
             author: author,
             subscribedDate: subscribedDate,
             filterText: filterText,
+            allowOnMatch: allowOnMatch,
             videoPlacement: videoPlacement,
             isArchived: isArchived,
             customSpeedSetting: customSpeedSetting,
@@ -236,6 +244,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         author = try container.decodeIfPresent(String.self, forKey: .author)
         subscribedDate = try container.decodeIfPresent(Date.self, forKey: .subscribedDate)
         filterText = try container.decodeIfPresent(String.self, forKey: .filterText) ?? ""
+        allowOnMatch = try container.decodeIfPresent(Bool.self, forKey: .allowOnMatch) ?? false
         videoPlacement = VideoPlacement(rawValue: try container.decodeIfPresent(Int.self, forKey: .videoPlacement) ?? VideoPlacement.defaultPlacement.rawValue) ?? VideoPlacement.defaultPlacement
         isArchived = try container.decodeIfPresent(Bool.self, forKey: .isArchived) ?? false
         customSpeedSetting = try container.decodeIfPresent(Double.self, forKey: .customSpeedSetting)
@@ -256,7 +265,10 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
         try container.encode(title, forKey: .title)
         try container.encodeIfPresent(author, forKey: .author)
         try container.encodeIfPresent(subscribedDate, forKey: .subscribedDate)
-        try container.encodeIfPresent(filterText, forKey: .filterText)
+        if !filterText.isEmpty {
+            try container.encodeIfPresent(filterText, forKey: .filterText)
+            try container.encode(allowOnMatch, forKey: .allowOnMatch)
+        }
         try container.encode(videoPlacement.rawValue, forKey: .videoPlacement)
         try container.encode(isArchived, forKey: .isArchived)
         try container.encodeIfPresent(customSpeedSetting, forKey: .customSpeedSetting)
@@ -276,6 +288,7 @@ public struct SendableSubscription: SubscriptionData, Sendable, Codable, Hashabl
              author,
              subscribedDate,
              filterText,
+             allowOnMatch,
              isArchived,
              customSpeedSetting,
              customAspectRatio,

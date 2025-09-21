@@ -21,7 +21,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedSchemaV1p9.self,
             UnwatchedSchemaV1p10.self,
             UnwatchedSchemaV1p11.self,
-            UnwatchedSchemaV1p12.self
+            UnwatchedSchemaV1p12.self,
+            UnwatchedSchemaV1p13.self,
         ]
     }
     
@@ -224,6 +225,13 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         willMigrate: nil,
         didMigrate: nil
     )
+    
+    public static var migrateV1p12toV1p13 = MigrationStage.custom(
+        fromVersion: UnwatchedSchemaV1p12.self,
+        toVersion: UnwatchedSchemaV1p13.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
 
     public static var stages: [MigrationStage] {
         [
@@ -238,7 +246,8 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             migrateV1p8toV1p9,
             migrateV1p9toV1p10,
             migrateV1p10toV1p11,
-            migrateV1p11toV1p12
+            migrateV1p11toV1p12,
+            migrateV1p12toV1p13
         ]
     }
 }

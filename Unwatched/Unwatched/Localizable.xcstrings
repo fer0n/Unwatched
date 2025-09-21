@@ -3532,6 +3532,40 @@
         }
       }
     },
+    "contains" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enthält"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contains"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contiene"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contient"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zawiera"
+          }
+        }
+      }
+    },
     "continuousPlay" : {
       "localizations" : {
         "de" : {
@@ -4684,6 +4718,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odrzuć"
+          }
+        }
+      }
+    },
+    "doesNotContain" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enthält nicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Does Not Contain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No contiene"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ne contient pas"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie zawiera"
           }
         }
       }
@@ -6044,6 +6112,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Często zadawane pytania"
+          }
+        }
+      }
+    },
+    "filterMode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtermodus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter Mode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo de filtro"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode de filtrage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tryb filtrowania"
           }
         }
       }
@@ -16671,31 +16773,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video-Titel, die einem der Schlagwörter entsprechen, werden nicht zur Queue/Inbox hinzugefügt, bleiben aber in der Bibliothek. Verwende \",\" um mehrere Schlüsselwörter zu trennen."
+            "value" : "Dotyczy nowych filmów w twojej Queue/Inbox, gdy ich tytuł zawiera dowolne słowo kluczowe. Użyj „,”, aby oddzielić wiele słów kluczowych."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Video titles matching any of the keywords will not be added to Queue/Inbox, but will still be in the library. Use “,” to separate multiple keywords."
+            "value" : "Affects new videos in your Queue/Inbox when their title includes any keyword. Use “,” to separate multiple keywords."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los títulos de videos que coincidan con cualquiera de las palabras clave no se agregarán a Queue/Inbox, pero seguirán estando en la biblioteca. Usa \",\" para separar múltiples palabras clave."
+            "value" : "Afecta a los nuevos videos en tu Queue/Inbox cuando su título incluye alguna palabra clave. Usa “,” para separar varias palabras clave."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les titres de vidéos correspondant à l'un des mots-clés ne seront pas ajoutés à Queue/Inbox, mais resteront dans la bibliothèque. Utilisez \",\" pour séparer plusieurs mots-clés."
+            "value" : "Betrifft neue Videos in deiner Queue/Inbox, wenn ihr Titel ein Schlüsselwort enthält. Verwende „,“ um mehrere Schlüsselwörter zu trennen.\n"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tytuły wideo pasujące do któregokolwiek ze słów kluczowych nie zostaną dodane do Queue/Inbox, ale nadal będą w bibliotece. Użyj \",\" aby oddzielić wiele słów kluczowych."
+            "value" : "Dotyczy nowych filmów w twojej Queue/Inbox, gdy ich tytuł zawiera dowolne słowo kluczowe. Użyj „,”, aby oddzielić wiele słów kluczowych."
           }
         }
       }
