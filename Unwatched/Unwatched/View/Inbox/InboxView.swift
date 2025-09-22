@@ -156,11 +156,12 @@ struct InboxView: View {
     }
 
     static var descriptor: FetchDescriptor<InboxEntry> {
-        var descriptor = FetchDescriptor<InboxEntry>(
+        var fetch = FetchDescriptor<InboxEntry>(
             sortBy: [SortDescriptor(\InboxEntry.date, order: .reverse)]
         )
-        descriptor.fetchLimit = Const.inboxFetchLimit
-        return descriptor
+        fetch.fetchLimit = Const.inboxFetchLimit
+        fetch.relationshipKeyPathsForPrefetching = [\.video, \.video?.subscription]
+        return fetch
     }
 }
 

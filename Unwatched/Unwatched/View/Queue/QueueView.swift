@@ -108,7 +108,9 @@ struct QueueView: View {
     }
 
     static var descriptor: FetchDescriptor<QueueEntry> {
-        FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+        fetch.relationshipKeyPathsForPrefetching = [\.video, \.video?.subscription]
+        return fetch
     }
 
     func willClearAll() {
