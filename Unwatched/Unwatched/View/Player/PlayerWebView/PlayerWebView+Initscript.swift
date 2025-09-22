@@ -121,6 +121,7 @@ extension PlayerWebView {
         }, { passive: true });
 
         function isOverlayHealthy() {
+            overlayVisible = overlay.classList.contains("fadein");
             if (document.contains(overlay)) {
                 return true;
             }
