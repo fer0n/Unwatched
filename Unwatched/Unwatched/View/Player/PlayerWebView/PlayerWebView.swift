@@ -235,6 +235,23 @@ struct PlayerWebView: PlatformViewRepresentable {
         // swiftlint:disable:next line_length
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacingOccurrences(of: "_", with: ".")) Safari/\(webKitVersion)"
     }
+
+    func repairVideo() {
+        Log.info("repairVideo: using repairBlackScreenScript")
+        let script = repairBlackScreenScript()
+        appNotificationVM.show(
+            AppNotificationData(
+                title: "loading",
+                isLoading: true,
+                timeout: 2
+            )
+        )
+        guard let webView = webViewState.webView else {
+            Log.error("repairVideo: webView not found")
+            return
+        }
+        evaluateJavaScript(webView, script)
+    }
 }
 
 #Preview {

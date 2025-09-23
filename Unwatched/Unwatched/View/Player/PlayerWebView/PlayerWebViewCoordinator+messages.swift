@@ -332,6 +332,8 @@ extension PlayerWebViewCoordinator {
                 parent.player.embeddingDisabled = true
             }
             return
+        } else {
+            parent.repairVideo()
         }
     }
 

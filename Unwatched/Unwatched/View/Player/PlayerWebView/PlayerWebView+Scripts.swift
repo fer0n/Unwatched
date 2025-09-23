@@ -126,4 +126,47 @@ extension PlayerWebView {
     func getExitPipScript() -> String {
         "document.exitPictureInPicture();"
     }
+
+    // Sometimes on iOS 26, the player is black and unresponsive
+    // changing quality fixes it
+    func repairBlackScreenScript() -> String {
+        """
+        function repairBlackScreen() {
+            sendMessage("repairBlackScreen", "start");
+            const video = document.querySelector('video');
+            if (video?.readyState !== 0) {
+                sendMessage("repairBlackScreen", "video readyState is not 0");
+                return;
+            }
+
+            const player = document.getElementById("movie_player");
+            if (!player) {
+                sendMessage("repairBlackScreen", "no player");
+                return;
+            }
+
+            const currentQuality = player.getPlaybackQuality();
+
+            const qualities = player.getAvailableQualityLevels();
+            if (qualities.length < 2) {
+                sendMessage("repairBlackScreen: not enough qualities");
+                return;
+            }
+            let newQuality = qualities[0];
+            for (let i = qualities.length - 1; i >= 0; i--) {
+                if (qualities[i] !== currentQuality) {
+                    newQuality = qualities[i];
+                    sendMessage("repairBlackScreen", `new quality: ${newQuality}`);
+                    break;
+                }
+            }
+            player.setPlaybackQualityRange(newQuality);
+            setTimeout(() => {
+                sendMessage("repairBlackScreen", `changing quality back to ${currentQuality}`);
+                player.setPlaybackQualityRange(currentQuality);
+            }, 600);
+        }
+        repairBlackScreen();
+        """
+    }
 }
