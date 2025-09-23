@@ -39,6 +39,9 @@ struct GetTranscript: AppIntent {
             from: transcriptUrl,
             youtubeId: video.youtubeId
         )
+        if transcript.isEmpty {
+            throw TranscriptError.emptyTranscript
+        }
 
         let text: String = {
             if includeTimestamps == true {
