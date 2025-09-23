@@ -10,7 +10,6 @@ import UnwatchedShared
 
 // swiftlint:disable:next type_body_length
 struct YtBrowserWebView: PlatformViewRepresentable {
-    @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
 
@@ -40,7 +39,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
             #if os(iOS)
             webViewConfig.allowsPictureInPictureMediaPlayback = true
-            webViewConfig.allowsInlineMediaPlayback = !playVideoFullscreen
+            webViewConfig.allowsInlineMediaPlayback = true
             #endif
 
             webView = WKWebView(frame: .zero, configuration: webViewConfig)
