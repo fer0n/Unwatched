@@ -134,20 +134,9 @@ extension PlayerWebView {
         }
         function overlayHealthCheckPolling() {
             if (!isNewEmbedding) return;
-            let timers = [];
-            function checkOverlay() {
-                const isHealthy = isOverlayHealthy();
-                if (isHealthy) {
-                    cancelChecks();
-                }
-            }
-            function cancelChecks() {
-                timers.forEach(clearTimeout);
-                timers = [];
-            }
-            timers.push(setTimeout(checkOverlay, 1000));
-            timers.push(setTimeout(checkOverlay, 3000));
-            timers.push(setTimeout(checkOverlay, 8000));
+            setTimeout(isOverlayHealthy, 1000);
+            setTimeout(isOverlayHealthy, 3000);
+            setTimeout(isOverlayHealthy, 8000);
         }
 
         function toggleOverlay() {
