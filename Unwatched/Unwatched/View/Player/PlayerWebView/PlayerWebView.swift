@@ -237,20 +237,24 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func repairVideo() {
-        Log.info("repairVideo: using repairBlackScreenScript")
-        let script = repairBlackScreenScript()
-        appNotificationVM.show(
-            AppNotificationData(
-                title: "loading",
-                isLoading: true,
-                timeout: 2
-            )
-        )
         guard let webView = webViewState.webView else {
-            Log.error("repairVideo: webView not found")
+            Log.error("repairVideo: no webView")
             return
         }
-        evaluateJavaScript(webView, script)
+        let script = videoIsNotReadyScript()
+        webView.evaluateJavaScript(script) { result, _ in
+            if result as? String == "true" {
+                appNotificationVM.show(
+                    AppNotificationData(
+                        title: "loading",
+                        isLoading: true,
+                        timeout: 2
+                    )
+                )
+                player.hotReloadPlayer()
+                Log.info("repairVideo: hotReloadPlayer")
+            }
+        }
     }
 }
 
