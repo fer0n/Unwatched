@@ -147,7 +147,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
     nonisolated func setupNotificationCategories(_ center: UNUserNotificationCenter) {
         // Inbox videos: queue and clear
-        let queueIcon = UNNotificationActionIcon(systemImageName: Const.queueTopSF)
+        let queueIcon = UNNotificationActionIcon(systemImageName: Const.queueNextSF)
         let clearIcon = UNNotificationActionIcon(systemImageName: Const.clearNoFillSF)
 
         let queueAction = UNNotificationAction(identifier: Const.notificationActionQueue,

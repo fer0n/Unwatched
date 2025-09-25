@@ -46,8 +46,8 @@ extension VideoPlacement {
     public var systemName: String? {
         switch self {
         case .inbox: return Const.inboxTabEmptySF
-        case .queueNext: return Const.queueTopSF
-        case .queueLast: return Const.queueBottomSF
+        case .queueNext: return Const.queueNextSF
+        case .queueLast: return Const.queueLastSF
         case .nothing: return Const.clearSF
         case .defaultPlacement: return nil
         @unknown default:

@@ -7,6 +7,7 @@ struct ContextMenuAction {
         case copyUrl
         case subscribe
         case queueNext
+        case queueLast
         case addToInbox
     }
 
@@ -56,7 +57,15 @@ struct ContextMenuAction {
                 .init(
                     type: .queueNext,
                     title: String(localized: "queueNext"),
-                    imageName: Const.queueTopSF,
+                    imageName: Const.queueNextSF,
+                    group: .video
+                )
+            )
+            actions.append(
+                .init(
+                    type: .queueLast,
+                    title: String(localized: "queueLast"),
+                    imageName: Const.queueLastSF,
                     group: .video
                 )
             )

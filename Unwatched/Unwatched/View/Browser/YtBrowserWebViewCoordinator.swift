@@ -370,9 +370,9 @@ extension YtBrowserWebView {
 
         /// Handle queue next action
         @MainActor
-        func handleQueueNextAction(url: URL) {
+        func handleQueueAction(url: URL, at index: Int) {
             self.parent.appNotificationVM.show(.loading)
-            let task = VideoService.addForeignUrls([url], in: .queue, at: 1)
+            let task = VideoService.addForeignUrls([url], in: .queue, at: index)
             Task {
                 do {
                     try await task.value
@@ -443,7 +443,9 @@ extension YtBrowserWebView {
                         case .subscribe:
                             self.handleSubscribeAction(info: info)
                         case .queueNext:
-                            self.handleQueueNextAction(url: url)
+                            self.handleQueueAction(url: url, at: 1)
+                        case .queueLast:
+                            self.handleQueueAction(url: url, at: Int.max)
                         case .addToInbox:
                             self.handleAddToInboxAction(url: url)
                         }
@@ -541,6 +543,9 @@ extension YtBrowserWebView {
                 case .queueNext:
                     menuItem.action = #selector(queueNext(_:))
                     menuItem.representedObject = url
+                case .queueLast:
+                    menuItem.action = #selector(queueLast(_:))
+                    menuItem.representedObject = url
                 case .addToInbox:
                     menuItem.action = #selector(addToInbox(_:))
                     menuItem.representedObject = url
@@ -571,7 +576,12 @@ extension YtBrowserWebView {
 
         @objc private func queueNext(_ sender: NSMenuItem) {
             guard let url = sender.representedObject as? URL else { return }
-            handleQueueNextAction(url: url)
+            handleQueueAction(url: url, at: 1)
+        }
+
+        @objc private func queueLast(_ sender: NSMenuItem) {
+            guard let url = sender.representedObject as? URL else { return }
+            handleQueueAction(url: url, at: Int.max)
         }
 
         @objc private func addToInbox(_ sender: NSMenuItem) {

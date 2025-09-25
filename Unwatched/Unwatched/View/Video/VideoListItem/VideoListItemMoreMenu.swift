@@ -100,12 +100,12 @@ struct VideoListItemMoreMenuView: View {
         Button("markWatched", systemImage: "checkmark", action: { setWatched(true) })
 
         Button("queueNext",
-               systemImage: Const.queueTopSF,
+               systemImage: Const.queueNextSF,
                action: addVideoToTopQueue
         )
 
         Button("queueLast",
-               systemImage: Const.queueBottomSF,
+               systemImage: Const.queueLastSF,
                action: addVideoToBottomQueue
         )
         Button(

@@ -165,8 +165,8 @@ public struct Const {
     public static let clearSF = "xmark.circle.fill"
     public static let removeNewSF = "circle.slash.fill"
 
-    public static let queueTopSF = "text.insert"
-    public static let queueBottomSF = "text.append"
+    public static let queueNextSF = "text.insert"
+    public static let queueLastSF = "text.append"
 
     public static let refreshSF = "arrow.triangle.2.circlepath"
     public static let inboxTabFullSF = "tray.full"

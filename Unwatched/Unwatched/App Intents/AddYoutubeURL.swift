@@ -14,7 +14,7 @@ struct AddYoutubeURL: AppIntent {
     @Parameter(title: "youtubeVideoUrl")
     var youtubeUrl: URL
 
-    @Parameter(title: "destination", default: .queue)
+    @Parameter(title: "destination", default: .queueNext)
     var destination: VideoDestination
 
     @MainActor
@@ -23,6 +23,7 @@ struct AddYoutubeURL: AppIntent {
         let task = VideoService.addForeignUrls(
             [youtubeUrl],
             in: destination.toCollection(),
+            at: destination.index,
             markAsNew: false
         )
         try await task.value
@@ -36,8 +37,20 @@ struct AddYoutubeURL: AppIntent {
 }
 
 enum VideoDestination: String, AppEnum {
-    case queue
+    case queueNext
+    case queueLast
     case inbox
+
+    var index: Int {
+        switch self {
+        case .queueNext:
+            return 1
+        case .queueLast:
+            return Int.max
+        case .inbox:
+            return 0
+        }
+    }
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
         return TypeDisplayRepresentation(name: "destination")
@@ -45,14 +58,17 @@ enum VideoDestination: String, AppEnum {
 
     static var caseDisplayRepresentations: [VideoDestination: DisplayRepresentation] {
         [
-            .queue: DisplayRepresentation(title: "queue"),
+            .queueNext: DisplayRepresentation(title: "queueNext"),
+            .queueLast: DisplayRepresentation(title: "queueLast"),
             .inbox: DisplayRepresentation(title: "inbox")
         ]
     }
 
     func toCollection() -> VideoPlacementArea {
         switch self {
-        case .queue:
+        case .queueNext:
+            return .queue
+        case .queueLast:
             return .queue
         case .inbox:
             return .inbox

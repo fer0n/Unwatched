@@ -335,14 +335,14 @@ struct LeadingSwipeActionsView: View {
             Button(role: config.queueRole,
                    action: addVideoToTopQueue,
                    label: {
-                    Image(systemName: Const.queueTopSF)
+                    Image(systemName: Const.queueNextSF)
                    })
                 .tint(theme.color.myMix(with: Color.black, by: 0.1))
                 .accessibilityLabel("queueNext")
             Button(role: config.queueRole,
                    action: addVideoToBottomQueue,
                    label: {
-                    Image(systemName: Const.queueBottomSF)
+                    Image(systemName: Const.queueLastSF)
                    })
                 .tint(theme.color.myMix(with: Color.black, by: 0.3))
                 .accessibilityLabel("queueLast")

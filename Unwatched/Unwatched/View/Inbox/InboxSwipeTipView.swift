@@ -23,7 +23,7 @@ struct InboxSwipeTipView: View {
                 .tint(theme.color.myMix(with: Color.black, by: 0.1))
 
                 Button(action: invalidateTip) {
-                    Image(systemName: Const.queueBottomSF)
+                    Image(systemName: Const.queueLastSF)
                 }
                 .accessibilityLabel("queueLast")
                 .tint(theme.color.myMix(with: Color.black, by: 0.3))

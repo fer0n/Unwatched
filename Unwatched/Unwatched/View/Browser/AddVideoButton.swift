@@ -94,7 +94,7 @@ struct AddVideoButton: View {
             : avm.isSuccess == false
             ? Const.clearNoFillSF
             : isVideoUrl || isPlaylistUrl || showInsert
-            ? Const.queueTopSF
+            ? Const.queueNextSF
             : avm.isLoading
             ? "ellipsis"
             : "circle.circle"
