@@ -189,8 +189,14 @@ struct UrlService {
 
         // https://www.youtube.com/moviepilot
         // some channels forward to this kind of url (non-mobile), but the username is already known by then
-        if let prev = previousUserName?.lowercased(), urlString.lowercased().contains("youtube.com/\(prev)") {
-            return previousUserName
+        // https://www.youtube.com/lemonde lemondefr
+        // allow if one username is contained in the other
+        let prev = previousUserName?.lowercased()
+        let channelMatch = urlString.matching(regex: #"youtube\.com\/(\w+)"#)?.lowercased()
+        if let prev, let channelMatch {
+            if channelMatch.contains(prev) || prev.contains(channelMatch) {
+                return previousUserName
+            }
         }
 
         return nil
