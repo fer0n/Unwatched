@@ -21,6 +21,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     var currentUpdatedDate: String = ""
     var currentDescription: String = ""
     var currentUri: String = ""
+    var currentChannelId: String = ""
     var currentAuthor: String = ""
 
     init(limitVideos: Int?) {
@@ -57,6 +58,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentUpdatedDate = ""
             currentUri = ""
             currentAuthor = ""
+            currentChannelId = ""
         }
     }
 
@@ -69,6 +71,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         case "media:description": currentDescription += string
         case "uri": currentUri += string
         case "name": currentAuthor += string
+        case "yt:channelId": currentChannelId += string
         default: break
         }
     }
@@ -126,6 +129,27 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
             currentDescription = ""
             currentUri = ""
             currentAuthor = ""
+        }
+    }
+
+    func parserDidEndDocument(_ parser: XMLParser) {
+        // If we still don't have a valid subscription info after parsing the entire document,
+        // try to create one from the currently collected data
+        if subscriptionInfo == nil {
+            let url = URL(string: currentLink.trimmingCharacters(in: .whitespacesAndNewlines))
+            let channelId = !currentChannelId.isEmpty
+                ? currentChannelId.trimmingCharacters(in: .whitespacesAndNewlines)
+                : nil
+            subscriptionInfo = SendableSubscription(
+                link: url,
+                title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+                author: currentAuthor.trimmingCharacters(in: .whitespacesAndNewlines),
+                youtubeChannelId: channelId)
+        }
+
+        // If we have subscription info but no channel ID, try to use the current value if available
+        else if subscriptionInfo?.youtubeChannelId == nil && !currentChannelId.isEmpty {
+            subscriptionInfo?.youtubeChannelId = currentChannelId.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }
