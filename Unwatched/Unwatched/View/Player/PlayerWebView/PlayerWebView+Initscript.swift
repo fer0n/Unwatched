@@ -43,7 +43,6 @@ extension PlayerWebView {
         var video = null;
         let videoFindAttempts = 0;
         var isSwiping = false;
-        let overlayVisible = null;
 
         let overlay = document.querySelector('#player-control-overlay');
         let isNewEmbedding = !!overlay; // initially found means new embedding player
@@ -102,7 +101,6 @@ extension PlayerWebView {
         }
 
         // Overlay control
-        overlayVisible = overlay && overlay.classList.contains('fadein');
         let overlayHideTimer = null;
         let lastTapDate = null;
         let consecutiveSingleTaps = 0;
@@ -121,7 +119,6 @@ extension PlayerWebView {
         }, { passive: true });
 
         function isOverlayHealthy() {
-            overlayVisible = overlay.classList.contains("fadein");
             if (document.contains(overlay)) {
                 return true;
             }
@@ -131,6 +128,9 @@ extension PlayerWebView {
             }
             setupOverlay();
             return true;
+        }
+        function overlayIsVisible() {
+            return overlay?.classList?.contains("fadein");
         }
         function overlayHealthCheckPolling() {
             if (!isNewEmbedding) return;
@@ -142,7 +142,7 @@ extension PlayerWebView {
         function toggleOverlay() {
             if (!isNewEmbedding) return;
             if (overlay) {
-                if (overlayVisible) {
+                if (overlayIsVisible()) {
                     hideOverlay();
                 } else {
                     showOverlay();
@@ -151,7 +151,7 @@ extension PlayerWebView {
         }
 
         function debouncedHideOverlay(duration = 2500) {
-            if (!overlayVisible || !isNewEmbedding) return;
+            if (!overlayIsVisible() || !isNewEmbedding) return;
             clearTimeout(overlayHideTimer);
             overlayHideTimer = setTimeout(() => {
                 const element = document.querySelector('yt-bigboard');
@@ -193,11 +193,10 @@ extension PlayerWebView {
         }
 
         function showOverlay() {
-            if (overlayVisible || !isNewEmbedding) return;
+            if (overlayIsVisible() || !isNewEmbedding) return;
             allowFadeinChanges = true;
             overlay.classList.add('fadein');
             allowFadeinChanges = false;
-            overlayVisible = true;
             sendMessage('overlay', 'show');
              if (!video.paused) {
                 debouncedHideOverlay();
@@ -206,11 +205,10 @@ extension PlayerWebView {
 
         function hideOverlay() {
             const isHealthy = isOverlayHealthy();
-            if ((isHealthy && !overlayVisible) || !isNewEmbedding) return;
+            if ((isHealthy && !overlayIsVisible()) || !isNewEmbedding) return;
             allowFadeinChanges = true;
             overlay.classList.remove('fadein');
             allowFadeinChanges = false;
-            overlayVisible = false;
             sendMessage('overlay', 'hide');
             clearTimeout(overlayHideTimer);
         };
@@ -257,7 +255,7 @@ extension PlayerWebView {
         function sendVideoState(v, message = "checkVideoState") {
             let info = {
                 containsOverlay: document.contains(overlay),
-                overlayVisible: overlayVisible,
+                overlayVisible: overlayIsVisible(),
                 inDom: document.contains(v),
                 sameVideo: video === v,
                 video: !!v,
