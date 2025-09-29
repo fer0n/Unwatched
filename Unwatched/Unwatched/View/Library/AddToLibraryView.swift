@@ -191,7 +191,10 @@ struct AddToLibraryView: View {
         if rest == text,
            let url = URL(string: text),
            let youtubeId = UrlService.getYoutubeIdFromUrl(url: url),
-           let youtubeUrl = URL(string: UrlService.getNonEmbeddedYoutubeUrl(youtubeId)) {
+           let youtubeUrl = URL(string: UrlService.getNonEmbeddedYoutubeUrl(
+                                    youtubeId,
+                                    UrlService.getStartTimeFromUrl(url))
+           ) {
             videoUrlsLocal.append(youtubeUrl)
         } else {
             addSubscriptionFromText = rest
