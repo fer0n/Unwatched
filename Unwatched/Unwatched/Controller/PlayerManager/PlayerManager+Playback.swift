@@ -14,7 +14,7 @@ extension PlayerManager {
     @MainActor
     func handleAutoStart() {
         Log.info("handleAutoStart")
-        isLoading = false
+        isLoading = nil
 
         guard let source = videoSource else {
             Log.info("no source, stopping")
@@ -93,7 +93,7 @@ extension PlayerManager {
 
     @MainActor
     func play() {
-        if self.isLoading {
+        if self.isLoading != nil {
             self.videoSource = .playWhenReady
         }
         if !self.isPlaying {

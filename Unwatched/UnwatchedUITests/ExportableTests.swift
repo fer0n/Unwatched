@@ -149,7 +149,7 @@ class ExportableTests: XCTestCase {
             )
         ]
 
-        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShorts: false, filterVideoTitleText: "")
+        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShorts: false, filterVideoTitleText: "", allowOnMatch: true)
         _ = await repo.handleNewVideos(sendableSub, videos, defaultPlacement: placement)
         try? await repo.modelContext.save()
 

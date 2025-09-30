@@ -37,6 +37,11 @@ struct Signal {
         TelemetryDeck.signal(signalName, parameters: parameters)
         #endif
     }
+
+    static func error(_ id: String) {
+        if !(Const.analytics.bool ?? true) { return }
+        TelemetryDeck.errorOccurred(id: id)
+    }
 }
 
 extension View {

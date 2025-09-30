@@ -319,7 +319,7 @@ extension PlayerWebViewCoordinator {
                 return
             }
 
-            parent.player.isLoading = true
+            parent.player.isLoading = Date()
             parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
                 ? true
                 : parent.player.isPlaying
@@ -332,8 +332,6 @@ extension PlayerWebViewCoordinator {
                 parent.player.embeddingDisabled = true
             }
             return
-        } else {
-            parent.repairVideo()
         }
     }
 

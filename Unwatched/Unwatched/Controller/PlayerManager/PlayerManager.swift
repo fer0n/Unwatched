@@ -42,7 +42,7 @@ import UnwatchedShared
     var videoEnded: Bool = false
     var shouldStop: Bool = false
     var unstarted: Bool = true
-    var isLoading: Bool = true
+    var isLoading: Date? = Date()
     var deferVideoDate: Date?
     private(set) var aspectRatio: Double?
 
@@ -286,7 +286,7 @@ import UnwatchedShared
     @MainActor
     func handleHotSwap() {
         Log.info("handleHotSwap")
-        isLoading = true
+        isLoading = Date()
         canPlayPip = false
         previousState.pipEnabled = false
         previousIsPlaying = isPlaying
@@ -294,6 +294,16 @@ import UnwatchedShared
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()
+    }
+
+    @MainActor
+    func repairReload(force: Bool = false) {
+        Log.info("repairReload")
+        if (isLoading != nil || unstarted) && !force {
+            return
+        }
+        hotReloadPlayer()
+        Log.info("videoHealth: repair - triggerReload")
     }
 
     static func reloadPlayer() {

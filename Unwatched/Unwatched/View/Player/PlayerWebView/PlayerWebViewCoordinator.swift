@@ -20,7 +20,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         Log.info("webViewWebContentProcessDidTerminate")
-        parent.player.isLoading = true
+        parent.player.isLoading = Date()
         parent.loadWebContent(webView)
     }
 

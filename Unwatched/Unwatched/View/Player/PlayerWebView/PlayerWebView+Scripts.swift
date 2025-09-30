@@ -129,13 +129,15 @@ extension PlayerWebView {
 
     // Sometimes on iOS 26, the player is black and unresponsive
     // changing quality fixes it
-    func videoIsNotReadyScript() -> String {
+    // should only trigger when the video is there, but not working
+    static func videoRequiresReloadScript() -> String {
         """
-        function videoIsNotReady() {
+        function requiresReload() {
             const video = document.querySelector('video');
-            return !(video?.readyState !== 0) ? "true" : "false";
+            let requiresReload = video && video?.readyState === 0;
+            return requiresReload ? "true" : "false";
         }
-        videoIsNotReady();
+        requiresReload();
         """
     }
 }

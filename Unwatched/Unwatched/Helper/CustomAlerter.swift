@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct CustomAlerter: ViewModifier {
-    @State var alerter: Alerter = Alerter()
+    @State var alerter = Alerter()
 
     func body(content: Content) -> some View {
         content

@@ -28,11 +28,18 @@ struct PlayerLoadingTimeout: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
                     .fontWeight(.regular)
+                    .apply {
+                        if #available(iOS 26.0, macOS 26.0, *) {
+                            $0.glassEffect()
+                        } else {
+                            $0
+                        }
+                    }
             }
             .buttonStyle(.plain)
             .opacity(showReload ? 1 : 0)
         }
-        .opacity(player.isLoading ? 1 : 0)
+        .opacity(player.isLoading != nil ? 1 : 0)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .task(id: player.isLoading) {
@@ -43,16 +50,16 @@ struct PlayerLoadingTimeout: View {
                 showReload = false
             }
 
-            if player.isLoading {
+            if player.isLoading != nil {
                 do {
                     try await Task.sleep(s: 3)
-                    if player.isLoading {
+                    if player.isLoading != nil {
                         showSpinner = true
                     } else {
                         return
                     }
                     try await Task.sleep(s: 10)
-                    if player.isLoading {
+                    if player.isLoading != nil {
                         showSpinner = false
                         showReload = true
                     } else {

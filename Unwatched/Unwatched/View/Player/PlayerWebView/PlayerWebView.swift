@@ -15,6 +15,8 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 #endif
 
 @Observable class WebViewState {
+    @MainActor static let shared = WebViewState()
+
     @ObservationIgnored var webView: WKWebView?
 }
 
@@ -29,7 +31,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     let onVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
 
-    @State var webViewState = WebViewState()
+    @State var webViewState = WebViewState.shared
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
@@ -44,7 +46,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
         webViewState.webView = webView
 
-        player.isLoading = true
+        player.isLoading = Date()
 
         player.previousState.videoId = player.video?.youtubeId
         player.previousState.playbackSpeed = player.playbackSpeed
@@ -84,7 +86,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         handleShouldStop(view)
         #endif
 
-        if player.isLoading {
+        if player.isLoading != nil {
             // avoid setting anything before the player is ready
             Log.info("video not loaded yet – cancelling updateUIView")
             return
@@ -236,23 +238,17 @@ struct PlayerWebView: PlatformViewRepresentable {
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacingOccurrences(of: "_", with: ".")) Safari/\(webKitVersion)"
     }
 
-    func repairVideo() {
-        guard let webView = webViewState.webView else {
+    static func repairVideo(onRepair: @escaping () -> Void) {
+        guard let webView = WebViewState.shared.webView else {
             Log.error("repairVideo: no webView")
             return
         }
-        let script = videoIsNotReadyScript()
+        let script = PlayerWebView.videoRequiresReloadScript()
         webView.evaluateJavaScript(script) { result, _ in
-            if result as? String == "true" {
-                appNotificationVM.show(
-                    AppNotificationData(
-                        title: "loading",
-                        isLoading: true,
-                        timeout: 2
-                    )
-                )
-                player.hotReloadPlayer()
-                Log.info("repairVideo: hotReloadPlayer")
+            let requiresReload = result as? String == "true"
+            Log.info("repairVideo: onRepair, requiresReload=\(requiresReload)")
+            if requiresReload {
+                onRepair()
             }
         }
     }

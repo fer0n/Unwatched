@@ -56,6 +56,9 @@ struct SetupView: View {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
                     }
+                    Task {
+                        checkVideoHealth()
+                    }
                 case .background:
                     Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
@@ -99,6 +102,22 @@ struct SetupView: View {
             NotificationCenter.default.post(name: .watchInUnwatched, object: nil, userInfo: userInfo)
         default:
             break
+        }
+    }
+
+    func checkVideoHealth() {
+        let secondsSinceLoading = player.isLoading?.distance(to: Date()) ?? 0
+        Log.info("videoHealth: loading for \(secondsSinceLoading)s")
+        if secondsSinceLoading > 30 {
+            player.repairReload(force: true)
+            return
+        }
+        if player.isLoading != nil || player.unstarted {
+            return
+        }
+        Log.info("videoHealth: check ready state")
+        PlayerWebView.repairVideo {
+            player.repairReload()
         }
     }
 
