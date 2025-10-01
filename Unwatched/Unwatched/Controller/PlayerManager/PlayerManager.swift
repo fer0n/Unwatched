@@ -132,6 +132,21 @@ import UnwatchedShared
         if transcriptUrl != nil {
             transcriptUrl = nil
         }
+        if aspectRatio != nil {
+            aspectRatio = nil
+        }
+        if embeddingDisabled != false {
+            withAnimation {
+                embeddingDisabled = false
+            }
+        }
+        if unstarted != true {
+            unstarted = true
+        }
+        previousState.pipEnabled = false
+        if canPlayPip != false {
+            canPlayPip = false
+        }
         setVideoEnded(false)
         handleChapterChange()
     }
@@ -146,24 +161,9 @@ import UnwatchedShared
         guard video != nil else {
             return
         }
-        if aspectRatio != nil {
-            aspectRatio = nil
-        }
-        if unstarted != true {
-            unstarted = true
-        }
-        previousState.pipEnabled = false
-        if canPlayPip != false {
-            canPlayPip = false
-        }
         handleChapterRefresh()
         if deferVideoDate != nil {
             deferVideoDate = nil
-        }
-        if embeddingDisabled != false {
-            withAnimation {
-                embeddingDisabled = false
-            }
         }
     }
 

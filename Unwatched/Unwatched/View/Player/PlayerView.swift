@@ -43,8 +43,10 @@ struct PlayerView: View {
 
             HStack(spacing: 0) {
                 if player.video == nil && !compactSize {
-                    VideoNotAvailableView()
-                        .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                    VideoNotAvailableView(
+                        hideMiniPlayer: hideMiniPlayer
+                    )
+                    .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                 } else if !player.embeddingDisabled {
                     PlayerEmbedded(
                         autoHideVM: $autoHideVM,
@@ -254,5 +256,6 @@ struct PlayerView: View {
         .environment(SheetPositionReader())
         .environment(RefreshManager())
         .environment(ImageCacheManager())
+        .appNotificationOverlay()
         .tint(Color.neutralAccentColor)
 }

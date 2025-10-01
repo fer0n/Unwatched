@@ -44,7 +44,6 @@ struct MenuSheetDetents: ViewModifier {
                     && !navManager.showBrowser
                     && !landscapeFullscreen
                     && !navManager.showPremiumOffer
-                    && player.video != nil
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))

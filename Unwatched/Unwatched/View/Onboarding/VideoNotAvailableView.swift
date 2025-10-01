@@ -19,6 +19,8 @@ struct VideoNotAvailableView: View {
     @GestureState private var dragState: CGFloat = 0
     @State private var isDropTarget: Bool = false
 
+    var hideMiniPlayer: Bool
+
     var body: some View {
         GeometryReader { proxy in
             Image(systemName: "checkmark.rectangle.stack.fill")
@@ -26,18 +28,19 @@ struct VideoNotAvailableView: View {
                 .scaledToFit()
                 .symbolVariant(.fill)
                 .fontWeight(.black)
-                .frame(width: proxy.size.width * 0.3)
                 .foregroundStyle(theme.color)
-                .opacity(0.8)
+                .frame(width: proxy.size.width * 0.3)
+                .frame(width: !hideMiniPlayer ? 107 : nil,
+                       height: !hideMiniPlayer ? 60 : nil)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
-                    alignment: .center
+                    alignment: !hideMiniPlayer ? .top : .center
                 )
-                .opacity(sheetPos.swipedBelow ? 1 : 0)
+                .opacity(sheetPos.swipedBelow ? 0.8 : 0.1)
                 .animation(.bouncy, value: sheetPos.swipedBelow)
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .center)
         .frame(maxHeight: .infinity)
         .background(
             ZStack {
@@ -107,14 +110,13 @@ struct VideoNotAvailableView: View {
     }
 }
 
-struct VideoNotAvailable_Previews: PreviewProvider {
-
-    static var previews: some View {
-        VideoNotAvailableView()
-            .modelContainer(DataProvider.previewContainer)
-            .environment(NavigationManager())
-            .environment(PlayerManager())
-            .environment(RefreshManager())
-            .environment(SheetPositionReader())
-    }
+#Preview {
+    VideoNotAvailableView(
+        hideMiniPlayer: true
+    )
+    .modelContainer(DataProvider.previewContainer)
+    .environment(NavigationManager())
+    .environment(PlayerManager())
+    .environment(RefreshManager())
+    .environment(SheetPositionReader())
 }
