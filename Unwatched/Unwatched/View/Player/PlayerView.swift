@@ -42,11 +42,13 @@ struct PlayerView: View {
             )
 
             HStack(spacing: 0) {
-                if player.video == nil && !compactSize {
-                    VideoNotAvailableView(
-                        hideMiniPlayer: hideMiniPlayer
-                    )
-                    .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                if player.video == nil {
+                    if !compactSize {
+                        VideoNotAvailableView(
+                            hideMiniPlayer: hideMiniPlayer
+                        )
+                        .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                    }
                 } else if !player.embeddingDisabled {
                     PlayerEmbedded(
                         autoHideVM: $autoHideVM,
