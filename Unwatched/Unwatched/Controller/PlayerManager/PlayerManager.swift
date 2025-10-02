@@ -191,7 +191,14 @@ import UnwatchedShared
     @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
         let (first, second) = VideoService.getNextVideoInQueue(modelContext)
-        let next = first?.youtubeId != self.video?.youtubeId ? first : second
+        var next = first?.youtubeId != self.video?.youtubeId ? first : second
+        if first?.youtubeId == self.video?.youtubeId
+            && second?.youtubeId == self.video?.youtubeId {
+            // workaround: model context isn't always up to date
+            // if all three (current, first, second) are the same, it's the last video
+            // being cleared
+            next = nil
+        }
         withAnimation {
             setNextVideo(next, source)
         }
