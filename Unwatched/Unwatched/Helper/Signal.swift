@@ -42,7 +42,9 @@ struct Signal {
 extension View {
     func signalToggle(_ name: String, isOn: Bool) -> some View {
         self.onChange(of: isOn) {
+            #if os(iOS)
             Signal.log(name, parameters: ["value": isOn ? "On" : "Off"])
+            #endif
         }
     }
 }
