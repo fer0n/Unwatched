@@ -140,9 +140,6 @@ import UnwatchedShared
                 embeddingDisabled = false
             }
         }
-        if unstarted != true {
-            unstarted = true
-        }
         previousState.pipEnabled = false
         if canPlayPip != false {
             canPlayPip = false
@@ -158,12 +155,12 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
-        guard video != nil else {
-            return
-        }
         handleChapterRefresh()
         if deferVideoDate != nil {
             deferVideoDate = nil
+        }
+        if unstarted != true {
+            unstarted = true
         }
     }
 
