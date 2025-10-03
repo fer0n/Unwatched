@@ -15,13 +15,15 @@ struct MenuSheetDetents: ViewModifier {
     var landscapeFullscreen: Bool
     var proxy: GeometryProxy
 
+    @State var hasVideo = true
+
     func body(content: Content) -> some View {
         @Bindable var sheetPos = sheetPos
 
         content
             .modifier(AnimatableDetents(
                 selectedDetent: $sheetPos.selectedDetent,
-                allowMinSheet: sheetPos.allowMinSheet && player.video != nil,
+                allowMinSheet: sheetPos.allowMinSheet && hasVideo,
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 maxSheetHeight: sheetPos.maxSheetHeight,
                 playerControlHeight: sheetPos.playerControlHeight,
@@ -29,6 +31,18 @@ struct MenuSheetDetents: ViewModifier {
             .presentationBackgroundInteraction(.enabled)
             .presentationContentInteraction(.scrolls)
             .ignoresSafeArea(.all)
+            .onChange(of: player.video != nil, initial: true) {
+                // workaround: tab view becomes unresponsible when marking a
+                // the final video (#short) as watched
+                let newValue = player.video != nil
+                if newValue {
+                    hasVideo = true
+                } else {
+                    Task {
+                        hasVideo = false
+                    }
+                }
+            }
             .onGlobalMinYChange(action: {
                 // workaround: for some reason, when switching to landscape this jumps
                 // to the safe area value and causes a sensory feedback trigger
@@ -44,6 +58,7 @@ struct MenuSheetDetents: ViewModifier {
                     && !navManager.showBrowser
                     && !landscapeFullscreen
                     && !navManager.showPremiumOffer
+                    && player.video != nil
             )
             .sensoryFeedback(Const.sensoryFeedback, trigger: sheetPos.selectedDetent) { old, new in
                 ![old, new].contains(.height(sheetPos.maxSheetHeight))
