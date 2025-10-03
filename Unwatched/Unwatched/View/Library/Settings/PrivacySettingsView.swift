@@ -19,12 +19,14 @@ struct PrivacySettingsView: View {
                 }
                 .listRowBackground(Color.insetBackgroundColor)
 
+                #if os(iOS)
                 MySection(footer: "analyticsHelper") {
                     Toggle(isOn: $analytics) {
                         Text("anonymousAnalytics")
                     }
                     .signalToggle("Analytics", isOn: analytics)
                 }
+                #endif
             }
             .myNavigationTitle("privacyPolicy")
         }
