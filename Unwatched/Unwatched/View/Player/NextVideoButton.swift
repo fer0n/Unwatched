@@ -32,7 +32,7 @@ struct CoreNextButton<Content>: View where Content: View {
         Button {
             player.markVideoWatched(showMenu: false, source: .userInteraction)
             hapticToggle.toggle()
-            Signal.log("Player.NextVideo", throttle: .daily)
+            Signal.log("Player.NextVideo", throttle: .weekly)
         } label: {
             contentImage(
                 Image(

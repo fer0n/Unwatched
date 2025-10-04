@@ -161,7 +161,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handlePip(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
             if player.pipEnabled {
-                Signal.log("Player.PIP", throttle: .daily)
+                Signal.log("Player.PIP", throttle: .weekly)
                 evaluateJavaScript(uiView, getEnterPipScript())
             } else {
                 Log.info("PIP OFF")

@@ -39,7 +39,7 @@ struct AirPlayView: View {
             }
             hapticToggle.toggle()
             (button as? UIButton)?.sendActions(for: .touchUpInside)
-            Signal.log("Player.AirPlay")
+            Signal.log("Player.AirPlay", throttle: .weekly)
         } label: {
             Image(systemName: symbolname)
                 .fontWeight(.black)

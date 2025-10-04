@@ -19,7 +19,7 @@ struct AddYoutubeURL: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        Signal.log("Shortcut.AddYoutubeURL")
+        Signal.log("Shortcut.AddYoutubeURL", throttle: .weekly)
         let task = VideoService.addForeignUrls(
             [youtubeUrl],
             in: destination.toCollection(),

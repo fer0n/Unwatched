@@ -21,7 +21,7 @@ struct WatchInUnwatched: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        Signal.log("Shortcut.WatchInUnwatched")
+        Signal.log("Shortcut.WatchInUnwatched", throttle: .weekly)
         guard UrlService.getYoutubeIdFromUrl(url: youtubeUrl) != nil else {
             throw VideoError.noYoutubeId
         }

@@ -102,7 +102,7 @@ struct QueueView: View {
             Signal.log(
                 "Queue.Count",
                 parameters: ["Queue.Count.Value": "\(queue.count)"],
-                throttle: .daily
+                throttle: .weekly
             )
         }
     }

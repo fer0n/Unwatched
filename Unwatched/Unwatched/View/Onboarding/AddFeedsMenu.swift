@@ -54,7 +54,7 @@ struct AddFeedsMenu: View {
     var browseYoutubeButton: some View {
         Button {
             navManager.openUrlInApp(nil)
-            Signal.log("Onboarding.BrowseYoutube")
+            Signal.log("Onboarding.BrowseYoutube", throttle: .weekly)
         } label: {
             Text("browser")
                 .padding(.horizontal, 10)
@@ -66,7 +66,7 @@ struct AddFeedsMenu: View {
     var importSubscriptionsButton: some View {
         Button {
             showImportSheet = true
-            Signal.log("Onboarding.ImportSubscriptions")
+            Signal.log("Onboarding.ImportSubscriptions", throttle: .weekly)
         } label: {
             Label("importFromYoutube", systemImage: "square.and.arrow.down.fill")
                 .frame(maxWidth: .infinity)

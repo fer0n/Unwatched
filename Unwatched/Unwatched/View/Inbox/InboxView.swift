@@ -106,7 +106,7 @@ struct InboxView: View {
                 Signal.log(
                     "Inbox.Count",
                     parameters: ["Inbox.Count.Value": "\(inboxEntries.count)"],
-                    throttle: .daily
+                    throttle: .weekly
                 )
             }
             .inboxToolbar(showCancelButton)

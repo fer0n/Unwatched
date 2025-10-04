@@ -16,7 +16,7 @@ struct AddSubscription: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String?> {
-        Signal.log("Shortcut.AddSubscription")
+        Signal.log("Shortcut.AddSubscription", throttle: .weekly)
         let subInfo = SubscriptionInfo(youtubeUrl)
 
         let result = try await SubscriptionService.addSubscriptions(subscriptionInfo: [subInfo])

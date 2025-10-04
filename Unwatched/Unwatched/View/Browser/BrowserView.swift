@@ -199,7 +199,7 @@ struct BrowserView: View, KeyboardReadable {
         Task {
             await handleSubscriptionChange(browserManager.info)
         }
-        Signal.log("Browser.AddSubscription")
+        Signal.log("Browser.AddSubscription", throttle: .weekly)
     }
 
     func handleSubscriptionChange(_ info: SubscriptionInfo?) async {
