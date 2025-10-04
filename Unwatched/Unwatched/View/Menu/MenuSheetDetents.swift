@@ -24,6 +24,7 @@ struct MenuSheetDetents: ViewModifier {
             .modifier(AnimatableDetents(
                 selectedDetent: $sheetPos.selectedDetent,
                 allowMinSheet: sheetPos.allowMinSheet && hasVideo,
+                preferLarge: !hasVideo,
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 maxSheetHeight: sheetPos.maxSheetHeight,
                 playerControlHeight: sheetPos.playerControlHeight,

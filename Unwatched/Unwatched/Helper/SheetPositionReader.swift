@@ -91,6 +91,10 @@ import UnwatchedShared
         selectedDetent == .height(Const.minSheetDetent)
     }
 
+    var isLargePlayer: Bool {
+        selectedDetent == .large
+    }
+
     func setTopSafeArea(_ topSafeArea: CGFloat) {
         let newValue = topSafeArea + Const.playerAboveSheetHeight
         if newValue != sheetDistanceToTop {
@@ -113,6 +117,12 @@ import UnwatchedShared
         Log.info("setDetentMinimumSheet()")
         selectedDetent = .height(Const.minSheetDetent)
         setSwipedBelow(true)
+    }
+
+    func setLargeSheet() {
+        Log.info("setLargeSheet()")
+        selectedDetent = .large
+        setSwipedBelow(false)
     }
 
     // global position changes

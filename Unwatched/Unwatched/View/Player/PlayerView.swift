@@ -44,10 +44,8 @@ struct PlayerView: View {
             HStack(spacing: 0) {
                 if player.video == nil {
                     if !compactSize {
-                        VideoNotAvailableView(
-                            hideMiniPlayer: hideMiniPlayer
-                        )
-                        .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                        VideoNotAvailableView()
+                            .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                     }
                 } else if !player.embeddingDisabled {
                     PlayerEmbedded(

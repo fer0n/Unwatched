@@ -19,8 +19,6 @@ struct VideoNotAvailableView: View {
     @GestureState private var dragState: CGFloat = 0
     @State private var isDropTarget: Bool = false
 
-    var hideMiniPlayer: Bool
-
     var body: some View {
         GeometryReader { proxy in
             Image(systemName: "checkmark.rectangle.stack.fill")
@@ -28,19 +26,18 @@ struct VideoNotAvailableView: View {
                 .scaledToFit()
                 .symbolVariant(.fill)
                 .fontWeight(.black)
-                .foregroundStyle(theme.color)
                 .frame(width: proxy.size.width * 0.3)
-                .frame(width: !hideMiniPlayer ? 107 : nil,
-                       height: !hideMiniPlayer ? 60 : nil)
+                .foregroundStyle(theme.color)
+                .opacity(0.8)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
-                    alignment: !hideMiniPlayer ? .top : .center
+                    alignment: .center
                 )
-                .opacity(sheetPos.swipedBelow ? 0.8 : 0.1)
+                .opacity(sheetPos.swipedBelow ? 1 : 0)
                 .animation(.bouncy, value: sheetPos.swipedBelow)
         }
-        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
         .background(
             ZStack {
@@ -111,12 +108,10 @@ struct VideoNotAvailableView: View {
 }
 
 #Preview {
-    VideoNotAvailableView(
-        hideMiniPlayer: true
-    )
-    .modelContainer(DataProvider.previewContainer)
-    .environment(NavigationManager())
-    .environment(PlayerManager())
-    .environment(RefreshManager())
-    .environment(SheetPositionReader())
+    VideoNotAvailableView()
+        .modelContainer(DataProvider.previewContainer)
+        .environment(NavigationManager())
+        .environment(PlayerManager())
+        .environment(RefreshManager())
+        .environment(SheetPositionReader())
 }
