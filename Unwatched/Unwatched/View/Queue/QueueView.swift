@@ -52,7 +52,7 @@ struct QueueView: View {
                                         isNew: video.isNew,
                                         showAllStatus: false,
                                         clearRole: .destructive,
-                                        queueRole: .destructive,
+                                        queueRole: Const.iOS26 ? .destructive : nil,
                                         clearAboveBelowList: .queue,
                                         showContextMenu: enableQueueContextMenu,
                                         showDelete: false,
