@@ -68,6 +68,8 @@ struct PlayerControls: View {
                         }
                         .opacity(player.video != nil ? 1 : 0)
                     }
+                    .padding(.top, Const.iOS26_1 ? 7 : 0)
+                    .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
                 }
 
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {

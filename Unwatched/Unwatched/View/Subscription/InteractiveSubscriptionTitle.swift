@@ -20,7 +20,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
             Button {
                 openSubscription(sub)
             } label: {
-                HStack {
+                HStack(spacing: 5) {
                     if showImage, let thumbnailUrl = sub.thumbnailUrl {
                         CachedImageView(imageUrl: thumbnailUrl) { image in
                             image
@@ -53,7 +53,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
 
     var getSubscriptionSystemName: String? {
         if !(subscription?.isArchived == false) {
-            return "arrow.right.circle"
+            return "plus.circle"
         }
         return nil
     }

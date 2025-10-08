@@ -76,7 +76,7 @@ import UnwatchedShared
     }
 
     var maxSheetHeight: CGFloat {
-        sheetHeight - Const.playerAboveSheetHeight
+        sheetHeight - playerAboveSheetHeight
     }
 
     var isMiniPlayer: Bool {
@@ -95,8 +95,12 @@ import UnwatchedShared
         selectedDetent == .large
     }
 
+    var playerAboveSheetHeight: CGFloat {
+        Const.playerAboveSheetHeight - (Const.iOS26_1 ? 15 : 0)
+    }
+
     func setTopSafeArea(_ topSafeArea: CGFloat) {
-        let newValue = topSafeArea + Const.playerAboveSheetHeight
+        let newValue = topSafeArea + playerAboveSheetHeight
         if newValue != sheetDistanceToTop {
             sheetDistanceToTop = newValue
         }
@@ -128,7 +132,8 @@ import UnwatchedShared
     // global position changes
     func handleSheetMinYUpdate(_ minY: CGFloat) {
         let value = minY - sheetDistanceToTop
-        let newBelow = value > 50 || minY == 0 // after dismissing the sheet minY becomes 0
+        let threshold: CGFloat = Const.iOS26_1 ? 60 : 50
+        let newBelow = value > threshold || minY == 0 // after dismissing the sheet minY becomes 0
         setSwipedBelow(newBelow)
     }
 

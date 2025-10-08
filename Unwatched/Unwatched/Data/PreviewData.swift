@@ -54,9 +54,9 @@ extension PlayerManager {
     @MainActor
     static func getDummy() -> PlayerManager {
         let player = PlayerManager()
-        // player.video = DataProvider.dummyVideo
-        // player.currentTime = 5
-        // player.currentChapter = Chapter.getDummy()
+        player.video = DataProvider.dummyVideo
+        player.currentTime = 5
+        player.currentChapter = Chapter.getDummy()
         // player.embeddingDisabled = true
         player.isPlaying = false
         return player

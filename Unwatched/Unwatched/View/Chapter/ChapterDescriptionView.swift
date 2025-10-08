@@ -74,7 +74,7 @@ struct ChapterDescriptionView: View {
                 }
             }
         }
-        .padding(.top, 2)
+        .padding(.top, Const.iOS26_1 ? 0 : 2)
         .tint(.neutralAccentColor)
     }
 

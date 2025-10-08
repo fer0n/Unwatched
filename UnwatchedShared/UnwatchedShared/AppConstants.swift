@@ -305,4 +305,11 @@ public extension Const {
         }
         return false
     }
+    
+    static var iOS26_1: Bool {
+        if #available(iOS 26.1, *) {
+            return true
+        }
+        return false
+    }
 }
