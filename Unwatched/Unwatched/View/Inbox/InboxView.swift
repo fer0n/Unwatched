@@ -26,7 +26,7 @@ struct InboxView: View {
 
         NavigationStack(path: $navManager.presentedSubscriptionInbox) {
             ZStack {
-                Color.backgroundColor.ignoresSafeArea(.all)
+                MyBackgroundColor()
 
                 if !hasEntries {
                     ContentUnavailableView("noInboxItems",
@@ -48,7 +48,7 @@ struct InboxView: View {
 
                     if hasEntries {
                         InboxSwipeTipView()
-                            .listRowBackground(Color.backgroundColor)
+                            .myListRowBackground()
                             .listRowSeparator(.hidden)
                     }
 
@@ -84,7 +84,7 @@ struct InboxView: View {
                         }
                         .videoListItemEntry()
                     }
-                    .listRowBackground(Color.backgroundColor)
+                    .myListRowBackground()
 
                     if hasTooManyItems {
                         HiddenEntriesInfo()

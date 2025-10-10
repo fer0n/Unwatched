@@ -38,7 +38,7 @@ struct SubscriptionDetailView: View {
                         }
                 }
                 .imageAccentBackground(url: imageUrl)
-                .listRowBackground(Color.backgroundColor)
+                .myListRowBackground()
 
                 if showFilter {
                     Button {
@@ -58,7 +58,7 @@ struct SubscriptionDetailView: View {
                     .buttonBorderShape(.capsule)
                     .foregroundStyle(Color.automaticBlack)
                     .tint(Color.insetBackgroundColor)
-                    .listRowBackground(Color.backgroundColor)
+                    .myListRowBackground()
                     .listRowSeparator(.hidden)
                     .frame(maxWidth: .infinity, alignment: .center)
 
@@ -79,9 +79,10 @@ struct SubscriptionDetailView: View {
             }
         }
         .background {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
         }
         .listStyle(.plain)
+        .concentricMacWorkaround()
         .myNavigationTitle(LocalizedStringKey(subscription.title),
                            titleHidden: !showTitle
         )

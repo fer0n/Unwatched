@@ -26,7 +26,7 @@ struct QueueView: View {
 
         NavigationStack(path: $navManager.presentedSubscriptionQueue) {
             ZStack {
-                Color.backgroundColor.ignoresSafeArea(.all)
+                MyBackgroundColor()
 
                 if queue.isEmpty {
                     QueueViewUnavailable()
@@ -70,7 +70,7 @@ struct QueueView: View {
                         .videoListItemEntry()
                     }
                     .moveQueueEntryModifier()
-                    .listRowBackground(Color.backgroundColor)
+                    .myListRowBackground()
 
                     if !queue.isEmpty {
                         ClearAllQueueEntriesButton(

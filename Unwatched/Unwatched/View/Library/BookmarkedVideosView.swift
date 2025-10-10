@@ -8,7 +8,7 @@ struct BookmarkedVideosView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
 
             if videoListVM.hasNoVideos {
                 ContentUnavailableView("noBookmarkedVideosYet",
@@ -23,6 +23,7 @@ struct BookmarkedVideosView: View {
                 .listStyle(.plain)
             }
         }
+        .concentricMacWorkaround()
         .myNavigationTitle("bookmarkedVideos")
     }
 }

@@ -53,7 +53,7 @@ struct MenuView: View {
                     .tabItemView(image: Image(systemName: "books.vertical"), tag: NavigationTab.library)
 
                 BrowserView(
-                    showHeader: true,
+                    showHeader: !Device.isMac,
                     safeArea: false
                 )
                 .tabItemView(
@@ -93,7 +93,8 @@ struct MenuView: View {
         .browserViewSheet(navManager: $navManager)
         .premiumOfferSheet()
         .background {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            (Const.macOS26 ? Color.clear : Color.backgroundColor)
+                .ignoresSafeArea(.all)
         }
         #if os(iOS)
         .setTabBarAppearance(disableScrollAppearance: isSidebar)

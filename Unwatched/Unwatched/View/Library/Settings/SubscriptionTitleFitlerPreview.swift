@@ -20,7 +20,7 @@ struct SubscriptionTitleFitlerPreview: View {
 
         Spacer()
             .frame(height: videoListVM.hasNoVideos ? 300 : 0)
-            .listRowBackground(Color.backgroundColor)
+            .myListRowBackground()
     }
 
     var videoFilter: Predicate<Video>? {

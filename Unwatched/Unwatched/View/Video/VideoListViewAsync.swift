@@ -50,7 +50,7 @@ struct AsyncPlaceholderWorkaround: View {
                     return NSScreen.main?.frame.size.height ?? 800
                     #endif
                 }())
-                .listRowBackground(Color.backgroundColor)
+                .myListRowBackground()
         }
     }
 }
@@ -83,13 +83,13 @@ struct VideoListViewAsync: View {
                 videoListVM.loadMoreContentIfNeeded(currentItem: video)
             }
         }
-        .listRowBackground(Color.backgroundColor)
+        .myListRowBackground()
 
         if videoListVM.isLoading && !videoListVM.videos.isEmpty {
             ProgressView()
                 .frame(maxWidth: .infinity)
                 .listRowSeparator(.hidden)
-                .listRowBackground(Color.backgroundColor)
+                .myListRowBackground()
         }
     }
 }

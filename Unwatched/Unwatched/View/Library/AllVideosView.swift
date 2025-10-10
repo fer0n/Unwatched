@@ -8,7 +8,7 @@ struct AllVideosView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
             #if os(iOS)
             SearchableVideos(text: $text)
             #endif

@@ -46,7 +46,7 @@ struct TitleFilterContent: View {
                 .padding(.bottom, 15)
         }
         .listRowSeparator(.hidden)
-        .listRowBackground(Color.backgroundColor)
+        .myListRowBackground()
         .requiresPremium(filterText.isEmpty)
         .task {
             updateFilterStrings()

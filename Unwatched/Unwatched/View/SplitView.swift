@@ -22,6 +22,7 @@ struct MacOSSplitView: View {
             MenuView(isSidebar: true)
                 .toolbar(navManager.isMacosFullscreen ? .hidden : .visible)
                 .navigationSplitViewColumnWidth(min: 320, ideal: 350, max: 450)
+                .concentricMacWorkaround(corners: true)
         } detail: {
             GeometryReader { proxy in
                 let horizontalLayout = horizontalLayout(proxy.size)

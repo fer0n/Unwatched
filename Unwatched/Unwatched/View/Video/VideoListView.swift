@@ -34,7 +34,7 @@ struct VideoListView: View {
             .equatable()
             .videoListItemEntry()
         }
-        .listRowBackground(Color.backgroundColor)
+        .myListRowBackground()
     }
 
     nonisolated static func getVideoFilter(_ subscriptionId: PersistentIdentifier? = nil,

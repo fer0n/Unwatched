@@ -21,7 +21,7 @@ struct ImageAccentBackground: ViewModifier {
             #endif
             .background(
                 LinearGradient(
-                    colors: [color ?? Color.automaticWhite, Color.backgroundColor],
+                    colors: [color ?? Color.automaticWhite, Const.macOS26 ? Color.clear : Color.backgroundColor ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -43,7 +43,7 @@ struct ImageAccentBackground: ViewModifier {
                 }
             }
             .background {
-                color
+                (Const.macOS26 ? Color.clear : color)
                     .mask(LinearGradient(gradient: Gradient(
                         stops: [
                             .init(color: .clear, location: 0),
@@ -51,6 +51,9 @@ struct ImageAccentBackground: ViewModifier {
                         ]
                     ), startPoint: .top, endPoint: .bottom))
             }
+            #if os(macOS)
+            .clipShape(RoundedRectangle(cornerRadius: Const.macOS26 ? 25 : 0))
+        #endif
     }
 }
 

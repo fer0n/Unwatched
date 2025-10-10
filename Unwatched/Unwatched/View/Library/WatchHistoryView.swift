@@ -12,7 +12,7 @@ struct WatchHistoryView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
 
             if videoListVM.hasNoVideos {
                 ContentUnavailableView("noHistoryItems",
@@ -28,6 +28,7 @@ struct WatchHistoryView: View {
                 )
             }
         }
+        .concentricMacWorkaround()
         .myNavigationTitle("watched")
     }
 }

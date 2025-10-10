@@ -306,6 +306,15 @@ public extension Const {
         return false
     }
     
+    static var macOS26: Bool {
+        #if os(macOS)
+        if #available(macOS 26, *) {
+            return true
+        }
+        #endif
+        return false
+    }
+    
     static var iOS26_1: Bool {
         if #available(iOS 26.1, *) {
             return true

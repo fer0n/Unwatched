@@ -54,7 +54,7 @@ struct SubscriptionListSection: View {
                 .frame(height: text.debounced.isEmpty ? 0 : 300)
         }
         .listRowSeparator(.hidden)
-        .listRowBackground(Color.backgroundColor)
+        .myListRowBackground()
     }
 
     @ViewBuilder var workaroundPlaceholder: some View {

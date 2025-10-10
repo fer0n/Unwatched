@@ -32,7 +32,6 @@ struct NavigationStackWorkaround: ViewModifier {
                     .padding(.trailing, 30)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.backgroundColor)
             .frame(
                 maxHeight: .infinity,
                 alignment: .topLeading

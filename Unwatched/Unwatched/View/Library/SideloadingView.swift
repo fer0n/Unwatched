@@ -12,7 +12,7 @@ struct SideloadingView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
 
             if subs.isEmpty {
                 ContentUnavailableView("noSideloadedSubscriptions",
@@ -35,12 +35,14 @@ struct SideloadingView: View {
                         .equatable()
                         .videoListItemEntry()
                     }
-                    .listRowBackground(Color.backgroundColor)
+                    .myListRowBackground()
                 }
+                .scrollContentBackground(.hidden)
                 .listStyle(.plain)
                 .myNavigationTitle("sideloads")
             }
         }
+        .concentricMacWorkaround()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu {

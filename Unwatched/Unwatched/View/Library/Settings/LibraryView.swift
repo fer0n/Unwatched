@@ -23,7 +23,7 @@ struct LibraryView: View {
 
         NavigationStack(path: $navManager.presentedLibrary) {
             ZStack {
-                Color.backgroundColor.ignoresSafeArea(.all)
+                MyBackgroundColor()
 
                 List {
                     MySection(hasPadding: false) {
