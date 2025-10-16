@@ -1177,6 +1177,19 @@ final class ChapterServiceTests: XCTestCase {
                     SendableChapter(title: "Overview", startTime: 1 * 60 + 30 + 0.345, endTime: nil),
                 ]
             ),
+            (
+                """
+                ► Timestamps
+                    0:00 Intro
+                    0:40 Project Setup
+                    1:12 Implementing Conditional Rating Popup
+                """,
+                [
+                    SendableChapter(title: "Intro", startTime: 0, endTime: 40),
+                    SendableChapter(title: "Project Setup", startTime: 40, endTime: 1 * 60 + 12),
+                    SendableChapter(title: "Implementing Conditional Rating Popup", startTime: 1 * 60 + 12, endTime: nil)
+                ]
+            ),
         ]
 
         for (description, expected) in testValues {
