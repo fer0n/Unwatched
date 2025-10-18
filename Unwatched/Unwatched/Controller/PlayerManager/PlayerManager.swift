@@ -144,6 +144,7 @@ import UnwatchedShared
         if canPlayPip != false {
             canPlayPip = false
         }
+        previousState.chaptersHash = nil
         setVideoEnded(false)
         handleChapterChange()
     }

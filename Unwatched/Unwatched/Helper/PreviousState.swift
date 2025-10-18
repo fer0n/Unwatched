@@ -8,4 +8,5 @@ struct PreviousState {
     var playbackSpeed: Double?
     var isPlaying: Bool = false
     var pipEnabled: Bool = false
+    var chaptersHash: String?
 }

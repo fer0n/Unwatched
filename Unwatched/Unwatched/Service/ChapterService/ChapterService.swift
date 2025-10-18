@@ -312,4 +312,11 @@ struct ChapterService {
         let chapters = extractChapters(from: video.videoDescription ?? "", videoDuration: video.duration)
         insertChapters(chapters, for: video, in: context)
     }
+
+    static func getChaptersHash(from chapters: [Chapter], duration: Double?) -> String {
+        let combinedString = chapters.map { chapter in
+            "\(chapter.startTime)-\(chapter.isActive ? "1" : "0")"
+        }.joined(separator: ";")
+        return "\(combinedString)-\(duration ?? 0)"
+    }
 }

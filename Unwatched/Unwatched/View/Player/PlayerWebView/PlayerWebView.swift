@@ -98,6 +98,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         handlePip(prev, view)
         handleSeek(prev, view)
         handleQueueVideo(prev, view)
+        setChapterMarkers()
     }
 
     #if os(macOS)
@@ -126,6 +127,35 @@ struct PlayerWebView: PlatformViewRepresentable {
     func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
         Log.error("Error evaluating JavaScript: \(error)")
+    }
+
+    func setChapterMarkers(awaitHash: Bool = true) {
+        let prev = player.previousState
+        if awaitHash && prev.chaptersHash == nil {
+            return
+        }
+        guard let video = player.video,
+              prev.videoId == player.video?.youtubeId else {
+            return
+        }
+        let hash = ChapterService.getChaptersHash(
+            from: video.sortedChapters, duration: video.duration
+        )
+        player.previousState.chaptersHash = hash
+        if prev.chaptersHash == hash {
+            return
+        }
+        if let chapters = player.video?.sortedChapters,
+           let view = webViewState.webView {
+            Log.info("CHAPTERMARKERS")
+            let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
+            let script = PlayerWebView.setChapterMarkersScript(
+                chapters: chapters,
+                videoDuration: player.video?.duration ?? 0,
+                enableLogging: enableLogging
+            )
+            evaluateJavaScript(view, script)
+        }
     }
 
     func handleShouldStop(_ view: WKWebView) {

@@ -41,6 +41,7 @@ extension PlayerWebViewCoordinator {
             handleOverlay(payload)
         case "aspectRatio":
             handleAspectRatio(payload)
+            handleChapters()
         case "swipe":
             handleSwipe(payload)
         case "centerTouch":
@@ -199,6 +200,13 @@ extension PlayerWebViewCoordinator {
         parent.player.handleAspectRatio(aspectRatio)
     }
 
+    func handleChapters() {
+        Task {
+            try await Task.sleep(for: .seconds(1))
+            parent.setChapterMarkers(awaitHash: false)
+        }
+    }
+
     func handleInteraction() {
         parent.autoHideVM.setShowControls()
     }
@@ -239,6 +247,7 @@ extension PlayerWebViewCoordinator {
     }
 
     func updateUnstarted() {
+        Log.info("updateUnstarted")
         if parent.player.unstarted {
             withAnimation {
                 parent.player.unstarted = false
