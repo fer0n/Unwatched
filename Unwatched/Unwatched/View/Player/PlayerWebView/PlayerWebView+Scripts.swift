@@ -174,7 +174,7 @@ extension PlayerWebView {
                 progressBar: chapteredProgressBar,
                 isNewEmbedding: true,
                 hasYoutubeChapters: true,
-                chapterFormat: "new"
+                chapterFormat: "new",
               };
             }
           }
@@ -182,13 +182,15 @@ extension PlayerWebView {
           // Check for older embedded player chapters container
           let oldChaptersContainer = document.querySelector(".ytp-chapters-container");
           if (oldChaptersContainer) {
-            const chapterElements = oldChaptersContainer.querySelectorAll(".ytp-chapter-hover-container");
-            if (chapterElements && chapterElements.length > 0) {
+            const chapterElements = oldChaptersContainer.querySelectorAll(
+              ".ytp-chapter-hover-container"
+            );
+            if (chapterElements && chapterElements.length > 1) {
               return {
                 progressBar: oldChaptersContainer,
                 isNewEmbedding: false,
                 hasYoutubeChapters: true,
-                chapterFormat: "old"
+                chapterFormat: "old",
               };
             }
           }
@@ -200,7 +202,12 @@ extension PlayerWebView {
             progressBar = document.querySelector(".ytp-progress-list");
             isNewEmbedding = false;
           }
-          return { progressBar, isNewEmbedding, hasYoutubeChapters: false, chapterFormat: null };
+          return {
+            progressBar,
+            isNewEmbedding,
+            hasYoutubeChapters: false,
+            chapterFormat: null,
+          };
         }
 
         function removeCustomChapterAreas() {
@@ -373,7 +380,9 @@ extension PlayerWebView {
               const startTime = runningTime;
               const isLastChapter = i === chapterElements.length - 1;
               // For the last chapter, make it end exactly at videoDuration to avoid gaps
-              const endTime = isLastChapter ? videoDuration : runningTime + chapterDuration;
+              const endTime = isLastChapter
+                ? videoDuration
+                : runningTime + chapterDuration;
 
               youtubeChapters.push({
                 startTime,
@@ -385,13 +394,17 @@ extension PlayerWebView {
             }
 
             if (window.enableLogging) {
-              sendMessage("setChapterMarker oldFormatChapters", JSON.stringify(youtubeChapters.map(ch => ({
-                start: ch.startTime,
-                end: ch.endTime,
-                duration: ch.endTime - ch.startTime
-              }))));
+              sendMessage(
+                "setChapterMarker oldFormatChapters",
+                JSON.stringify(
+                  youtubeChapters.map((ch) => ({
+                    start: ch.startTime,
+                    end: ch.endTime,
+                    duration: ch.endTime - ch.startTime,
+                  }))
+                )
+              );
             }
-
           } else {
             // For new format, use the original approach
             let index = 0;
@@ -430,7 +443,7 @@ extension PlayerWebView {
           const ERROR_MARGIN = totalDuration * 0.02;
 
           // Minimum overlap percentage to be considered meaningful
-          const MIN_OVERLAP_PERCENTAGE = 0.10;
+          const MIN_OVERLAP_PERCENTAGE = 0.1;
           const MIN_OVERLAP_SECONDS = Math.max(2, totalDuration * 0.003); // At least 2 seconds or 0.3% of duration
 
           // Find all chapters that overlap with this YouTube chapter
@@ -457,7 +470,10 @@ extension PlayerWebView {
               const overlapPercentage = overlapDuration / ytChapterDuration;
 
               // Only include if there's a meaningful overlap - either percentage or absolute time based
-              if (overlapPercentage > MIN_OVERLAP_PERCENTAGE && overlapDuration > MIN_OVERLAP_SECONDS) {
+              if (
+                overlapPercentage > MIN_OVERLAP_PERCENTAGE &&
+                overlapDuration > MIN_OVERLAP_SECONDS
+              ) {
                 overlappingChapters.push({
                   chapter: chapter,
                   overlapStart: overlapStart,
@@ -472,8 +488,8 @@ extension PlayerWebView {
         }
 
         // Global variable to track the current retry timeout
-        if (typeof window.chapterRetryTimeoutId === 'undefined') {
-            window.chapterRetryTimeoutId = null;
+        if (typeof window.chapterRetryTimeoutId === "undefined") {
+          window.chapterRetryTimeoutId = null;
         }
 
         function addYouTubeChapterMarkersWithRetry(
@@ -517,7 +533,7 @@ extension PlayerWebView {
                     message: "YouTube progress bar not found after retries",
                     oldChaptersExists,
                     newChaptersExists,
-                    anyProgressBar
+                    anyProgressBar,
                   })
                 );
               }
@@ -573,7 +589,7 @@ extension PlayerWebView {
                     overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
                     overlay.style.pointerEvents = "none";
                     if (chapterFormat === "old") {
-                        overlay.style.zIndex = "39";
+                      overlay.style.zIndex = "39";
                     }
 
                     // Add the overlay as a child
@@ -637,7 +653,7 @@ extension PlayerWebView {
                 width: ch.element.style.width,
                 marginRight: ch.element.style.marginRight,
                 computedWidth: rect.width,
-                computedMargin: elementStyle.marginRight
+                computedMargin: elementStyle.marginRight,
               };
             });
 
@@ -649,7 +665,7 @@ extension PlayerWebView {
                   custom: chapters.length,
                   overlaps: overlapsFound,
                   format: chapterFormat,
-                  details: chapterFormat === "old" ? chapterDetails : null
+                  details: chapterFormat === "old" ? chapterDetails : null,
                 })
               );
             }
