@@ -1866,6 +1866,40 @@
         }
       }
     },
+    "backgroundPlayback" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio im Hintergrund fortsetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue Audio in Background"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar el audio en segundo plano"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer l’audio en arrière-plan"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontynuuj dźwięk w tle"
+          }
+        }
+      }
+    },
     "backupNow" : {
       "localizations" : {
         "de" : {
@@ -13664,7 +13698,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Beim Abspielen von Videos iPhone horizontal halten, um den Vollbildmodus zu starten, in dem Steuerelemente links oder rechts vom Video angezeigt werden können. Für Picture-in-Picture muss her native player verwendet werden, der durch den Vollbild-Button innerhalb des Videos aktiviert werden kann."
+                  "value" : "Beim Abspielen von Videos iPhone horizontal halten, um den Vollbildmodus zu starten, in dem Steuerelemente links oder rechts vom Video angezeigt werden können. "
                 }
               },
               "other" : {
@@ -13682,7 +13716,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "While playing a video, hold your phone horizontal to enter a fullscreen that can show controls on the left or right side. If you wish to enter Picture-in-picture, tap the maximize button inside the video."
+                  "value" : "While playing a video, hold your phone horizontal to enter a fullscreen mode that shows controls on the left or right side."
                 }
               },
               "other" : {
@@ -13700,7 +13734,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Mientras reproduces un video, sostiene tu teléfono en posición horizontal para entrar en pantalla completa, donde los controles pueden aparecer a la izquierda o derecha. Si deseas activar Picture-in-Picture, toca el botón de maximizar dentro del video."
+                  "value" : "Mientras reproduces un video, gira el teléfono horizontalmente para entrar en modo de pantalla completa con los controles a la izquierda o a la derecha."
                 }
               },
               "other" : {
@@ -13718,7 +13752,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Pendant la lecture d'une vidéo, tenez votre téléphone à l'horizontale pour activer le mode plein écran qui peut afficher les commandes à gauche ou à droite. Si vous souhaitez activer le mode Picture-in-picture, appuyez sur le bouton d'agrandissement dans la vidéo."
+                  "value" : "Pendant la lecture d’une vidéo, tiens ton téléphone à l’horizontale pour entrer en mode plein écran avec les contrôles à gauche ou à droite."
                 }
               },
               "other" : {
@@ -13736,7 +13770,7 @@
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Podczas odtwarzania obróć telefon poziomo, aby przejść do pełnego ekranu z przyciskami po bokach. Aby włączyć Picture-in-Picture, kliknij przycisk maksymalizacji w filmie."
+                  "value" : "Podczas odtwarzania filmu obróć telefon poziomo, aby przejść w tryb pełnoekranowy z przyciskami po lewej lub prawej stronie."
                 }
               },
               "other" : {

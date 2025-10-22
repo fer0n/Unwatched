@@ -49,9 +49,10 @@ struct SetupView: View {
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
+                    Log.info("scenePhase: active")
+                    BackgroundMonitor.handleActive()
                     NotificationManager.handleNotifications(checkDeferred: true)
 
-                    Log.info("scenePhase: active")
                     Task {
                         refresher.handleAutoBackup()
                         await refresher.handleBecameActive()
@@ -59,9 +60,13 @@ struct SetupView: View {
                     Task {
                         checkVideoHealth()
                     }
+                case .inactive:
+                    Log.info("scenePhase: inactive")
+                    BackgroundMonitor.handleInactive()
                 case .background:
                     Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
+                    BackgroundMonitor.handleBackground()
                 default:
                     break
                 }

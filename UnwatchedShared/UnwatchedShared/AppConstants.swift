@@ -232,6 +232,7 @@ public struct Const {
     // MARK: - AppStorage
     public static let subscriptionSortOrder = "subscriptionSortOrder"
     public static let playVideoFullscreen = "playVideoFullscreen"
+    public static let backgroundPlayback = "backgroundPlayback"
     public static let hideControlsFullscreen = "hideControlsFullscreen"
     public static let returnToQueue = "returnToQueue"
     public static let rotateOnPlay = "rotateOnPlay"

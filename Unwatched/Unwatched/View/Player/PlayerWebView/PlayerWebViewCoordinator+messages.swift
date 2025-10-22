@@ -15,9 +15,7 @@ extension PlayerWebViewCoordinator {
         case "pause":
             handlePause(payload)
         case "play":
-            parent.player.previousState.isPlaying = true
-            updateUnstarted()
-            parent.player.play()
+            handlePlay()
         case "ended":
             parent.player.previousState.isPlaying = false
             parent.onVideoEnded()
@@ -255,6 +253,15 @@ extension PlayerWebViewCoordinator {
         }
     }
 
+    func handlePlay() {
+        parent.player.previousState.isPlaying = true
+        updateUnstarted()
+        parent.player.play()
+        #if os(iOS)
+        BackgroundMonitor.handlePlay()
+        #endif
+    }
+
     func handlePause(_ payload: String?) {
         guard let payload else {
             Log.warning("No payload given for handlePause")
@@ -275,6 +282,10 @@ extension PlayerWebViewCoordinator {
            let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
             handleTimeUpdate(timeString, persist: true, youtubeId: videoId)
         }
+
+        #if os(iOS)
+        BackgroundMonitor.handlePause()
+        #endif
     }
 
     func handlePlaybackSpeed(_ payload: String?) {
