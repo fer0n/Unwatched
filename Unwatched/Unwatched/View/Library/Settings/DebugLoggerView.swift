@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct DebugLoggerView: View {
     @AppStorage(Const.enableLogging) private var enableLogging: Bool = false
+    @State var showConfirmation = false
 
     var body: some View {
         MySection("logs") {
@@ -32,10 +33,22 @@ struct DebugLoggerView: View {
 
         MySection {
             Button(role: .destructive) {
-                Log.deleteLogFile()
+                showConfirmation = true
             } label: {
                 Text("deleteLogs")
             }
         }
+        .confirmationDialog(
+            "reallyDelete",
+            isPresented: $showConfirmation,
+            titleVisibility: .visible,
+            actions: {
+                Button("confirm", role: .destructive) {
+                    Log.deleteLogFile()
+                }
+                Button("cancel", role: .cancel) { }
+            }
+        )
+
     }
 }
