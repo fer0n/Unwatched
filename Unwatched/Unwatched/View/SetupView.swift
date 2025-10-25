@@ -10,7 +10,7 @@ import OSLog
 import UnwatchedShared
 
 struct SetupView: View {
-    @AppStorage(Const.themeColor) var theme: ThemeColor = .teal
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(RefreshManager.self) var refresher

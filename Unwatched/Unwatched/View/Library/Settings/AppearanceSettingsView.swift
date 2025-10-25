@@ -9,7 +9,7 @@ import UnwatchedShared
 
 struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
-    @AppStorage(Const.themeColor) var themeColor: ThemeColor = .teal
+    @AppStorage(Const.themeColor) var themeColor: ThemeColor = .defaultTheme
     @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
     @AppStorage(Const.hidePlayerPageIndicator) var hidePlayerPageIndicator: Bool = false
@@ -67,7 +67,7 @@ struct AppearanceSettingsView: View {
                         .environment(\.colorScheme, .dark)
                 }
 
-                MySection("appColor") {
+                MySection("appColor", showPremiumIndicator: true) {
                     ForEach(ThemeColor.allCases, id: \.self) { theme in
                         Button {
                             themeColor = theme
@@ -93,6 +93,7 @@ struct AppearanceSettingsView: View {
                         }
                     }
                 }
+                .requiresPremium(themeColor == .defaultTheme)
 
                 #if os(iOS)
                 lightAppIconToggle

@@ -64,8 +64,10 @@ public enum ThemeColor: Int, CaseIterable, Sendable {
     }
 
     public init() {
-        self = .teal
+        self = .defaultTheme
     }
+    
+    public static let defaultTheme = ThemeColor.teal
 }
 
 public extension Color {
