@@ -83,9 +83,11 @@ struct ChapterList: View {
     }
 
     func toggleChapter(_ chapter: Chapter) {
-        chapter.isActive.toggle()
-        if video == player.video {
-            player.handleChapterChange()
+        if !chapter.isActive || guardPremium() {
+            chapter.isActive.toggle()
+            if video == player.video {
+                player.handleChapterChange()
+            }
         }
     }
 
