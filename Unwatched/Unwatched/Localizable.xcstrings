@@ -10907,31 +10907,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden.\n\nUm Audio im Hintergrund abzuspielen, tippe nach dem Verlassen der App auf “Play” — auf dem Sperrbildschirm, im Kontrollzentrum oder an Kopfhörern."
+            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden.\n\nUm Audio im Hintergrund weiter abzuspielen, stelle sicher, dass Einstellungen → Wiedergabe → „Audio im Hintergrund fortsetzen“ aktiviert ist.\n"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nTo play audio in the background, press play after leaving the app—on the lock screen, in Control Center, or with your headphones."
+            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nTo continue playing audio in the background, make sure Settings → Playback → “Continue Audio in Background” is enabled."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video.\n\nPara reproducir audio en segundo plano, pulsa reproducir tras salir de la app — en la pantalla de bloqueo, en el centro de control o con tus auriculares."
+            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video.\n\nPara seguir reproduciendo el audio en segundo plano, asegúrate de que Configuración → Reproducción → “Continuar el audio en segundo plano” esté activado."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il existe plusieurs façons de démarrer le mode Picture-in-Picture (incrustation d'image) :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. À partir de là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture de la vidéo.\n\nPour lire l’audio en arrière-plan, appuyez sur lecture après avoir quitté l’app — sur l’écran verrouillé, dans le centre de contrôle ou avec vos écouteurs."
+            "value" : "Il existe plusieurs façons de démarrer le mode Picture-in-Picture (incrustation d'image) :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. À partir de là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture de la vidéo.\n\nPour continuer à lire l’audio en arrière-plan, assure-toi que Paramètres → Lecture → “Continuer l’audio en arrière-plan” est activé."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nAby odtwarzać dźwięk w tle, naciśnij play po wyjściu z aplikacji — na ekranie blokady, w centrum sterowania lub za pomocą słuchawek."
+            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nAby kontynuować odtwarzanie dźwięku w tle, upewnij się, że Ustawienia → Odtwarzanie → „Kontynuuj dźwięk w tle” jest włączone."
           }
         }
       }
