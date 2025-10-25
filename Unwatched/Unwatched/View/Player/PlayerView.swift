@@ -187,6 +187,9 @@ struct PlayerView: View {
         let landscapeFullscreen = SheetPositionReader.shared.landscapeFullscreen
         switch direction {
         case .up:
+            guard Const.swipeGestureUp.bool ?? true else {
+                return
+            }
             #if os(macOS)
             return
             #endif
@@ -200,6 +203,9 @@ struct PlayerView: View {
                 player.setShowMenu()
             }
         case .down:
+            guard Const.swipeGestureDown.bool ?? true else {
+                return
+            }
             #if os(macOS)
             return
             #endif
@@ -213,10 +219,16 @@ struct PlayerView: View {
                 player.setPip(true)
             }
         case .left:
+            guard Const.swipeGestureLeft.bool ?? true else {
+                return
+            }
             if !player.unstarted && player.goToNextChapter() {
                 overlayVM.show(.next)
             }
         case .right:
+            guard Const.swipeGestureRight.bool ?? true else {
+                return
+            }
             if !player.unstarted && player.goToPreviousChapter() {
                 overlayVM.show(.previous)
             }

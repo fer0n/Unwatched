@@ -68,6 +68,9 @@ struct SettingsView: View {
                     NavigationLink(value: LibraryDestination.userData) {
                         Label("userData", systemImage: Const.userDataSettingsSF)
                     }
+                    NavigationLink(value: LibraryDestination.privacy) {
+                        Label("privacyPolicy", systemImage: "checkmark.shield.fill")
+                    }
                 }
 
                 MySection("sendFeedback") {
@@ -105,11 +108,6 @@ struct SettingsView: View {
                 .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
                 .listRowInsets(EdgeInsets())
                 .foregroundStyle(theme.darkContrastColor)
-
-                NavigationLink(value: LibraryDestination.privacy) {
-                    Label("privacyPolicy", systemImage: "checkmark.shield.fill")
-                }
-                .listRowBackground(Color.insetBackgroundColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: Const.debugSettingsSF)

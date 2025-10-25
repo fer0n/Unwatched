@@ -9,6 +9,7 @@ import UnwatchedShared
 struct HideControlsSettings: View {
     @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
     @AppStorage(Const.minimalPlayerUI) var minimalPlayerUI: Bool = false
+
     @Environment(PlayerManager.self) var player
 
     var body: some View {

@@ -264,6 +264,10 @@ public struct Const {
     public static let enableQueueContextMenu = "enableQueueContextMenu"
     public static let disableCaptions = "disableCaptions"
     public static let minimalPlayerUI = "minimalPlayerUI"
+    public static let swipeGestureUp = "swipeGestureUp"
+    public static let swipeGestureDown = "swipeGestureDown"
+    public static let swipeGestureLeft = "swipeGestureLeft"
+    public static let swipeGestureRight = "swipeGestureRight"
 
     public static let automaticBackups = "automaticBackups"
     public static let lastAutoBackupDate = "lastAutoBackupDate"

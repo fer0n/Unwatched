@@ -15,7 +15,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
-    @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
 
@@ -86,6 +85,8 @@ struct PlaybackSettingsView: View {
 
                 HideControlsSettings()
 
+                SwipeGestureSettings()
+
                 TemporaryPlaybackSpeedSettings()
 
                 MySection(
@@ -106,15 +107,6 @@ struct PlaybackSettingsView: View {
                     }
                 }
                 #endif
-
-                MySection("youtube", footer: "useNoCookieUrlHelper") {
-                    Toggle(isOn: $useNoCookieUrl) {
-                        Text("useNoCookieUrl")
-                    }
-                    .onChange(of: useNoCookieUrl) { _, _ in
-                        PlayerManager.reloadPlayer()
-                    }
-                }
             }
             .myNavigationTitle("playback")
         }

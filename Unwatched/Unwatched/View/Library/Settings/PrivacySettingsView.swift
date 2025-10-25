@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct PrivacySettingsView: View {
     @AppStorage(Const.analytics) var analytics = true
+    @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
 
     var body: some View {
         ZStack {
@@ -18,6 +19,15 @@ struct PrivacySettingsView: View {
                     Text("privacyPolicy")
                 }
                 .listRowBackground(Color.insetBackgroundColor)
+
+                MySection(footer: "useNoCookieUrlHelper") {
+                    Toggle(isOn: $useNoCookieUrl) {
+                        Text("useNoCookieUrl")
+                    }
+                    .onChange(of: useNoCookieUrl) { _, _ in
+                        PlayerManager.reloadPlayer()
+                    }
+                }
 
                 #if os(iOS)
                 MySection(footer: "analyticsHelper") {

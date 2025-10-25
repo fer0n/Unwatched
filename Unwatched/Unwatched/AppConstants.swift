@@ -49,6 +49,12 @@ extension Const {
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
         Const.minimalPlayerUI: false,
+
+        Const.swipeGestureUp: true,
+        Const.swipeGestureDown: true,
+        Const.swipeGestureLeft: true,
+        Const.swipeGestureRight: true,
+
         Const.autoAirplayHD: false,
         Const.playBrowserVideosInApp: false,
 
