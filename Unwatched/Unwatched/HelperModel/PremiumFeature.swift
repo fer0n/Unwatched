@@ -40,10 +40,11 @@ enum PremiumFeatureLarge: String, CaseIterable {
 enum PremiumFeature: String, CaseIterable {
     case customTemporaryPlaybackSpeed,
          videoTitleFilter,
-         chapterFilter,
          playBrowserVideosInApp,
          seeVideoDuration,
-         generateChaptersFromTranscript
+         generateChaptersFromTranscript,
+         chapterFilter,
+         customTheme
 
     var title: String {
         switch self {
@@ -59,6 +60,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "seeVideoDurationTitle")
         case .generateChaptersFromTranscript:
             return String(localized: "generateChaptersFromTranscript")
+        case .customTheme:
+            return String(localized: "customTheme")
         }
     }
 
@@ -76,6 +79,8 @@ enum PremiumFeature: String, CaseIterable {
             return "clock.fill"
         case .generateChaptersFromTranscript:
             return "sparkles.2"
+        case .customTheme:
+            return "paintbrush.fill"
         }
     }
 }
