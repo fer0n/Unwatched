@@ -21,33 +21,17 @@ struct VideoListItemStatus: View {
     @ScaledMetric var size = 23
 
     var body: some View {
-        #if os(macOS)
-        if let statusInfo = videoStatusSystemName,
-           let status = statusInfo.status {
-            ZStack {
-                statusInfo.color
-                    .clipShape(Circle())
-
-                Image(systemName: status)
-                    .resizable()
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.white, statusInfo.color)
-            }
-            .frame(width: size, height: size)
-            .padding(2)
-            .accessibilityLabel("videoStatus")
-        }
-        #else
         if let statusInfo = videoStatusSystemName,
            let status = statusInfo.status {
             Image(systemName: status)
                 .resizable()
-                .symbolRenderingMode(.palette)
-                .foregroundStyle(.white, statusInfo.color)
+                .foregroundStyle(.white, statusInfo.color.myMix(with: .black, by: 0.1))
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
+                #if os(macOS)
+                .padding(2)
+            #endif
         }
-        #endif
     }
 
     var videoStatusSystemName: (status: String?, color: Color)? {
@@ -71,7 +55,7 @@ struct VideoListItemStatus: View {
                 return ("clock.circle.fill", .orange)
             }
             if watched == true {
-                return (Const.watchedSF, defaultColor)
+                return (Const.watchedSF, defaultColor.myMix(with: .black, by: 0.3))
             }
         }
         return nil
@@ -79,11 +63,36 @@ struct VideoListItemStatus: View {
 }
 
 #Preview {
-    VideoListItemStatus(
-        youtubeId: "id",
-        // hasInboxEntry: true,
-        // hasQueueEntry: true,
-        // watched: true,
-        deferred: true,
-        )
+    VStack {
+        VideoListItemStatus(
+            youtubeId: "id",
+            // hasInboxEntry: true,
+            // hasQueueEntry: true,
+            // watched: true,
+            deferred: true,
+            )
+        VideoListItemStatus(
+            youtubeId: "id",
+            // hasInboxEntry: true,
+            // hasQueueEntry: true,
+            watched: true,
+            // deferred: true,
+            )
+        VideoListItemStatus(
+            youtubeId: "id",
+            // hasInboxEntry: true,
+            hasQueueEntry: true,
+            // watched: true,
+            // deferred: true,
+            )
+        VideoListItemStatus(
+            youtubeId: "id",
+            hasInboxEntry: true,
+            // hasQueueEntry: true,
+            // watched: true,
+            // deferred: true,
+            )
+    }
+    .scaleEffect(4)
+    .environment(PlayerManager())
 }
