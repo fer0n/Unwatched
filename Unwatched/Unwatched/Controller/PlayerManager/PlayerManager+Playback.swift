@@ -321,10 +321,13 @@ extension PlayerManager {
 
     @MainActor
     var videoIsCloseToEnd: Bool {
-        guard let duration = video?.duration, let time = currentTime else {
+        guard let duration = video?.duration,
+              let time = currentTime else {
             return false
         }
-        return duration - time <= Const.secondsConsideredCloseToEnd
+        let remainingTime = duration - time
+        // live streams may have an incorrect duration, remaining time shouldn't be too far off
+        return remainingTime <= Const.secondsConsideredCloseToEnd && remainingTime > -10
     }
 
     @MainActor
