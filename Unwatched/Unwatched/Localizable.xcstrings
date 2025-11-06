@@ -10630,6 +10630,108 @@
         }
       }
     },
+    "offlineDownloadsFaqA" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leider verstößt das gegen die Nutzungsbedingungen von YouTube und würde wahrscheinlich dazu führen, dass Unwatched aus dem App Store entfernt wird."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadly, this is against YouTube’s Terms of Service and would likely result in Unwatched being removed from the App Store."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lamentablemente, esto va en contra de los Términos de servicio de YouTube y probablemente haría que Unwatched fuera eliminado de la App Store."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Malheureusement, cela va à l’encontre des conditions d’utilisation de YouTube et entraînerait probablement la suppression de Unwatched de l’App Store."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niestety, jest to sprzeczne z warunkami korzystania z YouTube i prawdopodobnie spowodowałoby usunięcie Unwatched ze sklepu App Store."
+          }
+        }
+      }
+    },
+    "offlineDownloadsFaqQ" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kann ich Videos herunterladen, um sie offline anzusehen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can I download videos to view them offline?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Puedo descargar videos para verlos sin conexión?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puis-je télécharger des vidéos pour les regarder hors ligne ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Czy mogę pobierać filmy, aby oglądać je offline?"
+          }
+        }
+      }
+    },
+    "offlineDownloadsFaqT" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline-Downloads"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline Downloads"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descargas sin conexión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Téléchargements hors ligne"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pobieranie offline"
+          }
+        }
+      }
+    },
     "onPlaySettings" : {
       "localizations" : {
         "de" : {

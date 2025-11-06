@@ -34,6 +34,11 @@ struct FaqView: View {
             "durationMissingFaqA"
         ),
         FaqInfo(
+            "offlineDownloadsFaqT",
+            "offlineDownloadsFaqQ",
+            "offlineDownloadsFaqA"
+        ),
+        FaqInfo(
             "notAllVideosFaqT",
             "notAllVideosFaqQ",
             "notAllVideosFaqA"
