@@ -7,7 +7,7 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
-struct BackupView: View {
+struct UserDataSettingsView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
 
@@ -27,6 +27,10 @@ struct BackupView: View {
             Color.backgroundColor.ignoresSafeArea(.all)
 
             MyForm {
+                CloudSyncSetting()
+
+                CleanupDuplicatesView()
+
                 BackupSettings()
 
                 MySection {
@@ -327,7 +331,7 @@ struct AsyncSharableFile: Transferable {
 }
 
 #Preview {
-    BackupView()
+    UserDataSettingsView()
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager())
         .environment(PlayerManager())

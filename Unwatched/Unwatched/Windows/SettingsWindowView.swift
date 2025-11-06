@@ -46,7 +46,7 @@ struct SettingsWindowView: View {
             }
 
             ScrollView {
-                BackupView()
+                UserDataSettingsView()
                     .settingsView()
                     .padding(.vertical)
             }

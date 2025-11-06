@@ -7,19 +7,15 @@ import SwiftUI
 import UnwatchedShared
 
 struct DebugView: View {
+    @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
+    @AppStorage(Const.showTutorial) var showTutorial: Bool = true
+
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
     #if os(iOS)
     @Environment(Alerter.self) var alerter
     #endif
-
-    @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
-
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.showTutorial) var showTutorial: Bool = true
-
-    @State var cleanupInfo: RemovedDuplicatesInfo?
 
     var body: some View {
         ZStack {
@@ -43,28 +39,6 @@ struct DebugView: View {
                 }
 
                 DebugLoggerView()
-
-                MySection("userData") {
-                    AsyncButton {
-                        let task = CleanupService.cleanupDuplicatesAndInboxDate(videoOnly: false)
-                        cleanupInfo = await task.value
-                    } label: {
-                        Text("removeDuplicates")
-                    }
-                    .tint(theme.color)
-
-                    if let info = cleanupInfo {
-                        Text("""
-                        removedDuplicates
-                        \(info.countVideos)
-                        \(info.countQueueEntries)
-                        \(info.countInboxEntries)
-                        \(info.countChapters)
-                        \(info.countSubscriptions)
-                        """)
-                            .foregroundStyle(.secondary)
-                    }
-                }
             }
         }
         #if os(iOS)

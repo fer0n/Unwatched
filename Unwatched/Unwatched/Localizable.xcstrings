@@ -12296,6 +12296,40 @@
         }
       }
     },
+    "removeDuplicatesHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In manchen Fällen kann die Synchronisierung zu Duplikaten führen. Verwende das hier, um sie zu bereinigen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In some cases, sync can lead to duplicates. Use this to clean them up."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En algunos casos, la sincronización puede generar duplicados. Usa esto para eliminarlos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans certains cas, la synchronisation peut entraîner des doublons. Utilise ceci pour les supprimer."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W niektórych przypadkach synchronizacja może prowadzić do duplikatów. Użyj tego, aby je usunąć."
+          }
+        }
+      }
+    },
     "removeIsNew" : {
       "localizations" : {
         "de" : {

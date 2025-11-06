@@ -23,7 +23,7 @@ extension View {
                     case .settings:
                         SettingsView()
                     case .userData:
-                        BackupView()
+                        UserDataSettingsView()
                     case .bookmarkedVideos:
                         BookmarkedVideosView()
                     case .importSubscriptions:
