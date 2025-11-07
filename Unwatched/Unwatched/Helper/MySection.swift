@@ -47,10 +47,10 @@ struct MySection<Content: View>: View {
     var body: some View {
         #if os(iOS)
         iosSection
-            .listRowSeparatorTint(Color.automaticBlack.opacity(0.05))
+            .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
         #else
         macosSection
-            .listRowSeparatorTint(Color.automaticBlack.opacity(0.05))
+            .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
         #endif
     }
 
