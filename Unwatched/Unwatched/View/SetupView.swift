@@ -10,7 +10,6 @@ import OSLog
 import UnwatchedShared
 
 struct SetupView: View {
-    @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     @Environment(RefreshManager.self) var refresher
@@ -19,7 +18,7 @@ struct SetupView: View {
     @Environment(\.openWindow) var openWindow
 
     @State var browserManager = BrowserManager.shared
-    #if os(macOS)
+    #if os(macOS) || os(visionOS)
     @State var navTitleManager = NavigationTitleManager()
     #endif
     @State var imageCacheManager = ImageCacheManager.shared
@@ -29,7 +28,10 @@ struct SetupView: View {
 
     var body: some View {
         ContentView()
-            .tint(theme.color)
+            #if os(visionOS)
+            .modifier(UpdateWindowSizeModifier())
+            #endif
+            .myTint()
             .environment(sheetPos)
             .watchNotificationHandler()
             .environment(navManager)
@@ -38,7 +40,7 @@ struct SetupView: View {
             .environment(undoManager)
             .environment(browserManager)
             .modifier(CustomAlerter())
-            #if os(macOS)
+            #if os(macOS) || os(visionOS)
             .environment(navTitleManager)
             #endif
             .onOpenURL { url in

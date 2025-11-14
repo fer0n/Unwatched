@@ -17,7 +17,7 @@ public extension Color {
         
         let clampedPercentage = min(max(percentage, 0), 1)
 
-        #if os(iOS) || os(tvOS)
+        #if os(iOS) || os(tvOS) || os(visionOS)
         let components1 = UIColor(self).cgColor.components!
         let components2 = UIColor(color).cgColor.components!
         #elseif os(macOS)

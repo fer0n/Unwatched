@@ -6,6 +6,19 @@
 import SwiftUI
 import UnwatchedShared
 
+extension FullscreenSpeedControlContent {
+    struct Values {
+        #if os(visionOS)
+        static let height: CGFloat = 15
+        #else
+        static let height: CGFloat = 10
+        #endif
+
+        static let padding: CGFloat = 20
+        static let frameHeight: CGFloat = padding * 2 + height
+    }
+}
+
 struct FullscreenSpeedControlContent: View {
     let value: Double
     let onChange: (Double) -> Void
@@ -22,13 +35,13 @@ struct FullscreenSpeedControlContent: View {
                     id: \.offset
                 ) { index, speed in
                     Text(verbatim: speed)
-                        .font(.system(size: 18))
-                        .fontWidth(.compressed)
-                        .fontWeight(.bold)
                         .fixedSize()
                         .id(index)
                 }
-                .frame(height: 10)
+                .font(.system(size: 18))
+                .frame(height: Values.height)
+                .fontWidth(.compressed)
+                .fontWeight(.bold)
             }
             .scrollTargetLayout()
         }
@@ -45,11 +58,11 @@ struct FullscreenSpeedControlContent: View {
             old != nil
         }
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.vertical, 20)
+        .safeAreaPadding(.vertical, Values.padding)
         .scrollPosition(id: $viewModel.currentPage, anchor: .center)
         .scrollIndicators(.never)
         .mask(viewModel.mask)
-        .frame(width: 50, height: 50)
+        .frame(width: 50, height: Values.frameHeight)
         .frame(width: viewModel.isScrolling ? nil : 22, height: viewModel.isScrolling ? nil : 22)
         .frame(width: 30, height: 30)
         .onChange(of: viewModel.currentPage) { old, _ in
@@ -144,7 +157,7 @@ extension FullscreenSpeedControlContent {
 
         static let speeds: [Double] = Const.speeds.reversed()
         static let formattedSpeeds: [String] = speeds.map { speed in
-            let speedText = SpeedControlViewModel.formatSpeed(speed)
+            let speedText = SpeedHelper.formatSpeed(speed)
             return "\(speedText)\(speedText.count <= 1 ? "×" : "")"
         }
         static let formattedSpeedsEnumerated: [(offset: Int, element: String)] = Array(formattedSpeeds.enumerated())
@@ -165,4 +178,14 @@ extension View {
             return self
         }
     }
+}
+
+#Preview {
+    FullscreenSpeedControlContent(
+        value: 1,
+        onChange: { _ in },
+        triggerInteraction: { },
+        isInteracting: .constant(false)
+    )
+    .testEnvironments()
 }

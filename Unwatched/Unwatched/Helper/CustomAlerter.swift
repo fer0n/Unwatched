@@ -22,6 +22,7 @@ struct CustomAlerter: ViewModifier {
                 .fixedSize()
                 .padding(.horizontal, 20)
                 .padding(.vertical, 30)
+                #if !os(visionOS)
                 .apply {
                     if #available(iOS 26, macOS 26, *) {
                         $0
@@ -34,6 +35,7 @@ struct CustomAlerter: ViewModifier {
                             .background(Color.insetBackgroundColor)
                     }
                 }
+                #endif
                 .opacity(alerter.showPremium ? 1 : 0)
                 .scaleEffect(alerter.showPremium ? 1 : 0.9)
                 .animation(.default, value: alerter.showPremium)

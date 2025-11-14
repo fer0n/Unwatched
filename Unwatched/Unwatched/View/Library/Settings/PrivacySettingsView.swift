@@ -12,13 +12,13 @@ struct PrivacySettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             Form {
                 Link(destination: UrlService.privacyUrl) {
                     Text("privacyPolicy")
                 }
-                .listRowBackground(Color.insetBackgroundColor)
+                .myListInsetBackground()
 
                 MySection(footer: "useNoCookieUrlHelper") {
                     Toggle(isOn: $useNoCookieUrl) {

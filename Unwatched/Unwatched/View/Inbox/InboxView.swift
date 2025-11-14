@@ -9,7 +9,6 @@ import OSLog
 import UnwatchedShared
 
 struct InboxView: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
 
     @Environment(\.modelContext) var modelContext
@@ -112,7 +111,7 @@ struct InboxView: View {
             .inboxToolbar(showCancelButton)
             .myNavigationTitle("inbox")
             .sendableSubscriptionDestination()
-            .tint(theme.color)
+            .myTint()
         }
         .tint(.neutralAccentColor)
     }

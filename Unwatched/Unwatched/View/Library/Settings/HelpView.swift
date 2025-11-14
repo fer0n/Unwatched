@@ -10,13 +10,14 @@ struct HelpView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             MyForm {
                 MySection(footer: "pleaseCheckFaq") {
                     Link(destination: UrlService.getEmailUrl(body: Device.versionInfo)) {
                         LibraryNavListItem("contactUs", systemName: Const.contactMailSF)
                     }
+                    .visionForegroundColor()
                 }
 
                 MySection("frequentlyAskedQuestions") {

@@ -55,6 +55,9 @@ struct PlayerEmbedded: View {
                             }
                     }
                 }
+                #if os(visionOS)
+                .modifier(PlayerGestureOverlay())
+                #endif
                 .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                 .clipShape(RoundedRectangle(
                             cornerRadius: Const.videoPlayerCornerRadius,

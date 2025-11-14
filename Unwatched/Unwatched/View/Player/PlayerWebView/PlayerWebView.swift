@@ -8,7 +8,7 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 typealias PlatformViewRepresentable = UIViewRepresentable
 #elseif os(macOS)
 typealias PlatformViewRepresentable = NSViewRepresentable
@@ -38,7 +38,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         webViewConfig.preferences.isTextInteractionEnabled = false
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
 
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.allowsInlineMediaPlayback = !(Const.playVideoFullscreen.bool ?? false)
         #endif
@@ -55,8 +55,13 @@ struct PlayerWebView: PlatformViewRepresentable {
         webView.configuration.userContentController.add(coordinator, name: "iosListener")
 
         #if os(iOS)
-        webView.scrollView.delegate = coordinator
+        // on visionOS, this causes the web content to be zoomed in to much
+        // when the window is large enough during page reload
         webView.backgroundColor = UIColor.systemBackground
+        #endif
+
+        #if os(iOS) || os(visionOS)
+        webView.scrollView.delegate = coordinator
         webView.isOpaque = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         #else
@@ -109,7 +114,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     func updateNSView(_ view: WKWebView, context: Context) {
         updateView(view)
     }
-    #elseif os(iOS)
+    #elseif os(iOS) || os(visionOS)
 
     func makeUIView(context: Context) -> WKWebView {
         makeView(context.coordinator)

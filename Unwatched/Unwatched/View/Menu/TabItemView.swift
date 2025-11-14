@@ -16,7 +16,7 @@ struct TabItemViewModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         if show {
-            #if os(macOS)
+            #if os(macOS) || os(visionOS)
             content
                 .tabItem {
                     image

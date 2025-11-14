@@ -206,7 +206,7 @@ extension PlayerWebViewCoordinator {
     }
 
     func handleInteraction() {
-        parent.autoHideVM.setShowControls()
+        parent.autoHideVM.handlePlayerInteraction()
     }
 
     func handleOverlay(_ payload: String?) {

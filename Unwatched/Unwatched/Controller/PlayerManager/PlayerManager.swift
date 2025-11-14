@@ -426,7 +426,7 @@ extension PlayerManager {
                 sheetPos.setDetentVideoPlayer()
             }
         }
-        if Device.isIpad {
+        if Device.isIpad || Device.isVision {
             UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         }
         NavigationManager.shared.showMenu = true

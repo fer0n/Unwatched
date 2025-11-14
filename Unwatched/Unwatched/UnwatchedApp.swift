@@ -10,7 +10,7 @@ import UnwatchedShared
 
 @main
 struct UnwatchedApp: App {
-    #if os(iOS)
+    #if os(iOS) || os(visionOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #else
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -38,6 +38,7 @@ struct UnwatchedApp: App {
                     appDelegate.handleAppear()
                     #endif
                 }
+
                 #if os(macOS)
                 .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
             #endif

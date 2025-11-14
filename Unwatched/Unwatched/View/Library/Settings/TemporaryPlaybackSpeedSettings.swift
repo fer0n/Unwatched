@@ -36,7 +36,7 @@ struct TemporaryPlaybackSpeedSettings: View {
     }
 
     func format(_ speed: Double) -> String {
-        SpeedControlViewModel.formatSpeed(speed) + "×"
+        SpeedHelper.formatSpeed(speed) + "×"
     }
 
     var speeds: [Double] {

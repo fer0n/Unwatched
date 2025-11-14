@@ -37,7 +37,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
             let webViewConfig = WKWebViewConfiguration()
             webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
 
-            #if os(iOS)
+            #if os(iOS) || os(visionOS)
             webViewConfig.allowsPictureInPictureMediaPlayback = true
             webViewConfig.allowsInlineMediaPlayback = true
             #endif
@@ -59,7 +59,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         webView.navigationDelegate = coordinator
         webView.uiDelegate = coordinator
 
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         webView.backgroundColor = UIColor(Color.youtubeWebBackground)
         webView.isOpaque = false
         #endif
@@ -79,7 +79,7 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     func updateNSView(_ view: WKWebView, context: Context) {
         updateView(view)
     }
-    #elseif os(iOS)
+    #elseif os(iOS) || os(visionOS)
 
     func makeUIView(context: Context) -> WKWebView {
         makeView(context.coordinator)

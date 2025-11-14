@@ -9,7 +9,7 @@ import UnwatchedShared
 extension View {
     func videoListItemEntry() -> some View {
         self
-            #if os(iOS)
+            #if os(iOS) || os(visionOS)
             .listRowInsets(.init(
                 top: 5,
                 leading: 10,
@@ -27,8 +27,19 @@ extension View {
             #endif
             .listRowSeparator(.hidden)
             .contentShape(
-                .dragPreview,
+                kinds,
                 RoundedRectangle(cornerRadius: Const.videoCornerRadius + 5)
             )
+            #if os(visionOS)
+            .hoverEffect()
+        #endif
+    }
+
+    private var kinds: ContentShapeKinds {
+        #if os(visionOS)
+        [.dragPreview, .hoverEffect]
+        #else
+        .dragPreview
+        #endif
     }
 }

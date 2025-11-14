@@ -33,5 +33,8 @@ struct BrowserViewHeader: View {
         .accessibilityLabel("close")
         .keyboardShortcut(.escape, modifiers: [])
         .foregroundStyle(Color.neutralAccentColor)
+        #if os(visionOS)
+        .buttonStyle(.plain)
+        #endif
     }
 }

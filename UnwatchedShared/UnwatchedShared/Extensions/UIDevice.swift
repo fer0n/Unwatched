@@ -65,6 +65,7 @@ public struct Device {
             return UIDevice.current.name
         }
     }()
+    public static let isVision: Bool = false
 
     #elseif os(macOS)
     public static let systemVersion = "macOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
@@ -73,6 +74,7 @@ public struct Device {
     public static let requiresFullscreenWebWorkaround: Bool = false
     public static let isMac: Bool = true
     public static let isIpad: Bool = false
+    public static let isVision: Bool = false
 
     public static let deviceName: String = {
         Host.current().localizedName ?? "Mac"
@@ -81,6 +83,19 @@ public struct Device {
     #elseif os(tvOS)
     public static let isIphone: Bool = false
     public static let systemVersion = "tvOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
+    public static let isVision: Bool = false
+    #elseif os(visionOS)
+    public static let systemVersion = "visionOS \(ProcessInfo.processInfo.operatingSystemVersionString)"
+    public static let isIphone: Bool = false
+    public static let supportsFullscreenControls: Bool = true
+    public static let requiresFullscreenWebWorkaround: Bool = false
+    public static let isMac: Bool = false
+    public static let isIpad: Bool = false
+    public static let isVision: Bool = true
+    
+    public static let deviceName: String = {
+        "Apple Vision Pro"
+    }()
     #endif
 
     @MainActor
@@ -102,6 +117,8 @@ public struct Device {
         return "Mac"
         #elseif os(tvOS)
         return "Apple TV"
+        #elseif os(visionOS)
+        return "Apple Vision Pro"
         #endif
     }()
 }

@@ -38,14 +38,17 @@ struct AddToLibraryView: View {
                         .foregroundStyle(Color.neutralAccentColor)
                 } icon: {
                     Image(systemName: Const.youtubeSF)
-                        .tint(theme.color)
                         .fontWeight(.black)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             })
+            #if os(visionOS)
+            .foregroundStyle(.primary)
+            #else
             .foregroundStyle(theme.color)
             .buttonStyle(.plain)
+            #endif
         }
 
         HStack(spacing: 0) {
@@ -65,7 +68,7 @@ struct AddToLibraryView: View {
             UrlService.open(UrlService.shareShortcutUrl)
             addVideosTip.invalidate(reason: .actionPerformed)
         })
-        .tint(theme.color)
+        .myTint()
         .onSubmit {
             handleTextFieldSubmit()
         }
@@ -157,7 +160,7 @@ struct AddToLibraryView: View {
         }
         .buttonBorderShape(.capsule)
         .labelStyle(.iconOnly)
-        .tint(theme.color)
+        .myTint()
         .disabled(subManager.isLoading)
     }
 

@@ -14,7 +14,9 @@ struct SendableSubscriptionDestination: ViewModifier {
         content
             .navigationDestination(for: SendableSubscription.self) { sub in
                 SendableSubscriptionDetailView(sub, modelContext)
+                    #if !os(visionOS)
                     .foregroundStyle(Color.neutralAccentColor)
+                    #endif
                     #if os(macOS)
                     .navigationStackWorkaround()
                 #endif

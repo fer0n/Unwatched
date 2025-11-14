@@ -31,7 +31,16 @@ extension View {
 extension View {
     /// Applies background color except on macOS 26
     func myListRowBackground() -> some View {
-        self.listRowBackground(Const.macOS26 ? .clear : Color.backgroundColor)
+        self.listRowBackground(Const.macOS26 || Device.isVision
+                                ? .clear
+                                : Color.backgroundColor)
+    }
+
+    func myListInsetBackground() -> some View {
+        self
+            #if !os(visionOS)
+            .listRowBackground(Color.insetBackgroundColor)
+        #endif
     }
 
     /// On macOS 26, having the tabView inside the sidebar sometimes leads to the content not being clipped properly
@@ -48,5 +57,24 @@ extension View {
         #else
         self
         #endif
+    }
+}
+
+extension View {
+    func testEnvironments() -> some View {
+        self
+            .modelContainer(DataProvider.previewContainer)
+            .environment(NavigationManager.getDummy(true))
+            .environment(Alerter())
+            .environment(PlayerManager.getDummy())
+            .environment(ImageCacheManager())
+            .environment(RefreshManager())
+            .environment(SheetPositionReader.shared)
+            .environment(TinyUndoManager())
+            .modifier(CustomAlerter())
+            #if os(macOS) || os(visionOS)
+            .environment(NavigationTitleManager())
+            #endif
+            .appNotificationOverlay()
     }
 }

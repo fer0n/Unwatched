@@ -291,7 +291,7 @@ struct UrlService {
 
     @MainActor
     static func open(_ url: URL) {
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         UIApplication.shared.open(url)
         #else
         NSWorkspace.shared.open(url)
@@ -309,7 +309,7 @@ struct UrlService {
     }
 
     static func pathOnly(_ url: URL?) -> String? {
-        guard let url, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+        guard let url, let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return url?.absoluteString
         }
         return components.path + (components.query ?? "")

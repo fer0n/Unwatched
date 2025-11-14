@@ -100,6 +100,7 @@ struct PlayButton: View {
                 .foregroundStyle(.automaticWhite, .automaticBlack)
                 .fontWeight(.black)
         }
+        #if !os(visionOS)
         .apply {
             if #available(iOS 26.0, macOS 26.0, *) {
                 $0.glassEffect(in: Circle())
@@ -107,6 +108,7 @@ struct PlayButton: View {
                 $0
             }
         }
+        #endif
     }
 }
 

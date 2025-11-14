@@ -15,7 +15,7 @@ struct BrowserViewSheet: ViewModifier {
     func body(content: Content) -> some View {
         let bigScreen = sizeClass == .regular && !Device.isIphone
 
-        if bigScreen {
+        if bigScreen && !Device.isVision {
             content
                 #if os(iOS)
                 .fullScreenCover(isPresented: navManager.showBrowser) {
@@ -28,8 +28,7 @@ struct BrowserViewSheet: ViewModifier {
         } else {
             content
                 .sheet(isPresented: navManager.showBrowser) {
-                    BrowserView()
-                        .environment(\.colorScheme, colorScheme)
+                    BrowserView(showHeader: !Device.isVision)
                 }
         }
     }

@@ -7,8 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct DescriptionDetailView: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-
     var description: String?
 
     var body: some View {
@@ -21,7 +19,7 @@ struct DescriptionDetailView: View {
             }
         }
         .textSelection(.enabled)
-        .tint(theme.color)
+        .myTint()
     }
 }
 
@@ -47,6 +45,7 @@ struct DescriptionDetailHeaderView: View {
                 .multilineTextAlignment(.leading)
         }
         .buttonStyle(.plain)
+        .buttonBorderShape(.roundedRectangle(radius: 10))
         .contextMenu {
             CopyUrlOptions(asSection: true, video: video, onSuccess: {
                 hapticToggle.toggle()

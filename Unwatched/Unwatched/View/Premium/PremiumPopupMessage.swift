@@ -50,23 +50,33 @@ struct PremiumPopupMessage: View {
         .fixedSize()
         .padding(.horizontal, 20)
         .padding(.vertical, 25)
+        #if os(visionOS)
+        .viewBackground()
+        #else
         .apply {
-            if #available(iOS 26, macOS 26, *) {
-                $0
-                    .glassEffect(in: clipShape)
-                    .glassEffectTransition(.materialize )
-            } else {
-                $0
-                    .background(Color.insetBackgroundColor)
-                    .clipShape(clipShape)
-                    .shadow(radius: 10)
-            }
+        if #available(iOS 26, macOS 26, *) {
+        $0
+        .glassEffect(in: PremiumPopupMessage.clipShape)
+        .glassEffectTransition(.materialize )
+        } else {
+        $0.viewBackground()
         }
+        }
+        #endif
         .tint(theme.darkColor)
     }
 
-    var clipShape: some Shape {
+    static var clipShape: some Shape {
         RoundedRectangle(cornerRadius: 40, style: .continuous)
+    }
+}
+
+private extension View {
+    func viewBackground() -> some View {
+        self
+            .background(Color.insetBackgroundColor)
+            .clipShape(PremiumPopupMessage.clipShape)
+            .shadow(radius: 10)
     }
 }
 

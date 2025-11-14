@@ -18,15 +18,21 @@ struct SubscriptionInfoDetails: View {
     @Binding var requiresUnsubscribe: Bool
     @Binding var showFilter: Bool
 
+    #if os(visionOS)
+    let padding: CGFloat = 0
+    #else
     let padding: CGFloat = 15
+    #endif
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            #if !os(visionOS)
             Text(subscription.title)
                 .font(.system(size: 42))
                 .fontWidth(.condensed)
                 .fontWeight(.heavy)
                 .padding(.horizontal, padding)
+            #endif
 
             headerDetails
 

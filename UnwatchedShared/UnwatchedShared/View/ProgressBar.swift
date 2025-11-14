@@ -22,7 +22,11 @@ struct ProgressBar: View {
         VStack(spacing: 0) {
             Spacer()
             ZStack(alignment: .bottomLeading) {
+                #if os(visionOS)
+                Color.primary.opacity(0.6)
+                #else
                 Color.clear.overlay(.thinMaterial)
+                #endif
                 HStack(spacing: 0) {
                     (color ?? theme.color)
                         .frame(width: width ?? 0)

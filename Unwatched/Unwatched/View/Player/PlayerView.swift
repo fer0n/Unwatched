@@ -108,11 +108,13 @@ struct PlayerView: View {
             }
         }
         .dateSelectorSheet()
+        #if !os(visionOS)
         .persistentSystemOverlays(
             landscapeFullscreen || controlsHidden
                 ? .hidden
                 : .visible
         )
+        #endif
     }
 
     var showLeft: Bool {
@@ -192,6 +194,9 @@ struct PlayerView: View {
             }
             #if os(macOS)
             return
+            #elseif os(visionOS)
+            PlayerManager.shared.tempSpeedChange(faster: true)
+            return
             #endif
             if enableHideControls {
                 hideControlsFullscreen = true
@@ -208,6 +213,9 @@ struct PlayerView: View {
             }
             #if os(macOS)
             return
+            #elseif os(visionOS)
+            PlayerManager.shared.tempSpeedChange()
+            return
             #endif
             if enableHideControls && hideControlsFullscreen {
                 hideControlsFullscreen = false
@@ -222,6 +230,12 @@ struct PlayerView: View {
             guard Const.swipeGestureLeft.bool ?? true else {
                 return
             }
+            #if os(visionOS)
+            if PlayerManager.shared.seekForward() {
+                OverlayFullscreenVM.shared.show(.seekForward)
+            }
+            return
+            #endif
             if !player.unstarted && player.goToNextChapter() {
                 overlayVM.show(.next)
             }
@@ -229,6 +243,12 @@ struct PlayerView: View {
             guard Const.swipeGestureRight.bool ?? true else {
                 return
             }
+            #if os(visionOS)
+            if PlayerManager.shared.seekBackward() {
+                OverlayFullscreenVM.shared.show(.seekBackward)
+            }
+            return
+            #endif
             if !player.unstarted && player.goToPreviousChapter() {
                 overlayVM.show(.previous)
             }

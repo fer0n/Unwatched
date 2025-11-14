@@ -36,8 +36,10 @@ struct TitleFilterContent: View {
                 #endif
             }
             .padding()
+            #if !os(visionOS)
             .background(Color.insetBackgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 20))
+            #endif
 
             Text("videoTitleFilterFooter")
                 .foregroundColor(.secondary)
@@ -45,8 +47,11 @@ struct TitleFilterContent: View {
                 .padding(.horizontal)
                 .padding(.bottom, 15)
         }
-        .listRowSeparator(.hidden)
+        #if os(visionOS)
+        .hoverEffect(.empty)
         .myListRowBackground()
+        #endif
+        .listRowSeparator(.hidden)
         .requiresPremium(filterText.isEmpty)
         .task {
             updateFilterStrings()

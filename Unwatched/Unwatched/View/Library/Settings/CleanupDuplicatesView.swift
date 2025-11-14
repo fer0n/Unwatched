@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct CleanupDuplicatesView: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @State var cleanupInfo: RemovedDuplicatesInfo?
 
     var body: some View {
@@ -21,7 +20,7 @@ struct CleanupDuplicatesView: View {
             } label: {
                 Text("removeDuplicates")
             }
-            .tint(theme.color)
+            .myTint()
 
             if let info = cleanupInfo {
                 Text("""

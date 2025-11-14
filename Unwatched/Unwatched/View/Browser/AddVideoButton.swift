@@ -52,16 +52,20 @@ struct AddVideoButton: View {
                 .frame(width: size * 2, height: size * 2)
                 .symbolRenderingMode(.palette)
         }
+        #if os(visionOS)
+        .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
+        #else
         .apply {
-            if #available(iOS 26.0, macOS 26.0, *) {
-                $0
-                    .foregroundStyle(.primary, Color.clear)
-                    .glassEffect(.regular.interactive())
-            } else {
-                $0
-                    .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
-            }
+        if #available(iOS 26.0, macOS 26.0, *) {
+        $0
+        .foregroundStyle(.primary, Color.clear)
+        .glassEffect(.regular.interactive())
+        } else {
+        $0
+        .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
         }
+        }
+        #endif
         .buttonStyle(.plain)
     }
 
@@ -138,24 +142,32 @@ struct AddVideoButton: View {
 private extension View {
     func myButtonStyle(_ size: Double) -> some View {
         self
+            #if os(visionOS)
+            .viewBackground(size)
+            #else
             .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                    $0
-                        .frame(width: size * 2, height: size * 2)
-                        .glassEffect(.regular.interactive())
-                        .foregroundStyle(.primary)
-                } else {
-                    $0
-                        .background {
-                            Circle()
-                                .fill(Color.neutralAccentColor)
-                                .frame(width: size * 2, height: size * 2)
-
-                        }
-                        .foregroundStyle(Color.backgroundColor)
-                }
+            if #available(iOS 26.0, macOS 26.0, *) {
+            $0
+            .frame(width: size * 2, height: size * 2)
+            .glassEffect(.regular.interactive())
+            .foregroundStyle(.primary)
+            } else {
+            $0.viewBackground(size)
             }
+            }
+            #endif
             .contentShape(Rectangle())
+    }
+
+    func viewBackground(_ size: Double) -> some View {
+        self
+            .background {
+                Circle()
+                    .fill(Color.neutralAccentColor)
+                    .frame(width: size * 2, height: size * 2)
+
+            }
+            .foregroundStyle(Color.backgroundColor)
     }
 }
 

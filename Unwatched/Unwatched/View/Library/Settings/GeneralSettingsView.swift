@@ -18,7 +18,7 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             MyForm {
                 MySection {

@@ -117,6 +117,9 @@ struct IOSSPlitView: View {
                             : .offset(y: proxy.size.height * 0.4 + proxy.safeAreaInsets.bottom)
                     )
                     .environment(\.layoutDirection, .leftToRight)
+                    #if os(visionOS)
+                    .background(.regularMaterial)
+                #endif
             }
         }
         .environment(\.layoutDirection, .rightToLeft)
@@ -128,12 +131,24 @@ struct IOSSPlitView: View {
 
     var layout: AnyLayout {
         isLandscape
-            ? AnyLayout(HStackLayout(spacing: 3))
+            ? AnyLayout(HStackLayout(spacing: horizontalSpacing))
             : AnyLayout(VStackLayout())
     }
 
+    var horizontalSpacing: Double {
+        #if os(visionOS)
+        0
+        #else
+        3
+        #endif
+    }
+
     var sidebarWidth: Double {
+        #if os(visionOS)
+        400
+        #else
         dynamicTypeSize >= .accessibility1 ? 410 : 360
+        #endif
     }
 
     var limitWidth: Bool {

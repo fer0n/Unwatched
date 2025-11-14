@@ -23,9 +23,9 @@ struct SubscriptionSpeedSetting: View {
         } label: {
             var text: String = ""
             if let custom = subscription.customSpeedSetting {
-                text = "\(SpeedControlViewModel.formatSpeed(custom))×"
+                text = "\(SpeedHelper.formatSpeed(custom))×"
             } else {
-                text = String(localized: "defaultSpeed\(SpeedControlViewModel.formatSpeed(player.defaultPlaybackSpeed))")
+                text = String(localized: "defaultSpeed\(SpeedHelper.formatSpeed(player.defaultPlaybackSpeed))")
             }
             return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
         }
@@ -58,6 +58,12 @@ struct SubscriptionSpeedSetting: View {
                     }
                 )
 
+                #if os(visionOS)
+                CombinedPlaybackSpeedSettingVision(
+                    selectedSpeed: selectedSpeed,
+                    isOn: isOn
+                )
+                #else
                 CombinedPlaybackSpeedSetting(
                     selectedSpeed: selectedSpeed,
                     isOn: isOn,
@@ -66,6 +72,7 @@ struct SubscriptionSpeedSetting: View {
                     isTransparent: true
                 )
                 .padding(.horizontal)
+                #endif
             }
             .presentationCompactAdaptation(.popover)
             .frame(minWidth: 300, maxWidth: .infinity)
@@ -82,7 +89,7 @@ struct SubscriptionSpeedSetting: View {
             }
             #endif
         }
-        .tint(theme.color)
+        .myTint()
     }
 }
 

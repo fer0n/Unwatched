@@ -9,7 +9,7 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 struct NotificationManager {
 
     static func notifyNewVideos(_ newVideoInfo: NewVideosNotificationInfo) async {
@@ -106,11 +106,15 @@ struct NotificationManager {
     }
 
     private static func getNotificationAttachments(_ info: NotificationInfo) -> UNNotificationAttachment? {
+        #if os(visionOS)
+        return nil
+        #else
         if let imageData = info.video?.thumbnailData {
             let attachement = UNNotificationAttachment.create(identifier: "key", imageData: imageData)
             return attachement
         }
         return nil
+        #endif
     }
 
     static func notifyRun(_ status: DebugNotificationStatus, _ message: String? = nil) {

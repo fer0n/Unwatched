@@ -68,6 +68,8 @@
 		8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */; };
 		88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
 		88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3D2B99D97900F048C3 /* CleanupService.swift */; };
+		88190EF52EC235EE00C1C321 /* MyTint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190EF42EC235EE00C1C321 /* MyTint.swift */; };
+		88190EF62EC235EE00C1C321 /* MyTint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190EF42EC235EE00C1C321 /* MyTint.swift */; };
 		881942A22C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */; };
 		881942A32C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */; };
 		881964F32CCA449E0084ADE4 /* VideoListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881964F22CCA449A0084ADE4 /* VideoListVM.swift */; };
@@ -160,6 +162,10 @@
 		884069D82D7A290D00814A72 /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884069D62D7A290D00814A72 /* SearchField.swift */; };
 		88415BEA2C50E1D50072778F /* ExportableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88415BE92C50E1D50072778F /* ExportableTests.swift */; };
 		88415BFD2C50EB500072778F /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		8841E1F52EC6950800C64B58 /* PlayerGestureOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841E1F42EC6950800C64B58 /* PlayerGestureOverlay.swift */; };
+		8841E1F62EC6950800C64B58 /* PlayerGestureOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841E1F42EC6950800C64B58 /* PlayerGestureOverlay.swift */; };
+		8841E1F92EC7110200C64B58 /* CurrentChapterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */; };
+		8841E1FA2EC7110200C64B58 /* CurrentChapterPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */; };
 		8842DFCC2EACB5E800D11C5D /* SwipeGestureSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8842DFCB2EACB5E800D11C5D /* SwipeGestureSettings.swift */; };
 		8842DFCD2EACB5E800D11C5D /* SwipeGestureSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8842DFCB2EACB5E800D11C5D /* SwipeGestureSettings.swift */; };
 		8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8843AE572C8843E7001A740A /* CleaupServiceTests.swift */; };
@@ -179,6 +185,8 @@
 		8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */; };
 		884CC88C2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
 		884CC88D2DC3890F00FC59DF /* QueueTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */; };
+		8851D8542EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */; };
+		8851D8552EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */; };
 		8852493E2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
 		8852493F2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */; };
 		885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
@@ -210,6 +218,8 @@
 		886C16E52CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */; };
 		886C16E62CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */; };
 		886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */; };
+		886E21722EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E21712EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift */; };
+		886E21732EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E21712EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift */; };
 		886E79B72B46E0F900554E1F /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E79B62B46E0F900554E1F /* QueueView.swift */; };
 		886F020D2CA5B3B000EF2EEA /* UnwatchedShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; };
 		886F020E2CA5B3B000EF2EEA /* UnwatchedShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88B7FFA12C99DE8F00CD917E /* UnwatchedShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -401,7 +411,6 @@
 		889AF9112C50ECE7001CEDE6 /* UserDataSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* UserDataSettingsView.swift */; };
 		889AF9122C50ECE7001CEDE6 /* AutoDeleteBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8867F5422BC7ABD9008EC182 /* AutoDeleteBackupView.swift */; };
 		889AF9132C50ECE7001CEDE6 /* SubscriptionSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924812C485949001185A6 /* SubscriptionSearchBar.swift */; };
-		889AF9142C50ECE7001CEDE6 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
 		889AF9152C50ECE7001CEDE6 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
 		889AF9162C50ECE7001CEDE6 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
 		889AF9172C50ECE7001CEDE6 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88017FD62B96161B00192AEA /* DebugView.swift */; };
@@ -464,7 +473,6 @@
 		889AF9522C50ED05001CEDE6 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3A22B76A9BF00656D63 /* SetupView.swift */; };
 		889AF9532C50ED05001CEDE6 /* VideoListItemStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */; };
 		889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C52B448C01001895C8 /* VideoService.swift */; };
-		889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
 		889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */; };
 		889AF9592C50ED05001CEDE6 /* VideoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0BF2B4489C2001895C8 /* VideoListItem.swift */; };
@@ -676,6 +684,8 @@
 		88F901F82EA8C3FB001E0579 /* BackgroundMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F901F72EA8C3FB001E0579 /* BackgroundMonitor.swift */; };
 		88F901F92EA8C3FB001E0579 /* BackgroundMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F901F72EA8C3FB001E0579 /* BackgroundMonitor.swift */; };
 		88FA62D82B8485EA00924959 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FA62D72B8485EA00924959 /* PlayButton.swift */; };
+		88FAF5C02EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FAF5BF2EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift */; };
+		88FAF5C12EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FAF5BF2EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift */; };
 		88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
@@ -808,6 +818,7 @@
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
 		88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+CloudKit.swift"; sourceTree = "<group>"; };
 		88190E3D2B99D97900F048C3 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
+		88190EF42EC235EE00C1C321 /* MyTint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTint.swift; sourceTree = "<group>"; };
 		881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLoadingTimeout.swift; sourceTree = "<group>"; };
 		881964F22CCA449A0084ADE4 /* VideoListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListVM.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
@@ -871,6 +882,8 @@
 		883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandleVideoUrlDropModifier.swift; sourceTree = "<group>"; };
 		884069D62D7A290D00814A72 /* SearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchField.swift; sourceTree = "<group>"; };
 		88415BE92C50E1D50072778F /* ExportableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportableTests.swift; sourceTree = "<group>"; };
+		8841E1F42EC6950800C64B58 /* PlayerGestureOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGestureOverlay.swift; sourceTree = "<group>"; };
+		8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentChapterPopup.swift; sourceTree = "<group>"; };
 		8842DFCB2EACB5E800D11C5D /* SwipeGestureSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeGestureSettings.swift; sourceTree = "<group>"; };
 		8843AE572C8843E7001A740A /* CleaupServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleaupServiceTests.swift; sourceTree = "<group>"; };
 		8843E1012E57D00B00A303F5 /* PremiumPopupMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumPopupMessage.swift; sourceTree = "<group>"; };
@@ -882,6 +895,7 @@
 		8847D6C62C99865400BFA12F /* ChapterCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterCategory.swift; sourceTree = "<group>"; };
 		8849F38E2DF068550040DD9A /* ImageAccentBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAccentBackground.swift; sourceTree = "<group>"; };
 		884CC88B2DC3890F00FC59DF /* QueueTabItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTabItemView.swift; sourceTree = "<group>"; };
+		8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsOrnament.swift; sourceTree = "<group>"; };
 		8852493D2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenChangeOrientationButton.swift; sourceTree = "<group>"; };
 		885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentNavBarWorkaround.swift; sourceTree = "<group>"; };
 		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
@@ -898,6 +912,7 @@
 		886818222D77586700E06A0D /* ImportSubscriptionsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSubscriptionsWindow.swift; sourceTree = "<group>"; };
 		886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaceholder.swift; sourceTree = "<group>"; };
 		886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtPlaylistItems.swift; sourceTree = "<group>"; };
+		886E21712EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWindowSizeModifier.swift; sourceTree = "<group>"; };
 		886E79B62B46E0F900554E1F /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnwatchedTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8871A5712DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTitleFilterWithPreview.swift; sourceTree = "<group>"; };
@@ -1120,6 +1135,7 @@
 		88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterControlError.swift; sourceTree = "<group>"; };
 		88F901F72EA8C3FB001E0579 /* BackgroundMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMonitor.swift; sourceTree = "<group>"; };
 		88FA62D72B8485EA00924959 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
+		88FAF5BF2EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedPlaybackSpeedSettingVision.swift; sourceTree = "<group>"; };
 		88FB23692DD4BAD00066DB07 /* MultiPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPayload.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
@@ -1270,6 +1286,7 @@
 				885723012E6596F6006D1EE9 /* Signal.swift */,
 				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
+				88190EF42EC235EE00C1C321 /* MyTint.swift */,
 				88339AA12E5B87A500B295B7 /* PopupPresenter.swift */,
 				889F760C2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift */,
 				88FB23692DD4BAD00066DB07 /* MultiPayload.swift */,
@@ -1371,6 +1388,7 @@
 				889924762C484766001185A6 /* FullscreenControls */,
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				88B0C1612C427940006D2423 /* PlayerView.swift */,
+				8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */,
 				88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */,
 				88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */,
 				88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */,
@@ -1378,6 +1396,7 @@
 				886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */,
 				8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */,
 				88B9E3A12DB635B900B066BD /* CopyUrlOptions.swift */,
+				886E21712EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift */,
 				88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */,
 				889924772C4847C0001185A6 /* PlayerControlButtonStyle.swift */,
 				887E72932B91F6D400928946 /* NextVideoButton.swift */,
@@ -1396,10 +1415,12 @@
 				883D4CA92CF4791300BB2581 /* PlayerContentView.swift */,
 				889924682C47F4D4001185A6 /* VerticalSwipeGesture.swift */,
 				889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */,
+				88FAF5BF2EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift */,
 				88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */,
 				88373C0E2C8AF43600ACBB3B /* NextChapterButton.swift */,
 				88373C0B2C8AF3EA00ACBB3B /* PreviousChapterButton.swift */,
 				881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */,
+				8841E1F42EC6950800C64B58 /* PlayerGestureOverlay.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1408,6 +1429,7 @@
 			isa = PBXGroup;
 			children = (
 				888F74A52BA1FA6B00B94822 /* Settings */,
+				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
 				889924812C485949001185A6 /* SubscriptionSearchBar.swift */,
 				8899247F2C485913001185A6 /* SubscriptionListSection.swift */,
 				889924852C485E3B001185A6 /* LibraryVideoSection.swift */,
@@ -1594,7 +1616,6 @@
 			children = (
 				88373C142C8B37D600ACBB3B /* AppearanceSelection */,
 				8868181C2D7756E900E06A0D /* ExportSubscriptionsShareLink.swift */,
-				8804F91E2B4805A100E19B7A /* LibraryView.swift */,
 				88C572322B53C8BD002FF07E /* SettingsView.swift */,
 				888F74A62BA1FAC000B94822 /* NotificationSettingsView.swift */,
 				888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */,
@@ -1746,6 +1767,7 @@
 				8804A3EC2B8B6B5B00D3F4F1 /* DescriptionDetailView.swift */,
 				883CA8182B5BB2FB00028D52 /* ChapterMiniControlView.swift */,
 				88D446AC2D05D54E001F9F55 /* PlayerScrubber.swift */,
+				8841E1F82EC7110200C64B58 /* CurrentChapterPopup.swift */,
 				88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */,
 				8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */,
 				88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */,
@@ -2240,6 +2262,7 @@
 				889AF8CC2C50ECA9001CEDE6 /* YtBrowserTip.swift in Sources */,
 				889AF8CD2C50ECA9001CEDE6 /* myNavigationTitle.swift in Sources */,
 				889AF8EB2C50ECAE001CEDE6 /* SubscriptionError.swift in Sources */,
+				8851D8552EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */,
 				889AF8EC2C50ECAE001CEDE6 /* VideoCrawlerError.swift in Sources */,
 				889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */,
 				88F901F82EA8C3FB001E0579 /* BackgroundMonitor.swift in Sources */,
@@ -2262,7 +2285,6 @@
 				889AF9532C50ED05001CEDE6 /* VideoListItemStatus.swift in Sources */,
 				88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				889AF9542C50ED05001CEDE6 /* VideoService.swift in Sources */,
-				889AF9562C50ED05001CEDE6 /* ContentView.swift in Sources */,
 				88F347202CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				883A292D2E5FA34B00FE4E65 /* PremiumFeature.swift in Sources */,
 				8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */,
@@ -2377,6 +2399,7 @@
 				889AF9352C50ECEE001CEDE6 /* RotateOrientationButton.swift in Sources */,
 				889AF9362C50ECEE001CEDE6 /* PlayerView.swift in Sources */,
 				88373C102C8AF60700ACBB3B /* NextChapterButton.swift in Sources */,
+				8841E1F92EC7110200C64B58 /* CurrentChapterPopup.swift in Sources */,
 				887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
 				88373C0D2C8AF3EA00ACBB3B /* PreviousChapterButton.swift in Sources */,
 				889AF9372C50ECEE001CEDE6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
@@ -2447,6 +2470,7 @@
 				88339AB42E5BA94800B295B7 /* PremiumOfferSheetModifer.swift in Sources */,
 				8849F3902DF068550040DD9A /* ImageAccentBackground.swift in Sources */,
 				88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */,
+				886E21732EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
 				889A84E82E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
 				889AF8DF2C50ECA9001CEDE6 /* TextFieldClearButton.swift in Sources */,
 				889AF8E02C50ECA9001CEDE6 /* RefreshToolbarContent.swift in Sources */,
@@ -2460,6 +2484,7 @@
 				88B6DE382D76F06200CB8E64 /* SettingsWindowView.swift in Sources */,
 				889AF8E52C50ECA9001CEDE6 /* VideoSorting.swift in Sources */,
 				884777372D21509F0044E812 /* AnyCodable.swift in Sources */,
+				8841E1F62EC6950800C64B58 /* PlayerGestureOverlay.swift in Sources */,
 				88974D232D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */,
 				889AF8E62C50ECA9001CEDE6 /* CapsuleButtonStyle.swift in Sources */,
 				889AF8F62C50ECCA001CEDE6 /* NavigationManager.swift in Sources */,
@@ -2487,6 +2512,7 @@
 				882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */,
 				887EB2E22CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
 				8843E1022E57D00B00A303F5 /* PremiumPopupMessage.swift in Sources */,
+				88190EF62EC235EE00C1C321 /* MyTint.swift in Sources */,
 				88CBE34B2BB7711500B5722F /* SpeedContolViewModel.swift in Sources */,
 				88415BFD2C50EB500072778F /* Date.swift in Sources */,
 				88CD38902E213D1D00E7B21C /* TranscriptFieldClearButton.swift in Sources */,
@@ -2495,6 +2521,7 @@
 				889AF8AB2C50EC47001CEDE6 /* VideoCrawler.swift in Sources */,
 				889AF8AC2C50EC88001CEDE6 /* RSSParserDelegate.swift in Sources */,
 				88CBE3472BB76AFD00B5722F /* SpeedControlViewModelTests.swift in Sources */,
+				88FAF5C12EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
 				888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
@@ -2528,7 +2555,6 @@
 				889AF9122C50ECE7001CEDE6 /* AutoDeleteBackupView.swift in Sources */,
 				889AF9132C50ECE7001CEDE6 /* SubscriptionSearchBar.swift in Sources */,
 				CD5AF8472C8AD25A00D18628 /* PlayerManager+Playback.swift in Sources */,
-				889AF9142C50ECE7001CEDE6 /* LibraryView.swift in Sources */,
 				CDE87A492E2567DA00E35B41 /* CircularProgressView.swift in Sources */,
 				88296ADB2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,
 				889AF9152C50ECE7001CEDE6 /* AddToLibraryView.swift in Sources */,
@@ -2599,6 +2625,7 @@
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				88F3AA8E2C998B840030B2EA /* VideoListFormat.swift in Sources */,
 				883CA80A2B5AFB4100028D52 /* CapsuleButtonStyle.swift in Sources */,
+				88FAF5C02EC39A45001BF4C1 /* CombinedPlaybackSpeedSettingVision.swift in Sources */,
 				881E513D2B59D5A3006384E4 /* SubscriptionStateView.swift in Sources */,
 				8899247C2C48552D001185A6 /* MySection.swift in Sources */,
 				8809D8912DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
@@ -2606,6 +2633,7 @@
 				88373C282C8C6A9100ACBB3B /* SubscriptionListVM.swift in Sources */,
 				889931DA2D731AC5009096AB /* PlayerType.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
+				8841E1FA2EC7110200C64B58 /* CurrentChapterPopup.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */,
 				889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
@@ -2633,6 +2661,7 @@
 				88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				889017A02D790C61008BC329 /* BrowserWindow.swift in Sources */,
 				88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */,
+				8851D8542EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */,
 				8891F0B22B4E9F4E0098A3FB /* SubscriptionService.swift in Sources */,
 				8891F0B82B4F3E080098A3FB /* Collection.swift in Sources */,
 				883F41052BDECB5C00535952 /* InboxHasEntriesTip.swift in Sources */,
@@ -2682,6 +2711,7 @@
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
 				88CD388D2E213D0B00E7B21C /* TranscriptSearch.swift in Sources */,
 				88373C1F2C8BAE2700ACBB3B /* FullscreenChapterDescriptionButton.swift in Sources */,
+				8841E1F52EC6950800C64B58 /* PlayerGestureOverlay.swift in Sources */,
 				881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */,
 				88339AAE2E5BA72200B295B7 /* PremiumModifier.swift in Sources */,
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
@@ -2696,6 +2726,7 @@
 				88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */,
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
 				88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */,
+				886E21722EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
 				CDE87A4A2E2567DA00E35B41 /* CircularProgressView.swift in Sources */,
 				88A2921E2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */,
 				88D8584D2B559DCC0047E0E6 /* VideoError.swift in Sources */,
@@ -2732,6 +2763,7 @@
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
+				88190EF52EC235EE00C1C321 /* MyTint.swift in Sources */,
 				88B0C15C2C40881F006D2423 /* myNavigationTitle.swift in Sources */,
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,
@@ -3240,6 +3272,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = IconBlue;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = VisionAppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -3268,19 +3301,20 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				XROS_DEPLOYMENT_TARGET = 2.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -3288,6 +3322,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = VisionAppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -3316,19 +3351,20 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.7.2;
+				MARKETING_VERSION = 1.8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				XROS_DEPLOYMENT_TARGET = 2.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Release;
 		};

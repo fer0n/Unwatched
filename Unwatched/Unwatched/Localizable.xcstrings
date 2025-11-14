@@ -199,6 +199,40 @@
         }
       }
     },
+    "%@×" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@×"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@×"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@×"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@×"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@×"
+          }
+        }
+      }
+    },
     "%lld min" : {
       "localizations" : {
         "de" : {
@@ -13967,6 +14001,12 @@
         "de" : {
           "variations" : {
             "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : ""
+                }
+              },
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -13985,6 +14025,12 @@
         "en" : {
           "variations" : {
             "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "new",
+                  "value" : ""
+                }
+              },
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -14003,6 +14049,12 @@
         "es" : {
           "variations" : {
             "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : ""
+                }
+              },
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -14021,6 +14073,12 @@
         "fr" : {
           "variations" : {
             "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : ""
+                }
+              },
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -14039,6 +14097,12 @@
         "pl" : {
           "variations" : {
             "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : ""
+                }
+              },
               "iphone" : {
                 "stringUnit" : {
                   "state" : "translated",
@@ -15008,6 +15072,40 @@
         }
       }
     },
+    "surroundingEffect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatische Abdunkelung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto Dimming"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atenuación automática"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atténuation automatique"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatyczne przyciemnianie"
+          }
+        }
+      }
+    },
     "swipeGestures" : {
       "localizations" : {
         "de" : {
@@ -15589,33 +15687,93 @@
     "tipSwipeActionsMessage" : {
       "localizations" : {
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "**Unterstützte Video Gesten:**\n• Links/rechts swipen: Kapitel wechseln\n• Mitte antippen: Play/pause\n• Hoch/runter swipen: Vollbild an/aus\n• Rechts/links lange halten: Schneller/langsamer abspielen\n• Mini-player swipe nach unten: PiP"
+          "variations" : {
+            "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Unterstützte Videogesten:**\n• Nach links/rechts wischen: vor-/zurückspringen\n• In die Mitte tippen: abspielen/pausieren\n• Nach oben/unten wischen: Wiedergabegeschwindigkeit erhöhen/verringern"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Unterstützte Video Gesten:**\n• Links/rechts swipen: Kapitel wechseln\n• Mitte antippen: Play/pause\n• Hoch/runter swipen: Vollbild an/aus\n• Rechts/links lange halten: Schneller/langsamer abspielen\n• Mini-player swipe nach unten: PiP"
+                }
+              }
+            }
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
+          "variations" : {
+            "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Supported video gestures:**\n• Swipe left/right: seek forward/backward\n• Tap center: Play/pause\n• Swipe up/down: Speed up/slow down playback"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Enter/exit fullscreen\n• Long press right/left: Speed up/slow down playback\n• Swipe down in portrait: Enter PiP"
+                }
+              }
+            }
           }
         },
         "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "**Gestos de video compatibles:**\n• Deslizar izquierda/derecha: Saltar capítulos\n• Tocar centro: Reproducir/pausar\n• Deslizar arriba/abajo: Entrar/salir de pantalla completa\n• Mantener pulsado derecha/izquierda: Acelerar/ralentizar reproducción\n• Deslizar hacia abajo en modo vertical: Entrar en PiP"
+          "variations" : {
+            "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Gestos de vídeo compatibles:**\n• Deslizar a la izquierda/derecha: avanzar/retroceder\n• Tocar en el centro: reproducir/pausar\n• Deslizar hacia arriba/abajo: acelerar/reducir la velocidad de reproducción"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Gestos de video compatibles:**\n• Deslizar izquierda/derecha: Saltar capítulos\n• Tocar centro: Reproducir/pausar\n• Deslizar arriba/abajo: Entrar/salir de pantalla completa\n• Mantener pulsado derecha/izquierda: Acelerar/ralentizar reproducción\n• Deslizar hacia abajo en modo vertical: Entrar en PiP"
+                }
+              }
+            }
           }
         },
         "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "**Gestes vidéo pris en charge :**\n• Glisser vers la gauche/droite : Changer de chapitre\n• Toucher le centre : Lecture/pause\n• Glisser vers le haut/bas : Activer/quitter le plein écran\n• Appui long droite/gauche : Accélérer/ralentir la lecture\n• Glisser vers le bas en mode portrait : Activer PiP"
+          "variations" : {
+            "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Gestes vidéo pris en charge :**\n• Balayer vers la gauche/droite : avancer/reculer\n• Taper au centre : lecture/pause\n• Balayer vers le haut/bas : accélérer/ralentir la lecture"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Gestes vidéo pris en charge :**\n• Glisser vers la gauche/droite : Changer de chapitre\n• Toucher le centre : Lecture/pause\n• Glisser vers le haut/bas : Activer/quitter le plein écran\n• Appui long droite/gauche : Accélérer/ralentir la lecture\n• Glisser vers le bas en mode portrait : Activer PiP"
+                }
+              }
+            }
           }
         },
         "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Kliknij na środku: Odtwórz/Wstrzymaj\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
+          "variations" : {
+            "device" : {
+              "applevision" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: przewijaj do przodu/do tyłu\n• Stuknij na środku: odtwórz/pauzuj\n• Przesuń w górę/w dół: przyspiesz/zwolnij odtwarzanie"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Kliknij na środku: Odtwórz/Wstrzymaj\n• Przesuń w górę/dół: Wejdź/wyjdź z pełnego ekranu\n• Przytrzymaj w prawo/lewo: Przyspiesz/zwolnij odtwarzanie\n• Przesuń w dół w pionie: Wejdź w PiP"
+                }
+              }
+            }
           }
         }
       }
@@ -15684,134 +15842,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Możesz wybrać “Zobacz na YouTube” z menu “…” w odtwarzaczu lub przytrzymać tytuł filmu/aktualny rozdział."
-          }
-        }
-      }
-    },
-    "tipTitleNext" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wiedergabeoptionen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playback Options"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opciones de reproducción"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Options de lecture"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opcje odtwarzania"
-          }
-        }
-      }
-    },
-    "tipTitleNextMessage" : {
-      "localizations" : {
-        "de" : {
-          "variations" : {
-            "device" : {
-              "mac" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Langes drücken auf den “nächstes Video”-Button im Player gibt Optionen zur kontinuierliche oder wiederholenden Wiedergabe. "
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Ein Rechtsklick auf den “nächstes Video”-Button im Player gibt Optionen zur kontinuierliche oder wiederholenden Wiedergabe. "
-                }
-              }
-            }
-          }
-        },
-        "en" : {
-          "variations" : {
-            "device" : {
-              "mac" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Right click the “next video” button inside the player to enable continuous play or play it on repeat."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Long press the “next video” button inside the player to enable continuous play or play it on repeat."
-                }
-              }
-            }
-          }
-        },
-        "es" : {
-          "variations" : {
-            "device" : {
-              "mac" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Haz clic derecho en el botón de “siguiente video” dentro del reproductor para activar la reproducción continua o repetirlo."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Mantén presionado el botón de “siguiente video” dentro del reproductor para activar la reproducción continua o repetirlo."
-                }
-              }
-            }
-          }
-        },
-        "fr" : {
-          "variations" : {
-            "device" : {
-              "mac" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Faites un clic droit sur le bouton \"vidéo suivante\" dans le lecteur pour activer la lecture continue ou la lecture en boucle."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Appuyez longuement sur le bouton \"vidéo suivante\" dans le lecteur pour activer la lecture continue ou la lecture en boucle."
-                }
-              }
-            }
-          }
-        },
-        "pl" : {
-          "variations" : {
-            "device" : {
-              "mac" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Kliknij prawym przyciskiem myszy przycisk \"następne wideo\" w odtwarzaczu, aby włączyć ciągłe odtwarzanie lub odtwarzanie w pętli."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Przytrzymaj przycisk \"następne wideo\" w odtwarzaczu, aby włączyć ciągłe odtwarzanie lub odtwarzanie w pętli."
-                }
-              }
-            }
           }
         }
       }

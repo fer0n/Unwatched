@@ -21,6 +21,10 @@ struct VideoPlaceholder: View {
             .background(backgroundTapRecognizer)
             .animation(.default, value: player.videoAspectRatio)
             .edgesIgnoringSafeArea(.all)
+            .clipShape(RoundedRectangle(
+                        cornerRadius: Const.videoPlayerCornerRadius,
+                        style: .continuous)
+            )
     }
 
     var backgroundTapRecognizer: some View {

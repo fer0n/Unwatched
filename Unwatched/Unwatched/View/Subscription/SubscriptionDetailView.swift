@@ -31,13 +31,18 @@ struct SubscriptionDetailView: View {
                             withAnimation(.default.speed(1.5)) {
                                 showTitle = false
                             }
-                        }.onDisappear {
+                        }
+                        .onDisappear {
                             withAnimation(.default.speed(1.5)) {
                                 showTitle = true
                             }
                         }
                 }
+                #if os(visionOS)
+                .listRowInsets(EdgeInsets())
+                #else
                 .imageAccentBackground(url: imageUrl)
+                #endif
                 .myListRowBackground()
 
                 if showFilter {
@@ -47,6 +52,7 @@ struct SubscriptionDetailView: View {
                         Text("filterPreviewClose")
                             .padding(.horizontal, 5)
                     }
+                    #if !os(visionOS)
                     .apply {
                         if #available(iOS 26.0, macOS 26.0, *) {
                             $0.glassEffect(.regular.interactive())
@@ -54,10 +60,12 @@ struct SubscriptionDetailView: View {
                             $0
                         }
                     }
-                    .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.capsule)
                     .foregroundStyle(Color.automaticBlack)
                     .tint(Color.insetBackgroundColor)
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.capsule)
+                    #endif
+                    .buttonStyle(.bordered)
                     .myListRowBackground()
                     .listRowSeparator(.hidden)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -69,6 +77,7 @@ struct SubscriptionDetailView: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            #if !os(visionOS)
             .apply {
                 if #available(iOS 26.0, macOS 26.0, *) {
                     $0
@@ -77,6 +86,7 @@ struct SubscriptionDetailView: View {
                     $0
                 }
             }
+            #endif
         }
         .background {
             MyBackgroundColor()
@@ -91,6 +101,9 @@ struct SubscriptionDetailView: View {
                 RefreshToolbarContent(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
+        #if os(visionOS)
+        .tint(nil)
+        #endif
         .task(id: loadNewVideosTask) {
             if let task = loadNewVideosTask {
                 await task.value
@@ -154,20 +167,10 @@ struct SubscriptionDetailView: View {
     if let sub {
         return NavigationView {
             SubscriptionDetailView(subscription: sub)
-                .modelContainer(container)
-                .environment(NavigationManager())
-                .environment(RefreshManager())
-                .environment(PlayerManager())
-                .environment(ImageCacheManager())
-                .environment(SheetPositionReader())
+                .testEnvironments()
         }
     } else {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
-            .modelContainer(container)
-            .environment(NavigationManager())
-            .environment(RefreshManager())
-            .environment(PlayerManager())
-            .environment(ImageCacheManager())
-            .environment(SheetPositionReader())
+            .testEnvironments()
     }
 }

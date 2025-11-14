@@ -41,11 +41,6 @@ struct UserTipsView: View {
             "tipTitleLongPress",
             "tipTitleLongPressMessage",
             "hand.tap.fill"
-        ),
-        UserTip(
-            "tipTitleNext",
-            "tipTitleNextMessage",
-            Const.nextVideoCircleSF
         )
     ]
 

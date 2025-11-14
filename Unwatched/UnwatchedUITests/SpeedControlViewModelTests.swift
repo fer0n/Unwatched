@@ -42,10 +42,10 @@ class SpeedControlViewModelTests: XCTestCase {
     }
 
     func testFormatSpeed() {
-        let formattedSpeed = SpeedControlViewModel.formatSpeed(1.5)
+        let formattedSpeed = SpeedHelper.formatSpeed(1.5)
         XCTAssertEqual(formattedSpeed, "1.5", "Expected formatted speed to be '1.5' for speed 1.5")
 
-        let formattedSpeed2 = SpeedControlViewModel.formatSpeed(2.0)
+        let formattedSpeed2 = SpeedHelper.formatSpeed(2.0)
         XCTAssertEqual(formattedSpeed2, "2", "Expected formatted speed to be '2' for speed 2.0")
     }
 }

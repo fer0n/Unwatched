@@ -21,7 +21,9 @@ struct ImageAccentBackground: ViewModifier {
             #endif
             .background(
                 LinearGradient(
-                    colors: [color ?? Color.automaticWhite, Const.macOS26 ? Color.clear : Color.backgroundColor ],
+                    colors: [color ?? Color.automaticWhite, Const.macOS26 || Device.isVision
+                                ? Color.clear
+                                : Color.backgroundColor ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -43,7 +45,9 @@ struct ImageAccentBackground: ViewModifier {
                 }
             }
             .background {
-                (Const.macOS26 ? Color.clear : color)
+                (Const.macOS26 || Device.isVision
+                    ? Color.clear
+                    : color)
                     .mask(LinearGradient(gradient: Gradient(
                         stops: [
                             .init(color: .clear, location: 0),

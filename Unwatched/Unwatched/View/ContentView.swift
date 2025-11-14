@@ -28,7 +28,7 @@ struct ContentView: View {
             let landscapeFullscreen = !bigScreen && isLandscape
 
             ZStack {
-                #if os(iOS)
+                #if os(iOS) || os(visionOS)
                 IOSSPlitView(
                     proxy: proxy,
                     bigScreen: bigScreen,
@@ -46,7 +46,9 @@ struct ContentView: View {
             #if os(iOS)
             .environment(\.colorScheme, .dark)
             #endif
+            #if !os(visionOS)
             .background(Color.playerBackgroundColor)
+            #endif
             .onChange(of: proxy.safeAreaInsets.top, initial: true) {
                 if !landscapeFullscreen {
                     sheetPos.setTopSafeArea(proxy.safeAreaInsets.top)
@@ -78,5 +80,9 @@ struct ContentView: View {
         .environment(RefreshManager())
         .environment(SheetPositionReader.shared)
         .environment(TinyUndoManager())
-    // .environment(\.sizeCategory, .accessibilityExtraExtraLarge)
+        .modifier(CustomAlerter())
+        #if os(macOS) || os(visionOS)
+        .environment(NavigationTitleManager())
+        #endif
+        .appNotificationOverlay()
 }

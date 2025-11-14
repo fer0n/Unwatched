@@ -24,7 +24,7 @@ struct UserDataSettingsView: View {
         let backupType = Const.backupType ?? .json
 
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             MyForm {
                 CloudSyncSetting()

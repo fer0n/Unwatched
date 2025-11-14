@@ -44,13 +44,13 @@ struct LibraryView: View {
                     if showCancelButton {
                         DismissToolbarButton()
                     }
-                    #if os(iOS)
+                    #if os(iOS) || os(visionOS)
                     settingsToolbarButton
                     #endif
                     RefreshToolbarContent()
                 }
             }
-            .tint(theme.color)
+            .myTint()
             .libraryDestination()
         }
         .tint(navManager.lastLibrarySubscriptionId == nil ? theme.color : .neutralAccentColor)
@@ -69,9 +69,5 @@ struct LibraryView: View {
 
 #Preview {
     LibraryView()
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager())
-        .environment(PlayerManager())
-        .environment(RefreshManager())
-        .environment(ImageCacheManager())
+        .testEnvironments()
 }

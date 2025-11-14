@@ -71,19 +71,26 @@ struct MenuView: View {
                 }
             }
             #endif
+            #if os(macOS)
             .popover(item: $navManager.videoDetail) { video in
-                ZStack {
-                    Color.backgroundColor.ignoresSafeArea(.all)
-
-                    ChapterDescriptionView(video: video)
-                        .presentationDragIndicator(.hidden)
-                }
-                .environment(\.colorScheme, colorScheme)
-                .presentationCompactAdaptation(
-                    Device.isMac ? .popover : .sheet
-                )
-                .appNotificationOverlay(topPadding: 10)
+                videoDetailContent(video)
             }
+            #elseif os(visionOS)
+            .sheet(item: $navManager.videoDetail) { video in
+            NavigationStack {
+            videoDetailContent(video)
+            .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+            DismissSheetButton()
+            }
+            }
+            }
+            }
+            #else
+            .sheet(item: $navManager.videoDetail) { video in
+            videoDetailContent(video)
+            }
+            #endif
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
         }
@@ -93,12 +100,24 @@ struct MenuView: View {
         .browserViewSheet(navManager: $navManager)
         .premiumOfferSheet()
         .background {
-            (Const.macOS26 ? Color.clear : Color.backgroundColor)
+            (Const.macOS26 || Device.isVision
+                ? Color.clear
+                : Color.backgroundColor)
                 .ignoresSafeArea(.all)
         }
         #if os(iOS)
         .setTabBarAppearance(disableScrollAppearance: isSidebar)
         #endif
+    }
+
+    func videoDetailContent(_ video: Video) -> some View {
+        ZStack {
+            MyBackgroundColor(macOS: false)
+            ChapterDescriptionView(video: video, isTransparent: Device.isVision)
+                .presentationDragIndicator(.hidden)
+        }
+        .environment(\.colorScheme, colorScheme)
+        .appNotificationOverlay(topPadding: 10)
     }
 
     @MainActor

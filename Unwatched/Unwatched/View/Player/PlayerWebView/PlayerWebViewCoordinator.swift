@@ -24,7 +24,6 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         parent.loadWebContent(webView)
     }
 
-
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
         if message.name == "iosListener", let messageBody = message.body as? String {
@@ -66,7 +65,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             enableLogging: enableLogging,
             originalAudio: originalAudio,
             playbackId: playbackId,
-            )
+            blockOverlay: Device.isVision
+        )
         let script = PlayerWebView.initScript(options)
         Log.info("InitScriptOptions: \(options)")
         parent.evaluateJavaScript(webView, script)
@@ -77,7 +77,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 }
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 extension PlayerWebViewCoordinator: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         if scale <= 1 && !zoomWorkaroundActive {

@@ -28,6 +28,7 @@ struct PlayerLoadingTimeout: View {
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
                     .fontWeight(.regular)
+                    #if !os(visionOS)
                     .apply {
                         if #available(iOS 26.0, macOS 26.0, *) {
                             $0.glassEffect()
@@ -35,6 +36,7 @@ struct PlayerLoadingTimeout: View {
                             $0
                         }
                     }
+                #endif
             }
             .buttonStyle(.plain)
             .opacity(showReload ? 1 : 0)

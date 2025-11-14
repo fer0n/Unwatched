@@ -46,6 +46,8 @@ struct AsyncPlaceholderWorkaround: View {
                 .frame(height: {
                     #if os(iOS)
                     return UIScreen.main.bounds.size.height
+                    #elseif os(visionOS)
+                    return 800
                     #else
                     return NSScreen.main?.frame.size.height ?? 800
                     #endif

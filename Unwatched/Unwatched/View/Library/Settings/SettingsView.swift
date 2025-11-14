@@ -13,7 +13,7 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             MyForm {
                 MySection {
@@ -49,6 +49,8 @@ struct SettingsView: View {
                             systemName: "square.and.arrow.up.on.square.fill"
                         )
                     }
+                    .linkHoverEffect()
+
                     Link(destination: UrlService.generateChaptersShortcutUrl) {
                         LibraryNavListItem(
                             "generateChapters",
@@ -56,6 +58,7 @@ struct SettingsView: View {
                         )
                     }
                     .requiresPremium()
+                    .linkHoverEffect()
                 }
 
                 MySection("userData") {
@@ -77,27 +80,34 @@ struct SettingsView: View {
                     Link(destination: UrlService.writeReviewUrl) {
                         LibraryNavListItem("rateUnwatched", systemName: "star.fill")
                     }
+                    .linkHoverEffect()
                     NavigationLink(value: LibraryDestination.help) {
                         Label("emailAndFaq", systemImage: Const.contactMailSF)
                     }
                     Link(destination: UrlService.githubUrl) {
                         LibraryNavListItem("unwatchedOnGithub", imageName: "github-logo")
                     }
+                    .linkHoverEffect()
                     Link(destination: UrlService.mastodonUrl) {
                         LibraryNavListItem("unwatchedOnMastodon", imageName: "mastodon-logo")
                     }
+                    .linkHoverEffect()
                     Link(destination: UrlService.blueskyUrl) {
                         LibraryNavListItem("unwatchedOnBluesky", imageName: "bluesky_logo")
                     }
+                    .linkHoverEffect()
                 }
 
-                Link(destination: UrlService.releasesUrl) {
-                    LibraryNavListItem(
-                        "releases",
-                        systemName: "sparkles.2"
-                    )
+                MySection {
+                    Link(destination: UrlService.releasesUrl) {
+                        LibraryNavListItem(
+                            "releases",
+                            systemName: "sparkles.2"
+                        )
+                    }
+                    .linkHoverEffect()
                 }
-                .listRowBackground(Color.insetBackgroundColor)
+                .myListInsetBackground()
 
                 Section {
                     ZStack {
@@ -105,29 +115,41 @@ struct SettingsView: View {
                             .padding(.top)
                     }
                 }
-                .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
                 .listRowInsets(EdgeInsets())
+                .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
                 .foregroundStyle(theme.darkContrastColor)
 
                 NavigationLink(value: LibraryDestination.debug) {
                     Label("debug", systemImage: Const.debugSettingsSF)
                 }
-                .listRowBackground(Color.insetBackgroundColor)
+                .myListInsetBackground()
 
                 Section {
                     VersionAndBuildNumber()
                 }
-                .listRowBackground(Color.backgroundColor)
+                .myListRowBackground()
             }
             .myNavigationTitle("settings")
-            .tint(theme.color)
+            #if os(visionOS)
+            .visionForegroundColor()
+            #else
+            .myTint()
+            #endif
         }
+    }
+}
+
+extension View {
+    func linkHoverEffect() -> some View {
+        self
+            #if os(visionOS)
+            .hoverEffectDisabled()
+            .listRowHoverEffect(.highlight)
+        #endif
     }
 }
 
 #Preview {
     SettingsView()
-        .modelContainer(DataProvider.previewContainer)
-        .environment(NavigationManager())
-    // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+        .testEnvironments()
 }

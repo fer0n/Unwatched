@@ -18,8 +18,10 @@ struct HiddenEntriesInfo: View {
             .font(.headline)
             .italic()
             .frame(maxWidth: .infinity, alignment: .center)
+            .listRowSeparator(.hidden)
+            #if !os(visionOS)
             .foregroundColor(.secondary)
             .listRowBackground(Color.backgroundColor)
-            .listRowSeparator(.hidden)
+        #endif
     }
 }

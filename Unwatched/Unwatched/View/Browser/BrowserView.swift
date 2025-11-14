@@ -30,6 +30,73 @@ struct BrowserView: View, KeyboardReadable {
     let size: Double = 20
 
     var body: some View {
+        viewContent
+            .task(id: browserManager.info?.channelId) {
+                subscribeManager.reset()
+                await subscribeManager.setIsSubscribed(browserManager.info)
+            }
+            .task(id: browserManager.info?.playlistId) {
+                subscribeManager.reset()
+                handleSubscriptionInfoChanged(browserManager.info)
+                await subscribeManager.setIsSubscribed(browserManager.info)
+            }
+            .onChange(of: browserManager.info?.userName) {
+                handleSubscriptionInfoChanged(browserManager.info)
+            }
+            #if os(iOS)
+            .onReceive(keyboardPublisher) { newIsKeyboardVisible in
+                isKeyboardVisible = newIsKeyboardVisible
+            }
+            #endif
+            .onAppear {
+                Task {
+                    await subscribeManager.setIsSubscribed(browserManager.info)
+                }
+            }
+            .onDisappear {
+                if subscribeManager.hasNewSubscriptions {
+                    Task {
+                        await refresher.refreshAll()
+                    }
+                }
+                browserManager.stopPlayback()
+            }
+    }
+
+    var viewContent: some View {
+        #if os(visionOS)
+        NavigationStack {
+            browserContent
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        DismissSheetButton()
+                    }
+                    ToolbarItemGroup(placement: .navigation) {
+                        Button {
+                            browserManager.webView?.goBack()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                        }
+                        .disabled(browserManager.webView?.canGoBack != true)
+                    }
+                    ToolbarItemGroup(placement: .navigation) {
+                        Button {
+                            browserManager.webView?.goForward()
+                        } label: {
+                            Image(systemName: "chevron.right")
+                        }
+                        .disabled(browserManager.webView?.canGoForward != true)
+                    }
+                }
+                .buttonBorderShape(.circle)
+        }
+        #else
+        browserContent
+        #endif
+    }
+
+    @ViewBuilder
+    var browserContent: some View {
         @Bindable var browserManager = browserManager
 
         GeometryReader { geometry in
@@ -91,43 +158,17 @@ struct BrowserView: View, KeyboardReadable {
                         }
                     }
                 }
+                #if !os(visionOS)
                 .clipShape(RoundedRectangle(cornerRadius: showHeader ? 15 : 0))
+                #endif
             }
             .animation(.default, value: enableBottomPadding)
             .ignoresSafeArea(edges: safeArea ? [.bottom] : [])
         }
+        #if !os(visionOS)
         .background(Color.youtubeWebBackground)
-        .appNotificationOverlay(topPadding: 20)
-        .task(id: browserManager.info?.channelId) {
-            subscribeManager.reset()
-            await subscribeManager.setIsSubscribed(browserManager.info)
-        }
-        .task(id: browserManager.info?.playlistId) {
-            subscribeManager.reset()
-            handleSubscriptionInfoChanged(browserManager.info)
-            await subscribeManager.setIsSubscribed(browserManager.info)
-        }
-        .onChange(of: browserManager.info?.userName) {
-            handleSubscriptionInfoChanged(browserManager.info)
-        }
-        #if os(iOS)
-        .onReceive(keyboardPublisher) { newIsKeyboardVisible in
-            isKeyboardVisible = newIsKeyboardVisible
-        }
         #endif
-        .onAppear {
-            Task {
-                await subscribeManager.setIsSubscribed(browserManager.info)
-            }
-        }
-        .onDisappear {
-            if subscribeManager.hasNewSubscriptions {
-                Task {
-                    await refresher.refreshAll()
-                }
-            }
-            browserManager.stopPlayback()
-        }
+        .appNotificationOverlay(topPadding: 20)
     }
 
     func handleDismiss() {
@@ -235,7 +276,7 @@ struct BrowserView: View, KeyboardReadable {
 #Preview {
     ZStack {}
         .sheet(isPresented: .constant(true)) {
-            BrowserView()
+            BrowserView(showHeader: false)
                 .modelContainer(DataProvider.previewContainer)
                 .environment(ImageCacheManager())
                 .environment(RefreshManager())

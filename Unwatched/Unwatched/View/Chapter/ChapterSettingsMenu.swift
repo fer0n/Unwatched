@@ -49,13 +49,19 @@ struct ChapterSettingsMenu: View {
             Text("chapters")
         }
         .foregroundStyle(Color.automaticBlack)
+        #if !os(visionOS)
         .tint(Color.insetBackgroundColor)
+        #endif
         .menuOrder(.fixed)
         #if os(macOS)
         .buttonStyle(.plain)
         .padding(.horizontal, 10)
         .padding(.vertical, 8)
         .background(Color.insetBackgroundColor, in: .capsule)
+        #elseif os(visionOS)
+        .buttonStyle(.bordered)
+        .tint(nil)
+        .foregroundStyle(.primary)
         #else
         .buttonStyle(.borderedProminent)
         #endif

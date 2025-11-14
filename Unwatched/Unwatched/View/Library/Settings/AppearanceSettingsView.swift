@@ -22,7 +22,7 @@ struct AppearanceSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor()
 
             MyForm {
                 MySection {

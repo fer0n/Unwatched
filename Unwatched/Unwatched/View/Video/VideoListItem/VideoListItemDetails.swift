@@ -32,9 +32,11 @@ struct VideoListItemDetails: View {
                         .font(.system(size: subSize))
                         .lineLimit(1)
                         .textCase(.uppercase)
+                        #if !os(visionOS)
                         .onTapGesture {
                             VideoListItemDetails.handleSubscriptionTap(video.subscriptionData)
                         }
+                    #endif
                 }
 
                 if let published = video.publishedDate {

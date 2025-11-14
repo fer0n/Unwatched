@@ -59,7 +59,9 @@ struct SponsorBlockSettingsView: View {
             .disabled(!mergeSponsorBlockChapters)
         }
         .opacity(youtubePremium ? 1 : 0)
-        .listRowBackground(youtubePremium ? Color.insetBackgroundColor : Color.backgroundColor)
+        #if !os(visionOS)
+        .listRowBackground(youtubePremium ? Color.insetBackgroundColor : Color.clear)
+        #endif
         .animation(.default, value: youtubePremium)
     }
 }

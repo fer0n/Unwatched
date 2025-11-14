@@ -42,7 +42,7 @@ struct FullscreenOverlayControls: View {
                 .phaseAnimator([0, 1, 0], trigger: overlayVM.show) { view, phase in
                     view
                         .scaleEffect(phase == 1 ? 1 : 0.75)
-                        .backgroundTransparentEffect(fallback: .ultraThinMaterial)
+                        .backgroundTransparentEffect(fallback: .thinMaterial)
                         .opacity(phase == 1 ? 1 : 0)
                 } animation: { _ in
                     .easeInOut(duration: 0.15)
@@ -91,17 +91,26 @@ struct FullscreenOverlayControls: View {
 
 extension View {
     func backgroundTransparentEffect(fallback: Material) -> some View {
-        self.apply {
-            if #available(iOS 26, macOS 26, *) {
-                $0
-                    .contentShape(Circle())
-                    .glassEffect()
-            } else {
-                $0
-                    .background(fallback)
-                    .clipShape(Circle())
-            }
+        self
+            #if os(visionOS)
+            .fallbackBackground(fallback)
+        #else
+        .apply {
+        if #available(iOS 26, macOS 26, *) {
+        $0
+        .contentShape(Circle())
+        .glassEffect()
+        } else {
+        $0.fallbackBackground(fallback)
         }
+        }
+        #endif
+    }
+
+    private func fallbackBackground(_ fallback: Material) -> some View {
+        self
+            .background(fallback)
+            .clipShape(Circle())
     }
 }
 

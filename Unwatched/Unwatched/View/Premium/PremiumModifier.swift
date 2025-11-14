@@ -65,6 +65,9 @@ func guardPremium(onInteraction: (() -> Void)? = nil) -> Bool {
                 dismiss()
             })
         }
+        #elseif os(visionOS)
+        NavigationManager.shared.showMenu = true
+        NavigationManager.shared.showPremiumOffer = true
         #elseif os(macOS)
         // skipping the "learn more" popup on macOS for now
         NavigationManager.shared.openWindow?(id: Const.windowPremium)

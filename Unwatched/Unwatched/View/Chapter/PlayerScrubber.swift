@@ -61,17 +61,30 @@ struct PlayerScrubber: View {
                 }
 
                 ZStack {
-                    Color.foregroundGray.opacity(Const.iOS26
-                                                    ? (isGestureActive ? 0.15 : 0.1)
-                                                    : (isGestureActive ? 0.25 : 0.2))
+                    #if os(visionOS)
+                    Color.clear
+                        .background(.thinMaterial)
+                    #else
+                    Color.white
+                        .opacity(Const.iOS26
+                                    ? (isGestureActive ? 0.15 : 0.1)
+                                    : (isGestureActive ? 0.25 : 0.2)
+                        )
+                    #endif
 
                     if let video = player.video,
                        let total = video.duration {
 
                         HStack(spacing: 0) {
+                            #if os(visionOS)
+                            Color.white
+                                .opacity(isGestureActive ? 0.8 : 0.6)
+                                .frame(width: currentScrubberPosition)
+                            #else
                             Color.foregroundGray
                                 .opacity(isGestureActive ? 0.5 : 0.3)
                                 .frame(width: currentScrubberPosition)
+                            #endif
                             Color.clear
                         }
 
@@ -88,22 +101,43 @@ struct PlayerScrubber: View {
                 }
                 .frame(height: currentScrubberHeight)
                 .clipShape(clipShape)
+                .shadow(radius: 5)
+                #if os(visionOS)
+                .contentShape(.hoverEffect, .capsule)
+                .hoverEffect()
+                #else
                 .apply {
-                    if #available(iOS 26.0, macOS 26.0, *) {
-                        $0.glassEffect(.regular, in: clipShape)
-                    } else {
-                        $0
-                    }
+                if #available(iOS 26.0, macOS 26.0, *) {
+                $0.glassEffect(.regular, in: clipShape)
+                } else {
+                $0
                 }
+                }
+                #endif
                 .frame(height: scrubberHeight)
                 .contentShape(Rectangle())
+                #if os(visionOS)
+                .overlay {
+                    let anchor = CGPoint(
+                        x: currentScrubberPosition,
+                        y: -currentScrubberHeight / 3
+                    )
+
+                    CurrentChapterPopup(
+                        isVisible: isGestureActive,
+                        chapterTitle: (player.currentChapterPreview?.title ?? player.currentChapter?.title),
+                        currentTime: formattedCurrentTime,
+                        anchor: anchor
+                    )
+                }
+                #endif
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                         .onChanged(handleChanged)
                         .onEnded(handleEnded)
                 )
                 .disabled(isDisabled)
-                #if os(iOS)
+                #if os(iOS) || os(visionOS)
                 .animation(.default.speed(2), value: currentScrubberHeight)
                 #endif
 
@@ -167,7 +201,15 @@ struct PlayerScrubber: View {
     }
 
     var formattedCurrentTime: String {
+        #if os(visionOS)
+        player.video != nil
+            ? currentTime?.getFormattedSecondsColon(
+                player.video?.duration ?? currentTime ?? 0
+            ) ?? ""
+            : ""
+        #else
         player.video != nil ? currentTime?.formattedSecondsColon ?? "" : ""
+        #endif
     }
 
     func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
@@ -264,9 +306,10 @@ struct PlayerScrubber: View {
 
 #Preview {
     let player = PlayerManager.getDummy()
-    player.currentTime = 33230
+    player.currentTime = 140
 
     return PlayerScrubber(limitHeight: false)
-        .frame(height: 150)
+        .frame(width: 300, height: 150)
         .environment(player)
+    // .testEnvironments()
 }

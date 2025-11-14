@@ -57,6 +57,7 @@ extension Const {
 
         Const.autoAirplayHD: false,
         Const.playBrowserVideosInApp: false,
+        Const.surroundingEffect: true,
 
         // Appearance
         Const.browserAsTab: false,

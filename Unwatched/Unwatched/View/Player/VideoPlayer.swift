@@ -30,6 +30,7 @@ struct VideoPlayer: View {
         let padding: CGFloat = horizontalLayout ? 3 : 8
 
         VStack(spacing: 0) {
+            #if !os(visionOS)
             if showFullscreenControlsCompactSize {
                 squishyPadding
                 PlayButtonSpacer(
@@ -38,6 +39,7 @@ struct VideoPlayer: View {
                 )
                 .layoutPriority(1)
             }
+            #endif
 
             PlayerView(autoHideVM: $autoHideVM,
                        landscapeFullscreen: landscapeFullscreen,
@@ -46,7 +48,11 @@ struct VideoPlayer: View {
                        compactSize: compactSize)
                 .zIndex(1)
                 .layoutPriority(2)
+                #if os(visionOS)
+                .modifier(PlayerControlsOrnamentModifier(autoHideVM: $autoHideVM))
+            #endif
 
+            #if !os(visionOS)
             if !landscapeFullscreen {
                 if compactSize {
                     if showFullscreenControlsCompactSize {
@@ -72,6 +78,7 @@ struct VideoPlayer: View {
                                       )
                 }
             }
+            #endif
         }
         .appNotificationOverlay()
         .tint(.neutralAccentColor)

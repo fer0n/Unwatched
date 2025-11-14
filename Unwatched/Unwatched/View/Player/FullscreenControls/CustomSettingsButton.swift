@@ -23,6 +23,5 @@ struct CustomSettingsButton: View {
         .buttonStyle(.plain)
         .help("customSpeedSetting")
         .accessibilityLabel("customSpeedSetting")
-
     }
 }

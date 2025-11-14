@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct PlayerMoreMenuButton<Content>: View where Content: View {
+    @AppStorage(Const.surroundingEffect) var surroundingEffect = true
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
@@ -22,7 +24,9 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     var body: some View {
         Menu {
+            #if !os(visionOS)
             SleepTimer(viewModel: $sleepTimerVM, onEnded: player.onSleepTimerEnded)
+            #endif
 
             if let video = player.video {
                 CopyUrlOptions(
@@ -56,6 +60,12 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         .padding(5)
                 }
             }
+
+            #if os(visionOS)
+            Toggle(isOn: $surroundingEffect) {
+                Label("surroundingEffect", systemImage: "circle.lefthalf.filled")
+            }
+            #endif
         } label: {
             self.contentImage(Image(systemName: systemName))
                 .contentTransition(transition)

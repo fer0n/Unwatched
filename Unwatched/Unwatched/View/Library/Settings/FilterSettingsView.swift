@@ -18,7 +18,7 @@ struct FilterSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
 
             MyForm {
                 if #unavailable(iOS 26.0) {
@@ -82,6 +82,7 @@ struct FilterSettingsView: View {
             )
         }
         .myNavigationTitle("filterSettings")
+        #if !os(visionOS)
         .apply {
             if #available(iOS 26.0, *) {
                 $0.navigationSubtitle("settingsSync")
@@ -89,6 +90,7 @@ struct FilterSettingsView: View {
                 $0
             }
         }
+        #endif
     }
 
     func checkShortsInInbox() {

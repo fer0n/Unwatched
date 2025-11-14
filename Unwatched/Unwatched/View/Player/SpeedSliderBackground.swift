@@ -35,7 +35,7 @@ struct SpeedSliderBackground: View, Equatable {
                             onTap(speed)
                         }
                     if isHightlighted {
-                        Text(SpeedControlViewModel.formatSpeed(speed))
+                        Text(SpeedHelper.formatSpeed(speed))
                             .font(.system(size: 12))
                             .fontWeight(.heavy)
                             .fontWidth(.compressed)

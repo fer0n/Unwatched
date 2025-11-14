@@ -21,6 +21,7 @@ extension PlayerWebView {
         let enableLogging: Bool
         let originalAudio: Bool
         let playbackId: String
+        let blockOverlay: Bool
     }
 
     // swiftlint:disable function_body_length
@@ -39,6 +40,7 @@ extension PlayerWebView {
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
         const playbackId = "\(options.playbackId)";
+        const blockOverlay = \(options.blockOverlay);
 
         var video = null;
         let videoFindAttempts = 0;
@@ -523,6 +525,11 @@ extension PlayerWebView {
                             display: none !important;
                         }
                     }
+                    ${blockOverlay ? `
+                        .ytp-chrome-bottom, .ytp-chrome-top, .ytp-gradient-bottom, .ytp-gradient-top {
+                            display: none !important;
+                        }
+                    ` : ''}
                     ${!isNonEmbedding
                         ? '.ytp-play-progress { background: #ddd !important; }'
                         : ''}
@@ -556,6 +563,11 @@ extension PlayerWebView {
                             display: none !important;
                         }
                     }
+                    ${blockOverlay ? `
+                        #player-control-overlay {
+                            display: none !important;
+                        }
+                    ` : ''}
                     ${!isNonEmbedding ? `
                         .ytProgressBarPlayheadProgressBarPlayheadDot,
                         .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
@@ -736,6 +748,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
+                event.preventDefault();
                 handleTouchStart(event);
             }
         });
@@ -743,6 +756,7 @@ extension PlayerWebView {
         addTouchEventListener('touchmove', event => {
             if (!isPinching) {
                 event.stopPropagation();
+                event.preventDefault();
                 handleTouchMove(event);
             }
         });
@@ -753,6 +767,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
+                event.preventDefault();
                 handleTouchEnd(event);
             }
         });
@@ -761,6 +776,7 @@ extension PlayerWebView {
             if (!event.isReTriggering) {
                 handleTouchEnd(event);
                 event.stopPropagation();
+                event.preventDefault();
             }
         });
 

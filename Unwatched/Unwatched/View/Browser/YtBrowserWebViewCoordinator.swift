@@ -409,7 +409,7 @@ extension YtBrowserWebView {
         }
 
         // MARK: - Context Menu Handling (iOS)
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
         @MainActor
         func webView(
             _ webView: WKWebView,

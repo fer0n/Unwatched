@@ -33,26 +33,22 @@ struct AppNotificationView: View {
         }
         .padding(.horizontal, 15)
         .padding(.vertical, 10)
+        #if os(visionOS)
+        .regularViewBackground(hasError)
+        #else
         .apply {
-            if #available(iOS 26, macOS 26, *) {
-                $0
-                    .foregroundStyle(hasError ? .white : .primary)
-                    .glassEffect(
-                        .regular.tint(hasError ? .red : .clear).interactive(),
-                        in: clipShape
-                    )
-            } else {
-                $0
-                    .foregroundStyle(.white)
-                    .background(
-                        hasError
-                            ? .red
-                            : .black.opacity(0.2)
-                    )
-                    .background(.regularMaterial)
-                    .clipShape(clipShape)
-            }
+        if #available(iOS 26, macOS 26, *) {
+        $0
+        .foregroundStyle(hasError ? .white : .primary)
+        .glassEffect(
+        .regular.tint(hasError ? .red : .clear).interactive(),
+        in: AppNotificationView.clipShape
+        )
+        } else {
+        $0.regularViewBackground(hasError)
         }
+        }
+        #endif
         .fixedSize()
         .simultaneousGesture(
             DragGesture()
@@ -70,7 +66,7 @@ struct AppNotificationView: View {
         notification?.isError == true
     }
 
-    var clipShape: some Shape {
+    static var clipShape: some Shape {
         RoundedRectangle(cornerRadius: 25, style: .continuous)
     }
 
@@ -89,6 +85,20 @@ struct AppNotificationView: View {
             """
         let url = UrlService.getEmailUrl(title: error.localizedDescription, body: body)
         UrlService.open(url)
+    }
+}
+
+private extension View {
+    func regularViewBackground(_ hasError: Bool) -> some View {
+        self
+            .foregroundStyle(.white)
+            .background(
+                hasError
+                    ? .red
+                    : .black.opacity(0.2)
+            )
+            .background(.regularMaterial)
+            .clipShape(AppNotificationView.clipShape)
     }
 }
 

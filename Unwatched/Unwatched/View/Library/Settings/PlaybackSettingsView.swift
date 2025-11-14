@@ -22,7 +22,7 @@ struct PlaybackSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
             @Bindable var player = player
 
             MyForm {
@@ -38,7 +38,6 @@ struct PlaybackSettingsView: View {
                     }
                 }
 
-                #if os(iOS)
                 MySection {
                     Toggle(isOn: $originalAudio) {
                         Text("forceOriginalAudio")
@@ -47,6 +46,7 @@ struct PlaybackSettingsView: View {
                         PlayerManager.reloadPlayer()
                     }
 
+                    #if os(iOS)
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
                     }
@@ -54,8 +54,8 @@ struct PlaybackSettingsView: View {
                     Toggle(isOn: $backgroundPlayback) {
                         Text("backgroundPlayback")
                     }
+                    #endif
                 }
-                #endif
 
                 MySection(footer: "continuousPlayHelper") {
                     Toggle(isOn: $player.isRepeating) {

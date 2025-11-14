@@ -235,16 +235,14 @@ extension PlayerManager {
 
     @MainActor
     func debouncedSpeedUp() {
-        let nextSpeed = Const.speeds.first(where: { $0 > debouncedPlaybackSpeed }) ?? Const.speeds.last
-        if let nextSpeed {
+        if let nextSpeed = SpeedHelper.getNextSpeed(after: debouncedPlaybackSpeed) {
             setPlaybackSpeedDebounced(nextSpeed)
         }
     }
 
     @MainActor
     func debouncedSlowDown() {
-        let nextSpeed = Const.speeds.last(where: { $0 < debouncedPlaybackSpeed }) ?? Const.speeds.first
-        if let nextSpeed {
+        if let nextSpeed = SpeedHelper.getPreviousSpeed(before: debouncedPlaybackSpeed) {
             setPlaybackSpeedDebounced(nextSpeed)
         }
     }

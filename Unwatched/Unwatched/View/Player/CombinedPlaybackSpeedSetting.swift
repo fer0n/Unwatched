@@ -136,6 +136,7 @@ struct CombinedPlaybackSpeedSetting: View {
                 }
                 .padding(borderWidth)
                 .speedSelectionBackground(isTransparent: isTransparent)
+                #if !os(visionOS)
                 .apply {
                     if #available(iOS 26.0, macOS 26.0, *) {
                         $0.glassEffect(in: Capsule())
@@ -143,6 +144,7 @@ struct CombinedPlaybackSpeedSetting: View {
                         $0
                     }
                 }
+                #endif
                 .fixedSize(horizontal: false, vertical: true)
                 .overlay {
                     SpeedSliderThumb(

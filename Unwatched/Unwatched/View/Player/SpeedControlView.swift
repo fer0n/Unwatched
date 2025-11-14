@@ -63,7 +63,7 @@ struct SpeedControlView: View {
         let speed = viewModel.dragState == nil
             ? selectedSpeed
             : viewModel.getSpeedFromPos(viewModel.dragState ?? 0)
-        let text = SpeedControlViewModel.formatSpeed(speed)
+        let text = SpeedHelper.formatSpeed(speed)
         handleDebounceSpeedChange(speed)
         return text + (text.count <= 2 ? "×" : "")
     }
@@ -104,6 +104,24 @@ struct SpeedControlView: View {
             selectedSpeed = viewModel.getSelectedSpeed(speed)
             viewModel.setThumbPosition(to: selectedSpeed)
             viewModel.resetDragState()
+        }
+    }
+}
+
+struct SpeedHelper {
+    static func getNextSpeed(after speed: Double) -> Double? {
+        Const.speeds.first(where: { $0 > speed }) ?? Const.speeds.last
+    }
+
+    static func getPreviousSpeed(before speed: Double) -> Double? {
+        Const.speeds.last(where: { $0 < speed }) ?? Const.speeds.first
+    }
+
+    static func formatSpeed(_ speed: Double) -> String {
+        if floor(speed) == speed {
+            return String(format: "%.0f", speed)
+        } else {
+            return String(format: "%.1f", speed)
         }
     }
 }

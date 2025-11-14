@@ -278,7 +278,7 @@ public struct ImageService {
                 persistImage: true
             )
 
-            #if os(iOS) || os(tvOS)
+            #if os(iOS) || os(tvOS) || os(visionOS)
             return (UIImage(data: imageData), imageInfo)
             #elseif os(macOS)
             return (NSImage(data: imageData), imageInfo)

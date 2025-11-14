@@ -17,7 +17,7 @@ struct ImportSubscriptionsView: View {
     @State var subStates = [SubscriptionState]()
 
     @State private var selection = Set<SendableSubscription>()
-    #if os(iOS)
+    #if os(iOS) || os(visionOS)
     @State var editMode = EditMode.active
     #else
     @State var editMode = NSTableView.SelectionHighlightStyle.regular
@@ -109,7 +109,7 @@ struct ImportSubscriptionsView: View {
         .frame(minWidth: 400, minHeight: 600)
         #endif
         .background {
-            Color.backgroundColor.ignoresSafeArea(.all)
+            MyBackgroundColor(macOS: false)
         }
         .fileImporter(isPresented: $showFileImporter,
                       allowedContentTypes: [.plainText], onCompletion: handleFileImport)
@@ -175,7 +175,7 @@ struct ImportSubscriptionsView: View {
                 Spacer()
             }
             .fontWeight(.regular)
-            .tint(theme.color)
+            .myTint()
             .padding(.horizontal, 20)
         }
     }

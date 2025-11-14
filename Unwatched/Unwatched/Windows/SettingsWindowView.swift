@@ -7,8 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct SettingsWindowView: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @State var navTitleManager = NavigationTitleManager()
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
 
     var body: some View {
         TabView {
@@ -69,7 +69,7 @@ struct SettingsWindowView: View {
         .environment(navTitleManager)
         .background(Color.backgroundColor)
         .frame(width: 700, height: 500)
-        .tint(theme.color)
+        .myTint()
         #if os(macOS)
         .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
         // workaround: deprecated, but tint doesn't work on macOS

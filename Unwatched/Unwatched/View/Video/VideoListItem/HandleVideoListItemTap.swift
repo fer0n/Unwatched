@@ -16,7 +16,7 @@ struct HandleVideoListItemTap: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            #if os(iOS)
+            #if os(iOS) || os(visionOS)
             .contentShape(Rectangle())
             .onTapGesture {
                 handleTap()

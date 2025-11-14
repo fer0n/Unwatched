@@ -21,6 +21,8 @@ struct PremiumNavListItem: View {
                 systemName: Const.premiumIndicatorSF
             )
         }
+        #if !os(visionOS)
         .foregroundStyle(theme.color.gradient)
+        #endif
     }
 }

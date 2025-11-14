@@ -28,16 +28,20 @@ struct MiniPlayerContent: View {
                 .resizable()
                 .frame(width: 45, height: 45)
                 .symbolRenderingMode(.palette)
+                #if os(visionOS)
+                .foregroundStyle(.automaticWhite, .automaticBlack)
+                #else
                 .apply {
-                    if #available(iOS 26.0, macOS 26.0, *) {
-                        $0
-                            .foregroundStyle(.automaticBlack, .clear)
-                            .glassEffect(.regular.interactive(), in: Circle())
-                    } else {
-                        $0
-                            .foregroundStyle(.automaticWhite, .automaticBlack)
-                    }
+                if #available(iOS 26.0, macOS 26.0, *) {
+                $0
+                .foregroundStyle(.automaticBlack, .clear)
+                .glassEffect(.regular.interactive(), in: Circle())
+                } else {
+                $0
+                .foregroundStyle(.automaticWhite, .automaticBlack)
                 }
+                }
+                #endif
                 .fontWeight(.black)
         }
         .padding(.trailing, PlayerView.miniPlayerHorizontalPadding)

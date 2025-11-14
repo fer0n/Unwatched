@@ -14,18 +14,18 @@ struct ProgressBarChapterIndicators: View {
 
     var body: some View {
         ForEach(video?.sortedChapters ?? []) { chapter in
+            if !chapter.isActive {
+                inactive(chapter)
+                    .opacity(0.3)
+            }
             if chapter.startTime != 0 {
-                Color.playerBackgroundColor
-                    .rotationEffect(.degrees(180))
+                Color.white
                     .frame(width: 2)
                     .position(
                         x: (chapter.startTime / duration) * width,
                         y: height / 2
                     )
-            }
-            if !chapter.isActive {
-                inactive(chapter)
-                    .opacity(0.3)
+                    .blendMode(.destinationOut)
             }
         }
     }
@@ -35,12 +35,21 @@ struct ProgressBarChapterIndicators: View {
         if let chapterDuration = chapter.duration {
             let inactiveWidth = (chapterDuration / duration) * width
 
-            Color.playerBackgroundColor
+            inactiveBackground
                 .frame(width: inactiveWidth)
                 .position(
                     x: (chapter.startTime / duration) * width + (inactiveWidth / 2),
                     y: height / 2
                 )
         }
+    }
+
+    var inactiveBackground: some View {
+        #if os(visionOS)
+        Color.clear
+            .background(.ultraThickMaterial)
+        #else
+        Color.playerBackgroundColor
+        #endif
     }
 }

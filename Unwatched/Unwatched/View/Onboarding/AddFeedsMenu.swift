@@ -30,7 +30,7 @@ struct AddFeedsMenu: View {
             .aspectRatio(1, contentMode: .fill)
             .buttonStyle(.borderedProminent)
         }
-        .tint(theme.color)
+        .myTint()
         .fixedSize()
         .sheet(isPresented: $showImportSheet) {
             NavigationStack {

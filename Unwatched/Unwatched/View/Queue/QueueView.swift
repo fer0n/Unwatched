@@ -9,7 +9,6 @@ import OSLog
 import UnwatchedShared
 
 struct QueueView: View {
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
     @Environment(TinyUndoManager.self) private var undoManager
@@ -30,7 +29,9 @@ struct QueueView: View {
 
                 if queue.isEmpty {
                     QueueViewUnavailable()
+                    #if !os(visionOS)
                     InboxHasEntriesTip()
+                    #endif
                 }
                 // Potential Workaround: always showing the list might avoid a crash
                 List {
@@ -91,7 +92,7 @@ struct QueueView: View {
                 UndoToolbarButton()
                 RefreshToolbarContent()
             }
-            .tint(theme.color)
+            .myTint()
         }
         .tint(.neutralAccentColor)
         .listStyle(.plain)

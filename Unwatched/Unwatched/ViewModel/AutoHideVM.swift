@@ -52,6 +52,16 @@ import UnwatchedShared
         showControlsLocal = true
     }
 
+    @MainActor
+    func handlePlayerInteraction() {
+        #if os(visionOS)
+        let value = getValue("visionOSInteraction")
+        setKeepVisible(!value, "visionOSInteraction")
+        #else
+        setShowControls()
+        #endif
+    }
+
     func setKeepVisible(_ value: Bool, _ source: String) {
         if value {
             keepVisibleDict.insert(source)

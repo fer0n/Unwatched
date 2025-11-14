@@ -76,12 +76,4 @@ class SpeedControlViewModel {
     var showDecimalHighlights: Bool {
         itemWidth > 18
     }
-
-    static func formatSpeed(_ speed: Double) -> String {
-        if floor(speed) == speed {
-            return String(format: "%.0f", speed)
-        } else {
-            return String(format: "%.1f", speed)
-        }
-    }
 }
