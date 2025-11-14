@@ -71,7 +71,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         } else if Device.requiresFullscreenWebWorkaround {
             if let userAgent {
                 // workaround: fix "fullscreen" button being blocked on the iPad
-                let modifiedUserAgent = userAgent.replacingOccurrences(of: "iPad", with: "iPhone")
+                let modifiedUserAgent = userAgent.replacing("iPad", with: "iPhone")
                 webView.customUserAgent = modifiedUserAgent
             }
         }
@@ -265,7 +265,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         }
 
         // swiftlint:disable:next line_length
-        return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacingOccurrences(of: "_", with: ".")) Safari/\(webKitVersion)"
+        return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacing("_", with: ".")) Safari/\(webKitVersion)"
     }
 
     static func repairVideo(onRepair: @escaping () -> Void) {

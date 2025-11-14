@@ -142,7 +142,7 @@ struct UrlService {
         let qualities = ["hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
 
         for quality in qualities where urlString.contains(quality) {
-            return URL(string: urlString.replacingOccurrences(of: quality, with: "sddefault.jpg"))
+            return URL(string: urlString.replacing(quality, with: "sddefault.jpg"))
         }
         return imageUrl
     }

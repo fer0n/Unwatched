@@ -14,7 +14,7 @@ func parseDurationToSeconds(_ duration: String) -> Double? {
     }
 
     // Remove "PT" from the string
-    var durationString = duration.replacingOccurrences(of: "PT", with: "")
+    var durationString = duration.replacing("PT", with: "")
 
     var totalSeconds: Double = 0
 
