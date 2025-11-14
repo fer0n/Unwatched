@@ -29,6 +29,7 @@ extension PlayerWebView {
         var request = URLRequest(url: url)
         let referer = "https://app.local.com"
         request.setValue(referer, forHTTPHeaderField: "Referer")
+        request.setValue("strict-origin-when-cross-origin", forHTTPHeaderField: "Referrer-Policy")
         webView.load(request)
         return true
     }
