@@ -42,20 +42,44 @@ struct PlayerGestureOverlay: ViewModifier {
             player.handlePlayButton()
         case .tap:
             AutoHideVM.shared.handlePlayerInteraction()
-        case .doubleTapLeft, .swipeRight:
-            if player.seekBackward() {
-                OverlayFullscreenVM.shared.show(.seekBackward)
-                AutoHideVM.shared.reset()
+        case .doubleTapLeft:
+            seekBackward()
+        case .swipeRight:
+            guard Const.swipeGestureRight.bool ?? true else {
+                return
             }
-        case .doubleTapRight, .swipeLeft:
-            if player.seekForward() {
-                OverlayFullscreenVM.shared.show(.seekForward)
-                AutoHideVM.shared.reset()
+            seekBackward()
+        case .doubleTapRight:
+            seekForward()
+        case .swipeLeft:
+            guard Const.swipeGestureLeft.bool ?? true else {
+                return
             }
+            seekForward()
         case .swipeUp:
+            guard Const.swipeGestureUp.bool ?? true else {
+                return
+            }
             PlayerManager.shared.tempSpeedChange(faster: true)
         case .swipeDown:
+            guard Const.swipeGestureDown.bool ?? true else {
+                return
+            }
             PlayerManager.shared.tempSpeedChange(faster: false)
+        }
+    }
+
+    func seekBackward() {
+        if player.seekBackward() {
+            OverlayFullscreenVM.shared.show(.seekBackward)
+            AutoHideVM.shared.reset()
+        }
+    }
+
+    func seekForward() {
+        if player.seekForward() {
+            OverlayFullscreenVM.shared.show(.seekForward)
+            AutoHideVM.shared.reset()
         }
     }
 }
