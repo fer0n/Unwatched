@@ -65,8 +65,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             enableLogging: enableLogging,
             originalAudio: originalAudio,
             playbackId: playbackId,
-            blockOverlay: Device.isVision
-        )
+            blockOverlay: Device.isVision && !parent.player.embeddingDisabled,
+            )
         let script = PlayerWebView.initScript(options)
         Log.info("InitScriptOptions: \(options)")
         parent.evaluateJavaScript(webView, script)
