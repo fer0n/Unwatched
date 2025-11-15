@@ -748,7 +748,9 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                event.preventDefault();
+                if (!isNonEmbedding) {
+                    event.preventDefault();
+                }
                 handleTouchStart(event);
             }
         });
@@ -756,7 +758,9 @@ extension PlayerWebView {
         addTouchEventListener('touchmove', event => {
             if (!isPinching) {
                 event.stopPropagation();
-                event.preventDefault();
+                if (!isNonEmbedding) {
+                    event.preventDefault();
+                }
                 handleTouchMove(event);
             }
         });
@@ -767,7 +771,9 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                event.preventDefault();
+                if (!isNonEmbedding) {
+                    event.preventDefault();
+                }
                 handleTouchEnd(event);
             }
         });
@@ -776,7 +782,9 @@ extension PlayerWebView {
             if (!event.isReTriggering) {
                 handleTouchEnd(event);
                 event.stopPropagation();
-                event.preventDefault();
+                if (!isNonEmbedding) {
+                    event.preventDefault();
+                }
             }
         });
 
