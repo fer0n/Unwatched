@@ -535,6 +535,8 @@
 		88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */; };
 		88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205272B516D2A008EC51D /* ChapterListItem.swift */; };
 		88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
+		88C33B202EC9E0B300E7685C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
+		88C33B222EC9E0FC00E7685C /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
 		88C382412E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */; };
 		88C382422E6DD69400F1FDC2 /* PlayNowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */; };
 		88C572332B53C8BD002FF07E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C572322B53C8BD002FF07E /* SettingsView.swift */; };
@@ -2288,6 +2290,7 @@
 				88F347202CF6003D00A2EEB0 /* SheetOverlayMinimumSize.swift in Sources */,
 				883A292D2E5FA34B00FE4E65 /* PremiumFeature.swift in Sources */,
 				8843AE582C8843E7001A740A /* CleaupServiceTests.swift in Sources */,
+				88C33B202EC9E0B300E7685C /* ContentView.swift in Sources */,
 				889AF9572C50ED05001CEDE6 /* VideoActor+Entries.swift in Sources */,
 				889AF9582C50ED05001CEDE6 /* SubscriptionActor+Info.swift in Sources */,
 				889AF9592C50ED05001CEDE6 /* VideoListItem.swift in Sources */,
@@ -2382,6 +2385,7 @@
 				889AF92D2C50ECEE001CEDE6 /* FullscreenSpeedControl.swift in Sources */,
 				886818212D77570B00E06A0D /* LinkItemView.swift in Sources */,
 				889AF92E2C50ECEE001CEDE6 /* PlayerWebView+Scripts.swift in Sources */,
+				88C33B222EC9E0FC00E7685C /* LibraryView.swift in Sources */,
 				88373C132C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */,
 				889AF92F2C50ECEE001CEDE6 /* CustomSettingsButton.swift in Sources */,
 				889AF9302C50ECEE001CEDE6 /* ChapterTimeRemaining.swift in Sources */,
