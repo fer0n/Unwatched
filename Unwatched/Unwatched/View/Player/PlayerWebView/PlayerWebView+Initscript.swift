@@ -748,7 +748,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                if (!isNonEmbedding) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
                 handleTouchStart(event);
@@ -758,7 +758,7 @@ extension PlayerWebView {
         addTouchEventListener('touchmove', event => {
             if (!isPinching) {
                 event.stopPropagation();
-                if (!isNonEmbedding) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
                 handleTouchMove(event);
@@ -771,7 +771,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                if (!isNonEmbedding) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
                 handleTouchEnd(event);
@@ -782,7 +782,7 @@ extension PlayerWebView {
             if (!event.isReTriggering) {
                 handleTouchEnd(event);
                 event.stopPropagation();
-                if (!isNonEmbedding) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
             }
