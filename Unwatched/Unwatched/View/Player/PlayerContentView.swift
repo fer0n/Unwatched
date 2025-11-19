@@ -86,7 +86,7 @@ struct PlayerContentView: View {
                         .bottom,
                         compactSize
                             ? 0
-                            : (Const.minSheetDetent - (Const.iOS26 ? 25 : 3))
+                            : (Const.minSheetDetent - (Const.iOS26 ? 21 : 3))
                     )
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .opacity(navManager.showMenu ? 1 : 0)
