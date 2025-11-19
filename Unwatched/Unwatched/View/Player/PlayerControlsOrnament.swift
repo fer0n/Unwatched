@@ -75,9 +75,30 @@ struct PlayerControlsOrnament: View {
                 player.markVideoWatched(showMenu: false, source: .userInteraction)
             }
 
-            PlayerScrubber(limitHeight: false, inlineTime: true)
-                .frame(width: 400)
-                .padding(.horizontal, 15)
+            HStack(spacing: 1) {
+                if hasChapters {
+                    Button {
+                        _ = player.goToPreviousChapter()
+                    } label: {
+                        Image(systemName: Const.previousChapterSF)
+                    }
+                    .disabled(player.previousChapterDisabled)
+                }
+
+                PlayerScrubber(limitHeight: false, inlineTime: true)
+                    .frame(width: 400)
+
+                if hasChapters {
+                    Button {
+                        _ = player.goToNextChapter()
+                    } label: {
+                        Image(systemName: Const.nextChapterSF)
+                    }
+                    .disabled(player.nextChapter == nil)
+                }
+            }
+            .animation(.default, value: hasChapters)
+            .padding(.horizontal, 15)
 
             FullscreenSpeedControl(
                 autoHideVM: .constant(AutoHideVM()),
@@ -111,6 +132,10 @@ struct PlayerControlsOrnament: View {
         #if os(visionOS)
         .glassBackgroundEffect()
         #endif
+    }
+
+    var hasChapters: Bool {
+        player.currentChapter != nil
     }
 }
 
