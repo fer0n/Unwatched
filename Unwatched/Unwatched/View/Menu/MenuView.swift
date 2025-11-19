@@ -15,7 +15,7 @@ struct MenuView: View {
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
-    @AppStorage(Const.browserAsTab) var browserAsTab = false
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
 
     #if os(macOS)
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
@@ -59,7 +59,7 @@ struct MenuView: View {
                 .tabItemView(
                     image: Image(systemName: Const.youtubeSF),
                     tag: NavigationTab.browser,
-                    show: browserAsTab
+                    show: browserDisplayMode == .asTab
                 )
             }
             #if os(iOS)

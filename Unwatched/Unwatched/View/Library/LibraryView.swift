@@ -10,7 +10,6 @@ import UnwatchedShared
 
 struct LibraryView: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
 
     @Environment(NavigationManager.self) private var navManager
 
@@ -27,8 +26,7 @@ struct LibraryView: View {
 
                 List {
                     MySection(hasPadding: false) {
-                        AddToLibraryView(subManager: $subManager,
-                                         showBrowser: !browserAsTab)
+                        AddToLibraryView(subManager: $subManager)
                             .id(topListItemId)
                     }
                     LibraryVideoSection()

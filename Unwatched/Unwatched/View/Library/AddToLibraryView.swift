@@ -15,6 +15,7 @@ struct AddToLibraryView: View {
     @Environment(RefreshManager.self) var refresher
 
     @AppStorage(Const.themeColor) var theme = ThemeColor()
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
 
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
@@ -25,10 +26,9 @@ struct AddToLibraryView: View {
     var addVideosTip = AddVideosTip()
 
     @Binding var subManager: SubscribeManager
-    var showBrowser: Bool
 
     var body: some View {
-        if showBrowser {
+        if browserDisplayMode == .asSheet {
             Button(action: {
                 navManager.openUrlInApp(nil)
                 Signal.log("Library.OpenBrowser", throttle: .weekly)
@@ -261,7 +261,7 @@ struct AddToLibraryView: View {
 }
 
 #Preview {
-    AddToLibraryView(subManager: .constant(SubscribeManager()), showBrowser: true)
+    AddToLibraryView(subManager: .constant(SubscribeManager()))
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.shared)
         .environment(RefreshManager.shared)

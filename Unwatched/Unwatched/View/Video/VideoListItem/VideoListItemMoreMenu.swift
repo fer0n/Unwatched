@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoListItemMoreMenuView: View {
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
+
     var videoData: VideoData
     var config: VideoListItemConfig
     var setWatched: (Bool) -> Void
@@ -67,7 +69,7 @@ struct VideoListItemMoreMenuView: View {
                 Button("moveToInbox", systemImage: "tray.and.arrow.down", action: moveToInbox)
             }
 
-            if let url = videoData.url {
+            if browserDisplayMode != .disabled, let url = videoData.url {
                 Button("openInAppBrowser", systemImage: Const.youtubeSF) {
                     openUrlInApp(url.absoluteString)
                 }

@@ -200,7 +200,12 @@ import UnwatchedShared
     @MainActor
     func openUrlInApp(_ url: BrowserUrl?) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
-        if UserDefaults.standard.bool(forKey: Const.browserAsTab) {
+        let browserMode = BrowserDisplayMode.setting
+        if browserMode == .disabled {
+            return
+        }
+
+        if browserMode == .asTab {
             if let url {
                 BrowserManager.shared.loadUrl(url.getUrl)
             }

@@ -60,7 +60,7 @@ extension Const {
         Const.surroundingEffect: true,
 
         // Appearance
-        Const.browserAsTab: false,
+        Const.browserDisplayMode: BrowserDisplayMode.asSheet.rawValue,
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
         Const.hidePlayerPageIndicator: false,

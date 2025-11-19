@@ -196,11 +196,13 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToLibrary:
             NavigationManager.shared.navigateTo(.library)
         case .goToBrowser:
-            if Const.browserAsTab.bool ?? false {
+            let browserMode = BrowserDisplayMode.setting
+            if browserMode == .asTab {
                 NavigationManager.shared.navigateTo(.browser)
             }
         case .openInAppBrowser:
-            if let url = PlayerManager.shared.video?.url?.absoluteString {
+            let browserMode = BrowserDisplayMode.setting
+            if browserMode != .disabled, let url = PlayerManager.shared.video?.url?.absoluteString {
                 NavigationManager.shared.openUrlInApp(.url(url))
             }
         case .openInExternalBrowser:

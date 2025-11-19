@@ -25,7 +25,8 @@ struct AppCommands: Commands {
                     PlayerShortcut.goToQueue.render()
                     PlayerShortcut.goToInbox.render()
                     PlayerShortcut.goToLibrary.render()
-                    if Const.browserAsTab.bool ?? false {
+                    let browserMode = BrowserDisplayMode.setting
+                    if browserMode == .asTab {
                         PlayerShortcut.goToBrowser.render()
                     }
                 } label: {

@@ -10,7 +10,7 @@ import UnwatchedShared
 struct AppearanceSettingsView: View {
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels: Bool = true
     @AppStorage(Const.themeColor) var themeColor: ThemeColor = .defaultTheme
-    @AppStorage(Const.browserAsTab) var browserAsTab: Bool = false
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
     @AppStorage(Const.hidePlayerPageIndicator) var hidePlayerPageIndicator: Bool = false
 
@@ -26,9 +26,12 @@ struct AppearanceSettingsView: View {
 
             MyForm {
                 MySection {
-                    Toggle(isOn: $browserAsTab) {
-                        Text("browserAsTab")
+                    Picker("browserDisplayMode", selection: $browserDisplayMode) {
+                        ForEach(BrowserDisplayMode.allCases, id: \.self) {
+                            Text($0.description)
+                        }
                     }
+                    .pickerStyle(.menu)
                 }
 
                 MySection {

@@ -621,6 +621,8 @@
 		88E58AAD2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
 		88E63F042D75AABF00AC0A89 /* SplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E63F032D75AABF00AC0A89 /* SplitView.swift */; };
 		88E63F052D75AABF00AC0A89 /* SplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E63F032D75AABF00AC0A89 /* SplitView.swift */; };
+		88E70CCA2ECE136200CE7DAD /* BrowserDisplayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E70CC92ECE136200CE7DAD /* BrowserDisplayMode.swift */; };
+		88E70CCB2ECE136200CE7DAD /* BrowserDisplayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E70CC92ECE136200CE7DAD /* BrowserDisplayMode.swift */; };
 		88E779162D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
 		88E779172D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */; };
 		88E83E4E2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
@@ -1097,6 +1099,7 @@
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
 		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
 		88E63F032D75AABF00AC0A89 /* SplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitView.swift; sourceTree = "<group>"; };
+		88E70CC92ECE136200CE7DAD /* BrowserDisplayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserDisplayMode.swift; sourceTree = "<group>"; };
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
 		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
@@ -1984,6 +1987,7 @@
 			isa = PBXGroup;
 			children = (
 				88CD38802E20E5B400E7B21C /* SwipeDirecton.swift */,
+				88E70CC92ECE136200CE7DAD /* BrowserDisplayMode.swift */,
 				88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */,
 				88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */,
 				88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */,
@@ -2304,6 +2308,7 @@
 				889AF9602C50ED05001CEDE6 /* VideoActor+Videos.swift in Sources */,
 				88DD14782E7E9865007BA1F4 /* ThumbnailPlaceholder.swift in Sources */,
 				889AF9612C50ED05001CEDE6 /* UrlService.swift in Sources */,
+				88E70CCA2ECE136200CE7DAD /* BrowserDisplayMode.swift in Sources */,
 				88EE64BB2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */,
 				887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */,
 				88373C262C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
@@ -2828,6 +2833,7 @@
 				88BF35972BC96BCD005FA53E /* AddVideosTip.swift in Sources */,
 				88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */,
 				88017FD72B96161B00192AEA /* DebugView.swift in Sources */,
+				88E70CCB2ECE136200CE7DAD /* BrowserDisplayMode.swift in Sources */,
 				887E82A82CD8FC1000B196EA /* AddYoutubeURL.swift in Sources */,
 				88CD37002E203FB200E7B21C /* PlayerWebView+Initscript.swift in Sources */,
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
