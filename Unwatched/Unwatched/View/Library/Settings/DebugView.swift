@@ -9,6 +9,7 @@ import UnwatchedShared
 struct DebugView: View {
     @AppStorage(Const.monitorBackgroundFetchesNotification) var monitorBackgroundFetches: Bool = false
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
+    @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
 
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
@@ -37,6 +38,14 @@ struct DebugView: View {
                         Text("monitorBackgroundFetches")
                     }
                 }
+
+                #if os(iOS)
+                MySection("playback") {
+                    Toggle(isOn: $backgroundPlayback) {
+                        Text("backgroundPlayback")
+                    }
+                }
+                #endif
 
                 DebugLoggerView()
             }

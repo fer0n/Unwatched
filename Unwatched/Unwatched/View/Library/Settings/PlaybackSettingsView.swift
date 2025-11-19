@@ -11,7 +11,6 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
     @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
     @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
@@ -49,10 +48,6 @@ struct PlaybackSettingsView: View {
                     #if os(iOS)
                     Toggle(isOn: $playVideoFullscreen) {
                         Text("startVideosInFullscreen")
-                    }
-
-                    Toggle(isOn: $backgroundPlayback) {
-                        Text("backgroundPlayback")
                     }
                     #endif
                 }

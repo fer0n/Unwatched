@@ -11179,31 +11179,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Es gibt mehrere Möglichkeiten um den Bild-in-Bild Modus zu starten:\n- Tippe den Pip-button unterhalb des Videos\n- Swipe auf dem Video nach unten\n- Starte den nativen iOS-Vollbildmodus indem du auf den Vollbild-Button innerhalb des Videos unten rechts tippst. Von dort aus kann der \"Pip\"-Button ausgewählt werden.\n\nUm Audio im Hintergrund weiter abzuspielen, stelle sicher, dass Einstellungen → Wiedergabe → „Audio im Hintergrund fortsetzen“ aktiviert ist.\n"
+            "value" : "Unwatched versucht automatisch, Audio im Hintergrund weiterzuspielen. Falls das nicht funktioniert, kannst du Bild-in-Bild manuell aktivieren:\n- Tippe den Pip-Button unterhalb des Videos\n- Wische auf einem laufenden Video nach unten\n- Starte den nativen iOS-Vollbildmodus, indem du auf den Button unten rechts im Video tippst. Von dort aus kannst du den „Pip\"-Button antippen oder die App verlassen, um das Video weiterlaufen zu lassen.\n\nBild-in-Bild wird derzeit von Apples WebView auf macOS nicht unterstützt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There are a few ways to start Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nTo continue playing audio in the background, make sure Settings → Playback → “Continue Audio in Background” is enabled."
+            "value" : "Unwatched attempts to continue playing audio in the background automatically. If that doesn’t work, you can manually enable Picture-in-Picture:\n- Tap the Pip-button underneath the video\n- Swipe down on a playing video\n- Start the native iOS fullscreen by tapping the button on the bottom right inside the video. From there, tap the \"Pip\" button or leave the app to keep the video playing.\n\nPicture-in-Picture is currently not supported by Apple’s WebView on macOS."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hay varias formas de iniciar el modo imagen dentro del otra (PIP):\n- Toca el botón PIP debajo del video\n- Desliza hacia abajo en un video que se está reproduciendo\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"PIP\" o sal de la aplicación para seguir reproduciendo el video.\n\nPara seguir reproduciendo el audio en segundo plano, asegúrate de que Configuración → Reproducción → “Continuar el audio en segundo plano” esté activado."
+            "value" : "Unwatched intenta continuar reproduciendo el audio en segundo plano automáticamente. Si eso no funciona, puedes activar manualmente Picture-in-Picture:\n- Toca el botón Pip debajo del video\n- Desliza hacia abajo en un video en reproducción\n- Inicia la pantalla completa nativa de iOS tocando el botón en la esquina inferior derecha dentro del video. Desde allí, toca el botón \"Pip\" o sal de la aplicación para seguir reproduciendo el video.\n\nPicture-in-Picture actualmente no es compatible con WebView de Apple en macOS."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il existe plusieurs façons de démarrer le mode Picture-in-Picture (incrustation d'image) :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. À partir de là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture de la vidéo.\n\nPour continuer à lire l’audio en arrière-plan, assure-toi que Paramètres → Lecture → “Continuer l’audio en arrière-plan” est activé."
+            "value" : "Unwatched tente automatiquement de continuer à lire l'audio en arrière-plan. Si cela ne fonctionne pas, vous pouvez activer manuellement Picture-in-Picture :\n- Appuyez sur le bouton Pip sous la vidéo\n- Glissez vers le bas sur une vidéo en cours de lecture\n- Activez le plein écran natif iOS en appuyant sur le bouton en bas à droite de la vidéo. De là, appuyez sur le bouton \"Pip\" ou quittez l'application pour continuer la lecture.\n\nPicture-in-Picture n'est actuellement pas pris en charge par WebView d'Apple sur macOS."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Istnieje kilka sposobów na uruchomienie trybu Picture-in-Picture:\n- Kliknij przycisk PiP pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"PiP\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nAby kontynuować odtwarzanie dźwięku w tle, upewnij się, że Ustawienia → Odtwarzanie → „Kontynuuj dźwięk w tle” jest włączone."
+            "value" : "Unwatched automatycznie próbuje kontynuować odtwarzanie dźwięku w tle. Jeśli to nie działa, możesz ręcznie włączyć Picture-in-Picture:\n- Kliknij przycisk Pip pod filmem\n- Przesuń palcem w dół na odtwarzanym filmie\n- Włącz natywny tryb pełnoekranowy iOS, klikając przycisk w prawym dolnym rogu wideo. Następnie kliknij przycisk \"Pip\" lub opuść aplikację, aby kontynuować odtwarzanie.\n\nPicture-in-Picture nie jest obecnie obsługiwane przez WebView firmy Apple na macOS."
           }
         }
       }
