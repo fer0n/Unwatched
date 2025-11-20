@@ -114,7 +114,7 @@ extension TranscriptView {
                 from: transcriptUrl,
                 youtubeId: youtubeId,
                 )
-            Log.info("Transcript loaded for \(youtubeId): \(transcript) entries")
+            Log.info("Transcript loaded for \(youtubeId): \(transcript?.count ?? 0) entries")
             transcriptYoutubeId = youtubeId
         }
     }

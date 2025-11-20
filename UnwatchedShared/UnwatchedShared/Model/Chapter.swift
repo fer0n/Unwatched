@@ -48,7 +48,7 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     }
 
     public var description: String {
-        "\(startTime)-\(endTime ?? -1): \(title ?? category?.description ?? "-")"
+        "\(startTime)-\(endTime, default: "nil"): \(title ?? category?.description ?? "-")"
     }
 }
 
@@ -71,8 +71,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     }
 
     public var description: String {
-        let endText = endTime == nil ? "??" : "\(endTime ?? -1)"
-        return "\(startTime)-\(endText): \(title ?? category?.description ?? "-")"
+        "\(startTime)-\(endTime, default: "nil"): \(title ?? category?.description ?? "-")"
     }
 
     public var getChapter: Chapter {
