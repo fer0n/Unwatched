@@ -13,16 +13,32 @@ import UnwatchedShared
     }()
 
     var icon: OverlayIcon = .play
-
-    @MainActor
     var show = false
+    private var hideTask: Task<Void, Never>?
 
     init() {}
 
-    @MainActor
     func show(_ icon: OverlayIcon) {
+        // If showing the same icon, cancel the hide task to keep it visible
+        if self.icon == icon && show {
+            hideTask?.cancel()
+            hideTask = nil
+            scheduleHide()
+            return
+        }
+
         self.icon = icon
-        show.toggle()
+        show = true
+        scheduleHide()
+    }
+
+    private func scheduleHide() {
+        hideTask?.cancel()
+        hideTask = Task {
+            try? await Task.sleep(for: .milliseconds(150))
+            guard !Task.isCancelled else { return }
+            show = false
+        }
     }
 }
 
@@ -39,18 +55,13 @@ struct FullscreenOverlayControls: View {
                 .resizable()
                 .animation(nil, value: overlayVM.show)
                 .frame(width: 80, height: 80)
-                .phaseAnimator([0, 1, 0], trigger: overlayVM.show) { view, phase in
-                    view
-                        .scaleEffect(phase == 1 ? 1 : 0.75)
-                        .backgroundTransparentEffect(fallback: .thinMaterial)
-                        .opacity(phase == 1 ? 1 : 0)
-                } animation: { _ in
-                    .easeInOut(duration: 0.15)
-                }
+                .scaleEffect(overlayVM.show ? 1 : 0.75)
+                .backgroundTransparentEffect(fallback: .thinMaterial)
+                .opacity(overlayVM.show ? 1 : 0)
+                .animation(.easeInOut(duration: 0.15), value: overlayVM.show)
                 .fontWeight(overlayVM.icon.fontWeight)
                 .symbolRenderingMode(.palette)
                 .foregroundStyle(Color.white.opacity(0.7), .clear)
-
                 .allowsHitTesting(false)
 
             HStack {
@@ -114,7 +125,7 @@ extension View {
     }
 }
 
-enum OverlayIcon {
+enum OverlayIcon: Equatable {
     case play
     case pause
     case next
