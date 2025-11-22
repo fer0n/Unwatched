@@ -8,7 +8,6 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
-// swiftlint:disable:next type_body_length
 struct YtBrowserWebView: PlatformViewRepresentable {
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show

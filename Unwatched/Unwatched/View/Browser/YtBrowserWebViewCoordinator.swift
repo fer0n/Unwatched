@@ -192,10 +192,11 @@ extension YtBrowserWebView {
                 var style = document.createElement('style');
                 style.textContent = `
                     .rich-section-content:has(.shortsLockupViewModelHost),
-                    .reel-shelf-items {
+                    .reel-shelf-items,
+                    ytm-pivot-bar-item-renderer:has(.pivot-shorts) {
                         display: none !important;
                     }
-                `
+                `;
                 document.head.appendChild(style);
             })();
             """
