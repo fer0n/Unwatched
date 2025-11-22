@@ -94,6 +94,7 @@ struct RefreshToolbarContent: ToolbarContent {
                               options: .speed(0.8),
                               isActive: refresher.isSyncingIcloud)
                 .saturation(refresher.isSyncingIcloud ? 0 : 1)
+                .myTint(neutral: true)
         }
     }
 }

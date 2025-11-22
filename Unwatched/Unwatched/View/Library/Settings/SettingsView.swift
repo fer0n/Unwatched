@@ -130,11 +130,7 @@ struct SettingsView: View {
                 .myListRowBackground()
             }
             .myNavigationTitle("settings")
-            #if os(visionOS)
-            .visionForegroundColor()
-            #else
             .myTint()
-            #endif
         }
     }
 }

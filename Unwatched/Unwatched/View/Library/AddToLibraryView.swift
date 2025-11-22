@@ -43,12 +43,8 @@ struct AddToLibraryView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             })
-            #if os(visionOS)
-            .foregroundStyle(.primary)
-            #else
             .foregroundStyle(theme.color)
             .buttonStyle(.plain)
-            #endif
         }
 
         HStack(spacing: 0) {

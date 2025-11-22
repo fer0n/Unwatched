@@ -38,13 +38,21 @@ public enum ThemeColor: Int, CaseIterable, Sendable {
         case .purple:
             return .purple
         case .blackWhite:
+            #if os(visionOS)
+            return .primary
+            #else
             return .neutralAccentColor
+            #endif
         }
     }
 
     public var contrastColor: Color {
         if self == .blackWhite {
+            #if os(visionOS)
+            return .black
+            #else
             return .automaticWhite
+            #endif
         }
         return .white
     }

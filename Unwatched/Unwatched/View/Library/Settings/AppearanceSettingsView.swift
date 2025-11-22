@@ -60,6 +60,7 @@ struct AppearanceSettingsView: View {
                     .frame(height: 10)
                 #endif
 
+                #if !os(visionOS)
                 MySection(getAppearanceTitle(.light)) {
                     AppAppearanceSelection(selection: $lightModeTheme)
                         .environment(\.colorScheme, .light)
@@ -69,6 +70,7 @@ struct AppearanceSettingsView: View {
                     AppAppearanceSelection(selection: $darkModeTheme)
                         .environment(\.colorScheme, .dark)
                 }
+                #endif
 
                 MySection("appColor", showPremiumIndicator: true) {
                     ForEach(ThemeColor.allCases, id: \.self) { theme in

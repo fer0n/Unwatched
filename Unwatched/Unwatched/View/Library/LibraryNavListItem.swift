@@ -46,11 +46,7 @@ struct LibraryNavListItem: View {
                     .padding(1)
             }
         }
-        #if os(visionOS)
-        .foregroundStyle(.primary)
-        #else
         .foregroundStyle(theme.color)
-        #endif
     }
 }
 

@@ -19,6 +19,7 @@ struct UndoToolbarButton: ToolbarContent {
                 .accessibilityLabel("undo")
                 .font(.footnote)
                 .fontWeight(.bold)
+                .myTint(neutral: true)
             }
         }
     }

@@ -25,6 +25,7 @@ struct DismissToolbarButton: ToolbarContent {
             }
             .fontWeight(.bold)
             .accessibilityLabel("dismiss")
+            .myTint(neutral: true)
         }
     }
 }

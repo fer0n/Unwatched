@@ -11,17 +11,19 @@ struct MyTint: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            #if os(visionOS)
-            .tint(nil)
-        #else
-        .tint(theme.color)
-        #endif
+            .tint(theme.color)
     }
 }
 
 extension View {
-    func myTint() -> some View {
-        self.modifier(MyTint())
+    func myTint(neutral: Bool = false) -> some View {
+        self.apply {
+            if neutral && Device.isVision {
+                $0.tint(nil)
+            } else {
+                $0.modifier(MyTint())
+            }
+        }
     }
 
     func visionForegroundColor() -> some View {

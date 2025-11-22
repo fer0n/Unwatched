@@ -61,6 +61,9 @@ struct LibraryView: View {
                     .fontWeight(.bold)
                     .accessibilityLabel("settings")
             }
+            #if os(visionOS)
+            .foregroundStyle(theme.contrastColor)
+            #endif
         }
     }
 }
