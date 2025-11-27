@@ -130,19 +130,36 @@ struct UrlService {
         return url.absoluteString.contains("/shorts/")
     }
 
-    static func getAsLargeThumbnailUrl(_ imageUrl: URL?) -> URL? {
-        // default: https://i.ytimg.com/vi/88bMVbx1dzM/hqdefault.jpg
-        // or       https://i.ytimg.com/vi/88bMVbx1dzM/mqdefault.jpg
+    enum ThumbnailSize {
+        case small
+        case medium
+        case large
+    }
+
+    static func getImageUrl(_ imageUrl: URL?, _ size: ThumbnailSize) -> URL? {
+        // smallest: https://i.ytimg.com/vi/88bMVbx1dzM/default.jpg
+        // small: https://i.ytimg.com/vi/88bMVbx1dzM/mqdefault.jpg
+        // default/medium url: https://i.ytimg.com/vi/88bMVbx1dzM/hqdefault.jpg
 
         // larger: https://i.ytimg.com/vi/88bMVbx1dzM/sddefault.jpg
         // largest: https://i.ytimg.com/vi/88bMVbx1dzM/maxresdefault.jpg
 
         guard let imageUrl else { return nil }
         let urlString = imageUrl.absoluteString
-        let qualities = ["hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
 
+        let replacement: String
+        switch size {
+        case .small:
+            replacement = "mqdefault.jpg"
+        case .medium:
+            replacement = "hqdefault.jpg"
+        case .large:
+            replacement = "sddefault.jpg"
+        }
+        let qualities = ["hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
         for quality in qualities where urlString.contains(quality) {
-            return URL(string: urlString.replacing(quality, with: "sddefault.jpg"))
+            let newString = urlString.replacing(quality, with: replacement)
+            return URL(string: newString)
         }
         return imageUrl
     }

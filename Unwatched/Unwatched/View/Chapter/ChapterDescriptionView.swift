@@ -15,6 +15,7 @@ struct ChapterDescriptionView: View {
     var isCompact = false
     var scrollToCurrent = false
     var isTransparent = false
+    var showThumbnail = true
 
     var body: some View {
         let hasChapters = video.sortedChapters.isEmpty == false
@@ -22,9 +23,13 @@ struct ChapterDescriptionView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: isCompact ? 8 : 10) {
+                    if showThumbnail {
+                        VideoDetailThumbnail(video: video)
+                            .padding([.top, .horizontal], -5)
+                    }
+
                     DescriptionDetailHeaderView(
                         video: video,
-                        smallTitle: isCompact,
                         onTitleTap: onTitleTap)
 
                     if hasChapters {
@@ -47,8 +52,8 @@ struct ChapterDescriptionView: View {
                         isCurrentVideo: video.youtubeId == player.video?.youtubeId,
                         )
                 }
-                .padding(.horizontal, isCompact ? 10 : 20)
-                .padding(.top, isCompact ? 15 : 30)
+                .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
+                .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)
                 .frame(idealWidth: 500, maxWidth: 800, alignment: .leading)
 
                 Spacer()
@@ -74,7 +79,6 @@ struct ChapterDescriptionView: View {
                 }
             }
         }
-        .padding(.top, Const.iOS26_1 ? 0 : 2)
         .tint(.neutralAccentColor)
     }
 
@@ -87,13 +91,9 @@ struct ChapterDescriptionView: View {
 }
 
 #Preview {
-    ChapterDescriptionView(video: DataProvider.dummyVideo)
-        .modelContainer(DataProvider.previewContainerFilled)
-        .environment(PlayerManager.getDummy())
-        .environment(NavigationManager())
-        .environment(RefreshManager())
-        .environment(SubscribeManager())
-        .environment(ImageCacheManager())
-        .environment(SheetPositionReader())
-        .appNotificationOverlay()
+    Color.clear
+        .sheet(isPresented: .constant(true)) {
+            ChapterDescriptionView(video: DataProvider.dummyVideo)
+                .testEnvironments()
+        }
 }

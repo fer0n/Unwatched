@@ -233,6 +233,10 @@ import UnwatchedShared
             showBrowser = false
         }
 
+        if videoDetail != nil {
+            videoDetail = nil
+        }
+
         if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)

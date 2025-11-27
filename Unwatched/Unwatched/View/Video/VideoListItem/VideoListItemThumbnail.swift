@@ -29,7 +29,7 @@ struct VideoListItemThumbnail: View {
     var imageUrl: URL? {
         let url = !largeThumbnail
             ? video.thumbnailUrl
-            : UrlService.getAsLargeThumbnailUrl(video.thumbnailUrl)
+            : UrlService.getImageUrl(video.thumbnailUrl, .large)
         return url
     }
 

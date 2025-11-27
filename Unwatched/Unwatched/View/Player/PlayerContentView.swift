@@ -54,7 +54,8 @@ struct PlayerContentView: View {
                     ChapterDescriptionView(
                         video: video,
                         bottomSpacer: fadeOutHeight + Const.minSheetDetent,
-                        )
+                        showThumbnail: false
+                    )
                     .overlay {
                         topShadow
                     }
