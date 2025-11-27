@@ -48,14 +48,18 @@ struct PlayerGestureOverlay: ViewModifier {
             guard Const.swipeGestureRight.bool ?? true else {
                 return
             }
-            seekBackward()
+            if player.goToPreviousChapter() {
+                OverlayFullscreenVM.shared.show(.previous)
+            }
         case .doubleTapRight:
             seekForward()
         case .swipeLeft:
             guard Const.swipeGestureLeft.bool ?? true else {
                 return
             }
-            seekForward()
+            if player.goToNextChapter() {
+                OverlayFullscreenVM.shared.show(.next)
+            }
         case .swipeUp:
             guard Const.swipeGestureUp.bool ?? true else {
                 return
