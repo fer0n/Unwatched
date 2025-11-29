@@ -64,12 +64,14 @@ struct PlayerGestureOverlay: ViewModifier {
             guard Const.swipeGestureUp.bool ?? true else {
                 return
             }
-            PlayerManager.shared.tempSpeedChange(faster: true)
+            let appliedSpeed = PlayerManager.shared.tempSpeedChange(faster: true)
+            OverlayFullscreenVM.shared.show(appliedSpeed ? .speedUp : .regularSpeed)
         case .swipeDown:
             guard Const.swipeGestureDown.bool ?? true else {
                 return
             }
-            PlayerManager.shared.tempSpeedChange(faster: false)
+            let appliedSpeed = PlayerManager.shared.tempSpeedChange(faster: false)
+            OverlayFullscreenVM.shared.show(appliedSpeed ? .slowDown : .regularSpeed)
         }
     }
 

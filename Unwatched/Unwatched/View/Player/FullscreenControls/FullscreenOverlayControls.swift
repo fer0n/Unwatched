@@ -135,6 +135,9 @@ enum OverlayIcon: Equatable {
     case watched
     case nextVideo
     case queued
+    case speedUp
+    case slowDown
+    case regularSpeed
 
     var systemName: String {
         switch self {
@@ -147,6 +150,9 @@ enum OverlayIcon: Equatable {
         case .seekBackward: return "arrow.counterclockwise.circle.fill"
         case .seekForward: return "arrow.clockwise.circle.fill"
         case .queued: return "arrow.uturn.right.circle.fill"
+        case .speedUp: return "waveform.circle.fill"
+        case .slowDown: return "waveform.circle.fill"
+        case .regularSpeed: return "slash.circle.fill"
         }
     }
 

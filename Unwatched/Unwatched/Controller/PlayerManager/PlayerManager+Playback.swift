@@ -256,18 +256,22 @@ extension PlayerManager {
     }
 
     @MainActor
-    func tempSpeedChange(faster: Bool = false) {
+    func tempSpeedChange(faster: Bool = false) -> Bool {
         if faster {
             if temporaryPlaybackSpeed == tempSpeedUpValue {
                 temporaryPlaybackSpeed = nil
+                return false
             } else {
                 temporarySpeedUp()
+                return true
             }
         } else {
             if [1, tempSlowDownValue].contains(temporaryPlaybackSpeed) {
                 temporaryPlaybackSpeed = nil
+                return false
             } else {
                 temporarySlowDown()
+                return true
             }
         }
     }
