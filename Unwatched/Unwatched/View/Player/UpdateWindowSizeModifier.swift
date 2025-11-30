@@ -17,7 +17,7 @@ struct UpdateWindowSizeModifier: ViewModifier {
             .onSizeChange { newSize in
                 viewModel.currentSize = newSize
             }
-            .onChange(of: hideControlsFullscreen) {
+            .onChange(of: hideControlsFullscreen, initial: true) {
                 viewModel.updateWindowSize(player.videoAspectRatio, reset: true)
             }
             .onChange(of: player.videoAspectRatio) {
