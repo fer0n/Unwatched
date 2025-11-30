@@ -193,7 +193,8 @@ extension YtBrowserWebView {
                 style.textContent = `
                     .rich-section-content:has(.shortsLockupViewModelHost),
                     .reel-shelf-items,
-                    ytm-pivot-bar-item-renderer:has(.pivot-shorts) {
+                    ytm-pivot-bar-item-renderer:has(.pivot-shorts),
+                    yt-tab-shape[tab-title="Shorts"] {
                         display: none !important;
                     }
                 `;
