@@ -46,7 +46,8 @@ struct FullscreenChapterDescriptionButton: View {
                         isCompact: true,
                         scrollToCurrent: true,
                         isTransparent: Const.iOS26,
-                        showThumbnail: false
+                        showThumbnail: false,
+                        showActions: false
                     )
                     .scrollIndicators(.hidden)
                     .frame(

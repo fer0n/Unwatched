@@ -9,6 +9,8 @@ import UnwatchedShared
 struct ChapterDescriptionView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
 
     let video: Video
     var bottomSpacer: CGFloat = 0
@@ -16,6 +18,7 @@ struct ChapterDescriptionView: View {
     var scrollToCurrent = false
     var isTransparent = false
     var showThumbnail = true
+    var showActions = true
 
     var body: some View {
         let hasChapters = video.sortedChapters.isEmpty == false
@@ -78,8 +81,95 @@ struct ChapterDescriptionView: View {
                     )
                 }
             }
+            #if os(iOS) || os(visionOS)
+            .toolbar {
+                if showActions, #available(iOS 26.0, visionOS 26.0, *) {
+                    ToolbarItemGroup(placement: Device.isVision
+                                        ? .topBarTrailing
+                                        : .bottomBar) {
+                        #if os(visionOS)
+                        buttons
+                            .buttonBorderShape(.circle)
+                        #else
+                        buttons
+                        #endif
+                    }
+                }
+            }
+            #endif
+            #if os(visionOS)
+            .myTint(neutral: true)
+            #endif
         }
         .tint(.neutralAccentColor)
+    }
+
+    @ViewBuilder
+    var buttons: some View {
+        Button {
+            playVideo()
+        } label: {
+            Image(systemName: "play.fill")
+        }
+
+        Button {
+            addToQueueNext()
+        } label: {
+            Image(systemName: Const.queueNextSF)
+        }
+
+        Button {
+            addToQueueLast()
+        } label: {
+            Image(systemName: Const.queueLastSF)
+        }
+
+        Button {
+            clearVideo()
+        } label: {
+            #if os(visionOS)
+            Text("clear")
+            #else
+            Image(systemName: Const.clearNoFillSF)
+            #endif
+        }
+        .disabled(!canBeCleared)
+        .buttonBorderShape(.automatic)
+    }
+
+    var canBeCleared: Bool {
+        video.inboxEntry != nil || video.queueEntry != nil
+    }
+
+    func playVideo() {
+        VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
+        player.playVideo(video)
+        navManager.handlePlay()
+    }
+
+    func addToQueueNext() {
+        VideoService.insertQueueEntries(
+            at: 1,
+            videos: [video],
+            modelContext: modelContext
+        )
+        dismiss()
+    }
+
+    func addToQueueLast() {
+        VideoService.addToBottomQueue(
+            video: video,
+            modelContext: modelContext
+        )
+        dismiss()
+    }
+
+    func clearVideo() {
+        VideoService.clearEntries(from: video, modelContext: modelContext)
+        if video.queueEntry?.order == 0 {
+            player.loadTopmostVideoFromQueue()
+        }
+        dismiss()
     }
 
     func onTitleTap() {
@@ -93,7 +183,14 @@ struct ChapterDescriptionView: View {
 #Preview {
     Color.clear
         .sheet(isPresented: .constant(true)) {
-            ChapterDescriptionView(video: DataProvider.dummyVideo)
-                .testEnvironments()
+            NavigationStack {
+                ChapterDescriptionView(video: DataProvider.dummyVideo)
+                    .testEnvironments()
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            DismissSheetButton()
+                        }
+                    }
+            }
         }
 }

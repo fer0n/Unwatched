@@ -22,7 +22,7 @@ struct VideoDetailThumbnail: View {
                         .scaledToFill()
                 }
                 .apply {
-                    if #available(iOS 26.0, *) {
+                    if #available(iOS 26.0, macOS 26.0, *) {
                         $0.clipShape(
                             .rect(
                                 corners: .concentric(minimum: 25),
