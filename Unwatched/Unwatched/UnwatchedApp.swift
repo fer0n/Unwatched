@@ -41,8 +41,13 @@ struct UnwatchedApp: App {
 
                 #if os(macOS)
                 .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
+            #elseif os(visionOS)
+            .frame(minWidth: 900, minHeight: 500)
             #endif
         }
+        #if os(visionOS)
+        .windowResizability(.contentSize)
+        #endif
         .commands {
             PlayerCommands()
             AppCommands()
