@@ -19,6 +19,8 @@ import UnwatchedShared
                 sheetPos.selectedDetent = detent
             }
         }
+        sheetPos.playerControlHeight = UserDefaults.standard.double(forKey: Const.playerControlHeight)
+
         return sheetPos
     }()
 
@@ -69,10 +71,11 @@ import UnwatchedShared
     func save() {
         let encoder = JSONEncoder()
         let detent = selectedDetent.encode(playerControlHeight)
-
         if let encoded = try? encoder.encode(detent) {
             UserDefaults.standard.set(encoded, forKey: Const.selectedDetent)
         }
+
+        UserDefaults.standard.set(playerControlHeight, forKey: Const.playerControlHeight)
     }
 
     var maxSheetHeight: CGFloat {
