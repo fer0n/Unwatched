@@ -15794,7 +15794,7 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Unterstützte Videogesten:**\n• Nach links/rechts wischen: vor-/zurückspringen\n• In die Mitte tippen: abspielen/pausieren\n• Nach oben/unten wischen: Wiedergabegeschwindigkeit erhöhen/verringern"
+                  "value" : "**Unterstützte Videogesten:**\n• Nach links/rechts wischen: Kapitel wechseln\n• In die Mitte tippen: abspielen/pausieren\n• Nach oben/unten wischen: Wiedergabegeschwindigkeit erhöhen/verringern"
                 }
               },
               "other" : {
@@ -15812,7 +15812,7 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Supported video gestures:**\n• Swipe left/right: seek forward/backward\n• Tap center: Play/pause\n• Swipe up/down: Speed up/slow down playback"
+                  "value" : "**Supported video gestures:**\n• Swipe left/right: Jump chapters\n• Tap center: Play/pause\n• Swipe up/down: Speed up/slow down playback"
                 }
               },
               "other" : {
@@ -15830,7 +15830,7 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestos de vídeo compatibles:**\n• Deslizar a la izquierda/derecha: avanzar/retroceder\n• Tocar en el centro: reproducir/pausar\n• Deslizar hacia arriba/abajo: acelerar/reducir la velocidad de reproducción"
+                  "value" : "**Gestos de vídeo compatibles:**\n• Deslizar a la izquierda/derecha: Saltar capítulos\n• Tocar en el centro: reproducir/pausar\n• Deslizar hacia arriba/abajo: acelerar/reducir la velocidad de reproducción"
                 }
               },
               "other" : {
@@ -15848,7 +15848,7 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Gestes vidéo pris en charge :**\n• Balayer vers la gauche/droite : avancer/reculer\n• Taper au centre : lecture/pause\n• Balayer vers le haut/bas : accélérer/ralentir la lecture"
+                  "value" : "**Gestes vidéo pris en charge :**\n• Balayer vers la gauche/droite : changer de chapitre\n• Taper au centre : lecture/pause\n• Balayer vers le haut/bas : accélérer/ralentir la lecture"
                 }
               },
               "other" : {
@@ -15866,7 +15866,7 @@
               "applevision" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: przewijaj do przodu/do tyłu\n• Stuknij na środku: odtwórz/pauzuj\n• Przesuń w górę/w dół: przyspiesz/zwolnij odtwarzanie"
+                  "value" : "**Odtwarzacz obsługuje gesty:**\n• Przesuń w lewo/prawo: Przełącz rozdział\n• Stuknij na środku: odtwórz/pauzuj\n• Przesuń w górę/w dół: przyspiesz/zwolnij odtwarzanie"
                 }
               },
               "other" : {
