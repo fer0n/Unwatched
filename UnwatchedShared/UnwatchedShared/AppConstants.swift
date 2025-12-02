@@ -288,6 +288,7 @@ public struct Const {
 
     public static let selectedDetent = "selectedDetent"
     public static let playerControlHeight = "playerControlHeight"
+    public static let sheetHeight = "sheetHeight"
     public static let hideMenuOnPlay = "hideMenuOnPlay"
 
     public static let videoAddedToInboxNotification = "videoAddedToInboxNotification"

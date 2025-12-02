@@ -12,6 +12,8 @@ import UnwatchedShared
     @MainActor
     static let shared: SheetPositionReader = {
         let sheetPos = SheetPositionReader()
+        sheetPos.playerControlHeight = UserDefaults.standard.double(forKey: Const.playerControlHeight)
+        sheetPos.sheetHeight = UserDefaults.standard.double(forKey: Const.sheetHeight)
 
         if let savedDetent = UserDefaults.standard.data(forKey: Const.selectedDetent),
            let loadedDetentEncoding = try? JSONDecoder().decode(PresentationDetentEncoding.self, from: savedDetent) {
@@ -19,7 +21,6 @@ import UnwatchedShared
                 sheetPos.selectedDetent = detent
             }
         }
-        sheetPos.playerControlHeight = UserDefaults.standard.double(forKey: Const.playerControlHeight)
 
         return sheetPos
     }()
@@ -33,6 +34,7 @@ import UnwatchedShared
 
     @ObservationIgnored var landscapeFullscreen: Bool = false
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
+    @ObservationIgnored var needsRestoreMiniPlayer: Bool = false
     @ObservationIgnored var sheetHeight: CGFloat = .zero
     @ObservationIgnored private var sheetDistanceToTop: CGFloat = .zero
     @ObservationIgnored var playerContentViewHeight: CGFloat?
@@ -70,12 +72,12 @@ import UnwatchedShared
 
     func save() {
         let encoder = JSONEncoder()
-        let detent = selectedDetent.encode(playerControlHeight)
+        let detent = selectedDetent.encode(playerControlHeight, maxSheetHeight)
         if let encoded = try? encoder.encode(detent) {
             UserDefaults.standard.set(encoded, forKey: Const.selectedDetent)
         }
-
         UserDefaults.standard.set(playerControlHeight, forKey: Const.playerControlHeight)
+        UserDefaults.standard.set(sheetHeight, forKey: Const.sheetHeight)
     }
 
     var maxSheetHeight: CGFloat {

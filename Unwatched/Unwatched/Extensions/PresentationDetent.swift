@@ -27,14 +27,16 @@ enum PresentationDetentEncoding: Codable {
 }
 
 extension PresentationDetent {
-    func encode(_ possibleCustomHeight: CGFloat) -> PresentationDetentEncoding? {
+    func encode(_ playerControlHeight: CGFloat, _ maxSheetHeight: CGFloat) -> PresentationDetentEncoding? {
         switch self {
         case .medium:
             return .medium
         case .large:
             return .large
-        case .height(possibleCustomHeight):
-            return .height(possibleCustomHeight)
+        case .height(playerControlHeight):
+            return .height(playerControlHeight)
+        case .height(maxSheetHeight):
+            return .height(maxSheetHeight)
         default:
             return nil
         }
