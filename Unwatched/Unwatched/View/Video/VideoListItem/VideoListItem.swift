@@ -85,13 +85,18 @@ struct VideoListItem: View, Equatable {
             }
         }
         .accessibilityElement(children: .combine)
-        .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
             videoData: videoData,
             config: config,
             onChange: onChange
         ))
+        #if os(macOS)
         .drawingGroup()
+        .handleVideoListItemTap(videoData)
+        #else
+        .handleVideoListItemTap(videoData)
+        .drawingGroup()
+        #endif
     }
 }
 
