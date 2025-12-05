@@ -11,18 +11,18 @@ extension View {
         self
             #if os(iOS) || os(visionOS)
             .listRowInsets(.init(
-                top: 5,
-                leading: 10,
-                bottom: 5,
-                trailing: 10
+                top: 0,
+                leading: 5,
+                bottom: 0,
+                trailing: 5
             ))
             .padding(5)
             #else
             .listRowInsets(.init(
-            top: 5,
-            leading: 5,
-            bottom: 5,
-            trailing: 5
+            top: 0,
+            leading: 0,
+            bottom: 0,
+            trailing: 0
             ))
             #endif
             .listRowSeparator(.hidden)

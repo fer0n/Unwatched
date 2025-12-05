@@ -84,8 +84,6 @@ struct VideoListItem: View, Equatable {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding([.vertical, .leading], -5)
-        .padding(.horizontal, videoListFormat == .expansive ? -5 : 0)
         .accessibilityElement(children: .combine)
         .handleVideoListItemTap(videoData)
         .modifier(VideoListItemSwipeActionsModifier(
@@ -93,6 +91,7 @@ struct VideoListItem: View, Equatable {
             config: config,
             onChange: onChange
         ))
+        .drawingGroup()
     }
 }
 
@@ -130,6 +129,8 @@ extension View {
         .equatable()
         .tint(.teal)
         .listRowSeparator(.hidden)
+        .videoListItemEntry()
+        .listRowBackground(Color.gray)
     }
     .listStyle(.plain)
     .modelContainer(container)
