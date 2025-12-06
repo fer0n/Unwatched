@@ -69,11 +69,7 @@ public struct Const {
     public static let seekToEndBuffer: CGFloat = 0.5
 
     /// Default seconds to seek forward/back
-    #if os(visionOS)
-    public static let seekSeconds: Double = 15
-    #else
     public static let seekSeconds: Double = 10
-    #endif
 
     /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
