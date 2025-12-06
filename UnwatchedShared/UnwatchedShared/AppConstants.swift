@@ -280,6 +280,7 @@ public struct Const {
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     public static let sideloadingSortOrder = "sideloadingSortOrder"
     public static let showTabBarBadge = "showTabBarBadge"
+    public static let browserAsTab = "browserAsTab"
     public static let browserDisplayMode = "browserDisplayMode"
 
     public static let selectedDetent = "selectedDetent"

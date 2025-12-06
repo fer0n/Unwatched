@@ -159,8 +159,19 @@ struct SetupView: View {
             // avoid fetching another video first
             PlayerManager.shared.restoreNowPlayingVideo()
         }
-        VideoService.fetchVideoDurationsQueueInbox()
+        migrateBrowserTabSetting()
         sendSettings()
+    }
+
+    static func migrateBrowserTabSetting() {
+        VideoService.fetchVideoDurationsQueueInbox()
+        if Const.browserAsTab.bool == true,
+           UserDefaults.standard.value(forKey: Const.browserDisplayMode) as? Int == nil {
+            UserDefaults.standard.setValue(
+                BrowserDisplayMode.asTab.rawValue,
+                forKey: Const.browserDisplayMode
+            )
+        }
     }
 
     static func sendSettings() {
