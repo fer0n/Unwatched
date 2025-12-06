@@ -11,9 +11,10 @@ import UnwatchedShared
 @Observable class SheetPositionReader {
     @MainActor
     static let shared: SheetPositionReader = {
+        // workaround: light color has dark mode variant when menu starts with detent depending on either value
         let sheetPos = SheetPositionReader()
-        sheetPos.playerControlHeight = UserDefaults.standard.double(forKey: Const.playerControlHeight)
-        sheetPos.sheetHeight = UserDefaults.standard.double(forKey: Const.sheetHeight)
+        sheetPos.playerControlHeight = UserDefaults.standard.value(forKey: Const.playerControlHeight) as? Double ?? 400
+        sheetPos.sheetHeight = UserDefaults.standard.value(forKey: Const.sheetHeight) as? Double ?? 600
 
         if let savedDetent = UserDefaults.standard.data(forKey: Const.selectedDetent),
            let loadedDetentEncoding = try? JSONDecoder().decode(PresentationDetentEncoding.self, from: savedDetent) {
