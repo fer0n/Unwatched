@@ -147,6 +147,8 @@ extension YtBrowserWebView {
         // MARK: - JavaScript Injection
 
         private func applySettingsToWebView(_ webView: WKWebView) {
+            injectStyling(webView)
+
             if parent.defaultShortsSetting == .hide {
                 injectHideShortsCSS(webView)
             }
@@ -154,6 +156,23 @@ extension YtBrowserWebView {
             if parent.playBrowserVideosInApp {
                 injectVideoInterceptionScript(webView)
             }
+        }
+
+        func injectStyling(_ webView: WKWebView) {
+            // hide the "open app" button
+            let script = """
+                (function() {
+                    var style = document.createElement('style');
+                    style.textContent = `
+                        ytm-button-renderer:has(a[href*="open_app"]),
+                        ytm-button-renderer:has(a[href^="vnd.youtube"]) {
+                            display: none !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                })();
+            """
+            webView.evaluateJavaScript(script + " undefined;")
         }
 
         func injectVideoInterceptionScript(_ webView: WKWebView) {
