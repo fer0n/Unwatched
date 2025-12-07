@@ -45,6 +45,7 @@ struct AddToLibraryView: View {
             })
             .foregroundStyle(theme.color)
             .buttonStyle(.plain)
+            .linkHoverEffect()
         }
 
         HStack(spacing: 0) {
