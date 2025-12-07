@@ -7,6 +7,7 @@ import SwiftUI
 import WebKit
 import OSLog
 import UnwatchedShared
+import AVFoundation
 
 #if os(iOS) || os(visionOS)
 typealias PlatformViewRepresentable = UIViewRepresentable
@@ -83,7 +84,18 @@ struct PlayerWebView: PlatformViewRepresentable {
         #endif
 
         loadWebContent(webView)
+        setupAudioSession()
         return webView
+    }
+
+    func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance()
+                .setCategory(.playback, mode: .moviePlayback, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            Log.error("Failed to set audio session category: \(error)")
+        }
     }
 
     func updateView(_ view: WKWebView) {
