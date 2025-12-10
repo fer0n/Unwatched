@@ -237,8 +237,10 @@ extension VideoActor {
         isNew: Bool,
         ) -> [Video] {
         var addedVideos: [Video] = []
+        let videosToProcess = videoPlacement == .queueLast ? Array(videos.reversed()) : videos
+
         // check setting for ytShort, use individual setting in that case
-        for video in videos {
+        for video in videosToProcess {
             let placement: VideoPlacement = (video.isYtShort == true && hideShorts)
                 ? VideoPlacement.nothing
                 : videoPlacement
