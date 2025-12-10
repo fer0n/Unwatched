@@ -197,12 +197,22 @@ actor SubscriptionActor {
         if channelId == nil && playlistId == nil {
             throw SubscriptionError.noInfoFoundToUnsubscribe
         }
-        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
-            (channelId != nil && $0.youtubeChannelId == channelId)
-                || (playlistId != nil && $0.youtubePlaylistId == playlistId)
-        })
-        let subs = try modelContext.fetch(fetch)
+
+        var subs: [Subscription] = []
+        if let playlistId {
+            let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == playlistId
+            })
+            subs = try modelContext.fetch(fetch)
+        } else if let channelId {
+            let fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+                $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
+            })
+            subs = try modelContext.fetch(fetch)
+        }
+
         try deleteSubscriptions(subs)
+        try modelContext.save()
     }
 
     func deleteSubscriptions(_ subscriptionIds: [PersistentIdentifier]) throws {
