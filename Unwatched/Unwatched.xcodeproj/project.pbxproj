@@ -234,6 +234,10 @@
 		8874F4BD2E04A9B600AA5B3D /* backup-legacy.json in Resources */ = {isa = PBXBuildFile; fileRef = 8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
+		887785E72EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */; };
+		887785E82EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */; };
+		887785EB2EEA08C700795394 /* TranscriptRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785EA2EEA08C700795394 /* TranscriptRow.swift */; };
+		887785EC2EEA08C700795394 /* TranscriptRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785EA2EEA08C700795394 /* TranscriptRow.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
 		887AC8CE2B4988D000512852 /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CD2B4988D000512852 /* InboxView.swift */; };
 		887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */; };
@@ -929,6 +933,8 @@
 		887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationDelegate.swift; sourceTree = "<group>"; };
 		8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "backup-legacy.json"; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
+		887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptDisplayItem.swift; sourceTree = "<group>"; };
+		887785EA2EEA08C700795394 /* TranscriptRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptRow.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
 		887AC8CD2B4988D000512852 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailView.swift; sourceTree = "<group>"; };
@@ -1341,6 +1347,7 @@
 				88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */,
 				8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */,
 				88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */,
+				887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1827,6 +1834,7 @@
 				888D49282E2251D0007902CF /* TranscriptDescriptionSelection.swift */,
 				88CD38742E20781F00E7B21C /* TranscriptView.swift */,
 				88CD38912E213D3400E7B21C /* TranscriptList.swift */,
+				887785EA2EEA08C700795394 /* TranscriptRow.swift */,
 				88CD388E2E213D1D00E7B21C /* TranscriptFieldClearButton.swift */,
 				88CD388B2E213D0B00E7B21C /* TranscriptSearch.swift */,
 				CD3E27AE2E239FF200AB8F74 /* GenerateChaptersButton.swift */,
@@ -2340,6 +2348,7 @@
 				8802F84F2C691A51008A7778 /* ImageServiceTests.swift in Sources */,
 				88339AAF2E5BA72200B295B7 /* PremiumModifier.swift in Sources */,
 				889AF9412C50ECF5001CEDE6 /* ChangeChapterButtonStyle.swift in Sources */,
+				887785EC2EEA08C700795394 /* TranscriptRow.swift in Sources */,
 				CD03C1DE2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */,
 				889AF9422C50ECF5001CEDE6 /* YtBrowserWebView.swift in Sources */,
 				889AF9432C50ECF5001CEDE6 /* AddSubscriptionView.swift in Sources */,
@@ -2373,6 +2382,7 @@
 				889AF94D2C50ECF5001CEDE6 /* DescriptionDetailHeaderView.swift in Sources */,
 				8809D8952DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				889AF8FD2C50ECCD001CEDE6 /* RefreshManager+CloudKit.swift in Sources */,
+				887785E82EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */,
 				889AF8FE2C50ECCD001CEDE6 /* BrowserManager.swift in Sources */,
 				884777302D2150060044E812 /* UserDataServiceError.swift in Sources */,
 				889AF8FF2C50ECCD001CEDE6 /* OrientationManager.swift in Sources */,
@@ -2733,6 +2743,7 @@
 				8841E1F52EC6950800C64B58 /* PlayerGestureOverlay.swift in Sources */,
 				881E51442B5A75AD006384E4 /* SubscriptionListView.swift in Sources */,
 				88339AAE2E5BA72200B295B7 /* PremiumModifier.swift in Sources */,
+				887785E72EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */,
 				881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */,
 				889924882C48E75F001185A6 /* MenuViewSheet.swift in Sources */,
 				88DFC0B12B44843A001895C8 /* ContentView.swift in Sources */,
@@ -2775,6 +2786,7 @@
 				88899D972E035E6A002C05BC /* SubscriptionTitleFitlerPreview.swift in Sources */,
 				88C194742BBFC8440073E2E1 /* SubscriptionActor+Info.swift in Sources */,
 				88F3AA8B2C998B040030B2EA /* Color.swift in Sources */,
+				887785EB2EEA08C700795394 /* TranscriptRow.swift in Sources */,
 				8889A0672E043EBC002C05BC /* SpeedSliderThumb.swift in Sources */,
 				88DB7EB92BD8F3FB00FD9EBC /* VideoListItemSwipeActionsModifier.swift in Sources */,
 				881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */,

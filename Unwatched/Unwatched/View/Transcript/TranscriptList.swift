@@ -8,16 +8,27 @@ import UnwatchedShared
 
 struct TranscriptList: View {
     @Environment(PlayerManager.self) var player
-    let transcript: [TranscriptEntry]
+    let transcript: [TranscriptDisplayItem]
     let isCurrentVideo: Bool
+    let isSearching: Bool
 
     var body: some View {
-        ForEach(transcript) { entry in
-            TranscriptRow(
-                entry: entry,
-                isActive: isEntryActive(entry),
-                onTap: { handleTap(entry) }
-            )
+        ForEach(transcript) { item in
+            switch item {
+            case .entry(let entry, let isMatch):
+                TranscriptRow(
+                    entry: entry,
+                    isActive: isEntryActive(entry),
+                    isMatch: isMatch,
+                    isSearching: isSearching,
+                    onTap: { handleTap(entry) }
+                )
+            case .separator:
+                Image(systemName: "ellipsis")
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 4)
+            }
         }
     }
 
@@ -40,19 +51,5 @@ struct TranscriptList: View {
         player.currentTime = entry.start
         player.seek(to: entry.start)
         player.play()
-    }
-}
-
-struct TranscriptRow: View {
-    let entry: TranscriptEntry
-    let isActive: Bool
-    let onTap: () -> Void
-
-    var body: some View {
-        Text(entry.text)
-            .opacity(isActive ? 1 : 0.5)
-            .padding(.vertical, 4)
-            .onTapGesture(perform: onTap)
-            .padding(.bottom, entry.isParagraphEnd ? 20 : 0)
     }
 }

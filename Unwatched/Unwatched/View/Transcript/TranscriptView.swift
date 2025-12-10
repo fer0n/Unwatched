@@ -46,7 +46,8 @@ struct TranscriptView: View {
             LazyVStack(alignment: .leading, spacing: 0) {
                 TranscriptList(
                     transcript: viewModel.filteredTranscript,
-                    isCurrentVideo: isCurrentVideo
+                    isCurrentVideo: isCurrentVideo,
+                    isSearching: !viewModel.text.debounced.isEmpty
                 )
             }
         }
@@ -86,12 +87,41 @@ extension TranscriptView {
         @ObservationIgnored
         var transcriptYoutubeId: String = ""
 
-        var filteredTranscript: [TranscriptEntry] {
+        var filteredTranscript: [TranscriptDisplayItem] {
+            guard let transcript = transcript else { return [] }
+
             if text.debounced.isEmpty {
-                return transcript ?? []
-            } else {
-                return (transcript ?? []).filter { $0.text.localizedCaseInsensitiveContains(text.debounced) }
+                return transcript.map { .entry($0, isMatch: false) }
             }
+
+            var result: [TranscriptDisplayItem] = []
+            let searchText = text.debounced
+
+            let matchIndices = transcript.indices.filter { index in
+                transcript[index].text.localizedCaseInsensitiveContains(searchText)
+            }
+
+            if matchIndices.isEmpty { return [] }
+
+            var lastIncludedIndex = -1
+
+            for index in matchIndices {
+                let start = max(0, index - 1)
+                let end = min(transcript.count - 1, index + 1)
+
+                if start > lastIncludedIndex + 1 {
+                    result.append(.separator(UUID()))
+                }
+
+                for innerIndex in start...end where innerIndex > lastIncludedIndex {
+                    let entry = transcript[innerIndex]
+                    let isMatch = entry.text.localizedCaseInsensitiveContains(searchText)
+                    result.append(.entry(entry, isMatch: isMatch))
+                    lastIncludedIndex = innerIndex
+                }
+            }
+
+            return result
         }
 
         @MainActor
