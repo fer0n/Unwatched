@@ -92,9 +92,16 @@ struct PlayerWebView: PlatformViewRepresentable {
         do {
             try AVAudioSession.sharedInstance()
                 .setCategory(.playback, mode: .moviePlayback, options: [])
-            try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             Log.error("Failed to set audio session category: \(error)")
+        }
+    }
+
+    func activateAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            Log.error("Failed to activate audio session: \(error)")
         }
     }
 
@@ -194,6 +201,9 @@ struct PlayerWebView: PlatformViewRepresentable {
 
     func handlePlayPause(_ prev: PreviousState, _ uiView: WKWebView) {
         if prev.isPlaying != player.isPlaying {
+            if player.unstarted {
+                activateAudioSession()
+            }
             if player.isPlaying {
                 Log.info("PLAY")
                 evaluateJavaScript(uiView, getPlayScript())
