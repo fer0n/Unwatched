@@ -21,7 +21,11 @@ struct CompactFullscreenSpeedControl: View {
             .fontWeight(.bold)
             .playerToggleModifier(isOn: player.temporaryPlaybackSpeed != nil, isSmall: true)
             .onTapGesture {
-                showSpeedControl = true
+                if player.temporaryPlaybackSpeed != nil {
+                    player.temporaryPlaybackSpeed = nil
+                } else {
+                    showSpeedControl = true
+                }
             }
             .popover(isPresented: $showSpeedControl) {
                 CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)

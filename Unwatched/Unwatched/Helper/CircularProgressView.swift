@@ -61,7 +61,7 @@ struct CircularProgressView: View {
             // 4
             Slider(value: $progress, in: 0...1)
             // 5
-            Button("Reset") {
+            Button("reset") {
                 progress = 0
             }.buttonStyle(.borderedProminent)
         }

@@ -42,6 +42,18 @@ struct CombinedPlaybackSpeedSettingPlayer: View {
         .onChange(of: player.video?.subscription) {
             // workaround
         }
+        .overlay {
+            if player.temporaryPlaybackSpeed != nil {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                player.temporaryPlaybackSpeed = nil
+                            }
+                    )
+            }
+        }
     }
 }
 
