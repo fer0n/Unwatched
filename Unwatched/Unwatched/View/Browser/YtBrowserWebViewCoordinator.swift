@@ -459,6 +459,8 @@ extension YtBrowserWebView {
                         switch action.type {
                         case .openInBrowser:
                             webView.load(URLRequest(url: url))
+                        case .openLink:
+                            webView.load(URLRequest(url: url))
                         case .copyUrl:
                             ClipboardService.set(url.absoluteString)
                         case .subscribe:
@@ -555,6 +557,9 @@ extension YtBrowserWebView {
                 case .openInBrowser:
                     menuItem.action = #selector(openInExternalBrowser(_:))
                     menuItem.representedObject = url
+                case .openLink:
+                    menuItem.action = #selector(openLink(_:))
+                    menuItem.representedObject = url
                 case .copyUrl:
                     menuItem.action = #selector(copyUrl(_:))
                     menuItem.representedObject = url
@@ -583,6 +588,12 @@ extension YtBrowserWebView {
         @objc private func openInExternalBrowser(_ sender: NSMenuItem) {
             guard let url = sender.representedObject as? URL else { return }
             NSWorkspace.shared.open(url)
+        }
+
+        @objc private func openLink(_ sender: NSMenuItem) {
+            guard let url = sender.representedObject as? URL else { return }
+            let request = URLRequest(url: url)
+            parent.browserManager.webView?.load(request)
         }
 
         @objc private func copyUrl(_ sender: NSMenuItem) {

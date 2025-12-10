@@ -1,9 +1,11 @@
 import UnwatchedShared
+import Foundation
 
 /// Shared struct to hold context menu information across platforms
 struct ContextMenuAction {
     enum ActionType {
         case openInBrowser
+        case openLink
         case copyUrl
         case subscribe
         case queueNext
@@ -38,6 +40,18 @@ struct ContextMenuAction {
                 group: .basic
             )
         ]
+
+        if UserDefaults.standard.bool(forKey: Const.playBrowserVideosInApp) {
+            actions.insert(
+                .init(
+                    type: .openLink,
+                    title: String(localized: "openLink"),
+                    imageName: "link",
+                    group: .basic
+                ),
+                at: 1
+            )
+        }
 
         // Channel URL actions
         if info.channelId != nil || info.userName != nil || info.playlistId != nil {
