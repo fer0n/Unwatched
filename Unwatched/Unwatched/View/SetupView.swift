@@ -148,6 +148,10 @@ struct SetupView: View {
         SheetPositionReader.shared.save()
         PlayerManager.shared.save()
         await ImageCacheManager.shared.persistCache()
+        let shouldCleanup = UserDefaults.standard.shouldPerform(Const.cleanupImageCache, interval: .fortNightly)
+        if shouldCleanup {
+            ImageService.cleanupImages(olderThanDays: Const.cleanupCacheDays)
+        }
         Log.info("saved state")
     }
 
@@ -176,10 +180,7 @@ struct SetupView: View {
 
     static func sendSettings() {
         let signalType = "SettingsSnapshot"
-        let shouldSend = UserDefaults.standard.shouldSendThrottledSignal(
-            signalType: signalType,
-            interval: .fortNightly
-        )
+        let shouldSend = UserDefaults.standard.shouldPerform(signalType, interval: .fortNightly)
         if shouldSend {
             let nonDefault = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
             Signal.log(signalType, parameters: nonDefault)

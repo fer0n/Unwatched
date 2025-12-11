@@ -151,6 +151,9 @@ public struct Const {
 
     /// Option to keep the last x videos in the inbox when clearing it
     public static let inboxOverflowKeepCount = 20
+    
+    /// Days after which cached images will be cleaned up
+    public static let cleanupCacheDays = 40
 
     public static let notificationImageUrl = "notificationImageUrl"
     public static let notificationActionQueue = "notificationActionQueue"
@@ -249,6 +252,7 @@ public struct Const {
     public static let inboxFullDismissedDate = "inboxFullDismissedDate"
     public static let temporarySpeedUp = "temporarySpeedUp"
     public static let temporarySlowDown = "temporarySlowDown"
+    public static let cleanupImageCache = "cleanupImageCache"
 
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"

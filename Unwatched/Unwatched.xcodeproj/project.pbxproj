@@ -238,6 +238,8 @@
 		887785E82EEA088F00795394 /* TranscriptDisplayItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */; };
 		887785EB2EEA08C700795394 /* TranscriptRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785EA2EEA08C700795394 /* TranscriptRow.swift */; };
 		887785EC2EEA08C700795394 /* TranscriptRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785EA2EEA08C700795394 /* TranscriptRow.swift */; };
+		887785EE2EEAB37A00795394 /* SignalInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785ED2EEAB37A00795394 /* SignalInterval.swift */; };
+		887785EF2EEAB37A00795394 /* SignalInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887785ED2EEAB37A00795394 /* SignalInterval.swift */; };
 		887AC8CC2B49584400512852 /* WatchHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CB2B49584400512852 /* WatchHistoryView.swift */; };
 		887AC8CE2B4988D000512852 /* InboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8CD2B4988D000512852 /* InboxView.swift */; };
 		887AC8D22B499E7B00512852 /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */; };
@@ -935,6 +937,7 @@
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptDisplayItem.swift; sourceTree = "<group>"; };
 		887785EA2EEA08C700795394 /* TranscriptRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptRow.swift; sourceTree = "<group>"; };
+		887785ED2EEAB37A00795394 /* SignalInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalInterval.swift; sourceTree = "<group>"; };
 		887AC8CB2B49584400512852 /* WatchHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHistoryView.swift; sourceTree = "<group>"; };
 		887AC8CD2B4988D000512852 /* InboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxView.swift; sourceTree = "<group>"; };
 		887AC8D12B499E7B00512852 /* SubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailView.swift; sourceTree = "<group>"; };
@@ -1580,6 +1583,7 @@
 				8891F0B72B4F3E080098A3FB /* Collection.swift */,
 				8891F0B92B4F54940098A3FB /* Double.swift */,
 				888C49C12B5F288F00CDEC76 /* Binding.swift */,
+				887785ED2EEAB37A00795394 /* SignalInterval.swift */,
 				88B0C15D2C4165BC006D2423 /* UIWindow.swift */,
 				88358A792C64EBA700AF71F8 /* UNNotificationAttachment.swift */,
 				88358A7C2C65561B00AF71F8 /* UIImage.swift */,
@@ -2462,6 +2466,7 @@
 				888D49272E21BB49007902CF /* CapsuleSegmentedControl.swift in Sources */,
 				889AF9012C50ECD1001CEDE6 /* SleepTimerViewModel.swift in Sources */,
 				88DB36932D561B55007CF5F8 /* DescriptionButton.swift in Sources */,
+				887785EE2EEAB37A00795394 /* SignalInterval.swift in Sources */,
 				889AF9022C50ECD1001CEDE6 /* AddVideoViewModel.swift in Sources */,
 				889AF8EE2C50ECC5001CEDE6 /* Collection.swift in Sources */,
 				889AF8EF2C50ECC5001CEDE6 /* Logger.swift in Sources */,
@@ -2908,6 +2913,7 @@
 				889924842C485989001185A6 /* LibraryDestination.swift in Sources */,
 				884C430C2ED8B7FE00FA8DC4 /* DescriptionDetailView.swift in Sources */,
 				88CD38782E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
+				887785EF2EEAB37A00795394 /* SignalInterval.swift in Sources */,
 				88D858532B55ABD50047E0E6 /* YtVideoInfo.swift in Sources */,
 				887E82AE2CD8FD2F00B196EA /* WatchInUnwatched.swift in Sources */,
 				88DD147B2E7E9878007BA1F4 /* MiniPlayerContent.swift in Sources */,

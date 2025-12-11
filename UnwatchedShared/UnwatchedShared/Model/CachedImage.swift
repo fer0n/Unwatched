@@ -11,6 +11,7 @@ import SwiftUI
     @Attribute(.unique) public var imageUrl: URL?
     @Attribute(.externalStorage) public var imageData: Data?
     public var createdOn: Date?
+    public var lastAccessedOn: Date?
     public var colorHex: String?
 
     public var color: Color? {
@@ -31,6 +32,7 @@ import SwiftUI
         self.imageUrl = imageUrl
         self.imageData = imageData
         self.createdOn = .now
+        self.lastAccessedOn = .now
         self.color = color
     }
 }

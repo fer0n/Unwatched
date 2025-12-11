@@ -14,24 +14,30 @@ public struct ImageService {
     ) async {
         let container = DataProvider.shared.localCacheContainer
         let context = ModelContext(container)
-
+        let twoDaysAgo = Calendar.current.date(byAdding: .day, value: -2, to: .now) ?? .distantPast
+        
         for info in cache.values {
             if info.persistImage == true {
                 var color: Color?
                 if info.persistColor == true {
                     color = info.color
-                    Log.info("saved color with image for: \(info.url)")
                 }
                 let imageCache = CachedImage(info.url, imageData: info.data, color: color)
                 context.insert(imageCache)
-                Log.info("saved image with URL: \(info.url)")
-            } else if info.persistColor == true, let color = info.color {
+                Log.info("persistImages: saved image \(color == nil ? "+ color " : "")(\(info.url))")
+            } else {
                 guard let image = getCachedImage(for: info.url, context) else {
-                    Log.error("Could not find image for URL: \(info.url)")
+                    Log.error("persistImages: couldn't find \(info.url)")
                     continue
                 }
-                Log.info("saved color for: \(info.url)")
-                image.color = color
+                if info.persistColor == true, let color = info.color {
+                    Log.info("persistImages: saved color (\(info.url))")
+                    image.color = color
+                }
+                if (image.lastAccessedOn ?? .distantPast) < twoDaysAgo {
+                    image.lastAccessedOn = .now
+                    Log.info("persistImages: updated access date (\(info.url))")
+                }
             }
         }
 
@@ -94,6 +100,27 @@ public struct ImageService {
             for image in images {
                 context.delete(image)
             }
+            try context.save()
+        }
+    }
+
+    public static func cleanupImages(olderThanDays days: Int) {
+        Task.detached {
+            let imageContainer = DataProvider.shared.localCacheContainer
+            let context = ModelContext(imageContainer)
+            let cutoffDate = Calendar.current.date(byAdding: .day, value: -days, to: Date()) ?? Date()
+            let past = Date.distantPast
+
+            let fetch = FetchDescriptor<CachedImage>(predicate: #Predicate {
+                ($0.lastAccessedOn ?? past) < cutoffDate
+            })
+
+            let images = try context.fetch(fetch)
+            let count = images.count
+            for image in images {
+                context.delete(image)
+            }
+            Log.info("cleanupImages: \(count) images older than \(days) days")
             try context.save()
         }
     }
