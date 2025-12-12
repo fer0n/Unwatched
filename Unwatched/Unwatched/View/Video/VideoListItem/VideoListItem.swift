@@ -92,6 +92,7 @@ struct VideoListItem: View, Equatable {
         ))
         #if os(macOS)
         .drawingGroup()
+        .foregroundStyle(Color.neutralAccentColor)
         .handleVideoListItemTap(videoData)
         #else
         .handleVideoListItemTap(videoData)
@@ -128,14 +129,14 @@ extension View {
                 hasQueueEntry: true,
                 watched: true,
                 isNew: true,
-                showQueueButton: true
+                showQueueButton: false
             )
         )
         .equatable()
-        .tint(.teal)
+        // .tint(.teal)
         .listRowSeparator(.hidden)
         .videoListItemEntry()
-        .listRowBackground(Color.gray)
+        // .listRowBackground(Color.gray)
     }
     .listStyle(.plain)
     .modelContainer(container)
