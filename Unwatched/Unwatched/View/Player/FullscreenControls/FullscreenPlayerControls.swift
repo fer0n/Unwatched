@@ -23,7 +23,8 @@ struct FullscreenPlayerControls: View {
 
             PlayerMoreMenuButton(
                 sleepTimerVM: sleepTimerVM,
-                extended: true,
+                showClear: true,
+                showWatched: true,
                 isCircleVariant: true
             ) { image in
                 image

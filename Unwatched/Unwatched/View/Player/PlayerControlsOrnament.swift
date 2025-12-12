@@ -112,7 +112,10 @@ struct PlayerControlsOrnament: View {
                 showPadding: false
             )
 
-            PlayerMoreMenuButton(sleepTimerVM: SleepTimerViewModel()) { image in
+            PlayerMoreMenuButton(
+                sleepTimerVM: SleepTimerViewModel(),
+                showClear: true
+            ) { image in
                 image
             }
 

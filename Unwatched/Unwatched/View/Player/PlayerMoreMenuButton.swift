@@ -19,7 +19,8 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     @State var showDeferDateSelector: Bool = false
     @State var sleepTimerVM: SleepTimerViewModel
 
-    var extended = false
+    var showClear = false
+    var showWatched = false
     var isCircleVariant = false
     let contentImage: ((Image) -> Content)
 
@@ -43,9 +44,10 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             deferDateButton
 
             Divider()
-            if extended {
-                ExtendedPlayerActions()
-            }
+            ExtendedPlayerActions(
+                showClear: showClear,
+                showWatched: showWatched
+            )
 
             Divider()
             ReloadPlayerButton()

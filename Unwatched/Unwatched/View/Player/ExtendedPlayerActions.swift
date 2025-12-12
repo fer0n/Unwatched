@@ -10,13 +10,20 @@ struct ExtendedPlayerActions: View {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
+    var showClear = true
+    var showWatched = true
+
     var body: some View {
-        Button("markWatched", systemImage: "checkmark") {
-            player.markVideoWatched(showMenu: true, source: .nextUp)
+        if showWatched {
+            Button("markWatched", systemImage: "checkmark") {
+                player.markVideoWatched(showMenu: true, source: .nextUp)
+            }
         }
 
-        Button("clearVideo", systemImage: Const.clearNoFillSF) {
-            player.clearVideo(modelContext)
+        if showClear {
+            Button("clearVideo", systemImage: Const.clearNoFillSF) {
+                player.clearVideo(modelContext)
+            }
         }
     }
 }
