@@ -43,13 +43,12 @@ extension YtBrowserWebView {
 
         @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             Log.info("--- new page loaded")
+            #if os(macOS)
+            setupMacOSContextMenu(webView)
+            #endif
             if isFirstLoad {
                 isFirstLoad = false
                 parent.browserManager.firstPageLoaded = true
-
-                #if os(macOS)
-                setupMacOSContextMenu(webView)
-                #endif
             }
             guard let url = webView.url else {
                 Log.warning("no url found")
