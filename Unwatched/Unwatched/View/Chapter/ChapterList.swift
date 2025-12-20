@@ -32,10 +32,8 @@ struct ChapterList: View {
                     ChapterListItem(
                         chapter: chapter,
                         toggleChapter: toggleChapter,
-                        spacing: padding,
-                        currentTime: isCurrent ? player.currentTime : nil,
-                        )
-                    .animation(nil, value: player.currentTime)
+                        spacing: padding
+                    )
                     .padding(.horizontal, padding + 2)
                     .padding(.vertical, padding)
                     .padding(.trailing, 4)

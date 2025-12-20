@@ -5,7 +5,6 @@ struct ChapterListItem: View {
     var chapter: Chapter
     var toggleChapter: (_ chapter: Chapter) -> Void
     var spacing: CGFloat = 5
-    var currentTime: Double?
 
     @ScaledMetric var frameSize = 30
     @State var toggleHaptic = false
@@ -24,15 +23,7 @@ struct ChapterListItem: View {
                         .accessibilityElement()
                         .accessibilityLabel(title)
                 }
-                let timeInfo = ChapterTimeInfo(chapter: chapter, currentTime: currentTime)
-                if let short = timeInfo.short, let verbose = timeInfo.verbose {
-                    Text(short)
-                        .font(.subheadline.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                        .accessibilityElement()
-                        .accessibilityLabel(verbose)
-                }
+                ChapterTimeLabel(chapter: chapter)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .animation(nil, value: chapter.isActive)
@@ -108,16 +99,14 @@ struct ChapterListItem: View {
         ChapterListItem(chapter: Chapter(
             title: "Hello there",
             time: 102
-        ), toggleChapter: { _ in },
-        currentTime: 10,
+        ), toggleChapter: { _ in }
         )
         .background(Color.gray)
 
         ChapterListItem(chapter: Chapter(
             title: nil,
             time: 102
-        ), toggleChapter: { _ in },
-        currentTime: 10,
+        ), toggleChapter: { _ in }
         )
         .background(Color.gray)
     }
