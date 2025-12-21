@@ -12,10 +12,14 @@ import UnwatchedShared
 extension PlayerManager {
 
     @MainActor
-    func handleAutoStart() {
+    func handleAutoStart(_ url: URL?) {
         Log.info("handleAutoStart")
-        isLoading = nil
-
+        if let url, let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
+            guard video?.youtubeId == videoId else {
+                Log.warning("outdated video \(videoId) != \(video?.youtubeId ?? "nil"), stopping")
+                return
+            }
+        }
         guard let source = videoSource else {
             Log.info("no source, stopping")
             return

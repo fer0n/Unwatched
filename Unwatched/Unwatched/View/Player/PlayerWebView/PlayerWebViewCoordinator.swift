@@ -73,7 +73,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         withAnimation {
             parent.player.unstarted = true
         }
-        parent.player.handleAutoStart()
+        parent.player.isLoading = nil
+        parent.player.handleAutoStart(webView.url)
     }
 }
 

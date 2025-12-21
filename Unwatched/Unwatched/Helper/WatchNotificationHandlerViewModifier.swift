@@ -12,6 +12,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
+    @Environment(RefreshManager.self) var refresher
 
     func body(content: Content) -> some View {
         content
@@ -20,6 +21,11 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             }
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
+            }
+            .onAppear {
+                if refresher.consumeTriggerPasteAction() {
+                    handlePasteAndPlay()
+                }
             }
             #if os(iOS)
             .onReceive(

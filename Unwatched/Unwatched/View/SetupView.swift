@@ -157,12 +157,7 @@ struct SetupView: View {
 
     static func onLaunch() {
         Log.info("setupVideo")
-        if RefreshManager.shared.consumeTriggerPasteAction() {
-            NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
-        } else {
-            // avoid fetching another video first
-            PlayerManager.shared.restoreNowPlayingVideo()
-        }
+        PlayerManager.shared.restoreNowPlayingVideo()
         migrateBrowserTabSetting()
         sendSettings()
     }
