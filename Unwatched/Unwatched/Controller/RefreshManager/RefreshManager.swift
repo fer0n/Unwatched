@@ -37,10 +37,19 @@ actor RefreshActor {
     var isSyncingIcloud = false
 
     @ObservationIgnored var triggerPasteAction = false
+    @ObservationIgnored var triggerPasteAndQueueAction = false
 
     func consumeTriggerPasteAction() -> Bool {
         if triggerPasteAction {
             triggerPasteAction = false
+            return true
+        }
+        return false
+    }
+
+    func consumeTriggerPasteAndQueueAction() -> Bool {
+        if triggerPasteAndQueueAction {
+            triggerPasteAndQueueAction = false
             return true
         }
         return false

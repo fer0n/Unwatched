@@ -161,6 +161,7 @@ public struct Const {
     public static let notificationVideoId = "notificationVideoId"
     public static let addEntriesOnReceive = "addEntriesOnReceive"
     public static let shortcutItemPasteAndPlay = "PasteAndPlay"
+    public static let shortcutItemPasteAndQueue = "PasteAndQueue"
 
     // MARK: - SF Symbols
     public static let queueTagSF = "rectangle.stack"

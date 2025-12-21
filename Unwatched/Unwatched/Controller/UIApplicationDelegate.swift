@@ -218,6 +218,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let shortcutItem = connectionOptions.shortcutItem {
             if shortcutItem.type == Const.shortcutItemPasteAndPlay {
                 refresher.triggerPasteAction = true
+            } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
+                refresher.triggerPasteAndQueueAction = true
             }
         }
     }
@@ -225,6 +227,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) {
         if shortcutItem.type == Const.shortcutItemPasteAndPlay {
             NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
+        } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
+            NotificationCenter.default.post(name: .pasteAndQueue, object: nil)
         }
     }
 }

@@ -51,6 +51,18 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>PasteAndPlay</string>
 		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>text.insert</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconType</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>From Clipboard</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Queue</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>PasteAndQueue</string>
+		</dict>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

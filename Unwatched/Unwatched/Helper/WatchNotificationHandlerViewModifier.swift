@@ -22,9 +22,15 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .pasteAndQueue)) { _ in
+                handlePasteAndQueue()
+            }
             .onAppear {
                 if refresher.consumeTriggerPasteAction() {
                     handlePasteAndPlay()
+                }
+                if refresher.consumeTriggerPasteAndQueueAction() {
+                    handlePasteAndQueue()
                 }
             }
             #if os(iOS)
@@ -68,6 +74,15 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         addAndPlay(url)
     }
 
+    func handlePasteAndQueue() {
+        Log.info("handlePasteAndQueue")
+        guard let string = ClipboardService.get(), let url = URL(string: string) else {
+            Log.warning("handlePasteAndQueue: no valid url pasted")
+            return
+        }
+        addAndQueue(url)
+    }
+
     func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
         Log.info("handleWatchInUnwatched")
         if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
@@ -83,6 +98,15 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         )
         player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .userInteraction)
         navManager.handlePlay()
+    }
+
+    func addAndQueue(_ url: URL) {
+        let task = VideoService.addForeignUrls(
+            [url],
+            in: .queue,
+            at: 1
+        )
+        player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .nextUp)
     }
 }
 
