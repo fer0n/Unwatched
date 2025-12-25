@@ -149,14 +149,17 @@ extension PlayerWebView {
         videoDuration: Double,
         enableLogging: Bool) -> String {
         // Convert chapters to a JSON array of objects with startTime, endTime and isActive properties
-        let chaptersData = chapters.map { chapter in
-            """
-            {
-            "startTime": \(chapter.startTime),
-            "endTime": \(chapter.endTime ?? -1),
-            "isActive": \(chapter.isActive)
+        let chaptersData = chapters.compactMap { chapter in
+            if chapter.startTime == 0 {
+                return nil
             }
-            """
+            return """
+                {
+                "startTime": \(chapter.startTime),
+                "endTime": \(chapter.endTime ?? -1),
+                "isActive": \(chapter.isActive)
+                }
+                """
         }.joined(separator: ", ")
 
         return """
