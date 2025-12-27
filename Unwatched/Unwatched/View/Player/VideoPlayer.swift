@@ -107,6 +107,11 @@ struct VideoPlayer: View {
 
     @MainActor
     func handleLandscapeFullscreenChange(_ landscapeFullscreen: Bool) {
+        #if os(iOS)
+        if navManager.hasSheetOpen {
+            return
+        }
+        #endif
         if landscapeFullscreen && navManager.showMenu
             && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
             navManager.showMenu = false
