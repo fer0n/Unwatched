@@ -180,28 +180,35 @@ struct BrowserView: View, KeyboardReadable {
     }
 
     func addSubButton(_ text: String) -> some View {
-        VStack {
+        Button(action: handleAddSubButton) {
+            HStack {
+                let systemName = subscribeManager.getSubscriptionSystemName()
+                Image(systemName: systemName)
+                    .contentTransition(.symbolEffect(.replace))
+                    .symbolEffect(.pulse, isActive: subscribeManager.isLoading)
+                Text(text)
+                    .lineLimit(2)
+            }
+            .padding(10)
+        }
+        .buttonStyle(CapsuleButtonStyle(interactive: true))
+        .bold()
+        .popover(isPresented: Binding(
+            get: { subscribeManager.errorMessage != nil },
+            set: { if !$0 { subscribeManager.errorMessage = nil } }
+        )) {
             if let error = subscribeManager.errorMessage {
-                Button {
-                    subscribeManager.errorMessage = nil
-                } label: {
+                VStack {
+                    Text("errorOccured")
+                        .font(.headline)
                     Text(verbatim: error)
+                        .foregroundStyle(.secondary)
+                        .font(.body)
                 }
-                .buttonStyle(CapsuleButtonStyle(interactive: true))
-            }
-            Button(action: handleAddSubButton) {
-                HStack {
-                    let systemName = subscribeManager.getSubscriptionSystemName()
-                    Image(systemName: systemName)
-                        .contentTransition(.symbolEffect(.replace))
-                        .symbolEffect(.pulse, isActive: subscribeManager.isLoading)
-                    Text(text)
-                        .lineLimit(2)
-                }
+                .frame(idealWidth: 300, maxWidth: 300)
                 .padding(10)
+                .presentationCompactAdaptation(.popover)
             }
-            .buttonStyle(CapsuleButtonStyle(interactive: true))
-            .bold()
         }
     }
 

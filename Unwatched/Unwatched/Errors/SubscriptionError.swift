@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-enum SubscriptionError: Error, CustomLocalizedStringResourceConvertible {
+enum SubscriptionError: Error, LocalizedError {
     case notSupported
     case failedGettingChannelIdFromUsername(_ message: String?)
     case failedGettingVideoInfo
@@ -15,29 +15,29 @@ enum SubscriptionError: Error, CustomLocalizedStringResourceConvertible {
     case noInfoFoundToUnsubscribe
     case couldNotSubscribe(_ message: String)
 
-    var localizedStringResource: LocalizedStringResource {
+    var errorDescription: String? {
         switch self {
         case .notSupported:
-            return "notSupported"
+            return String(localized: "notSupported")
         case .failedGettingChannelIdFromUsername(let message):
             let msg = """
             Failed to get channel ID from username.
             Try adding the RSS feed directly (instead of the channel URL).
             \(message != nil ? "Error: \(message!)" : "" )")
             """
-            return "failedGettingChannelIdFromUsername\(msg)"
+            return String(localized: "failedGettingChannelIdFromUsername\(msg)")
         case .failedGettingVideoInfo:
-            return "failedGettingVideoInfo"
+            return String(localized: "failedGettingVideoInfo")
         case .httpRequestFailed(let message):
-            return "HTTP request failed: \(message)"
+            return String(localized: "HTTP request failed: \(message)")
         case .notAnUrl(let noUrl):
-            return "Couldn't convert to URL: \(noUrl)"
+            return String(localized: "Couldn't convert to URL: \(noUrl)")
         case .noInfoFoundToSubscribeTo:
-            return "noInfoFoundToSubscribeTo"
+            return String(localized: "noInfoFoundToSubscribeTo")
         case .couldNotSubscribe(let message):
-            return "Could not subscribe: \(message)"
+            return String(localized: "Could not subscribe: \(message)")
         case .noInfoFoundToUnsubscribe:
-            return "noInfoFoundToUnsibscribe"
+            return String(localized: "noInfoFoundToUnsibscribe")
         }
     }
 
