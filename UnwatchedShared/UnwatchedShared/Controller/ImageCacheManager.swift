@@ -49,6 +49,11 @@ import OSLog
     public func clearCache(_ imageUrl: String) {
         cache[imageUrl] = nil
     }
+    
+    @MainActor
+    public func clearMemory() async {
+        await persistCache()
+    }
 }
 
 public struct ImageCacheInfo: Sendable {

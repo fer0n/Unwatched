@@ -44,11 +44,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         return sceneConfiguration
     }
 
-    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
-        Log.warning("Memory warning received")
-        NotificationManager.notifyRun(.warning, "Memory Warning")
-    }
-
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,

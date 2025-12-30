@@ -281,6 +281,13 @@ struct UserDataService {
         let dateString = Date().formatted(.iso8601)
         return "\(deviceName)_\(dateString)\(manual ? "_m" : "").unwatchedbackup"
     }
+
+    static func clearMemory() {
+        Log.info("clearMemory")
+        Task { @MainActor in
+            await ImageCacheManager.shared.clearMemory()
+        }
+    }
 }
 
 struct UnwatchedBackup: Codable {
