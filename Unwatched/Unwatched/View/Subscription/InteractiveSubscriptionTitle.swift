@@ -29,7 +29,6 @@ struct InteractiveSubscriptionTitle: View, Equatable {
                         } placeholder: {
                             Color.clear
                         }
-                        .id("subImage-\(sub.thumbnailUrl?.absoluteString ?? "")")
                         .frame(width: 30, height: 30)
                         .clipShape(Circle())
                     }

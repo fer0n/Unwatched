@@ -26,7 +26,6 @@ struct ThumbnailPlaceholder: View {
                     cornerRadius: Const.videoPlayerCornerRadius,
                     style: .continuous)
         )
-        .id(imageUrl)
         .onTapGesture(perform: handleMiniPlayerTap)
     }
 }

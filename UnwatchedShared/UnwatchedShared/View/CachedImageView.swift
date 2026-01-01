@@ -27,24 +27,35 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
     }
 
     public var body: some View {
-        if let platformImage = image {
-            #if os(iOS) || os(tvOS) || os(visionOS)
-            self.contentImage(Image(uiImage: platformImage))
-            #elseif os(macOS)
-            self.contentImage(Image(nsImage: platformImage))
-            #endif
-        } else {
-            self.placeholder()
-                .task(id: imageUrl) {
-                    if image == nil, let url = imageUrl {
-                        let task = ImageService.getImage(url, cacheManager)
-                        if let taskResult = try? await task.value {
-                            let (taskImage, info) = taskResult
-                            image = taskImage
-                            self.cacheManager[url.absoluteString] = info
-                        }
+        Group {
+            if let platformImage = image {
+#if os(iOS) || os(tvOS) || os(visionOS)
+                self.contentImage(Image(uiImage: platformImage))
+#elseif os(macOS)
+                self.contentImage(Image(nsImage: platformImage))
+#endif
+            } else {
+                self.placeholder()
+                    .task(id: imageUrl) {
+                        await loadImage()
                     }
-                }
+            }
+        }
+        .onChange(of: imageUrl) {
+            Task {
+                await loadImage()
+            }
+        }
+    }
+    
+    func loadImage() async {
+        if let url = imageUrl {
+            let task = ImageService.getImage(url, cacheManager)
+            if let taskResult = try? await task.value {
+                let (taskImage, info) = taskResult
+                image = taskImage
+                self.cacheManager[url.absoluteString] = info
+            }
         }
     }
 }

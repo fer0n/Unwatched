@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 struct ChapterDescriptionView: View {
@@ -11,6 +12,7 @@ struct ChapterDescriptionView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
+    @Environment(TinyUndoManager.self) private var undoManager
 
     let video: Video
     var bottomSpacer: CGFloat = 0
@@ -153,7 +155,7 @@ struct ChapterDescriptionView: View {
             videos: [video],
             modelContext: modelContext
         )
-        dismiss()
+        handleDone()
     }
 
     func addToQueueLast() {
@@ -161,7 +163,7 @@ struct ChapterDescriptionView: View {
             video: video,
             modelContext: modelContext
         )
-        dismiss()
+        handleDone()
     }
 
     func clearVideo() {
@@ -169,13 +171,43 @@ struct ChapterDescriptionView: View {
         if video.queueEntry?.order == 0 {
             player.loadTopmostVideoFromQueue()
         }
-        dismiss()
+        handleDone()
     }
 
     func onTitleTap() {
         if let url = video.url?.absoluteString {
             navManager.openUrlInApp(.url(url))
             navManager.videoDetail = nil
+        }
+    }
+
+    func handleDone() {
+        undoManager.registerAction(.moveToInbox([video.persistentModelID]))
+        if navManager.tab == .inbox, let date = video.publishedDate {
+            openNextInboxVideo(date)
+        } else {
+            dismiss()
+        }
+    }
+
+    func openNextInboxVideo(_ date: Date) {
+        var descriptor = FetchDescriptor<InboxEntry>(
+            sortBy: [SortDescriptor(\.date, order: .reverse)]
+        )
+        descriptor.fetchLimit = Const.inboxFetchLimit
+
+        guard let entries = try? modelContext.fetch(descriptor), !entries.isEmpty else {
+            dismiss()
+            return
+        }
+
+        if let nextEntry = entries.first(where: { ($0.date ?? Date.distantFuture) < date }),
+           let nextVideo = nextEntry.video {
+            navManager.videoDetail = nextVideo
+        } else if let firstEntry = entries.first, let firstVideo = firstEntry.video {
+            navManager.videoDetail = firstVideo
+        } else {
+            dismiss()
         }
     }
 }

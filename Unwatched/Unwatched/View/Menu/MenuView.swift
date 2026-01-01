@@ -72,11 +72,17 @@ struct MenuView: View {
             }
             #endif
             #if os(macOS)
-            .popover(item: $navManager.videoDetail) { video in
-                videoDetailContent(video)
+            .popover(isPresented: showVideoDetail) {
+                Group {
+                    if let video = navManager.videoDetail {
+                        videoDetailContent(video)
+                    }
+                }
             }
             #elseif os(visionOS)
-            .sheet(item: $navManager.videoDetail) { video in
+            .sheet(isPresented: showVideoDetail) {
+            Group {
+            if let video = navManager.videoDetail {
             NavigationStack {
             videoDetailContent(video)
             .toolbar {
@@ -86,9 +92,15 @@ struct MenuView: View {
             }
             }
             }
+            }
+            }
             #else
-            .sheet(item: $navManager.videoDetail) { video in
+            .sheet(isPresented: showVideoDetail) {
+            Group {
+            if let video = navManager.videoDetail {
             videoDetailContent(video)
+            }
+            }
             }
             #endif
             .environment(\.horizontalSizeClass, .compact)
@@ -133,6 +145,17 @@ struct MenuView: View {
                 }
             }
         }
+    }
+
+    var showVideoDetail: Binding<Bool> {
+        Binding<Bool>(
+            get: { navManager.videoDetail != nil },
+            set: { isPresented in
+                if !isPresented {
+                    navManager.videoDetail = nil
+                }
+            }
+        )
     }
 }
 
