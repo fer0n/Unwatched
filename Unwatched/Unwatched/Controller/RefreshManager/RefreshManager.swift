@@ -100,15 +100,20 @@ actor RefreshActor {
             stopLoading()
         }
 
-        if subscriptionIds?.isEmpty ?? true {
+        let isFullRefresh = subscriptionIds?.isEmpty ?? true
+        if isFullRefresh {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
         }
         do {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
-                fetchDurations: true
+                fetchDurations: !isFullRefresh
             )
             _ = try await task.value
+            if isFullRefresh {
+                // workaround: fetchDurations doesn't seem to be working reliably
+                VideoService.fetchVideoDurationsQueueInbox()
+            }
         } catch {
             Log.info("Error during refresh: \(error)")
         }
