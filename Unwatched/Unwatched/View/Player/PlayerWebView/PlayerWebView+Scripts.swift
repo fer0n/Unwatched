@@ -109,7 +109,10 @@ extension PlayerWebView {
     }
 
     func getSetPlaybackRateScript() -> String {
-        "video.playbackRate = \(player.playbackSpeed);"
+        """
+        video.playbackRate = \(player.playbackSpeed);
+        playbackRate = \(player.playbackSpeed);
+        """
     }
 
     func getEnterPipScript() -> String {
