@@ -36,14 +36,12 @@ struct ImageAccentBackground: ViewModifier {
             .listRowInsets(EdgeInsets(top: -topPadding, leading: 0, bottom: 0, trailing: 0))
             .listRowSeparator(.hidden)
             #endif
-            .task {
-                guard let url, color == nil else { return }
-                let task = await ImageService.getAccentColor(from: url, imageCacheManager)
-                if let info = await task.value {
-                    color = info.color
-                    imageCacheManager[url.absoluteString] = info
+            .onChange(of: url, initial: true) {
+                Task {
+                    await updateColor()
                 }
             }
+
             .background {
                 (Const.macOS26 || Device.isVision
                     ? Color.clear
@@ -58,6 +56,15 @@ struct ImageAccentBackground: ViewModifier {
             #if os(macOS)
             .clipShape(RoundedRectangle(cornerRadius: Const.macOS26 ? 25 : 0))
         #endif
+    }
+
+    func updateColor() async {
+        guard let url else { return }
+        let task = await ImageService.getAccentColor(from: url, imageCacheManager)
+        if let info = await task.value {
+            color = info.color
+            imageCacheManager[url.absoluteString] = info
+        }
     }
 }
 
