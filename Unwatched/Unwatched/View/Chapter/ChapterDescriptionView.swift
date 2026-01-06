@@ -150,28 +150,45 @@ struct ChapterDescriptionView: View {
     }
 
     func addToQueueNext() {
+        let requiresQueueChange = requiresQueueChange()
         VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
             modelContext: modelContext
         )
+        if requiresQueueChange {
+            handlePotentialQueueChange()
+        }
         handleDone()
     }
 
     func addToQueueLast() {
+        let requiresQueueChange = requiresQueueChange()
         VideoService.addToBottomQueue(
             video: video,
             modelContext: modelContext
         )
+        if requiresQueueChange {
+            handlePotentialQueueChange()
+        }
         handleDone()
     }
 
     func clearVideo() {
+        let requiresQueueChange = requiresQueueChange()
         VideoService.clearEntries(from: video, modelContext: modelContext)
-        if video.queueEntry?.order == 0 {
-            player.loadTopmostVideoFromQueue()
+        if requiresQueueChange {
+            handlePotentialQueueChange()
         }
         handleDone()
+    }
+
+    func handlePotentialQueueChange() {
+        player.loadTopmostVideoFromQueue()
+    }
+
+    func requiresQueueChange() -> Bool {
+        return video.queueEntry?.order == 0
     }
 
     func onTitleTap() {
