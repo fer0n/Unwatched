@@ -75,8 +75,17 @@ struct ChapterDescriptionView: View {
                     } else {
                         return
                     }
-                    let chapter = player.previousChapter ?? player.currentChapter
-                    let anchor: UnitPoint = player.previousChapter == nil ? .center : .top
+                    var chapter = player.currentChapter
+                    var anchor: UnitPoint = .center
+
+                    if let current = player.currentChapter,
+                       let index = video.sortedChapters.firstIndex(where: {
+                        $0.persistentModelID == current.persistentModelID
+                       }),
+                       index > 0 {
+                        chapter = video.sortedChapters[index - 1]
+                        anchor = .top
+                    }
                     proxy.scrollTo(
                         chapter?.persistentModelID,
                         anchor: anchor
