@@ -14,6 +14,8 @@ struct ChapterDescriptionView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(TinyUndoManager.self) private var undoManager
 
+    @State var hapticToggle = false
+
     let video: Video
     var bottomSpacer: CGFloat = 0
     var isCompact = false
@@ -107,6 +109,7 @@ struct ChapterDescriptionView: View {
                     }
                 }
             }
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
             #endif
             #if os(visionOS)
             .myTint(neutral: true)
@@ -209,6 +212,7 @@ struct ChapterDescriptionView: View {
 
     func handleDone() {
         undoManager.registerAction(.moveToInbox([video.persistentModelID]))
+        hapticToggle.toggle()
         if navManager.tab == .inbox, let date = video.publishedDate {
             openNextInboxVideo(date)
         } else {
