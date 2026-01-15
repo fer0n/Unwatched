@@ -18,6 +18,7 @@ public struct Const {
     public static let allowOnMatch = "allowOnMatch"
     public static let nowPlayingVideo = "nowPlayingVideo"
     public static let enableIcloudSync = "enableIcloudSync"
+    public static let requiresDurationFetch = "requiresDurationFetch"
 
     public static let inboxVideoAddedCategory = "inboxVideoAddedCategory"
     public static let queueVideoAddedCategory = "queueVideoAddedCategory"

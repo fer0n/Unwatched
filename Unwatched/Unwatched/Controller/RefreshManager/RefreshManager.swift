@@ -107,13 +107,9 @@ actor RefreshActor {
         do {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
-                fetchDurations: !isFullRefresh
+                fetchDurations: true
             )
             _ = try await task.value
-            if isFullRefresh {
-                // workaround: fetchDurations doesn't seem to be working reliably
-                VideoService.fetchVideoDurationsQueueInbox()
-            }
         } catch {
             Log.info("Error during refresh: \(error)")
         }
@@ -165,6 +161,10 @@ actor RefreshActor {
         Log.info("iCloud sync: refreshOnStartup started")
         let enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
+        if Const.requiresDurationFetch.bool ?? false {
+            VideoService.fetchVideoDurationsQueueInbox()
+            UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
+        }
 
         if enableIcloudSync {
             let networkTimeout: CGFloat = 3
@@ -294,6 +294,7 @@ extension RefreshManager {
 
             let task = VideoService.loadNewVideosInBg(fetchDurations: false)
             // batch fetch durations only when necessary, e.g. when opening the app
+            UserDefaults.standard.set(true, forKey: Const.requiresDurationFetch)
 
             let newVideos = try await task.value
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
