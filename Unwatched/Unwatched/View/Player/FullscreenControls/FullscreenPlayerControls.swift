@@ -51,6 +51,7 @@ struct FullscreenPlayerControls: View {
                         .foregroundStyle(Color.foregroundGray.opacity(0.5))
                 }
             }
+            .buttonStyle(.plain)
             .opacity(hasChapters ? 1 : 0)
             .disabled(player.nextChapter == nil)
 
@@ -62,6 +63,7 @@ struct FullscreenPlayerControls: View {
                 menuOpen: $autoHideVM.keepVisible,
                 size: size
             )
+            .buttonStyle(.plain)
             .frame(minHeight: size)
 
             Spacer()
@@ -72,6 +74,7 @@ struct FullscreenPlayerControls: View {
                 arrowEdge: arrowEdge,
                 size: size
             )
+            .buttonStyle(.plain)
 
             Spacer()
             Spacer()
@@ -89,6 +92,7 @@ struct FullscreenPlayerControls: View {
 
             #if os(iOS)
             FullscreenChangeOrientationButton(size: size, showLeft: showLeft)
+                .buttonStyle(.plain)
             #endif
 
             Spacer()
