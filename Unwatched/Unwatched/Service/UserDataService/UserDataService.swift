@@ -10,7 +10,6 @@ import OSLog
 import UnwatchedShared
 
 struct UserDataService {
-
     // saves user data as .unwatchedbackup
     static func exportUserData() throws -> Data {
         var backup = UnwatchedBackup()
@@ -37,6 +36,16 @@ struct UserDataService {
             // also happens if subscriptions is called before fetching videos
         }
 
+        if !(Const.excludeStatsInBackup.bool ?? false) {
+            let stats = fetchMapExportable(WatchTimeEntry.self)
+            let grouped = Dictionary(grouping: stats, by: { $0.channelId })
+            backup.channelStatistics = grouped.map { (key, value) in
+                SendableChannelStatistics(
+                    channelId: key,
+                    entries: value.map { SendableChannelStatistics.Entry(date: $0.date, time: $0.watchTime) }
+                )
+            }
+        }
         backup.settings         = getSettings()
         backup.queueEntries     = fetchMapExportable(QueueEntry.self)
         backup.inboxEntries     = fetchMapExportable(InboxEntry.self)
@@ -89,6 +98,18 @@ struct UserDataService {
         insertModelsFor(backup.queueEntries, videoIdDict: videoIdDict, context: context)
         insertModelsFor(backup.inboxEntries, videoIdDict: videoIdDict, context: context)
         migrateWatchEntries(backup.watchEntries, videoIdDict: &videoIdDict)
+
+        // Statistics
+        for channelStat in backup.channelStatistics {
+            for entry in channelStat.entries {
+                let model = WatchTimeEntry(
+                    date: entry.date,
+                    channelId: channelStat.channelId,
+                    watchTime: entry.time
+                )
+                context.insert(model)
+            }
+        }
 
         // Subscriptions
         for subscription in backup.subscriptions {
@@ -296,6 +317,8 @@ struct UnwatchedBackup: Codable {
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()
+    var channelStatistics = [SendableChannelStatistics]()
+
     var watchEntries    = [SendableWatchEntry]() // Legacy
 
     var isEmpty: Bool {

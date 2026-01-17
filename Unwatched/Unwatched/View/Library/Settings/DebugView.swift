@@ -47,6 +47,10 @@ struct DebugView: View {
                 }
                 #endif
 
+                MySection {
+                    Button("createTestWatchData", action: createTestWatchData)
+                }
+
                 DebugLoggerView()
             }
         }
@@ -62,6 +66,23 @@ struct DebugView: View {
         }
         #endif
         .myNavigationTitle("debug")
+    }
+
+    private func createTestWatchData() {
+        let channelIds = ["channel1", "channel2", "channel3"]
+        let calendar = Calendar.current
+
+        for _ in 0..<10 {
+            let randomChannel = channelIds.randomElement()!
+            let randomTime = TimeInterval.random(in: 60...3600)
+            // Random date within last 30 days
+            let randomDays = Int.random(in: 0...10)
+            let date = calendar.date(byAdding: .day, value: -randomDays, to: Date())!
+
+            let entry = WatchTimeEntry(date: date, channelId: randomChannel, watchTime: randomTime)
+            modelContext.insert(entry)
+        }
+        try? modelContext.save()
     }
 }
 

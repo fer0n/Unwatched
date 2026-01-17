@@ -113,6 +113,9 @@ struct CleanupService {
             if model != Video.self {
                 try context.delete(model: Video.self)
             }
+            if model != WatchTimeEntry.self {
+                try context.delete(model: WatchTimeEntry.self)
+            }
             try context.save()
         } catch {
             Log.error("Failed to delete everything")
@@ -156,6 +159,7 @@ struct CleanupService {
             removeEmptyChapters()
             removeEmptyInboxEntries()
             removeEmptyQueueEntries()
+            removeDuplicateWatchTimeEntries()
         }
         removeVideoDuplicatesAndEntries()
         try? modelContext.save()
@@ -346,6 +350,27 @@ struct CleanupService {
             return inbox0
         }
     }
+
+    // MARK: WatchTime
+    func removeDuplicateWatchTimeEntries() {
+        let fetch = FetchDescriptor<WatchTimeEntry>()
+        guard let entries = try? modelContext.fetch(fetch) else {
+            return
+        }
+
+        let duplicates = getDuplicates(from: entries, keySelector: {
+            $0.channelId + "|" + String($0.date.timeIntervalSinceReferenceDate)
+        }, sort: sortWatchTimeEntries)
+
+        duplicateInfo.countWatchTimeEntries = duplicates.count
+        for duplicate in duplicates {
+            modelContext.delete(duplicate)
+        }
+    }
+
+    func sortWatchTimeEntries(_ entries: [WatchTimeEntry]) -> [WatchTimeEntry] {
+        entries.sorted { $0.watchTime > $1.watchTime }
+    }
 }
 
 struct RemovedDuplicatesInfo {
@@ -354,4 +379,5 @@ struct RemovedDuplicatesInfo {
     var countInboxEntries: Int = 0
     var countSubscriptions: Int = 0
     var countChapters: Int = 0
+    var countWatchTimeEntries: Int = 0
 }

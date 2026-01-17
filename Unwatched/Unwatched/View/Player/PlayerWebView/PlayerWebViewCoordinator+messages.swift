@@ -260,6 +260,7 @@ extension PlayerWebViewCoordinator {
         #if os(iOS)
         BackgroundMonitor.handlePlay()
         #endif
+        StatsService.shared.handlePlay(parent.player.video?.youtubeId)
     }
 
     func handlePause(_ payload: String?) {
@@ -281,6 +282,7 @@ extension PlayerWebViewCoordinator {
            let url = URL(string: string),
            let videoId = UrlService.getYoutubeIdFromUrl(url: url) {
             handleTimeUpdate(timeString, persist: true, youtubeId: videoId)
+            StatsService.shared.handlePause(videoId)
         }
 
         #if os(iOS)

@@ -1979,7 +1979,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Back Up To iCloud Drive"
+            "value" : "Backup to iCloud Drive"
           }
         },
         "es" : {
@@ -2814,6 +2814,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kanał"
+          }
+        }
+      }
+    },
+    "channels" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanäle"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Channels"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canales"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaînes"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kanały"
           }
         }
       }
@@ -4076,6 +4110,40 @@
         }
       }
     },
+    "createTestWatchData" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test-Watch-Daten erstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Test Watch Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear datos de prueba de visualización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer des données de test de visionnage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utwórz testowe dane oglądania"
+          }
+        }
+      }
+    },
     "customSpeedSetting" : {
       "localizations" : {
         "de" : {
@@ -4684,6 +4752,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usuń logi"
+          }
+        }
+      }
+    },
+    "deleteStatsConfirmation %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Den aktuellen Zeitraum für %@ löschen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete the current timeframe for %@?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Eliminar el periodo actual para %@?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer la période actuelle pour %@ ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usunąć bieżący okres dla %@?"
           }
         }
       }
@@ -5908,6 +6010,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wystąpił błąd"
+          }
+        }
+      }
+    },
+    "excludeStatsInBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch-Statistiken ausschließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclude Watch Statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir estadísticas de visualización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exclure les statistiques de visionnage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyklucz statystyki oglądania"
           }
         }
       }
@@ -9746,6 +9882,40 @@
         }
       }
     },
+    "noData" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Daten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Data"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune donnée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak danych"
+          }
+        }
+      }
+    },
     "noHistoryItems" : {
       "localizations" : {
         "de" : {
@@ -10728,6 +10898,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nie znaleziono URL filmu"
+          }
+        }
+      }
+    },
+    "noWatchHistory" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Wiedergabeverlauf für diesen Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No watch history for this period"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay historial de visualización para este periodo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun historique de visionnage pour cette période"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak historii oglądania w tym okresie"
           }
         }
       }
@@ -12534,36 +12738,36 @@
         }
       }
     },
-    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld" : {
+    "removedDuplicates\n%lld\n%lld\n%lld\n%lld\n%lld\n%lld" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue: %2$lld  Inbox: %3$lld\nKapitel: %4$lld Abos: %5$lld"
+            "value" : "Videos: %1$lld\nQueue: %2$lld\nInbox: %3$lld\nKapitel: %4$lld\nAbos: %5$lld\nStatistik: %6$lld"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Chapters: %4$lld Subscriptions: %5$lld"
+            "value" : "Videos: %1$lld\nQueue Entries: %2$lld  Inbox Entries: %3$lld Chapters: %4$lld Subscriptions: %5$lld\nWatch Entries: %6$lld"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Videos: %1$lld\nElementos en cola: %2$lld\nElementos en la bandeja de entrada: %3$lld\nCapítulos: %4$lld\nSuscripciones: %5$lld"
+            "value" : "Videos: %1$lld\nElementos en cola: %2$lld\nElementos en la bandeja de entrada: %3$lld\nCapítulos: %4$lld\nSuscripciones: %5$lld\nEntradas de visualización: %6$lld"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vidéos : %1$lld\nEntrées dans la File d'attente : %2$lld Entrées dans l'Inbox : %3$lld Chapitres : %4$lld Abonnements : %5$lld"
+            "value" : "Vidéos : %1$lld\nEntrées dans la File d'attente : %2$lld\nEntrées dans l'Inbox : %3$lld\nChapitres : %4$lld\nAbonnements : %5$lld\nEntrées de visionnage : %6$lld"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filmy: %1$lld\nWpisy w kolejce: %2$lld\nWpisy w skrzynce: %3$lld\nRozdziały: %4$lld\nSubskrypcje: %5$lld"
+            "value" : "Filmy: %1$lld\nWpisy w kolejce: %2$lld\nWpisy w skrzynce: %3$lld\nRozdziały: %4$lld\nSubskrypcje: %5$lld\nWpisy oglądania: %6$lld"
           }
         }
       }
@@ -13278,6 +13482,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kanał RSS"
+          }
+        }
+      }
+    },
+    "scope" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scope"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Periodo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Période"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakres"
           }
         }
       }
@@ -14936,6 +15174,74 @@
         }
       }
     },
+    "statisticsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabezeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch Time Statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estadísticas de tiempo de visualización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiques de temps de visionnage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statystyki czasu oglądania"
+          }
+        }
+      }
+    },
+    "stats" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiken"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estadísticas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiques"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statystyki"
+          }
+        }
+      }
+    },
     "subscribe" : {
       "localizations" : {
         "de" : {
@@ -16114,6 +16420,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przełącz panel boczny"
+          }
+        }
+      }
+    },
+    "totalWatchTime" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Łącznie"
           }
         }
       }

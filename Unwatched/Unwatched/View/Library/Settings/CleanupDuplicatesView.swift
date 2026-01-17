@@ -30,6 +30,7 @@ struct CleanupDuplicatesView: View {
             \(info.countInboxEntries)
             \(info.countChapters)
             \(info.countSubscriptions)
+            \(info.countWatchTimeEntries)
             """)
                     .foregroundStyle(.secondary)
             }

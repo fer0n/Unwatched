@@ -34,6 +34,10 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
                 }
             }
             #if os(iOS)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didReceiveMemoryWarningNotification)) { _ in
+                Log.warning("didReceiveMemoryWarningNotification")
+                UserDataService.clearMemory()
+            }
             .onReceive(
                 NotificationCenter.default.publisher(for: UIApplication.didReceiveMemoryWarningNotification)
             ) { _ in

@@ -30,6 +30,14 @@ struct WatchHistoryView: View {
         }
         .concentricMacWorkaround()
         .myNavigationTitle("watched")
+        .toolbar {
+            ToolbarItem {
+                NavigationLink(value: LibraryDestination.stats) {
+                    Image(systemName: "chart.bar.fill")
+                }
+                .requiresPremium()
+            }
+        }
     }
 }
 

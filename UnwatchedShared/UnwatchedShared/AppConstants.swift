@@ -279,6 +279,7 @@ public struct Const {
     public static let automaticBackups = "automaticBackups"
     public static let lastAutoBackupDate = "lastAutoBackupDate"
     public static let minimalBackups = "minimalBackups"
+    public static let excludeStatsInBackup = "excludeStatsInBackup"
     public static let exludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     public static let autoDeleteBackups = "autoDeleteBackups"
     public static let analytics = "analytics"

@@ -122,7 +122,8 @@ public final class DataProvider: Sendable {
         Subscription.self,
         QueueEntry.self,
         InboxEntry.self,
-        Chapter.self
+        Chapter.self,
+        WatchTimeEntry.self
     ]
 
     static let schema = Schema(DataProvider.dbEntries)

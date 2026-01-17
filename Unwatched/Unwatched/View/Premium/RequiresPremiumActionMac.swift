@@ -22,7 +22,14 @@ struct RequiresPremiumActionMac: ViewModifier {
             .alert("unwatchedPremium", isPresented: $showAlert, actions: {
                 Button("learnMore") {
                     Signal.log("Premium.LearnMore")
+                    #if os(macOS)
                     openWindow(id: Const.windowPremium)
+                    #else
+                    Task { @MainActor in
+                        NavigationManager.shared.showMenu = true
+                        NavigationManager.shared.showPremiumOffer = true
+                    }
+                    #endif
                 }
 
                 Button("close", role: .cancel) {

@@ -1,5 +1,5 @@
 //
-//  CleaupServiceTests.swift
+//  CleanupServiceTests.swift
 //  UnwatchedUITests
 //
 
@@ -142,6 +142,55 @@ class CleanupServiceTests: XCTestCase {
         } catch {
             XCTFail("Fetching failed: \(error)")
         }
+    }
+
+    func testDedupeWatchTimeEntry() async {
+        let context = DataProvider.newContext()
+
+        let now = Date()
+        let channelId = "channel1"
+
+        // 1. Exact Duplicate
+        let exact1 = WatchTimeEntry(date: now, channelId: channelId, watchTime: 100)
+        context.insert(exact1)
+        let exact2 = WatchTimeEntry(date: now, channelId: channelId, watchTime: 100)
+        context.insert(exact2)
+
+        // 2. Different Duration (Keep longer)
+        let diffDate = now.addingTimeInterval(86400)
+        let diffDurationShort = WatchTimeEntry(date: diffDate, channelId: channelId, watchTime: 50)
+        context.insert(diffDurationShort)
+        let diffDurationLong = WatchTimeEntry(date: diffDate, channelId: channelId, watchTime: 200)
+        context.insert(diffDurationLong)
+
+        // 3. Different Date (Keep both)
+        let date3 = now.addingTimeInterval(86400 * 2)
+        let diffDateEntry = WatchTimeEntry(date: date3, channelId: channelId, watchTime: 100)
+        context.insert(diffDateEntry)
+
+        // 4. Different Channel (Keep both)
+        let otherChannelEntry = WatchTimeEntry(date: now, channelId: "channel2", watchTime: 100)
+        context.insert(otherChannelEntry)
+
+        try? context.save()
+
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false, videoOnly: false)
+        _ = await task.value
+
+        let fetch = FetchDescriptor<WatchTimeEntry>()
+        guard let entries = try? context.fetch(fetch) else {
+            XCTFail("Failed to fetch entries")
+            return
+        }
+
+        XCTAssertEqual(entries.count, 4)
+
+        let exactEntries = entries.filter { $0.date == now && $0.channelId == channelId }
+        XCTAssertEqual(exactEntries.count, 1)
+
+        let diffDurationEntries = entries.filter { $0.date == diffDate && $0.channelId == channelId }
+        XCTAssertEqual(diffDurationEntries.count, 1)
+        XCTAssertEqual(diffDurationEntries.first?.watchTime, 200)
     }
 }
 // swiftlint:enable all

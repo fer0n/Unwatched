@@ -44,7 +44,8 @@ enum PremiumFeature: String, CaseIterable {
          seeVideoDuration,
          generateChaptersFromTranscript,
          chapterFilter,
-         customTheme
+         customTheme,
+         statistics
 
     var title: String {
         switch self {
@@ -62,6 +63,8 @@ enum PremiumFeature: String, CaseIterable {
             return String(localized: "generateChaptersFromTranscript")
         case .customTheme:
             return String(localized: "customTheme")
+        case .statistics:
+            return String(localized: "statisticsTitle")
         }
     }
 
@@ -81,6 +84,8 @@ enum PremiumFeature: String, CaseIterable {
             return "sparkles.2"
         case .customTheme:
             return "paintbrush.fill"
+        case .statistics:
+            return "chart.pie.fill"
         }
     }
 }
