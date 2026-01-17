@@ -11,6 +11,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     @Environment(NavigationManager.self) var navManager
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(\.horizontalSizeClass) var sizeClass: UserInterfaceSizeClass?
+    @Environment(\.dismiss) var dismiss
 
     let subscription: Subscription?
     var showImage = false
@@ -58,6 +59,7 @@ struct InteractiveSubscriptionTitle: View, Equatable {
     }
 
     func openSubscription(_ sub: Subscription) {
+        dismiss()
         if sheetPos.isMinimumSheet && !Device.isBigScreen(sizeClass) {
             Task {
                 // workaround: view appearing while still being cut off due to sheet position
