@@ -147,5 +147,5 @@ extension View {
 
 #Preview {
     SettingsView()
-        .testEnvironments()
+        .previewEnvironments()
 }

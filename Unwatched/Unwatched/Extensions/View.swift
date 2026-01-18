@@ -61,7 +61,7 @@ extension View {
 }
 
 extension View {
-    func testEnvironments() -> some View {
+    func previewEnvironments() -> some View {
         self
             .modelContainer(DataProvider.previewContainer)
             .environment(NavigationManager.getDummy(true))

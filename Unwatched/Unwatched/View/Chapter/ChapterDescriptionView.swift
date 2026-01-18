@@ -247,7 +247,7 @@ struct ChapterDescriptionView: View {
         .sheet(isPresented: .constant(true)) {
             NavigationStack {
                 ChapterDescriptionView(video: DataProvider.dummyVideo)
-                    .testEnvironments()
+                    .previewEnvironments()
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             DismissSheetButton()

@@ -70,5 +70,5 @@ struct LibraryView: View {
 
 #Preview {
     LibraryView()
-        .testEnvironments()
+        .previewEnvironments()
 }

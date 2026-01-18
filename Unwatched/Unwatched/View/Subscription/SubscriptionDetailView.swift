@@ -167,10 +167,10 @@ struct SubscriptionDetailView: View {
     if let sub {
         return NavigationView {
             SubscriptionDetailView(subscription: sub)
-                .testEnvironments()
+                .previewEnvironments()
         }
     } else {
         return SubscriptionDetailView(subscription: Subscription.getDummy())
-            .testEnvironments()
+            .previewEnvironments()
     }
 }

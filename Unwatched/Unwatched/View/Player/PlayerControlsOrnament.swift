@@ -149,6 +149,6 @@ struct PlayerControlsOrnament: View {
         .ornament(attachmentAnchor: .scene(.bottom)) {
             PlayerControlsOrnament()
         }
-        .testEnvironments()
+        .previewEnvironments()
 }
 #endif

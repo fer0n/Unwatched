@@ -245,5 +245,5 @@ struct StatsView: View {
 
 #Preview {
     StatsView()
-        .testEnvironments()
+        .previewEnvironments()
 }

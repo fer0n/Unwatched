@@ -187,5 +187,5 @@ extension View {
         triggerInteraction: { },
         isInteracting: .constant(false)
     )
-    .testEnvironments()
+    .previewEnvironments()
 }
