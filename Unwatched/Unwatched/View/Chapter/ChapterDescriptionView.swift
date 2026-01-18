@@ -94,23 +94,33 @@ struct ChapterDescriptionView: View {
                     )
                 }
             }
-            #if os(iOS) || os(visionOS)
-            .toolbar {
-                if showActions, #available(iOS 26.0, visionOS 26.0, *) {
-                    ToolbarItemGroup(placement: Device.isVision
-                                        ? .topBarTrailing
-                                        : .bottomBar) {
-                        #if os(visionOS)
-                        buttons
-                            .buttonBorderShape(.circle)
-                        #else
-                        buttons
-                        #endif
+            .if(showActions) { view in
+                Group {
+                    #if os(macOS)
+                    view.overlay {
+                        actionOverlay
                     }
+                    #else
+                    if #available(iOS 17.0, visionOS 1.0, *) {
+                        view.toolbar {
+                            ToolbarItemGroup(placement: Device.isVision ? .topBarTrailing : .bottomBar) {
+                                #if os(visionOS)
+                                buttons
+                                    .buttonBorderShape(.circle)
+                                #else
+                                buttons
+                                #endif
+                            }
+                        }
+                    } else {
+                        view.overlay {
+                            actionOverlay
+                        }
+                    }
+                    #endif
                 }
             }
             .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-            #endif
             #if os(visionOS)
             .myTint(neutral: true)
             #endif
@@ -122,24 +132,28 @@ struct ChapterDescriptionView: View {
     var buttons: some View {
         Button {
             playVideo()
+            Signal.log("VideoDetail.Play", throttle: .weekly)
         } label: {
             Image(systemName: "play.fill")
         }
 
         Button {
             addToQueueNext()
+            Signal.log("VideoDetail.QueueNext", throttle: .weekly)
         } label: {
             Image(systemName: Const.queueNextSF)
         }
 
         Button {
             addToQueueLast()
+            Signal.log("VideoDetail.QueueLast", throttle: .weekly)
         } label: {
             Image(systemName: Const.queueLastSF)
         }
 
         Button {
             clearVideo()
+            Signal.log("VideoDetail.Clear", throttle: .weekly)
         } label: {
             #if os(visionOS)
             Text("clear")
@@ -149,6 +163,20 @@ struct ChapterDescriptionView: View {
         }
         .disabled(!canBeCleared)
         .buttonBorderShape(.automatic)
+    }
+
+    @ViewBuilder
+    var actionOverlay: some View {
+        HStack(spacing: 20) {
+            buttons
+                .buttonStyle(.plain)
+        }
+        .padding(15)
+        .background(.ultraThinMaterial, in: .capsule)
+        .frame(maxHeight: .infinity, alignment: .bottom)
+        #if os(macOS)
+        .padding()
+        #endif
     }
 
     var canBeCleared: Bool {
