@@ -100,7 +100,7 @@ struct UserDataService {
         migrateWatchEntries(backup.watchEntries, videoIdDict: &videoIdDict)
 
         // Statistics
-        for channelStat in backup.channelStatistics {
+        for channelStat in backup.channelStatistics ?? [] {
             for entry in channelStat.entries {
                 let model = WatchTimeEntry(
                     date: entry.date,
@@ -317,7 +317,7 @@ struct UnwatchedBackup: Codable {
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()
-    var channelStatistics = [SendableChannelStatistics]()
+    var channelStatistics: [SendableChannelStatistics]? = []
 
     var watchEntries    = [SendableWatchEntry]() // Legacy
 
