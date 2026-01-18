@@ -726,6 +726,8 @@
 		CD5AF8472C8AD25A00D18628 /* PlayerManager+Playback.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5AF8452C8AD25300D18628 /* PlayerManager+Playback.swift */; };
 		CD6364102C6DD9DF00C5DD43 /* EmptyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63640F2C6DD9C100C5DD43 /* EmptyEntry.swift */; };
 		CD6364112C6DD9DF00C5DD43 /* EmptyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD63640F2C6DD9C100C5DD43 /* EmptyEntry.swift */; };
+		CD6681462F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6681452F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift */; };
+		CD6681472F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6681452F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift */; };
 		CD93E71B2E23AA4A00FF6447 /* GeneratedChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD93E71A2E23AA4900FF6447 /* GeneratedChapters.swift */; };
 		CD93E71C2E23AA4A00FF6447 /* GeneratedChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD93E71A2E23AA4900FF6447 /* GeneratedChapters.swift */; };
 		CD93E71F2E23AAD800FF6447 /* GenerationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD93E71E2E23AAD500FF6447 /* GenerationService.swift */; };
@@ -1182,6 +1184,7 @@
 		CD3E27AE2E239FF200AB8F74 /* GenerateChaptersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateChaptersButton.swift; sourceTree = "<group>"; };
 		CD5AF8452C8AD25300D18628 /* PlayerManager+Playback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+Playback.swift"; sourceTree = "<group>"; };
 		CD63640F2C6DD9C100C5DD43 /* EmptyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyEntry.swift; sourceTree = "<group>"; };
+		CD6681452F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTransparentEffect.swift; sourceTree = "<group>"; };
 		CD93E71A2E23AA4900FF6447 /* GeneratedChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedChapters.swift; sourceTree = "<group>"; };
 		CD93E71E2E23AAD500FF6447 /* GenerationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerationService.swift; sourceTree = "<group>"; };
 		CDA07A352C601F250009BFEC /* backup-file.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "backup-file.json"; sourceTree = "<group>"; };
@@ -1369,6 +1372,7 @@
 				8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */,
 				88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */,
 				887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */,
+				CD6681452F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -2499,6 +2503,7 @@
 				88F3AA882C99887E0030B2EA /* ThemeColor.swift in Sources */,
 				88F286212DEA6DE700309C36 /* MoveQueueEntry.swift in Sources */,
 				88CD38842E20E66300E7B21C /* TranscriptService.swift in Sources */,
+				CD6681472F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */,
 				889AF8F02C50ECC5001CEDE6 /* Double.swift in Sources */,
 				889AF8F12C50ECC5001CEDE6 /* Binding.swift in Sources */,
 				8866B6942CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */,
@@ -2884,6 +2889,7 @@
 				887E82AC2CD8FC8B00B196EA /* GetCurrentVideo.swift in Sources */,
 				88EE64BF2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */,
 				8804A3EF2B8B88A000D3F4F1 /* VideoListItemDetails.swift in Sources */,
+				CD6681462F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift in Sources */,
 				8845F0152B500E8A0086AA98 /* AllVideosView.swift in Sources */,
 				88F149E02F03E81E00516422 /* StatsActor.swift in Sources */,
 				88E589B32D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */,

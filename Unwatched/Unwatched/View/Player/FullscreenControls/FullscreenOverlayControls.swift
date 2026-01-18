@@ -100,30 +100,7 @@ struct FullscreenOverlayControls: View {
     }
 }
 
-extension View {
-    func backgroundTransparentEffect(fallback: Material) -> some View {
-        self
-            #if os(visionOS)
-            .fallbackBackground(fallback)
-        #else
-        .apply {
-        if #available(iOS 26, macOS 26, *) {
-        $0
-        .contentShape(Circle())
-        .glassEffect()
-        } else {
-        $0.fallbackBackground(fallback)
-        }
-        }
-        #endif
-    }
 
-    private func fallbackBackground(_ fallback: Material) -> some View {
-        self
-            .background(fallback)
-            .clipShape(Circle())
-    }
-}
 
 enum OverlayIcon: Equatable {
     case play

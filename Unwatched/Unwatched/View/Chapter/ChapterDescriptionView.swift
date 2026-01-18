@@ -172,7 +172,7 @@ struct ChapterDescriptionView: View {
                 .buttonStyle(.plain)
         }
         .padding(15)
-        .background(.ultraThinMaterial, in: .capsule)
+        .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: .capsule)
         .frame(maxHeight: .infinity, alignment: .bottom)
         #if os(macOS)
         .padding()
