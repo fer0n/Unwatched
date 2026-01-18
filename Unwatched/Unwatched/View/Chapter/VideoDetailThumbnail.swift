@@ -13,7 +13,12 @@ struct VideoDetailThumbnail: View {
     let video: Video
 
     var body: some View {
-        CachedImageView(imageUrl: UrlService.getImageUrl(video.thumbnailUrl, .large)) { image in
+        CachedImageView(
+            urls: [
+                UrlService.getImageUrl(video.thumbnailUrl, .large),
+                UrlService.getImageUrl(video.thumbnailUrl, .medium)
+            ]
+        ) { image in
             Color.clear
                 .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
                 .overlay {

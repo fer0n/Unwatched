@@ -26,16 +26,19 @@ struct VideoListItemThumbnail: View {
         self.largeThumbnail = largeThumbnail
     }
 
-    var imageUrl: URL? {
-        let url = UrlService.getImageUrl(
-            video.thumbnailUrl, largeThumbnail
-                ? .large
-                : .small)
-        return url
+    var imageUrls: [URL?] {
+        [
+            UrlService.getImageUrl(
+                video.thumbnailUrl, largeThumbnail
+                    ? .large
+                    : .small
+            ),
+            UrlService.getImageUrl(video.thumbnailUrl, .medium)
+        ]
     }
 
     var body: some View {
-        CachedImageView(imageUrl: imageUrl) { image in
+        CachedImageView(urls: imageUrls) { image in
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
