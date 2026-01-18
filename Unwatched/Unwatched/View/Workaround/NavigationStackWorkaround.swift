@@ -30,6 +30,13 @@ struct NavigationStackWorkaround: ViewModifier {
                     .fontWeight(.heavy)
                     .lineLimit(1)
                     .padding(.trailing, 30)
+
+                if navigationTitleManager.showStatsItem {
+                    Spacer()
+                    ShowStatsItem()
+                        .buttonStyle(.plain)
+                        .padding(.horizontal)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(

@@ -9,6 +9,7 @@ import SwiftUI
 @Observable
 final class NavigationTitleManager {
     private var titleStack: [LocalizedStringKey] = []
+    private var showStatsItemStack: [Bool] = []
 
     var title: LocalizedStringKey? {
         titleStack.last
@@ -34,5 +35,22 @@ final class NavigationTitleManager {
 
     func clear() {
         titleStack.removeAll()
+    }
+
+    // MARK: Stats item
+    var showStatsItem: Bool {
+        showStatsItemStack.last == true
+    }
+
+    func pushShowStatsItem(_ value: Bool) {
+        showStatsItemStack.append(value)
+    }
+
+    func popShowStatsItem() {
+        _ = showStatsItemStack.popLast()
+    }
+
+    func clearShowStatsItem() {
+        _ = showStatsItemStack.popLast()
     }
 }
