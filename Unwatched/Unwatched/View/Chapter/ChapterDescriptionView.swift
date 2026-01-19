@@ -101,7 +101,7 @@ struct ChapterDescriptionView: View {
                         actionOverlay
                     }
                     #else
-                    if #available(iOS 17.0, visionOS 1.0, *) {
+                    if #available(iOS 26.0, visionOS 26.0, *) {
                         view.toolbar {
                             ToolbarItemGroup(placement: Device.isVision ? .topBarTrailing : .bottomBar) {
                                 #if os(visionOS)
