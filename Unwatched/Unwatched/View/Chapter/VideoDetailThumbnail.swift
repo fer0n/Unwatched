@@ -7,7 +7,6 @@ import SwiftUI
 import UnwatchedShared
 
 struct VideoDetailThumbnail: View {
-    @Environment(PlayerManager.self) var player
     @Environment(\.dismiss) var dismiss
 
     let video: Video
@@ -26,27 +25,32 @@ struct VideoDetailThumbnail: View {
                         .resizable()
                         .scaledToFill()
                 }
-                .apply {
-                    if #available(iOS 26.0, macOS 26.0, *) {
-                        $0.clipShape(
-                            .rect(
-                                corners: .concentric(minimum: 25),
-                                isUniform: true
-                            )
-                        )
-                    } else {
-                        $0.clipShape(
-                            RoundedRectangle(
-                                cornerRadius: 25,
-                                style: .continuous
-                            )
-                        )
-                    }
-                }
         } placeholder: {
             Color.insetBackgroundColor
+                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
+        }
+        .apply {
+            if #available(iOS 26.0, macOS 26.0, *) {
+                $0.clipShape(
+                    .rect(
+                        corners: .concentric(minimum: 25),
+                        isUniform: true
+                    )
+                )
+            } else {
+                $0.clipShape(
+                    RoundedRectangle(
+                        cornerRadius: 25,
+                        style: .continuous
+                    )
+                )
+            }
         }
         .frame(maxWidth: 600)
         .handleVideoListItemTap(video)
     }
 }
+
+// #Preview {
+//    VideoDetailThumbnail(video: Video.getDummy())
+// }

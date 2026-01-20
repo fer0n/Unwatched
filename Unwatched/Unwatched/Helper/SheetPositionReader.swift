@@ -8,6 +8,7 @@ import SwiftUI
 import OSLog
 import UnwatchedShared
 
+@MainActor
 @Observable class SheetPositionReader {
     @MainActor
     static let shared: SheetPositionReader = {
