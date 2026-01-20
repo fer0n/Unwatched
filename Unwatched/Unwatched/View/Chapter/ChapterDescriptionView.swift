@@ -167,7 +167,7 @@ struct ChapterDescriptionView: View {
 
     @ViewBuilder
     var actionOverlay: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 25) {
             buttons
                 .buttonStyle(.plain)
         }
