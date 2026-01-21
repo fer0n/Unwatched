@@ -100,10 +100,14 @@ extension PlayerWebView {
 
     func getSeekRelScript(_ seekRel: Double) -> String {
         """
-        if (video.duration) {
-            video.currentTime = Math.min(video.currentTime + \(seekRel), video.duration - 0.2);
+        if (typeof smartSeekRelative === 'function') {
+            smartSeekRelative(\(seekRel));
         } else {
-            video.currentTime += \(seekRel);
+            if (video.duration) {
+                video.currentTime = Math.min(video.currentTime + \(seekRel), video.duration - 0.2);
+            } else {
+                video.currentTime += \(seekRel);
+            }
         }
         """
     }
@@ -145,8 +149,8 @@ extension PlayerWebView {
         """
     }
 
-    /// Override YouTube chapter indicators with custom chapters
     // swiftlint:disable function_body_length
+    /// Override YouTube chapter indicators with custom chapters
     static func setChapterMarkersScript(
         chapters: [Chapter],
         videoDuration: Double,
@@ -166,6 +170,8 @@ extension PlayerWebView {
         }.joined(separator: ", ")
 
         return """
+        window.unwatchedChapters = [\(chaptersData)];
+        window.hasInactiveChapters = window.unwatchedChapters.some(c => !c.isActive);
         function findYouTubeProgressBar() {
           // First check for the new YouTube chapters progress bar
           let chapteredProgressBar = document.querySelector(

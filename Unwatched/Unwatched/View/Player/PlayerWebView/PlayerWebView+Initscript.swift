@@ -8,6 +8,8 @@ import WebKit
 import OSLog
 import UnwatchedShared
 
+// swiftlint:disable all
+
 extension PlayerWebView {
     struct InitScriptOptions {
         let playbackSpeed: Double
@@ -24,7 +26,6 @@ extension PlayerWebView {
         let blockOverlay: Bool
     }
 
-    // swiftlint:disable function_body_length
     static func initScript(_ options: InitScriptOptions) -> String {
         """
         var requiresFetchingVideoData = \(options.requiresFetchingVideoData == true);
@@ -881,6 +882,47 @@ extension PlayerWebView {
             }
         }
 
+        function smartSeekRelative(seekRel) {
+            if (seekRel >= 0 || !window.hasInactiveChapters || !window.unwatchedChapters || window.unwatchedChapters.length === 0) {
+                if (video.duration) {
+                     video.currentTime = Math.min(video.currentTime + seekRel, video.duration - 0.2);
+                } else {
+                     video.currentTime += seekRel;
+                }
+                return;
+            }
+
+            let remaining = -seekRel;
+            let cursor = video.currentTime;
+            const chapters = window.unwatchedChapters;
+
+            let idx = -1;
+            for (let i = chapters.length - 1; i >= 0; i--) {
+                if (chapters[i].startTime <= cursor) {
+                    idx = i;
+                    break;
+                }
+            }
+
+            while (remaining > 0 && idx >= 0) {
+                const chapter = chapters[idx];
+                if (!chapter.isActive) {
+                    cursor = chapter.startTime;
+                    idx--;
+                    continue;
+                }
+                const available = Math.max(0, cursor - chapter.startTime);
+                if (remaining <= available) {
+                    video.currentTime = cursor - remaining;
+                    return;
+                }
+                remaining -= available;
+                cursor = chapter.startTime;
+                idx--;
+            }
+            video.currentTime = Math.max(0, cursor - remaining);
+        }
+
         function handleDoubleTapSeek(event) {
             event.stopPropagation();
             event.preventDefault();
@@ -888,7 +930,7 @@ extension PlayerWebView {
             const touchEndX = event.changedTouches?.[0]?.clientX;
             const screenWidth = window.innerWidth;
             const seekRel = (touchEndX < screenWidth / 2 ? -1 : 1) * 10;
-            video.currentTime += seekRel;
+            smartSeekRelative(seekRel);
         }
 
         function triggerTouchEvent() {
@@ -966,5 +1008,5 @@ extension PlayerWebView {
         }
     """
     }
-    // swiftlint:enable function_body_length
 }
+// swiftlint:enable all
