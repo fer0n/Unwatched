@@ -231,6 +231,8 @@
 		8871A5732DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8871A5712DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift */; };
 		887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
 		887255F92D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */; };
+		8874BF332F20DB9B007202E2 /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8874BF322F20DB9B007202E2 /* DeepLinkHandler.swift */; };
+		8874BF342F20DB9B007202E2 /* DeepLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8874BF322F20DB9B007202E2 /* DeepLinkHandler.swift */; };
 		8874F4BD2E04A9B600AA5B3D /* backup-legacy.json in Resources */ = {isa = PBXBuildFile; fileRef = 8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */; };
 		887683722C53842600EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
 		887683732C539F1A00EB05B9 /* PlayerWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */; };
@@ -947,6 +949,7 @@
 		886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnwatchedTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8871A5712DFA4291002083B6 /* GlobalTitleFilterWithPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTitleFilterWithPreview.swift; sourceTree = "<group>"; };
 		887255F72D94209D008F1DE1 /* NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationDelegate.swift; sourceTree = "<group>"; };
+		8874BF322F20DB9B007202E2 /* DeepLinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkHandler.swift; sourceTree = "<group>"; };
 		8874F4BC2E04A9B600AA5B3D /* backup-legacy.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "backup-legacy.json"; sourceTree = "<group>"; };
 		887683712C53842600EB05B9 /* PlayerWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebViewCoordinator.swift; sourceTree = "<group>"; };
 		887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptDisplayItem.swift; sourceTree = "<group>"; };
@@ -1323,9 +1326,10 @@
 		88143EB52B4A7FEF00829E13 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
+				8874BF322F20DB9B007202E2 /* DeepLinkHandler.swift */,
 				CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */,
 				885723012E6596F6006D1EE9 /* Signal.swift */,
-				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8868181F2D77570B00E06A0D /* LinkItemView.swift */,
 				88190EF42EC235EE00C1C321 /* MyTint.swift */,
 				88339AA12E5B87A500B295B7 /* PopupPresenter.swift */,
@@ -2318,6 +2322,7 @@
 				889AF8CD2C50ECA9001CEDE6 /* myNavigationTitle.swift in Sources */,
 				889AF8EB2C50ECAE001CEDE6 /* SubscriptionError.swift in Sources */,
 				8851D8552EC0AE6F006D3310 /* PlayerControlsOrnament.swift in Sources */,
+				8874BF342F20DB9B007202E2 /* DeepLinkHandler.swift in Sources */,
 				889AF8EC2C50ECAE001CEDE6 /* VideoCrawlerError.swift in Sources */,
 				889AF8FB2C50ECCD001CEDE6 /* RefreshManager.swift in Sources */,
 				88F901F82EA8C3FB001E0579 /* BackgroundMonitor.swift in Sources */,
@@ -2811,6 +2816,7 @@
 				88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */,
 				881942A32C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */,
+				8874BF332F20DB9B007202E2 /* DeepLinkHandler.swift in Sources */,
 				882A750A2C74A6A40051BBF0 /* ChapterService.swift in Sources */,
 				88F1AC2B2E70D5F800676C26 /* IntentError.swift in Sources */,
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,

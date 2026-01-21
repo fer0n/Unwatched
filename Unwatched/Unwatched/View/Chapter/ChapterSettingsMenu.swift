@@ -95,6 +95,7 @@ struct GenerateChaptersMenuButton: View {
 }
 
 struct CloudAiButton: View {
+    @Environment(PlayerManager.self) var player
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
 
@@ -104,7 +105,40 @@ struct CloudAiButton: View {
                 dismiss()
             }
             guard hasAccess else { return }
-            openURL(UrlService.generateChaptersShortcutUrl)
+
+            let name = "Generate Chapters"
+            var components = URLComponents()
+            let enablePip = !player.pipEnabled && player.isPlaying
+
+            var successUrl = "unwatched://shortcut-success"
+            var errorUrl = "unwatched://shortcut-error"
+
+            if enablePip {
+                successUrl += "?disablePip=true"
+                errorUrl += "?disablePip=true"
+            }
+
+            components.scheme = "shortcuts"
+            components.host = "x-callback-url"
+            components.path = "/run-shortcut"
+            components.queryItems = [
+                URLQueryItem(name: "name", value: name),
+                URLQueryItem(name: "x-success", value: successUrl),
+                URLQueryItem(name: "x-error", value: errorUrl),
+            ]
+            if let url = components.url {
+                if enablePip {
+                    player.setPip(true)
+                    Task {
+                        try await Task.sleep(for: .seconds(0.2))
+                        openURL(url)
+                    }
+                } else {
+                    openURL(url)
+                }
+            } else {
+                openURL(UrlService.generateChaptersShortcutUrl)
+            }
         } label: {
             Text("cloudAI")
             Text("shortcut")
@@ -112,7 +146,6 @@ struct CloudAiButton: View {
         }
     }
 }
-
 
 #Preview {
     ChapterSettingsMenu(video: Video.getDummy())
