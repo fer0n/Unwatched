@@ -24,6 +24,11 @@ struct FaqView: View {
 
     let faqContent: [FaqInfo] = [
         FaqInfo(
+            "likeViewCommentsFaqT",
+            "likeViewCommentsFaqQ",
+            "likeViewCommentsFaqA"
+        ),
+        FaqInfo(
             "pictureInPictureFaqT",
             "pictureInPictureFaqQ",
             "pictureInPictureFaqA"
@@ -67,11 +72,6 @@ struct FaqView: View {
             "syncNotWorkingFaqT",
             "syncNotWorkingFaqQ",
             "syncNotWorkingFaqA"
-        ),
-        FaqInfo(
-            "likeSubscribeVideoFaqT",
-            "likeSubscribeVideoFaqQ",
-            "likeSubscribeVideoFaqA"
         ),
         FaqInfo(
             "blockingAdsFaqT",

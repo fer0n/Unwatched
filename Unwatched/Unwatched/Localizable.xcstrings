@@ -8896,104 +8896,104 @@
         }
       }
     },
-    "likeSubscribeVideoFaqA" : {
+    "likeViewCommentsFaqA" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Im Player den “…”-Button antippen, dann “Auf YouTube ansehen” auswählen. Von dort aus kann man sich anmelden, liken und abonniert."
+            "value" : "Wähle im Player „…“ → „In YouTube öffnen“. Dort kann man sich anmelden, das Video liken oder Kommentare ansehen. Alternativ lange auf den Videotitel unterhalb der Fortschrittsanzeige des Players tippen."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In the player, tap on the “…”-button and then “View on YouTube”. From there, you can sign in and like/subscribe."
+            "value" : "Inside the player, select “…” → “View on YouTube”. From there, you can sign in, like the video, or view comments. Alternatively, you can tap and hold on the video title beneath the player’s progress bar."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "En el reproductor, toca el botón “…” y luego “Ver en YouTube”. Desde allí, puedes iniciar sesión y dar me gusta/suscribirte."
+            "value" : "Dentro del reproductor, selecciona “…” → “Ver en YouTube”. Desde allí, puedes iniciar sesión, dar me gusta al video o ver los comentarios. Alternativamente, puedes mantener presionado el título del video debajo de la barra de progreso del reproductor."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dans le lecteur, appuyez sur le bouton \"...\" puis sur \"Voir sur YouTube\". De là, vous pouvez vous connecter et aimer/vous abonner."
+            "value" : "Dans le lecteur, sélectionnez « … » → « Voir sur YouTube ». De là, vous pouvez vous connecter, liker la vidéo ou voir les commentaires. Alternativement, vous pouvez appuyer longuement sur le titre de la vidéo sous la barre de progression du lecteur."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "W odtwarzaczu kliknij przycisk “…” a następnie “Zobacz na YouTube”. Stamtąd możesz zalogować się i polubić/subskrybować."
+            "value" : "W odtwarzaczu wybierz „…” → „Otwórz w YouTube”. Stamtąd możesz się zalogować, polubić wideo lub zobaczyć komentarze. Alternatywnie możesz dotknąć i przytrzymać tytuł wideo pod paskiem postępu odtwarzacza."
           }
         }
       }
     },
-    "likeSubscribeVideoFaqQ" : {
+    "likeViewCommentsFaqQ" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wie kann ich Videos liken oder Kanälen auf YouTube folgen?"
+            "value" : "Wie kann ich ein Video liken oder Kommentare ansehen?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How can I like videos or subscribe to channels on YouTube?"
+            "value" : "How can I like a video or view comments?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Cómo puedo dar me gusta a los videos o suscribirme a canales en YouTube?"
+            "value" : "¿Cómo puedo dar me gusta a un video o ver los comentarios?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comment puis-je aimer des vidéos ou m'abonner à des chaînes sur YouTube ?"
+            "value" : "Comment puis-je liker une vidéo ou voir les commentaires ?"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jak mogę polubić filmy lub subskrybować kanały na YouTube?"
+            "value" : "Jak mogę polubić wideo lub zobaczyć komentarze?"
           }
         }
       }
     },
-    "likeSubscribeVideoFaqT" : {
+    "likeViewCommentsFaqT" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Liken & Abonnieren"
+            "value" : "Video liken, Kommentare ansehen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Like & Subscribe on YouTube"
+            "value" : "Like Video, View Comments"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Me gusta y suscríbete en YouTube"
+            "value" : "Dar me gusta, ver comentarios"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aimer & S'abonner sur YouTube"
+            "value" : "Liker la vidéo, voir les commentaires"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Polub i subskrybuj na YouTube"
+            "value" : "Polub wideo, zobacz komentarze"
           }
         }
       }
