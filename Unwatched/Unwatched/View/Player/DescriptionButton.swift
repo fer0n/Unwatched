@@ -23,12 +23,17 @@ struct DescriptionButton: View {
         .buttonStyle(.plain)
         .popover(isPresented: $show) {
             if let video = player.video {
-                ChapterDescriptionView(video: video, scrollToCurrent: true, showThumbnail: false)
-                    .presentationBackground(.black)
-                    .environment(\.colorScheme, colorScheme)
-                    .environment(player)
-                    .environment(navManager)
-                    .frame(idealWidth: 500, maxWidth: 500, maxHeight: 600)
+                ChapterDescriptionView(
+                    video: video,
+                    scrollToCurrent: true,
+                    showThumbnail: false,
+                    showActions: false
+                )
+                .presentationBackground(.black)
+                .environment(\.colorScheme, colorScheme)
+                .environment(player)
+                .environment(navManager)
+                .frame(idealWidth: 500, maxWidth: 500, maxHeight: 600)
             }
         }
         .keyboardShortcut("i", modifiers: [])
