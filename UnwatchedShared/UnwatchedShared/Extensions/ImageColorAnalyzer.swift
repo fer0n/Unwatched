@@ -21,6 +21,7 @@ private class ImageColorAnalyzer {
     private let vibrancyWeight: Float = 1    // How much to prioritize saturation
     private let prominenceWeight: Float = 0.5  // How much to prioritize pixel count
     private let brightnessWeight: Float = 0.4  // How much to prioritize balanced brightness
+    private let skinToneWeight: Float = 0.0001   // Penalty for likely skin tones
 
     // Ideal brightness range for scoring (middle range gets highest score)
     private let idealBrightnessRange: ClosedRange<Float> = 0.5...0.999
@@ -136,7 +137,7 @@ private class ImageColorAnalyzer {
                 bestColor = color
             }
         }
-
+        
         return bestColor
     }
 
@@ -192,6 +193,13 @@ private class ImageColorAnalyzer {
             } else {
                 penalty *= 0.01
             }
+        }
+
+        // Penalty for likely skin tones
+        if (hsb.hue > 0 && hsb.hue < 60) &&
+           (hsb.saturation > 0.1 && hsb.saturation < 0.85) &&
+           (hsb.brightness > 0.1 && hsb.brightness < 0.995) {
+            penalty *= skinToneWeight
         }
 
         // Calculate weighted score
@@ -253,10 +261,17 @@ private extension CGColor {
     @Previewable @State var imageColors: [Color] = [.gray, .gray, .gray, .gray]
 
     let urls = [
-        URL(string: "https://yt3.ggpht.com/lm_rPgM6BQFft9IdivtzaZMnZ3ab84yDrdjohb1CkO3tXXhGzPqs_N5sUSr32gFcIAflZCtCjw=s176-c-k-c0x00ffffff-no-rj-mo")!, // faevr
-        URL(string: "https://yt3.googleusercontent.com/ytc/AIdro_ndrznk18X0Sm4a8-tgnWB6yMUlSq_-hcCjN9SxEJ0S9PM=s160-c-k-c0x00ffffff-no-rj")!, // valve
-        URL(string: "https://yt3.ggpht.com/gvrEezxXgIqEv1k5zfp2fvMCOuL0uam774xGV0Sk9Vz2t_ytgqEO6GJE87dmt8q9MXkOaMe0Jw=s176-c-k-c0x00ffffff-no-rj-mo")!, // beardo benjo
-        URL(string: "https://yt3.googleusercontent.com/WgwnZy3sVim2cCBqCiRAXmQ8O_MFSc02Du52E74bFJGUaokjoXdBkAX7DL_Nv8TRQMYpp7jX=s160-c-k-c0x00ffffff-no-rj")! // virtual bro
+//        URL(string: "https://yt3.ggpht.com/lm_rPgM6BQFft9IdivtzaZMnZ3ab84yDrdjohb1CkO3tXXhGzPqs_N5sUSr32gFcIAflZCtCjw=s176-c-k-c0x00ffffff-no-rj-mo")!, // faevr
+//        URL(string: "https://yt3.googleusercontent.com/ytc/AIdro_ndrznk18X0Sm4a8-tgnWB6yMUlSq_-hcCjN9SxEJ0S9PM=s160-c-k-c0x00ffffff-no-rj")!, // valve
+//        URL(string: "https://yt3.ggpht.com/gvrEezxXgIqEv1k5zfp2fvMCOuL0uam774xGV0Sk9Vz2t_ytgqEO6GJE87dmt8q9MXkOaMe0Jw=s176-c-k-c0x00ffffff-no-rj-mo")!, // beardo benjo
+//        URL(string: "https://yt3.googleusercontent.com/WgwnZy3sVim2cCBqCiRAXmQ8O_MFSc02Du52E74bFJGUaokjoXdBkAX7DL_Nv8TRQMYpp7jX=s160-c-k-c0x00ffffff-no-rj")!, // virtual bro
+        URL(string: "https://yt3.googleusercontent.com/IBgiJOen7sXZxskS-BNsDVr_T5WLHSD4-jsvPRtmb_g1BkMSigXjv0uQyySxiF3Sq0BDriJfjcc=s900-c-k-c0x00ffffff-no-rj")!, // brandon
+        URL(string: "https://yt3.googleusercontent.com/SgwRgpiAQqnfIhYI_FfWjlZHzqkVkhn9hylH1_rJl98h1Z_JNbtvhZO-fnEkhuG1Q_WeVBOHGg=s900-c-k-c0x00ffffff-no-rj")!, // jasmin
+//        URL(string: "https://yt3.googleusercontent.com/XryXd0PS0zcIMjJE80UYOd0Azh5cdodscnvND66ViNFcsFoV29JBHYZfIwQqCzrm3A9QkZik=s900-c-k-c0x00ffffff-no-rj")!, // leeAnne
+//        URL(string: "https://yt3.googleusercontent.com/ytc/AIdro_lO1dGNQA_KkLYNfUdZJYNbFA9FFTt0rsU1DC95T4A98Y0=s900-c-k-c0x00ffffff-no-rj")!, // habie
+        URL(string: "https://yt3.googleusercontent.com/KxPzYd4N5kY8r1idQQKRZ_ulN6VYrkudnFJdXUINM3LcnpIcK4DJUrZFkTOnB11oh5Y0FWT25A=s900-c-k-c0x00ffffff-no-rj")!, // internet historian
+        URL(string: "https://yt3.googleusercontent.com/qu4TmIaYUlS41-dJ9gZ7DUR3nilvmB5_11i6OKSdvNnBNiyOusZP1bMN6ICnuxtjFBb6ioKgRQ=s900-c-k-c0x00ffffff-no-rj")!, // Marque
+        
     ]
 
     let images = urls.map { url in
