@@ -52,6 +52,26 @@ struct CleanupService {
         }
     }
 
+    /// Deletes all inbox and queue entries for the given video ID (in rare case of duplicate entries that both link the same video, happens sometimes with deferred videos).
+    static func cleanupAllEntries(_ videoId: String, _ modelContext: ModelContext) {
+        let fetchInbox = FetchDescriptor<InboxEntry>(
+            predicate: #Predicate { $0.video?.youtubeId == videoId }
+        )
+        if let inboxEntries = try? modelContext.fetch(fetchInbox) {
+            for entry in inboxEntries {
+                modelContext.delete(entry)
+            }
+        }
+        let fetchQueue = FetchDescriptor<QueueEntry>(
+            predicate: #Predicate { $0.video?.youtubeId == videoId }
+        )
+        if let queueEntries = try? modelContext.fetch(fetchQueue) {
+            for entry in queueEntries {
+                modelContext.delete(entry)
+            }
+        }
+    }
+
     /// Deletes video and all relationships (workaround; can be removed if .cascade delete rule works properly)
     static func deleteVideo(_ video: Video, _ modelContext: ModelContext) {
         if let entry = video.inboxEntry {
@@ -60,6 +80,7 @@ struct CleanupService {
         if let entry = video.queueEntry {
             modelContext.delete(entry)
         }
+        cleanupAllEntries(video.youtubeId, modelContext)
 
         var chaptersToDelete: [Chapter] = []
         if let chapters = video.chapters {
@@ -159,6 +180,7 @@ struct CleanupService {
             removeEmptyChapters()
             removeEmptyInboxEntries()
             removeEmptyQueueEntries()
+            removeDuplicateQueueEntries()
             removeDuplicateWatchTimeEntries()
         }
         removeVideoDuplicatesAndEntries()
@@ -210,6 +232,37 @@ struct CleanupService {
             for entry in entries {
                 modelContext.delete(entry)
             }
+        }
+    }
+
+    func removeDuplicateQueueEntries() {
+        let fetch = FetchDescriptor<QueueEntry>()
+        guard let entries = try? modelContext.fetch(fetch) else {
+            return
+        }
+
+        let duplicates = getDuplicates(from: entries, keySelector: {
+            $0.video?.youtubeId ?? UUID().uuidString
+        }, sort: sortQueueEntries)
+
+        duplicateInfo.countQueueEntries += duplicates.count
+        for duplicate in duplicates {
+            modelContext.delete(duplicate)
+        }
+    }
+
+    func sortQueueEntries(_ entries: [QueueEntry]) -> [QueueEntry] {
+        let video = entries.first?.video
+        let trueEntry = video?.queueEntry
+        if let trueEntry {
+            return entries.sorted { entry0, _ in
+                if entry0 == trueEntry {
+                    return true
+                }
+                return false
+            }
+        } else {
+            return entries.sorted { $0.order < $1.order }
         }
     }
 
