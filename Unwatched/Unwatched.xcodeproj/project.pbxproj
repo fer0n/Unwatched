@@ -629,6 +629,7 @@
 		88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */; };
 		88E1132C2D0EE22D00076DF2 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E1132B2D0EE22D00076DF2 /* EnvironmentValues.swift */; };
 		88E1132D2D0EE22D00076DF2 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E1132B2D0EE22D00076DF2 /* EnvironmentValues.swift */; };
+		88E48D822F215D7100EE199A /* UnwatchedSafariExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 88E48D6A2F215D7100EE199A /* UnwatchedSafariExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		88E589B32D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */; };
 		88E589B42D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */; };
 		88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */; };
@@ -770,6 +771,13 @@
 			remoteGlobalIDString = 8801877F2C9960060071C0F5;
 			remoteInfo = UnwatchedShared;
 		};
+		88E48D802F215D7100EE199A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88DFC0A32B44843A001895C8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 88E48D692F215D7100EE199A;
+			remoteInfo = UnwatchedSafariExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -779,6 +787,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				88E48D822F215D7100EE199A /* UnwatchedSafariExtension.appex in Embed Foundation Extensions */,
 				880A0AB62E6D8ADB00264C03 /* UnwatchedWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -1129,6 +1138,7 @@
 		88DFC0C52B448C01001895C8 /* VideoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoService.swift; sourceTree = "<group>"; };
 		88DFC0C72B448C2E001895C8 /* VideoCrawler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCrawler.swift; sourceTree = "<group>"; };
 		88E1132B2D0EE22D00076DF2 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
+		88E48D6A2F215D7100EE199A /* UnwatchedSafariExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UnwatchedSafariExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		88E589B22D06FB2B008C4F31 /* ProgressBarChapterIndicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarChapterIndicators.swift; sourceTree = "<group>"; };
 		88E58AAB2D0768CE008C4F31 /* ExtendedPlayerActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedPlayerActions.swift; sourceTree = "<group>"; };
 		88E63F032D75AABF00AC0A89 /* SplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitView.swift; sourceTree = "<group>"; };
@@ -1218,6 +1228,13 @@
 			);
 			target = 886F01F82CA5B34600EF2EEA /* UnwatchedTV */;
 		};
+		88E48D862F215D7100EE199A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 88E48D692F215D7100EE199A /* UnwatchedSafariExtension */;
+		};
 		88F1AA1A2E70D3AE00676C26 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -1233,6 +1250,7 @@
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
 		886F01FA2CA5B34600EF2EEA /* tvOS */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (886F020A2CA5B34700EF2EEA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = tvOS; sourceTree = "<group>"; };
 		887051762D2EE11B0000F4AB /* Notification */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Notification; sourceTree = "<group>"; };
+		88E48D6B2F215D7100EE199A /* UnwatchedSafariExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88E48D862F215D7100EE199A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/_locales, Resources/images, ); path = UnwatchedSafariExtension; sourceTree = "<group>"; };
 		88F7D6D92DE4C261001E1F3F /* CloudStorage */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CloudStorage; sourceTree = "<group>"; };
 		CD00F4902E6B397400DADB96 /* Workaround */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Workaround; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -1270,6 +1288,13 @@
 				88B7FFA22C99DE9600CD917E /* UnwatchedShared.framework in Frameworks */,
 				88BB6D122D8C069200A90CCF /* CloudKit.framework in Frameworks */,
 				885714882E658911006D1EE9 /* TelemetryDeck in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88E48D672F215D7100EE199A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1926,6 +1951,7 @@
 				882FBA7E2B905F2500213CEF /* UnwatchedUITests */,
 				886F01FA2CA5B34600EF2EEA /* tvOS */,
 				880A0AA82E6D8AD900264C03 /* UnwatchedWidget */,
+				88E48D6B2F215D7100EE199A /* UnwatchedSafariExtension */,
 				88B7FF562C99DE8F00CD917E /* Frameworks */,
 				88DFC0AC2B44843A001895C8 /* Products */,
 				88C487CE2CB28C040096743D /* Recovered References */,
@@ -1939,6 +1965,7 @@
 				882FBA7D2B905F2500213CEF /* UnwatchedUITests.xctest */,
 				886F01F92CA5B34600EF2EEA /* UnwatchedTV.app */,
 				880A0AA32E6D8AD800264C03 /* UnwatchedWidgetExtension.appex */,
+				88E48D6A2F215D7100EE199A /* UnwatchedSafariExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2144,6 +2171,7 @@
 			);
 			dependencies = (
 				880A0AB52E6D8ADB00264C03 /* PBXTargetDependency */,
+				88E48D812F215D7100EE199A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				881931D02E4C9FC400DB3843 /* Icons */,
@@ -2157,6 +2185,28 @@
 			productReference = 88DFC0AB2B44843A001895C8 /* Unwatched.app */;
 			productType = "com.apple.product-type.application";
 		};
+		88E48D692F215D7100EE199A /* UnwatchedSafariExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88E48D852F215D7100EE199A /* Build configuration list for PBXNativeTarget "UnwatchedSafariExtension" */;
+			buildPhases = (
+				88E48D662F215D7100EE199A /* Sources */,
+				88E48D672F215D7100EE199A /* Frameworks */,
+				88E48D682F215D7100EE199A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				88E48D6B2F215D7100EE199A /* UnwatchedSafariExtension */,
+			);
+			name = UnwatchedSafariExtension;
+			packageProductDependencies = (
+			);
+			productName = UnwatchedSafariExtension;
+			productReference = 88E48D6A2F215D7100EE199A /* UnwatchedSafariExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2164,7 +2214,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					880A0AA22E6D8AD800264C03 = {
@@ -2179,6 +2229,9 @@
 					};
 					88DFC0AA2B44843A001895C8 = {
 						CreatedOnToolsVersion = 15.1;
+					};
+					88E48D692F215D7100EE199A = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -2216,6 +2269,7 @@
 				882FBA7C2B905F2500213CEF /* UnwatchedUITests */,
 				886F01F82CA5B34600EF2EEA /* UnwatchedTV */,
 				880A0AA22E6D8AD800264C03 /* UnwatchedWidgetExtension */,
+				88E48D692F215D7100EE199A /* UnwatchedSafariExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -2273,6 +2327,13 @@
 				88904B072C07428500F95C67 /* credentials.swift.example in Resources */,
 				887AC8D42B49CECF00512852 /* Localizable.xcstrings in Resources */,
 				888129AB2D60802500BE47E4 /* InfoPlist.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88E48D682F215D7100EE199A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3040,6 +3101,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		88E48D662F215D7100EE199A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -3052,6 +3120,11 @@
 			isa = PBXTargetDependency;
 			target = 88DFC0AA2B44843A001895C8 /* Unwatched */;
 			targetProxy = 882FBA832B905F2500213CEF /* PBXContainerItemProxy */;
+		};
+		88E48D812F215D7100EE199A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 88E48D692F215D7100EE199A /* UnwatchedSafariExtension */;
+			targetProxy = 88E48D802F215D7100EE199A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3456,6 +3529,75 @@
 			};
 			name = Release;
 		};
+		88E48D832F215D7100EE199A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HU6B6E9383;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UnwatchedSafariExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UnwatchedSafariExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched.UnwatchedSafariExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		88E48D842F215D7100EE199A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HU6B6E9383;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = UnwatchedSafariExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = UnwatchedSafariExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched.UnwatchedSafariExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3500,6 +3642,15 @@
 			buildConfigurations = (
 				88DFC0BD2B44843C001895C8 /* Debug */,
 				88DFC0BE2B44843C001895C8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88E48D852F215D7100EE199A /* Build configuration list for PBXNativeTarget "UnwatchedSafariExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88E48D832F215D7100EE199A /* Debug */,
+				88E48D842F215D7100EE199A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

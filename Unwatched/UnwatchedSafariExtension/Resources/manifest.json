@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "default_locale": "en",
+
+    "name": "__MSG_extension_name__",
+    "description": "__MSG_extension_description__",
+    "version": "1.0",
+
+    "background": {
+        "scripts": [ "shared.js", "background.js" ]
+    },
+
+    "content_scripts": [{
+        "js": [ "shared.js", "content.js" ],
+        "matches": [ "*://*.youtube.com/*", "*://youtu.be/*" ]
+    }],
+
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "images/toolbar-icon.svg"
+    },
+
+    "permissions": [
+        "webNavigation",
+        "tabs"
+    ]
+}

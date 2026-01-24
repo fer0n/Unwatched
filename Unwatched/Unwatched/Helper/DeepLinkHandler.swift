@@ -54,7 +54,14 @@ struct DeepLinkHandler: ViewModifier {
             // unwatched://play?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
             guard
                 let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-                let queryItems = components.queryItems,
+                let queryItems = components.queryItems
+            else { return }
+
+            if queryItems.first(where: { $0.name == "source" })?.value == "safari_extension" {
+                guard guardPremium() else { return }
+            }
+
+            guard
                 let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
                 let youtubeUrl = URL(string: youtubeUrlString)
             else {

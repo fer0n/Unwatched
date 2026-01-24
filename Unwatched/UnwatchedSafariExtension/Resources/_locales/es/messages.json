@@ -1,0 +1,14 @@
+{
+  "extension_name": {
+    "message": "Abrir en Unwatched",
+    "description": "El nombre para mostrar de la extensión."
+  },
+  "extension_description": {
+    "message": "Abre automáticamente videos de YouTube en la aplicación Unwatched. Requiere Unwatched Premium.",
+    "description": "Descripción de lo que hace la extensión."
+  },
+  "popup_description": {
+    "message": "Esta extensión abrirá videos de YouTube en Unwatched (requiere Premium).",
+    "description": "Texto mostrado en la ventana emergente."
+  }
+}
