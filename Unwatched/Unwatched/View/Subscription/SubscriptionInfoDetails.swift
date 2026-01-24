@@ -11,9 +11,6 @@ struct SubscriptionInfoDetails: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.modelContext) var modelContext
 
-    @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
-    @CloudStorage(Const.defaultShortsSetting) var defaultShortsSetting: ShortsSetting = .show
-
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
     @Binding var showFilter: Bool
@@ -86,29 +83,9 @@ struct SubscriptionInfoDetails: View {
                             .buttonStyle(CapsuleButtonStyle(primary: false))
                             .padding(.leading, padding + workaroundPadding)
 
-                        CapsulePicker(
-                            selection: $subscription.videoPlacement,
-                            options: VideoPlacement.allCases,
-                            label: {
-                                let text = $0.description(defaultPlacement: defaultVideoPlacement.shortDescription)
-                                let img = $0.systemName
-                                    ?? defaultVideoPlacement.systemName
-                                    ?? "questionmark"
-                                return (text, img)
-                            },
-                            menuLabel: "videoPlacement")
+                        SubscriptionVideoPlacementSetting(subscription: subscription)
 
-                        CapsulePicker(
-                            selection: $subscription.shortsSetting,
-                            options: ShortsSetting.allCases,
-                            label: {
-                                let text = $0.description(defaultSetting: defaultShortsSetting.description)
-                                let img = $0.systemName
-                                    ?? defaultShortsSetting.systemName
-                                    ?? "questionmark"
-                                return (text, img)
-                            },
-                            menuLabel: "shortsSetting")
+                        SubscriptionShortsSetting(subscription: subscription)
 
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,

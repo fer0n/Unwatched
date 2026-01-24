@@ -196,6 +196,10 @@ import UnwatchedShared
         videos = await getNewVideosAndUpdateExisting(sub: subModel, videos: videos)
         videos = await self.addShortsDetectionAndImageData(to: videos)
 
+        if subModel.shortsSetting.shouldHide(defaultPlacement.hideShorts) {
+            videos = videos.filter { $0.isYtShort != true }
+        }
+
         cacheImages(for: videos, subModel)
 
         let videoModels = insertVideoModels(from: videos, to: subModel)
@@ -254,6 +258,11 @@ import UnwatchedShared
                         video.title,
                         description: video.videoDescription
                     )
+
+                    if isYtShort == nil, let url = video.url, UrlService.isYtShortUrl(url: url) {
+                        isYtShort = true
+                    }
+
                     if isYtShort == nil {
                         let (isShort, imageData) = await VideoActor.isYtShort(video.thumbnailUrl)
                         isYtShort = isShort

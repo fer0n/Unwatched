@@ -51,6 +51,8 @@ struct DebugView: View {
                     Button("createTestWatchData", action: createTestWatchData)
                 }
 
+                CleanupHiddenShortsView()
+
                 DebugLoggerView()
             }
         }

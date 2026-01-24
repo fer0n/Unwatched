@@ -3090,6 +3090,40 @@
         }
       }
     },
+    "cleanupHiddenShorts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versteckte Shorts löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete Hidden Shorts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar Shorts ocultos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer les Shorts masqués"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń ukryte Shorty"
+          }
+        }
+      }
+    },
     "clear" : {
       "localizations" : {
         "de" : {
@@ -4684,6 +4718,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usuń wszystko oprócz subskrypcji"
+          }
+        }
+      }
+    },
+    "deleteHiddenShorts %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld versteckte Shorts gelöscht."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted %lld hidden shorts."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se eliminaron %lld Shorts ocultos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Shorts masqués supprimés."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usunięto %lld ukrytych Shortów."
           }
         }
       }

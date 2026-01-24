@@ -52,6 +52,13 @@ struct CleanupService {
         }
     }
 
+    static func cleanupHiddenShorts() -> Task<Int, Error> {
+        return Task.detached {
+            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            return try await actor.cleanupHiddenShorts()
+        }
+    }
+
     /// Deletes all inbox and queue entries for the given video ID (in rare case of duplicate entries that both link the same video, happens sometimes with deferred videos).
     static func cleanupAllEntries(_ videoId: String, _ modelContext: ModelContext) {
         let fetchInbox = FetchDescriptor<InboxEntry>(
@@ -149,6 +156,31 @@ struct CleanupService {
 
 @ModelActor actor CleanupActor {
     var duplicateInfo = RemovedDuplicatesInfo()
+
+    func cleanupHiddenShorts() throws -> Int {
+        let descriptor = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.isYtShort == true && $0.queueEntry == nil
+        })
+        let videos = try modelContext.fetch(descriptor)
+
+        let defaultShortSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+        let defaultShortSetting = ShortsSetting(rawValue: Int(defaultShortSettingRaw)) ?? .show
+        let defaultHideShorts = defaultShortSetting == .hide
+
+        var deletedCount = 0
+        for video in videos {
+            if let subscription = video.subscription,
+               subscription.shortsSetting.shouldHide(defaultHideShorts), video.bookmarkedDate == nil {
+                modelContext.delete(video)
+                deletedCount += 1
+            }
+        }
+
+        if deletedCount > 0 {
+            try modelContext.save()
+        }
+        return deletedCount
+    }
 
     func cleanupInboxEntryDates() {
         let fetch = FetchDescriptor<InboxEntry>(predicate: #Predicate { $0.date == nil })
