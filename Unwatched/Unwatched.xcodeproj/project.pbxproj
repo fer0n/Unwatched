@@ -74,6 +74,8 @@
 		881942A32C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */; };
 		881964F32CCA449E0084ADE4 /* VideoListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881964F22CCA449A0084ADE4 /* VideoListVM.swift */; };
 		881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881964F22CCA449A0084ADE4 /* VideoListVM.swift */; };
+		8819EA352F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */; };
+		8819EA362F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */; };
 		881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
 		881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51382B59D555006384E4 /* LibraryNavListItem.swift */; };
@@ -866,6 +868,7 @@
 		88190EF42EC235EE00C1C321 /* MyTint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTint.swift; sourceTree = "<group>"; };
 		881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLoadingTimeout.swift; sourceTree = "<group>"; };
 		881964F22CCA449A0084ADE4 /* VideoListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListVM.swift; sourceTree = "<group>"; };
+		8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewInteractionDetector.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		881E51362B59CAFF006384E4 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		881E51382B59D555006384E4 /* LibraryNavListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNavListItem.swift; sourceTree = "<group>"; };
@@ -1904,6 +1907,7 @@
 		88CD388A2E213CEF00E7B21C /* Transcript */ = {
 			isa = PBXGroup;
 			children = (
+				8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */,
 				888D49282E2251D0007902CF /* TranscriptDescriptionSelection.swift */,
 				88CD38742E20781F00E7B21C /* TranscriptView.swift */,
 				88CD38912E213D3400E7B21C /* TranscriptList.swift */,
@@ -2455,6 +2459,7 @@
 				889AF93E2C50ECF5001CEDE6 /* DropUrlArea.swift in Sources */,
 				880C211A2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */,
 				889AF93F2C50ECF5001CEDE6 /* VideoListView.swift in Sources */,
+				8819EA352F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */,
 				CD6364102C6DD9DF00C5DD43 /* EmptyEntry.swift in Sources */,
 				889AF9402C50ECF5001CEDE6 /* SubscriptionInfoDetails.swift in Sources */,
 				8891AAEF2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */,
@@ -2772,6 +2777,7 @@
 				88CD38922E213D3400E7B21C /* TranscriptList.swift in Sources */,
 				88BDC3AB2B79F0DE00656D63 /* SleepTimer.swift in Sources */,
 				88F73D902D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
+				8819EA362F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */,
 				888F74A72BA1FAC000B94822 /* NotificationSettingsView.swift in Sources */,
 				88F149E32F03E89600516422 /* StatsVM.swift in Sources */,
 				88F3AA8E2C998B840030B2EA /* VideoListFormat.swift in Sources */,
@@ -3455,7 +3461,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 317;
+				CURRENT_PROJECT_VERSION = 318;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3505,7 +3511,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 317;
+				CURRENT_PROJECT_VERSION = 318;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

@@ -15,6 +15,7 @@ struct TranscriptRow: View {
 
     var body: some View {
         Text(entry.text)
+            .textSelection(.enabled)
             .opacity(opacity)
             .padding(.vertical, 4)
             .onTapGesture(perform: onTap)

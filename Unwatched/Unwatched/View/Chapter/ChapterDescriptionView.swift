@@ -57,7 +57,8 @@ struct ChapterDescriptionView: View {
                     TranscriptDescriptionSelection(
                         video: video,
                         isCurrentVideo: video.youtubeId == player.video?.youtubeId,
-                        )
+                        scrollProxy: proxy
+                    )
                 }
                 .padding(.horizontal, showThumbnail ? 15 : isCompact ? 10 : 20)
                 .padding(.top, showThumbnail ? 15 : isCompact ? 15 : 30)

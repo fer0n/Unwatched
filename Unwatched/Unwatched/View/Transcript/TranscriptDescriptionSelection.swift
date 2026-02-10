@@ -11,6 +11,7 @@ struct TranscriptDescriptionSelection: View {
 
     let video: Video
     let isCurrentVideo: Bool
+    let scrollProxy: ScrollViewProxy
 
     @State var selection: DescriptionContentType = .description
     @State var transcriptVM = TranscriptView.ViewModel()
@@ -40,7 +41,8 @@ struct TranscriptDescriptionSelection: View {
                 transcriptUrl: isCurrentVideo ? player.transcriptUrl : nil,
                 youtubeId: video.youtubeId,
                 viewModel: $transcriptVM,
-                )
+                scrollProxy: scrollProxy
+            )
             .padding(.bottom, 7)
         }
     }
