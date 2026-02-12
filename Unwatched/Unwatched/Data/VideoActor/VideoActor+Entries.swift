@@ -276,14 +276,16 @@ extension VideoActor {
 
     private func addVideosToInbox(_ videos: [Video]) {
         for video in videos {
-            let inboxEntry = InboxEntry(video)
-            modelContext.insert(inboxEntry)
-            video.inboxEntry = inboxEntry
             VideoActor.clearEntries(
                 from: video,
                 except: InboxEntry.self,
                 modelContext: modelContext
             )
+            if video.inboxEntry == nil {
+                let inboxEntry = InboxEntry(video)
+                modelContext.insert(inboxEntry)
+                video.inboxEntry = inboxEntry
+            }
         }
     }
 
