@@ -12335,31 +12335,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datenschutzerklärung"
+            "value" : "Datenschutz"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy Policy"
+            "value" : "Privacy"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Política de privacidad"
+            "value" : "Privacidad"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Politique de confidentialité"
+            "value" : "Confidentialité"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Polityka prywatności"
+            "value" : "Prywatność"
           }
         }
       }
@@ -18027,31 +18027,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Option \"Einstellungen → Wiedergabe → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser unter Bibliothek → YouTube Browser mit deinem YouTube Account angemeldet bist."
+            "value" : "Die Option \"Einstellungen → Datenschutz → Keine Cookies Modus\" muss deaktiviert sein. Stelle außerdem Sicher, dass du im in-App Browser unter Bibliothek → YouTube Browser mit deinem YouTube Account angemeldet bist."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disable “Settings → Playback → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser under Library → Search YouTube."
+            "value" : "Disable “Settings → Privacy → No Cookies Mode” to ensure watched videos appear on YouTube, and sign in through the in-app browser under Library → Search YouTube."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desactiva \"Configuración → Reproducción → Modo sin cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador de la aplicación en Biblioteca → Buscar en YouTube.\nRetryClaude can make mistakes. Please double-check responses."
+            "value" : "Desactiva \"Configuración → Privacidad → Modo sin cookies\" para asegurar que los videos vistos aparezcan en YouTube, e inicia sesión a través del navegador de la aplicación en Biblioteca → Buscar en YouTube.\nRetryClaude can make mistakes. Please double-check responses."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désactivez « Réglages → Lecture → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré sous Bibliothèque → Rechercher sur YouTube."
+            "value" : "Désactivez « Réglages → Confidentialité → Mode sans cookies » pour que les vidéos regardées apparaissent sur YouTube, et connectez-vous via le navigateur intégré sous Bibliothèque → Rechercher sur YouTube."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wyłącz „Ustawienia → Odtwarzanie → Tryb bez ciasteczek\", aby obejrzane filmy pojawiały się na YouTube, i zaloguj się przez przeglądarkę w aplikacji w Biblioteka → Szukaj w YouTube."
+            "value" : "Wyłącz „Ustawienia → Prywatność → Tryb bez ciasteczek\", aby obejrzane filmy pojawiały się na YouTube, i zaloguj się przez przeglądarkę w aplikacji w Biblioteka → Szukaj w YouTube."
           }
         }
       }
