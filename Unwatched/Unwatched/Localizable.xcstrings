@@ -12335,31 +12335,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datenschutzerklärung"
+            "value" : "Datenschutz"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy Policy"
+            "value" : "Privacy"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Política de privacidad"
+            "value" : "Privacidad"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Politique de confidentialité"
+            "value" : "Confidentialité"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Polityka prywatności"
+            "value" : "Prywatność"
           }
         }
       }
