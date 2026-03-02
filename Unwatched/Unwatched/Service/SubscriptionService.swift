@@ -46,6 +46,11 @@ struct SubscriptionService {
         return try await repo.subscribeTo(subscriptionInfo, subscriptionId)
     }
 
+    static func addSubscriptionWithoutRSS(_ info: SubscriptionInfo) async throws {
+        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        try await repo.addSubscriptionWithoutRSS(info)
+    }
+
     static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {
         let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
         return try await repo.getAllFeedUrls()

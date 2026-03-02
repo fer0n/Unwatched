@@ -13622,6 +13622,22 @@
         }
       }
     },
+    "rssFeedUnavailableMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konnte nicht verifiziert werden – YouTube RSS-Feeds sind möglicherweise nicht erreichbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not verify – YouTube RSS feeds might be down"
+          }
+        }
+      }
+    },
     "scope" : {
       "localizations" : {
         "de" : {
@@ -15476,6 +15492,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subskrybuj"
+          }
+        }
+      }
+    },
+    "subscribeAnyway" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trotzdem abonnieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe Anyway"
           }
         }
       }

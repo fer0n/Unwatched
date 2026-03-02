@@ -186,6 +186,25 @@ actor SubscriptionActor {
         return try UrlService.getFeedUrlFromChannelId(loadedChannelId)
     }
 
+    func addSubscriptionWithoutRSS(_ info: SubscriptionInfo) async throws {
+        guard let title = info.title,
+              info.channelId != nil || info.playlistId != nil else {
+            throw SubscriptionError.noInfoFoundToSubscribeTo
+        }
+        let rssFeedUrl = await info.getRssFeedUrl()
+        let sendableSub = SendableSubscription(
+            link: rssFeedUrl,
+            title: title,
+            youtubeChannelId: info.channelId,
+            youtubePlaylistId: info.playlistId,
+            youtubeUserName: info.userName,
+            thumbnailUrl: info.imageUrl
+        )
+        let sub = sendableSub.createSubscription()
+        modelContext.insert(sub)
+        try modelContext.save()
+    }
+
     func getAllFeedUrls() throws -> [(title: String, link: URL?)] {
         let predicate = #Predicate<Subscription> { $0.isArchived == false }
         let fetchDescriptor = FetchDescriptor<Subscription>(predicate: predicate)

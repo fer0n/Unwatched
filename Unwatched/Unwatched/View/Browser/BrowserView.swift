@@ -195,15 +195,24 @@ struct BrowserView: View, KeyboardReadable {
         .bold()
         .popover(isPresented: Binding(
             get: { subscribeManager.errorMessage != nil },
-            set: { if !$0 { subscribeManager.errorMessage = nil } }
+            set: { if !$0 {
+                subscribeManager.errorMessage = nil
+                subscribeManager.failedSubscriptionInfo = nil
+            } }
         )) {
             if let error = subscribeManager.errorMessage {
-                VStack {
+                VStack(spacing: 8) {
                     Text("errorOccured")
                         .font(.headline)
                     Text(verbatim: error)
                         .foregroundStyle(.secondary)
                         .font(.body)
+                    if subscribeManager.failedSubscriptionInfo != nil {
+                        Button("subscribeAnyway") {
+                            Task { await subscribeManager.addWithoutRSS() }
+                        }
+                        .padding(.top, 4)
+                    }
                 }
                 .frame(idealWidth: 300, maxWidth: 300)
                 .padding(10)
