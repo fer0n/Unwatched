@@ -215,6 +215,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 refresher.triggerPasteAction = true
             } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
                 refresher.triggerPasteAndQueueAction = true
+            } else if shortcutItem.type == Const.shortcutItemSearchYoutube {
+                refresher.triggerSearchYoutube = true
             }
         }
     }
@@ -224,6 +226,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             NotificationCenter.default.post(name: .pasteAndWatch, object: nil)
         } else if shortcutItem.type == Const.shortcutItemPasteAndQueue {
             NotificationCenter.default.post(name: .pasteAndQueue, object: nil)
+        } else if shortcutItem.type == Const.shortcutItemSearchYoutube {
+            NotificationCenter.default.post(name: .searchYoutube, object: nil)
         }
     }
 }

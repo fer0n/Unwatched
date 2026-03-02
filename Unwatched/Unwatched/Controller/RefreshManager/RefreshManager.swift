@@ -38,6 +38,7 @@ actor RefreshActor {
 
     @ObservationIgnored var triggerPasteAction = false
     @ObservationIgnored var triggerPasteAndQueueAction = false
+    @ObservationIgnored var triggerSearchYoutube = false
 
     func consumeTriggerPasteAction() -> Bool {
         if triggerPasteAction {
@@ -50,6 +51,14 @@ actor RefreshActor {
     func consumeTriggerPasteAndQueueAction() -> Bool {
         if triggerPasteAndQueueAction {
             triggerPasteAndQueueAction = false
+            return true
+        }
+        return false
+    }
+
+    func consumeTriggerSearchYoutube() -> Bool {
+        if triggerSearchYoutube {
+            triggerSearchYoutube = false
             return true
         }
         return false

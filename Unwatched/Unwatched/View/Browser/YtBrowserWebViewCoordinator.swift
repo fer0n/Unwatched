@@ -155,6 +155,14 @@ extension YtBrowserWebView {
             if parent.playBrowserVideosInApp {
                 injectVideoInterceptionScript(webView)
             }
+
+            if parent.browserManager.shouldFocusSearch {
+                parent.browserManager.shouldFocusSearch = false
+                Task { @MainActor in
+                    try await Task.sleep(for: .milliseconds(800))
+                    try await webView.evaluateJavaScript(BrowserManager.searchFocusScript)
+                }
+            }
         }
 
         func injectStyling(_ webView: WKWebView) {

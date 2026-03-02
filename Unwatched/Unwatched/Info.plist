@@ -63,6 +63,16 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>PasteAndQueue</string>
 		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>magnifyingglass</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconType</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search YouTube</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>SearchYoutube</string>
+		</dict>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

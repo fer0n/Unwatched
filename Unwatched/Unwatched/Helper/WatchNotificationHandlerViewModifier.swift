@@ -25,12 +25,18 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndQueue)) { _ in
                 handlePasteAndQueue()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .searchYoutube)) { _ in
+                handleSearchYoutube()
+            }
             .onAppear {
                 if refresher.consumeTriggerPasteAction() {
                     handlePasteAndPlay()
                 }
                 if refresher.consumeTriggerPasteAndQueueAction() {
                     handlePasteAndQueue()
+                }
+                if refresher.consumeTriggerSearchYoutube() {
+                    handleSearchYoutube()
                 }
             }
             #if os(iOS)
@@ -82,6 +88,18 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             return
         }
         addAndPlay(url)
+    }
+
+    func handleSearchYoutube() {
+        BrowserManager.shared.shouldFocusSearch = true
+        navManager.openUrlInApp(.url("https://m.youtube.com/feed/library"))
+        let webView = BrowserManager.shared.webView
+        Task { @MainActor in
+            try await Task.sleep(for: .milliseconds(200))
+            try await webView?.evaluateJavaScript(BrowserManager.searchFocusScript)
+            try await Task.sleep(for: .milliseconds(800))
+            try await webView?.evaluateJavaScript(BrowserManager.searchFocusScript)
+        }
     }
 
     func handlePasteAndQueue() {
