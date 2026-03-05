@@ -275,6 +275,9 @@ extension PlayerWebViewCoordinator {
             Log.info("handlePause: playbackId mismatch, not pausing")
             return
         }
+        // Sync previousState before pausing so handlePlayPause doesn't echo
+        // the pause command back to the web player (mirrors handlePlay's approach)
+        parent.player.previousState.isPlaying = false
         parent.player.pause()
 
         let timeString = payloadArray[safe: 0]
