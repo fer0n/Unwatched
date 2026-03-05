@@ -749,7 +749,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                if (isNewEmbedding || blockOverlay) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
                 handleTouchStart(event);
@@ -772,7 +772,7 @@ extension PlayerWebView {
             }
             if (!event.isReTriggering) {
                 event.stopPropagation();
-                if (isNewEmbedding || blockOverlay) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
                 handleTouchEnd(event);
@@ -783,7 +783,7 @@ extension PlayerWebView {
             if (!event.isReTriggering) {
                 handleTouchEnd(event);
                 event.stopPropagation();
-                if (isNewEmbedding || blockOverlay) {
+                if (blockOverlay) {
                     event.preventDefault();
                 }
             }
@@ -853,8 +853,10 @@ extension PlayerWebView {
         function handleTouchEnd(event) {
             triggerTouchEvent(event);
             clearTimeout(touchTimeout);
+            let preventDefault = true;
             if (isPinching) {
                 // nothing
+                preventDefault = false;
             } else if (longTouchSent) {
                 sendMessage("longTouchEnd");
             } else if (isSwiping) {
@@ -864,6 +866,10 @@ extension PlayerWebView {
                 sendMessage("centerTouch", video.paused ? "play" : "pause");
             } else {
                 handleOverlayTap();
+            }
+
+            if (preventDefault && event) {
+                event.preventDefault();
             }
         }
 
@@ -939,20 +945,20 @@ extension PlayerWebView {
             }
             if (!isNewEmbedding) {
                 sendMessage("interaction");
-                const event = touchStartEvent;
-
-                // Manually trigger the event again with the custom property
-                const newEvent = new event.constructor('touchstart', event);
-                newEvent.isReTriggering = true;
-                event.target.dispatchEvent(newEvent);
-
-                // trigger end as well
-                setTimeout(function() {
-                    const endEvent = new event.constructor('touchend', event);
-                    endEvent.isReTriggering = true;
-                    event.target.dispatchEvent(endEvent);
-                }, 0);
             }
+            const event = touchStartEvent;
+
+            // Manually trigger the event again with the custom property
+            const newEvent = new event.constructor('touchstart', event);
+            newEvent.isReTriggering = true;
+            event.target.dispatchEvent(newEvent);
+
+            // trigger end as well
+            setTimeout(function() {
+                const endEvent = new event.constructor('touchend', event);
+                endEvent.isReTriggering = true;
+                event.target.dispatchEvent(endEvent);
+            }, 0);
         }
 
 
