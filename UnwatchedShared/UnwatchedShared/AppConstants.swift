@@ -259,6 +259,9 @@ public struct Const {
     public static let temporarySpeedUp = "temporarySpeedUp"
     public static let temporarySlowDown = "temporarySlowDown"
     public static let cleanupImageCache = "cleanupImageCache"
+    public static let autoDeleteWatchedVideos = "autoDeleteWatchedVideos"
+    public static let autoDeleteOrphanedVideos = "autoDeleteOrphanedVideos"
+    public static let autoDeleteInboxVideosLimit = "autoDeleteInboxVideosLimit"
 
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"

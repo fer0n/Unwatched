@@ -76,6 +76,9 @@ extension Const {
         Const.exludeWatchHistoryInBackup: false,
         Const.minimalBackups: true,
         Const.autoDeleteBackups: false,
+        Const.autoDeleteWatchedVideos: 0,
+        Const.autoDeleteOrphanedVideos: 0,
+        Const.autoDeleteInboxVideosLimit: 0,
 
         // Premium
         Const.unwatchedPremiumAcknowledged: false,

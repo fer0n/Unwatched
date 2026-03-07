@@ -128,7 +128,37 @@ struct SetupView: View {
         if shouldCleanup {
             ImageService.cleanupImages(olderThanDays: Const.cleanupCacheDays)
         }
+
+        let watchedDays = UserDefaults.standard.integer(forKey: Const.autoDeleteWatchedVideos)
+        if watchedDays > 0,
+           UserDefaults.standard.shouldPerform(
+            Const.autoDeleteWatchedVideos,
+            interval: cleanupInterval(forDays: watchedDays)
+           ) {
+            CleanupService.deleteOldWatchedVideos(olderThan: watchedDays)
+        }
+
+        let orphanedDays = UserDefaults.standard.integer(forKey: Const.autoDeleteOrphanedVideos)
+        if orphanedDays > 0,
+           UserDefaults.standard
+            .shouldPerform(Const.autoDeleteOrphanedVideos, interval: cleanupInterval(forDays: orphanedDays)) {
+            CleanupService.deleteOrphanedVideos(olderThan: orphanedDays)
+        }
+
+        let inboxLimit = UserDefaults.standard.integer(forKey: Const.autoDeleteInboxVideosLimit)
+        if inboxLimit > 0,
+           UserDefaults.standard.shouldPerform(Const.autoDeleteInboxVideosLimit, interval: .weekly) {
+            Task.detached {
+                let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+                _ = await actor.clearOldInboxEntries(keep: inboxLimit)
+            }
+        }
+
         Log.info("saved state")
+    }
+
+    private static func cleanupInterval(forDays days: Int) -> SignalInterval {
+        days < 7 ? .daily : .weekly
     }
 
     static func onLaunch() {

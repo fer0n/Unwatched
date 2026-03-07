@@ -654,6 +654,8 @@
 		88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */; };
 		88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
 		88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */; };
+		88EBB40E2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */; };
+		88EBB40F2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */; };
 		88EE64BA2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */; };
 		88EE64BB2E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */; };
 		88EE64BE2E64A1B700A3DD36 /* ContextMenuAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */; };
@@ -1161,6 +1163,7 @@
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
 		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
+		88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoDeleteVideosView.swift"; sourceTree = "<group>"; };
 		88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebViewCoordinator.swift; sourceTree = "<group>"; };
 		88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuAction.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
@@ -1741,6 +1744,7 @@
 				880505112C836882005F0972 /* FaqView.swift */,
 				88C5F3EF2CCCF50200DA802F /* UserTipsView.swift */,
 				8816A2FC2CCD5125001FE63E /* PageControl.swift */,
+				88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2453,6 +2457,7 @@
 				889AF9622C50ED05001CEDE6 /* VideoActor+Subscriptions.swift in Sources */,
 				889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */,
 				889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */,
+				88EBB40F2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */,
 				882966F62CCE1F9400E96D3C /* View.swift in Sources */,
 				889AF93A2C50ECF5001CEDE6 /* SubStateOverview.swift in Sources */,
 				889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */,
@@ -2891,6 +2896,7 @@
 				88F3AA812C99870F0030B2EA /* Chapter.swift in Sources */,
 				8808D8252B4B02E300B4FF11 /* SpeedControlView.swift in Sources */,
 				88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */,
+				88EBB40E2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */,
 				886E21722EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift in Sources */,
 				CDE87A4A2E2567DA00E35B41 /* CircularProgressView.swift in Sources */,
 				88A2921E2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */,

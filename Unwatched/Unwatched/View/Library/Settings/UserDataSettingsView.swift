@@ -29,6 +29,8 @@ struct UserDataSettingsView: View {
             MyForm {
                 CloudSyncSetting()
 
+                AutoDeleteVideosView()
+
                 CleanupDuplicatesView()
 
                 BackupSettings()

@@ -123,6 +123,20 @@ struct CleanupService {
         video.sponserBlockUpdateDate = nil
     }
 
+    static func deleteOldWatchedVideos(olderThan days: Int) {
+        Task.detached {
+            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            await actor.deleteOldWatchedVideos(olderThan: days)
+        }
+    }
+
+    static func deleteOrphanedVideos(olderThan days: Int) {
+        Task.detached {
+            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            await actor.deleteOrphanedVideos(olderThan: days)
+        }
+    }
+
     static func deleteEverything(except model: (any PersistentModel.Type)? = nil) async {
         let context = DataProvider.newContext()
         do {
@@ -434,6 +448,65 @@ struct CleanupService {
             let inbox0 = vid0.inboxEntry != nil
             return inbox0
         }
+    }
+
+    func clearOldInboxEntries(keep: Int) -> Int? {
+        CleanupService.clearOldInboxEntries(keep: keep, modelContext)
+    }
+
+    func deleteOldWatchedVideos(olderThan days: Int) {
+        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .now
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.watchedDate != nil })
+        guard let videos = try? modelContext.fetch(fetch) else { return }
+        let protectedIds = recentActiveSubscriptionVideoIds()
+        let toDelete = videos.filter {
+            ($0.watchedDate ?? .distantFuture) < cutoff
+                && $0.bookmarkedDate == nil
+                && $0.inboxEntry == nil
+                && $0.queueEntry == nil
+                && !protectedIds.contains($0.persistentModelID)
+        }
+        for video in toDelete {
+            CleanupService.deleteVideo(video, modelContext)
+        }
+        Log.info("deleteOldWatchedVideos: deleted \(toDelete.count) videos older than \(days) days")
+    }
+
+    func deleteOrphanedVideos(olderThan days: Int) {
+        let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: .now) ?? .now
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate {
+            $0.watchedDate == nil && $0.bookmarkedDate == nil
+        })
+        guard let videos = try? modelContext.fetch(fetch) else { return }
+        let protectedIds = recentActiveSubscriptionVideoIds()
+        let toDelete = videos.filter {
+            $0.inboxEntry == nil
+                && $0.queueEntry == nil
+                && $0.deferDate == nil
+                && ($0.createdDate ?? .distantFuture) < cutoff
+                && !protectedIds.contains($0.persistentModelID)
+        }
+        for video in toDelete {
+            CleanupService.deleteVideo(video, modelContext)
+        }
+        Log.info("deleteOrphanedVideos: deleted \(toDelete.count) videos older than \(days) days")
+    }
+
+    /// Returns the persistent IDs of the N most recent videos per active subscription.
+    /// Those videos should not be deleted since they'd just reappear on the next sync.
+    private func recentActiveSubscriptionVideoIds(keep count: Int = 15) -> Set<PersistentIdentifier> {
+        let fetch = FetchDescriptor<Subscription>(predicate: #Predicate { !$0.isArchived })
+        guard let subs = try? modelContext.fetch(fetch) else { return [] }
+        var ids = Set<PersistentIdentifier>()
+        for sub in subs {
+            let recent = (sub.videos ?? [])
+                .sorted { ($0.publishedDate ?? .distantPast) > ($1.publishedDate ?? .distantPast) }
+                .prefix(count)
+            for video in recent {
+                ids.insert(video.persistentModelID)
+            }
+        }
+        return ids
     }
 
     // MARK: WatchTime
