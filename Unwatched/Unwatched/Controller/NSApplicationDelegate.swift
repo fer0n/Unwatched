@@ -14,8 +14,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
 
     func applicationWillTerminate(_ notification: Notification) {
         Log.info("applicationWillTerminate start")
+        let isFakePip = UserDefaults.standard.bool(forKey: Const.isFakePip)
+        if isFakePip, let window = mainWindow {
+            // Save pip position for next pip session, but don't overwrite the regular window frame
+            UserDefaults.standard.set(NSStringFromRect(window.frame), forKey: Const.fakePipWindowFrame)
+        } else {
+            persistWindowFrame()
+        }
         SetupView.handleAppClosed()
-        persistWindowFrame()
         Log.info("applicationWillTerminate done")
     }
 
@@ -53,7 +59,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject, NSWindowDe
     @MainActor
     func restoreWindowFrame() {
         Log.info("restoreWindowFrame")
-        if let frameDescription = UserDefaults.standard.string(forKey: Const.mainWindowFrame) {
+        let isFakePip = UserDefaults.standard.bool(forKey: Const.isFakePip)
+        if isFakePip,
+           let frameString = UserDefaults.standard.string(forKey: Const.fakePipWindowFrame) {
+            let frame = NSRectFromString(frameString)
+            if frame.size != .zero {
+                mainWindow?.setFrame(frame, display: true)
+            }
+            mainWindow?.level = .floating
+            mainWindow?.contentMinSize = NSSize(width: 200, height: 112)
+        } else if let frameDescription = UserDefaults.standard.string(forKey: Const.mainWindowFrame) {
             mainWindow?.setFrame(from: frameDescription)
         }
     }

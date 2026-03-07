@@ -204,6 +204,8 @@
 		885723032E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		885723042E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
+		885D6A712F5A173F00961381 /* FakePipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885D6A702F5A173F00961381 /* FakePipButton.swift */; };
+		885D6A722F5A173F00961381 /* FakePipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885D6A702F5A173F00961381 /* FakePipButton.swift */; };
 		88632AF52B64FD8200C93F82 /* UserDataSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88632AF42B64FD8200C93F82 /* UserDataSettingsView.swift */; };
 		886555322E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */; };
 		886555332E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */; };
@@ -951,6 +953,7 @@
 		8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsView.swift; sourceTree = "<group>"; };
 		88571ADD2E658FDA006D1EE9 /* credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = credentials.swift; sourceTree = "<group>"; };
 		885723012E6596F6006D1EE9 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		885D6A702F5A173F00961381 /* FakePipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakePipButton.swift; sourceTree = "<group>"; };
 		88632AF42B64FD8200C93F82 /* UserDataSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataSettingsView.swift; sourceTree = "<group>"; };
 		886555312E7340CB00F4A2DA /* ChapterSettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterSettingsMenu.swift; sourceTree = "<group>"; };
 		8866B6932CF68C6C0034F44A /* PlayerMoreMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMoreMenuButton.swift; sourceTree = "<group>"; };
@@ -1363,6 +1366,7 @@
 		88143EB52B4A7FEF00829E13 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				885D6A702F5A173F00961381 /* FakePipButton.swift */,
 				88F7D6D92DE4C261001E1F3F /* CloudStorage */,
 				8874BF322F20DB9B007202E2 /* DeepLinkHandler.swift */,
 				CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */,
@@ -2482,6 +2486,7 @@
 				88E83F6E2D5D5D0600F596A9 /* AirPlayView.swift in Sources */,
 				880505012C81E4BC005F0972 /* VersionAndBuildNumber.swift in Sources */,
 				889AF9642C50ED0D001CEDE6 /* YtChannelId.swift in Sources */,
+				885D6A712F5A173F00961381 /* FakePipButton.swift in Sources */,
 				889AF9652C50ED0D001CEDE6 /* YtVideoInfo.swift in Sources */,
 				88339AA32E5B87A500B295B7 /* PopupPresenter.swift in Sources */,
 				8808820B2E565AD8008C38DA /* HideControlsSettings.swift in Sources */,
@@ -2808,6 +2813,7 @@
 				CD6364112C6DD9DF00C5DD43 /* EmptyEntry.swift in Sources */,
 				883CA8192B5BB2FB00028D52 /* ChapterMiniControlView.swift in Sources */,
 				889924672C47F4A4001185A6 /* PlayerControls.swift in Sources */,
+				885D6A722F5A173F00961381 /* FakePipButton.swift in Sources */,
 				88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */,
 				88D438A72B45ADBD00482F29 /* RSSParserDelegate.swift in Sources */,
 				8889A0652E04390A002C05BC /* SpeedSliderBackground.swift in Sources */,

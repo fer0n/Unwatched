@@ -9,6 +9,7 @@ import UnwatchedShared
 struct AppCommands: Commands {
     @Environment(\.openWindow) var openWindow
     @State var navManager = NavigationManager.shared
+    @AppStorage(Const.isFakePip) var isFakePip = false
 
     var body: some Commands {
         CommandGroup(after: .appInfo) {
@@ -43,6 +44,17 @@ struct AppCommands: Commands {
                 PlayerShortcut.hideControls.render()
                 PlayerShortcut.toggleFullscreen.render()
             }
+
+            #if os(macOS)
+            Section {
+                Button {
+                    isFakePip.toggle()
+                } label: {
+                    Label(String(localized: "togglePip"), systemImage: "pip.fill")
+                }
+                .keyboardShortcut("p", modifiers: .command)
+            }
+            #endif
         }
 
         #if os(macOS)

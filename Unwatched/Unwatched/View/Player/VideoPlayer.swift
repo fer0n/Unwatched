@@ -15,6 +15,7 @@ struct VideoPlayer: View {
 
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
+    @AppStorage(Const.isFakePip) var isFakePip = false
 
     @State var sleepTimerVM = SleepTimerViewModel()
     @State var autoHideVM = AutoHideVM.shared
@@ -31,7 +32,7 @@ struct VideoPlayer: View {
 
         VStack(spacing: 0) {
             #if !os(visionOS)
-            if showFullscreenControlsCompactSize {
+            if showFullscreenControlsCompactSize && !isFakePip {
                 squishyPadding
                 PlayButtonSpacer(
                     padding: padding * 2,
@@ -53,7 +54,7 @@ struct VideoPlayer: View {
             #endif
 
             #if !os(visionOS)
-            if !landscapeFullscreen {
+            if !landscapeFullscreen && !isFakePip {
                 if compactSize {
                     if showFullscreenControlsCompactSize {
                         squishyPadding

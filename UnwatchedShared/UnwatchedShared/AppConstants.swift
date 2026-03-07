@@ -233,6 +233,9 @@ public struct Const {
     public static let windowImportSubs = "windowImportSubs"
     public static let windowBrowser = "windowBrowser"
     public static let mainWindowFrame = "mainWindowFrame"
+    public static let preFakePipWindowFrame = "preFakePipWindowFrame"
+    public static let fakePipWindowFrame = "fakePipWindowFrame"
+    public static let isFakePip = "isFakePip"
     public static let windowPremium = "windowPremium"
 
     // MARK: - AppStorage

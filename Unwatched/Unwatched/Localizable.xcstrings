@@ -5062,6 +5062,40 @@
         }
       }
     },
+    "disablePip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PiP Deaktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable PiP"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar PiP"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactiver PiP"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz PiP"
+          }
+        }
+      }
+    },
     "dismiss" : {
       "localizations" : {
         "de" : {
@@ -13635,6 +13669,24 @@
             "state" : "translated",
             "value" : "Could not verify – YouTube RSS feeds might be down"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo verificar – los feeds RSS de YouTube podrían estar caídos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de vérifier – les flux RSS YouTube sont peut-être indisponibles"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie można zweryfikować – kanały RSS YouTube mogą być niedostępne"
+          }
         }
       }
     },
@@ -15509,6 +15561,24 @@
             "state" : "translated",
             "value" : "Subscribe Anyway"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscribirse de todos modos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S'abonner quand même"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subskrybuj mimo to"
+          }
         }
       }
     },
@@ -16622,6 +16692,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przełącz pełny ekran"
+          }
+        }
+      }
+    },
+    "togglePip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PiP Umschalten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle PiP"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alternar PiP"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basculer PiP"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przełącz PiP"
           }
         }
       }

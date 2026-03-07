@@ -16,6 +16,8 @@ struct UnwatchedApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     #endif
 
+    @AppStorage(Const.isFakePip) var isFakePip = false
+
     @State var player = PlayerManager.shared
     @State var refresher = RefreshManager.shared
 
@@ -40,7 +42,12 @@ struct UnwatchedApp: App {
                 }
 
                 #if os(macOS)
-                .frame(minWidth: 800, idealWidth: 1000, minHeight: 500, idealHeight: 700)
+                .frame(
+                    minWidth: isFakePip ? 300 : 800,
+                    idealWidth: isFakePip ? 400 : 1000,
+                    minHeight: isFakePip ? 100 : 500,
+                    idealHeight: isFakePip ? 100 : 700
+                )
             #elseif os(visionOS)
             .frame(minWidth: 900, minHeight: 500)
             #endif
