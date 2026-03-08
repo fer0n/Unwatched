@@ -19,6 +19,9 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .watchInUnwatched)) {
                 handleWatchInUnwatched($0)
             }
+            .onReceive(NotificationCenter.default.publisher(for: .queueInUnwatched)) {
+                handleQueueInUnwatched($0)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
             }
@@ -118,6 +121,19 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         }
     }
 
+    func handleQueueInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
+        Log.info("handleQueueInUnwatched")
+        if let userInfo = notification.userInfo,
+           let youtubeUrl = userInfo["youtubeUrl"] as? URL {
+            let isNext = userInfo["next"] as? Bool ?? false
+            if isNext {
+                addAndQueue(youtubeUrl)
+            } else {
+                addAndQueueAtBottom(youtubeUrl)
+            }
+        }
+    }
+
     func addAndPlay(_ url: URL) {
         let task = VideoService.addForeignUrls(
             [url],
@@ -133,6 +149,15 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             [url],
             in: .queue,
             at: 1
+        )
+        player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .nextUp)
+    }
+
+    func addAndQueueAtBottom(_ url: URL) {
+        let task = VideoService.addForeignUrls(
+            [url],
+            in: .queue,
+            at: -1
         )
         player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .nextUp)
     }

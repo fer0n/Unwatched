@@ -70,6 +70,24 @@ struct DeepLinkHandler: ViewModifier {
             }
             let userInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl]
             NotificationCenter.default.post(name: .watchInUnwatched, object: nil, userInfo: userInfo)
+        case "queue":
+            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
+            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8&next=true
+            guard
+                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                let queryItems = components.queryItems
+            else { return }
+
+            guard
+                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
+                let youtubeUrl = URL(string: youtubeUrlString)
+            else {
+                Log.error("No youtube URL found in deep link: \(url)")
+                return
+            }
+            let isNext = queryItems.first(where: { $0.name == "next" })?.value == "true"
+            let queueUserInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl, "next": isNext]
+            NotificationCenter.default.post(name: .queueInUnwatched, object: nil, userInfo: queueUserInfo)
         default:
             break
         }
