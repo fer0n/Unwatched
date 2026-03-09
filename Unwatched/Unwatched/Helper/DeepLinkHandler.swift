@@ -73,6 +73,7 @@ struct DeepLinkHandler: ViewModifier {
         case "queue":
             // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
             // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8&next=true
+            // unwatched://queue?url=https://www.youtube.com/watch?v=O_0Wn73AnC8&x-success=myapp://
             guard
                 let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
                 let queryItems = components.queryItems
@@ -88,6 +89,10 @@ struct DeepLinkHandler: ViewModifier {
             let isNext = queryItems.first(where: { $0.name == "next" })?.value == "true"
             let queueUserInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl, "next": isNext]
             NotificationCenter.default.post(name: .queueInUnwatched, object: nil, userInfo: queueUserInfo)
+            if let xSuccess = queryItems.first(where: { $0.name == "x-success" })?.value,
+               let xSuccessURL = URL(string: xSuccess) {
+                UrlService.open(xSuccessURL)
+            }
         default:
             break
         }
