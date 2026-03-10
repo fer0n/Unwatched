@@ -1163,7 +1163,7 @@
 		88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchNotificationHandlerViewModifier.swift; sourceTree = "<group>"; };
 		88E83E4D2D5D403D00F596A9 /* ReloadPlayerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadPlayerButton.swift; sourceTree = "<group>"; };
 		88E83F6D2D5D5D0600F596A9 /* AirPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayView.swift; sourceTree = "<group>"; };
-		88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AutoDeleteVideosView.swift"; sourceTree = "<group>"; };
+		88EBB40D2F5C607600A25A70 /* AutoDeleteVideosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDeleteVideosView.swift; sourceTree = "<group>"; };
 		88EE64B92E64933F00A3DD36 /* YtBrowserWebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtBrowserWebViewCoordinator.swift; sourceTree = "<group>"; };
 		88EE64BD2E64A1B700A3DD36 /* ContextMenuAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextMenuAction.swift; sourceTree = "<group>"; };
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
@@ -3473,7 +3473,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 320;
+				CURRENT_PROJECT_VERSION = 321;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3523,7 +3523,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 320;
+				CURRENT_PROJECT_VERSION = 321;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;

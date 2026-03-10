@@ -7,6 +7,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct PlayerEmbedded: View {
+    @AppStorage(Const.isFakePip) var isFakePip = false
+
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
@@ -70,7 +72,7 @@ struct PlayerEmbedded: View {
                    height: !hideMiniPlayer ? 60 : nil)
             .padding(.leading, !hideMiniPlayer ? PlayerView.miniPlayerHorizontalPadding : 0)
             #if os(macOS)
-            .padding(.horizontal, 5)
+            .padding(.horizontal, isFakePip ? 0 : 5)
             #endif
 
             if !hideMiniPlayer {

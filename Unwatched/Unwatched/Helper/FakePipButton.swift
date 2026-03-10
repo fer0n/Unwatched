@@ -29,7 +29,6 @@ struct FakePipTitleBar: View {
                     .backgroundTransparentEffect(fallback: .thinMaterial, shape: .capsule)
             }
             .buttonStyle(.plain)
-            .foregroundStyle(.white.opacity(0.8))
             .padding([.top, .leading], 10)
             .opacity(isHovered ? 1 : 0)
             .animation(.default, value: isHovered)
