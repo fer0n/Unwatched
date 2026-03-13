@@ -868,7 +868,7 @@ extension PlayerWebView {
                 handleOverlayTap();
             }
 
-            if (preventDefault && event) {
+            if (preventDefault && event && isNewEmbedding) {
                 event.preventDefault();
             }
         }
