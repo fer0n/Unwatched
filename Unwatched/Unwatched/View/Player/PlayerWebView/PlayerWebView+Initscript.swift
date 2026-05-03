@@ -52,7 +52,6 @@ extension PlayerWebView {
         var isSwiping = false;
 
         let overlay = document.querySelector('#player-control-overlay');
-        let isNewEmbedding = !!overlay; // initially found means new embedding player
 
 
         function sendMessage(topic, payload) {
@@ -113,7 +112,6 @@ extension PlayerWebView {
         let consecutiveSingleTaps = 0;
         let allowFadeinChanges = false;
         let overlayIntendedVisible = false;
-        sendMessage('isNewEmbedding', isNewEmbedding);
 
         setupOverlay();
         if (minimalPlayerUI) {
@@ -122,7 +120,7 @@ extension PlayerWebView {
 
         // Watch for the overlay element being replaced during initial load.
         // Disconnects after 5s — replacements happen early (triggered by setting currentTime).
-        if (isNewEmbedding && overlay.parentElement) {
+        if (overlay.parentElement) {
             const overlayReplaceObserver = new MutationObserver(() => {
                 const found = document.querySelector('#player-control-overlay');
                 if (found && found !== overlay) {
@@ -175,14 +173,12 @@ extension PlayerWebView {
             return overlay?.classList?.contains("fadein");
         }
         function overlayHealthCheckPolling() {
-            if (!isNewEmbedding) return;
             setTimeout(isOverlayHealthy, 1000);
             setTimeout(isOverlayHealthy, 3000);
             setTimeout(isOverlayHealthy, 8000);
         }
 
         function toggleOverlay() {
-            if (!isNewEmbedding) return;
             if (overlay) {
                 if (overlayIsVisible()) {
                     hideOverlay();
@@ -193,7 +189,7 @@ extension PlayerWebView {
         }
 
         function debouncedHideOverlay(duration = 2500) {
-            if (!overlayIsVisible() || !isNewEmbedding) return;
+            if (!overlayIsVisible()) return;
             clearTimeout(overlayHideTimer);
             overlayHideTimer = setTimeout(() => {
                 const element = document.querySelector('yt-bigboard');
@@ -205,7 +201,7 @@ extension PlayerWebView {
         }
 
         function setupOverlay() {
-            if (!overlay || !isNewEmbedding) return;
+            if (!overlay) return;
             // Override setAttribute to block fadein changes (except when we allow it)
             const originalSetAttribute = overlay.setAttribute;
             overlay.setAttribute = function(name, value) {
@@ -235,7 +231,7 @@ extension PlayerWebView {
         }
 
         function showOverlay() {
-            if (overlayIsVisible() || !isNewEmbedding) return;
+            if (overlayIsVisible()) return;
             overlayIntendedVisible = true;
             allowFadeinChanges = true;
             overlay.classList.add('fadein');
@@ -248,7 +244,7 @@ extension PlayerWebView {
 
         function hideOverlay() {
             const isHealthy = isOverlayHealthy();
-            if ((isHealthy && !overlayIsVisible()) || !isNewEmbedding) return;
+            if (isHealthy && !overlayIsVisible()) return;
             overlayIntendedVisible = false;
             allowFadeinChanges = true;
             overlay.classList.remove('fadein');
@@ -569,110 +565,69 @@ extension PlayerWebView {
         styling()
         function styling() {
             const style = document.createElement('style');
-            if (!isNewEmbedding) {
-                style.textContent = `
-                    * {
-                        cursor: default !important;
-                    }
-                    .ytp-pause-overlay, .branding-img, .ytp-ad-progress-list {
+            style.textContent = `
+                * {
+                    cursor: default !important;
+                }
+                .branding-img {
+                    display: none !important;
+                }
+                @media (max-width: 200px) {
+                    #player-control-overlay, .ytmCuedOverlayPlayButton, .ytmCuedOverlayGradient {
                         display: none !important;
                     }
-                    @media (max-width: 200px) {
-                        .ytp-gradient-top, .ytp-chrome-top, .ytp-button, .ytp-impression-link,
-                        .ytp-chrome-bottom {
-                            display: none !important;
-                        }
-                    }
-                    ${blockOverlay ? `
-                        .ytp-chrome-bottom, .ytp-chrome-top, .ytp-gradient-bottom, .ytp-gradient-top {
-                            display: none !important;
-                        }
-                    ` : ''}
-                    ${!isNonEmbedding
-                        ? '.ytp-play-progress { background: #ddd !important; }'
-                        : ''}
-                    .videowall-endscreen {
-                        opacity: 0.2;
-                    }
-                    body, html {
-                        overflow: hidden !important;
-                        touch-action: none !important;
-                    }
-                    ${disableCaptions
-                        ? '.ytp-caption-window-container, .ytp-subtitles-button { display: none !important; }'
-                        : ''}
-                    ${minimalPlayerUI ? `
-                        .ytp-chrome-top, .ytp-gradient-top, .ytp-airplay-button, .ytp-volume-panel,
-                        .ytp-info-panel-preview, .ytp-pip-button, .ytp-mute-button {
-                            display: none !important;
-                        }
-                        ` : ''}
-                `;
-            } else {
-                style.textContent = `
-                    * {
-                        cursor: default !important;
-                    }
-                    .branding-img {
+                }
+                ${blockOverlay ? `
+                    #player-control-overlay {
                         display: none !important;
                     }
-                    @media (max-width: 200px) {
-                        #player-control-overlay, .ytmCuedOverlayPlayButton, .ytmCuedOverlayGradient {
-                            display: none !important;
-                        }
+                ` : ''}
+                ${!isNonEmbedding ? `
+                    .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
+                    .ytChapteredProgressBarChapteredPlayerBarFill,
+                    .ytProgressBarLineProgressBarPlayed {
+                        background: #ddd !important;
                     }
-                    ${blockOverlay ? `
-                        #player-control-overlay {
-                            display: none !important;
-                        }
+                    .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
+                    .ytProgressBarPlayheadProgressBarPlayheadDot {
+                            background: #fff !important;
+                    }
                     ` : ''}
-                    ${!isNonEmbedding ? `
-                        .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
-                        .ytChapteredProgressBarChapteredPlayerBarFill,
-                        .ytProgressBarLineProgressBarPlayed {
-                            background: #ddd !important;
-                        }
-                        .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
-                        .ytProgressBarPlayheadProgressBarPlayheadDot {
-                                background: #fff !important;
-                        }
-                        ` : ''}
-                    ${disableCaptions ? `
-                        .ytp-caption-window-container, .ytmClosedCaptioningButtonButton {
-                            display: none !important;
-                        }
-                        ` : ''}
-                    ${autoCaptionsOnSeekBack ? `
-                        #toasts, .ytp-caption-window-top {
-                            display: none !important;
-                        }
-                        ` : ''}
-                    ${minimalPlayerUI ? `
-                        .ytmVideoInfoVideoDetailsContainer,
-                        .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
-                        .player-control-play-pause-icon, .player-controls-spinner,
-                        .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost, .ytdVolumeControlsHost,
-                        .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, yt-mute-toggle-button, embedded-player-video-details,
-                        .ytmCuedOverlayGradient, #toasts {
-                            display: none !important;
-                        }
-                        .ytmSlimMetadataButtonRendererHost:has(.icon-add_to_watch_later) {
-                            display: none !important;
-                        }
-                        .player-settings-icon, .ytmClosedCaptioningButtonHost {
-                            background: radial-gradient(circle, rgba(0, 0, 0, 0.18) 52%, transparent 0%) !important;
-                        }
-                        #player-control-overlay.fadein .player-controls-background {
-                            background: linear-gradient(
-                                to bottom,
-                                transparent,
-                                transparent calc(100% - 145px),
-                                rgba(0, 0, 0, 0.6) calc(100% - 20px)
-                            ) !important;
-                        }
-                        ` : ''}
+                ${disableCaptions ? `
+                    .ytp-caption-window-container, .ytmClosedCaptioningButtonButton {
+                        display: none !important;
+                    }
+                    ` : ''}
+                ${autoCaptionsOnSeekBack ? `
+                    #toasts, .ytp-caption-window-top {
+                        display: none !important;
+                    }
+                    ` : ''}
+                ${minimalPlayerUI ? `
+                    .ytmVideoInfoVideoDetailsContainer,
+                    .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
+                    .player-control-play-pause-icon, .player-controls-spinner,
+                    .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost, .ytdVolumeControlsHost,
+                    .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, yt-mute-toggle-button, embedded-player-video-details,
+                    .ytmCuedOverlayGradient, #toasts {
+                        display: none !important;
+                    }
+                    .ytmSlimMetadataButtonRendererHost:has(.icon-add_to_watch_later) {
+                        display: none !important;
+                    }
+                    .player-settings-icon, .ytmClosedCaptioningButtonHost {
+                        background: radial-gradient(circle, rgba(0, 0, 0, 0.18) 52%, transparent 0%) !important;
+                    }
+                    #player-control-overlay.fadein .player-controls-background {
+                        background: linear-gradient(
+                            to bottom,
+                            transparent,
+                            transparent calc(100% - 145px),
+                            rgba(0, 0, 0, 0.6) calc(100% - 20px)
+                        ) !important;
+                    }
+                    ` : ''}
                 `;
-            }
             document.head.appendChild(style);
         }
 
@@ -682,12 +637,7 @@ extension PlayerWebView {
             if (!hijackFullscreenButton) {
                 return
             }
-            let fullscreenButton = null;
-            if (!isNewEmbedding) {
-                fullscreenButton = document.querySelector('.ytp-fullscreen-button');
-            } else {
-                fullscreenButton = document.querySelector('.fullscreen-icon');
-            }
+            let fullscreenButton = document.querySelector('.fullscreen-icon');
             if (fullscreenButton) {
                 fullscreenButton.style.opacity = 1;
                 fullscreenButton.disabled = false;
@@ -790,11 +740,6 @@ extension PlayerWebView {
 
         function isVideoElement(event) {
             return event.target.matches('video')
-                || event.target.matches('.ytp-cued-thumbnail-overlay-image')
-                || event.target.matches('.videowall-endscreen')
-                || event.target.matches('.ytp-videowall-still-info-content')
-
-                // new embedded player
                 || event.target.matches('.player-controls-background')
                 || event.target.matches('.fullscreen-action-menu')
                 || event.target.matches('.ytmVideoInfoHost')
@@ -937,14 +882,13 @@ extension PlayerWebView {
                 handleOverlayTap();
             }
 
-            if (preventDefault && event && isNewEmbedding) {
+            if (preventDefault && event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
         }
 
         function handleOverlayTap() {
-            if (!isNewEmbedding) return;
             const now = Date.now();
             if (lastTapDate && now - lastTapDate < 300) {
                 consecutiveSingleTaps += 1;
@@ -1015,9 +959,6 @@ extension PlayerWebView {
         function triggerTouchEvent() {
             if (isSwiping || longTouchSent || centerTouch) {
                 return;
-            }
-            if (!isNewEmbedding) {
-                sendMessage("interaction");
             }
             const event = touchStartEvent;
 
