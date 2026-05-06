@@ -598,7 +598,7 @@ extension PlayerWebView {
                         display: none !important;
                     }
                     ` : ''}
-                ${autoCaptionsOnSeekBack ? `
+                ${autoCaptionsOnSeekBack || minimalPlayerUI ? `
                     #toasts, .ytp-caption-window-top {
                         display: none !important;
                     }
@@ -609,7 +609,7 @@ extension PlayerWebView {
                     .player-control-play-pause-icon, .player-controls-spinner,
                     .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost, .ytdVolumeControlsHost,
                     .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, yt-mute-toggle-button, embedded-player-video-details,
-                    .ytmCuedOverlayGradient, #toasts {
+                    .ytmCuedOverlayGradient {
                         display: none !important;
                     }
                     .ytmSlimMetadataButtonRendererHost:has(.icon-add_to_watch_later) {
