@@ -1191,6 +1191,38 @@ final class ChapterServiceTests: XCTestCase {
                 ]
             ),
 
+            // time range format: start <sep> end <sep> Title (same separator pattern applies on both sides)
+            (
+                """
+                00:00 -  00:55 - I Showed My Breasts to AI
+                00:55 -  05:00 - Second chapter
+                """,
+                [
+                    SendableChapter(title: "I Showed My Breasts to AI", startTime: 0, endTime: 55),
+                    SendableChapter(title: "Second chapter", startTime: 55, endTime: nil)
+                ]
+            ),
+            (
+                """
+                00:00 —  00:55 — Third chapter title
+                00:55 —  05:00 — Fourth chapter title
+                """,
+                [
+                    SendableChapter(title: "Third chapter title", startTime: 0, endTime: 55),
+                    SendableChapter(title: "Fourth chapter title", startTime: 55, endTime: nil)
+                ]
+            ),
+            (
+                """
+                00:00 - 00:55 | Fifth chapter title
+                00:55 - 05:00 | Sixth chapter title
+                """,
+                [
+                    SendableChapter(title: "Fifth chapter title", startTime: 0, endTime: 55),
+                    SendableChapter(title: "Sixth chapter title", startTime: 55, endTime: nil)
+                ]
+            ),
+
             // time range format: start - end  Title (end time is ignored)
             (
                 """
