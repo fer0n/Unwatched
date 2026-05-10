@@ -120,7 +120,7 @@ extension PlayerWebView {
 
         // Watch for the overlay element being replaced during initial load.
         // Disconnects after 5s — replacements happen early (triggered by setting currentTime).
-        if (overlay.parentElement) {
+        if (overlay?.parentElement) {
             const overlayReplaceObserver = new MutationObserver(() => {
                 const found = document.querySelector('#player-control-overlay');
                 if (found && found !== overlay) {
@@ -231,8 +231,8 @@ extension PlayerWebView {
         }
 
         function showOverlay() {
-            if (overlayIsVisible()) return;
             overlayIntendedVisible = true;
+            if (!overlay || overlayIsVisible()) return;
             allowFadeinChanges = true;
             overlay.classList.add('fadein');
             allowFadeinChanges = false;
@@ -243,9 +243,9 @@ extension PlayerWebView {
         };
 
         function hideOverlay() {
-            const isHealthy = isOverlayHealthy();
-            if (isHealthy && !overlayIsVisible()) return;
             overlayIntendedVisible = false;
+            const isHealthy = isOverlayHealthy();
+            if (!isHealthy || !overlayIsVisible()) return;
             allowFadeinChanges = true;
             overlay.classList.remove('fadein');
             allowFadeinChanges = false;
