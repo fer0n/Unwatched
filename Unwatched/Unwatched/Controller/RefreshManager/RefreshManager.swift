@@ -35,6 +35,7 @@ actor RefreshActor {
 
     var isLoading = false
     var isSyncingIcloud = false
+    var lastRefreshFailed = false
 
     @ObservationIgnored var triggerPasteAction = false
     @ObservationIgnored var triggerPasteAndQueueAction = false
@@ -119,8 +120,16 @@ actor RefreshActor {
                 fetchDurations: true
             )
             _ = try await task.value
+            if isFullRefresh {
+                lastRefreshFailed = false
+            }
         } catch {
             Log.info("Error during refresh: \(error)")
+            if isFullRefresh,
+               let urlError = error as? URLError,
+               urlError.code == .badServerResponse {
+                lastRefreshFailed = true
+            }
         }
         await cleanup(hardRefresh: hardRefresh)
     }

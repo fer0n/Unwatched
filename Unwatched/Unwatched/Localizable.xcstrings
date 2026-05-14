@@ -13304,6 +13304,40 @@
         }
       }
     },
+    "refreshFailedMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laden fehlgeschlagen – YouTube RSS-Feeds sind möglicherweise nicht erreichbar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh failed – YouTube RSS feeds might be down"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al actualizar – los feeds RSS de YouTube podrían estar caídos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de l'actualisation – les flux RSS YouTube sont peut-être indisponibles"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się odświeżyć – kanały RSS YouTube mogą być niedostępne"
+          }
+        }
+      }
+    },
     "releases" : {
       "localizations" : {
         "de" : {

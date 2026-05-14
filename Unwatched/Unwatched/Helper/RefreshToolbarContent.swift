@@ -22,23 +22,25 @@ struct CoreRefreshButton: View {
                 }
             } label: {
                 if #available(iOS 18, macOS 15, *) {
-                    Image(systemName: Const.refreshSF)
+                    Image(systemName: refreshIconName)
                         .symbolEffect(.rotate,
                                       options: .speed(1.5),
                                       isActive: refresher.isLoading)
                 } else {
-                    Image(systemName: Const.refreshSF)
+                    Image(systemName: refreshIconName)
                         .rotationEffect(Angle(degrees: rotation))
                 }
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                Button {
-                    Task { @MainActor in
-                        await refresh(hardRefresh: true)
+                Section(refresher.lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : "") {
+                    Button {
+                        Task { @MainActor in
+                            await refresh(hardRefresh: true)
+                        }
+                    } label: {
+                        Label("hardReload", systemImage: "clock.arrow.2.circlepath")
                     }
-                } label: {
-                    Label("hardReload", systemImage: "clock.arrow.2.circlepath")
                 }
             }
         }
@@ -57,6 +59,12 @@ struct CoreRefreshButton: View {
                     }
                 }
         }
+    }
+
+    private var refreshIconName: String {
+        refresher.lastRefreshFailed && !refresher.isLoading
+            ? Const.refreshFailedSF
+            : Const.refreshSF
     }
 
     private var supportsIos18: Bool {

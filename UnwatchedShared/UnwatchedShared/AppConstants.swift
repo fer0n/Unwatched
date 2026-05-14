@@ -176,6 +176,7 @@ public struct Const {
     public static let queueLastSF = "text.append"
 
     public static let refreshSF = "arrow.triangle.2.circlepath"
+    public static let refreshFailedSF = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
     public static let inboxTabFullSF = "tray.full"
     public static let libraryTabSF = "books.vertical"
 
