@@ -1,4 +1,5 @@
 // background.js
+importScripts("shared.js");
 
 browser.webNavigation.onBeforeNavigate.addListener(
   (details) => {

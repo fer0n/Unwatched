@@ -1,24 +1,8 @@
 // content.js
 
-let lastUrl = location.href;
-const openedUrls = new Set();
-
 function openInUnwatched(url) {
   console.log("Opening in Unwatched: " + url);
-  openedUrls.add(url);
-
-  const deepLink = getUnwatchedDeepLink(url);
-  window.location.href = deepLink;
-
-  return true;
-}
-
-function checkAndOpen() {
-  const url = window.location.href;
-
-  if (isYouTubeVideoUrl(url)) {
-    openInUnwatched(url);
-  }
+  window.location.href = getUnwatchedDeepLink(url);
 }
 
 // Intercept clicks on links before navigation
@@ -40,8 +24,4 @@ function handleClick(event) {
   }
 }
 
-// Add click listener to intercept video link clicks
 document.addEventListener("click", handleClick, true);
-
-// Initial check when page loads
-checkAndOpen();
