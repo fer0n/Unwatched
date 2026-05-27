@@ -55,3 +55,29 @@ playground.xcworkspace
 # Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
 # hence it is not needed unless you have added a package configuration file to your project
 # .swiftpm
+
+# Next.js / Node
+node_modules/
+/.next/
+/out/
+*.tsbuildinfo
+next-env.d.ts
+/coverage
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# env files
+.env*
+
+# Vercel
+.vercel
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
