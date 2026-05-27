@@ -11,20 +11,44 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [checkEmail, setCheckEmail] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) {
       setError(error.message)
       setLoading(false)
-    } else {
+    } else if (data.session) {
+      // Email confirmation is disabled — session created immediately
       router.push('/queue')
       router.refresh()
+    } else {
+      // Email confirmation required
+      setCheckEmail(true)
+      setLoading(false)
     }
+  }
+
+  if (checkEmail) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black px-4">
+        <div className="w-full max-w-sm text-center">
+          <h1 className="text-2xl font-bold mb-2">Check your email</h1>
+          <p className="text-zinc-400 text-sm mt-4">
+            We sent a confirmation link to <span className="text-white">{email}</span>.
+            Click it to activate your account.
+          </p>
+          <p className="mt-6 text-zinc-500 text-sm">
+            Already confirmed?{' '}
+            <Link href="/login" className="text-white hover:underline">Sign in</Link>
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (

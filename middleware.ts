@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-  const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup')
+  const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup') || pathname.startsWith('/auth/')
   const isPublicAsset = pathname.startsWith('/_next') || pathname.startsWith('/icons') || pathname === '/manifest.json'
 
   if (!user && !isAuthRoute && !isPublicAsset) {
