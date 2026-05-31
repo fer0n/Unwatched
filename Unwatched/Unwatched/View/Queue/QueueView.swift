@@ -1,7 +1,6 @@
 //
 //  QueueView.swift
 //  Unwatched
-//
 
 import SwiftUI
 import SwiftData
@@ -9,16 +8,43 @@ import OSLog
 import UnwatchedShared
 
 struct QueueView: View {
+    @State private var showAll = false
+    var showCancelButton: Bool = false
+
+    var body: some View {
+        QueueListView(
+            showAll: $showAll,
+            showCancelButton: showCancelButton
+        )
+    }
+}
+
+private struct QueueListView: View {
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
 
     @Environment(TinyUndoManager.self) private var undoManager
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) private var modelContext
 
-    @Query(QueueView.descriptor, animation: .default)
-    var queue: [QueueEntry]
+    @Query var queue: [QueueEntry]
 
-    var showCancelButton: Bool = false
+    @Binding var showAll: Bool
+    var showCancelButton: Bool
+
+    init(showAll: Binding<Bool>, showCancelButton: Bool) {
+        _showAll = showAll
+        self.showCancelButton = showCancelButton
+
+        var descriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+        if !showAll.wrappedValue {
+            descriptor.fetchLimit = Const.queueFetchLimit
+        }
+        _queue = Query(descriptor, animation: .default)
+    }
+
+    var hasTooManyItems: Bool {
+        !showAll && queue.count >= Const.queueFetchLimit
+    }
 
     var body: some View {
         @Bindable var navManager = navManager
@@ -74,6 +100,24 @@ struct QueueView: View {
                     .moveQueueEntryModifier()
                     .myListRowBackground()
 
+                    if hasTooManyItems {
+                        Button {
+                            withAnimation {
+                                showAll = true
+                            }
+                        } label: {
+                            Text("showAllQueueEntries")
+                                .font(.headline)
+                                .italic()
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .listRowSeparator(.hidden)
+                        #if !os(visionOS)
+                        .foregroundColor(.secondary)
+                        .listRowBackground(Color.backgroundColor)
+                        #endif
+                    }
+
                     if !queue.isEmpty {
                         ClearAllQueueEntriesButton(
                             willClearAll: willClearAll
@@ -107,10 +151,6 @@ struct QueueView: View {
                 throttle: .weekly
             )
         }
-    }
-
-    static var descriptor: FetchDescriptor<QueueEntry> {
-        FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
     }
 
     func willClearAll() {
