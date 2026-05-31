@@ -16,7 +16,6 @@ struct ProgressBarChapterIndicators: View {
         ForEach(video?.sortedChapters ?? []) { chapter in
             if !chapter.isActive {
                 inactive(chapter)
-                    .opacity(0.3)
             }
             if chapter.startTime != 0 {
                 Color.white
@@ -34,22 +33,16 @@ struct ProgressBarChapterIndicators: View {
     func inactive(_ chapter: Chapter) -> some View {
         if let chapterDuration = chapter.duration {
             let inactiveWidth = (chapterDuration / duration) * width
+            let xPos = (chapter.startTime / duration) * width + (inactiveWidth / 2)
 
-            inactiveBackground
+            Color.white
+                .blendMode(.destinationOut)
+                .frame(height: height / 2)
                 .frame(width: inactiveWidth)
                 .position(
-                    x: (chapter.startTime / duration) * width + (inactiveWidth / 2),
-                    y: height / 2
+                    x: xPos,
+                    y: height / 4
                 )
         }
-    }
-
-    var inactiveBackground: some View {
-        #if os(visionOS)
-        Color.clear
-            .background(.ultraThickMaterial)
-        #else
-        Color.playerBackgroundColor
-        #endif
     }
 }

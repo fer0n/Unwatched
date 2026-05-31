@@ -163,6 +163,7 @@ struct VideoPlayer: View {
     .environment(SheetPositionReader())
     .environment(TinyUndoManager())
     .tint(Color.neutralAccentColor)
+    .preferredColorScheme(.dark)
     // .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 
     //        Button {

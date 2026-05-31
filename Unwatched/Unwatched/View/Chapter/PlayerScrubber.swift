@@ -17,12 +17,33 @@ struct PlayerScrubber: View {
     @State private var isInactive: Bool = false
     @State private var isGestureActive = false
 
-    init(limitHeight: Bool = false, inlineTime: Bool = false) {
+    init(
+        height: CGFloat? = nil,
+        inlineTime: Bool = false,
+        translucent: Bool = false,
+        glassEffect: Bool = true,
+        fillColor: Color = .foregroundGray,
+        trackColor: Color = .white,
+        timeColor: Color = .secondary,
+        onScrubbingChanged: ((Bool) -> Void)? = nil
+    ) {
         self.inlineTime = inlineTime
-        self.scrubberHeight = limitHeight ? 10 : 20
+        self.scrubberHeight = height ?? 20
+        self.translucent = translucent
+        self.glassEffect = glassEffect
+        self.fillColor = fillColor
+        self.trackColor = trackColor
+        self.timeColor = timeColor
+        self.onScrubbingChanged = onScrubbingChanged
     }
 
     let inlineTime: Bool
+    let translucent: Bool
+    let glassEffect: Bool
+    let fillColor: Color
+    let trackColor: Color
+    let timeColor: Color
+    var onScrubbingChanged: ((Bool) -> Void)?
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
 
@@ -46,7 +67,7 @@ struct PlayerScrubber: View {
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
                 }
                 .padding(.horizontal, scrubbingPadding)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(timeColor)
                 .font(.caption.monospacedDigit())
             }
 
@@ -54,37 +75,31 @@ struct PlayerScrubber: View {
                 if inlineTime {
                     Text(formattedCurrentTime)
                         .animation(nil, value: UUID())
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(timeColor)
                         .font(.caption.monospacedDigit())
                         .fixedSize()
                         .matchedGeometryEffect(id: "currentTime", in: namespace)
                 }
 
                 ZStack {
-                    #if os(visionOS)
-                    Color.clear
-                        .background(.thinMaterial)
-                    #else
-                    Color.white
-                        .opacity(Const.iOS26
-                                    ? (isGestureActive ? 0.15 : 0.1)
-                                    : (isGestureActive ? 0.25 : 0.2)
-                        )
-                    #endif
+                    if translucent {
+                        Color.clear
+                            .background(.thinMaterial)
+                    } else {
+                        trackColor
+                            .opacity(Const.iOS26
+                                        ? (isGestureActive ? 0.15 : 0.1)
+                                        : (isGestureActive ? 0.25 : 0.2)
+                            )
+                    }
 
                     if let video = player.video,
                        let total = video.duration {
 
                         HStack(spacing: 0) {
-                            #if os(visionOS)
-                            Color.white
+                            fillColor
                                 .opacity(isGestureActive ? 0.8 : 0.6)
                                 .frame(width: currentScrubberPosition)
-                            #else
-                            Color.foregroundGray
-                                .opacity(isGestureActive ? 0.5 : 0.3)
-                                .frame(width: currentScrubberPosition)
-                            #endif
                             Color.clear
                         }
 
@@ -101,13 +116,13 @@ struct PlayerScrubber: View {
                 }
                 .frame(height: currentScrubberHeight)
                 .clipShape(clipShape)
-                .shadow(radius: 5)
+                .shadow(color: Color.black.opacity(0.15), radius: 4)
                 #if os(visionOS)
                 .contentShape(.hoverEffect, .capsule)
                 .hoverEffect()
                 #else
                 .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
+                if #available(iOS 26.0, macOS 26.0, *), glassEffect {
                 $0.glassEffect(.regular, in: clipShape)
                 } else {
                 $0
@@ -143,7 +158,7 @@ struct PlayerScrubber: View {
 
                 if inlineTime {
                     Text(formattedDuration)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(timeColor)
                         .font(.caption.monospacedDigit())
                         .fixedSize()
                         .matchedGeometryEffect(id: "totalTime", in: namespace)
@@ -308,8 +323,8 @@ struct PlayerScrubber: View {
     let player = PlayerManager.getDummy()
     player.currentTime = 140
 
-    return PlayerScrubber(limitHeight: false)
+    return PlayerScrubber()
         .frame(width: 300, height: 150)
         .environment(player)
-    // .testEnvironments()
+    //     .testEnvironments()
 }

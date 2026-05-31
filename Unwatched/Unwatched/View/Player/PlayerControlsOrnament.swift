@@ -85,8 +85,13 @@ struct PlayerControlsOrnament: View {
                     .disabled(player.previousChapterDisabled)
                 }
 
-                PlayerScrubber(limitHeight: false, inlineTime: true)
-                    .frame(width: 400)
+                PlayerScrubber(
+                    inlineTime: true,
+                    translucent: true,
+                    glassEffect: false,
+                    fillColor: .white
+                )
+                .frame(width: 400)
 
                 if hasChapters {
                     Button {

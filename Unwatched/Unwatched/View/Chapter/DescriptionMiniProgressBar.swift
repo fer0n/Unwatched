@@ -11,13 +11,17 @@ struct DescriptionMiniProgressBar: View {
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
 
-    var limitHeight = false
+    var height: CGFloat?
     var inlineTime = false
 
     var body: some View {
         if !player.embeddingDisabled {
-            PlayerScrubber(limitHeight: limitHeight, inlineTime: inlineTime)
-                .frame(maxWidth: .infinity)
+            PlayerScrubber(
+                height: height,
+                inlineTime: inlineTime,
+                translucent: true
+            )
+            .frame(maxWidth: .infinity)
         }
     }
 }

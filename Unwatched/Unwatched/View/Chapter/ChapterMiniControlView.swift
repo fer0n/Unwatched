@@ -26,7 +26,7 @@ struct ChapterMiniControlView: View {
 
         VStack(spacing: limitHeight ? 0 : 10) {
             DescriptionMiniProgressBar(
-                limitHeight: limitHeight,
+                height: limitHeight ? 10 : nil,
                 inlineTime: inlineTime
             )
             .frame(maxWidth: .infinity)
