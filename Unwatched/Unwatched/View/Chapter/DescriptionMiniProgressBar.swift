@@ -19,7 +19,7 @@ struct DescriptionMiniProgressBar: View {
             PlayerScrubber(
                 height: height,
                 inlineTime: inlineTime,
-                translucent: true
+                translucent: false
             )
             .frame(maxWidth: .infinity)
         }

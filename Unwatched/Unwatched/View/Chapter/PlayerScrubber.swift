@@ -83,7 +83,8 @@ struct PlayerScrubber: View {
 
                 ZStack {
                     if translucent {
-                        Color.clear
+                        trackColor
+                            .opacity(0.2)
                             .background(.thinMaterial)
                     } else {
                         trackColor
