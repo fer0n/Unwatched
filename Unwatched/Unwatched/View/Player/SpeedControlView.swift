@@ -43,7 +43,9 @@ struct SpeedControlView: View {
                     viewModel.width = minY.width
                     viewModel.itemWidth = (minY.width - thumbSize) / CGFloat(Const.speeds.count - 1)
                     viewModel.padding = thumbSize / 2 - viewModel.itemWidth / 2
-                    viewModel.setThumbPosition(to: selectedSpeed)
+                    if viewModel.dragState == nil {
+                        viewModel.setThumbPosition(to: selectedSpeed)
+                    }
                     if !viewModel.showContent {
                         viewModel.showContent = true
                     }
