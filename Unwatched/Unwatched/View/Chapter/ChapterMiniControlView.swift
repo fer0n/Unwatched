@@ -55,8 +55,9 @@ struct ChapterMiniControlView: View {
                                 }
                             }
                             .padding(.vertical, 2)
-                            .font(.system(.title2))
-                            .fontWeight(.black)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .fontWidth(.condensed)
                             .lineLimit(1)
                             .frame(maxWidth: link == nil ? .infinity : nil)
                             .animation(nil, value: UUID())
