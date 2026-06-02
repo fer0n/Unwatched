@@ -17,10 +17,20 @@ struct ClearAllVideosButton: View {
         } label: {
             HStack {
                 Spacer()
-                Image(systemName: Const.clearSF)
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .symbolRenderingMode(.hierarchical)
+                if #available(iOS 26, macOS 26, *) {
+                    Image(systemName: Const.clearNoFillSF)
+                        .resizable()
+                        .fontWeight(.bold)
+                        .frame(width: 15, height: 15)
+                        .padding(13)
+                        .glassEffect(in: .circle)
+                        .foregroundStyle(.primary)
+                } else {
+                    Image(systemName: Const.clearSF)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .symbolRenderingMode(.hierarchical)
+                }
                 Spacer()
             }.padding()
         }
