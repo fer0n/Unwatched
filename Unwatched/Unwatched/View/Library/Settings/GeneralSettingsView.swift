@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct GeneralSettingsView: View {
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
     @AppStorage(Const.defaultVideoPlacement) var defaultVideoPlacement: VideoPlacement = .inbox
     @AppStorage(Const.autoClearNew) var autoClearNew: Bool = false
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
@@ -22,6 +23,12 @@ struct GeneralSettingsView: View {
 
             MyForm {
                 MySection {
+                    Picker("browserDisplayMode", selection: $browserDisplayMode) {
+                        ForEach(BrowserDisplayMode.allCases, id: \.self) {
+                            Text($0.description)
+                        }
+                    }
+                    .pickerStyle(.menu)
                     Picker("newVideos", selection: $defaultVideoPlacement) {
                         ForEach(VideoPlacement.allCases.filter { $0 != .defaultPlacement }, id: \.self) {
                             Text($0.description(defaultPlacement: ""))
