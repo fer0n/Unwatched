@@ -9,7 +9,6 @@ import UnwatchedShared
 struct PlayerMoreMenuButton<Content>: View where Content: View {
     @AppStorage(Const.surroundingEffect) var surroundingEffect = true
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
-
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player

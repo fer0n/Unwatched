@@ -9,6 +9,7 @@ public enum BrowserDisplayMode: Int, Codable, CaseIterable, Sendable {
     case asTab
     case asSheet
     case disabled
+    case external
 
     public var description: String {
         switch self {
@@ -18,6 +19,8 @@ public enum BrowserDisplayMode: Int, Codable, CaseIterable, Sendable {
             return String(localized: "browserAsSheet")
         case .disabled:
             return String(localized: "browserDisabled")
+        case .external:
+            return String(localized: "browserExternal")
         }
     }
 

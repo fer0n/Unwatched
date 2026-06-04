@@ -28,7 +28,7 @@ struct AddToLibraryView: View {
     @Binding var subManager: SubscribeManager
 
     var body: some View {
-        if browserDisplayMode == .asSheet {
+        if browserDisplayMode == .asSheet || browserDisplayMode == .external {
             Button(action: {
                 navManager.openUrlInApp(nil)
                 Signal.log("Library.OpenBrowser", throttle: .weekly)

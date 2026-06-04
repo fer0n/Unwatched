@@ -199,8 +199,24 @@ import UnwatchedShared
 
     @MainActor
     func openUrlInApp(_ url: BrowserUrl?) {
-        UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         let browserMode = BrowserDisplayMode.setting
+
+        if browserMode == .external, let resolvedUrl = url?.getUrl {
+            let player = PlayerManager.shared
+            let enablePip = !player.pipEnabled && player.isPlaying
+            if enablePip {
+                player.setPip(true)
+                Task {
+                    try? await Task.sleep(for: .seconds(0.2))
+                    UrlService.open(resolvedUrl)
+                }
+            } else {
+                UrlService.open(resolvedUrl)
+            }
+            return
+        }
+
+        UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if browserMode == .disabled {
             return
         }
