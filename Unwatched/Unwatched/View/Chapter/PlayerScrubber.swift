@@ -16,6 +16,7 @@ struct PlayerScrubber: View {
     @State private var viewSize: CGSize = .zero
     @State private var isInactive: Bool = false
     @State private var isGestureActive = false
+    @State private var gestureScrubberWidth: CGFloat = 0
 
     init(
         height: CGFloat? = nil,
@@ -148,7 +149,7 @@ struct PlayerScrubber: View {
                 }
                 #endif
                 .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                    DragGesture(minimumDistance: 0, coordinateSpace: enableTapScrubbing ? .local : .global)
                         .onChanged(handleChanged)
                         .onEnded(handleEnded)
                 )
@@ -242,6 +243,7 @@ struct PlayerScrubber: View {
     func handleChanged(_ value: DragGesture.Value) {
         isGestureActive = true
         if initialDragPosition == nil {
+            gestureScrubberWidth = scrubberWidth
             if enableTapScrubbing {
                 if value.translation == .zero {
                     // Initial click - move to clicked position
@@ -313,8 +315,9 @@ struct PlayerScrubber: View {
     }
 
     func getTimeFromPosition(_ position: CGFloat) -> Double? {
-        if let video = player.video, let total = video.duration {
-            return Double(position / scrubberWidth) * total
+        let width = isGestureActive ? gestureScrubberWidth : scrubberWidth
+        if width > 0, let video = player.video, let total = video.duration {
+            return Double(position / width) * total
         }
         return nil
     }
