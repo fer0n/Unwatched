@@ -12,14 +12,21 @@ struct ProgressBarChapterIndicators: View {
     let width: CGFloat
     let duration: Double
 
+    var breakWidth: CGFloat {
+        let chapters = video?.sortedChapters ?? []
+        return chapters.count > 40 ? 1 : 2
+    }
+
     var body: some View {
-        ForEach(video?.sortedChapters ?? []) { chapter in
+        let chapters = video?.sortedChapters ?? []
+
+        ForEach(chapters) { chapter in
             if !chapter.isActive {
                 inactive(chapter)
             }
             if chapter.startTime != 0 {
                 Color.white
-                    .frame(width: 2)
+                    .frame(width: breakWidth)
                     .position(
                         x: (chapter.startTime / duration) * width,
                         y: height / 2
