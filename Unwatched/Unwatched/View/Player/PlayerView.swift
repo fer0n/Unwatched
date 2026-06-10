@@ -171,6 +171,9 @@ struct PlayerView: View {
                 VideoService.setVideoWatched(
                     video, modelContext: modelContext
                 )
+                // workaround: sync clear is sometimes unreliable (e.g. screen locked);
+                // async version ensures the queue entry is actually removed
+                _ = VideoService.clearFromEverywhereAsync(video.youtubeId)
             }
             player.autoSetNextVideo(.continuousPlay, modelContext)
         } else {
