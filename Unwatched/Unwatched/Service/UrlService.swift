@@ -19,7 +19,7 @@ struct UrlService {
     static let shareShortcutUrl = URL(staticString: "https://www.icloud.com/shortcuts/08d23cfd38624043a00d626f9b5b00c6")
     static let generateChaptersShortcutUrl = URL(
         staticString: Const.iOS26
-            ? "https://www.icloud.com/shortcuts/9f47b3c3bfd041a886e05e320b9b17c8"
+            ? "https://www.icloud.com/shortcuts/de93db94377f4849a3b2174d31b57fd3"
             : "https://www.icloud.com/shortcuts/9cb5cc2ada7548e796a0d1fdfd940fcf"
     )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
