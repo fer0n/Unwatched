@@ -23,7 +23,8 @@ struct FullscreenPlayerControlsWrapper: View {
                 autoHideVM: $autoHideVM,
                 arrowEdge: arrowEdge,
                 sleepTimerVM: sleepTimerVM,
-                showLeft: showLeft
+                showLeft: showLeft,
+                transparent: true
             )
             .offset(x: nonEmbedding ? -5 : showLeft ? -22 : 22)
             .frame(width: 60)
