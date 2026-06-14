@@ -39,6 +39,7 @@ struct PlayerEmbedded: View {
                         overlayVM: $overlayVM,
                         enabled: showFullscreenControls,
                         show: landscapeFullscreen
+                            || player.tallFullscreenOverlay
                             || (!sheetPos.isMinimumSheet && navManager.showMenu)
                             || navManager.playerTab == .chapterDescription,
                         )
