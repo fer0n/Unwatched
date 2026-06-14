@@ -17,7 +17,6 @@ struct FullscreenPlayerControls: View {
     var transparent: Bool = false
 
     var body: some View {
-        let hasChapters = player.currentChapter != nil
         let size: CGFloat = 32
 
         VStack(spacing: 0) {
@@ -54,7 +53,7 @@ struct FullscreenPlayerControls: View {
                 }
             }
             .buttonStyle(.plain)
-            .opacity(hasChapters ? 1 : 0)
+            // always shown; disabled (greyed out) when there is no next chapter
             .disabled(player.nextChapter == nil)
 
             Spacer()
