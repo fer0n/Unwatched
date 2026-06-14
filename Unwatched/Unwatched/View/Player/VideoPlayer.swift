@@ -54,7 +54,7 @@ struct VideoPlayer: View {
             #endif
 
             #if !os(visionOS)
-            if !landscapeFullscreen && !isFakePip {
+            if !layoutMode.isFullscreen && !isFakePip {
                 if compactSize {
                     if showFullscreenControlsCompactSize {
                         squishyPadding
@@ -88,9 +88,12 @@ struct VideoPlayer: View {
                 player.video?.isNew = false
             }
         }
-        .ignoresSafeArea(edges: landscapeFullscreen ? (player.embeddingDisabled ? .all : .vertical) : [])
+        .ignoresSafeArea(edges: layoutMode.ignoredSafeAreaEdges(embeddingDisabled: player.embeddingDisabled))
         .onChange(of: landscapeFullscreen) {
-            handleLandscapeFullscreenChange(landscapeFullscreen)
+            handleFullscreenChange(.landscape, active: landscapeFullscreen)
+        }
+        .onChange(of: player.tallFullscreenOverlay) {
+            handleFullscreenChange(.portrait, active: player.tallFullscreenOverlay)
         }
         .hideCursorOnInactive(
             after: 2,
@@ -106,26 +109,77 @@ struct VideoPlayer: View {
             .frame(minHeight: 0, maxHeight: 6)
     }
 
+    var hideMiniPlayer: Bool {
+        sheetPos.hideMiniPlayer(showMenu: navManager.showMenu, landscapeFullscreen: landscapeFullscreen)
+    }
+
+    var layoutMode: PlayerLayoutMode {
+        PlayerLayoutMode(
+            landscapeFullscreen: landscapeFullscreen,
+            tallFullscreenOverlay: player.tallFullscreenOverlay,
+            hideMiniPlayer: hideMiniPlayer
+        )
+    }
+
+    enum FullscreenMode {
+        case landscape, portrait
+    }
+
+    /// Keeps the menu in sync when either fullscreen mode toggles.
+    /// Symmetry: entering a fullscreen mode hides the menu; exiting it restores the menu,
+    /// unless the *other* fullscreen mode is still active (then the menu stays hidden).
     @MainActor
-    func handleLandscapeFullscreenChange(_ landscapeFullscreen: Bool) {
+    func handleFullscreenChange(_ mode: FullscreenMode, active: Bool) {
         #if os(iOS)
-        if navManager.hasSheetOpen {
-            return
-        }
+        if navManager.hasSheetOpen { return }
         #endif
-        if landscapeFullscreen && navManager.showMenu
-            && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
-            navManager.showMenu = false
-        } else if !landscapeFullscreen {
-            // switching back to portrait
-            if navManager.showMenu {
-                // menu was open in landscape mode -> show menu in portrait
-                sheetPos.setDetentVideoPlayer()
-            } else {
-                // show menu and keep previous detent
-                navManager.showMenu = true
+        if active {
+            // entering fullscreen -> hide the menu
+            switch mode {
+            case .landscape:
+                // only auto-hide when the menu sits at the player/minimum detent
+                if navManager.showMenu
+                    && (sheetPos.isVideoPlayer && player.isPlaying || sheetPos.isMinimumSheet) {
+                    navManager.showMenu = false
+                }
+            case .portrait:
+                // remember the menu state so it can be restored when leaving portrait fullscreen
+                sheetPos.menuStateBeforeFullscreen = MenuState(
+                    showMenu: navManager.showMenu,
+                    detent: sheetPos.selectedDetent
+                )
+                navManager.showMenu = false
+            }
+        } else {
+            // exiting -> keep the menu hidden if the other fullscreen mode is still active
+            switch mode {
+            case .landscape:
+                if player.tallFullscreenOverlay { return }
+                if navManager.showMenu {
+                    // menu was open in landscape -> show it in portrait at the player detent
+                    sheetPos.setDetentVideoPlayer()
+                } else {
+                    navManager.showMenu = true
+                }
+            case .portrait:
+                if landscapeFullscreen { return }
+                restoreMenuAfterPortraitFullscreen()
             }
         }
+    }
+
+    /// Restores the menu to the state it had before entering portrait fullscreen.
+    /// Falls back to a minimized menu if no prior state was captured.
+    @MainActor
+    func restoreMenuAfterPortraitFullscreen() {
+        if let saved = sheetPos.menuStateBeforeFullscreen {
+            sheetPos.selectedDetent = saved.detent
+            navManager.showMenu = saved.showMenu
+        } else {
+            sheetPos.setDetentMinimumSheet()
+            navManager.showMenu = true
+        }
+        sheetPos.menuStateBeforeFullscreen = nil
     }
 
     var hideCursorEnabled: Bool {

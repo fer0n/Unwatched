@@ -72,7 +72,7 @@ struct PlayerView: View {
                     .environment(\.layoutDirection, .leftToRight)
                 }
 
-                if landscapeFullscreen && showFullscreenControls {
+                if layoutMode == .landscapeFullscreen && showFullscreenControls {
                     FullscreenPlayerControlsWrapper(
                         autoHideVM: $autoHideVM,
                         sleepTimerVM: sleepTimerVM,
@@ -88,6 +88,21 @@ struct PlayerView: View {
             .frame(maxWidth: !showFullscreenControls
                     ? .infinity
                     : nil)
+            .overlay(alignment: .trailing) {
+                if showTallFullscreenOverlay {
+                    FullscreenPlayerControls(
+                        autoHideVM: $autoHideVM,
+                        arrowEdge: .trailing,
+                        sleepTimerVM: sleepTimerVM,
+                        showLeft: false,
+                        transparent: true
+                    )
+                    .frame(width: 60)
+                    .frame(maxHeight: player.tallFullscreenOverlay ? 400 : nil)
+                    .opacity(tallOverlayShowControls ? 1 : 0)
+                    .animation(.easeInOut, value: tallOverlayShowControls)
+                }
+            }
             .fullscreenSafeArea(enable: landscapeFullscreen)
             // force reload if value changed (requires settings update)
             .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)")
@@ -110,11 +125,19 @@ struct PlayerView: View {
         .dateSelectorSheet()
         #if !os(visionOS)
         .persistentSystemOverlays(
-            landscapeFullscreen || controlsHidden
+            layoutMode.isFullscreen || controlsHidden
                 ? .hidden
                 : .visible
         )
         #endif
+    }
+
+    var layoutMode: PlayerLayoutMode {
+        PlayerLayoutMode(
+            landscapeFullscreen: landscapeFullscreen,
+            tallFullscreenOverlay: player.tallFullscreenOverlay,
+            hideMiniPlayer: hideMiniPlayer
+        )
     }
 
     var showLeft: Bool {
@@ -126,17 +149,25 @@ struct PlayerView: View {
     }
 
     var hideMiniPlayer: Bool {
-        !(
-            navManager.showMenu
-                && !sheetPos.swipedBelow
-                && !landscapeFullscreen
-        )
+        sheetPos.hideMiniPlayer(showMenu: navManager.showMenu, landscapeFullscreen: landscapeFullscreen)
     }
 
     var showFullscreenControls: Bool {
         fullscreenControlsSetting != .disabled
             && Device.supportsFullscreenControls
             && hideMiniPlayer
+    }
+
+    var showTallFullscreenOverlay: Bool {
+        player.isTallAspectRatio
+            && layoutMode == .portraitFullscreen
+            && showFullscreenControls
+    }
+
+    var tallOverlayShowControls: Bool {
+        fullscreenControlsSetting == .enabled
+            || !player.isPlaying
+            || autoHideVM.showControls
     }
 
     var controlsHidden: Bool {
@@ -210,7 +241,14 @@ struct PlayerView: View {
                 setHideControlsFullscreen(true)
             } else if !landscapeFullscreen {
                 #if os(iOS)
-                OrientationManager.changeOrientation(to: .landscapeRight)
+                if PlayerManager.shared.tallFullscreenOverlay {
+                    // already in portrait fullscreen -> reveal menu, stay fullscreen
+                    player.setShowMenu()
+                } else if PlayerManager.shared.isTallAspectRatio {
+                    player.setTallFullscreen(true)
+                } else {
+                    OrientationManager.changeOrientation(to: .landscapeRight)
+                }
                 #endif
             } else {
                 player.setShowMenu()
@@ -231,6 +269,13 @@ struct PlayerView: View {
                 #if os(iOS)
                 OrientationManager.changeOrientation(to: .portrait)
                 #endif
+            } else if PlayerManager.shared.tallFullscreenOverlay {
+                if NavigationManager.shared.showMenu {
+                    // menu is revealed over portrait fullscreen -> hide it, stay fullscreen
+                    NavigationManager.shared.showMenu = false
+                } else {
+                    player.setTallFullscreen(false)
+                }
             } else {
                 player.setPip(true)
             }

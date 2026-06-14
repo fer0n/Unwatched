@@ -13,6 +13,8 @@ struct FullscreenPlayerControls: View {
     var arrowEdge: Edge
     @State var sleepTimerVM: SleepTimerViewModel
     let showLeft: Bool
+    /// Enables the translucent glass + primary-color look when the controls overlap the video.
+    var transparent: Bool = false
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
@@ -100,6 +102,7 @@ struct FullscreenPlayerControls: View {
         .foregroundStyle(Color.neutralAccentColor)
         .fontWeight(.bold)
         .environment(\.colorScheme, .dark)
+        .environment(\.playerControlsTransparent, transparent)
         .padding(.vertical)
         .frame(minWidth: 35)
         .preferredColorScheme(.dark)

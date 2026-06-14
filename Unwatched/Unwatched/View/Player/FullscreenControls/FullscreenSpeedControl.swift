@@ -49,6 +49,7 @@ struct FullscreenSpeedControl: View {
     let transitionId = "popoverTransition"
 
     @Environment(PlayerManager.self) var player
+    @Environment(\.playerControlsTransparent) var transparent
     @State var showSpeedControl = false
     @Binding var autoHideVM: AutoHideVM
 
@@ -68,7 +69,8 @@ struct FullscreenSpeedControl: View {
                 Image(systemName: "circle.fill")
                     .resizable()
                     .frame(width: size, height: size)
-                    .foregroundStyle(Color.backgroundColor)
+                    // transparent mode relies on the glass background from PlayerControlButtonStyle
+                    .foregroundStyle(transparent ? Color.clear : Color.backgroundColor)
                 #endif
 
                 HStack(spacing: -3) {
@@ -101,7 +103,7 @@ struct FullscreenSpeedControl: View {
                 .foregroundStyle(.primary)
                 .tint(nil)
                 #else
-                .foregroundStyle(Color.foregroundGray.opacity(0.5))
+                .foregroundStyle(transparent ? Color.neutralAccentColor : Color.foregroundGray.opacity(0.5))
                 #endif
             }
             #if !os(visionOS)

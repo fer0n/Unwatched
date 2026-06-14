@@ -72,6 +72,31 @@ struct PlayerControls: View {
                     .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
                 }
 
+                if showRotateFullscreen && !player.embeddingDisabled && player.isTallAspectRatio {
+                    HStack(alignment: .center, spacing: 0) {
+                        InteractiveSubscriptionTitle(
+                            subscription: player.video?.subscription,
+                            showImage: true
+                        )
+                        .font(.headline)
+                        .fontWeight(.medium)
+                        .fontWidth(.condensed)
+                        .lineLimit(1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                        .foregroundStyle(.secondary)
+
+                        ToggleTallFullscreenButton { image in
+                            image
+                                .font(.system(size: 18, weight: .medium))
+                                .padding()
+                        }
+                        .opacity(player.video != nil ? 1 : 0)
+                    }
+                    .padding(.top, Const.iOS26_1 ? 7 : 0)
+                    .padding(.horizontal, Const.iOS26_1 ? 5 : 0)
+                }
+
                 if !player.embeddingDisabled && !compactSize && !player.isTallAspectRatio {
                     Spacer()
                 }

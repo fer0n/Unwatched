@@ -40,6 +40,7 @@ import UnwatchedShared
     var isRepeating: Bool = false
     var videoSource: VideoSource?
     var videoEnded: Bool = false
+    var tallFullscreenOverlay: Bool = false
     var shouldStop: Bool = false
     var unstarted: Bool = true
     var isLoading: Date? = Date()
@@ -413,6 +414,21 @@ extension PlayerManager {
 
             TinyUndoManager.shared.registerAction(.moveToQueue([videoId], order: 0))
         }
+    }
+
+    /// Enters/exits the portrait ("tall") custom fullscreen.
+    /// Animates the layout change and, when entering, locks the device to portrait
+    /// so the behavior mirrors the landscape fullscreen (which animates via rotation).
+    @MainActor
+    func setTallFullscreen(_ value: Bool) {
+        withAnimation {
+            tallFullscreenOverlay = value
+        }
+        #if os(iOS)
+        if value {
+            OrientationManager.changeOrientation(to: .portrait)
+        }
+        #endif
     }
 
     @MainActor

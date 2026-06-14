@@ -48,6 +48,28 @@ struct RotateOrientationButton: View {
     }
 }
 
+struct ToggleTallFullscreenButton<Content>: View where Content: View {
+    @Environment(PlayerManager.self) var player
+    @State var hapticToggle = false
+    let contentImage: ((Image) -> Content)
+
+    var body: some View {
+        Button {
+            hapticToggle.toggle()
+            player.setTallFullscreen(!player.tallFullscreenOverlay)
+        } label: {
+            contentImage(
+                Image(systemName: player.tallFullscreenOverlay
+                        ? Const.disableFullscreenSF
+                        : Const.enableFullscreenSF)
+            )
+        }
+        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
+}
+
 struct HideControlsButton: View {
     @AppStorage(Const.hideControlsFullscreen) var hideControlsFullscreen = false
     var textOnly: Bool = false

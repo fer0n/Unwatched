@@ -14,7 +14,11 @@ struct FullscreenChangeOrientationButton: View {
 
     var body: some View {
         Button {
-            OrientationManager.changeOrientation(to: .portrait)
+            if player.tallFullscreenOverlay {
+                player.setTallFullscreen(false)
+            } else {
+                OrientationManager.changeOrientation(to: .portrait)
+            }
         } label: {
             Image(systemName: "arrow.down.right.and.arrow.up.left.circle.fill")
                 .resizable()

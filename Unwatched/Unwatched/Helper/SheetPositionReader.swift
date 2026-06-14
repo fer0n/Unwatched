@@ -35,6 +35,8 @@ import UnwatchedShared
     var allowMinSheet: Bool = true
 
     @ObservationIgnored var landscapeFullscreen: Bool = false
+    /// Menu state captured when entering portrait fullscreen, so it can be restored on exit.
+    @ObservationIgnored var menuStateBeforeFullscreen: MenuState?
     var selectedDetent: PresentationDetent = .height(Const.minSheetDetent)
     @ObservationIgnored var needsRestoreMiniPlayer: Bool = false
     @ObservationIgnored var sheetHeight: CGFloat = .zero
@@ -113,6 +115,13 @@ import UnwatchedShared
         }
     }
 
+    /// Whether the regular mini-player layout should be hidden (player shown large/fullscreen).
+    /// Pass the live, observed values: the stored `landscapeFullscreen` is observation-ignored
+    /// and must not drive layout decisions, so callers supply their own observed copy.
+    func hideMiniPlayer(showMenu: Bool, landscapeFullscreen: Bool) -> Bool {
+        !(showMenu && !swipedBelow && !landscapeFullscreen)
+    }
+
     func setDetentMiniPlayer() {
         Log.info("setDetentMiniPlayer()")
         selectedDetent = .height(maxSheetHeight)
@@ -149,4 +158,9 @@ import UnwatchedShared
             swipedBelow = value
         }
     }
+}
+
+struct MenuState {
+    var showMenu: Bool
+    var detent: PresentationDetent
 }

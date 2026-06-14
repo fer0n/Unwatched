@@ -679,6 +679,8 @@
 		88EEFDE82B72E12500A1F441 /* InboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EEFDE72B72E12500A1F441 /* InboxTip.swift */; };
 		88EF34BD2B7C09CE007D33D4 /* VideoActor+Entries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */; };
 		88EF34BF2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */; };
+		88F031EA2FDEE5F400031301 /* PlayerLayoutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F031E92FDEE5F400031301 /* PlayerLayoutMode.swift */; };
+		88F031EB2FDEE5F400031301 /* PlayerLayoutMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F031E92FDEE5F400031301 /* PlayerLayoutMode.swift */; };
 		88F149D82F03D99600516422 /* StatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149D62F03D98500516422 /* StatsService.swift */; };
 		88F149D92F03D99600516422 /* StatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149D62F03D98500516422 /* StatsService.swift */; };
 		88F149DB2F03E45400516422 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F149DA2F03E45400516422 /* StatsView.swift */; };
@@ -1193,6 +1195,7 @@
 		88EEFDE72B72E12500A1F441 /* InboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxTip.swift; sourceTree = "<group>"; };
 		88EF34BC2B7C09CE007D33D4 /* VideoActor+Entries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Entries.swift"; sourceTree = "<group>"; };
 		88EF34BE2B7C0B5F007D33D4 /* VideoActor+Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Subscriptions.swift"; sourceTree = "<group>"; };
+		88F031E92FDEE5F400031301 /* PlayerLayoutMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLayoutMode.swift; sourceTree = "<group>"; };
 		88F149D62F03D98500516422 /* StatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsService.swift; sourceTree = "<group>"; };
 		88F149DA2F03E45400516422 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		88F149DF2F03E81E00516422 /* StatsActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsActor.swift; sourceTree = "<group>"; };
@@ -1506,6 +1509,7 @@
 				88D438A82B45B27600482F29 /* VideoPlayer.swift */,
 				88B0C1612C427940006D2423 /* PlayerView.swift */,
 				8851D8532EC0AE6F006D3310 /* PlayerControlsOrnament.swift */,
+				88F031E92FDEE5F400031301 /* PlayerLayoutMode.swift */,
 				88DD14742E7E981F007BA1F4 /* PlayerEmbedded.swift */,
 				88DD147D2E7E99A4007BA1F4 /* PlayerWebsite.swift */,
 				88DD147A2E7E9878007BA1F4 /* MiniPlayerContent.swift */,
@@ -2689,6 +2693,7 @@
 				88974D232D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */,
 				889AF8E62C50ECA9001CEDE6 /* CapsuleButtonStyle.swift in Sources */,
 				889AF8F62C50ECCA001CEDE6 /* NavigationManager.swift in Sources */,
+				88F031EA2FDEE5F400031301 /* PlayerLayoutMode.swift in Sources */,
 				8852493E2D16E5D2004C983E /* FullscreenChangeOrientationButton.swift in Sources */,
 				889AF8F72C50ECCA001CEDE6 /* PlayerManager.swift in Sources */,
 				88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */,
@@ -3152,6 +3157,7 @@
 				88C46B762F124BE100DF2963 /* StatsChannelRow.swift in Sources */,
 				88DA0EBB2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,
 				888C49C72B5FBF4E00CDEC76 /* SubscriptionInfoDetails.swift in Sources */,
+				88F031EB2FDEE5F400031301 /* PlayerLayoutMode.swift in Sources */,
 				88358A7A2C64EBA700AF71F8 /* UNNotificationAttachment.swift in Sources */,
 				889924782C4847C0001185A6 /* PlayerControlButtonStyle.swift in Sources */,
 				8891F0B42B4EF3610098A3FB /* SideloadingView.swift in Sources */,
