@@ -47,6 +47,8 @@ struct PlayerScrubber: View {
     var onScrubbingChanged: ((Bool) -> Void)?
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
+    /// Extra vertical touch area added on each side of the scrubber without affecting layout.
+    let verticalHitSlop: CGFloat = 14
 
     let enableTapScrubbing: Bool = Device.isMac
     var scrubberHeight: CGFloat
@@ -132,6 +134,7 @@ struct PlayerScrubber: View {
                 }
                 #endif
                 .frame(height: scrubberHeight)
+                .padding(.vertical, verticalHitSlop)
                 .contentShape(Rectangle())
                 #if os(visionOS)
                 .overlay {
@@ -154,6 +157,7 @@ struct PlayerScrubber: View {
                         .onEnded(handleEnded)
                 )
                 .disabled(isDisabled)
+                .padding(.vertical, -verticalHitSlop)
                 #if os(iOS) || os(visionOS)
                 .animation(.default.speed(2), value: currentScrubberHeight)
                 #endif
