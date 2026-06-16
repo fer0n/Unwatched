@@ -254,7 +254,7 @@ struct UserDataSettingsView: View {
 
     func getAllIcloudFiles() {
         let fileManager = FileManager.default
-        guard let backupsUrl = UserDataService.getBackupsDirectory() else {
+        guard let backupsUrl = UserDataService.getBackupsDirectory(createIfMissing: false) else {
             Log.warning("no documents url")
             hasicloudDirectory = false
             return

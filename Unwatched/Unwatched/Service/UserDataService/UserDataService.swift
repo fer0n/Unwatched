@@ -214,7 +214,7 @@ struct UserDataService {
     }
 
     static func getFilesToDelete() -> [URL] {
-        guard let directory = getBackupsDirectory() else {
+        guard let directory = getBackupsDirectory(createIfMissing: false) else {
             return []
         }
         do {
@@ -277,12 +277,16 @@ struct UserDataService {
         }
     }
 
-    static func getBackupsDirectory() -> URL? {
+    static func getBackupsDirectory(createIfMissing: Bool = true) -> URL? {
         if let containerUrl = FileManager.default.url(
             forUbiquityContainerIdentifier: nil
         )?.appendingPathComponent("Documents/Backups") {
             Log.info("containerUrl \(containerUrl)")
             if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
+                guard createIfMissing else {
+                    Log.info("backupsDirectory: doesn't exist")
+                    return nil
+                }
                 do {
                     Log.info("create directory")
                     try FileManager.default.createDirectory(
