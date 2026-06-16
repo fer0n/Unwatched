@@ -95,6 +95,7 @@ extension PlayerWebView {
             }
         }
         function setupVideo() {
+            window.pendingSeekTarget = null;
             addVideoListeners();
             video.playbackRate = playbackRate;
             video.muted = false;
@@ -329,6 +330,11 @@ extension PlayerWebView {
 
         function addVideoListeners() {
             video.addEventListener('seeked', () => {
+                // Once the player has caught up to the latest requested target, drop it so
+                // later isolated seeks measure from the real (now current) playback time.
+                if (window.pendingSeekTarget != null && Math.abs(video.currentTime - window.pendingSeekTarget) < 0.5) {
+                    window.pendingSeekTarget = null;
+                }
                 debouncedHideOverlay(1000);
             });
             video.addEventListener('ratechange', () => {
@@ -902,21 +908,40 @@ extension PlayerWebView {
             }
         }
 
+        // Returns the position a relative seek should start from. While a seek is still in
+        // flight video.currentTime hasn't caught up yet, so rapid taps would all measure from
+        // the same stale time and fail to accumulate. In that case build on the last requested
+        // target instead. window.pendingSeekTarget is cleared once the player reaches it (see
+        // the 'seeked' listener) or after it goes stale.
+        function seekBase() {
+            if (window.pendingSeekTarget != null && (Date.now() - (window.pendingSeekTime || 0)) < 1500) {
+                return window.pendingSeekTarget;
+            }
+            return video.currentTime;
+        }
+
+        function applySeekTarget(target) {
+            window.pendingSeekTarget = target;
+            window.pendingSeekTime = Date.now();
+            video.currentTime = target;
+        }
+
         function smartSeekRelative(seekRel) {
             if (seekRel < 0) {
                 showCaptionsTemporarily(Math.abs(seekRel));
             }
+            const start = seekBase();
             if (seekRel >= 0 || !window.hasInactiveChapters || !window.unwatchedChapters || window.unwatchedChapters.length === 0) {
                 if (video.duration) {
-                     video.currentTime = Math.min(video.currentTime + seekRel, video.duration - 0.2);
+                     applySeekTarget(Math.max(0, Math.min(start + seekRel, video.duration - 0.2)));
                 } else {
-                     video.currentTime += seekRel;
+                     applySeekTarget(Math.max(0, start + seekRel));
                 }
                 return;
             }
 
             let remaining = -seekRel;
-            let cursor = video.currentTime;
+            let cursor = start;
             const chapters = window.unwatchedChapters;
 
             let idx = -1;
@@ -936,14 +961,14 @@ extension PlayerWebView {
                 }
                 const available = Math.max(0, cursor - chapter.startTime);
                 if (remaining <= available) {
-                    video.currentTime = cursor - remaining;
+                    applySeekTarget(cursor - remaining);
                     return;
                 }
                 remaining -= available;
                 cursor = chapter.startTime;
                 idx--;
             }
-            video.currentTime = Math.max(0, cursor - remaining);
+            applySeekTarget(Math.max(0, cursor - remaining));
         }
 
         function handleDoubleTapSeek(event) {
