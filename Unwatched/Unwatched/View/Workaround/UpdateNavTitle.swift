@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-@available(macOS 26, *)
 struct UpdateNavTitle: ViewModifier {
     @Environment(NavigationTitleManager.self) var navigationTitleManager
     var title: LocalizedStringKey?
@@ -47,12 +46,6 @@ struct UpdateNavTitle: ViewModifier {
 
 extension View {
     func updateNavTitle(_ title: LocalizedStringKey?, titleHidden: Bool = false) -> some View {
-        self.apply {
-            if #available(macOS 26, *) {
-                $0.modifier(UpdateNavTitle(title: title, titleHidden: titleHidden))
-            } else {
-                $0
-            }
-        }
+        self.modifier(UpdateNavTitle(title: title, titleHidden: titleHidden))
     }
 }

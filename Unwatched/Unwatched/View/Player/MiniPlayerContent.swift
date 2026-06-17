@@ -31,16 +31,8 @@ struct MiniPlayerContent: View {
                 #if os(visionOS)
                 .foregroundStyle(.automaticWhite, .automaticBlack)
                 #else
-                .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                $0
                 .foregroundStyle(.automaticBlack, .clear)
                 .glassEffect(.regular.interactive(), in: Circle())
-                } else {
-                $0
-                .foregroundStyle(.automaticWhite, .automaticBlack)
-                }
-                }
                 #endif
                 .fontWeight(.black)
         }

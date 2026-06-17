@@ -46,14 +46,7 @@ extension View {
     /// On macOS 26, having the tabView inside the sidebar sometimes leads to the content not being clipped properly
     func concentricMacWorkaround(corners: Bool = false) -> some View {
         #if os(macOS)
-        self.apply {
-            if Const.macOS26 {
-                $0
-                    .clipShape(RoundedRectangle(cornerRadius: corners ? 20 : 0))
-            } else {
-                $0
-            }
-        }
+        self.clipShape(RoundedRectangle(cornerRadius: corners ? 20 : 0))
         #else
         self
         #endif

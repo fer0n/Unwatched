@@ -14,7 +14,7 @@ struct MyNavigationTitle: ViewModifier {
         content
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(toolbarBackground, for: .navigationBar)
+            .toolbarBackground(Color.clear, for: .navigationBar)
             .toolbarBackground(.automatic, for: .navigationBar)
             .toolbar {
                 if let title {
@@ -24,7 +24,7 @@ struct MyNavigationTitle: ViewModifier {
                                 .fontWeight(.black)
                                 .offset(y: titleHidden ? 10 : 0)
                                 .opacity(titleHidden ? 0 : 1)
-                                .blur(radius: titleHidden && Const.iOS26 ? 3 : 0)
+                                .blur(radius: titleHidden ? 3 : 0)
                                 .lineLimit(1)
                         }
                     }
@@ -34,14 +34,6 @@ struct MyNavigationTitle: ViewModifier {
         .navigationTitle(title ?? "")
         .updateNavTitle(title, titleHidden: titleHidden)
         #endif
-    }
-
-    var toolbarBackground: Color {
-        if #available(iOS 26, *) {
-            Color.clear
-        } else {
-            Color.backgroundColor.opacity(1)
-        }
     }
 }
 

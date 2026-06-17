@@ -11,15 +11,8 @@ extension View {
             #if os(visionOS)
             .fallbackBackground(fallback, shape: shape)
         #else
-        .apply {
-        if #available(iOS 26, macOS 26, *) {
-        $0
         .contentShape(shape)
         .glassEffect()
-        } else {
-        $0.fallbackBackground(fallback, shape: shape)
-        }
-        }
         #endif
     }
 

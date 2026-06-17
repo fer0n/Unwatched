@@ -43,13 +43,7 @@ struct ChapterSettingsMenu: View {
 
         } label: {
             Image(systemName: "gearshape.fill")
-                .apply {
-                    if #available(iOS 18, macOS 15, *) {
-                        $0.symbolEffect(.rotate, isActive: viewModel.isLoading)
-                    } else {
-                        $0.symbolEffect(.pulse, isActive: viewModel.isLoading)
-                    }
-                }
+                .symbolEffect(.rotate, isActive: viewModel.isLoading)
             Text("chapters")
         }
         .foregroundStyle(Color.automaticBlack)
@@ -88,13 +82,11 @@ struct GenerateChaptersMenuButton: View {
         let transcriptUrl = video?.youtubeId == player.video?.youtubeId
             ? player.transcriptUrl
             : nil
-        if #available(iOS 26, macOS 26.0, *) {
-            GenerateChaptersButton(
-                viewModel: $viewModel,
-                video: video,
-                transcriptUrl: transcriptUrl,
-                )
-        }
+        GenerateChaptersButton(
+            viewModel: $viewModel,
+            video: video,
+            transcriptUrl: transcriptUrl,
+            )
     }
 }
 

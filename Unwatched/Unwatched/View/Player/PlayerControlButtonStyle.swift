@@ -22,13 +22,7 @@ struct PlayerControlButtonStyle: ViewModifier {
                 Color.clear
             )
             #if !os(visionOS)
-            .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                    $0.glassEffect(.regular, in: Circle())
-                } else {
-                    $0.background(.ultraThinMaterial, in: Circle())
-                }
-            }
+            .glassEffect(.regular, in: Circle())
             #endif
             .overlay {
                 badge
@@ -46,13 +40,7 @@ struct PlayerControlButtonStyle: ViewModifier {
             .frame(width: badgeSize, height: badgeSize)
             .padding(2)
             #if !os(visionOS)
-            .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                    $0.glassEffect(.regular, in: Circle())
-                } else {
-                    $0.background(.thinMaterial, in: Circle())
-                }
-            }
+            .glassEffect(.regular, in: Circle())
         #endif
     }
 }

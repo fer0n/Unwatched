@@ -21,14 +21,6 @@ struct FilterSettingsView: View {
             MyBackgroundColor(macOS: false)
 
             MyForm {
-                if #unavailable(iOS 26.0) {
-                    MySection {
-                        Text("settingsSync")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
                 MySection("videoFilter", footer: "shortsSettingsFooter") {
                     #if os(iOS)
                     NavigationLink(value: LibraryDestination.titleFilter) {
@@ -83,13 +75,7 @@ struct FilterSettingsView: View {
         }
         .myNavigationTitle("filterSettings")
         #if !os(visionOS)
-        .apply {
-            if #available(iOS 26.0, *) {
-                $0.navigationSubtitle("settingsSync")
-            } else {
-                $0
-            }
-        }
+        .navigationSubtitle("settingsSync")
         #endif
     }
 

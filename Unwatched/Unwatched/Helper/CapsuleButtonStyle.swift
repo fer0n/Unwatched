@@ -40,17 +40,10 @@ struct CapsuleButtonStyle: ButtonStyle {
             .hoverEffect()
             #else
             .background(background, in: shape)
-            .apply {
-            if #available(iOS 26.0, macOS 26.0, *) {
-            $0
             .glassEffect(
             .regular.interactive(interactive),
             in: shape,
             )
-            } else {
-            $0
-            }
-            }
             #endif
             .foregroundStyle(foreground)
     }

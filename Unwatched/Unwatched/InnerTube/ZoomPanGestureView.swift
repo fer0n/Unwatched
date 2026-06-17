@@ -20,23 +20,18 @@ struct ZoomPanModifier: ViewModifier {
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        if #available(iOS 18, *) {
-            content
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
-                    action: { contentFrame = $0 }
-                .gesture(PinchZoomRepresentable(
-                    zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
-                .gesture(TwoFingerPanRepresentable(
-                    zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
-        } else {
-            content
-        }
+        content
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
+                action: { contentFrame = $0 }
+            .gesture(PinchZoomRepresentable(
+                zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
+            .gesture(TwoFingerPanRepresentable(
+                zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
     }
 }
 
 // MARK: - Pinch-to-Zoom
 
-@available(iOS 18.0, *)
 private struct PinchZoomRepresentable: UIGestureRecognizerRepresentable {
     @Binding var zoom: CGFloat
     @Binding var offset: CGSize
@@ -140,7 +135,6 @@ private struct PinchZoomRepresentable: UIGestureRecognizerRepresentable {
 
 // MARK: - Two-Finger Pan
 
-@available(iOS 18.0, *)
 private struct TwoFingerPanRepresentable: UIGestureRecognizerRepresentable {
     @Binding var zoom: CGFloat
     @Binding var offset: CGSize

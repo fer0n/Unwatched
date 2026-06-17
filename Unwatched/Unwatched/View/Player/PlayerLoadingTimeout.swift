@@ -42,13 +42,7 @@ struct PlayerLoadingTimeout: View {
                     .foregroundStyle(Color.automaticBlack, Color.backgroundColor)
                     .fontWeight(.regular)
                     #if !os(visionOS)
-                    .apply {
-                        if #available(iOS 26.0, macOS 26.0, *) {
-                            $0.glassEffect()
-                        } else {
-                            $0
-                        }
-                    }
+                    .glassEffect()
                 #endif
             }
             .buttonStyle(.plain)

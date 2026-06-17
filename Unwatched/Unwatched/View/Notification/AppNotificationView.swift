@@ -36,18 +36,11 @@ struct AppNotificationView: View {
         #if os(visionOS)
         .regularViewBackground(hasError)
         #else
-        .apply {
-        if #available(iOS 26, macOS 26, *) {
-        $0
         .foregroundStyle(hasError ? .white : .primary)
         .glassEffect(
         .regular.tint(hasError ? .red : .clear).interactive(),
         in: AppNotificationView.clipShape
         )
-        } else {
-        $0.regularViewBackground(hasError)
-        }
-        }
         #endif
         .fixedSize()
         .simultaneousGesture(

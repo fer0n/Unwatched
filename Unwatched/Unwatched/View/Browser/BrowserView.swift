@@ -121,13 +121,7 @@ struct BrowserView: View, KeyboardReadable {
                                 if let text = subscriptionText, !isKeyboardVisible {
                                     addSubButton(text)
                                         .popoverTip(addButtonTip, arrowEdge: .bottom)
-                                        .apply {
-                                            if #available(iOS 26, macOS 26, *) {
-                                                $0.tipBackgroundInteraction(.enabled)
-                                            } else {
-                                                $0
-                                            }
-                                        }
+                                        .tipBackgroundInteraction(.enabled)
                                         .disabled(subscribeManager.isLoading)
                                         .frame(maxWidth: .infinity, alignment: .center)
                                 } else {

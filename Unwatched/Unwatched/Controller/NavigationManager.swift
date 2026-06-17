@@ -174,10 +174,6 @@ import UnwatchedShared
             }
         }
 
-        if !isOnTopView, #unavailable(iOS 18) {
-            // happens automatically on iOS 18
-            clearNavigationStack(tab)
-        }
         return isOnTopView
     }
 

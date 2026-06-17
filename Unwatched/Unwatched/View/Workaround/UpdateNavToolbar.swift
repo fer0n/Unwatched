@@ -22,13 +22,7 @@ struct UpdateStatsToolbarItem: ViewModifier {
 
 extension View {
     func showStatsToolbarItem(_ value: Bool) -> some View {
-        self.apply {
-            if #available(macOS 26, *) {
-                $0.modifier(UpdateStatsToolbarItem(value: value))
-            } else {
-                $0
-            }
-        }
+        self.modifier(UpdateStatsToolbarItem(value: value))
     }
 }
 

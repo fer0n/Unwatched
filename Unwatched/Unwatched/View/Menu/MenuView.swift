@@ -26,9 +26,6 @@ struct MenuView: View {
     var isSidebar = false
 
     var shouldShowCancelButton: Bool {
-        if showCancelButton, #unavailable(iOS 18.1) {
-            return true
-        }
         return false
     }
 
@@ -63,13 +60,7 @@ struct MenuView: View {
                 )
             }
             #if os(iOS)
-            .apply {
-                if #available(iOS 26.0, *) {
-                    $0.scrollEdgeEffectHidden(for: .bottom)
-                } else {
-                    $0
-                }
-            }
+            .scrollEdgeEffectHidden(for: .bottom)
             #endif
             #if os(macOS)
             .popover(isPresented: showVideoDetail) {
@@ -117,9 +108,6 @@ struct MenuView: View {
                 : Color.backgroundColor)
                 .ignoresSafeArea(.all)
         }
-        #if os(iOS)
-        .setTabBarAppearance(disableScrollAppearance: isSidebar)
-        #endif
     }
 
     func videoDetailContent(_ video: Video) -> some View {

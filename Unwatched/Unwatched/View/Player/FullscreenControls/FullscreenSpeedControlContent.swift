@@ -176,16 +176,12 @@ extension FullscreenSpeedControlContent {
 
 extension View {
     func onScrollInteraction(_ action: @escaping (Bool) -> Void) -> some View {
-        if #available(iOS 18, *) {
-            return self.onScrollPhaseChange { oldPhase, newPhase in
-                if oldPhase == .idle && newPhase != .idle {
-                    action(true)
-                } else if oldPhase != .idle && newPhase == .idle {
-                    action(false)
-                }
+        self.onScrollPhaseChange { oldPhase, newPhase in
+            if oldPhase == .idle && newPhase != .idle {
+                action(true)
+            } else if oldPhase != .idle && newPhase == .idle {
+                action(false)
             }
-        } else {
-            return self
         }
     }
 }

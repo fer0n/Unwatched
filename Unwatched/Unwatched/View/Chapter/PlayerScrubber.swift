@@ -90,10 +90,7 @@ struct PlayerScrubber: View {
                             .opacity(0.4)
                     } else {
                         trackColor
-                            .opacity(Const.iOS26
-                                        ? (isGestureActive ? 0.15 : 0.1)
-                                        : (isGestureActive ? 0.25 : 0.2)
-                            )
+                            .opacity(isGestureActive ? 0.15 : 0.1)
                     }
                 }
                 .onSizeChange { geometry in
@@ -126,7 +123,7 @@ struct PlayerScrubber: View {
                 .hoverEffect()
                 #else
                 .apply {
-                if #available(iOS 26.0, macOS 26.0, *), glassEffect {
+                if glassEffect {
                 $0.glassEffect(.regular, in: clipShape)
                 } else {
                 $0

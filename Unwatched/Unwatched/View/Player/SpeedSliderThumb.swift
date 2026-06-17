@@ -45,12 +45,8 @@ struct SpeedSliderThumb: View {
                 #if os(visionOS)
                 thumbBackground
                 #else
-                if #available(iOS 26, macOS 26.0, *) {
-                    thumbBackground
-                        .glassEffect(.regular.tint(.white).interactive())
-                } else {
-                    thumbBackground
-                }
+                thumbBackground
+                    .glassEffect(.regular.tint(.white).interactive())
                 #endif
                 Text(floatingText)
                     .foregroundStyle(.automaticWhite)

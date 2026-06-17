@@ -55,16 +55,8 @@ struct AddVideoButton: View {
         #if os(visionOS)
         .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
         #else
-        .apply {
-        if #available(iOS 26.0, macOS 26.0, *) {
-        $0
         .foregroundStyle(.primary, Color.clear)
         .glassEffect(.regular.interactive())
-        } else {
-        $0
-        .foregroundStyle(.automaticWhite, Color.neutralAccentColor)
-        }
-        }
         #endif
         .buttonStyle(.plain)
     }
@@ -145,16 +137,9 @@ private extension View {
             #if os(visionOS)
             .viewBackground(size)
             #else
-            .apply {
-            if #available(iOS 26.0, macOS 26.0, *) {
-            $0
             .frame(width: size * 2, height: size * 2)
             .glassEffect(.regular.interactive())
             .foregroundStyle(.primary)
-            } else {
-            $0.viewBackground(size)
-            }
-            }
             #endif
             .contentShape(Rectangle())
     }

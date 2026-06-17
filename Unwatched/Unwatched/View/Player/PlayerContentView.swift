@@ -19,7 +19,7 @@ struct PlayerContentView: View {
     let hideControls: Bool
 
     var sleepTimerVM: SleepTimerViewModel
-    let fadeOutHeight: CGFloat = Const.iOS26 ? 25 : 35
+    let fadeOutHeight: CGFloat = 25
 
     @State var minHeight: CGFloat?
     @Binding var autoHideVM: AutoHideVM
@@ -88,23 +88,18 @@ struct PlayerContentView: View {
                         .bottom,
                         compactSize
                             ? 0
-                            : (Const.minSheetDetent - (Const.iOS26 ? 21 : 3))
+                            : (Const.minSheetDetent - 21)
                     )
                     .frame(maxHeight: .infinity, alignment: .bottom)
                     .opacity(navManager.showMenu ? 1 : 0)
             }
         }
         // TODO: enable safe area? Last checked on iOS 26 beta 8 (flickering issue)
-        // .ignoresSafeArea(edges: Const.iOS26 ? .bottom : [])
     }
 
     var shadowHeight: CGFloat {
-        if !Const.iOS26 {
-            hidePlayerPageIndicator ? 0 : Const.minSheetDetent + fadeOutHeight
-        } else {
-            (hidePlayerPageIndicator
-                ? Const.minSheetDetent
-                : Const.minSheetDetent + fadeOutHeight)
-        }
+        hidePlayerPageIndicator
+            ? Const.minSheetDetent
+            : Const.minSheetDetent + fadeOutHeight
     }
 }

@@ -11,7 +11,6 @@ struct CoreRefreshButton: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
-    @State private var rotation = 0.0
 
     var body: some View {
         HStack {
@@ -21,15 +20,10 @@ struct CoreRefreshButton: View {
                     await refresh()
                 }
             } label: {
-                if #available(iOS 18, macOS 15, *) {
-                    Image(systemName: refreshIconName)
-                        .symbolEffect(.rotate,
-                                      options: .speed(1.5),
-                                      isActive: refresher.isLoading)
-                } else {
-                    Image(systemName: refreshIconName)
-                        .rotationEffect(Angle(degrees: rotation))
-                }
+                Image(systemName: refreshIconName)
+                    .symbolEffect(.rotate,
+                                  options: .speed(1.5),
+                                  isActive: refresher.isLoading)
             }
             .accessibilityLabel("refresh")
             .contextMenu {
@@ -46,32 +40,12 @@ struct CoreRefreshButton: View {
         }
         .font(.footnote)
         .fontWeight(.bold)
-        .if(!supportsIos18) { view in
-            view
-                .modifier(AnimationCompletionCallback(animatedValue: rotation) {
-                    if refresher.isLoading {
-                        nextTurn()
-                    }
-                })
-                .onChange(of: refresher.isLoading) {
-                    if refresher.isLoading {
-                        nextTurn()
-                    }
-                }
-        }
     }
 
     private var refreshIconName: String {
         refresher.lastRefreshFailed && !refresher.isLoading
             ? Const.refreshFailedSF
             : Const.refreshSF
-    }
-
-    private var supportsIos18: Bool {
-        if #available(iOS 18.0, macOS 15, *) {
-            return true
-        }
-        return false
     }
 
     @MainActor
@@ -81,12 +55,6 @@ struct CoreRefreshButton: View {
             await refresher.refreshSubscription(subscriptionId: subId, hardRefresh: hardRefresh)
         } else {
             await refresher.refreshAll(hardRefresh: hardRefresh)
-        }
-    }
-
-    private func nextTurn() {
-        withAnimation(.linear(duration: 1)) {
-            rotation += 180
         }
     }
 }

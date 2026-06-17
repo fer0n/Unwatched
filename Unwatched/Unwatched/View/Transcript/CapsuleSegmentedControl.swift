@@ -10,27 +10,25 @@ struct CapsuleSegmentedControl<SelectionType: Hashable>: View {
         self.items = items
 
         #if os(iOS)
-        if #available(iOS 26, *) {
-            UISegmentedControl
-                .appearance()
-                .selectedSegmentTintColor = UIColor.white
-            UISegmentedControl
-                .appearance()
-                .setTitleTextAttributes([.foregroundColor: UIColor.black],
-                                        for: .selected)
-            UISegmentedControl
-                .appearance()
-                .setTitleTextAttributes([.foregroundColor: UIColor.white],
-                                        for: .normal)
-            UISegmentedControl
-                .appearance()
-                .backgroundColor = UIColor(named: "insetBackgroundUIColor")
-        }
+        UISegmentedControl
+            .appearance()
+            .selectedSegmentTintColor = UIColor.white
+        UISegmentedControl
+            .appearance()
+            .setTitleTextAttributes([.foregroundColor: UIColor.black],
+                                    for: .selected)
+        UISegmentedControl
+            .appearance()
+            .setTitleTextAttributes([.foregroundColor: UIColor.white],
+                                    for: .normal)
+        UISegmentedControl
+            .appearance()
+            .backgroundColor = UIColor(named: "insetBackgroundUIColor")
         #endif
     }
 
     var body: some View {
-        if #available(iOS 26, *), !Device.isMac {
+        if !Device.isMac {
             Picker(selection: $selection, label: Text("")) {
                 Text("description")
                     .tag(DescriptionContentType.description)

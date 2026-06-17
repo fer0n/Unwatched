@@ -53,15 +53,8 @@ struct PremiumPopupMessage: View {
         #if os(visionOS)
         .viewBackground()
         #else
-        .apply {
-        if #available(iOS 26, macOS 26, *) {
-        $0
         .glassEffect(in: PremiumPopupMessage.clipShape)
-        .glassEffectTransition(.materialize )
-        } else {
-        $0.viewBackground()
-        }
-        }
+        .glassEffectTransition(.materialize)
         #endif
         .tint(theme.darkColor)
     }

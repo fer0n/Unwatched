@@ -59,18 +59,8 @@ struct StatsView: View {
             await viewModel.loadStats()
         }
         .myNavigationTitle("stats")
-        .apply {
-            if #available(iOS 26.0, visionOS 26.0, macOS 26.0, *) {
-                $0.safeAreaBar(edge: .top) {
-                    controls
-                }
-            } else {
-                $0.safeAreaInset(edge: .top) {
-                    controls
-                        .padding(.top, 5)
-                        .background(MyBackgroundColor())
-                }
-            }
+        .safeAreaBar(edge: .top) {
+            controls
         }
     }
 

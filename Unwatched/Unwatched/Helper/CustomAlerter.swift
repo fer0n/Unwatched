@@ -23,18 +23,8 @@ struct CustomAlerter: ViewModifier {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 30)
                 #if !os(visionOS)
-                .apply {
-                    if #available(iOS 26, macOS 26, *) {
-                        $0
-                            .glassEffect(in: RoundedRectangle(cornerRadius: 40, style: .continuous))
-                            .glassEffectTransition(.materialize )
-                    } else {
-                        $0
-                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                            .shadow(radius: 10)
-                            .background(Color.insetBackgroundColor)
-                    }
-                }
+                .glassEffect(in: RoundedRectangle(cornerRadius: 40, style: .continuous))
+                .glassEffectTransition(.materialize )
                 #endif
                 .opacity(alerter.showPremium ? 1 : 0)
                 .scaleEffect(alerter.showPremium ? 1 : 0.9)

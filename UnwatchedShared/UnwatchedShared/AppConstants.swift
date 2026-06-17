@@ -39,7 +39,7 @@ public struct Const {
     public static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
 
     public static let playerAboveSheetHeight: CGFloat = 75
-    public static let minSheetDetent: CGFloat = Const.iOS26 ? 75 : 50
+    public static let minSheetDetent: CGFloat = 75
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
     /// Max video IDs supported by a single YouTube API request
@@ -336,22 +336,14 @@ public struct Const {
 }
 
 public extension Const {
-    static var iOS26: Bool {
-        if #available(iOS 26, *) {
-            return true
-        }
-        return false
-    }
-    
     static var macOS26: Bool {
         #if os(macOS)
-        if #available(macOS 26, *) {
-            return true
-        }
-        #endif
+        return true
+        #else
         return false
+        #endif
     }
-    
+
     static var iOS26_1: Bool {
         if #available(iOS 26.1, *) {
             return true

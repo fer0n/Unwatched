@@ -41,7 +41,7 @@ struct AirPlayView: View {
             (button as? UIButton)?.sendActions(for: .touchUpInside)
             Signal.log("Player.AirPlay", throttle: .weekly)
         } label: {
-            Image(systemName: symbolname)
+            Image(systemName: "airplay.video")
                 .fontWeight(.black)
                 .playerToggleModifier(isOn: isOn, isSmall: true)
         }
@@ -60,14 +60,6 @@ struct AirPlayView: View {
 
     var isOn: Bool {
         player.airplayHD
-    }
-
-    var symbolname: String {
-        if #available(iOS 18.0, *) {
-            return "airplay.video"
-        } else {
-            return "airplayvideo"
-        }
     }
 }
 #endif

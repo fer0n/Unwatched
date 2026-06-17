@@ -98,11 +98,7 @@ struct AVPlayerScrubberOverlay: View {
 
     @ViewBuilder
     private var pillStack: some View {
-        if #available(iOS 26.0, macOS 26.0, *) {
-            GlassEffectContainer(spacing: 0) {
-                pills
-            }
-        } else {
+        GlassEffectContainer(spacing: 0) {
             pills
         }
     }
@@ -116,13 +112,7 @@ struct AVPlayerScrubberOverlay: View {
                     .foregroundStyle(.primary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .apply {
-                        if #available(iOS 26.0, macOS 26.0, *) {
-                            $0.glassEffect(.regular, in: Capsule())
-                        } else {
-                            $0.background(.ultraThinMaterial, in: Capsule())
-                        }
-                    }
+                    .glassEffect(.regular, in: Capsule())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .containerRelativeFrame(.horizontal) { width, _ in
                         (width - 60) * 0.75
@@ -143,13 +133,7 @@ struct AVPlayerScrubberOverlay: View {
             )
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                    $0.glassEffect(.regular, in: Capsule())
-                } else {
-                    $0.background(.ultraThinMaterial, in: Capsule())
-                }
-            }
+            .glassEffect(.regular, in: Capsule())
             .padding(.horizontal, 30)
         }
     }

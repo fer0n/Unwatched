@@ -45,7 +45,7 @@ struct FullscreenChapterDescriptionButton: View {
                         video: video,
                         isCompact: true,
                         scrollToCurrent: true,
-                        isTransparent: Const.iOS26,
+                        isTransparent: true,
                         showThumbnail: false,
                         showActions: false
                     )
@@ -61,23 +61,14 @@ struct FullscreenChapterDescriptionButton: View {
                 .buttonBorderShape(.automatic)
                 .environment(\.colorScheme, .dark)
                 .presentationCompactAdaptation(.popover)
-                .if(!Const.iOS26) { view in
-                    view.presentationBackground(Color.sheetBackground)
-                }
                 .onDisappear {
                     menuOpen = false
                 }
                 .fontWeight(nil)
                 #if os(iOS) || os(visionOS)
-                .apply {
-                    if #available(iOS 26.0, *) {
-                        $0.navigationTransition(
-                            .zoom(sourceID: transitionId, in: namespace)
-                        )
-                    } else {
-                        $0
-                    }
-                }
+                .navigationTransition(
+                    .zoom(sourceID: transitionId, in: namespace)
+                )
                 #endif
             }
         }
@@ -89,11 +80,7 @@ struct MyMatchedTransitionSource: ViewModifier {
     var namespace: Namespace.ID
 
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.matchedTransitionSource(id: id, in: namespace)
-        } else {
-            content
-        }
+        content.matchedTransitionSource(id: id, in: namespace)
     }
 }
 

@@ -19,7 +19,7 @@ import FoundationModels
         )
     }
 
-    @MainActor @available(iOS 26.0, macOS 26.0, *)
+    @MainActor
     func generateChapters(for video: Video?, transcriptUrl: String?) {
         guard let video else {
             return
@@ -49,7 +49,6 @@ import FoundationModels
     }
 }
 
-@available(iOS 26.0, macOS 26.0, *)
 struct GenerateChaptersButton: View {
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: GenerateChaptersButtonViewModel
@@ -87,8 +86,6 @@ struct GenerateChaptersButton: View {
 }
 
 #Preview {
-    if #available (iOS 26.0, macOS 26.0, visionOS 26.0, *) {
-        GenerateChaptersButton(viewModel: .constant(GenerateChaptersButtonViewModel()), video: nil, transcriptUrl: nil)
-            .appNotificationOverlay()
-    }
+    GenerateChaptersButton(viewModel: .constant(GenerateChaptersButtonViewModel()), video: nil, transcriptUrl: nil)
+        .appNotificationOverlay()
 }

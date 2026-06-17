@@ -156,11 +156,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     }
 
     var transition: ContentTransition {
-        if #available(iOS 18, *) {
-            ContentTransition.symbolEffect(.replace.magic(fallback: .replace))
-        } else {
-            ContentTransition.symbolEffect(.replace)
-        }
+        ContentTransition.symbolEffect(.replace.magic(fallback: .replace))
     }
 
     var deferDateButton: some View {

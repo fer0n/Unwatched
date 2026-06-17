@@ -102,20 +102,14 @@ struct ChapterDescriptionView: View {
                         actionOverlay
                     }
                     #else
-                    if #available(iOS 26.0, visionOS 26.0, *) {
-                        view.toolbar {
-                            ToolbarItemGroup(placement: Device.isVision ? .topBarTrailing : .bottomBar) {
-                                #if os(visionOS)
-                                buttons
-                                    .buttonBorderShape(.circle)
-                                #else
-                                buttons
-                                #endif
-                            }
-                        }
-                    } else {
-                        view.overlay {
-                            actionOverlay
+                    view.toolbar {
+                        ToolbarItemGroup(placement: Device.isVision ? .topBarTrailing : .bottomBar) {
+                            #if os(visionOS)
+                            buttons
+                                .buttonBorderShape(.circle)
+                            #else
+                            buttons
+                            #endif
                         }
                     }
                     #endif

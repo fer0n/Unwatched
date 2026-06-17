@@ -6,7 +6,6 @@
 import SwiftUI
 
 #if os(macOS)
-@available(macOS 26, *)
 struct NavigationStackWorkaround: ViewModifier {
     @Environment(NavigationTitleManager.self) var navigationTitleManager
 
@@ -50,13 +49,7 @@ struct NavigationStackWorkaround: ViewModifier {
 
 extension View {
     func navigationStackWorkaround() -> some View {
-        self.apply {
-            if #available(macOS 26, *) {
-                $0.modifier(NavigationStackWorkaround())
-            } else {
-                $0
-            }
-        }
+        self.modifier(NavigationStackWorkaround())
     }
 }
 #endif

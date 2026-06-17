@@ -35,8 +35,6 @@
 		8805050D2C830A96005F0972 /* VideoListItemThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8805050B2C830A96005F0972 /* VideoListItemThumbnail.swift */; };
 		880505122C836882005F0972 /* FaqView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505112C836882005F0972 /* FaqView.swift */; };
 		880505132C836882005F0972 /* FaqView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505112C836882005F0972 /* FaqView.swift */; };
-		88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
-		88080D522CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */; };
 		880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
 		8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
 		8808820B2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
@@ -913,7 +911,6 @@
 		880505022C83016B005F0972 /* QueueVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueVideoButton.swift; sourceTree = "<group>"; };
 		8805050B2C830A96005F0972 /* VideoListItemThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListItemThumbnail.swift; sourceTree = "<group>"; };
 		880505112C836882005F0972 /* FaqView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaqView.swift; sourceTree = "<group>"; };
-		88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearanceModifier.swift; sourceTree = "<group>"; };
 		880882062E564EBF008C38DA /* SetContinuousPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContinuousPlay.swift; sourceTree = "<group>"; };
 		880882092E565AD8008C38DA /* HideControlsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideControlsSettings.swift; sourceTree = "<group>"; };
 		8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryPlaybackSpeedSettings.swift; sourceTree = "<group>"; };
@@ -1511,7 +1508,6 @@
 				8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */,
 				884069D62D7A290D00814A72 /* SearchField.swift */,
 				88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */,
-				88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */,
 				888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */,
 				88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */,
 				883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */,
@@ -2859,7 +2855,6 @@
 				889AF9072C50ECD8001CEDE6 /* InboxTabItemView.swift in Sources */,
 				889AF9082C50ECD8001CEDE6 /* MenuViewSheet.swift in Sources */,
 				881964F32CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
-				88080D522CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
 				889AF9092C50ECD8001CEDE6 /* TabItemView.swift in Sources */,
 				889AF90A2C50ECD8001CEDE6 /* MenuView.swift in Sources */,
 				88DA0EBA2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,
@@ -3289,7 +3284,6 @@
 				88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */,
-				88080D512CF5C74F00513093 /* TabBarAppearanceModifier.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,
 				8898B6792B481F2100348D01 /* SubscriptionActor.swift in Sources */,
 				8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */,
@@ -3547,7 +3541,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched.UnwatchedWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3583,7 +3577,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched.UnwatchedWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3665,7 +3659,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 			};
 			name = Debug;
 		};
@@ -3697,7 +3691,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 17.6;
+				TVOS_DEPLOYMENT_TARGET = 26.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -3860,7 +3854,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.8.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3910,7 +3904,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.8.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3947,7 +3941,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -3991,7 +3985,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",

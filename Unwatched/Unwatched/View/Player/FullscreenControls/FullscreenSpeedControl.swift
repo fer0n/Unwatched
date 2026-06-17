@@ -27,7 +27,7 @@ struct CompactFullscreenSpeedControl: View {
                 CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
                     .padding(.horizontal)
                     .frame(width: 350)
-                    .presentationBackground(Const.iOS26 ? .clear : .black)
+                    .presentationBackground(.clear)
                     .presentationCompactAdaptation(.popover)
                     .fontWeight(nil)
                     .preferredColorScheme(.dark)
@@ -117,13 +117,7 @@ struct FullscreenSpeedControl: View {
         #if !os(visionOS)
         .frame(width: 35)
         #endif
-        .apply {
-            if #available(iOS 26.0, *) {
-                $0.matchedTransitionSource(id: transitionId, in: namespace)
-            } else {
-                $0
-            }
-        }
+        .matchedTransitionSource(id: transitionId, in: namespace)
         #if !os(visionOS)
         .padding(.horizontal) // workaround: safearea pushing content in pop over
         #endif
@@ -167,22 +161,13 @@ struct FullscreenSpeedControl: View {
             .padding(.horizontal)
             .frame(width: 350)
             .environment(\.colorScheme, .dark)
-            .if(!Const.iOS26) { view in
-                view.presentationBackground(.ultraThinMaterial)
-            }
             .presentationCompactAdaptation(.popover)
             .onDisappear {
                 autoHideVM.keepVisible = false
             }
             .fontWeight(nil)
             #if os(iOS)
-            .apply {
-                if #available(iOS 26.0, *) {
-                    $0.navigationTransition(.zoom(sourceID: transitionId, in: namespace))
-                } else {
-                    $0
-                }
-            }
+            .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
         #endif
     }
 

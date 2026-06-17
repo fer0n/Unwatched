@@ -53,13 +53,7 @@ struct SubscriptionDetailView: View {
                             .padding(.horizontal, 5)
                     }
                     #if !os(visionOS)
-                    .apply {
-                        if #available(iOS 26.0, macOS 26.0, *) {
-                            $0.glassEffect(.regular.interactive())
-                        } else {
-                            $0
-                        }
-                    }
+                    .glassEffect(.regular.interactive())
                     .foregroundStyle(Color.automaticBlack)
                     .tint(Color.insetBackgroundColor)
                     .buttonStyle(.borderedProminent)
@@ -78,14 +72,7 @@ struct SubscriptionDetailView: View {
             }
             .scrollContentBackground(.hidden)
             #if !os(visionOS)
-            .apply {
-                if #available(iOS 26.0, macOS 26.0, *) {
-                    $0
-                        .scrollEdgeEffectHidden(!showTitle, for: .top)
-                } else {
-                    $0
-                }
-            }
+            .scrollEdgeEffectHidden(!showTitle, for: .top)
             #endif
         }
         .background {

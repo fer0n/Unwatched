@@ -29,13 +29,7 @@ struct SubscriptionSpeedSetting: View {
             }
             return CapsuleMenuLabel(systemImage: "timer", menuLabel: "speedSetting", text: text)
         }
-        .apply {
-            if #available(iOS 26.0, *) {
-                $0.matchedTransitionSource(id: transitionId, in: namespace)
-            } else {
-                $0
-            }
-        }
+        .matchedTransitionSource(id: transitionId, in: namespace)
         .popover(isPresented: $showSpeedControl, arrowEdge: .bottom) {
             ZStack {
                 let selectedSpeed = Binding(
@@ -76,17 +70,8 @@ struct SubscriptionSpeedSetting: View {
             }
             .presentationCompactAdaptation(.popover)
             .frame(minWidth: 300, maxWidth: .infinity)
-            .if(!Const.iOS26) { view in
-                view.presentationBackground(.ultraThinMaterial)
-            }
             #if os(iOS)
-            .apply {
-                if #available(iOS 26.0, *) {
-                    $0.navigationTransition(.zoom(sourceID: transitionId, in: namespace))
-                } else {
-                    $0
-                }
-            }
+            .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
             #endif
         }
         .myTint()

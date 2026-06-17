@@ -6,7 +6,6 @@
 import SwiftUI
 
 #if os(macOS)
-@available(macOS 26, *)
 private struct TrafficLightButton: View {
     let color: Color
     let symbol: String
@@ -35,7 +34,6 @@ private struct TrafficLightButton: View {
     }
 }
 
-@available(macOS 26, *)
 struct TrafficLights: View {
     let size: CGFloat = 14
     @State private var hovering = false
@@ -73,9 +71,7 @@ struct TrafficLights: View {
 }
 
 #Preview {
-    if #available(macOS 26, *) {
-        TrafficLights()
-            .frame(width: 200, height: 200)
-    }
+    TrafficLights()
+        .frame(width: 200, height: 200)
 }
 #endif

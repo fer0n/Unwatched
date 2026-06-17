@@ -6,7 +6,6 @@
 import SwiftUI
 
 #if os(macOS)
-@available(macOS 26, *)
 struct MacBackButton: View {
     @Environment(\.dismiss) private var dismiss
 

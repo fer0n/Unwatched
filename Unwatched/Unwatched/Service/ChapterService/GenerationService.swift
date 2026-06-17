@@ -7,7 +7,6 @@ import FoundationModels
 import UnwatchedShared
 import Playgrounds
 
-@available(iOS 26.0, macOS 26.0, *)
 struct GenerationService {
     static let characterLimit = 7000 // 4096 token limit * roughly 4 characters per token
 
@@ -131,7 +130,6 @@ struct GenerationService {
 }
 
 // swiftlint:disable all
-@available(iOS 26.0, macOS 26.0, *)
 #Playground {
     let transcriptUrl = "https://www.youtube.com/api/timedtext?v=5e2CQ1RknaA&ei=R7PCaMOpC9746dsP06ehkQI&caps=asr&opi=112496729&xoaf=4&hl=en&ip=0.0.0.0&ipbits=0&expire=1757615543&sparams=ip,ipbits,expire,v,ei,caps,opi,xoaf&signature=A669B5833AC344AA82FCA68BDA075ACDA5536334.5E69237930330880C165DA80C950E19C09DE2D27&key=yt8&kind=asr&lang=en"
 

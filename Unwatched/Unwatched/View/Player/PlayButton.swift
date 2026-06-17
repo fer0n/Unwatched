@@ -45,7 +45,7 @@ struct CorePlayButton<Content>: View where Content: View {
                                         : 0)
             )
             .foregroundStyle(Color.neutralAccentColor)
-            .contentTransition(transition)
+            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7)))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(player.isPlaying ? "pause" : "play")
@@ -56,14 +56,6 @@ struct CorePlayButton<Content>: View where Content: View {
             }
         }
         .keyboardShortcut(.space, modifiers: [])
-    }
-
-    var transition: ContentTransition {
-        if #available(iOS 18, *) {
-            ContentTransition.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7))
-        } else {
-            ContentTransition.symbolEffect(.replace, options: .speed(7))
-        }
     }
 }
 
@@ -101,13 +93,7 @@ struct PlayButton: View {
                 .fontWeight(.black)
         }
         #if !os(visionOS)
-        .apply {
-            if #available(iOS 26.0, macOS 26.0, *) {
-                $0.glassEffect(in: Circle())
-            } else {
-                $0
-            }
-        }
+        .glassEffect(in: Circle())
         #endif
     }
 }

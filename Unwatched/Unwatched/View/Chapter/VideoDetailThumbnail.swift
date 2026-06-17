@@ -29,23 +29,12 @@ struct VideoDetailThumbnail: View {
             Color.insetBackgroundColor
                 .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
         }
-        .apply {
-            if #available(iOS 26.0, macOS 26.0, *) {
-                $0.clipShape(
-                    .rect(
-                        corners: .concentric(minimum: 25),
-                        isUniform: true
-                    )
-                )
-            } else {
-                $0.clipShape(
-                    RoundedRectangle(
-                        cornerRadius: 25,
-                        style: .continuous
-                    )
-                )
-            }
-        }
+        .clipShape(
+            .rect(
+                corners: .concentric(minimum: 25),
+                isUniform: true
+            )
+        )
         .frame(maxWidth: 600)
         .handleVideoListItemTap(video)
     }
