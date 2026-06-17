@@ -14,6 +14,7 @@ public struct Const {
     public static let hidePremium = "hidePremium"
     public static let skipSponsorSegments = "skipSponsorSegments"
     public static let skipChapterText = "skipChapterText"
+    public static let customYoutubeApiKey = "customYoutubeApiKey"
     public static let filterVideoTitleText = "filterVideoTitleText"
     public static let allowOnMatch = "allowOnMatch"
     public static let nowPlayingVideo = "nowPlayingVideo"

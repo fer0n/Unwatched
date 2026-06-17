@@ -3,10 +3,30 @@ import OSLog
 import UnwatchedShared
 
 struct YoutubeDataAPI {
-    static let apiKey = Credentials.youtubeApiKey
-    static let premiumApiKey = Credentials.unwatchedPremiumApiKey
+    /// A user-provided YouTube Data API key (set in Debug settings, synced via iCloud).
+    /// When set, it overrides both the standard and premium keys for all API calls.
+    private static var customApiKey: String? {
+        let key = NSUbiquitousKeyValueStore.default.string(forKey: Const.customYoutubeApiKey)
+        return key?.isEmpty == false ? key : nil
+    }
+
+    static var apiKey: String {
+        customApiKey ?? Credentials.youtubeApiKey
+    }
+
+    static var premiumApiKey: String {
+        customApiKey ?? Credentials.unwatchedPremiumApiKey
+    }
 
     static let baseUrl = "https://www.googleapis.com/youtube/v3/"
+
+    /// Validates an API key by making a minimal request. Throws if the key is rejected
+    /// (e.g. invalid key, disabled API, exceeded quota) or the request otherwise fails.
+    static func verifyApiKey(_ key: String) async throws {
+        // "jNQXAC9IVRw" is the first video ever uploaded to YouTube – stable and guaranteed to exist.
+        let apiUrl = "\(baseUrl)videos?key=\(key)&id=jNQXAC9IVRw&part=id"
+        _ = try await handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
+    }
 
     static func getYtChannelId(from handle: String) async throws -> String {
         Log.info("getYtChannelId")

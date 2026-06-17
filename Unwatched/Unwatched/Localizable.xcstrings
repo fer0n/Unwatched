@@ -4404,6 +4404,40 @@
         }
       }
     },
+    "createYoutubeApiKey" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel erstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create API key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crear clave de API"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créer une clé API"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utwórz klucz API"
+          }
+        }
+      }
+    },
     "customSpeedSetting" : {
       "localizations" : {
         "de" : {
@@ -4502,6 +4536,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niestandardowe motywy"
+          }
+        }
+      }
+    },
+    "customYoutubeApiKey" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave de API"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé API"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klucz API"
+          }
+        }
+      }
+    },
+    "customYoutubeApiKeyHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched verwendet die YouTube Data API, um Videoinfos, Kanäle und Dauern abzurufen. Die eingebauten Schlüssel werden von allen Nutzern geteilt und können Googles tägliche Kontingentgrenzen erreichen. Füge deinen eigenen API-Schlüssel hinzu (mit aktivierter YouTube Data API v3), um dein persönliches Kontingent für alle Anfragen zu nutzen. Wird über iCloud synchronisiert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched uses the YouTube Data API to fetch video info, channels and durations. The built-in keys are shared across all users, so they can hit Google’s daily quota limits. Add your own API key (with the YouTube Data API v3 enabled) to use your personal quota for all requests. Synced via iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched usa la API de datos de YouTube para obtener información de vídeos, canales y duraciones. Las claves integradas son compartidas por todos los usuarios y pueden alcanzar los límites de cuota diaria de Google. Añade tu propia clave de API (con la API de datos de YouTube v3 habilitada) para usar tu cuota personal en todas las solicitudes. Sincronizado a través de iCloud."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched utilise l’API YouTube Data pour récupérer les informations sur les vidéos, les chaînes et les durées. Les clés intégrées sont partagées entre tous les utilisateurs et peuvent atteindre les limites de quota journalier de Google. Ajoutez votre propre clé API (avec l’API YouTube Data v3 activée) pour utiliser votre quota personnel pour toutes les requêtes. Synchronisé via iCloud."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched używa YouTube Data API do pobierania informacji o filmach, kanałach i czasach trwania. Wbudowane klucze są współdzielone przez wszystkich użytkowników i mogą osiągnąć dzienne limity kwoty Google. Dodaj własny klucz API (z włączonym YouTube Data API v3), aby korzystać z osobistego limitu dla wszystkich żądań. Synchronizowane przez iCloud."
           }
         }
       }
@@ -9832,41 +9934,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce i są starsze niż tydzień. Najlepiej pozostawić to włączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
-          }
-        }
-      }
-    },
-    "minimalPlayerUI" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Player-Overlays minimieren"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Minimize Player Overlays"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Minimizar superposiciones del reproductor"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Minimiser les superpositions du lecteur"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zminimalizuj nakładki odtwarzacza"
           }
         }
       }
@@ -19333,6 +19400,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wczoraj, %@"
+          }
+        }
+      }
+    },
+    "youtubeApiKey" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube-Data-API-Schlüssel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube Data API Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clave de API de datos de YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé API YouTube Data"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klucz YouTube Data API"
           }
         }
       }

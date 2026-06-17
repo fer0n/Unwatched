@@ -55,6 +55,8 @@ struct DebugView: View {
                 }
                 #endif
 
+                YoutubeApiKeyView()
+
                 MySection {
                     Button("createTestWatchData", action: createTestWatchData)
                 }
