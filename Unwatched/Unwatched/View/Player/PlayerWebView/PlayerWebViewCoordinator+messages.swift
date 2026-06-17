@@ -22,6 +22,8 @@ extension PlayerWebViewCoordinator {
             parent.onVideoEnded()
         case "currentTime":
             handleTimeUpdate(payload)
+        case "seek":
+            handleSeekTime(payload)
         case "videoData":
             handleVideoData(payload)
         case "duration":
@@ -368,6 +370,16 @@ extension PlayerWebViewCoordinator {
             if let videoId = youtubeId ?? parent.player.video?.youtubeId {
                 StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time)
             }
+        }
+    }
+
+    /// Applies a seek target right when the seek is issued
+    func handleSeekTime(_ timeString: String?) {
+        guard let timeString, let time = Double(timeString) else {
+            return
+        }
+        withAnimation(.seekScrubber) {
+            parent.player.currentTime = time
         }
     }
 

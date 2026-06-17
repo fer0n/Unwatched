@@ -917,13 +917,25 @@ extension PlayerWebView {
             if (window.pendingSeekTarget != null && (Date.now() - (window.pendingSeekTime || 0)) < 1500) {
                 return window.pendingSeekTarget;
             }
-            return video.currentTime;
+            // Before playback starts, video.currentTime is still 0 even though the player is
+            // queued to resume at startAtTime — measure relative to the intended start instead.
+            const time = video.currentTime;
+            if (!time && startAtTime) {
+                return startAtTime;
+            }
+            return time;
         }
 
         function applySeekTarget(target) {
             window.pendingSeekTarget = target;
             window.pendingSeekTime = Date.now();
             video.currentTime = target;
+            // Keep the resume target in sync so the loadedmetadata handler doesn't clobber a
+            // seek made before playback started.
+            startAtTime = target;
+            // Push the new position to native immediately so the scrubber snaps to it,
+            // instead of trailing until the next 1s currentTime tick.
+            sendMessage("seek", target);
         }
 
         function smartSeekRelative(seekRel) {

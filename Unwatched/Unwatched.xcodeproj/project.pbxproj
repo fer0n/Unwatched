@@ -233,6 +233,8 @@
 		886818212D77570B00E06A0D /* LinkItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8868181F2D77570B00E06A0D /* LinkItemView.swift */; };
 		886818232D77586700E06A0D /* ImportSubscriptionsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886818222D77586700E06A0D /* ImportSubscriptionsWindow.swift */; };
 		886818242D77586700E06A0D /* ImportSubscriptionsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886818222D77586700E06A0D /* ImportSubscriptionsWindow.swift */; };
+		8869875C2FE2893B0082E717 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8869875B2FE2893B0082E717 /* Animation.swift */; };
+		8869875D2FE2893B0082E717 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8869875B2FE2893B0082E717 /* Animation.swift */; };
 		886C16E52CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */; };
 		886C16E62CEB8CC400C0C564 /* VideoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */; };
 		886DB6402BD79F9000E784DF /* YtPlaylistItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */; };
@@ -988,6 +990,7 @@
 		8868181C2D7756E900E06A0D /* ExportSubscriptionsShareLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportSubscriptionsShareLink.swift; sourceTree = "<group>"; };
 		8868181F2D77570B00E06A0D /* LinkItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkItemView.swift; sourceTree = "<group>"; };
 		886818222D77586700E06A0D /* ImportSubscriptionsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportSubscriptionsWindow.swift; sourceTree = "<group>"; };
+		8869875B2FE2893B0082E717 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		886C16E42CEB8CC400C0C564 /* VideoPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaceholder.swift; sourceTree = "<group>"; };
 		886DB63F2BD79F9000E784DF /* YtPlaylistItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtPlaylistItems.swift; sourceTree = "<group>"; };
 		886E21712EC1488A00BF03B5 /* UpdateWindowSizeModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateWindowSizeModifier.swift; sourceTree = "<group>"; };
@@ -1671,6 +1674,7 @@
 		886E79B82B46FFC700554E1F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				8869875B2FE2893B0082E717 /* Animation.swift */,
 				887E82AF2CD8FD8500B196EA /* Notification.swift */,
 				8846DF322F76A599008AC6FE /* UTType.swift */,
 				884777322D2150850044E812 /* URL.swift */,
@@ -2505,6 +2509,7 @@
 				CDA07A392C601F590009BFEC /* DataSpeedTests.swift in Sources */,
 				889AF93C2C50ECF5001CEDE6 /* InteractiveSubscriptionTitle.swift in Sources */,
 				889AF93D2C50ECF5001CEDE6 /* BrowserView.swift in Sources */,
+				8869875C2FE2893B0082E717 /* Animation.swift in Sources */,
 				885723032E6596FA006D1EE9 /* Signal.swift in Sources */,
 				889AF93E2C50ECF5001CEDE6 /* DropUrlArea.swift in Sources */,
 				880C211A2D7ECE5A00E859A5 /* DismissSheetButton.swift in Sources */,
@@ -2848,6 +2853,7 @@
 				889931DA2D731AC5009096AB /* PlayerType.swift in Sources */,
 				887E72962B92219C00928946 /* DismissToolbarButton.swift in Sources */,
 				8841E1FA2EC7110200C64B58 /* CurrentChapterPopup.swift in Sources */,
+				8869875D2FE2893B0082E717 /* Animation.swift in Sources */,
 				88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */,
 				8880D6CB2B95BEE900E76E20 /* UIApplicationDelegate.swift in Sources */,
 				889A84E72E6C198E006F210A /* DeleteEverythingExceptSubsButton.swift in Sources */,
