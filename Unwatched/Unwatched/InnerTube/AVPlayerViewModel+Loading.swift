@@ -219,7 +219,8 @@ extension AVPlayerViewModel {
                                        skipMuxed: false) {
                     let upgradeId = videoId
                     let fallback = androidInfo
-                    Task { await self.backgroundQualityUpgrade(videoId: upgradeId, fallbackInfo: fallback) }
+                    backgroundQualityUpgradeTask?.cancel()
+                    backgroundQualityUpgradeTask = Task { await self.backgroundQualityUpgrade(videoId: upgradeId, fallbackInfo: fallback) }
                     return
                 }
             }

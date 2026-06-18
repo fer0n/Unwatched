@@ -21,6 +21,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored private lazy var prefetchManager = AVPlayerPrefetchManager(api: api)
 
     @ObservationIgnored var loadTask: Task<Void, Never>?
+    @ObservationIgnored var backgroundQualityUpgradeTask: Task<Void, Never>?
     @ObservationIgnored var endObserverTask: Task<Void, Never>?
     @ObservationIgnored var statusObserverTask: Task<Void, Never>?
     @ObservationIgnored var presentationSizeObserver: NSKeyValueObservation?
@@ -125,6 +126,7 @@ final class AVPlayerViewModel {
         statusObserverTask?.cancel()
         endObserverTask?.cancel()
         loadTask?.cancel()
+        backgroundQualityUpgradeTask?.cancel()
         interruptionObserverTask?.cancel()
         rateObserverTask?.cancel()
         startTimeObserver()
@@ -253,6 +255,7 @@ final class AVPlayerViewModel {
         stopCaptionTimeObserver()
         captionFetchTask?.cancel()
         loadTask?.cancel()
+        backgroundQualityUpgradeTask?.cancel()
         prefetchManager.cancelAll()
         statusObserverTask?.cancel()
         endObserverTask?.cancel()
