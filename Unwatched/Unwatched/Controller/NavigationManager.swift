@@ -34,6 +34,11 @@ import UnwatchedShared
 
     var presentedSubscriptionQueue = [SendableSubscription]()
     var presentedSubscriptionInbox = [SendableSubscription]()
+    // Transient (not persisted) — channel previews opened from the Search tab.
+    var presentedSearch = [SendableSubscription]()
+    // Toggled (e.g. via the "Search" home-screen quick action) to request the
+    // Search tab focus its search field. SearchView observes and consumes it.
+    var pendingSearchFocus = false
     var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?
@@ -114,6 +119,10 @@ import UnwatchedShared
         case .browser:
             tab = .library
             pushToLibrary(sendableSub)
+        case .search:
+            if presentedSearch.last != sendableSub {
+                presentedSearch.append(sendableSub)
+            }
         case .library:
             pushToLibrary(sendableSub)
         }
@@ -172,6 +181,8 @@ import UnwatchedShared
             Task { @MainActor in
                 BrowserManager.shared.loadUrl(BrowserUrl.youtubeStartPage.getUrl)
             }
+        case .search:
+            isOnTopView = presentedSearch.isEmpty
         }
 
         return isOnTopView
@@ -188,6 +199,8 @@ import UnwatchedShared
         case .library:
             lastLibrarySubscriptionId = nil
             presentedLibrary = NavigationPath()
+        case .search:
+            presentedSearch.removeAll()
         case .browser:
             break
         }
@@ -195,45 +208,17 @@ import UnwatchedShared
 
     @MainActor
     func openUrlInApp(_ url: BrowserUrl?) {
-        let browserMode = BrowserDisplayMode.setting
-
-        if browserMode == .external, let resolvedUrl = url?.getUrl {
-            let player = PlayerManager.shared
-            let enablePip = !player.pipEnabled && player.isPlaying
-            if enablePip {
-                player.setPip(true)
-                Task {
-                    try? await Task.sleep(for: .seconds(0.2))
-                    UrlService.open(resolvedUrl)
-                }
-            } else {
-                UrlService.open(resolvedUrl)
-            }
-            return
-        }
-
+        // Links always open in the in-app browser sheet. (The configurable tab/sheet/
+        // external modes were removed; the native Search tab covers searching YouTube.)
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
-        if browserMode == .disabled {
-            return
+        if let url {
+            BrowserManager.shared.loadUrl(url.getUrl)
         }
-
-        if browserMode == .asTab {
-            if let url {
-                BrowserManager.shared.loadUrl(url.getUrl)
-            }
-            tab = .browser
-            SheetPositionReader.shared.setDetentMiniPlayer()
-            showMenu = true
-        } else {
-            if let url {
-                BrowserManager.shared.loadUrl(url.getUrl)
-            }
-            showBrowser = true
-            showMenu = true
-            #if os(macOS)
-            openWindow?(id: Const.windowBrowser)
-            #endif
-        }
+        showBrowser = true
+        showMenu = true
+        #if os(macOS)
+        openWindow?(id: Const.windowBrowser)
+        #endif
     }
 
     @MainActor
@@ -322,6 +307,7 @@ enum NavigationTab: String, Codable, CustomStringConvertible {
     case queue
     case library
     case browser
+    case search
 
     var description: String {
         switch self {
@@ -333,6 +319,8 @@ enum NavigationTab: String, Codable, CustomStringConvertible {
             return String(localized: "library")
         case .browser:
             return String(localized: "browserShort")
+        case .search:
+            return String(localized: "search")
         }
     }
 
@@ -346,6 +334,8 @@ enum NavigationTab: String, Codable, CustomStringConvertible {
             return "library"
         case .browser:
             return "browserShort"
+        case .search:
+            return "search"
         }
     }
 }

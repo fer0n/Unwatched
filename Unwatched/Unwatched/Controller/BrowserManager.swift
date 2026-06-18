@@ -38,14 +38,6 @@ import UnwatchedShared
     var firstPageLoaded = false
     var isMobileVersion = true
     var isVideoUrl = false
-    var shouldFocusSearch = false
-
-    static let searchFocusScript = """
-        (function() {
-            var btn = document.querySelector('button.topbar-menu-button-avatar-button');
-            if (btn) btn.click();
-        })()
-        """
 
     var hasCheckedInfo = false
 

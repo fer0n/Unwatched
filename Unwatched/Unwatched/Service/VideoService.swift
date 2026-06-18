@@ -390,12 +390,64 @@ extension VideoService {
     static func getVideoModel(from videoData: VideoData, modelContext: ModelContext) -> Video? {
         if let video = videoData as? Video {
             return video
-        } else if let video = videoData as? SendableVideo,
-                  let id = video.persistentId,
-                  let video: Video = modelContext.existingModel(for: id) {
-            return video
+        }
+        if let video = videoData as? SendableVideo {
+            // Already persisted — resolve the model directly.
+            if let id = video.persistentId,
+               let model: Video = modelContext.existingModel(for: id) {
+                return model
+            }
+            // Transient (e.g. a search result): dedupe by youtubeId, otherwise
+            // materialise it into the store on demand so queue/play/swipe actions work.
+            if let existing = getVideo(for: video.youtubeId, modelContext: modelContext) {
+                return existing
+            }
+            let model = video.createVideo(extractChapters: ChapterService.extractChapters)
+            modelContext.insert(model)
+            associateSubscription(
+                model,
+                channelId: video.youtubeChannelId,
+                feedTitle: video.feedTitle ?? video.subscription?.title,
+                modelContext: modelContext
+            )
+            try? modelContext.save()
+            return model
         }
         return nil
+    }
+
+    /// Links a (just-materialised) video to its channel's subscription, creating an
+    /// archived subscription when the user isn't subscribed — mirrors the foreign-video
+    /// flow in `VideoActor.addSubscriptionsForForeignVideos` so the channel shows up in
+    /// the queue/player.
+    private static func associateSubscription(
+        _ video: Video,
+        channelId: String?,
+        feedTitle: String?,
+        modelContext: ModelContext
+    ) {
+        guard let channelId, !channelId.isEmpty else { return }
+        var fetch = FetchDescriptor<Subscription>(predicate: #Predicate {
+            $0.youtubePlaylistId == nil && $0.youtubeChannelId == channelId
+        })
+        fetch.fetchLimit = 1
+        // Append to `subscription.videos` (the @Relationship-owning side) rather than
+        // setting the bare inverse `video.subscription` — matches VideoActor's foreign-video
+        // flow and reliably persists the link (setting only the inverse can be dropped).
+        if let existing = try? modelContext.fetch(fetch).first {
+            existing.videos?.append(video)
+            video.youtubeChannelId = existing.youtubeChannelId
+            return
+        }
+        let link = try? UrlService.getFeedUrlFromChannelId(channelId)
+        let sub = Subscription(
+            link: link,
+            title: feedTitle ?? "",
+            isArchived: true,
+            youtubeChannelId: channelId
+        )
+        modelContext.insert(sub)
+        sub.videos?.append(video)
     }
 
     @MainActor

@@ -111,6 +111,7 @@ actor SubscriptionActor {
                             if let sub = sendableSub {
                                 sendableSub = SubscriptionActor.mergeSubscriptionInfoAndSendableSub(info, sub)
                             }
+                            sendableSub = await SubscriptionActor.enrichThumbnail(sendableSub)
                             return (subState, sendableSub)
                         }
                     } else {
@@ -121,7 +122,10 @@ actor SubscriptionActor {
             } else if !sendableSubs.isEmpty {
                 for sub in sendableSubs {
                     group.addTask {
-                        return await self.verifySubscriptionInfo(sub, unarchiveSubIfAvailable: true)
+                        let (subState, verified) = await self.verifySubscriptionInfo(
+                            sub, unarchiveSubIfAvailable: true
+                        )
+                        return (subState, await SubscriptionActor.enrichThumbnail(verified))
                     }
                 }
             }
@@ -136,6 +140,19 @@ actor SubscriptionActor {
         }
         try modelContext.save()
         return subscriptionStates
+    }
+
+    /// Fills in the channel avatar (profile picture) from InnerTube when the feed didn't
+    /// provide one. Best-effort: returns the subscription unchanged on any failure.
+    /// Only applies to channel subscriptions (needs a `youtubeChannelId`).
+    static func enrichThumbnail(_ sub: SendableSubscription?) async -> SendableSubscription? {
+        guard var sub, sub.thumbnailUrl == nil, let channelId = sub.youtubeChannelId else {
+            return sub
+        }
+        if let avatar = try? await InnerTubeAPI().fetchChannelAvatarURL(channelId: channelId) {
+            sub.thumbnailUrl = avatar
+        }
+        return sub
     }
 
     private static func mergeSubscriptionInfoAndSendableSub(
@@ -192,7 +209,7 @@ actor SubscriptionActor {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
         let rssFeedUrl = await info.getRssFeedUrl()
-        let sendableSub = SendableSubscription(
+        var sendableSub = SendableSubscription(
             link: rssFeedUrl,
             title: title,
             youtubeChannelId: info.channelId,
@@ -200,6 +217,7 @@ actor SubscriptionActor {
             youtubeUserName: info.userName,
             thumbnailUrl: info.imageUrl
         )
+        sendableSub = await SubscriptionActor.enrichThumbnail(sendableSub) ?? sendableSub
         let sub = sendableSub.createSubscription()
         modelContext.insert(sub)
         try modelContext.save()

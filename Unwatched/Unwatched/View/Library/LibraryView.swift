@@ -25,11 +25,8 @@ struct LibraryView: View {
                 MyBackgroundColor()
 
                 List {
-                    MySection(hasPadding: false) {
-                        AddToLibraryView(subManager: $subManager)
-                            .id(topListItemId)
-                    }
                     LibraryVideoSection()
+                        .id(topListItemId)
                     SubscriptionListSection(subManager: $subManager,
                                             theme: theme)
                 }

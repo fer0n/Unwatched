@@ -23,15 +23,14 @@ struct SubscriptionInfoDetails: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            #if !os(visionOS)
-            Text(subscription.title)
-                .font(.system(size: 42))
-                .fontWidth(.condensed)
-                .fontWeight(.heavy)
-                .padding(.horizontal, padding)
-            #endif
-
-            headerDetails
+            ChannelHeaderView(
+                title: subscription.title,
+                imageUrl: subscription.thumbnailUrl,
+                userName: subscription.youtubeUserName,
+                author: subscription.author,
+                videoCount: subscription.videos?.count,
+                onAuthorTap: handleAuthorTap
+            )
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
@@ -124,60 +123,11 @@ struct SubscriptionInfoDetails: View {
         #endif
     }
 
-    @ViewBuilder var headerDetails: some View {
-        let count = subscription.videos?.count ?? 0
-        let availableVideos = String(
-            AttributedString(localized: "^[\(count) video](inflect: true) available").characters
-        )
-        let hasImage = subscription.thumbnailUrl != nil
-
-        HStack {
-            if hasImage {
-                ZStack {
-                    CachedImageView(imageUrl: subscription.thumbnailUrl) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-
-                    } placeholder: {
-                        Color.clear
-                    }
-                }
-                .frame(width: 80, height: 80)
-                .clipShape(Circle())
-            }
-
-            VStack(alignment: .leading, spacing: hasImage ? 5 : 0) {
-                if let userName = subscription.youtubeUserName {
-                    Text(verbatim: "@\(userName)")
-                        .font(.title2)
-                        .foregroundStyle(.primary)
-                }
-                if let author = subscription.author {
-                    Text(verbatim: author)
-                        .font(.title2)
-                        .foregroundStyle(.primary)
-                        .onTapGesture {
-                            if let channelId = subscription.youtubeChannelId,
-                               let regularChannel = SubscriptionService.getRegularChannel(channelId) {
-                                navManager.pushSubscription(
-                                    subscription: regularChannel
-                                )
-                            }
-                        }
-                }
-
-                let hasOtherInfos = subscription.youtubeUserName != nil || hasImage || subscription.author != nil
-
-                Text(availableVideos)
-                    .font(.system(size: 14))
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .padding(.leading, hasOtherInfos ? 0 : 10)
-            }
+    func handleAuthorTap() {
+        if let channelId = subscription.youtubeChannelId,
+           let regularChannel = SubscriptionService.getRegularChannel(channelId) {
+            navManager.pushSubscription(subscription: regularChannel)
         }
-        .padding(.bottom, 10)
-        .padding(.horizontal, padding)
     }
 
     var subscribeButton: some View {

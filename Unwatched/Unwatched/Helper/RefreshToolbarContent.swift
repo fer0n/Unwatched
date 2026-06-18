@@ -62,6 +62,7 @@ struct CoreRefreshButton: View {
 struct RefreshToolbarContent: ToolbarContent {
     @Environment(RefreshManager.self) var refresher
     var refreshOnlySubscription: PersistentIdentifier?
+    var forceNeutral: Bool = false
 
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .confirmationAction) {
@@ -70,6 +71,9 @@ struct RefreshToolbarContent: ToolbarContent {
                               options: .speed(0.8),
                               isActive: refresher.isSyncingIcloud)
                 .saturation(refresher.isSyncingIcloud ? 0 : 1)
+                .if(forceNeutral) {
+                    $0.tint(.neutralAccentColor)
+                }
                 .myTint(neutral: true)
         }
     }

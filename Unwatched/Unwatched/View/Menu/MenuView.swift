@@ -14,8 +14,6 @@ struct MenuView: View {
     @Environment(NavigationManager.self) var navManager
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
-    @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
-    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
 
     #if os(macOS)
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
@@ -36,28 +34,27 @@ struct MenuView: View {
             TabView(selection: $navManager.tab.onUpdate { newValue in
                 handleTabChanged(newValue, proxy)
             }) {
-                QueueTabItemView(
-                    showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge
-                )
+                Tab(value: NavigationTab.queue) {
+                    QueueTabItemView(showCancelButton: showCancelButton)
+                } label: {
+                    QueueTabLabel()
+                }
 
-                InboxTabItemView(
-                    showCancelButton: showCancelButton,
-                    showBadge: showTabBarBadge
-                )
+                Tab(value: NavigationTab.inbox) {
+                    InboxTabItemView(showCancelButton: showCancelButton)
+                } label: {
+                    InboxTabLabel()
+                }
 
-                LibraryView(showCancelButton: shouldShowCancelButton)
-                    .tabItemView(image: Image(systemName: "books.vertical"), tag: NavigationTab.library)
+                Tab(value: NavigationTab.library) {
+                    LibraryView(showCancelButton: shouldShowCancelButton)
+                } label: {
+                    MenuTabLabel(image: Image(systemName: "books.vertical"), tag: .library)
+                }
 
-                BrowserView(
-                    showHeader: !Device.isMac,
-                    safeArea: false
-                )
-                .tabItemView(
-                    image: Image(systemName: Const.youtubeSF),
-                    tag: NavigationTab.browser,
-                    show: browserDisplayMode == .asTab
-                )
+                Tab(value: NavigationTab.search, role: .search) {
+                    SearchView()
+                }
             }
             #if os(iOS)
             .scrollEdgeEffectHidden(for: .bottom)

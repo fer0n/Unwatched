@@ -80,7 +80,7 @@ struct VideoListItem: View, Equatable {
             }
 
             if config.showQueueButton {
-                QueueVideoButton(videoData, size: queueButtonSize)
+                QueueVideoButton(videoData, size: queueButtonSize, onChange: onChange)
                     .foregroundStyle(.secondary)
             }
         }

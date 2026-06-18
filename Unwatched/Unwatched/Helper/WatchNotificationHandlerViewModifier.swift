@@ -94,15 +94,10 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     }
 
     func handleSearchYoutube() {
-        BrowserManager.shared.shouldFocusSearch = true
-        navManager.openUrlInApp(.url("https://m.youtube.com/feed/library"))
-        let webView = BrowserManager.shared.webView
-        Task { @MainActor in
-            try await Task.sleep(for: .milliseconds(200))
-            try await webView?.evaluateJavaScript(BrowserManager.searchFocusScript)
-            try await Task.sleep(for: .milliseconds(800))
-            try await webView?.evaluateJavaScript(BrowserManager.searchFocusScript)
-        }
+        Log.info("handleSearchYoutube")
+        navManager.presentedSearch.removeAll()
+        navManager.navigateTo(.search)
+        navManager.pendingSearchFocus = true
     }
 
     func handlePasteAndQueue() {

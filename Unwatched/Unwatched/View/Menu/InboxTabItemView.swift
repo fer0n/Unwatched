@@ -9,45 +9,21 @@ import UnwatchedShared
 
 struct InboxTabItemView: View {
     let showCancelButton: Bool
-    let showBadge: Bool
 
     var body: some View {
         InboxView(showCancelButton: showCancelButton)
-            .modifier(InboxTabItemViewModifier(showBadge: showBadge))
+            .modifier(InboxTabItemViewModifier())
     }
 }
 
+/// Auto-clears the "new" status when entering/leaving the inbox tab.
 struct InboxTabItemViewModifier: ViewModifier {
-    @Environment(RefreshManager.self) var refresher
-
-    @Query(InboxTabItemViewModifier.descriptorAny)
-    var anyInboxEntry: [InboxEntry]
-
     @Query(InboxTabItemViewModifier.descriptorNew)
     var newInboxEntry: [InboxEntry]
 
-    let showBadge: Bool
-
     func body(content: Content) -> some View {
         content
-            .tabItemView(
-                image: getInboxSymbol,
-                tag: NavigationTab.inbox,
-                showBadge: showBadge && hasNewItems
-            )
             .autRemoveNewViewModifier(hasNewItems: hasNewItems, list: .inbox)
-    }
-
-    var getInboxSymbol: Image {
-        let isLoading = refresher.isLoading
-        let isEmpty = anyInboxEntry.isEmpty
-
-        let full = isEmpty ? "" : ".full"
-        if !isLoading {
-            return Image(systemName: "tray\(full)")
-        }
-
-        return Image("custom.tray.loading.fill")
     }
 
     var hasNewItems: Bool {
@@ -66,5 +42,32 @@ struct InboxTabItemViewModifier: ViewModifier {
         )
         descriptor.fetchLimit = 1
         return descriptor
+    }
+}
+
+/// Tab-bar label for the inbox: a tray icon that reflects loading/empty state.
+struct InboxTabLabel: View {
+    @Environment(RefreshManager.self) var refresher
+
+    @Query(InboxTabItemViewModifier.descriptorAny)
+    var anyInboxEntry: [InboxEntry]
+
+    var body: some View {
+        MenuTabLabel(
+            image: getInboxSymbol,
+            tag: .inbox
+        )
+    }
+
+    var getInboxSymbol: Image {
+        let isLoading = refresher.isLoading
+        let isEmpty = anyInboxEntry.isEmpty
+
+        let full = isEmpty ? "" : ".full"
+        if !isLoading {
+            return Image(systemName: "tray\(full)")
+        }
+
+        return Image("custom.tray.loading.fill")
     }
 }

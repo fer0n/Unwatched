@@ -164,19 +164,8 @@ struct SetupView: View {
     static func onLaunch() {
         Log.info("setupVideo")
         PlayerManager.shared.restoreNowPlayingVideo()
-        migrateBrowserTabSetting()
-        sendSettings()
-    }
-
-    static func migrateBrowserTabSetting() {
         VideoService.fetchVideoDurationsQueueInbox()
-        if Const.browserAsTab.bool == true,
-           UserDefaults.standard.value(forKey: Const.browserDisplayMode) as? Int == nil {
-            UserDefaults.standard.setValue(
-                BrowserDisplayMode.asTab.rawValue,
-                forKey: Const.browserDisplayMode
-            )
-        }
+        sendSettings()
     }
 
     static func sendSettings() {

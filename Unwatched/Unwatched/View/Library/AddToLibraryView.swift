@@ -10,11 +10,7 @@ import UnwatchedShared
 struct AddToLibraryView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var modelContext
-    @Environment(NavigationManager.self) private var navManager
     @Environment(RefreshManager.self) var refresher
-
-    @AppStorage(Const.themeColor) var theme = ThemeColor()
-    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
 
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
@@ -22,133 +18,84 @@ struct AddToLibraryView: View {
     @State var addSubscriptionFromText: String?
     @State var textContainingPlaylist: IdentifiableString?
 
-    @Binding var subManager: SubscribeManager
+    @State private var subManager = SubscribeManager()
 
     var body: some View {
-        if browserDisplayMode == .asSheet || browserDisplayMode == .external {
-            Button(action: {
-                navManager.openUrlInApp(nil)
-                Signal.log("Library.OpenBrowser", throttle: .weekly)
-            }, label: {
-                Label {
-                    Text("browser")
-                        .foregroundStyle(Color.neutralAccentColor)
-                } icon: {
-                    Image(systemName: Const.youtubeSF)
-                        .fontWeight(.black)
+        pasteButton
+            .disabled(subManager.isLoading)
+            .sheet(isPresented: $subManager.showDropResults) {
+                AddSubscriptionView(subManager: subManager)
+                    .environment(\.colorScheme, colorScheme)
+            }
+            .task(id: addVideosSuccess) {
+                await delayedVideoCheckmarkReset()
+            }
+            .task(id: subManager.isSubscribedSuccess) {
+                if subManager.isSubscribedSuccess == true {
+                    await refresher.refreshAll()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-            })
-            .foregroundStyle(theme.color)
-            .buttonStyle(.plain)
-            .linkHoverEffect()
-        }
-
-        HStack(spacing: 0) {
-            TextField("enterUrls", text: $addText)
-                .autocorrectionDisabled(true)
-                #if os(iOS)
-                .keyboardType(.webSearch)
-                .textInputAutocapitalization(.never)
-                .submitLabel(.send)
-            #endif
-            TextFieldClearButton(text: $addText)
-
-            pasteButton
-                .padding(.leading, 5)
-        }
-        .myTint()
-        .onSubmit {
-            handleTextFieldSubmit()
-        }
-        .disabled(subManager.isLoading)
-        .sheet(isPresented: $subManager.showDropResults) {
-            AddSubscriptionView(subManager: subManager)
-                .environment(\.colorScheme, colorScheme)
-        }
-        .task(id: addVideosSuccess) {
-            await delayedVideoCheckmarkReset()
-        }
-        .task(id: subManager.isSubscribedSuccess) {
-            if subManager.isSubscribedSuccess == true {
-                await refresher.refreshAll()
             }
-        }
-        .task(id: addVideosSuccess) {
-            if addVideosSuccess == true {
-                await refresher.refreshAll()
+            .task(id: addVideosSuccess) {
+                if addVideosSuccess == true {
+                    await refresher.refreshAll()
+                }
             }
-        }
-        .task(id: subManager.isSubscribedSuccess) {
-            await delayedSubscriptionCheckmarkReset()
-        }
-        .task(id: addSubscriptionFromText) {
-            await handleAddSubscriptionFromText()
-        }
-        .confirmationDialog("textContainsPlaylist",
-                            isPresented: Binding(
-                                get: { textContainingPlaylist != nil },
-                                set: { if !$0 { textContainingPlaylist = nil } }
-                            ),
-                            actions: {
-                                Button("addAsPlaylist") {
-                                    if let text = textContainingPlaylist {
-                                        addUrlsFromText(text.str)
+            .task(id: subManager.isSubscribedSuccess) {
+                await delayedSubscriptionCheckmarkReset()
+            }
+            .task(id: addSubscriptionFromText) {
+                await handleAddSubscriptionFromText()
+            }
+            .confirmationDialog("textContainsPlaylist",
+                                isPresented: Binding(
+                                    get: { textContainingPlaylist != nil },
+                                    set: { if !$0 { textContainingPlaylist = nil } }
+                                ),
+                                actions: {
+                                    Button("addAsPlaylist") {
+                                        if let text = textContainingPlaylist {
+                                            addUrlsFromText(text.str)
+                                        }
                                     }
-                                }
-                                Button("addAsVideosToQueue") {
-                                    if let text = textContainingPlaylist {
-                                        addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
+                                    Button("addAsVideosToQueue") {
+                                        if let text = textContainingPlaylist {
+                                            addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
+                                        }
                                     }
-                                }
-                                Button("addAsVideosToInbox") {
-                                    if let text = textContainingPlaylist {
-                                        addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
+                                    Button("addAsVideosToInbox") {
+                                        if let text = textContainingPlaylist {
+                                            addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
+                                        }
                                     }
-                                }
-                                Button("cancel", role: .cancel) {
-                                    textContainingPlaylist = nil
-                                }
-                            },
-                            message: { Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)") })
+                                    Button("cancel", role: .cancel) {
+                                        textContainingPlaylist = nil
+                                    }
+                                },
+                                message: { Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)") })
     }
 
     @ViewBuilder var pasteButton: some View {
         let isLoading = subManager.isLoading || isLoadingVideos
-        let isSuccess = subManager.isSubscribedSuccess == true || addVideosSuccess == true && isLoading == false
+        let isSuccess = (subManager.isSubscribedSuccess == true || addVideosSuccess == true) && !isLoading
         let failed = subManager.isSubscribedSuccess == false || addVideosSuccess == false
 
-        if isLoading {
-            ProgressView()
-                .frame(width: 10, height: 10)
-                .padding(.horizontal, 5)
-                #if os(macOS)
-                .scaleEffect(0.3)
-            #endif
-        } else if failed {
-            Image(systemName: Const.clearNoFillSF)
-                .accessibilityLabel("failed")
-        } else if isSuccess {
-            Image(systemName: "checkmark")
-                .accessibilityLabel("success")
-        }
-
-        PasteButton(payloadType: MultiPayload.self) { payloads in
-            guard let payload = payloads.first else {
-                return
+        Button {
+            if let text = ClipboardService.get() {
+                handleTextFieldSubmit(text)
             }
-            switch payload.content {
-            case .text(let content):
-                handleTextFieldSubmit(content)
-            case .url(let url):
-                handleTextFieldSubmit(url.absoluteString)
+        } label: {
+            if isLoading {
+                ProgressView()
+                    .controlSize(.small)
+            } else if failed {
+                Image(systemName: Const.clearNoFillSF)
+            } else if isSuccess {
+                Image(systemName: "checkmark")
+            } else {
+                Image(systemName: "doc.on.clipboard.fill")
             }
         }
-        .buttonBorderShape(.capsule)
-        .labelStyle(.iconOnly)
-        .myTint()
-        .disabled(subManager.isLoading)
+        .accessibilityLabel("pasteUrl")
     }
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
@@ -247,7 +194,7 @@ struct AddToLibraryView: View {
 }
 
 #Preview {
-    AddToLibraryView(subManager: .constant(SubscribeManager()))
+    AddToLibraryView()
         .modelContainer(DataProvider.previewContainer)
         .environment(NavigationManager.shared)
         .environment(RefreshManager.shared)

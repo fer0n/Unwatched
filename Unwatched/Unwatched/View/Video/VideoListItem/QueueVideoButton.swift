@@ -15,10 +15,16 @@ struct QueueVideoButton: View {
 
     var videoData: VideoData
     var size: CGFloat = 30
+    var onChange: ((_ reason: VideoChangeReason?, _ order: Int?) -> Void)?
 
-    init(_ videoData: VideoData, size: CGFloat = 30) {
+    init(
+        _ videoData: VideoData,
+        size: CGFloat = 30,
+        onChange: ((_ reason: VideoChangeReason?, _ order: Int?) -> Void)? = nil
+    ) {
         self.videoData = videoData
         self.size = size
+        self.onChange = onChange
     }
 
     var body: some View {
@@ -54,5 +60,8 @@ struct QueueVideoButton: View {
             videos: [video],
             modelContext: modelContext
         )
+        // reason: nil so status-driven list refreshes (e.g. search) update without
+        // triggering list-specific move/remove handling (Inbox/Queue guard on nil).
+        onChange?(nil, nil)
     }
 }

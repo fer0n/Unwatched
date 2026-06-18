@@ -55,9 +55,6 @@ private struct QueueListView: View {
 
                 if queue.isEmpty {
                     QueueViewUnavailable()
-                    #if !os(visionOS)
-                    InboxHasEntriesTip()
-                    #endif
                 }
                 // Potential Workaround: always showing the list might avoid a crash
                 List {

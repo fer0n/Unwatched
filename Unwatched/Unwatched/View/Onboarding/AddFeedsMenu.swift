@@ -51,7 +51,9 @@ struct AddFeedsMenu: View {
 
     var browseYoutubeButton: some View {
         Button {
-            navManager.openUrlInApp(nil)
+            navManager.presentedSearch.removeAll()
+            navManager.navigateTo(.search)
+            navManager.pendingSearchFocus = true
             Signal.log("Onboarding.BrowseYoutube", throttle: .weekly)
         } label: {
             Text("browser")

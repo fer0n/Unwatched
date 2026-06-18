@@ -9,27 +9,20 @@ import UnwatchedShared
 
 struct QueueTabItemView: View {
     let showCancelButton: Bool
-    let showBadge: Bool
 
     var body: some View {
         QueueView(showCancelButton: showCancelButton)
-            .modifier(QueueTabItemViewModifier(showBadge: showBadge))
+            .modifier(QueueTabItemViewModifier())
     }
 }
 
+/// Auto-clears the "new" status when entering/leaving the queue tab.
 struct QueueTabItemViewModifier: ViewModifier {
     @Query(QueueTabItemViewModifier.descriptor)
     var queue: [QueueEntry]
 
-    let showBadge: Bool
-
     func body(content: Content) -> some View {
         content
-            .tabItemView(
-                image: Image(systemName: Const.queueTagSF),
-                tag: NavigationTab.queue,
-                showBadge: showBadge && hasNewItems
-            )
             .autRemoveNewViewModifier(hasNewItems: hasNewItems, list: .queue)
     }
 
@@ -43,5 +36,21 @@ struct QueueTabItemViewModifier: ViewModifier {
         )
         descriptor.fetchLimit = 1
         return descriptor
+    }
+}
+
+/// Tab-bar label for the queue, showing a badge dot when the queue has new items.
+struct QueueTabLabel: View {
+    @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
+
+    @Query(QueueTabItemViewModifier.descriptor)
+    var queue: [QueueEntry]
+
+    var body: some View {
+        MenuTabLabel(
+            image: Image(systemName: Const.queueTagSF),
+            tag: .queue,
+            showBadge: showTabBarBadge && !queue.isEmpty
+        )
     }
 }
