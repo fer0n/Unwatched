@@ -61,9 +61,6 @@ struct ChapterMiniControlView: View {
                             .lineLimit(1)
                             .frame(maxWidth: link == nil ? .infinity : nil)
                             .animation(nil, value: UUID())
-                            .sensoryFeedback(Const.sensoryFeedback, trigger: player.currentChapterPreview) { old, new in
-                                old != nil && new != nil
-                            }
                         }
                         .buttonStyle(.plain)
                         .highPriorityGesture(LongPressGesture(minimumDuration: 0.3).onEnded { _ in

@@ -91,9 +91,6 @@ struct AVPlayerScrubberOverlay: View {
             .padding(.bottom, 30)
             .opacity(vm.showScrubber ? 1 : 0)
             .animation(.easeOut(duration: 0.15), value: vm.showScrubber)
-            .sensoryFeedback(Const.sensoryFeedback, trigger: player.currentChapterPreview?.startTime) { old, new in
-                vm.isScrubbing && old != nil && new != nil && old != new
-            }
     }
 
     @ViewBuilder
