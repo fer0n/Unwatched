@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import TipKit
 import UnwatchedShared
 
 struct SetupShareSheetAction: View {
@@ -24,21 +23,6 @@ struct SetupShareSheetAction: View {
             }
             .accessibilityLabel("setupShareSheetAction")
             .bold()
-        }
-    }
-}
-
-struct ShareSheetTip: View {
-    @AppStorage(Const.shortcutHasBeenUsed) var shortcutHasBeenUsed = false
-
-    var setupShareSheetTip = AddVideosTip()
-
-    var body: some View {
-        if !shortcutHasBeenUsed {
-            TipView(setupShareSheetTip)
-                .onTapGesture {
-                    UrlService.open(UrlService.shareShortcutUrl)
-                }
         }
     }
 }

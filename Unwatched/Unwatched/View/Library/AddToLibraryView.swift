@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import TipKit
 import OSLog
 import UnwatchedShared
 
@@ -22,8 +21,6 @@ struct AddToLibraryView: View {
     @State var isLoadingVideos = false
     @State var addSubscriptionFromText: String?
     @State var textContainingPlaylist: IdentifiableString?
-
-    var addVideosTip = AddVideosTip()
 
     @Binding var subManager: SubscribeManager
 
@@ -61,10 +58,6 @@ struct AddToLibraryView: View {
             pasteButton
                 .padding(.leading, 5)
         }
-        .popoverTip(addVideosTip, arrowEdge: .top, action: { _ in
-            UrlService.open(UrlService.shareShortcutUrl)
-            addVideosTip.invalidate(reason: .actionPerformed)
-        })
         .myTint()
         .onSubmit {
             handleTextFieldSubmit()
@@ -92,9 +85,6 @@ struct AddToLibraryView: View {
         }
         .task(id: addSubscriptionFromText) {
             await handleAddSubscriptionFromText()
-        }
-        .onDisappear {
-            addVideosTip.invalidate(reason: .displayCountExceeded)
         }
         .confirmationDialog("textContainsPlaylist",
                             isPresented: Binding(
@@ -162,7 +152,6 @@ struct AddToLibraryView: View {
     }
 
     func handleTextFieldSubmit(_ inputText: String? = nil) {
-        addVideosTip.invalidate(reason: .actionPerformed)
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
             Log.warning("no url found")

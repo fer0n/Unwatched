@@ -389,7 +389,6 @@
 		889AF8D32C50ECA9001CEDE6 /* Alerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D34D742B58F86800533B74 /* Alerter.swift */; };
 		889AF8D42C50ECA9001CEDE6 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88CAEC372BA49D63000202D9 /* ShareView.swift */; };
 		889AF8D52C50ECA9001CEDE6 /* SheetPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883CA8162B5BA94900028D52 /* SheetPositionReader.swift */; };
-		889AF8D62C50ECA9001CEDE6 /* AddVideosTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35962BC96BCD005FA53E /* AddVideosTip.swift */; };
 		889AF8D72C50ECA9001CEDE6 /* AnimationCompletionCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */; };
 		889AF8D82C50ECA9001CEDE6 /* PlayerToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808D8222B4AF9FF00B4FF11 /* PlayerToggleStyle.swift */; };
 		889AF8D92C50ECA9001CEDE6 /* DateTimeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D8584F2B55AB4D0047E0E6 /* DateTimeConversion.swift */; };
@@ -435,7 +434,6 @@
 		889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */; };
 		889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */; };
 		889AF9052C50ECD4001CEDE6 /* SetupShareSheetAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */; };
-		889AF9062C50ECD4001CEDE6 /* AddVideosButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35942BC95BE7005FA53E /* AddVideosButton.swift */; };
 		889AF9072C50ECD8001CEDE6 /* InboxTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899246A2C47FAE3001185A6 /* InboxTabItemView.swift */; };
 		889AF9082C50ECD8001CEDE6 /* MenuViewSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924872C48E75F001185A6 /* MenuViewSheet.swift */; };
 		889AF9092C50ECD8001CEDE6 /* TabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D5DFF2BE0B95800989313 /* TabItemView.swift */; };
@@ -561,8 +559,6 @@
 		88BF31062CAE813400AE26EC /* LocalizedStringKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */; };
 		88BF35912BC91F20005FA53E /* AddFeedsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */; };
 		88BF35932BC91F45005FA53E /* SetupShareSheetAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */; };
-		88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35942BC95BE7005FA53E /* AddVideosButton.swift */; };
-		88BF35972BC96BCD005FA53E /* AddVideosTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35962BC96BCD005FA53E /* AddVideosTip.swift */; };
 		88BF35992BC96C37005FA53E /* TextFieldClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */; };
 		88BFA0EA2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
 		88BFA0EB2C871E8A0095EFBA /* AutoHideVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */; };
@@ -1128,8 +1124,6 @@
 		88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStringKey.swift; sourceTree = "<group>"; };
 		88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedsMenu.swift; sourceTree = "<group>"; };
 		88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupShareSheetAction.swift; sourceTree = "<group>"; };
-		88BF35942BC95BE7005FA53E /* AddVideosButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideosButton.swift; sourceTree = "<group>"; };
-		88BF35962BC96BCD005FA53E /* AddVideosTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideosTip.swift; sourceTree = "<group>"; };
 		88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHideVM.swift; sourceTree = "<group>"; };
 		88C10D762D08853E005EDB4B /* ShortsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortsSetting.swift; sourceTree = "<group>"; };
@@ -1384,7 +1378,6 @@
 			children = (
 				88EEFDE72B72E12500A1F441 /* InboxTip.swift */,
 				888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */,
-				88BF35962BC96BCD005FA53E /* AddVideosTip.swift */,
 				8802F8502C6950A2008A7778 /* HideShortsTip.swift */,
 			);
 			path = Tips;
@@ -1914,7 +1907,6 @@
 			children = (
 				88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */,
 				88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */,
-				88BF35942BC95BE7005FA53E /* AddVideosButton.swift */,
 				88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */,
 			);
 			path = Onboarding;
@@ -2695,7 +2687,6 @@
 				889AF8D32C50ECA9001CEDE6 /* Alerter.swift in Sources */,
 				889AF8D42C50ECA9001CEDE6 /* ShareView.swift in Sources */,
 				889AF8D52C50ECA9001CEDE6 /* SheetPositionReader.swift in Sources */,
-				889AF8D62C50ECA9001CEDE6 /* AddVideosTip.swift in Sources */,
 				88014D212E68D339000FAA00 /* getTranscript.swift in Sources */,
 				889AF8D72C50ECA9001CEDE6 /* AnimationCompletionCallback.swift in Sources */,
 				88CD38812E20E5B400E7B21C /* SwipeDirecton.swift in Sources */,
@@ -2822,7 +2813,6 @@
 				CDEB17722C5CCB5800E6FE66 /* VideoCrawlerTests.swift in Sources */,
 				8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
 				88CD38792E20797C00E7B21C /* PlayerWebViewCoordinator+messages.swift in Sources */,
-				889AF9062C50ECD4001CEDE6 /* AddVideosButton.swift in Sources */,
 				889AF90F2C50ECE7001CEDE6 /* LibraryNavListItem.swift in Sources */,
 				88F3AA822C99870F0030B2EA /* Chapter.swift in Sources */,
 				885249412D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */,
@@ -3100,7 +3090,6 @@
 				889924822C485949001185A6 /* SubscriptionSearchBar.swift in Sources */,
 				888C49C02B5EC53C00CDEC76 /* KeyboardReadable.swift in Sources */,
 				8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */,
-				88BF35952BC95BE7005FA53E /* AddVideosButton.swift in Sources */,
 				88CD388F2E213D1D00E7B21C /* TranscriptFieldClearButton.swift in Sources */,
 				888D49262E21BB49007902CF /* CapsuleSegmentedControl.swift in Sources */,
 				888050C32D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
@@ -3128,7 +3117,6 @@
 				88373C122C8B203400ACBB3B /* UnwatchedMiniature.swift in Sources */,
 				8845F0192B50648D0086AA98 /* ChapterDescriptionView.swift in Sources */,
 				88BFA0EA2C871E8A0095EFBA /* AutoHideVM.swift in Sources */,
-				88BF35972BC96BCD005FA53E /* AddVideosTip.swift in Sources */,
 				88F7B2C82C4D823B00E722F3 /* BackupSettings.swift in Sources */,
 				88017FD72B96161B00192AEA /* DebugView.swift in Sources */,
 				88E70CCB2ECE136200CE7DAD /* BrowserDisplayMode.swift in Sources */,

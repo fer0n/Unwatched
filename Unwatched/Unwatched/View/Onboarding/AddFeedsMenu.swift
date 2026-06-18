@@ -21,8 +21,6 @@ struct AddFeedsMenu: View {
             Menu {
                 SetupShareSheetAction()
                 importSubscriptionsButton
-                AddVideosButton()
-                    .foregroundStyle(.primary)
             } label: {
                 Image(systemName: "ellipsis")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
