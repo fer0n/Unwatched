@@ -26,6 +26,7 @@ struct PlayerScrubber: View {
         fillColor: Color = .foregroundGray,
         trackColor: Color = .white,
         timeColor: Color = .secondary,
+        verticalHitSlop: CGFloat = 5,
         onScrubbingChanged: ((Bool) -> Void)? = nil
     ) {
         self.inlineTime = inlineTime
@@ -35,6 +36,7 @@ struct PlayerScrubber: View {
         self.fillColor = fillColor
         self.trackColor = trackColor
         self.timeColor = timeColor
+        self.verticalHitSlop = verticalHitSlop
         self.onScrubbingChanged = onScrubbingChanged
     }
 
@@ -48,7 +50,7 @@ struct PlayerScrubber: View {
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
     /// Extra vertical touch area added on each side of the scrubber without affecting layout.
-    let verticalHitSlop: CGFloat = 14
+    let verticalHitSlop: CGFloat
 
     let enableTapScrubbing: Bool = Device.isMac
     var scrubberHeight: CGFloat

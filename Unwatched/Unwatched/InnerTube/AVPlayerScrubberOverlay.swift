@@ -129,6 +129,7 @@ struct AVPlayerScrubberOverlay: View {
                 fillColor: .primary,
                 trackColor: .secondary,
                 timeColor: .primary,
+                verticalHitSlop: 14,
                 onScrubbingChanged: vm.handleScrubbing
             )
             .padding(.horizontal, 12)
