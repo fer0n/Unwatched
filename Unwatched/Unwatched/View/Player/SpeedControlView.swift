@@ -26,7 +26,8 @@ struct SpeedControlView: View {
                 onTap: onSpeedTap,
                 showDecimalHighlights: viewModel.showDecimalHighlights,
                 thumbSize: thumbSize,
-                indicatorSpacing: indicatorSpacing
+                indicatorSpacing: indicatorSpacing,
+                speeds: viewModel.speeds
             )
             .equatable()
             .padding(.horizontal, viewModel.padding)
@@ -41,7 +42,7 @@ struct SpeedControlView: View {
                 }
                 Task { @MainActor in
                     viewModel.width = minY.width
-                    viewModel.itemWidth = (minY.width - thumbSize) / CGFloat(Const.speeds.count - 1)
+                    viewModel.itemWidth = (minY.width - thumbSize) / CGFloat(viewModel.speeds.count - 1)
                     viewModel.padding = thumbSize / 2 - viewModel.itemWidth / 2
                     if viewModel.dragState == nil {
                         viewModel.setThumbPosition(to: selectedSpeed)
@@ -85,7 +86,7 @@ struct SpeedControlView: View {
     }
 
     func handleAccessibilitySpeedChange(_ direction: AccessibilityAdjustmentDirection) {
-        let speeds = Const.speeds
+        let speeds = viewModel.speeds
         if let currentIndex = speeds.firstIndex(of: selectedSpeed) {
             var newIndex = currentIndex
             switch direction {

@@ -25,7 +25,7 @@ struct PlayerEmbedded: View {
     var handleMiniPlayerTap: () -> Void
 
     var body: some View {
-        HStack {
+        MiniPlayerLayout(hideMiniPlayer: hideMiniPlayer, handleMiniPlayerTap: handleMiniPlayerTap) {
             ZStack {
                 PlayerWebView(
                     overlayVM: $overlayVM,
@@ -75,15 +75,6 @@ struct PlayerEmbedded: View {
             #if os(macOS)
             .padding(.horizontal, isFakePip ? 0 : 5)
             #endif
-
-            if !hideMiniPlayer {
-                MiniPlayerContent(
-                    videoTitle: player.video?.title,
-                    handleMiniPlayerTap: handleMiniPlayerTap
-                )
-            }
         }
-        .animation(.bouncy(duration: 0.4), value: hideMiniPlayer)
-        .frame(height: !hideMiniPlayer ? Const.playerAboveSheetHeight : nil)
     }
 }

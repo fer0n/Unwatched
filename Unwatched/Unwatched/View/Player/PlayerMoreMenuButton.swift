@@ -9,6 +9,8 @@ import UnwatchedShared
 struct PlayerMoreMenuButton<Content>: View where Content: View {
     @AppStorage(Const.surroundingEffect) var surroundingEffect = true
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .asSheet
+    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
     @Environment(PlayerManager.self) var player
@@ -28,6 +30,69 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             #if !os(visionOS)
             SleepTimer(viewModel: $sleepTimerVM, onEnded: player.onSleepTimerEnded)
             #endif
+
+            if playerType == .native && player.availableAudioLanguages.count > 1 {
+                Menu {
+                    ForEach(player.availableAudioLanguages, id: \.code) { lang in
+                        Button {
+                            player.selectedAudioLanguage = lang.code
+                        } label: {
+                            if lang.code == player.selectedAudioLanguage {
+                                Label(lang.name, systemImage: "checkmark")
+                            } else {
+                                Text(lang.name)
+                            }
+                        }
+                    }
+                } label: {
+                    Label("audioLanguage", systemImage: "globe")
+                }
+            }
+
+            if playerType == .native && player.availableVideoQualities.count > 1 {
+                Menu {
+                    ForEach(player.availableVideoQualities, id: \.height) { quality in
+                        Button {
+                            player.selectedVideoQuality = quality.height
+                        } label: {
+                            if quality.height == player.selectedVideoQuality {
+                                Label(quality.label, systemImage: "checkmark")
+                            } else {
+                                Text(quality.label)
+                            }
+                        }
+                    }
+                } label: {
+                    Label("videoQuality", systemImage: "film")
+                }
+            }
+
+            if playerType != .youtubeEmbedded && !player.availableCaptionTracks.isEmpty {
+                Menu {
+                    Button {
+                        player.selectedCaptionTrackId = nil
+                    } label: {
+                        if player.selectedCaptionTrackId == nil {
+                            Label("off", systemImage: "checkmark")
+                        } else {
+                            Text("off")
+                        }
+                    }
+                    ForEach(player.availableCaptionTracks) { track in
+                        Button {
+                            player.selectedCaptionTrackId = track.id
+                        } label: {
+                            if track.id == player.selectedCaptionTrackId {
+                                Label(track.name, systemImage: "checkmark")
+                            } else {
+                                Text(track.name)
+                            }
+                        }
+                    }
+                } label: {
+                    Label("captions", systemImage: "captions.bubble")
+                }
+            }
 
             if let video = player.video {
                 CopyUrlOptions(

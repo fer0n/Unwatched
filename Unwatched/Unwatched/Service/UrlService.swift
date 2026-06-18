@@ -100,6 +100,7 @@ struct UrlService {
         case small
         case medium
         case large
+        case max
     }
 
     static func getImageUrl(_ imageUrl: URL?, _ size: ThumbnailSize) -> URL? {
@@ -121,8 +122,10 @@ struct UrlService {
             replacement = "hqdefault.jpg"
         case .large:
             replacement = "sddefault.jpg"
+        case .max:
+            replacement = "maxresdefault.jpg"
         }
-        let qualities = ["hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
+        let qualities = ["maxresdefault.jpg", "sddefault.jpg", "hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
         for quality in qualities where urlString.contains(quality) {
             let newString = urlString.replacing(quality, with: replacement)
             return URL(string: newString)

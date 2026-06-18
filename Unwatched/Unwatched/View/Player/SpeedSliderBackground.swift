@@ -11,6 +11,7 @@ struct SpeedSliderBackground: View, Equatable {
     var showDecimalHighlights: Bool = false
     var thumbSize: CGFloat
     var indicatorSpacing: CGFloat
+    var speeds: [Double] = Const.speeds
 
     var body: some View {
         let highlighted: [Double] = showDecimalHighlights
@@ -19,7 +20,7 @@ struct SpeedSliderBackground: View, Equatable {
         let frameSize: CGFloat = 3
 
         HStack(spacing: 0) {
-            ForEach(Const.speeds, id: \.self) { speed in
+            ForEach(speeds, id: \.self) { speed in
                 let isHightlighted = highlighted.contains(speed)
                 let foregroundColor: Color = .foregroundGray.opacity(0.5)
 
@@ -52,6 +53,7 @@ struct SpeedSliderBackground: View, Equatable {
     nonisolated static func == (lhs: SpeedSliderBackground, rhs: SpeedSliderBackground) -> Bool {
         lhs.indicatorSpacing == rhs.indicatorSpacing &&
             lhs.thumbSize == rhs.thumbSize &&
-            lhs.showDecimalHighlights == rhs.showDecimalHighlights
+            lhs.showDecimalHighlights == rhs.showDecimalHighlights &&
+            lhs.speeds == rhs.speeds
     }
 }

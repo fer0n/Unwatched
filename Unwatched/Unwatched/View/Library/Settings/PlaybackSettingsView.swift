@@ -16,6 +16,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
+    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -24,6 +25,17 @@ struct PlaybackSettingsView: View {
             @Bindable var player = player
 
             MyForm {
+                #if os(iOS)
+                MySection {
+                    NavigationLink(value: LibraryDestination.settingsPlayerType) {
+                        LabeledContent("playerType") {
+                            Text(playerType.description)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                #endif
+
                 if Device.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {
                         Picker("fullscreenControls", selection: $fullscreenControlsSetting) {

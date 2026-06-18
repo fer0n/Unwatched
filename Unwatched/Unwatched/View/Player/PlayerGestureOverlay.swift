@@ -6,68 +6,190 @@
 import SwiftUI
 import UnwatchedShared
 
+private enum SwipeAxis { case horizontal, vertical }
+
+private struct SwipeTransform {
+    var scale: CGFloat = 1.0
+    var anchor: UnitPoint = .center
+    var offset: CGSize = .zero
+}
+
 struct PlayerGestureOverlay: ViewModifier {
     @Environment(PlayerManager.self) var player
+
+    var handleSwipe: ((SwipeDirecton) -> Void)?
+    var onTap: (() -> Void)?
+    var onDoubleTap: (() -> Void)?
+    var onChapterSwipe: (() -> Void)?
+    /// Set to true by external gesture systems (e.g. two-finger zoom/pan) to suppress
+    /// swipe and tap recognition while multi-touch is active.
+    var isExternallyPinching: Bool = false
+    var enabled: Bool = true
+
     @State private var gestureState = GestureTrackingState()
+    @State private var swipeTransform = SwipeTransform()
+    @State private var hapticTrigger = false
+
+    // Must match GestureTrackingState.swipeThreshold so the visual wall aligns with action trigger
+    private let swipeThreshold: CGFloat = 50
 
     func body(content: Content) -> some View {
         content
+            .scaleEffect(enabled ? swipeTransform.scale : 1, anchor: swipeTransform.anchor)
+            .offset(enabled ? swipeTransform.offset : .zero)
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticTrigger)
             .overlay {
-                GeometryReader { geometry in
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .gesture(
-                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                                .onChanged { value in
-                                    gestureState.handleTouchStart(value: value, in: geometry.size)
-                                    gestureState.handleTouchMove(value: value, in: geometry.size)
-                                }
-                                .onEnded { value in
-                                    gestureState.handleTouchEnd(value: value, in: geometry.size) { gesture in
-                                        handleGesture(gesture)
+                if enabled {
+                    GeometryReader { geometry in
+                        Color.clear
+                            .contentShape(Rectangle())
+                            .gesture(
+                                DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                    .onChanged { value in
+                                        guard !gestureState.isPinching && !isExternallyPinching else { return }
+                                        gestureState.handleTouchStart(value: value, in: geometry.size) { gesture in
+                                            handleGesture(gesture)
+                                        }
+                                        gestureState.handleTouchMove(value: value, in: geometry.size)
+                                        applySwipeAnimation(translation: value.translation)
                                     }
-                                }
-                        )
+                                    .onEnded { value in
+                                        let axis = gestureState.lockedSwipeAxis
+                                        resetSwipeAnimation()
+                                        guard !isExternallyPinching else {
+                                            gestureState.resetTouch()
+                                            return
+                                        }
+                                        gestureState.handleTouchEnd(value: value, in: geometry.size, lockedAxis: axis) { gesture in
+                                            handleGesture(gesture, lockedAxis: axis)
+                                        }
+                                    }
+                            )
+                            .simultaneousGesture(
+                                MagnifyGesture()
+                                    .onChanged { _ in
+                                        gestureState.isPinching = true
+                                        gestureState.resetTouch()
+                                        resetSwipeAnimation()
+                                    }
+                                    .onEnded { _ in
+                                        Task { @MainActor in
+                                            try? await Task.sleep(for: .milliseconds(100))
+                                            gestureState.isPinching = false
+                                        }
+                                    }
+                            )
+                    }
                 }
             }
     }
 
-    func handleGesture(_ gesture: GestureType) {
+    private func applySwipeAnimation(translation: CGSize) {
+        guard !gestureState.longTouchSent else { return }
+        let dx = translation.width
+        let dy = translation.height
+        guard abs(dx) > 10 || abs(dy) > 10 else { return }
+
+        if gestureState.lockedSwipeAxis == nil {
+            gestureState.lockedSwipeAxis = abs(dx) >= abs(dy) ? .horizontal : .vertical
+        }
+
+        // Strip the axis-detection deadzone symmetrically so the animation starts
+        // at zero and reverses cleanly through the gesture origin without a jump.
+        let deadzone: CGFloat = 10
+        let animDy = dy < 0 ? min(0, dy + deadzone) : max(0, dy - deadzone)
+
+        var transform = SwipeTransform()
+        if gestureState.lockedSwipeAxis == .vertical {
+            if animDy < 0, handleSwipe == nil || !SheetPositionReader.shared.landscapeFullscreen {
+                // swipe up → zoom in anchored at bottom (speed change, or portrait→landscape rotation)
+                let progress = easeOutProgress(abs(animDy))
+                transform.scale = 1.0 + progress * 0.12
+                transform.anchor = .bottom
+            } else if animDy > 0 {
+                // swipe down → shrink + slide down
+                let progress = easeOutProgress(animDy)
+                transform.scale = 1.0 - progress * 0.06
+                transform.anchor = .top
+                transform.offset = CGSize(width: 0, height: progress * 20)
+            }
+        }
+        swipeTransform = transform
+    }
+
+    private func resetSwipeAnimation() {
+        gestureState.lockedSwipeAxis = nil
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+            swipeTransform = SwipeTransform()
+        }
+    }
+
+    private func easeOutProgress(_ distance: CGFloat) -> CGFloat {
+        let ratio = min(distance / swipeThreshold, 1)
+        return sin(ratio * .pi / 2)
+    }
+
+    private func handleGesture(
+        _ gesture: GestureType,
+        lockedAxis: SwipeAxis? = nil
+    ) {
+        if lockedAxis == .vertical && (gesture == .swipeLeft || gesture == .swipeRight) { return }
+        if lockedAxis == .horizontal && (gesture == .swipeUp || gesture == .swipeDown) { return }
+
         switch gesture {
         case .centerTap:
             let isPlaying = player.isPlaying
             OverlayFullscreenVM.shared.show(isPlaying ? .pause : .play)
             player.handlePlayButton()
         case .tap:
-            AutoHideVM.shared.handlePlayerInteraction()
-        case .doubleTapLeft:
-            seekBackward()
-        case .swipeRight:
-            guard Const.swipeGestureRight.bool ?? true else {
-                return
-            }
-            if player.goToPreviousChapter() {
-                OverlayFullscreenVM.shared.show(.previous)
-            }
-        case .doubleTapRight:
-            seekForward()
-        case .swipeLeft:
-            guard Const.swipeGestureLeft.bool ?? true else {
-                return
-            }
-            if player.goToNextChapter() {
-                OverlayFullscreenVM.shared.show(.next)
-            }
-        case .swipeUp:
-            guard Const.swipeGestureUp.bool ?? true else {
-                return
-            }
+            if let onTap { onTap() } else { AutoHideVM.shared.handlePlayerInteraction() }
+        case .doubleTapLeft:  seekBackward()
+        case .doubleTapRight: seekForward()
+        case .swipeRight:     handleSwipeRight()
+        case .swipeLeft:      handleSwipeLeft()
+        case .swipeUp:        handleSwipeUp()
+        case .swipeDown:      handleSwipeDown()
+        case .longPressLeft:  player.temporarySlowDown()
+        case .longPressRight: player.temporarySpeedUp()
+        case .longPressEnd:   player.resetTemporaryPlaybackSpeed()
+        }
+    }
+
+    private func handleSwipeRight() {
+        guard Const.swipeGestureRight.bool ?? true else { return }
+        if player.goToPreviousChapter() {
+            hapticTrigger.toggle()
+            OverlayFullscreenVM.shared.show(.previous)
+            onChapterSwipe?()
+        }
+    }
+
+    private func handleSwipeLeft() {
+        guard Const.swipeGestureLeft.bool ?? true else { return }
+        if player.goToNextChapter() {
+            hapticTrigger.toggle()
+            OverlayFullscreenVM.shared.show(.next)
+            onChapterSwipe?()
+        }
+    }
+
+    private func handleSwipeUp() {
+        guard Const.swipeGestureUp.bool ?? true else { return }
+        hapticTrigger.toggle()
+        if let handleSwipe {
+            handleSwipe(.up)
+        } else {
             let appliedSpeed = PlayerManager.shared.tempSpeedChange(faster: true)
             OverlayFullscreenVM.shared.show(appliedSpeed ? .speedUp : .regularSpeed)
-        case .swipeDown:
-            guard Const.swipeGestureDown.bool ?? true else {
-                return
-            }
+        }
+    }
+
+    private func handleSwipeDown() {
+        guard Const.swipeGestureDown.bool ?? true else { return }
+        hapticTrigger.toggle()
+        if let handleSwipe {
+            handleSwipe(.down)
+        } else {
             let appliedSpeed = PlayerManager.shared.tempSpeedChange(faster: false)
             OverlayFullscreenVM.shared.show(appliedSpeed ? .slowDown : .regularSpeed)
         }
@@ -77,6 +199,7 @@ struct PlayerGestureOverlay: ViewModifier {
         if player.seekBackward() {
             OverlayFullscreenVM.shared.show(.seekBackward)
             AutoHideVM.shared.reset()
+            onDoubleTap?()
         }
     }
 
@@ -84,6 +207,7 @@ struct PlayerGestureOverlay: ViewModifier {
         if player.seekForward() {
             OverlayFullscreenVM.shared.show(.seekForward)
             AutoHideVM.shared.reset()
+            onDoubleTap?()
         }
     }
 }
@@ -93,17 +217,21 @@ class GestureTrackingState {
     @ObservationIgnored private var touchStartTime: Date?
     @ObservationIgnored private var touchStartLocation: CGPoint?
     @ObservationIgnored private var isSwiping = false
-    @ObservationIgnored private var longTouchSent = false
+    @ObservationIgnored fileprivate var longTouchSent = false
     @ObservationIgnored private var centerTouch = false
     @ObservationIgnored private let longPressThreshold: TimeInterval = 0.3
     @ObservationIgnored private let swipeThreshold: CGFloat = 50
     @ObservationIgnored private let doubleTapInterval: TimeInterval = 0.3
     @ObservationIgnored private var lastTapDate: Date?
-    @ObservationIgnored private var consecutiveSingleTaps: Int = 0
-    @ObservationIgnored private var pendingTapTask: Task<Void, Never>?
-    @ObservationIgnored private var pendingTapLocation: CGPoint?
+    @ObservationIgnored private var longPressTask: Task<Void, Never>?
+    @ObservationIgnored var isPinching = false
+    @ObservationIgnored fileprivate var lockedSwipeAxis: SwipeAxis?
 
-    func handleTouchStart(value: DragGesture.Value, in size: CGSize) {
+    func handleTouchStart(
+        value: DragGesture.Value,
+        in size: CGSize,
+        gestureHandler: @escaping @MainActor (PlayerGestureOverlay.GestureType) -> Void
+    ) {
         if touchStartLocation == nil {
             touchStartTime = Date()
             touchStartLocation = value.startLocation
@@ -118,6 +246,14 @@ class GestureTrackingState {
             if isHorizontalCenter && isVerticalCenter {
                 centerTouch = true
             }
+            let isLeft = value.startLocation.x < midX
+            longPressTask?.cancel()
+            longPressTask = Task { @MainActor in
+                try? await Task.sleep(for: .seconds(longPressThreshold))
+                guard !Task.isCancelled, !isSwiping, !centerTouch, !isPinching else { return }
+                longTouchSent = true
+                gestureHandler(isLeft ? .longPressLeft : .longPressRight)
+            }
         }
     }
 
@@ -127,13 +263,16 @@ class GestureTrackingState {
         let deltaY = value.location.y - start.y
         if !isSwiping && (abs(deltaX) > 10 || abs(deltaY) > 10) {
             isSwiping = true
+            longPressTask?.cancel()
+            longPressTask = nil
         }
     }
 
     @MainActor
-    func handleTouchEnd(
+    fileprivate func handleTouchEnd(
         value: DragGesture.Value,
         in size: CGSize,
+        lockedAxis: SwipeAxis? = nil,
         gestureHandler: @escaping (
             PlayerGestureOverlay.GestureType
         ) -> Void
@@ -148,18 +287,26 @@ class GestureTrackingState {
         let isHorizontalCenter = abs(end.x - midX) < maxTouchSize
         let isVerticalCenter = abs(end.y - midY) < maxTouchSize
         let now = Date()
+        if longTouchSent {
+            gestureHandler(.longPressEnd)
+            resetTouch()
+            return
+        }
+        guard !isPinching else {
+            resetTouch()
+            return
+        }
         if isSwiping {
-            if abs(deltaX) > abs(deltaY) {
-                if deltaX > swipeThreshold {
-                    gestureHandler(.swipeRight)
-                } else if deltaX < -swipeThreshold {
-                    gestureHandler(.swipeLeft)
-                }
-            } else {
-                if deltaY > swipeThreshold {
-                    gestureHandler(.swipeDown)
-                } else if deltaY < -swipeThreshold {
-                    gestureHandler(.swipeUp)
+            switch lockedAxis {
+            case .horizontal:
+                if deltaX > swipeThreshold { gestureHandler(.swipeRight) } else if deltaX < -swipeThreshold { gestureHandler(.swipeLeft) }
+            case .vertical:
+                if deltaY > swipeThreshold { gestureHandler(.swipeDown) } else if deltaY < -swipeThreshold { gestureHandler(.swipeUp) }
+            case nil:
+                if abs(deltaX) > abs(deltaY) {
+                    if deltaX > swipeThreshold { gestureHandler(.swipeRight) } else if deltaX < -swipeThreshold { gestureHandler(.swipeLeft) }
+                } else {
+                    if deltaY > swipeThreshold { gestureHandler(.swipeDown) } else if deltaY < -swipeThreshold { gestureHandler(.swipeUp) }
                 }
             }
             resetTouch()
@@ -170,36 +317,27 @@ class GestureTrackingState {
             resetTouch()
             return
         }
-        // Double tap detection: trigger tap and double tap immediately, no delay
         if let lastTap = lastTapDate, now.timeIntervalSince(lastTap) < doubleTapInterval {
-            consecutiveSingleTaps += 1
-            pendingTapTask?.cancel() // Cancel pending tap
-            gestureHandler(.tap)
+            // Second tap within interval: fire seek gesture only (.tap already fired on first tap)
             let side: PlayerGestureOverlay.GestureType = (end.x < midX) ? .doubleTapLeft : .doubleTapRight
             gestureHandler(side)
         } else {
-            consecutiveSingleTaps = 0
-            // Schedule tap after doubleTapInterval using Task
-            pendingTapLocation = end
-            pendingTapTask?.cancel()
-            pendingTapTask = Task {
-                do {
-                    try await Task.sleep(for: .seconds(doubleTapInterval))
-                    gestureHandler(.tap)
-                    pendingTapLocation = nil
-                } catch {}
-            }
+            // First tap: fire immediately with no delay
+            gestureHandler(.tap)
         }
         lastTapDate = now
         resetTouch()
     }
 
-    private func resetTouch() {
+    func resetTouch() {
+        longPressTask?.cancel()
+        longPressTask = nil
         touchStartLocation = nil
         touchStartTime = nil
         isSwiping = false
         longTouchSent = false
         centerTouch = false
+        lockedSwipeAxis = nil
     }
 }
 
@@ -212,7 +350,10 @@ extension PlayerGestureOverlay {
              swipeRight,
              swipeUp,
              swipeDown,
-             centerTap
+             centerTap,
+             longPressLeft,
+             longPressRight,
+             longPressEnd
     }
 }
 

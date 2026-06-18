@@ -87,8 +87,7 @@ struct PlayerScrubber: View {
                 ZStack {
                     if translucent {
                         trackColor
-                            .opacity(0.2)
-                            .background(.thinMaterial)
+                            .opacity(0.4)
                     } else {
                         trackColor
                             .opacity(Const.iOS26
@@ -96,7 +95,11 @@ struct PlayerScrubber: View {
                                         : (isGestureActive ? 0.25 : 0.2)
                             )
                     }
-
+                }
+                .onSizeChange { geometry in
+                    viewSize = geometry
+                }
+                .overlay {
                     if let video = player.video,
                        let total = video.duration {
 
@@ -114,9 +117,6 @@ struct PlayerScrubber: View {
                             duration: total
                         )
                     }
-                }
-                .onSizeChange { geometry in
-                    viewSize = geometry
                 }
                 .frame(height: currentScrubberHeight)
                 .clipShape(clipShape)
@@ -248,6 +248,7 @@ struct PlayerScrubber: View {
         isGestureActive = true
         if initialDragPosition == nil {
             gestureScrubberWidth = scrubberWidth
+            onScrubbingChanged?(true)
             if enableTapScrubbing {
                 if value.translation == .zero {
                     // Initial click - move to clicked position
@@ -299,6 +300,7 @@ struct PlayerScrubber: View {
         isInactive = false
         isGestureActive = false
         dragOffset = 0
+        onScrubbingChanged?(false)
     }
 
     func getWithinBounds(_ value: CGFloat, maxValue: CGFloat? = nil) -> CGFloat {

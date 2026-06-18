@@ -20,6 +20,13 @@ class SpeedControlViewModel {
     @ObservationIgnored var speedDebounceTask: Task<Void, Never>?
     @ObservationIgnored var currentSpeed: Double?
 
+    var speeds: [Double] {
+        if UserDefaults.standard.string(forKey: Const.playerType) == PlayerTypeSetting.native.rawValue {
+            return Const.speeds.filter { $0 <= Const.speedMax }
+        }
+        return Const.speeds
+    }
+
     func setThumbPosition(to speed: CGFloat) {
         controlMinX = getXPos(speed)
         currentSpeed = speed
@@ -34,13 +41,13 @@ class SpeedControlViewModel {
             }
             return Int(res)
         }
-        let index = max(0, min(calculatedIndex, Const.speeds.count - 1))
-        let speed = Const.speeds[index]
+        let index = max(0, min(calculatedIndex, speeds.count - 1))
+        let speed = speeds[index]
         return speed
     }
 
     func getXPos(_ speed: Double) -> CGFloat {
-        let selectedSpeedIndex = Const.speeds.firstIndex(of: speed) ?? 0
+        let selectedSpeedIndex = speeds.firstIndex(of: speed) ?? 0
         return (CGFloat(selectedSpeedIndex) * itemWidth)
             + (itemWidth / 2)
             + padding
@@ -58,9 +65,9 @@ class SpeedControlViewModel {
         if Device.isMac {
             return tappedSpeed
         }
-        let index = Const.speeds.firstIndex(of: tappedSpeed) ?? 0
+        let index = speeds.firstIndex(of: tappedSpeed) ?? 0
         let highlightIndeces = Const.highlightedSpeedsInt
-            .compactMap { Const.speeds.firstIndex(of: $0) }
+            .compactMap { speeds.firstIndex(of: $0) }
 
         if highlightIndeces.contains(index) {
             return tappedSpeed

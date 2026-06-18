@@ -23,7 +23,8 @@ extension PlayerManager {
         }
         if let endTime = earlyEndTime ?? currentEndTime, time >= endTime {
             handleChapterChange()
-        } else if let current = currentChapter, time < current.startTime {
+        } else if let current = currentChapter,
+                  time < current.startTime - Const.elapsedTimeMonitorSeconds * Const.speedMax {
             handleChapterChange()
         }
     }

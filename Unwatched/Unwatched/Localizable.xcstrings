@@ -73,7 +73,7 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
+            "state" : "translated",
             "value" : "%1$@ %2$@"
           }
         },
@@ -1445,6 +1445,40 @@
         }
       }
     },
+    "audioLanguage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audiosprache"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio Language"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idioma de audio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue audio"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Język audio"
+          }
+        }
+      }
+    },
     "autoAirplayHD" : {
       "comment" : "A compatibility setting to increase quality when playing over AirPlay",
       "localizations" : {
@@ -2632,6 +2666,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anuluj darmowy okres próbny"
+          }
+        }
+      }
+    },
+    "captions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untertitel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Captions"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtítulos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sous-titres"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Napisy"
           }
         }
       }
@@ -11536,6 +11604,40 @@
         }
       }
     },
+    "off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłączone"
+          }
+        }
+      }
+    },
     "offlineDownloadsFaqA" : {
       "localizations" : {
         "de" : {
@@ -12454,6 +12556,56 @@
         }
       }
     },
+    "playerComparisonBackground" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reliable background playback"
+          }
+        }
+      }
+    },
+    "playerComparisonHighSpeed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3× playback speed"
+          }
+        }
+      }
+    },
+    "playerComparisonManualQuality" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual quality control"
+          }
+        }
+      }
+    },
+    "playerComparisonReliablePlayback" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reliable & quick playback start"
+          }
+        }
+      }
+    },
+    "playerComparisonStreamlinedOverlays" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streamlined overlays"
+          }
+        }
+      }
+    },
     "playerScrubber" : {
       "localizations" : {
         "de" : {
@@ -12586,6 +12738,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Strona w odtwarzaczu"
+          }
+        }
+      }
+    },
+    "playerType" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player type"
+          }
+        }
+      }
+    },
+    "playerTypeCustomUI" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube with Custom UI"
+          }
+        }
+      }
+    },
+    "playerTypeCustomUIHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uses the YouTube player but hides its controls, adding native gestures and a custom scrubber instead."
+          }
+        }
+      }
+    },
+    "playerTypeCustomUIShort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
+    "playerTypeEmbedded" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube"
+          }
+        }
+      }
+    },
+    "playerTypeEmbeddedHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The standard YouTube player."
+          }
+        }
+      }
+    },
+    "playerTypeNative" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Native"
+          }
+        }
+      }
+    },
+    "playerTypeNativeHelper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays videos using the system's native player. This feature may be removed in a future update."
           }
         }
       }
@@ -12994,6 +13226,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fioletowy"
+          }
+        }
+      }
+    },
+    "qualityAuto" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automático"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatique"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatyczna"
           }
         }
       }
@@ -15341,7 +15607,7 @@
             "device" : {
               "applevision" : {
                 "stringUnit" : {
-                  "state" : "new",
+                  "state" : "translated",
                   "value" : ""
                 }
               },
@@ -18652,6 +18918,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pozycja"
+          }
+        }
+      }
+    },
+    "videoQuality" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videoqualität"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video Quality"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calidad de video"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualité vidéo"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jakość wideo"
           }
         }
       }

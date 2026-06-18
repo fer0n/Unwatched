@@ -82,6 +82,12 @@ public extension Color {
     static var neutralAccentColor: Color {
         Color("neutralAccentColor")
     }
+    /// Color for fullscreen player control labels and badges.
+    /// Full accent in portrait; a dimmed accent in landscape (`secondary`).
+    /// Tune the landscape opacity to taste.
+    static func playerControl(secondary: Bool) -> Color {
+        .neutralAccentColor.opacity(secondary ? 0.7 : 1)
+    }
     static var backgroundColor: Color {
         Color("BackgroundColor")
     }

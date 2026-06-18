@@ -11,7 +11,6 @@ struct DebugView: View {
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
     @AppStorage(Const.inboxTipHiddenPermanently) var inboxTipHiddenPermanently = false
-
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 

@@ -14,6 +14,7 @@ struct PlayerView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
     @AppStorage(Const.reloadVideoId) var reloadVideoId = ""
+    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
 
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
@@ -47,19 +48,39 @@ struct PlayerView: View {
                         VideoNotAvailableView()
                             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                     }
-                } else if !player.embeddingDisabled {
-                    PlayerEmbedded(
-                        autoHideVM: $autoHideVM,
-                        overlayVM: $overlayVM,
+                } else if playerType == .native {
+                    #if os(iOS)
+                    AVPlayerView(
                         handleVideoEnded: handleVideoEnded,
                         handleSwipe: handleSwipe,
-                        showFullscreenControls: showFullscreenControls,
-                        landscapeFullscreen: landscapeFullscreen,
-                        showEmbeddedThumbnail: showEmbeddedThumbnail,
                         hideMiniPlayer: hideMiniPlayer,
-                        handleMiniPlayerTap: handleMiniPlayerTap
+                        handleMiniPlayerTap: handleMiniPlayerTap,
+                        showOverlay: landscapeFullscreen
+                            || (!sheetPos.isMinimumSheet && navManager.showMenu)
+                            || navManager.playerTab == .chapterDescription,
+                        landscapeFullscreen: landscapeFullscreen
                     )
                     .environment(\.layoutDirection, .leftToRight)
+                    #endif
+                } else if !player.embeddingDisabled {
+                    #if os(iOS)
+                    if playerType == .youtubeCustomUI {
+                        PlayerEmbeddedCustomUI(
+                            autoHideVM: $autoHideVM,
+                            overlayVM: $overlayVM,
+                            handleVideoEnded: handleVideoEnded,
+                            handleSwipe: handleSwipe,
+                            landscapeFullscreen: landscapeFullscreen,
+                            hideMiniPlayer: hideMiniPlayer,
+                            handleMiniPlayerTap: handleMiniPlayerTap
+                        )
+                        .environment(\.layoutDirection, .leftToRight)
+                    } else {
+                        embeddedPlayer
+                    }
+                    #else
+                    embeddedPlayer
+                    #endif
                 } else {
                     PlayerWebsite(
                         autoHideVM: $autoHideVM,
@@ -94,8 +115,7 @@ struct PlayerView: View {
                         autoHideVM: $autoHideVM,
                         arrowEdge: .trailing,
                         sleepTimerVM: sleepTimerVM,
-                        showLeft: false,
-                        transparent: true
+                        showLeft: false
                     )
                     .frame(width: 60)
                     .frame(maxHeight: player.tallFullscreenOverlay ? 400 : nil)
@@ -113,7 +133,7 @@ struct PlayerView: View {
                 player.handleHotSwap()
             }
             .overlay {
-                if player.video != nil {
+                if player.video != nil && playerType != .native {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
@@ -138,6 +158,22 @@ struct PlayerView: View {
             tallFullscreenOverlay: player.tallFullscreenOverlay,
             hideMiniPlayer: hideMiniPlayer
         )
+    }
+
+    @ViewBuilder
+    var embeddedPlayer: some View {
+        PlayerEmbedded(
+            autoHideVM: $autoHideVM,
+            overlayVM: $overlayVM,
+            handleVideoEnded: handleVideoEnded,
+            handleSwipe: handleSwipe,
+            showFullscreenControls: showFullscreenControls,
+            landscapeFullscreen: landscapeFullscreen,
+            showEmbeddedThumbnail: showEmbeddedThumbnail,
+            hideMiniPlayer: hideMiniPlayer,
+            handleMiniPlayerTap: handleMiniPlayerTap
+        )
+        .environment(\.layoutDirection, .leftToRight)
     }
 
     var showLeft: Bool {

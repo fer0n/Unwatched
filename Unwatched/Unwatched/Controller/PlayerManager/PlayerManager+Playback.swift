@@ -154,6 +154,7 @@ extension PlayerManager {
         if video != nil {
             let seek = backward ? -seconds : seconds
             seekRelative = seek
+            updateVideoEnded()
             if !isPlaying {
                 currentTime? += seek
             }
@@ -169,6 +170,7 @@ extension PlayerManager {
         } else {
             seekAbsolute = time
         }
+        updateVideoEnded()
         updateElapsedTime(time, videoId: video?.youtubeId)
     }
 
@@ -256,7 +258,11 @@ extension PlayerManager {
     }
 
     var tempSpeedUpValue: Double {
-        UserDefaults.standard.value(forKey: Const.temporarySpeedUp) as? Double ?? Const.speedMax
+        let value = UserDefaults.standard.value(forKey: Const.temporarySpeedUp) as? Double ?? Const.speedMax
+        if UserDefaults.standard.string(forKey: Const.playerType) == PlayerTypeSetting.native.rawValue {
+            return min(value, Const.speedMax)
+        }
+        return value
     }
 
     var tempSlowDownValue: Double {

@@ -66,7 +66,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             enableLogging: enableLogging,
             originalAudio: originalAudio,
             playbackId: playbackId,
-            blockOverlay: Device.isVision && !parent.player.embeddingDisabled,
+            blockOverlay: parent.playerType == .youtubeCustomUI || (Device.isVision && !parent.player.embeddingDisabled),
             seekSeconds: UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double ?? Const.seekSeconds
         )
         let script = PlayerWebView.initScript(options)

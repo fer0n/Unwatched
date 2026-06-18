@@ -33,6 +33,14 @@ import UnwatchedShared
 
     var seekAbsolute: Double?
     var seekRelative: Double?
+    var availableAudioLanguages: [(code: String, name: String)] = []
+    var selectedAudioLanguage: String = ""
+    var availableVideoQualities: [(height: Int, label: String)] = []
+    var selectedVideoQuality: Int = 0
+    var availableCaptionTracks: [CaptionTrack] = []
+    var selectedCaptionTrackId: String?
+    var captionCues: [CaptionCue] = []
+    var currentCaptionCue: CaptionCue?
     var embeddingDisabled: Bool = false
     var airplayHD: Bool = false
     var pipEnabled: Bool = false
@@ -380,6 +388,20 @@ import UnwatchedShared
                 self.aspectRatio = aspectRatio
             }
         }
+    }
+}
+
+extension PlayerManager {
+    func findCaptionCue(at time: TimeInterval) -> CaptionCue? {
+        var lo = 0, hi = captionCues.count
+        while lo < hi {
+            let mid = (lo + hi) / 2
+            if captionCues[mid].startTime <= time { lo = mid + 1 } else { hi = mid }
+        }
+        let idx = lo - 1
+        guard idx >= 0 else { return nil }
+        let cue = captionCues[idx]
+        return cue.endTime > time ? cue : nil
     }
 }
 

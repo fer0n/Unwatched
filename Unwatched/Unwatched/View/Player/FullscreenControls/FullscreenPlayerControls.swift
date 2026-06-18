@@ -13,8 +13,8 @@ struct FullscreenPlayerControls: View {
     var arrowEdge: Edge
     @State var sleepTimerVM: SleepTimerViewModel
     let showLeft: Bool
-    /// Enables the translucent glass + primary-color look when the controls overlap the video.
-    var transparent: Bool = false
+    /// Use the secondary color for the buttons (landscape) instead of primary (portrait overlay).
+    var secondary: Bool = false
 
     var body: some View {
         let size: CGFloat = 32
@@ -101,7 +101,7 @@ struct FullscreenPlayerControls: View {
         .foregroundStyle(Color.neutralAccentColor)
         .fontWeight(.bold)
         .environment(\.colorScheme, .dark)
-        .environment(\.playerControlsTransparent, transparent)
+        .environment(\.playerControlsSecondary, secondary)
         .padding(.vertical)
         .frame(minWidth: 35)
         .preferredColorScheme(.dark)

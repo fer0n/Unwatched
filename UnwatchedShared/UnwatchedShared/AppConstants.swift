@@ -144,6 +144,10 @@ public struct Const {
     /// Time in seconds before fullscreen controls are automatically hidden
     public static let controlsAutoHideDebounce: Double = 2.5
 
+    /// Time in seconds before the scrubber is hidden after a seek (shorter than the
+    /// regular controls debounce so it disappears quickly once seeking stops)
+    public static let seekScrubberAutoHideDebounce: Double = 0.75
+
     /// Number of notifications that will be sent at once per inbox/queue
     public static let simultaneousNotificationsLimit = 1
 
@@ -327,6 +331,8 @@ public struct Const {
 
     public static let videoListFormat = "videoListFormat"
     public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
+
+    public static let playerType = "playerType"
 }
 
 public extension Const {
