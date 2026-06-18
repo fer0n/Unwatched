@@ -89,49 +89,11 @@ struct UrlService {
     }
 
     static func getYoutubeIdFromUrl(url: URL) -> String? {
-        // https://m.youtube.com/shorts/jH_QIBtX1gY
-        // https://www.youtube.com/watch?v=epBbbysk5cU
-        // https://www.youtube.com/watch/?v=epBbbysk5cU
-        // https://piped.video/watch?v=VZIm_2MgdeA
-        // https://m.youtube.com/watch?v=Sa-FI9exq8o&pp=ygUTRGV2aWwgR2VvcmdpYSBjb3Zlcg%3D%3D
-        let regex
-            = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\/?\?v=)|(?:shorts\/))([^\s\/\?\&\n]+))"#
-        if let res = url.absoluteString.matching(regex: regex) {
-            return res
-        }
-
-        // https://youtu.be/dtp6b76pMak
-        let shortRegex = #"(?:https\:\/\/)?(?:www\.)?youtu\.be\/([^\s\/\?\n]+)"#
-        if let res = url.absoluteString.matching(regex: shortRegex) {
-            return res
-        }
-
-        // https://www.youtube.com/live/l6p4bWw_oEk?t=1h54m11s
-
-        // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
-        let embedOrLiveRegex = #"(?:https:\/\/)?(?:www\.)?youtube\.com\/(?:live|embed)\/([^\s\/\?\n]+)"#
-        if let res = url.absoluteString.matching(regex: embedOrLiveRegex) {
-            return res
-        }
-
-        // swiftlint:disable:next line_length
-        // https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.youtube.com/watch%3Fv%3D1K5oDtVAYzk&ved=2ahUKEwjTwKmPx6SLAxUHTDABHQ0WDRsQwqsBegQIYxAG&usg=AOvVaw2wqHdPMbGG4kUgVDx4nR-w
-        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        if let encodedUrl = urlComponents?.queryItems?.first(where: { $0.name == "url" })?.value,
-           let decodedUrl = encodedUrl.removingPercentEncoding,
-           let actualUrl = URL(string: decodedUrl) {
-            let urlComponents = URLComponents(url: actualUrl, resolvingAgainstBaseURL: false)
-            if let id = urlComponents?.queryItems?.first(where: { $0.name == "v" })?.value {
-                return id
-            }
-        }
-
-        return nil
+        YoutubeUrlParser.getYoutubeId(from: url)
     }
 
     static func isYtShortUrl(url: URL) -> Bool {
-        // https://www.youtube.com/shorts/rCllEeHXjUw
-        return url.absoluteString.contains("/shorts/")
+        YoutubeUrlParser.isShort(url)
     }
 
     enum ThumbnailSize {
@@ -233,19 +195,11 @@ struct UrlService {
     }
 
     static func getPlaylistIdFromUrl(_ url: URL) -> String? {
-        getPlaylistIdFromUrl(url.absoluteString)
+        YoutubeUrlParser.getPlaylistId(from: url)
     }
 
     static func getPlaylistIdFromUrl(_ url: String) -> String? {
-        // https://www.youtube.com/feeds/videos.xml?playlist_id=PLKp8CenWaxrBvyoP7cq3ESrXhnS7yGaTh
-        if let playlistId = url.matching(regex: #"\/videos\.xml\?playlist_id=([^\s\/\?\n#]+)"#) {
-            return playlistId
-        }
-        // https://www.youtube.com/playlist?list=PL6BHqJ_7o92sPDB2UpgWBYdeyeSs-pc8_
-        if let playlistId = url.matching(regex: #"\/playlist\?list=([^\s\/\?\n#]+)"#) {
-            return playlistId
-        }
-        return nil
+        YoutubeUrlParser.getPlaylistId(from: url)
     }
 
     static func getPlaylistFeedUrl(_ playlistId: String) throws -> URL {
