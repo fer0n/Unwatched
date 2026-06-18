@@ -137,7 +137,6 @@ struct AVPlayerView: View {
                 scrubberVM.handleTemporarySpeedChanged(active: speed != nil)
             }
             .onChange(of: player.seekAbsolute) { vm.applyAbsoluteSeek() }
-            .onChange(of: player.seekRelative) { vm.applyRelativeSeek() }
             .onChange(of: player.playbackSpeed) { vm.handlePlaybackSpeedChange() }
     }
 

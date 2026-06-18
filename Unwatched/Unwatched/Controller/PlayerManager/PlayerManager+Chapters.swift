@@ -257,6 +257,45 @@ extension PlayerManager {
         }
     }
 
+    /// When seeking backward over inactive chapters, skips them entirely so the user
+    /// only consumes time in active chapters. Mirrors the JS `smartSeekRelative` logic.
+    @MainActor
+    func chapterAwareSeekTarget(from base: Double, offset: Double) -> Double {
+        guard offset < 0,
+              let chapters = video?.sortedChapters,
+              chapters.contains(where: { !$0.isActive }) else {
+            return base + offset
+        }
+
+        var remaining = -offset
+        var cursor = base
+
+        var idx = -1
+        for pos in stride(from: chapters.count - 1, through: 0, by: -1) {
+            if chapters[pos].startTime <= cursor {
+                idx = pos
+                break
+            }
+        }
+
+        while remaining > 0 && idx >= 0 {
+            let chapter = chapters[idx]
+            guard chapter.isActive else {
+                cursor = chapter.startTime
+                idx -= 1
+                continue
+            }
+            let available = max(0, cursor - chapter.startTime)
+            if remaining <= available {
+                return cursor - remaining
+            }
+            remaining -= available
+            cursor = chapter.startTime
+            idx -= 1
+        }
+        return max(0, cursor - remaining)
+    }
+
     @MainActor
     func ensureStartPositionWorksWithChapters(_ time: Double) -> Double {
         guard let video = video else {

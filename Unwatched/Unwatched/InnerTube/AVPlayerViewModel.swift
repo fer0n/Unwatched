@@ -69,7 +69,6 @@ final class AVPlayerViewModel {
                 guard let self else { return }
                 let seekInFlight = seekAnchor.time != nil
                     || player.seekAbsolute != nil
-                    || player.seekRelative != nil
                 if player.isPlaying {
                     if !seekInFlight { player.monitorChapters(time: seconds) }
                     timeObserverTickCount += 1
@@ -218,27 +217,6 @@ final class AVPlayerViewModel {
         // Keep the scrubber in sync immediately (see applyRelativeSeek).
         player.currentTime = time
         updateNowPlayingInfo(elapsed: time)
-    }
-
-    @MainActor
-    func applyRelativeSeek() {
-        guard let offset = player.seekRelative else { return }
-        let raw = avPlayer.currentTime().seconds
-        let base = seekAnchor.time ?? ((raw.isNaN || raw.isInfinite) ? 0 : raw)
-        let target = max(0, base + offset)
-        seekAnchor.time = target
-        let anchor = seekAnchor
-        avPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600),
-                      toleranceBefore: .zero, toleranceAfter: .zero) { finished in
-            if finished, anchor.time == target { anchor.time = nil }
-        }
-        player.seekRelative = nil
-        // Reflect the seek target on the scrubber immediately; otherwise it trails until
-        // the periodic time observer catches up (~1s), lagging behind continuous double-taps.
-        withAnimation(.seekScrubber) {
-            player.currentTime = target
-        }
-        updateNowPlayingInfo(elapsed: target)
     }
 
     @MainActor

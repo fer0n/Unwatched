@@ -32,7 +32,6 @@ import UnwatchedShared
     var transcriptUrl: String?
 
     var seekAbsolute: Double?
-    var seekRelative: Double?
     var availableAudioLanguages: [(code: String, name: String)] = []
     var selectedAudioLanguage: String = ""
     var availableVideoQualities: [(height: Int, label: String)] = []

@@ -215,11 +215,6 @@ struct PlayerWebView: PlatformViewRepresentable {
             player.seekAbsolute = nil
         }
 
-        if let seekRel = player.seekRelative {
-            Log.info("SEEK REL")
-            evaluateJavaScript(uiView, getSeekRelScript(seekRel))
-            player.seekRelative = nil
-        }
     }
 
     func handleQueueVideo(_ prev: PreviousState, _ uiView: WKWebView) {

@@ -152,12 +152,12 @@ extension PlayerManager {
     @MainActor
     func seek(backward: Bool, _ seconds: Double) -> Bool {
         if video != nil {
-            let seek = backward ? -seconds : seconds
-            seekRelative = seek
+            let offset = backward ? -seconds : seconds
+            let base = currentTime ?? 0
+            let target = max(0, chapterAwareSeekTarget(from: base, offset: offset))
+            seekAbsolute = target
+            currentTime = target
             updateVideoEnded()
-            if !isPlaying {
-                currentTime? += seek
-            }
             return true
         }
         return false
