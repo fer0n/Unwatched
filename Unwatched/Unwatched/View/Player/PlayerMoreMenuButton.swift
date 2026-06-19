@@ -62,7 +62,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         }
                     }
                 } label: {
-                    Label("videoQuality", systemImage: "film")
+                    Label("videoQuality", systemImage: "film.fill")
                 }
             }
 
@@ -89,7 +89,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         }
                     }
                 } label: {
-                    Label("captions", systemImage: "captions.bubble")
+                    Label("captions", systemImage: "captions.bubble.fill")
                 }
             }
 
@@ -113,6 +113,21 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             )
 
             Divider()
+            Menu {
+                ForEach(PlayerTypeSetting.allCases, id: \.self) { type in
+                    Button {
+                        playerType = type
+                    } label: {
+                        if type == playerType {
+                            Label(type.description, systemImage: "checkmark")
+                        } else {
+                            Text(type.description)
+                        }
+                    }
+                }
+            } label: {
+                Label("playerType", systemImage: "play.rectangle.on.rectangle.fill")
+            }
             ReloadPlayerButton()
             Divider()
 

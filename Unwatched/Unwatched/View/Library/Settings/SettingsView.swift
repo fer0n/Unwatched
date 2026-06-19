@@ -25,12 +25,12 @@ struct SettingsView: View {
                         Label("generalSettings", systemImage: Const.settingsViewSF)
                     }
 
-                    NavigationLink(value: LibraryDestination.settingsNotifications) {
-                        Label("notifications", systemImage: Const.notificationsSettingsSF)
-                    }
-
                     NavigationLink(value: LibraryDestination.settingsPlayback) {
                         Label("playback", systemImage: Const.playbackSettingsSF)
+                    }
+
+                    NavigationLink(value: LibraryDestination.settingsNotifications) {
+                        Label("notifications", systemImage: Const.notificationsSettingsSF)
                     }
 
                     NavigationLink(value: LibraryDestination.filter) {
