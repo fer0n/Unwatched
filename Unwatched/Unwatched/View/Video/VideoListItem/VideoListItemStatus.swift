@@ -25,7 +25,7 @@ struct VideoListItemStatus: View {
            let status = statusInfo.status {
             Image(systemName: status)
                 .resizable()
-                .foregroundStyle(.white, statusInfo.color.myMix(with: .black, by: 0.1))
+                .foregroundStyle(.white, statusInfo.color.mix(with: .black, by: 0.1))
                 .frame(width: size, height: size)
                 .accessibilityLabel("videoStatus")
                 #if os(macOS)
@@ -55,7 +55,7 @@ struct VideoListItemStatus: View {
                 return ("clock.circle.fill", .orange)
             }
             if watched == true {
-                return (Const.watchedSF, defaultColor.myMix(with: .black, by: 0.3))
+                return (Const.watchedSF, defaultColor.mix(with: .black, by: 0.3))
             }
         }
         return nil

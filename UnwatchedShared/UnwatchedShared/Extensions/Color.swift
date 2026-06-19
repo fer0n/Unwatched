@@ -9,10 +9,6 @@ public extension Color {
     var isBlack: Bool {
         self == .black
     }
-    
-    func myMix(with color: Color, by percentage: Double) -> Color {
-        return self.mix(with: color, by: percentage)
-    }
 }
 
 extension Color {

@@ -129,7 +129,7 @@ struct SettingsView: View {
                     }
                 }
                 .listRowInsets(EdgeInsets())
-                .listRowBackground(theme.color.myMix(with: .black, by: 0.4))
+                .listRowBackground(theme.color.mix(with: .black, by: 0.4))
                 .foregroundStyle(theme.darkContrastColor)
 
                 NavigationLink(value: LibraryDestination.debug) {

@@ -45,6 +45,6 @@ struct TrailingSwipeMoreMenu: View {
         } label: {
             Image(systemName: "ellipsis")
         }
-        .tint(theme.color.myMix(with: Color.black, by: 0.5))
+        .tint(theme.color.mix(with: Color.black, by: 0.5))
     }
 }

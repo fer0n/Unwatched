@@ -354,20 +354,20 @@ struct LeadingSwipeActionsView: View {
                    label: {
                     Image(systemName: Const.queueNextSF)
                    })
-                .tint(theme.color.myMix(with: Color.black, by: 0.1))
+                .tint(theme.color.mix(with: Color.black, by: 0.1))
                 .accessibilityLabel("queueNext")
             Button(role: config.queueRole,
                    action: addVideoToBottomQueue,
                    label: {
                     Image(systemName: Const.queueLastSF)
                    })
-                .tint(theme.color.myMix(with: Color.black, by: 0.3))
+                .tint(theme.color.mix(with: Color.black, by: 0.3))
                 .accessibilityLabel("queueLast")
             if config.isNew == true {
                 Button(action: toggleIsNew) {
                     Image(systemName: Const.removeNewSF)
                 }
-                .tint(theme.color.myMix(with: Color.black, by: 0.5))
+                .tint(theme.color.mix(with: Color.black, by: 0.5))
                 .accessibilityLabel("removeIsNew")
             }
         }
@@ -402,7 +402,7 @@ struct TrailingSwipeActionsView: View {
                     action: clearVideoEverywhere
                 )
                 .labelStyle(.iconOnly)
-                .tint(theme.color.myMix(with: Color.black, by: 0.9))
+                .tint(theme.color.mix(with: Color.black, by: 0.9))
             }
             #if os(iOS)
             TrailingSwipeMoreMenu(
@@ -434,7 +434,7 @@ struct TrailingSwipeActionsView: View {
             } label: {
                 Image(Const.videoDescriptionSF)
             }
-            .tint(theme.color.myMix(with: Color.black, by: 0.3))
+            .tint(theme.color.mix(with: Color.black, by: 0.3))
             .accessibilityLabel("videoDescription")
         }
     }

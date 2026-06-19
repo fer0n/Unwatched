@@ -61,7 +61,7 @@ public enum ThemeColor: Int, CaseIterable, Sendable {
         if self == .blackWhite {
             return .automaticWhite
         }
-        return color.myMix(with: .black, by: 0.2)
+        return color.mix(with: .black, by: 0.2)
     }
 
     public var darkContrastColor: Color {

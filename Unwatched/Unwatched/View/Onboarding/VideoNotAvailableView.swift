@@ -47,7 +47,7 @@ struct VideoNotAvailableView: View {
                         LinearGradient(
                             colors: [
                                 theme.darkColor,
-                                .black.myMix(
+                                .black.mix(
                                     with: theme.darkColor,
                                     by: 0.8
                                 ),
