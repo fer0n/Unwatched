@@ -18,6 +18,7 @@ struct PlayerScrubber: View {
     @State private var isGestureActive = false
     @State private var gestureScrubberWidth: CGFloat = 0
     @State private var cachedChapterTimes: [Double] = []
+    @State private var cachedSnapTimeThreshold: Double = 0
     @State private var snappedChapterTime: Double?
 
     init(
@@ -56,7 +57,7 @@ struct PlayerScrubber: View {
 
     let enableTapScrubbing: Bool = Device.isMac
     var scrubberHeight: CGFloat
-    let chapterSnapThreshold: Double = 8.0
+    let chapterSnapPixels: CGFloat = 5
 
     var body: some View {
         let boundedPosition = getWithinBounds(draggedScrubberWidth, maxValue: scrubberWidth)
@@ -213,7 +214,7 @@ struct PlayerScrubber: View {
         if isGestureActive,
            let rawTime = getTimeFromPosition(rawPosition),
            let duration = player.video?.duration {
-            let snappedTime = snapToChapter(rawTime, duration: duration)
+            let snappedTime = snapToChapter(rawTime)
             return CGFloat(snappedTime / duration) * gestureScrubberWidth
         }
         return rawPosition
@@ -262,6 +263,8 @@ struct PlayerScrubber: View {
         if initialDragPosition == nil {
             gestureScrubberWidth = scrubberWidth
             cachedChapterTimes = player.video?.sortedChapters.map(\.startTime) ?? []
+            let duration = player.video?.duration ?? 1
+            cachedSnapTimeThreshold = Double(chapterSnapPixels / scrubberWidth) * duration
             onScrubbingChanged?(true)
             if enableTapScrubbing {
                 if value.translation == .zero {
@@ -271,7 +274,7 @@ struct PlayerScrubber: View {
                        let newTime = getTimeFromPosition(position) {
                         let floatDuration = CGFloat(duration)
                         let cleanedTime = Double(getWithinBounds(newTime, maxValue: floatDuration))
-                        let snappedTime = snapToChapter(cleanedTime, duration: duration)
+                        let snappedTime = snapToChapter(cleanedTime)
                         player.seek(to: snappedTime)
                         player.currentTime = snappedTime
                         player.handleChapterChange()
@@ -313,14 +316,15 @@ struct PlayerScrubber: View {
         isGestureActive = false
         dragOffset = 0
         cachedChapterTimes = []
+        cachedSnapTimeThreshold = 0
         snappedChapterTime = nil
         onScrubbingChanged?(false)
     }
 
-    func snapToChapter(_ time: Double, duration: Double) -> Double {
-        guard !cachedChapterTimes.isEmpty else { return time }
+    func snapToChapter(_ time: Double) -> Double {
+        guard !cachedChapterTimes.isEmpty, cachedSnapTimeThreshold > 0 else { return time }
         guard let closest = cachedChapterTimes.min(by: { abs($0 - time) < abs($1 - time) }),
-              abs(closest - time) <= chapterSnapThreshold else { return time }
+              abs(closest - time) <= cachedSnapTimeThreshold else { return time }
         return closest
     }
 
