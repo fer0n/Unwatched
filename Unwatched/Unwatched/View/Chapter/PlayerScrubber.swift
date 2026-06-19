@@ -121,6 +121,7 @@ struct PlayerScrubber: View {
                         )
                     }
                 }
+                .compositingGroup()
                 .frame(height: currentScrubberHeight)
                 .clipShape(clipShape)
                 .shadow(color: Color.black.opacity(0.15), radius: 4)
