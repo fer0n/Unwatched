@@ -208,27 +208,31 @@ struct PlayerScrubber: View {
         getCurrentPosition() ?? 0
     }
 
+    /// The time currently targeted by the gesture, snapped to a nearby chapter.
+    /// The raw position is mapped to time using the cached `gestureScrubberWidth`
+    /// so the time stays stable while the track resizes (e.g. the inline time
+    /// gaining a digit). Returns nil when not actively scrubbing.
+    var scrubbingTime: Double? {
+        guard isGestureActive, !isInactive else { return nil }
+        let rawPosition = (initialDragPosition ?? currentScrubberWidth) + dragOffset
+        guard let rawTime = getTimeFromPosition(rawPosition),
+              let duration = player.video?.duration else { return nil }
+        let snapped = snapToChapter(rawTime)
+        return Double(getWithinBounds(CGFloat(snapped), maxValue: CGFloat(duration)))
+    }
+
     var draggedScrubberWidth: CGFloat {
         if isInactive { return currentScrubberWidth }
-        let rawPosition = (initialDragPosition ?? currentScrubberWidth) + dragOffset
-        if isGestureActive,
-           let rawTime = getTimeFromPosition(rawPosition),
-           let duration = player.video?.duration {
-            let snappedTime = snapToChapter(rawTime)
-            return CGFloat(snappedTime / duration) * gestureScrubberWidth
+        // Render the fill from the (snapped) time against the *live* width so it
+        // stays aligned with the chapter indicators even as the track resizes.
+        if let scrubbingTime, let duration = player.video?.duration, duration > 0 {
+            return CGFloat(scrubbingTime / duration) * scrubberWidth
         }
-        return rawPosition
+        return (initialDragPosition ?? currentScrubberWidth) + dragOffset
     }
 
     var currentTime: Double? {
-        if isGestureActive,
-           let time = getTimeFromPosition(draggedScrubberWidth),
-           let duration = player.video?.duration {
-            let value = getWithinBounds(time, maxValue: CGFloat(duration))
-            return Double(value)
-        }
-
-        return player.currentTime
+        scrubbingTime ?? player.currentTime
     }
 
     var formattedDuration: String {
