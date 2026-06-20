@@ -903,6 +903,7 @@ final class ChapterServiceTests: XCTestCase {
                 Chapter 3: 30:22
                 """,
                 [
+                    SendableChapter(title: nil, startTime: 0, endTime: 10 * 60 + 13, category: .generated),
                     SendableChapter(title: "Chapter 1", startTime: 10 * 60 + 13, endTime: 20 * 60 + 45),
                     SendableChapter(title: "Chapter 2", startTime: 20 * 60 + 45, endTime: 30 * 60 + 22),
                     SendableChapter(title: "Chapter 3", startTime: 30 * 60 + 22, endTime: nil)
@@ -1145,7 +1146,7 @@ final class ChapterServiceTests: XCTestCase {
                 8:00 Encounter: Dinosaurs
                 """,
                 [
-                    // SendableChapter(title: "Intro", startTime: 0, endTime: 1 * 60 + 30),
+                    SendableChapter(title: nil, startTime: 0, endTime: 1 * 60 + 56, category: .generated),
                     SendableChapter(
                         title: "Dino Hab",
                         startTime: 1 * 60 + 56,
@@ -1242,6 +1243,7 @@ final class ChapterServiceTests: XCTestCase {
                 2:34:56 - 3:00:00  Long video chapter two
                 """,
                 [
+                    SendableChapter(title: nil, startTime: 0, endTime: 1 * 3600 + 23 * 60 + 45, category: .generated),
                     SendableChapter(title: "Long video chapter one", startTime: 1 * 3600 + 23 * 60 + 45, endTime: 2 * 3600 + 34 * 60 + 56),
                     SendableChapter(title: "Long video chapter two", startTime: 2 * 3600 + 34 * 60 + 56, endTime: nil)
                 ]
