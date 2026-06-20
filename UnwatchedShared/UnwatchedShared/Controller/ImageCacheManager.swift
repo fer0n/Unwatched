@@ -56,6 +56,35 @@ import OSLog
     }
 }
 
+/// Thread-safe in-memory cache of **decoded** images, keyed by URL string.
+///
+/// `ImageCacheManager` only buffers raw image `Data` awaiting persistence, so without this
+/// every `ImageService.getImage` call re-runs `PlatformImage(data:)` — re-decoding the same
+/// bytes each time a cell is recycled while scrolling. `NSCache` is thread-safe and evicts
+/// automatically under memory pressure, bounded here by `totalCostLimit`.
+public final class DecodedImageCache: @unchecked Sendable {
+    private let cache = NSCache<NSString, PlatformImage>()
+
+    public init(totalCostLimit: Int = 100 * 1024 * 1024) {
+        cache.totalCostLimit = totalCostLimit
+    }
+
+    public subscript(key: String) -> PlatformImage? {
+        get { cache.object(forKey: key as NSString) }
+        set {
+            guard let newValue else {
+                cache.removeObject(forKey: key as NSString)
+                return
+            }
+            cache.setObject(newValue, forKey: key as NSString, cost: newValue.decodedByteCost)
+        }
+    }
+
+    public func removeAll() {
+        cache.removeAllObjects()
+    }
+}
+
 public struct ImageCacheInfo: Sendable {
     public var url: URL
     public var data: Data

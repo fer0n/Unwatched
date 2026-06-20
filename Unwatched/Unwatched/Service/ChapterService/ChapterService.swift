@@ -31,7 +31,8 @@ struct ChapterService {
                 return []
             }
 
-            let chaptersWithDuration = updateDurationAndEndTime(in: chapters, videoDuration: videoDuration)
+            let chaptersWithBeginning = addBeginningChapterIfNeeded(to: chapters)
+            let chaptersWithDuration = updateDurationAndEndTime(in: chaptersWithBeginning, videoDuration: videoDuration)
             return chaptersWithDuration
         } catch {
             Log.error("Error creating regex: \(error)")
@@ -76,6 +77,25 @@ struct ChapterService {
             }
         }
         return chapters
+    }
+
+    /// Ensures there's always a chapter starting at the beginning of the video.
+    /// Video descriptions often don't define a chapter at 0:00, so the time before
+    /// the first listed chapter would otherwise be left uncovered.
+    static func addBeginningChapterIfNeeded(to chapters: [SendableChapter]) -> [SendableChapter] {
+        guard let earliest = chapters.min(by: { $0.startTime < $1.startTime }) else {
+            return chapters
+        }
+        if earliest.startTime <= Const.chapterTimeTolerance {
+            return chapters
+        }
+
+        let beginning = SendableChapter(
+            title: nil,
+            startTime: 0,
+            category: .generated
+        )
+        return [beginning] + chapters
     }
 
     static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {

@@ -64,6 +64,11 @@ public extension UIImage {
         return cgImage.extractVibrantAccentColor()
     }
 
+    /// Approximate decoded size in bytes, used as the `NSCache` cost in `DecodedImageCache`.
+    var decodedByteCost: Int {
+        guard let cgImage else { return 1 }
+        return cgImage.bytesPerRow * cgImage.height
+    }
 }
 #endif
 
@@ -83,6 +88,12 @@ public extension NSImage {
     func extractVibrantAccentColor() -> Color? {
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
         return cgImage.extractVibrantAccentColor()
+    }
+
+    /// Approximate decoded size in bytes, used as the `NSCache` cost in `DecodedImageCache`.
+    var decodedByteCost: Int {
+        guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else { return 1 }
+        return cgImage.bytesPerRow * cgImage.height
     }
 }
 

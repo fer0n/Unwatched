@@ -9,6 +9,10 @@ import SwiftUI
 import OSLog
 
 public struct ImageService {
+    /// Process-wide cache of decoded images, so a cache hit skips re-running `PlatformImage(data:)`.
+    /// Cleared on explicit image deletion (see `deleteImages`/`deleteAllImages`/`cleanupImages`).
+    public static let decodedImageCache = DecodedImageCache()
+
     public static func persistImages(
         cache: [String: ImageCacheInfo]
     ) async {
@@ -75,6 +79,7 @@ public struct ImageService {
             let imageContainer = DataProvider.shared.localCacheContainer
             let context = ModelContext(imageContainer)
             for url in urls {
+                decodedImageCache[url.absoluteString] = nil
                 if let image = getCachedImage(for: url, context) {
                     context.delete(image)
                 }
@@ -100,6 +105,7 @@ public struct ImageService {
             for image in images {
                 context.delete(image)
             }
+            decodedImageCache.removeAll()
             try context.save()
         }
     }
@@ -118,6 +124,9 @@ public struct ImageService {
             let images = try context.fetch(fetch)
             let count = images.count
             for image in images {
+                if let imageUrl = image.imageUrl {
+                    decodedImageCache[imageUrl.absoluteString] = nil
+                }
                 context.delete(image)
             }
             Log.info("cleanupImages: \(count) images older than \(days) days")
@@ -269,16 +278,20 @@ public struct ImageService {
         _ url: URL,
         _ cacheManager: ImageCacheManager
     ) -> Task<(PlatformImage?, ImageCacheInfo), Error> {
-        let cacheInfo = cacheManager[url.absoluteString]
+        let key = url.absoluteString
+        let cacheInfo = cacheManager[key]
+        let decodedImageCache = ImageService.decodedImageCache
 
         return Task.detached {
             // load from memory
-            if var cacheInfo {
-                #if os(iOS)
-                return (UIImage(data: cacheInfo.data), cacheInfo)
-                #elseif os(macOS)
-                return (NSImage(data: cacheInfo.data), cacheInfo)
-                #endif
+            if let cacheInfo {
+                // reuse an already-decoded image instead of re-decoding the same bytes
+                if let decoded = decodedImageCache[key] {
+                    return (decoded, cacheInfo)
+                }
+                let image = PlatformImage(data: cacheInfo.data)
+                if let image { decodedImageCache[key] = image }
+                return (image, cacheInfo)
             }
 
             // fetch from DB
@@ -293,11 +306,9 @@ public struct ImageService {
                     persistImage: false,
                     persistColor: false
                 )
-                #if os(iOS)
-                return (UIImage(data: imageData), imageInfo)
-                #elseif os(macOS)
-                return (NSImage(data: imageData), imageInfo)
-                #endif
+                let image = PlatformImage(data: imageData)
+                if let image { decodedImageCache[key] = image }
+                return (image, imageInfo)
             }
 
             // fetch online
@@ -307,12 +318,9 @@ public struct ImageService {
                 data: imageData,
                 persistImage: true
             )
-
-            #if os(iOS) || os(tvOS) || os(visionOS)
-            return (UIImage(data: imageData), imageInfo)
-            #elseif os(macOS)
-            return (NSImage(data: imageData), imageInfo)
-            #endif
+            let image = PlatformImage(data: imageData)
+            if let image { decodedImageCache[key] = image }
+            return (image, imageInfo)
         }
     }
 
