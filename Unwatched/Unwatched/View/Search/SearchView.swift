@@ -207,7 +207,9 @@ struct SearchView: View {
                 .font(.footnote)
             title
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.secondary)
+        .contentShape(Rectangle())
     }
 
     var resultsList: some View {
