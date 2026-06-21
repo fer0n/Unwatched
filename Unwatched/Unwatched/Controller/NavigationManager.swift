@@ -208,8 +208,32 @@ import UnwatchedShared
 
     @MainActor
     func openUrlInApp(_ url: BrowserUrl?) {
-        // Links always open in the in-app browser sheet. (The configurable tab/sheet/
-        // external modes were removed; the native Search tab covers searching YouTube.)
+        // "Open Links" setting: route "View on YouTube" links to the external browser
+        // when chosen, do nothing when disabled, otherwise show them in the in-app
+        // browser sheet. The Search tab's result fallback bypasses this and always uses
+        // the in-app browser directly.
+        let browserMode = BrowserDisplayMode.setting
+
+        if browserMode == .disabled {
+            return
+        }
+
+        if browserMode == .external, let resolvedUrl = url?.getUrl {
+            let player = PlayerManager.shared
+            let enablePip = !player.pipEnabled && player.isPlaying
+            if enablePip {
+                // Keep playback visible while leaving the app.
+                player.setPip(true)
+                Task {
+                    try? await Task.sleep(for: .seconds(0.2))
+                    UrlService.open(resolvedUrl)
+                }
+            } else {
+                UrlService.open(resolvedUrl)
+            }
+            return
+        }
+
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if let url {
             BrowserManager.shared.loadUrl(url.getUrl)

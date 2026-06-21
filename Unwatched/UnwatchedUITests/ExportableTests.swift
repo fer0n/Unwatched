@@ -221,7 +221,7 @@ class ExportableTests: XCTestCase {
                 Const.showTabBarLabels: false,
                 Const.showTabBarBadge: false,
                 Const.themeColor: ThemeColor.red.rawValue,
-                Const.browserDisplayMode: BrowserDisplayMode.disabled.rawValue,
+                Const.browserDisplayMode: BrowserDisplayMode.external.rawValue,
 
                 // User Data
                 Const.automaticBackups: false,

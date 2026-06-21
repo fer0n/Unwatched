@@ -17,6 +17,8 @@ struct ChannelPreviewView: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(RefreshManager.self) var refresher
 
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
+
     let sub: SendableSubscription
 
     @State private var videos: [SendableVideo] = []
@@ -191,7 +193,7 @@ struct ChannelPreviewView: View {
                 .buttonStyle(CapsuleButtonStyle())
                 .disabled(subManager.isLoading || (sub.youtubeChannelId == nil && sub.youtubePlaylistId == nil))
 
-                if let youtubeUrl {
+                if browserDisplayMode != .disabled, let youtubeUrl {
                     Button {
                         navManager.openUrlInApp(.url(youtubeUrl.absoluteString))
                     } label: {

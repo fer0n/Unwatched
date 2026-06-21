@@ -9,6 +9,7 @@ import UnwatchedShared
 struct PlayerMoreMenuButton<Content>: View where Content: View {
     @AppStorage(Const.surroundingEffect) var surroundingEffect = true
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -131,7 +132,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
             ReloadPlayerButton()
             Divider()
 
-            if let url = player.video?.url {
+            if browserDisplayMode != .disabled, let url = player.video?.url {
                 Button {
                     navManager.showMenu = true
                     openUrl(url)

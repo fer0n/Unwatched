@@ -11,6 +11,8 @@ struct SubscriptionInfoDetails: View {
     @Environment(NavigationManager.self) var navManager
     @Environment(\.modelContext) var modelContext
 
+    @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
+
     @Bindable var subscription: Subscription
     @Binding var requiresUnsubscribe: Bool
     @Binding var showFilter: Bool
@@ -38,21 +40,23 @@ struct SubscriptionInfoDetails: View {
                         .frame(maxHeight: .infinity)
                         .buttonStyle(CapsuleButtonStyle())
 
-                    Button {
-                        if let url = UrlService.getYoutubeUrl(
-                            userName: subscription.youtubeUserName,
-                            channelId: subscription.youtubeChannelId,
-                            playlistId: subscription.youtubePlaylistId) {
-                            navManager.openUrlInApp(.url(url))
+                    if browserDisplayMode != .disabled {
+                        Button {
+                            if let url = UrlService.getYoutubeUrl(
+                                userName: subscription.youtubeUserName,
+                                channelId: subscription.youtubeChannelId,
+                                playlistId: subscription.youtubePlaylistId) {
+                                navManager.openUrlInApp(.url(url))
+                            }
+                        } label: {
+                            Image(systemName: Const.youtubeSF)
+                                .fontWeight(.black)
+                                .padding(10)
+                                .frame(maxHeight: .infinity)
                         }
-                    } label: {
-                        Image(systemName: Const.youtubeSF)
-                            .fontWeight(.black)
-                            .padding(10)
-                            .frame(maxHeight: .infinity)
+                        .accessibilityLabel("browser")
+                        .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
-                    .accessibilityLabel("browser")
-                    .buttonStyle(CapsuleButtonStyle(primary: false))
 
                     if let shareURL {
                         ShareLink(item: shareURL) {

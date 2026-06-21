@@ -61,7 +61,7 @@ extension Const {
         Const.surroundingEffect: true,
 
         // Appearance
-        Const.browserDisplayMode: BrowserDisplayMode.external.rawValue,
+        Const.browserDisplayMode: BrowserDisplayMode.inApp.rawValue,
         Const.showTabBarLabels: true,
         Const.showTabBarBadge: true,
         Const.hidePlayerPageIndicator: false,
