@@ -168,6 +168,9 @@ final class AVPlayerViewModel {
         }
 
         player.isLoading = Date()
+        // `embeddingDisabled` is a YouTube-web concept; clear any stale `true` carried over from a
+        // previous non-embed YouTube session so the native player uses the full controls layout.
+        player.embeddingDisabled = false
         player.availableAudioLanguages = []
         player.selectedAudioLanguage = ""
         player.availableVideoQualities = []
