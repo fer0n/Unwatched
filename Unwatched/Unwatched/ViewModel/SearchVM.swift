@@ -146,7 +146,7 @@ final class SearchVM {
     func updateSuggestions() {
         suggestionsTask?.cancel()
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty, trimmed != activeQuery else {
+        guard !trimmed.isEmpty else {
             suggestions = []
             return
         }

@@ -54,10 +54,9 @@ struct SearchView: View {
             showBrowserFallback = false
             if newValue.isEmpty {
                 vm.clear()
-            } else {
-                vm.updateSuggestions()
             }
         }
+
         // tap-to-play adds to the queue without an onChange callback — refresh when
         // the now-playing video changes so the status badge catches up.
         .onChange(of: player.video?.youtubeId) {
@@ -129,7 +128,7 @@ struct SearchView: View {
                     }
                 }
             }
-        } else if !vm.hasSearched {
+        } else if !vm.hasSearched || searchFocused {
             // Suggestions/recents render inline (rather than via `.searchSuggestions`)
             // so they share the app background and look identical whether or not the
             // search field is focused — the native suggestions overlay can't be recoloured.
@@ -184,6 +183,7 @@ struct SearchView: View {
             .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
         }
         .scrollContentBackground(.hidden)
+        .task(id: vm.query) { vm.updateSuggestions() }
     }
 
     /// A tappable suggestion/recent row that runs the search for its term.
