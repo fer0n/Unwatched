@@ -4,6 +4,26 @@ import OSLog
 import UnwatchedShared
 
 extension VideoService {
+    /// Fetches a video's description (and chapters parsed from it) in the background when it
+    /// was added without one — e.g. a video added from the search tab, whose results carry no
+    /// description. Runs once at materialisation so the description is present for every action
+    /// (play, queue, swipe) and every player type. Keyed by `youtubeId` so it's safe to dispatch
+    /// from any context.
+    static func fetchDescriptionInBg(youtubeId: String) {
+        Task.detached {
+            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let didSet = await repo.fetchAndSetDescription(youtubeId: youtubeId)
+            // Refresh the player's chapter state if the backfilled video is the one playing.
+            if didSet {
+                await MainActor.run {
+                    if PlayerManager.shared.video?.youtubeId == youtubeId {
+                        PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
+                    }
+                }
+            }
+        }
+    }
+
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
         fetchDurations: Bool
@@ -399,18 +419,25 @@ extension VideoService {
             }
             // Transient (e.g. a search result): dedupe by youtubeId, otherwise
             // materialise it into the store on demand so queue/play/swipe actions work.
+            let model: Video
             if let existing = getVideo(for: video.youtubeId, modelContext: modelContext) {
-                return existing
+                model = existing
+            } else {
+                model = video.createVideo(extractChapters: ChapterService.extractChapters)
+                modelContext.insert(model)
+                associateSubscription(
+                    model,
+                    channelId: video.youtubeChannelId,
+                    feedTitle: video.feedTitle ?? video.subscription?.title,
+                    modelContext: modelContext
+                )
+                try? modelContext.save()
             }
-            let model = video.createVideo(extractChapters: ChapterService.extractChapters)
-            modelContext.insert(model)
-            associateSubscription(
-                model,
-                channelId: video.youtubeChannelId,
-                feedTitle: video.feedTitle ?? video.subscription?.title,
-                modelContext: modelContext
-            )
-            try? modelContext.save()
+            // Search results carry no description; fetch it (InnerTube, then Data API) in the
+            // background so it's present for every action and player type.
+            if model.videoDescription?.isEmpty ?? true {
+                fetchDescriptionInBg(youtubeId: model.youtubeId)
+            }
             return model
         }
         return nil

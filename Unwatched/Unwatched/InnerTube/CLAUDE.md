@@ -60,9 +60,15 @@ InnerTube/
   AVPlayerView.swift        ← Unwatched-owned
   AVPlayerViewModel.swift   ← Unwatched-owned
   WKHLSManager.swift        ← Unwatched-owned
+  InnerTubeAPI+Metadata.swift ← Unwatched-owned (InnerTubeAPI extension; not upstream)
   PlayerViewControllerRepresentable.swift
   CLAUDE.md
 ```
+
+`InnerTubeAPI+Metadata.swift` adds `fetchVideoDescription(videoId:)` — a metadata-only
+`/player` call that parses just `videoDetails.shortDescription` and never throws on
+unresolvable streams. Used to backfill descriptions for videos added without one (e.g.
+from search). Kept out of `Core/` so the upstream `InnerTubeAPI+Player.swift` stays vanilla.
 
 ### SmartTube/ intentional diffs vs upstream
 

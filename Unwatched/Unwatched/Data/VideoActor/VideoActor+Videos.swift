@@ -120,6 +120,40 @@ import UnwatchedShared
         return videos?.first
     }
 
+    /// Fetches and stores a video's description (and chapters parsed from it) when it was
+    /// created without one — e.g. a video added from search, whose results carry no
+    /// description. Prefers InnerTube's player endpoint (no Data API quota) and falls back
+    /// to the official YouTube Data API. Returns true when a description was set.
+    @discardableResult
+    func fetchAndSetDescription(youtubeId: String) async -> Bool {
+        guard let video = videoAlreadyExists(youtubeId),
+              video.videoDescription?.isEmpty ?? true else {
+            return false
+        }
+
+        var description = try? await InnerTubeAPI().fetchVideoDescription(videoId: youtubeId)
+        if description?.isEmpty ?? true {
+            description = (try? await YoutubeDataAPI.getYtVideoInfo(youtubeId))?.videoDescription
+            Log.info("fetchAndSetDescription: \(youtubeId) — InnerTube empty, Data API "
+                        + ((description?.isEmpty ?? true) ? "also empty" : "succeeded"))
+        } else {
+            Log.info("fetchAndSetDescription: \(youtubeId) — got description from InnerTube")
+        }
+        guard let description, !description.isEmpty else { return false }
+
+        video.videoDescription = description
+        let chapters = ChapterService.extractChapters(from: description, videoDuration: video.duration)
+        if !chapters.isEmpty {
+            video.chapters = chapters.map {
+                let chapter = $0.getChapter
+                modelContext.insert(chapter)
+                return chapter
+            }
+        }
+        try? modelContext.save()
+        return true
+    }
+
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
         fetchDurations: Bool
