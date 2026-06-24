@@ -391,16 +391,44 @@ import UnwatchedShared
 }
 
 extension PlayerManager {
-    func findCaptionCue(at time: TimeInterval) -> CaptionCue? {
+    /// Lead time added when looking up the active caption cue, so captions appear
+    /// slightly ahead of their start time. Cue transitions are now scheduled precisely
+    /// (see `CaptionScheduler` / the native boundary observer), so this only needs to
+    /// cover the overlay's fade-in animation rather than any polling coarseness.
+    static let captionLeadTime: TimeInterval = 0.25
+
+    /// Index of the first cue whose `startTime` is greater than `time` (upper bound).
+    private func captionUpperBound(_ time: TimeInterval) -> Int {
         var lo = 0, hi = captionCues.count
         while lo < hi {
             let mid = (lo + hi) / 2
             if captionCues[mid].startTime <= time { lo = mid + 1 } else { hi = mid }
         }
-        let idx = lo - 1
+        return lo
+    }
+
+    func findCaptionCue(at time: TimeInterval) -> CaptionCue? {
+        let idx = captionUpperBound(time) - 1
         guard idx >= 0 else { return nil }
         let cue = captionCues[idx]
         return cue.endTime > time ? cue : nil
+    }
+
+    /// The next time (in playback seconds, strictly after `time`) at which the visible
+    /// caption should change: the active cue's end, or the following cue's start,
+    /// whichever comes first. `nil` when no further transition exists.
+    func nextCaptionBoundary(after time: TimeInterval) -> TimeInterval? {
+        let ub = captionUpperBound(time)
+        var next: TimeInterval?
+        let activeIdx = ub - 1
+        if activeIdx >= 0, captionCues[activeIdx].endTime > time {
+            next = captionCues[activeIdx].endTime
+        }
+        if ub < captionCues.count {
+            let nextStart = captionCues[ub].startTime
+            next = next.map { min($0, nextStart) } ?? nextStart
+        }
+        return next
     }
 }
 

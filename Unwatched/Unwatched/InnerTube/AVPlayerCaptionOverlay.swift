@@ -10,6 +10,7 @@ struct PlayerCaptionOverlay: View {
     @State private var displayedLines: [String] = []
     @State private var trackFetchTask: Task<Void, Never>?
     @State private var vttFetchTask: Task<Void, Never>?
+    @State private var scheduler = CaptionScheduler()
 
     private var isNative: Bool { playerType == .native }
 
@@ -40,13 +41,34 @@ struct PlayerCaptionOverlay: View {
                 displayedLines = player.currentCaptionCue?.text.components(separatedBy: "\n") ?? []
             }
         }
-        // Custom UI: JS currentTime updates drive cue lookup.
+        // Custom UI: the ~1 Hz JS currentTime updates only re-anchor the scheduler, which
+        // then flips cues precisely on their boundaries (covers seeks too, since seeks
+        // also write currentTime).
         .onChange(of: player.currentTime) { _, t in
-            guard !isNative, let t, player.selectedCaptionTrackId != nil,
-                  !player.captionCues.isEmpty else { return }
-            let cue = player.findCaptionCue(at: t + 0.15)
-            if cue?.startTime != player.currentCaptionCue?.startTime {
-                player.currentCaptionCue = cue
+            guard !isNative, let t, player.selectedCaptionTrackId != nil else { return }
+            scheduler.sync(player: player, to: t)
+        }
+        // Custom UI: stop flipping cues while paused; re-anchor on resume.
+        .onChange(of: player.isPlaying) { _, playing in
+            guard !isNative, player.selectedCaptionTrackId != nil else { return }
+            if playing, let t = player.currentTime {
+                scheduler.sync(player: player, to: t)
+            } else {
+                scheduler.cancel()
+            }
+        }
+        // Custom UI: playback speed changes the time-to-boundary, so re-anchor.
+        .onChange(of: player.playbackSpeed) { _, _ in
+            guard !isNative, player.selectedCaptionTrackId != nil, let t = player.currentTime else { return }
+            scheduler.sync(player: player, to: t)
+        }
+        // Custom UI: (re)schedule once cues finish loading or are cleared.
+        .onChange(of: player.captionCues.count) { _, _ in
+            guard !isNative else { return }
+            if let t = player.currentTime {
+                scheduler.sync(player: player, to: t)
+            } else {
+                scheduler.cancel()
             }
         }
         // Custom UI: fetch caption tracks from InnerTube when the video changes.

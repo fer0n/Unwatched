@@ -50,6 +50,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored var pendingSeekToTime: Double?
     @ObservationIgnored var captionFetchTask: Task<Void, Never>?
     @ObservationIgnored var captionTimeObserverToken: Any?
+    @ObservationIgnored var captionSeekObserver: NSObjectProtocol?
 
     // Set by the view; called when the current video plays to end.
     @ObservationIgnored var onVideoEnded: () -> Void = {}
