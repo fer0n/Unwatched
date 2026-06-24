@@ -23,7 +23,7 @@ struct PlayerEmbeddedCustomUI: View {
     var hideMiniPlayer: Bool
     var handleMiniPlayerTap: () -> Void
 
-    @State private var scrubberVM = AVPlayerScrubberVM()
+    @State private var scrubberVM = PlayerScrubberOverlayVM()
     @State private var videoZoom: CGFloat = 1.0
     @State private var panOffset: CGSize = .zero
     @State private var isTwoFingerGesturing = false
@@ -45,6 +45,10 @@ struct PlayerEmbeddedCustomUI: View {
                     handleSwipe: handleSwipe
                 )
                 .aspectRatio(player.videoAspectRatio, contentMode: .fit)
+                .overlay {
+                    ScrubberThumbnailOverlay()
+                        .opacity(hideMiniPlayer ? 1 : 0)
+                }
                 .scaleEffect(hideMiniPlayer ? videoZoom : 1.0)
                 .offset(hideMiniPlayer ? panOffset : .zero)
                 .clipShape(RoundedRectangle(cornerRadius: Const.videoPlayerCornerRadius, style: .continuous))
@@ -75,7 +79,7 @@ struct PlayerEmbeddedCustomUI: View {
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
                 .overlay(alignment: .bottom) {
-                    AVPlayerScrubberOverlay(vm: scrubberVM)
+                    PlayerScrubberOverlay(vm: scrubberVM)
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
             }

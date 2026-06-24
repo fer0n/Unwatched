@@ -3,9 +3,9 @@ import SwiftUI
 import UnwatchedShared
 
 @Observable @MainActor
-final class AVPlayerScrubberVM {
+final class PlayerScrubberOverlayVM {
     var scrubberVisible = false
-    var isScrubbing = false
+
     @ObservationIgnored private var autoHideTask: Task<Void, Never>?
 
     var showScrubber: Bool {
@@ -52,7 +52,6 @@ final class AVPlayerScrubberVM {
     }
 
     func handleScrubbing(_ active: Bool) {
-        isScrubbing = active
         if active {
             autoHideTask?.cancel()
             autoHideTask = nil
@@ -82,8 +81,35 @@ final class AVPlayerScrubberVM {
     }
 }
 
-struct AVPlayerScrubberOverlay: View {
-    var vm: AVPlayerScrubberVM
+/// Full-bleed storyboard preview shown over the video while scrubbing. Mounted as an
+/// `.overlay` on the aspect-fit video view (like `ThumbnailPlaceholder`) so it fills the exact
+/// video bounds, with the scrubber bar layered on top. Driven by the shared provider, so any
+/// scrubber (this overlay's bar or the inline `DescriptionMiniProgressBar`) controls it.
+struct ScrubberThumbnailOverlay: View {
+    @Environment(PlayerManager.self) var player
+    private var provider: ScrubberThumbnailProvider { .shared }
+
+    var body: some View {
+        Group {
+            if provider.showThumbnail {
+                ScrubberThumbnailView(
+                    provider: provider,
+                    time: provider.previewTime,
+                    duration: player.video?.duration
+                )
+                .transition(.opacity)
+            }
+        }
+        .allowsHitTesting(false)
+        .animation(.easeOut(duration: 0.15), value: provider.showThumbnail)
+        .task(id: player.video?.youtubeId) {
+            provider.load(videoId: player.video?.youtubeId)
+        }
+    }
+}
+
+struct PlayerScrubberOverlay: View {
+    var vm: PlayerScrubberOverlayVM
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -127,6 +153,7 @@ struct AVPlayerScrubberOverlay: View {
                 trackColor: .secondary,
                 timeColor: .primary,
                 verticalHitSlop: 14,
+                showThumbnailPreview: true,
                 onScrubbingChanged: vm.handleScrubbing
             )
             .padding(.horizontal, 12)
@@ -138,16 +165,16 @@ struct AVPlayerScrubberOverlay: View {
 }
 
 #Preview {
-    var vm = AVPlayerScrubberVM()
+    var vm = PlayerScrubberOverlayVM()
     vm.scrubberVisible = true
-    
+
     return VStack(spacing: 0) {
-        AVPlayerScrubberOverlay(vm: vm)
+        PlayerScrubberOverlay(vm: vm)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             .padding(.bottom, 30)
             .background(.black)
 
-        AVPlayerScrubberOverlay(vm: vm)
+        PlayerScrubberOverlay(vm: vm)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(.white)
             .padding(.top, 40)

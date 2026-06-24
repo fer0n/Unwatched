@@ -30,6 +30,7 @@ struct PlayerScrubber: View {
         trackColor: Color = .white,
         timeColor: Color = .secondary,
         verticalHitSlop: CGFloat = 5,
+        showThumbnailPreview: Bool = false,
         onScrubbingChanged: ((Bool) -> Void)? = nil
     ) {
         self.inlineTime = inlineTime
@@ -40,6 +41,7 @@ struct PlayerScrubber: View {
         self.trackColor = trackColor
         self.timeColor = timeColor
         self.verticalHitSlop = verticalHitSlop
+        self.showThumbnailPreview = showThumbnailPreview
         self.onScrubbingChanged = onScrubbingChanged
     }
 
@@ -49,6 +51,9 @@ struct PlayerScrubber: View {
     let fillColor: Color
     let trackColor: Color
     let timeColor: Color
+    /// When true, this scrubber drives the shared storyboard preview shown over the video
+    /// (`ScrubberThumbnailProvider.shared`), so the overlay and inline bars control the same one.
+    let showThumbnailPreview: Bool
     var onScrubbingChanged: ((Bool) -> Void)?
     let scrubbingPadding: CGFloat = 8
     let inactiveHeight: CGFloat = 150
@@ -187,6 +192,10 @@ struct PlayerScrubber: View {
         .accessibilityLabel(String(localized: "playerScrubber"))
         .accessibilityAdjustableAction(handleAccessibilitySpeedChange)
         .accessibilityValue(currentTime?.formattedSecondsColon ?? "")
+        .task(id: showThumbnailPreview ? player.video?.youtubeId : nil) {
+            guard showThumbnailPreview else { return }
+            ScrubberThumbnailProvider.shared.load(videoId: player.video?.youtubeId)
+        }
     }
 
     var currentScrubberHeight: CGFloat {
@@ -271,6 +280,7 @@ struct PlayerScrubber: View {
             let duration = player.video?.duration ?? 1
             cachedSnapTimeThreshold = Double(chapterSnapPixels / scrubberWidth) * duration
             onScrubbingChanged?(true)
+            if showThumbnailPreview { ScrubberThumbnailProvider.shared.isScrubbing = true }
             if enableTapScrubbing {
                 if value.translation == .zero {
                     // Initial click - move to clicked position
@@ -300,9 +310,11 @@ struct PlayerScrubber: View {
 
         if isInactive {
             player.currentChapterPreview = nil
+            if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = nil }
             snappedChapterTime = nil
         } else if let snappedTime = currentTime {
             player.setCurrentChapterPreview(at: snappedTime)
+            if showThumbnailPreview { ScrubberThumbnailProvider.shared.previewTime = snappedTime }
             let isSnapped = cachedChapterTimes.contains { abs($0 - snappedTime) < 0.01 }
             snappedChapterTime = isSnapped ? snappedTime : nil
         }
@@ -316,6 +328,7 @@ struct PlayerScrubber: View {
         }
 
         player.currentChapterPreview = nil
+        if showThumbnailPreview { ScrubberThumbnailProvider.shared.endScrubbing() }
         initialDragPosition = nil
         isInactive = false
         isGestureActive = false

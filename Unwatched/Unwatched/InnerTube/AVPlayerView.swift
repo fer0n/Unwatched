@@ -24,7 +24,7 @@ struct AVPlayerView: View {
 
     @State private var vm = AVPlayerViewModel()
     @State private var overlayVM = OverlayFullscreenVM.shared
-    @State private var scrubberVM = AVPlayerScrubberVM()
+    @State private var scrubberVM = PlayerScrubberOverlayVM()
     @State private var videoZoom: CGFloat = 1.0
     @State private var panOffset: CGSize = .zero
     @State private var isTwoFingerGesturing = false
@@ -46,6 +46,9 @@ struct AVPlayerView: View {
                 )
                 .transition(.opacity.animation(.easeOut(duration: 0.3)))
             }
+        }
+        .overlay {
+            ScrubberThumbnailOverlay()
         }
         .clipShape(RoundedRectangle(
                     cornerRadius: Const.videoPlayerCornerRadius,
@@ -90,7 +93,7 @@ struct AVPlayerView: View {
                         PlayerCaptionOverlay()
                     }
                     .overlay(alignment: .bottom) {
-                        AVPlayerScrubberOverlay(vm: scrubberVM)
+                        PlayerScrubberOverlay(vm: scrubberVM)
                     }
             } else {
                 videoPlayerView

@@ -80,6 +80,8 @@
 		8816A2FD2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
 		8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A2FC2CCD5125001FE63E /* PageControl.swift */; };
 		8816E3912FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */; };
+		8816E3A02FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */; };
+		8816E3A22FEB16D0004EB1ED /* ScrubberThumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */; };
 		8817FA9F2C30668E002DE44F /* ChangeChapterButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */; };
 		88190E3C2B99D32100F048C3 /* RefreshManager+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */; };
 		88190E3E2B99D97900F048C3 /* CleanupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88190E3D2B99D97900F048C3 /* CleanupService.swift */; };
@@ -757,7 +759,7 @@
 		88F7B2CC2C4D883500E722F3 /* DeleteImageCacheButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */; };
 		88F7E24B2DE59962001E1F3F /* DebugLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */; };
 		88F7E24C2DE59962001E1F3F /* DebugLoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */; };
-		88F844772FCAB25F000FC034 /* AVPlayerScrubberOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F844762FCAB25F000FC034 /* AVPlayerScrubberOverlay.swift */; };
+		88F844772FCAB25F000FC034 /* PlayerScrubberOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */; };
 		88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */; };
@@ -963,6 +965,8 @@
 		8816A1FF2CCD0D19001FE63E /* PipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipButton.swift; sourceTree = "<group>"; };
 		8816A2FC2CCD5125001FE63E /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InnerTubeAPI+Metadata.swift"; sourceTree = "<group>"; };
+		8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InnerTubeAPI+Storyboard.swift"; sourceTree = "<group>"; };
+		8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubberThumbnails.swift; sourceTree = "<group>"; };
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
 		88190E3B2B99D32100F048C3 /* RefreshManager+CloudKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshManager+CloudKit.swift"; sourceTree = "<group>"; };
 		88190E3D2B99D97900F048C3 /* CleanupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupService.swift; sourceTree = "<group>"; };
@@ -1316,7 +1320,7 @@
 		88F7B2C72C4D823B00E722F3 /* BackupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettings.swift; sourceTree = "<group>"; };
 		88F7B2CB2C4D883500E722F3 /* DeleteImageCacheButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteImageCacheButton.swift; sourceTree = "<group>"; };
 		88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLoggerView.swift; sourceTree = "<group>"; };
-		88F844762FCAB25F000FC034 /* AVPlayerScrubberOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerScrubberOverlay.swift; sourceTree = "<group>"; };
+		88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScrubberOverlay.swift; sourceTree = "<group>"; };
 		88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateObserver.swift; sourceTree = "<group>"; };
 		88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideoChapter.swift; sourceTree = "<group>"; };
 		88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousVideoChapter.swift; sourceTree = "<group>"; };
@@ -2303,7 +2307,7 @@
 		FE100001AA000000001000A1 /* InnerTube */ = {
 			isa = PBXGroup;
 			children = (
-				88F844762FCAB25F000FC034 /* AVPlayerScrubberOverlay.swift */,
+				88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */,
 				884128802FC838A7001B06AE /* SmartTube */,
 				884128722FC838A7001B06AE /* WKHLSManager.swift */,
 				3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */,
@@ -2319,6 +2323,8 @@
 				8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */,
 				8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */,
 				8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */,
+				8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */,
+				8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */,
 			);
 			path = InnerTube;
 			sourceTree = "<group>";
@@ -3371,7 +3377,7 @@
 				880E85D42F655B88001DAAE8 /* TrailingSwipeMoreMenu.swift in Sources */,
 				883CA8172B5BA94900028D52 /* SheetPositionReader.swift in Sources */,
 				887EB2E12CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
-				88F844772FCAB25F000FC034 /* AVPlayerScrubberOverlay.swift in Sources */,
+				88F844772FCAB25F000FC034 /* PlayerScrubberOverlay.swift in Sources */,
 				8809D8972DE8EE7300B28165 /* InboxOverflowTip.swift in Sources */,
 				8843E1032E57D00B00A303F5 /* PremiumPopupMessage.swift in Sources */,
 				882966F72CCE1F9400E96D3C /* View.swift in Sources */,
@@ -3468,6 +3474,8 @@
 				88D438A92B45B27600482F29 /* VideoPlayer.swift in Sources */,
 				883CA81B2B5BC81600028D52 /* RefreshManager.swift in Sources */,
 				8816E3912FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift in Sources */,
+				8816E3A02FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift in Sources */,
+				8816E3A22FEB16D0004EB1ED /* ScrubberThumbnails.swift in Sources */,
 				883F41072BDEDE7000535952 /* HandleVideoUrlDropModifier.swift in Sources */,
 				88CD38852E20E66300E7B21C /* TranscriptService.swift in Sources */,
 				88A4F40D2E6F89650074126C /* AnimatableDetents.swift in Sources */,
