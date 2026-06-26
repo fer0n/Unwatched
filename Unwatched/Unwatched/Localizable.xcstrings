@@ -13100,6 +13100,74 @@
         }
       }
     },
+    "playerTypeMinimal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube mit minimierter Oberfläche"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube with Minimized UI"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube con interfaz minimizada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube avec interface minimisée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube ze zminimalizowanym interfejsem"
+          }
+        }
+      }
+    },
+    "playerTypeMinimalHelper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der standardmäßige YouTube-Player mit minimierten Overlays."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The standard YouTube player with its overlays minimized."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El reproductor estándar de YouTube con sus superposiciones minimizadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le lecteur YouTube standard avec ses superpositions minimisées."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardowy odtwarzacz YouTube ze zminimalizowanymi nakładkami."
+          }
+        }
+      }
+    },
     "playerTypeNative" : {
       "localizations" : {
         "de" : {

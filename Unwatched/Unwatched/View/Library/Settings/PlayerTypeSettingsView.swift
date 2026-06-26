@@ -14,6 +14,7 @@ struct PlayerTypeSettingsView: View {
             MyBackgroundColor(macOS: false)
             MyForm {
                 optionSection(.youtubeEmbedded, footer: "playerTypeEmbeddedHelper")
+                optionSection(.youtubeEmbeddedMinimal, footer: "playerTypeMinimalHelper")
                 optionSection(.youtubeCustomUI, footer: "playerTypeCustomUIHelper")
                 nativeSection
                 PlayerTypeComparisonTable()
