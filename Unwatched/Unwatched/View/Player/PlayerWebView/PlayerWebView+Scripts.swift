@@ -100,8 +100,11 @@ extension PlayerWebView {
 
     func getSetPlaybackRateScript() -> String {
         """
-        video.playbackRate = \(player.playbackSpeed);
         playbackRate = \(player.playbackSpeed);
+        // defaultPlaybackRate is what the element resets to when YouTube reloads the media
+        // (e.g. resuming from background); keep it in sync so the speed survives the reload.
+        video.defaultPlaybackRate = \(player.playbackSpeed);
+        video.playbackRate = \(player.playbackSpeed);
         """
     }
 

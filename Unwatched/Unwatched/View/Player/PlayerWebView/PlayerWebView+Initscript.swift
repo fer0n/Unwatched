@@ -45,6 +45,7 @@ extension PlayerWebView {
         const originalAudio = \(options.originalAudio);
         const playbackId = "\(options.playbackId)";
         const blockOverlay = \(options.blockOverlay);
+        const ownsPlaybackRate = blockOverlay;
         const seekSeconds = \(options.seekSeconds);
 
         var video = null;
@@ -94,10 +95,19 @@ extension PlayerWebView {
                 sendError(error);
             }
         }
+        // Single point that applies our intended rate to the element. defaultPlaybackRate is
+        // the value the element resets to whenever new media loads (YouTube rebuilds its
+        // MediaSource on resume from background), so keeping it in sync means a reload lands
+        // on the user's chosen speed instead of falling back to 1.0.
+        function applyPlaybackRate(v = video) {
+            if (!v) { return; }
+            v.defaultPlaybackRate = playbackRate;
+            v.playbackRate = playbackRate;
+        }
         function setupVideo() {
             window.pendingSeekTarget = null;
             addVideoListeners();
-            video.playbackRate = playbackRate;
+            applyPlaybackRate();
             video.muted = false;
             handleFullscreenButton();
         }
@@ -338,6 +348,13 @@ extension PlayerWebView {
                 debouncedHideOverlay(1000);
             });
             video.addEventListener('ratechange', () => {
+                if (ownsPlaybackRate && Math.abs(video.playbackRate - playbackRate) > 0.01) {
+                    // YouTube snapped the rate back to its internal value (e.g. on resume).
+                    // Re-assert ours instead of reporting the spurious reset, which would
+                    // otherwise clobber the user's stored speed.
+                    applyPlaybackRate();
+                    return;
+                }
                 sendMessage('playbackRate', video.playbackRate);
             });
         }
@@ -406,6 +423,10 @@ extension PlayerWebView {
         document.addEventListener('loadeddata', (e) => {
             if (e.target.tagName === 'VIDEO') {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
+                // YouTube swaps the MediaSource on resume from background, reloading the media
+                // and resetting the rate to 1.0 without firing a ratechange we observe — which
+                // silently loses the user's speed. Re-assert it on every load.
+                applyPlaybackRate(e.target);
             }
         }, { passive: true, capture: true });
 
