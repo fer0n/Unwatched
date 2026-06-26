@@ -9,6 +9,7 @@ import UnwatchedShared
 struct HideControlsSettings: View {
     @AppStorage(Const.disableCaptions) var disableCaptions: Bool = false
     @AppStorage(Const.autoCaptionsOnSeekBack) var autoCaptionsOnSeekBack: Bool = false
+    @AppStorage(Const.minimalPlayerUI) var minimalPlayerUI: Bool = false
     @AppStorage(Const.doubleTapSeekDuration) var doubleTapSeekDuration: Double = Const.seekSeconds
     @State var seekReloadTask: Task<Void, Never>?
 
@@ -27,6 +28,13 @@ struct HideControlsSettings: View {
                 Text("autoCaptionsOnSeekBack")
             }
             .onChange(of: autoCaptionsOnSeekBack) {
+                reloadPlayer()
+            }
+
+            Toggle(isOn: $minimalPlayerUI) {
+                Text("minimalPlayerUI")
+            }
+            .onChange(of: minimalPlayerUI) {
                 reloadPlayer()
             }
 

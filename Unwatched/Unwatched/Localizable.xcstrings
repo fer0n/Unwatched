@@ -2330,6 +2330,40 @@
         }
       }
     },
+    "browserExternal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Externe"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zewnętrznie"
+          }
+        }
+      }
+    },
     "browserAsSheet" : {
       "localizations" : {
         "de" : {
@@ -2462,40 +2496,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Przeglądarka YouTube"
-          }
-        }
-      }
-    },
-    "browserExternal" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Extern"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "External"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Externo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Externe"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zewnętrznie"
           }
         }
       }
@@ -9832,6 +9832,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce i są starsze niż tydzień. Najlepiej pozostawić to włączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
+          }
+        }
+      }
+    },
+    "minimalPlayerUI" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Player-Overlays minimieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimize Player Overlays"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimizar superposiciones del reproductor"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimiser les superpositions du lecteur"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zminimalizuj nakładki odtwarzacza"
           }
         }
       }
