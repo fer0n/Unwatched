@@ -33,10 +33,6 @@
 		880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
 		8808820A2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
 		8808820B2E565AD8008C38DA /* HideControlsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882092E565AD8008C38DA /* HideControlsSettings.swift */; };
-		99AA00022E565AD8008C38DA /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */; };
-		99AA00032E565AD8008C38DA /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */; };
-		99AA00122E565AD8008C38DA /* PlayerTypeSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */; };
-		99AA00132E565AD8008C38DA /* PlayerTypeSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */; };
 		8808820D2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */; };
 		8808820E2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */; };
 		8808A9112B928CD8004D7CE2 /* ChapterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8808A9102B928CD8004D7CE2 /* ChapterList.swift */; };
@@ -755,6 +751,10 @@
 		88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FB23692DD4BAD00066DB07 /* MultiPayload.swift */; };
 		88FEBFC62C19DF37007FC1A5 /* AddVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */; };
 		88FEBFC82C19DF5B007FC1A5 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
+		99AA00022E565AD8008C38DA /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */; };
+		99AA00032E565AD8008C38DA /* PlayerTypeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */; };
+		99AA00122E565AD8008C38DA /* PlayerTypeSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */; };
+		99AA00132E565AD8008C38DA /* PlayerTypeSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */; };
 		CD00F49C2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
 		CD00F49D2E6B6DBC00DADB96 /* CustomAlerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */; };
 		CD03C1DD2C73BEDE00913256 /* SponsorBlockAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD03C1DC2C73BED800913256 /* SponsorBlockAPI.swift */; };
@@ -878,7 +878,6 @@
 		88080D502CF5C74F00513093 /* TabBarAppearanceModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearanceModifier.swift; sourceTree = "<group>"; };
 		880882062E564EBF008C38DA /* SetContinuousPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContinuousPlay.swift; sourceTree = "<group>"; };
 		880882092E565AD8008C38DA /* HideControlsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideControlsSettings.swift; sourceTree = "<group>"; };
-		99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeSettingsView.swift; sourceTree = "<group>"; };
 		8808820C2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryPlaybackSpeedSettings.swift; sourceTree = "<group>"; };
 		8808A9102B928CD8004D7CE2 /* ChapterList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterList.swift; sourceTree = "<group>"; };
 		8808A9142B937C66004D7CE2 /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
@@ -926,7 +925,6 @@
 		881F57442C4A8C6E00559BF9 /* RotateOrientationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateOrientationButton.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
-		99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeSetting.swift; sourceTree = "<group>"; };
 		8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsView.swift; sourceTree = "<group>"; };
 		882966F52CCE1F9100E96D3C /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionMiniProgressBar.swift; sourceTree = "<group>"; };
@@ -1254,6 +1252,8 @@
 		88FB23692DD4BAD00066DB07 /* MultiPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiPayload.swift; sourceTree = "<group>"; };
 		88FEBFC52C19DF36007FC1A5 /* AddVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoButton.swift; sourceTree = "<group>"; };
 		88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVideoViewModel.swift; sourceTree = "<group>"; };
+		99AA00012E565AD8008C38DA /* PlayerTypeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeSettingsView.swift; sourceTree = "<group>"; };
+		99AA00112E565AD8008C38DA /* PlayerTypeSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeSetting.swift; sourceTree = "<group>"; };
 		CD00F49B2E6B6DBC00DADB96 /* CustomAlerter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlerter.swift; sourceTree = "<group>"; };
 		CD03C1DC2C73BED800913256 /* SponsorBlockAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SponsorBlockAPI.swift; sourceTree = "<group>"; };
 		CD3E27AE2E239FF200AB8F74 /* GenerateChaptersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateChaptersButton.swift; sourceTree = "<group>"; };
@@ -3690,7 +3690,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 331;
+				CURRENT_PROJECT_VERSION = 332;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3740,7 +3740,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 331;
+				CURRENT_PROJECT_VERSION = 332;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
