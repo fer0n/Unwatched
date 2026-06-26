@@ -43,7 +43,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
         let autoCaptionsOnSeekBack = UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack)
-        let minimalPlayerUI = UserDefaults.standard.bool(forKey: Const.minimalPlayerUI)
+        let playerTypeSetting = UserDefaults.standard.string(forKey: Const.playerType)
+            .flatMap(PlayerTypeSetting.init(rawValue:)) ?? .youtubeEmbedded
+        let minimalPlayerUI = playerTypeSetting.minimalPlayerUI
         let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
         let originalAudio = UserDefaults.standard.bool(forKey: Const.originalAudio)
 

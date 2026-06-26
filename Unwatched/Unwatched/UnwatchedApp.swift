@@ -27,6 +27,7 @@ struct UnwatchedApp: App {
         WindowGroup {
             SetupView()
                 .task {
+                    PlayerTypeSetting.migrateMinimalPlayerUIIfNeeded()
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)

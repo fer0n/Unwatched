@@ -328,6 +328,8 @@ public struct Const {
 
     public static let videoListFormat = "videoListFormat"
     public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
+
+    public static let playerType = "playerType"
 }
 
 public extension Const {

@@ -39,6 +39,8 @@ extension View {
                         AppearanceSettingsView()
                     case .settingsPlayback:
                         PlaybackSettingsView()
+                    case .settingsPlayerType:
+                        PlayerTypeSettingsView()
                     case .help:
                         HelpView()
                     case .filter:
@@ -76,5 +78,6 @@ enum LibraryDestination: Codable {
          filter,
          titleFilter,
          privacy,
-         stats
+         stats,
+         settingsPlayerType
 }

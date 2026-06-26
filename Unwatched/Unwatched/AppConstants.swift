@@ -50,7 +50,6 @@ extension Const {
         Const.playVideoFullscreen: false,
         Const.disableCaptions: false,
         Const.autoCaptionsOnSeekBack: false,
-        Const.minimalPlayerUI: false,
 
         Const.swipeGestureUp: true,
         Const.swipeGestureDown: true,
