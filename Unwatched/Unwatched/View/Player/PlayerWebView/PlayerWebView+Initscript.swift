@@ -338,25 +338,33 @@ extension PlayerWebView {
             setInterval(checkVideoState, 3000);
         }
 
+        function onVideoSeeked() {
+            // Once the player has caught up to the latest requested target, drop it so
+            // later isolated seeks measure from the real (now current) playback time.
+            if (window.pendingSeekTarget != null && Math.abs(video.currentTime - window.pendingSeekTarget) < 0.5) {
+                window.pendingSeekTarget = null;
+            }
+            debouncedHideOverlay(1000);
+        }
+        function onVideoRatechange() {
+            if (ownsPlaybackRate && Math.abs(video.playbackRate - playbackRate) > 0.01) {
+                // YouTube snapped the rate back to its internal value (e.g. on resume).
+                // Re-assert ours instead of reporting the spurious reset, which would
+                // otherwise clobber the user's stored speed.
+                applyPlaybackRate();
+                return;
+            }
+            sendMessage('playbackRate', video.playbackRate);
+        }
         function addVideoListeners() {
-            video.addEventListener('seeked', () => {
-                // Once the player has caught up to the latest requested target, drop it so
-                // later isolated seeks measure from the real (now current) playback time.
-                if (window.pendingSeekTarget != null && Math.abs(video.currentTime - window.pendingSeekTarget) < 0.5) {
-                    window.pendingSeekTarget = null;
-                }
-                debouncedHideOverlay(1000);
-            });
-            video.addEventListener('ratechange', () => {
-                if (ownsPlaybackRate && Math.abs(video.playbackRate - playbackRate) > 0.01) {
-                    // YouTube snapped the rate back to its internal value (e.g. on resume).
-                    // Re-assert ours instead of reporting the spurious reset, which would
-                    // otherwise clobber the user's stored speed.
-                    applyPlaybackRate();
-                    return;
-                }
-                sendMessage('playbackRate', video.playbackRate);
-            });
+            // setupVideo()/repairVideo() can run more than once on the same element, so remove
+            // before adding to keep this idempotent — otherwise the handlers stack up and we
+            // post duplicate messages to native. Named handlers make removeEventListener work;
+            // removing one that was never added is a harmless no-op.
+            video.removeEventListener('seeked', onVideoSeeked);
+            video.addEventListener('seeked', onVideoSeeked);
+            video.removeEventListener('ratechange', onVideoRatechange);
+            video.addEventListener('ratechange', onVideoRatechange);
         }
         document.addEventListener('play', (e) => {
             if (e.target.tagName === 'VIDEO') {
