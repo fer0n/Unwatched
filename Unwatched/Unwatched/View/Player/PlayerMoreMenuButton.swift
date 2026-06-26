@@ -120,9 +120,9 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                         playerType = type
                     } label: {
                         if type == playerType {
-                            Label(type.description, systemImage: "checkmark")
+                            Label(type.menuDescription, systemImage: "checkmark")
                         } else {
-                            Text(type.description)
+                            Text(type.menuDescription)
                         }
                     }
                 }
