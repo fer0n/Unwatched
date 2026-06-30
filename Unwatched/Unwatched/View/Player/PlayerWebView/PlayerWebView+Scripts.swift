@@ -18,7 +18,7 @@ extension PlayerWebView {
         }
         let urlString = type == .youtube
             ? UrlService.getNonEmbeddedYoutubeUrl(youtubeId, startAt)
-            : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt)
+            : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt, forceDisableCaptions: type == .youtubeCustomUI)
 
         guard let url = URL(string: urlString) else {
             Log.warning("loadPlayer: no url")

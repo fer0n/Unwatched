@@ -41,7 +41,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
+        // The custom UI player has no caption controls, so captions are always disabled.
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
+            || parent.playerType == .youtubeCustomUI
         let autoCaptionsOnSeekBack = UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack)
         let playerTypeSetting = UserDefaults.standard.string(forKey: Const.playerType)
             .flatMap(PlayerTypeSetting.init(rawValue:)) ?? .youtubeEmbedded
