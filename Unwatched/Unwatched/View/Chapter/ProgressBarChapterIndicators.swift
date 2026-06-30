@@ -14,7 +14,9 @@ struct ProgressBarChapterIndicators: View {
 
     var breakWidth: CGFloat {
         let chapters = video?.sortedChapters ?? []
-        return chapters.count > 40 ? 1 : 2
+        guard !chapters.isEmpty else { return 2 }
+        let widthPerChapter = width / CGFloat(chapters.count)
+        return widthPerChapter < 20 ? 1 : 2
     }
 
     var body: some View {
