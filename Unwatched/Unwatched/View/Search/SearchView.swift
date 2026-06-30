@@ -11,6 +11,8 @@ import UnwatchedShared
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
+    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
+
     @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
     @Environment(BrowserManager.self) private var browserManager
@@ -224,7 +226,7 @@ struct SearchView: View {
                         videoDuration: video.duration,
                         watched: video.watchedDate != nil,
                         showAllStatus: true,
-                        showQueueButton: true,
+                        showQueueButton: showAddToQueueButton,
                         showContextMenu: true,
                         showDelete: false
                     ),
