@@ -82,6 +82,22 @@ struct PlayerGestureOverlay: ViewModifier {
                     }
                 }
             }
+            // The actual zoom is driven by the UIKit ZoomPanModifier, which flips
+            // `isExternallyPinching` the instant a second finger lands — well before the
+            // SwiftUI MagnifyGesture recognizes. Mirror it into `isPinching` and cancel any
+            // pending touch so a two-finger start can't fire the long-press (temporary speed).
+            .onChange(of: isExternallyPinching) { _, pinching in
+                if pinching {
+                    gestureState.isPinching = true
+                    gestureState.resetTouch()
+                    resetSwipeAnimation()
+                } else {
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(100))
+                        gestureState.isPinching = false
+                    }
+                }
+            }
     }
 
     private func applySwipeAnimation(translation: CGSize) {
