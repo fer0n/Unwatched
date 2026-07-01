@@ -432,10 +432,7 @@ extension InnerTubeAPI {
     public func fetchAuthenticatedTrackingURLs(videoId: String) async -> PlaybackTrackingURLs? {
         guard authToken != nil else { return nil }
         do {
-            var body = makeBody(client: tvClientContext)
-            body["videoId"] = videoId
-            body["racyCheckOk"] = true
-            body["contentCheckOk"] = true
+            let body = await buildTrackingURLsBody(videoId: videoId)
             let data = try await postTV(endpoint: "player", body: body)
             guard
                 let tracking  = data["playbackTracking"] as? [String: Any],
@@ -461,10 +458,7 @@ extension InnerTubeAPI {
     /// that start before `PlaybackViewModel.updateAuthToken` has had a chance to run).
     public func fetchAuthenticatedTrackingURLs(videoId: String, usingToken token: String) async -> PlaybackTrackingURLs? {
         do {
-            var body = makeBody(client: tvClientContext)
-            body["videoId"] = videoId
-            body["racyCheckOk"] = true
-            body["contentCheckOk"] = true
+            let body = await buildTrackingURLsBody(videoId: videoId)
             let data = try await postTV(endpoint: "player", body: body, explicitBearerToken: token)
             guard
                 let tracking  = data["playbackTracking"] as? [String: Any],
@@ -482,6 +476,35 @@ extension InnerTubeAPI {
             tubeLog.error("fetchAuthenticatedTrackingURLs failed for \(videoId, privacy: .public): \(error, privacy: .public)")
             return nil
         }
+    }
+
+    /// Builds the TV-client `/player` body for a tracking-URLs-only request.
+    ///
+    /// The original minimal body here (just videoId/racyCheckOk/contentCheckOk)
+    /// consistently got back a response with videoDetails/playabilityStatus but
+    /// no playbackTracking at all — confirmed live, every single video, for an
+    /// authenticated request. `fetchPlayerInfoAuthenticated`'s body (used for the
+    /// actual streaming-data fetch) includes visitorData, playbackContext, and a
+    /// poToken attestation — i.e. it looks like a genuine playback session, not a
+    /// metadata probe. Matching that shape here is the fix: playbackTracking
+    /// appears to be gated on the request looking like real playback.
+    private func buildTrackingURLsBody(videoId: String) async -> [String: Any] {
+        var clientFields = (tvClientContext["client"] as? [String: Any]) ?? [:]
+        if let vd = visitorData { clientFields["visitorData"] = vd }
+        let sts = await fetchSignatureTimestampIfNeeded()
+        var cpbc: [String: Any] = ["html5Preference": "HTML5_PREF_WANTS"]
+        if let sts { cpbc["signatureTimestamp"] = sts }
+        let attToken = await fetchAttestationToken(videoId: videoId)
+
+        var body = makeBody(client: ["client": clientFields])
+        body["videoId"] = videoId
+        body["racyCheckOk"] = true
+        body["contentCheckOk"] = true
+        body["playbackContext"] = ["contentPlaybackContext": cpbc]
+        if let attToken {
+            body["serviceIntegrityDimensions"] = ["poToken": attToken]
+        }
+        return body
     }
 
     // MARK: - Private player helpers
