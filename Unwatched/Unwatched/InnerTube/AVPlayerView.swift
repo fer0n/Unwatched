@@ -13,7 +13,6 @@ import UnwatchedShared
 struct AVPlayerView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.modelContext) private var modelContext
 
     var handleVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
@@ -21,6 +20,8 @@ struct AVPlayerView: View {
     var handleMiniPlayerTap: () -> Void
     var showOverlay: Bool
     var landscapeFullscreen: Bool
+
+    @Query(AVPlayerView.nextEntriesDescriptor) private var nextEntries: [QueueEntry]
 
     @State private var vm = AVPlayerViewModel()
     @State private var overlayVM = OverlayFullscreenVM.shared
@@ -117,8 +118,7 @@ struct AVPlayerView: View {
                 guard new == nil else { return }
                 prefetchNextHLS()
             }
-            .onChange(of: player.videoIsCloseToEnd) { _, closeToEnd in
-                guard closeToEnd else { return }
+            .onChange(of: nextPrefetchVideoId) { _, _ in
                 prefetchNextHLS()
             }
             .onDisappear { vm.cleanup() }
@@ -143,12 +143,27 @@ struct AVPlayerView: View {
             .onChange(of: player.playbackSpeed) { vm.handlePlaybackSpeedChange() }
     }
 
-    private func prefetchNextHLS() {
-        let (first, second) = VideoService.getNextVideoInQueue(modelContext)
+    /// The video after the current one in the queue — the one to pre-warm.
+    /// The playing video normally sits at queue position 1, so this is position 2
+    /// (falling back to position 1 if it isn't the current video, e.g. right after a swap).
+    private var nextPrefetchVideoId: String? {
+        let first = nextEntries.first?.video
+        let second = nextEntries.count > 1 ? nextEntries[1].video : nil
         let next = first?.youtubeId != player.video?.youtubeId ? first : second
-        if let nextId = next?.youtubeId {
-            vm.prefetchNext(videoId: nextId)
-        }
+        return next?.youtubeId
+    }
+
+    /// Pre-warm the second (next-up) video. Gated on the current video having finished
+    /// loading so the prefetch doesn't compete with the current stream for bandwidth.
+    private func prefetchNextHLS() {
+        guard player.isLoading == nil, let nextId = nextPrefetchVideoId else { return }
+        vm.prefetchNext(videoId: nextId)
+    }
+
+    static var nextEntriesDescriptor: FetchDescriptor<QueueEntry> {
+        var descriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
+        descriptor.fetchLimit = 2
+        return descriptor
     }
 }
 #endif
