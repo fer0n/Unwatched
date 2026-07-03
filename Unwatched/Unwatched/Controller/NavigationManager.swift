@@ -31,6 +31,7 @@ import UnwatchedShared
     var tab = NavigationTab.queue
 
     var askForReviewPoints = 0
+    var askForReviewCount = 0
 
     var presentedSubscriptionQueue = [SendableSubscription]()
     var presentedSubscriptionInbox = [SendableSubscription]()
@@ -74,6 +75,7 @@ import UnwatchedShared
         showMenu = try container.decode(Bool.self, forKey: .showMenu)
         tab = try container.decode(NavigationTab.self, forKey: .tab)
         askForReviewPoints = try container.decode(Int.self, forKey: .askForReviewPoints)
+        askForReviewCount = try container.decodeIfPresent(Int.self, forKey: .askForReviewCount) ?? 0
 
         let decoded = try container.decode(NavigationPath.CodableRepresentation.self, forKey: .presentedLibrary)
         presentedLibrary = NavigationPath(decoded)
@@ -90,6 +92,7 @@ import UnwatchedShared
         try container.encode(showMenu, forKey: .showMenu)
         try container.encode(tab, forKey: .tab)
         try container.encode(askForReviewPoints, forKey: .askForReviewPoints)
+        try container.encode(askForReviewCount, forKey: .askForReviewCount)
 
         if let representation = presentedLibrary.codable {
             try container.encode(representation, forKey: .presentedLibrary)
@@ -281,9 +284,11 @@ import UnwatchedShared
     }
 
     func handleRequestReview(_ requestReview: @escaping () -> Void) {
+        guard askForReviewCount < Const.askForReviewMaxCount else { return }
         askForReviewPoints += 1
         if askForReviewPoints >= Const.askForReviewPointThreshold {
             askForReviewPoints = -70
+            askForReviewCount += 1
             requestReview()
         }
     }
@@ -320,6 +325,7 @@ enum NavManagerCodingKeys: CodingKey {
     case showMenu,
          tab,
          askForReviewPoints,
+         askForReviewCount,
          presentedLibrary,
          presentedSubscriptionInbox,
          presentedSubscriptionQueue,

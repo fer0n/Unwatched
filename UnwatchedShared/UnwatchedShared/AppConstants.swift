@@ -127,6 +127,7 @@ public struct Const {
     public static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
     public static let askForReviewPointThreshold = 20
+    public static let askForReviewMaxCount = 2
     public static let sheetOpacityValue = 0.6
 
     /// Time difference within which it will be considered the same time between start/end of chapters
