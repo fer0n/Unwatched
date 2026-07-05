@@ -33,7 +33,6 @@ final class SearchVM {
 
     private static let recentSearchesKey = "recentSearches"
     private static let maxRecentSearches = 20
-    private static let maxResults = 10
     private static let maxSuggestions = 10
 
     init() {
@@ -58,7 +57,7 @@ final class SearchVM {
                 let page = try await api.search(query: trimmed, filter: filter)
                 if Task.isCancelled { return }
                 withAnimation {
-                    results = page.videos.prefix(Self.maxResults).map(Self.sendable(from:))
+                    results = page.videos.map(Self.sendable(from:))
                     nextPageToken = page.nextPageToken
                     isSearching = false
                 }
@@ -79,7 +78,6 @@ final class SearchVM {
     /// Fetches the next page when the user scrolls near the end of the list.
     func loadMoreIfNeeded(currentItem: SendableVideo) {
         guard currentItem.youtubeId == results.last?.youtubeId else { return }
-        guard results.count < Self.maxResults else { return }
         guard let token = nextPageToken, !isLoadingMore, !isSearching else { return }
         let queryAtStart = activeQuery
         isLoadingMore = true
@@ -91,7 +89,6 @@ final class SearchVM {
                 let existing = Set(results.map(\.youtubeId))
                 let new = page.videos
                     .filter { !existing.contains($0.id) }
-                    .prefix(Self.maxResults - results.count)
                     .map(Self.sendable(from:))
                 withAnimation {
                     results.append(contentsOf: new)
