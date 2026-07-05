@@ -30,10 +30,14 @@ final class SearchVM {
     private var nextPageToken: String?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored private var suggestionsTask: Task<Void, Never>?
+    /// Prefix → suggestions cache, with an insertion-ordered key list for simple LRU eviction.
+    @ObservationIgnored private var suggestionCache: [String: [String]] = [:]
+    @ObservationIgnored private var suggestionCacheOrder: [String] = []
 
     private static let recentSearchesKey = "recentSearches"
     private static let maxRecentSearches = 20
     private static let maxSuggestions = 10
+    private static let maxSuggestionCacheEntries = 100
 
     init() {
         loadRecentSearches()
@@ -140,6 +144,10 @@ final class SearchVM {
 
     /// Fetches autocomplete suggestions for the current query (debounced). Skips when
     /// the query is empty or already matches the active search.
+    ///
+    /// An exact prefix we've fetched before is served instantly from cache. Otherwise we
+    /// optimistically filter the closest cached prefix's suggestions for immediate feedback
+    /// while the debounced network request fetches the real (refined) list.
     func updateSuggestions() {
         suggestionsTask?.cancel()
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -147,15 +155,48 @@ final class SearchVM {
             suggestions = []
             return
         }
+        if let cached = suggestionCache[trimmed] {
+            suggestions = cached
+            return
+        }
+        // Show cached suggestions from the last-typed prefix, filtered to the new query, so
+        // forward typing (e.g. "swif" → "swift") updates instantly instead of blanking.
+        if let optimistic = optimisticSuggestions(for: trimmed) {
+            suggestions = optimistic
+        }
         suggestionsTask = Task {
-            try? await Task.sleep(for: .milliseconds(200))
+            try? await Task.sleep(for: .milliseconds(120))
             if Task.isCancelled { return }
             let results = (try? await api.fetchSearchSuggestions(query: trimmed)) ?? []
             if Task.isCancelled || trimmed != query.trimmingCharacters(in: .whitespacesAndNewlines) {
                 return
             }
-            suggestions = Array(results.prefix(Self.maxSuggestions))
+            let limited = Array(results.prefix(Self.maxSuggestions))
+            cacheSuggestions(limited, for: trimmed)
+            suggestions = limited
         }
+    }
+
+    /// Filters the longest cached prefix of `query` down to suggestions that still match,
+    /// giving instant (network-free) feedback while the real request is in flight.
+    private func optimisticSuggestions(for query: String) -> [String]? {
+        let lowerQuery = query.lowercased()
+        let match = suggestionCacheOrder
+            .filter { lowerQuery.hasPrefix($0.lowercased()) }
+            .max(by: { $0.count < $1.count })
+        guard let prefix = match, let cached = suggestionCache[prefix] else { return nil }
+        let filtered = cached.filter { $0.lowercased().hasPrefix(lowerQuery) }
+        return filtered.isEmpty ? nil : filtered
+    }
+
+    private func cacheSuggestions(_ suggestions: [String], for query: String) {
+        if suggestionCacheOrder.count >= Self.maxSuggestionCacheEntries,
+           let oldest = suggestionCacheOrder.first {
+            suggestionCache.removeValue(forKey: oldest)
+            suggestionCacheOrder.removeFirst()
+        }
+        suggestionCache[query] = suggestions
+        suggestionCacheOrder.append(query)
     }
 
     /// Refreshes a single result's inbox/queue/watched status from the store after an
