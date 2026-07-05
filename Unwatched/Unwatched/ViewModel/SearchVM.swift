@@ -25,6 +25,17 @@ final class SearchVM {
 
     var hasSearched: Bool { !activeQuery.isEmpty }
 
+    /// Upload-date filter for the search. Changing it re-runs the active search so
+    /// results update immediately (mirrors YouTube's "Upload date" search filter).
+    var uploadDate: SearchFilter.UploadDate {
+        get { filter.uploadDate }
+        set {
+            guard filter.uploadDate != newValue else { return }
+            filter.uploadDate = newValue
+            rerunActiveSearch()
+        }
+    }
+
     private let api = InnerTubeAPI()
     private var filter = SearchFilter.default
     private var nextPageToken: String?
@@ -77,6 +88,14 @@ final class SearchVM {
                 isSearching = false
             }
         }
+    }
+
+    /// Re-runs the search for the currently active query (e.g. after a filter change),
+    /// leaving the search field text untouched.
+    private func rerunActiveSearch() {
+        guard hasSearched else { return }
+        query = activeQuery
+        search()
     }
 
     /// Fetches the next page when the user scrolls near the end of the list.

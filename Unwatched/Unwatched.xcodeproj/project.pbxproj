@@ -817,12 +817,14 @@
 		FE100002AA0000000010F102 /* InnerTubeAPI+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F002 /* InnerTubeAPI+Search.swift */; };
 		FE100002AA0000000010F103 /* SearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F003 /* SearchVM.swift */; };
 		FE100002AA0000000010F104 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F004 /* SearchView.swift */; };
+		FE100002AA0000000010F107 /* SearchFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F007 /* SearchFilterMenu.swift */; };
 		FE100002AA0000000010F105 /* ChannelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F005 /* ChannelPreviewView.swift */; };
 		FE100002AA0000000010F106 /* ChannelHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* ChannelHeaderView.swift */; };
 		FE100002AA0000000010F201 /* SearchFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F001 /* SearchFilter.swift */; };
 		FE100002AA0000000010F202 /* InnerTubeAPI+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F002 /* InnerTubeAPI+Search.swift */; };
 		FE100002AA0000000010F203 /* SearchVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F003 /* SearchVM.swift */; };
 		FE100002AA0000000010F204 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F004 /* SearchView.swift */; };
+		FE100002AA0000000010F207 /* SearchFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F007 /* SearchFilterMenu.swift */; };
 		FE100002AA0000000010F205 /* ChannelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F005 /* ChannelPreviewView.swift */; };
 		FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* ChannelHeaderView.swift */; };
 		FE100002AA0000000010F210 /* AppSubsystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000B2 /* AppSubsystem.swift */; };
@@ -1366,6 +1368,7 @@
 		FE100002AA0000000010F002 /* InnerTubeAPI+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InnerTubeAPI+Search.swift"; sourceTree = "<group>"; };
 		FE100002AA0000000010F003 /* SearchVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVM.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F004 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F005 /* ChannelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPreviewView.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F006 /* ChannelHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelHeaderView.swift; sourceTree = "<group>"; };
 		FE100003AA0000000010C001 /* CaptionScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionScheduler.swift; sourceTree = "<group>"; };
@@ -2362,6 +2365,7 @@
 				8869A17A2FE2CBD90082E717 /* PlaylistCard.swift */,
 				FE100002AA0000000010F005 /* ChannelPreviewView.swift */,
 				FE100002AA0000000010F004 /* SearchView.swift */,
+				FE100002AA0000000010F007 /* SearchFilterMenu.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -2701,6 +2705,7 @@
 				FE100002AA0000000010F202 /* InnerTubeAPI+Search.swift in Sources */,
 				FE100002AA0000000010F203 /* SearchVM.swift in Sources */,
 				FE100002AA0000000010F204 /* SearchView.swift in Sources */,
+				FE100002AA0000000010F207 /* SearchFilterMenu.swift in Sources */,
 				FE100002AA0000000010F210 /* AppSubsystem.swift in Sources */,
 				FE100002AA0000000010F211 /* CaptionTrack.swift in Sources */,
 				FE100002AA0000000010F212 /* ITVideo.swift in Sources */,
@@ -3106,6 +3111,7 @@
 				FE100002AA0000000010F102 /* InnerTubeAPI+Search.swift in Sources */,
 				FE100002AA0000000010F103 /* SearchVM.swift in Sources */,
 				FE100002AA0000000010F104 /* SearchView.swift in Sources */,
+				FE100002AA0000000010F107 /* SearchFilterMenu.swift in Sources */,
 				884069D72D7A290D00814A72 /* SearchField.swift in Sources */,
 				88DFC0C82B448C2E001895C8 /* VideoCrawler.swift in Sources */,
 				88FB236B2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,

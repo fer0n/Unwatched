@@ -31,6 +31,13 @@ struct SearchView: View {
             .myNavigationTitle("search")
             .toolbar {
                 RefreshToolbarContent()
+                if vm.hasSearched {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        SearchFilterMenu(vm: vm)
+                            .font(.footnote)
+                            .fontWeight(.bold)
+                    }
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     AddToLibraryView()
                         .font(.footnote)
