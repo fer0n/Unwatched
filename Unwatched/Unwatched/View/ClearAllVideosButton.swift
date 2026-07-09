@@ -23,7 +23,7 @@ struct ClearAllVideosButton: View {
                         .fontWeight(.bold)
                         .frame(width: 15, height: 15)
                         .padding(13)
-                        .glassEffect(in: .circle)
+                        .backgroundTransparentEffect(fallback: .ultraThinMaterial)
                         .foregroundStyle(.primary)
                 } else {
                     Image(systemName: Const.clearSF)
