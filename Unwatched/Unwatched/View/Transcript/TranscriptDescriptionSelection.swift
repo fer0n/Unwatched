@@ -33,6 +33,11 @@ struct TranscriptDescriptionSelection: View {
         .frame(maxWidth: 260)
         .frame(maxWidth: .infinity, alignment: .center)
         .padding(.bottom, 8)
+        .onChange(of: selection) {
+            if selection == .transcript {
+                Signal.log("Transcript.View")
+            }
+        }
 
         if selection == .description {
             DescriptionDetailView(description: video.videoDescription)

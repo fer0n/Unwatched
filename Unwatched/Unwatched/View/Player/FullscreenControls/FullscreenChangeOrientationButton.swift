@@ -29,7 +29,7 @@ struct FullscreenChangeOrientationButton: View {
         .contentShape(.contextMenuPreview, Circle())
         .contextMenu {
             Button {
-                player.pipEnabled.toggle()
+                player.togglePip()
             } label: {
                 Text(player.pipEnabled ? "exitPip" : "enterPip")
                 Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")

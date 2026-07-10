@@ -11,6 +11,7 @@ struct HandleVideoListItemTap: ViewModifier {
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) private var player
+    @Environment(\.videoListContext) private var listContext
 
     let videoData: VideoData
 
@@ -37,6 +38,8 @@ struct HandleVideoListItemTap: ViewModifier {
             Log.error("no video to tap")
             return
         }
+        Signal.videoAction("play", listContext)
+        Signal.playbackStarted(listContext.rawValue)
         Task {
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }

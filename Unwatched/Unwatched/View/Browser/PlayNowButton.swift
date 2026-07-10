@@ -35,7 +35,8 @@ struct PlayNowButton: View {
                     )
                     navManager.handlePlay()
                     onDismiss?()
-                    Signal.log("Browser.PlayNow", throttle: .weekly)
+                    Signal.log("Browser.PlayNow")
+                    Signal.playbackStarted("browser")
                 } catch {
                     Log.warning("PlayNowButton: \(error)")
                 }

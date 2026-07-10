@@ -62,11 +62,16 @@ extension UserDataService {
         }
     }
 
+    /// Non-default settings, used only to build the analytics `SettingsSnapshot`.
+    /// String-typed values are deliberately dropped: a snapshot must only ever carry
+    /// bool / enum / number values, never free text or secrets (e.g. `skipChapterText`,
+    /// `customYoutubeApiKey`).
     static func getNonDefaultSettings(prefixValue: String?) -> [String: String] {
         var result = [String: String]()
         // Check local settings
         for (key, defaultValue) in Const.settingsDefaults {
             if let currentValue = UserDefaults.standard.object(forKey: key) {
+                if currentValue is String { continue }
                 let currentAnyCodable = AnyCodable(currentValue)
                 let defaultAnyCodable = AnyCodable(defaultValue)
                 if currentAnyCodable != defaultAnyCodable {
@@ -77,6 +82,7 @@ extension UserDataService {
         // Check synced settings
         for (key, defaultValue) in Const.syncedSettingsDefaults {
             if let currentValue = NSUbiquitousKeyValueStore.default.object(forKey: key) {
+                if currentValue is String { continue }
                 let currentAnyCodable = AnyCodable(currentValue)
                 let defaultAnyCodable = AnyCodable(defaultValue)
                 if currentAnyCodable != defaultAnyCodable {

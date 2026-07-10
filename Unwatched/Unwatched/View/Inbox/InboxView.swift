@@ -97,6 +97,7 @@ struct InboxView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
+                .environment(\.videoListContext, .inbox)
             }
             .onAppear {
                 navManager.setScrollId("top", ClearList.inbox.rawValue)
@@ -104,7 +105,7 @@ struct InboxView: View {
             .onDisappear {
                 Signal.log(
                     "Inbox.Count",
-                    parameters: ["Inbox.Count.Value": "\(inboxEntries.count)"],
+                    parameters: ["Inbox.Count.Value": Signal.bucket(inboxEntries.count)],
                     throttle: .weekly
                 )
             }

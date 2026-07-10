@@ -1,6 +1,13 @@
 # Credentials
 **/credentials.swift
 
+# Claude Code local config
+.claude/
+
+# Cloudflare Worker
+cloudflare-worker/node_modules/
+cloudflare-worker/.wrangler/
+
 # Other
 
 .build/

@@ -46,7 +46,7 @@ struct CopyUrlOptions: View {
                     channelId: channel.youtubeChannelId,
                     mobile: false,
                     videosSubPath: false) {
-                    copyUrl(urlString)
+                    copyUrl(urlString, "channel")
                 }
             } label: {
                 Text("channel")
@@ -62,7 +62,7 @@ struct CopyUrlOptions: View {
                     playlistId: playlistId,
                     mobile: false
                 ) {
-                    copyUrl(urlString)
+                    copyUrl(urlString, "playlist")
                 }
             } label: {
                 Text("playlist")
@@ -74,7 +74,7 @@ struct CopyUrlOptions: View {
     var copyRssFeedUrlButton: some View {
         if let urlString = video.subscription?.link?.absoluteString {
             Button {
-                copyUrl(urlString)
+                copyUrl(urlString, "rssFeed")
             } label: {
                 Text("rssFeed")
             }
@@ -85,7 +85,7 @@ struct CopyUrlOptions: View {
     var copyUrlButton: some View {
         Button {
             let text = UrlService.getShortenedUrl(video.youtubeId)
-            copyUrl(text)
+            copyUrl(text, "video")
         } label: {
             Text("video")
         }
@@ -99,15 +99,16 @@ struct CopyUrlOptions: View {
                     video.youtubeId,
                     timestamp: getTimestamp()
                 )
-                copyUrl(text)
+                copyUrl(text, "timestamp")
             } label: {
                 Text("videoAtTimestamp")
             }
         }
     }
 
-    func copyUrl(_ url: String) {
+    func copyUrl(_ url: String, _ option: String) {
         ClipboardService.set(url)
+        Signal.log("Player.MoreMenu", parameters: ["action": "copyUrl", "option": option])
         onSuccess?()
     }
 }

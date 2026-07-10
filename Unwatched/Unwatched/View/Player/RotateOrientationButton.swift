@@ -16,6 +16,7 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
             #if os(iOS)
             OrientationManager.changeOrientation(to: .landscapeRight)
             #endif
+            Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
         } label: {
             contentImage(
                 Image(systemName: Const.enableFullscreenSF)
@@ -30,6 +31,7 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
                 #if os(iOS)
                 OrientationManager.changeOrientation(to: .landscapeLeft)
                 #endif
+                Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
             } label: {
                 Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
             }
@@ -56,7 +58,11 @@ struct ToggleTallFullscreenButton<Content>: View where Content: View {
     var body: some View {
         Button {
             hapticToggle.toggle()
-            player.setTallFullscreen(!player.tallFullscreenOverlay)
+            let willEnable = !player.tallFullscreenOverlay
+            player.setTallFullscreen(willEnable)
+            if willEnable {
+                Signal.log("Player.Fullscreen", parameters: ["type": "tall"])
+            }
         } label: {
             contentImage(
                 Image(systemName: player.tallFullscreenOverlay

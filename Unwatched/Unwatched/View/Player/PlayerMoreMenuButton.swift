@@ -36,6 +36,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     ForEach(player.availableAudioLanguages, id: \.code) { lang in
                         Button {
                             player.selectedAudioLanguage = lang.code
+                            Signal.log("Player.MoreMenu", parameters: ["action": "audioLanguage"])
                         } label: {
                             if lang.code == player.selectedAudioLanguage {
                                 Label(lang.name, systemImage: "checkmark")
@@ -54,6 +55,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     ForEach(player.availableVideoQualities, id: \.height) { quality in
                         Button {
                             player.selectedVideoQuality = quality.height
+                            Signal.log("Player.MoreMenu", parameters: ["action": "videoQuality"])
                         } label: {
                             if quality.height == player.selectedVideoQuality {
                                 Label(quality.label, systemImage: "checkmark")
@@ -71,6 +73,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                 Menu {
                     Button {
                         player.selectedCaptionTrackId = nil
+                        Signal.log("Player.MoreMenu", parameters: ["action": "captions"])
                     } label: {
                         if player.selectedCaptionTrackId == nil {
                             Label("off", systemImage: "checkmark")
@@ -81,6 +84,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                     ForEach(player.availableCaptionTracks) { track in
                         Button {
                             player.selectedCaptionTrackId = track.id
+                            Signal.log("Player.MoreMenu", parameters: ["action": "captions"])
                         } label: {
                             if track.id == player.selectedCaptionTrackId {
                                 Label(track.name, systemImage: "checkmark")
@@ -118,6 +122,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                 ForEach(PlayerTypeSetting.allCases, id: \.self) { type in
                     Button {
                         playerType = type
+                        Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
                     } label: {
                         if type == playerType {
                             Label(type.menuDescription, systemImage: "checkmark")
@@ -136,6 +141,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
                 Button {
                     navManager.showMenu = true
                     openUrl(url)
+                    Signal.log("Player.MoreMenu", parameters: ["action": "openInBrowser"])
                 } label: {
                     Text("openInAppBrowser")
                     Image(systemName: Const.youtubeSF)
@@ -178,6 +184,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
         Button {
             navManager.showMenu = false
             navManager.showDeferDateSelector = true
+            Signal.log("Player.MoreMenu", parameters: ["action": "defer"])
         } label: {
             Text("deferVideo")
             Image(systemName: "clock.fill")
@@ -233,6 +240,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
             VideoService.toggleBookmark(video)
             hapticToggle.toggle()
+            Signal.log("Player.MoreMenu", parameters: ["action": "bookmark"])
         }
     }
 

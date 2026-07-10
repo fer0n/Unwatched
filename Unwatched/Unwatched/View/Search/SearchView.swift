@@ -181,6 +181,7 @@ struct SearchView: View {
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
+        .environment(\.videoListContext, .search)
     }
 }
 

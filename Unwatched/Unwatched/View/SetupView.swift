@@ -66,6 +66,7 @@ struct SetupView: View {
                     Log.info("scenePhase: background")
                     SetupView.handleAppClosed()
                     BackgroundMonitor.handleBackground()
+                    Signal.flushOnBackground()
                 default:
                     break
                 }
@@ -172,10 +173,22 @@ struct SetupView: View {
         let signalType = "SettingsSnapshot"
         let shouldSend = UserDefaults.standard.shouldPerform(signalType, interval: .fortNightly)
         if shouldSend {
-            let nonDefault = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
-            Signal.log(signalType, parameters: nonDefault)
+            var params = UserDataService.getNonDefaultSettings(prefixValue: "Unwatched.Setting.")
+            params["device"] = Signal.deviceCategory
+            params["os"] = Signal.osVersion
+            // Free-text settings are never sent verbatim (see getNonDefaultSettings).
+            params["hasCustomApiKey"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.customYoutubeApiKey))"
+            params["hasSkipText"] = "Unwatched.Setting.\(Self.isSyncedSettingSet(Const.skipChapterText))"
+            Signal.log(signalType, parameters: params)
             signalSubscriptionCount()
         }
+    }
+
+    /// Whether a synced free-text setting has a non-empty value. Used to report the
+    /// *presence* of settings like the custom API key without ever transmitting the value.
+    static func isSyncedSettingSet(_ key: String) -> Bool {
+        let value = NSUbiquitousKeyValueStore.default.string(forKey: key) ?? ""
+        return !value.isEmpty
     }
 
     static func signalSubscriptionCount() {

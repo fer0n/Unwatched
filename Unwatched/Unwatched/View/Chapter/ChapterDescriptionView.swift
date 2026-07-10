@@ -127,28 +127,28 @@ struct ChapterDescriptionView: View {
     var buttons: some View {
         Button {
             playVideo()
-            Signal.log("VideoDetail.Play", throttle: .weekly)
+            Signal.videoAction("play", .detail)
         } label: {
             Image(systemName: "play.fill")
         }
 
         Button {
             addToQueueNext()
-            Signal.log("VideoDetail.QueueNext", throttle: .weekly)
+            Signal.videoAction("queueTop", .detail)
         } label: {
             Image(systemName: Const.queueNextSF)
         }
 
         Button {
             addToQueueLast()
-            Signal.log("VideoDetail.QueueLast", throttle: .weekly)
+            Signal.videoAction("queueBottom", .detail)
         } label: {
             Image(systemName: Const.queueLastSF)
         }
 
         Button {
             clearVideo()
-            Signal.log("VideoDetail.Clear", throttle: .weekly)
+            Signal.videoAction("clear", .detail)
         } label: {
             #if os(visionOS)
             Text("clear")
@@ -181,6 +181,7 @@ struct ChapterDescriptionView: View {
     func playVideo() {
         VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         player.playVideo(video)
+        Signal.playbackStarted("detail")
         navManager.handlePlay()
     }
 

@@ -22,7 +22,7 @@ struct GetTranscript: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        Signal.log("Shortcut.GetTranscript", throttle: .weekly)
+        Signal.log("Shortcut.GetTranscript")
 
         let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
         guard hasPremium else {

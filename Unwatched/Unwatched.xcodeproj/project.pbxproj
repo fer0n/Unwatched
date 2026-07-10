@@ -233,7 +233,6 @@
 		885249422D18119D004C983E /* TransparentNavBarWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885249402D18119D004C983E /* TransparentNavBarWorkaround.swift */; };
 		8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
 		8852B02C2D346B8B0047C498 /* FilterSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8852B02A2D346B8B0047C498 /* FilterSettingsView.swift */; };
-		885714882E658911006D1EE9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 885714872E658911006D1EE9 /* TelemetryDeck */; };
 		88571E7C2E659447006D1EE9 /* credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88571ADD2E658FDA006D1EE9 /* credentials.swift */; };
 		885723032E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
 		885723042E6596FA006D1EE9 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885723012E6596F6006D1EE9 /* Signal.swift */; };
@@ -594,6 +593,10 @@
 		88C194742BBFC8440073E2E1 /* SubscriptionActor+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */; };
 		88C194772BBFCE9A0073E2E1 /* WatchedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */; };
 		88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */; };
+		88C1A1E12FF5D9CB001ED1DD /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C1A1E02FF5D9CB001ED1DD /* AnalyticsEvent.swift */; };
+		88C1A1E22FF5D9CC001ED1DD /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C1A1E02FF5D9CB001ED1DD /* AnalyticsEvent.swift */; };
+		88C1A1E52FF5D9D4001ED1DD /* AnalyticsQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C1A1E42FF5D9D4001ED1DD /* AnalyticsQueue.swift */; };
+		88C1A1E62FF5D9D4001ED1DD /* AnalyticsQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C1A1E42FF5D9D4001ED1DD /* AnalyticsQueue.swift */; };
 		88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205272B516D2A008EC51D /* ChapterListItem.swift */; };
 		88C2052A2B517732008EC51D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C205292B517732008EC51D /* PlayerManager.swift */; };
 		88C33B202EC9E0B300E7685C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DFC0B02B44843A001895C8 /* ContentView.swift */; };
@@ -1219,6 +1222,8 @@
 		88C194732BBFC8440073E2E1 /* SubscriptionActor+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SubscriptionActor+Info.swift"; sourceTree = "<group>"; };
 		88C194762BBFCE9A0073E2E1 /* WatchedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedButton.swift; sourceTree = "<group>"; };
 		88C194782BBFD1560073E2E1 /* CustomSettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsButton.swift; sourceTree = "<group>"; };
+		88C1A1E02FF5D9CB001ED1DD /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
+		88C1A1E42FF5D9D4001ED1DD /* AnalyticsQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsQueue.swift; sourceTree = "<group>"; };
 		88C205272B516D2A008EC51D /* ChapterListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterListItem.swift; sourceTree = "<group>"; };
 		88C205292B517732008EC51D /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayNowButton.swift; sourceTree = "<group>"; };
@@ -1471,7 +1476,6 @@
 			files = (
 				88B7FFA22C99DE9600CD917E /* UnwatchedShared.framework in Frameworks */,
 				88BB6D122D8C069200A90CCF /* CloudKit.framework in Frameworks */,
-				885714882E658911006D1EE9 /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1587,6 +1591,8 @@
 				88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */,
 				887785E62EEA088F00795394 /* TranscriptDisplayItem.swift */,
 				CD6681452F1D8B9200E8DA73 /* BackgroundTransparentEffect.swift */,
+				88C1A1E02FF5D9CB001ED1DD /* AnalyticsEvent.swift */,
+				88C1A1E42FF5D9D4001ED1DD /* AnalyticsQueue.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -2558,7 +2564,6 @@
 			);
 			mainGroup = 88DFC0A22B44843A001895C8;
 			packageReferences = (
-				885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
 			);
 			productRefGroup = 88DFC0AC2B44843A001895C8 /* Products */;
 			projectDirPath = "";
@@ -2768,6 +2773,7 @@
 				88C4F6942F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */,
 				889AF95C2C50ED05001CEDE6 /* HandleVideoListItemTap.swift in Sources */,
 				886817882D77379800E06A0D /* AppCommands.swift in Sources */,
+				88C1A1E52FF5D9D4001ED1DD /* AnalyticsQueue.swift in Sources */,
 				889AF95D2C50ED05001CEDE6 /* SubscriptionActor.swift in Sources */,
 				889AF95E2C50ED05001CEDE6 /* VideoListItemSwipeActionsModifier.swift in Sources */,
 				889AF95F2C50ED05001CEDE6 /* ClearAllVideosButton.swift in Sources */,
@@ -2998,6 +3004,7 @@
 				889DFB652E0225FD00D694E0 /* TinyUndoManager.swift in Sources */,
 				889AF8E92C50ECA9001CEDE6 /* DismissToolbarButton.swift in Sources */,
 				889AF8EA2C50ECA9001CEDE6 /* CapsulePicker.swift in Sources */,
+				88C1A1E22FF5D9CC001ED1DD /* AnalyticsEvent.swift in Sources */,
 				8809D8922DE8E38200B28165 /* InboxSwipeTipView.swift in Sources */,
 				88D446AD2D05D54E001F9F55 /* PlayerScrubber.swift in Sources */,
 				88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */,
@@ -3274,6 +3281,7 @@
 				88F1AC2B2E70D5F800676C26 /* IntentError.swift in Sources */,
 				88C4F6982F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift in Sources */,
 				88F1EE4E2B5C6CBC009866A0 /* YtBrowserWebView.swift in Sources */,
+				88C1A1E62FF5D9D4001ED1DD /* AnalyticsQueue.swift in Sources */,
 				88373C252C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift in Sources */,
 				889924732C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift in Sources */,
 				88DD14752E7E981F007BA1F4 /* PlayerEmbedded.swift in Sources */,
@@ -3304,6 +3312,7 @@
 				88DFC0C62B448C01001895C8 /* VideoService.swift in Sources */,
 				88899D932E035E54002C05BC /* TitleFilterView.swift in Sources */,
 				8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */,
+				88C1A1E12FF5D9CB001ED1DD /* AnalyticsEvent.swift in Sources */,
 				88758A1B2F76A1FA00643CE1 /* OPMLParser.swift in Sources */,
 				8852B02B2D346B8B0047C498 /* FilterSettingsView.swift in Sources */,
 				880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */,
@@ -4204,11 +4213,6 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		88014D222E68D454000FAA00 /* TelemetryDeck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
-			productName = TelemetryDeck;
-		};
-		885714872E658911006D1EE9 /* TelemetryDeck */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 885714862E658911006D1EE9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
 			productName = TelemetryDeck;

@@ -227,7 +227,7 @@ extension PlayerManager {
         } else {
             temporaryPlaybackSpeed = tempSpeedUpValue
         }
-        Signal.log("Player.setTemporarySpeed", throttle: .weekly)
+        Signal.log("Player.setTemporarySpeed")
     }
 
     func temporarySpeedUp() {
@@ -303,12 +303,33 @@ extension PlayerManager {
         }
     }
 
+    /// Toggle Picture-in-Picture. Logs on enter only, so `Player.PIP` counts deliberate
+    /// user PIP starts for both the web and native players (auto-PIP on backgrounding is
+    /// intentionally excluded — this answers "who uses the PIP button").
+    @MainActor
+    func togglePip() {
+        pipEnabled.toggle()
+        if pipEnabled {
+            Signal.log("Player.PIP")
+        }
+    }
+
+    /// Where the player currently is, for analytics context. Shared by `Player.setPlaybackSpeed`
+    /// and `Player.NextVideo` so the "portrait vs. landscape fullscreen vs. embedded" split
+    /// stays comparable across surfaces.
+    @MainActor
+    var fullscreenContext: String {
+        SheetPositionReader.shared.landscapeFullscreen
+            ? "landscape"
+            : (tallFullscreenOverlay ? "portrait" : "off")
+    }
+
     @MainActor
     private func setPlaybackSpeed(_ value: Double) {
         if temporaryPlaybackSpeed != nil {
             return
         }
-        Signal.log("Player.setPlaybackSpeed", throttle: .weekly)
+        Signal.log("Player.setPlaybackSpeed", parameters: ["fullscreen": fullscreenContext])
         if video?.subscription?.customSpeedSetting != nil {
             video?.subscription?.customSpeedSetting = value
         } else {

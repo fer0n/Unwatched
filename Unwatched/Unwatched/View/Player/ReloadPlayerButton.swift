@@ -14,6 +14,7 @@ struct ReloadPlayerButton: View {
             player.embeddingDisabled = false
             player.hotReloadPlayer()
             player.handleChapterRefresh(forceRefresh: true)
+            Signal.log("Player.MoreMenu", parameters: ["action": "reload"])
         } label: {
             Image(systemName: Const.reloadSF)
             Text("reloadPlayer")

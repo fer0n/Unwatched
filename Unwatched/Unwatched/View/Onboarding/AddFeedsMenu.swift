@@ -54,7 +54,7 @@ struct AddFeedsMenu: View {
             navManager.presentedSearch.removeAll()
             navManager.navigateTo(.search)
             navManager.pendingSearchFocus = true
-            Signal.log("Onboarding.BrowseYoutube", throttle: .weekly)
+            Signal.log("Onboarding.BrowseYoutube")
         } label: {
             Text("browser")
                 .padding(.horizontal, 10)
@@ -66,7 +66,7 @@ struct AddFeedsMenu: View {
     var importSubscriptionsButton: some View {
         Button {
             showImportSheet = true
-            Signal.log("Onboarding.ImportSubscriptions", throttle: .weekly)
+            Signal.log("Onboarding.ImportSubscriptions")
         } label: {
             Label("importFromYoutube", systemImage: "square.and.arrow.down.fill")
                 .frame(maxWidth: .infinity)

@@ -14,6 +14,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     @Environment(PlayerManager.self) private var player
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
+    @Environment(\.videoListContext) private var listContext
 
     let videoData: VideoData
     var config: VideoListItemConfig
@@ -25,8 +26,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 LeadingSwipeActionsView(
                     theme: theme,
                     config: config,
-                    addVideoToTopQueue: addVideoToTopQueue,
-                    addVideoToBottomQueue: addVideoToBottomQueue,
+                    addVideoToTopQueue: { addVideoToTopQueue(via: "swipe") },
+                    addVideoToBottomQueue: { addVideoToBottomQueue(via: "swipe") },
                     toggleIsNew: toggleIsNew,
                     )
             }
@@ -37,8 +38,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                     config: config,
                     clearVideoEverywhere: clearVideoEverywhere,
                     setWatched: setWatched,
-                    addVideoToTopQueue: addVideoToTopQueue,
-                    addVideoToBottomQueue: addVideoToBottomQueue,
+                    addVideoToTopQueue: { addVideoToTopQueue(via: "menu") },
+                    addVideoToBottomQueue: { addVideoToBottomQueue(via: "menu") },
                     toggleBookmark: toggleBookmark,
                     toggleIsNew: toggleIsNew,
                     moveToInbox: moveToInbox,
@@ -55,8 +56,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                                 videoData: videoData,
                                 config: config,
                                 setWatched: setWatched,
-                                addVideoToTopQueue: addVideoToTopQueue,
-                                addVideoToBottomQueue: addVideoToBottomQueue,
+                                addVideoToTopQueue: { addVideoToTopQueue(via: "menu") },
+                                addVideoToBottomQueue: { addVideoToBottomQueue(via: "menu") },
                                 clearVideoEverywhere: clearVideoEverywhere,
                                 canBeCleared: canBeCleared,
                                 toggleBookmark: toggleBookmark,
@@ -152,8 +153,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
     }
 
-    func addVideoToTopQueue() {
+    func addVideoToTopQueue(via: String) {
         Log.info("addVideoTop")
+        Signal.videoAction("queueTop", listContext, via: via)
         queueAction {
             performVideoAction(
                 isNew: false,
@@ -175,8 +177,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
     }
 
-    func addVideoToBottomQueue() {
+    func addVideoToBottomQueue(via: String) {
         Log.info("addVideoBottom")
+        Signal.videoAction("queueBottom", listContext, via: via)
         queueAction {
             performVideoAction(
                 isNew: false,
@@ -211,6 +214,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
 
     func moveToInbox() {
         Log.info("moveToInbox")
+        Signal.videoAction("inbox", listContext)
         withAnimation {
             performVideoAction(
                 isNew: false,
@@ -231,6 +235,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func toggleBookmark() {
+        Signal.videoAction("bookmark", listContext)
         performVideoAction(
             asyncAction: { videoId in
                 VideoService.toggleBookmarkFetch(
@@ -258,6 +263,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func setWatched(_ watched: Bool) {
+        Signal.videoAction(watched ? "watched" : "unwatched", listContext)
         performVideoAction(
             isNew: false,
             asyncAction: { videoId in
@@ -278,6 +284,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     }
 
     func clearVideoEverywhere() {
+        Signal.videoAction("clear", listContext)
         performVideoAction(
             isNew: false,
             asyncAction: { videoId in

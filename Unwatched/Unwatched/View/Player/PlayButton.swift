@@ -31,6 +31,7 @@ struct CorePlayButton<Content>: View where Content: View {
     var body: some View {
         Button {
             player.handlePlayButton()
+            Signal.log("Player.PlayPause", throttle: .daily)
             if enableHaptics {
                 hapticToggle.toggle()
             }

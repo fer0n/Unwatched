@@ -15,14 +15,17 @@ struct CoreNextButton<Content>: View where Content: View {
     private let contentImage: ((Image, _ isOn: Bool) -> Content)
     let extendedContextMenu: Bool
     let isCircleVariant: Bool
+    let endOverlay: Bool
 
     init(
         extendedContextMenu: Bool = false,
         isCircleVariant: Bool = false,
+        endOverlay: Bool = false,
         @ViewBuilder content: @escaping (Image, _ isOn: Bool) -> Content
     ) {
         self.extendedContextMenu = extendedContextMenu
         self.isCircleVariant = isCircleVariant
+        self.endOverlay = endOverlay
         self.contentImage = content
     }
 
@@ -32,7 +35,10 @@ struct CoreNextButton<Content>: View where Content: View {
         Button {
             player.markVideoWatched(showMenu: false, source: .userInteraction)
             hapticToggle.toggle()
-            Signal.log("Player.NextVideo", throttle: .weekly)
+            Signal.log("Player.NextVideo", parameters: [
+                "source": endOverlay ? "ended" : "controls",
+                "fullscreen": player.fullscreenContext
+            ])
         } label: {
             contentImage(
                 Image(
@@ -100,9 +106,10 @@ struct NextVideoButton: View {
     var isSmall: Bool = false
     var stroke: Bool = true
     var backgroundColor: Color?
+    var endOverlay: Bool = false
 
     var body: some View {
-        CoreNextButton { image, isOn in
+        CoreNextButton(endOverlay: endOverlay) { image, isOn in
             image
                 .playerToggleModifier(isOn: isOn,
                                       isSmall: isSmall,

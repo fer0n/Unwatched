@@ -90,7 +90,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             Log.warning("handlePasteAndPlay: no valid url pasted")
             return
         }
-        addAndPlay(url)
+        addAndPlay(url, source: "paste")
     }
 
     func handleSearchYoutube() {
@@ -112,7 +112,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
     func handleWatchInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
         Log.info("handleWatchInUnwatched")
         if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
-            addAndPlay(youtubeUrl)
+            addAndPlay(youtubeUrl, source: "shortcut")
         }
     }
 
@@ -129,7 +129,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         }
     }
 
-    func addAndPlay(_ url: URL) {
+    func addAndPlay(_ url: URL, source: String) {
         let task = VideoService.addForeignUrls(
             [url],
             in: .queue,
@@ -137,6 +137,7 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
         )
         player.loadTopmostVideoFromQueue(after: task, modelContext: modelContext, source: .userInteraction)
         navManager.handlePlay()
+        Signal.playbackStarted(source)
     }
 
     func addAndQueue(_ url: URL) {

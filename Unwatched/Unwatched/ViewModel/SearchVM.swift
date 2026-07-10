@@ -76,6 +76,7 @@ final class SearchVM {
                     nextPageToken = page.nextPageToken
                     isSearching = false
                 }
+                Signal.log("Search.Submitted", parameters: ["resultCount": Signal.bucket(results.count)])
                 refreshAllStatuses()
             } catch is CancellationError {
                 // superseded by a newer query — leave state to the newer task

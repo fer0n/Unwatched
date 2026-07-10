@@ -13,7 +13,7 @@ struct PipButton: View {
     var body: some View {
         Button {
             hapticToggle.toggle()
-            player.pipEnabled.toggle()
+            player.togglePip()
         } label: {
             Image(systemName: "pip.fill")
                 .playerToggleModifier(isOn: player.pipEnabled, isSmall: true)

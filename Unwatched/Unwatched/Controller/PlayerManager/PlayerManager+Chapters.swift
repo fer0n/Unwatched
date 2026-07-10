@@ -175,7 +175,7 @@ extension PlayerManager {
     func goToNextChapter() -> Bool {
         if let next = nextChapter {
             setChapter(next)
-            Signal.log("Player.NextChapter", throttle: .weekly)
+            Signal.log("Player.NextChapter")
             return true
         }
         return false
@@ -202,7 +202,7 @@ extension PlayerManager {
             return true
         }
 
-        Signal.log("Player.PreviousChapter", throttle: .weekly)
+        Signal.log("Player.PreviousChapter")
         return false
     }
 

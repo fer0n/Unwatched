@@ -10,6 +10,7 @@ import OSLog
 struct QueueVideoButton: View {
     @AppStorage(Const.themeColor) var theme = ThemeColor()
     @Environment(\.modelContext) var modelContext
+    @Environment(\.videoListContext) private var listContext
 
     @State var hapticToggle = false
 
@@ -55,6 +56,7 @@ struct QueueVideoButton: View {
             return
         }
         hapticToggle.toggle()
+        Signal.videoAction("queueTop", listContext, via: "button")
         VideoService.insertQueueEntries(
             at: 1,
             videos: [video],

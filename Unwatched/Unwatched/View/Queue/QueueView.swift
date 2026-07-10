@@ -123,6 +123,7 @@ private struct QueueListView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .disabled(queue.isEmpty)
+                .environment(\.videoListContext, .queue)
             }
             .myNavigationTitle("queue")
             .sendableSubscriptionDestination()
@@ -144,7 +145,7 @@ private struct QueueListView: View {
         .onDisappear {
             Signal.log(
                 "Queue.Count",
-                parameters: ["Queue.Count.Value": "\(queue.count)"],
+                parameters: ["Queue.Count.Value": Signal.bucket(queue.count)],
                 throttle: .weekly
             )
         }

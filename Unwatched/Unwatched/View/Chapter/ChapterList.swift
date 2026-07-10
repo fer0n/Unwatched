@@ -48,6 +48,7 @@ struct ChapterList: View {
                         if !chapter.isActive {
                             toggleChapter(chapter)
                         } else {
+                            Signal.log("Chapter.Jump")
                             setChapter(chapter)
                         }
                     }
@@ -93,6 +94,7 @@ struct ChapterList: View {
         if video != player.video {
             video.elapsedSeconds = chapter.startTime
             player.playVideo(video)
+            Signal.playbackStarted("detail")
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }
         player.setChapter(chapter)

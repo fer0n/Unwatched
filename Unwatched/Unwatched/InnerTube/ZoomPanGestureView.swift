@@ -20,6 +20,9 @@ struct ZoomPanModifier: ViewModifier {
 
     @ViewBuilder
     func body(content: Content) -> some View {
+        #if os(visionOS)
+        content
+        #else
         content
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) }
                 action: { contentFrame = $0 }
@@ -30,10 +33,13 @@ struct ZoomPanModifier: ViewModifier {
             // long-press gestures stacked below never hijack it mid-zoom.
             .gesture(PinchPanRepresentable(
                 zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
+        #endif
     }
 }
 
 // MARK: - Combined pinch + two-finger pan
+
+#if !os(visionOS)
 
 /// Custom recognizer that tracks its own touches so it can stay alive across finger-count
 /// changes. Pinch geometry is derived from the first two tracked touches directly (spread +
@@ -227,4 +233,5 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
         }
     }
 }
+#endif
 #endif

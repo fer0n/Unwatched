@@ -121,9 +121,13 @@ struct PlayerScrubberOverlay: View {
 
     @ViewBuilder
     private var pillStack: some View {
+        #if os(visionOS)
+        pills
+        #else
         GlassEffectContainer(spacing: 0) {
             pills
         }
+        #endif
     }
 
     private var pills: some View {
@@ -135,7 +139,7 @@ struct PlayerScrubberOverlay: View {
                     .foregroundStyle(.primary)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
-                    .glassEffect(.regular, in: Capsule())
+                    .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: Capsule())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .containerRelativeFrame(.horizontal) { width, _ in
                         (width - 60) * 0.75
@@ -158,7 +162,7 @@ struct PlayerScrubberOverlay: View {
             )
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .glassEffect(.regular, in: Capsule())
+            .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: Capsule())
             .padding(.horizontal, 30)
         }
     }

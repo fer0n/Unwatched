@@ -86,7 +86,8 @@ struct FullscreenOverlayControls: View {
                 .backgroundTransparentEffect(fallback: .regularMaterial)
 
                 NextVideoButton(
-                    backgroundColor: .clear
+                    backgroundColor: .clear,
+                    endOverlay: true
                 )
                 .backgroundTransparentEffect(fallback: .ultraThinMaterial)
                 .frame(maxWidth: .infinity)

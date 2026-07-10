@@ -73,6 +73,7 @@ struct GenerateChaptersButton: View {
                 dismiss()
             }
             if canAccess {
+                Signal.log("Chapter.Generate", parameters: ["source": "button"])
                 viewModel.generateChapters(for: video, transcriptUrl: transcriptUrl)
             }
         } label: {

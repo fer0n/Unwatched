@@ -58,6 +58,7 @@ struct InboxOverflowTipView: View {
                     Divider()
 
                     Button {
+                        Signal.log("Inbox.OverflowTip", parameters: ["action": "clearKeepAlt"])
                         let count = CleanupService.clearOldInboxEntries(
                             keep: Const.inboxOverflowKeepCountAlt,
                             modelContext
@@ -73,6 +74,7 @@ struct InboxOverflowTipView: View {
                     Divider()
 
                     Button {
+                        Signal.log("Inbox.OverflowTip", parameters: ["action": "clearKeep"])
                         let count = CleanupService.clearOldInboxEntries(
                             keep: Const.inboxOverflowKeepCount,
                             modelContext
@@ -88,6 +90,7 @@ struct InboxOverflowTipView: View {
                     Divider()
 
                     Button(role: .destructive) {
+                        Signal.log("Inbox.OverflowTip", parameters: ["action": "clearAll"])
                         triggerAction = true
                     } label: {
                         Text("clearAll")

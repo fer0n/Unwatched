@@ -152,6 +152,10 @@ struct PlayerGestureOverlay: ViewModifier {
         if lockedAxis == .vertical && (gesture == .swipeLeft || gesture == .swipeRight) { return }
         if lockedAxis == .horizontal && (gesture == .swipeUp || gesture == .swipeDown) { return }
 
+        if let name = gesture.analyticsName {
+            Signal.gesture(name)
+        }
+
         switch gesture {
         case .centerTap:
             let isPlaying = player.isPlaying
@@ -370,6 +374,24 @@ extension PlayerGestureOverlay {
              longPressLeft,
              longPressRight,
              longPressEnd
+
+        /// Low-cardinality analytics id, or nil for gestures we don't track: `.tap` toggles
+        /// the controls constantly (noise) and `.longPressEnd` is just the release of a
+        /// long-press that's already counted on its start.
+        var analyticsName: String? {
+            switch self {
+            case .tap, .longPressEnd: return nil
+            case .centerTap: return "centerTap"
+            case .doubleTapLeft: return "doubleTapLeft"
+            case .doubleTapRight: return "doubleTapRight"
+            case .swipeLeft: return "swipeLeft"
+            case .swipeRight: return "swipeRight"
+            case .swipeUp: return "swipeUp"
+            case .swipeDown: return "swipeDown"
+            case .longPressLeft: return "longPressLeft"
+            case .longPressRight: return "longPressRight"
+            }
+        }
     }
 }
 

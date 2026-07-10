@@ -1,0 +1,27 @@
+name = "unwatched-analytics"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+[vars]
+CF_ACCOUNT_ID = "2206bad495d854f040f37fc989b8305e"
+
+[[routes]]
+pattern = "signal.octabits.net"
+custom_domain = true
+
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "unwatched_analytics_v2"
+
+# Per-IP rate limit on the ingest endpoint. The bearer token that authorizes writes
+# ships inside the app and is therefore extractable; this caps how much any single
+# source can inject regardless of the token. Legitimate clients send only a handful of
+# batched POSTs per app session, so 60/min/IP sits far above real usage. Reads are
+# unaffected — the dashboard uses a separate, server-only secret.
+[[ratelimits]]
+name = "INGEST_LIMITER"
+namespace_id = "1001"
+
+[ratelimits.simple]
+limit = 60
+period = 60
