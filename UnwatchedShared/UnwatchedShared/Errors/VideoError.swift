@@ -1,12 +1,12 @@
 //
 //  VideoError.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 import SwiftUI
 
-enum VideoError: Error, CustomLocalizedStringResourceConvertible {
+public enum VideoError: Error, CustomLocalizedStringResourceConvertible {
     case noVideoFound
     case noYoutubeId
     case noYoutubePlaylistId
@@ -16,7 +16,7 @@ enum VideoError: Error, CustomLocalizedStringResourceConvertible {
     case noVideoInfo
     case noVideoUrl
 
-    var localizedStringResource: LocalizedStringResource {
+    public var localizedStringResource: LocalizedStringResource {
         switch self {
         case .noVideoFound:
             return "noVideoFound"

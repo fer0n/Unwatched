@@ -79,6 +79,76 @@ public enum YoutubeUrlParser {
         getYoutubeId(from: url) != nil || getPlaylistId(from: url) != nil
     }
 
+    /// True if the URL points at a channel or user page (not a video/playlist).
+    public static func isChannelUrl(_ url: URL) -> Bool {
+        !isContentUrl(url)
+            && (getChannelId(from: url) != nil || getChannelUserName(from: url) != nil || isFeedUrl(url))
+    }
+
+    public static func getStartTime(from url: URL) -> Double? {
+        // https://www.youtube.com/watch?v=epBbbysk5cU&t=60s
+        let regex = #"t=(\d+(\.\d+)?)"#
+        guard let match = firstCapture(in: url.absoluteString, regex: regex), !match.isEmpty else {
+            return nil
+        }
+        return Double(match)
+    }
+
+    /// https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+    /// https://www.youtube.com/feeds/videos.xml?channel_id=UCnrAvt4i_2WV3yEKWyEUMlg
+    public static func isFeedUrl(_ url: URL) -> Bool {
+        url.absoluteString.contains("youtube.com/feeds/videos.xml")
+    }
+
+    public static func getFeedUrl(fromChannelId channelId: String) throws -> URL {
+        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
+            return channelFeedUrl
+        }
+        throw SubscriptionError.notSupported
+    }
+
+    public static func getFeedUrl(fromPlaylistId playlistId: String) throws -> URL {
+        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?playlist_id=\(playlistId)") {
+            return channelFeedUrl
+        }
+        throw SubscriptionError.notSupported
+    }
+
+    public static func getChannelId(from url: URL) -> String? {
+        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+        firstCapture(in: url.absoluteString, regex: #"\/channel\/([^\s\/\?\n#]+)"#)
+    }
+
+    public static func getChannelUserName(from url: URL) -> String? {
+        let urlString = url.absoluteString.removingPercentEncoding ?? url.absoluteString
+
+        // https://www.youtube.com/@GAMERTAGVR/videos
+        if let userName = firstCapture(in: urlString, regex: #"\/@([^\/#\?]*)"#), !userName.isEmpty {
+            return userName
+        }
+
+        // https://www.youtube.com/c/GamertagVR/videos
+        if let userName = firstCapture(in: urlString, regex: #"\/c\/([^\/]*)"#), !userName.isEmpty {
+            return userName
+        }
+
+        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
+        if let userName = firstCapture(in: urlString, regex: #"\/videos.xml\?user=(.*)"#), !userName.isEmpty {
+            return userName
+        }
+
+        // https://www.youtube.com/user/JPRPokeTrainer98
+        if let userName = firstCapture(in: urlString, regex: #"\/user\/([^\/#\?\s]*)"#), !userName.isEmpty {
+            return userName
+        }
+
+        return nil
+    }
+
+    public static func getChannelId(fromAuthorUri uri: String) -> String? {
+        firstCapture(in: uri, regex: #"\/channel\/([^\s\/\?\n#]+)"#)
+    }
+
     /// Returns the first capture group of `regex` in `string`, an empty string if it matched
     /// without a capture group, or nil if there was no match. (Mirrors `String.matching(regex:)`.)
     private static func firstCapture(in string: String, regex: String) -> String? {

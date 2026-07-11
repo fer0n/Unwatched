@@ -1,22 +1,22 @@
 //
-//  VideoInfo.swift
-//  Unwatched
+//  YtPlaylistItems.swift
+//  UnwatchedShared
 //
 
 import Foundation
 
-struct YtPlaylistItems: Codable {
+public struct YtPlaylistItems: Codable {
 
-    struct ContentDetails: Codable {
+    public struct ContentDetails: Codable {
         let videoId: String
     }
 
-    struct Item: Codable {
+    public struct Item: Codable {
         let snippet: YtVideoSnippet
         let contentDetails: ContentDetails
     }
 
-    struct PageInfo: Codable {
+    public struct PageInfo: Codable {
         let totalResults: Int
         let resultsPerPage: Int
     }

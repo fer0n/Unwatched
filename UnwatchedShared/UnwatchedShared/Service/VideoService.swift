@@ -22,14 +22,17 @@ public struct VideoService {
 
     public static func clearEntries(from video: Video,
                                     except model: (any PersistentModel.Type)? = nil,
-                                    modelContext: ModelContext) {
+                                    modelContext: ModelContext,
+                                    save: Bool = true) {
         if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
             deleteInboxEntry(inboxEntry, modelContext: modelContext)
         }
         if model != QueueEntry.self, let queueEntry = video.queueEntry {
             deleteQueueEntry(queueEntry, modelContext: modelContext)
         }
-        try? modelContext.save()
+        if save {
+            try? modelContext.save()
+        }
     }
 
     public static func deleteQueueEntry(

@@ -95,41 +95,8 @@ struct UrlService {
         YoutubeUrlParser.isShort(url)
     }
 
-    enum ThumbnailSize {
-        case small
-        case medium
-        case large
-        case max
-    }
-
-    static func getImageUrl(_ imageUrl: URL?, _ size: ThumbnailSize) -> URL? {
-        // smallest: https://i.ytimg.com/vi/88bMVbx1dzM/default.jpg
-        // small: https://i.ytimg.com/vi/88bMVbx1dzM/mqdefault.jpg
-        // default/medium url: https://i.ytimg.com/vi/88bMVbx1dzM/hqdefault.jpg
-
-        // larger: https://i.ytimg.com/vi/88bMVbx1dzM/sddefault.jpg
-        // largest: https://i.ytimg.com/vi/88bMVbx1dzM/maxresdefault.jpg
-
-        guard let imageUrl else { return nil }
-        let urlString = imageUrl.absoluteString
-
-        let replacement: String
-        switch size {
-        case .small:
-            replacement = "mqdefault.jpg"
-        case .medium:
-            replacement = "hqdefault.jpg"
-        case .large:
-            replacement = "sddefault.jpg"
-        case .max:
-            replacement = "maxresdefault.jpg"
-        }
-        let qualities = ["maxresdefault.jpg", "sddefault.jpg", "hqdefault.jpg", "mqdefault.jpg", "default.jpg"]
-        for quality in qualities where urlString.contains(quality) {
-            let newString = urlString.replacing(quality, with: replacement)
-            return URL(string: newString)
-        }
-        return imageUrl
+    static func getImageUrl(_ imageUrl: URL?, _ size: ThumbnailUrlService.Size) -> URL? {
+        ThumbnailUrlService.getImageUrl(imageUrl, size)
     }
 
     static func isYoutubeVideoUrl(url: URL) -> Bool {
@@ -143,32 +110,11 @@ struct UrlService {
     }
 
     static func getFeedUrlFromChannelId(_ channelId: String) throws -> URL {
-        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelId)") {
-            return channelFeedUrl
-        }
-        throw SubscriptionError.notSupported
+        try YoutubeUrlParser.getFeedUrl(fromChannelId: channelId)
     }
 
     static func getChannelUserNameFromUrl(_ url: URL, previousUserName: String? = nil) -> String? {
-        let urlString = url.absoluteString.removingPercentEncoding ?? url.absoluteString
-
-        // https://www.youtube.com/@GAMERTAGVR/videos
-        if let userName = urlString.matching(regex: #"\/@([^\/#\?]*)"#) {
-            return userName
-        }
-
-        // https://www.youtube.com/c/GamertagVR/videos
-        if let userName = urlString.matching(regex: #"\/c\/([^\/]*)"#) {
-            return userName
-        }
-
-        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        if let userName = urlString.matching(regex: #"\/videos.xml\?user=(.*)"#) {
-            return userName
-        }
-
-        // https://www.youtube.com/user/JPRPokeTrainer98
-        if let userName = urlString.matching(regex: #"\/user\/([^\/#\?\s]*)"#) {
+        if let userName = YoutubeUrlParser.getChannelUserName(from: url) {
             return userName
         }
 
@@ -176,6 +122,7 @@ struct UrlService {
         // some channels forward to this kind of url (non-mobile), but the username is already known by then
         // https://www.youtube.com/lemonde lemondefr
         // allow if one username is contained in the other
+        let urlString = url.absoluteString.removingPercentEncoding ?? url.absoluteString
         let prev = previousUserName?.lowercased()
         let channelMatch = urlString.matching(regex: #"youtube\.com\/(\w+)"#)?.lowercased()
         if let prev, let channelMatch {
@@ -188,12 +135,7 @@ struct UrlService {
     }
 
     static func getChannelIdFromUrl(_ url: URL) -> String? {
-        return getChannelIdFromUrl(url.absoluteString)
-    }
-
-    static func getChannelIdFromUrl(_ url: String) -> String? {
-        // https://www.youtube.com/feeds/videos.xml?user=GAMERTAGVR
-        return url.matching(regex: #"\/channel\/([^\s\/\?\n#]+)"#)
+        YoutubeUrlParser.getChannelId(from: url)
     }
 
     static func getPlaylistIdFromUrl(_ url: URL) -> String? {
@@ -205,10 +147,7 @@ struct UrlService {
     }
 
     static func getPlaylistFeedUrl(_ playlistId: String) throws -> URL {
-        if let channelFeedUrl = URL(string: "https://www.youtube.com/feeds/videos.xml?playlist_id=\(playlistId)") {
-            return channelFeedUrl
-        }
-        throw SubscriptionError.notSupported
+        try YoutubeUrlParser.getFeedUrl(fromPlaylistId: playlistId)
     }
 
     static func isMobileYoutubePage(_ url: URL) -> Bool {

@@ -1,12 +1,12 @@
 //
 //  YtErrorResponseBody.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 
-struct YtErrorResponseBody: Decodable {
-    struct Error: Decodable {
+public struct YtErrorResponseBody: Decodable {
+    public struct Error: Decodable {
         var code: Int
         var message: String
     }

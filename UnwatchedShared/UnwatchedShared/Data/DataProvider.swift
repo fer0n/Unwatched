@@ -15,6 +15,30 @@ public extension ProcessInfo {
 public final class DataProvider: Sendable {
     public static let shared = DataProvider()
 
+    /// Shared between the main app and `UnwatchedShareExtension` so the extension can read/write
+    /// the same SwiftData store without launching the app.
+    static let appGroupIdentifier = "group.com.pentlandFirth.Unwatched"
+
+    /// Whether the running target actually has the App Group entitlement — tvOS/other targets
+    /// don't, so `groupContainer` below falls back to SwiftData's own default (non-shared)
+    /// location there instead of failing to resolve the group.
+    private static var hasAppGroupEntitlement: Bool {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) != nil
+    }
+
+    /// SwiftData has a built-in mechanism for exactly this — persisting to (and migrating an
+    /// existing store into) an App Group container — via `ModelConfiguration.groupContainer`.
+    /// Per Apple's guidance ("Adopting SwiftData for a Core Data app"): "For an app that has the
+    /// application-groups entitlement, it persists the data store to the root directory of the
+    /// app group container. For apps that evolve from a version that doesn't have any app group
+    /// container to a version that has one, SwiftData copies the existing store to the app group
+    /// container" — automatically, with no application code needed. Passing an explicit `url:` to
+    /// `ModelConfiguration` (the previous approach here) bypasses this entirely, since it skips
+    /// SwiftData's own default-location resolution — which is what triggers the automatic copy.
+    private static var groupContainer: ModelConfiguration.GroupContainer {
+        hasAppGroupEntitlement ? .identifier(appGroupIdentifier) : .none
+    }
+
     public let container: ModelContainer = {
         Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
@@ -30,7 +54,7 @@ public final class DataProvider: Sendable {
 
         let config = ModelConfiguration(
             schema: DataProvider.schema,
-            isStoredInMemoryOnly: false,
+            groupContainer: DataProvider.groupContainer,
             cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
         )
 
@@ -38,11 +62,12 @@ public final class DataProvider: Sendable {
 
         do {
             do {
-                return try ModelContainer(
+                let container = try ModelContainer(
                     for: DataProvider.schema,
                     migrationPlan: UnwatchedMigrationPlan.self,
                     configurations: [config]
                 )
+                return container
             } catch {
                 Log.error("getModelContainer error: \(error)")
             }
@@ -51,7 +76,7 @@ public final class DataProvider: Sendable {
             Log.info("getModelContainer: fallback")
             let config = ModelConfiguration(
                 schema: DataProvider.schema,
-                isStoredInMemoryOnly: false,
+                groupContainer: DataProvider.groupContainer,
                 cloudKitDatabase: .none
             )
             let container = try ModelContainer(

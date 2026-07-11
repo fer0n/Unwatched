@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import UnwatchedShared
 
 actor AnalyticsQueue {
     static let shared = AnalyticsQueue()

@@ -1,15 +1,14 @@
 //
 //  RSSParserDelegate.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 import OSLog
-import UnwatchedShared
 
-class RSSParserDelegate: NSObject, XMLParserDelegate {
-    var videos: [SendableVideo] = []
-    var subscriptionInfo: SendableSubscription?
+public class RSSParserDelegate: NSObject, XMLParserDelegate {
+    public var videos: [SendableVideo] = []
+    public var subscriptionInfo: SendableSubscription?
     var limitVideos: Int?
 
     var currentElement = ""
@@ -24,13 +23,13 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     var currentChannelId: String = ""
     var currentAuthor: String = ""
 
-    init(limitVideos: Int?) {
+    public init(limitVideos: Int?) {
         self.limitVideos = limitVideos
     }
 
-    override init() { }
+    override public init() { }
 
-    func parser(_ parser: XMLParser,
+    public func parser(_ parser: XMLParser,
                 didStartElement elementName: String,
                 namespaceURI: String?,
                 qualifiedName qName: String?,
@@ -62,7 +61,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
+    public func parser(_ parser: XMLParser, foundCharacters string: String) {
         switch currentElement {
         case "title": currentTitle += string
         case "yt:videoId": currentYoutubeId += string
@@ -77,10 +76,10 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     }
 
     func getChannelIdFromAuthorUri(_ uri: String) -> String? {
-        UrlService.getChannelIdFromUrl(uri)
+        YoutubeUrlParser.getChannelId(fromAuthorUri: uri)
     }
 
-    func parser(_ parser: XMLParser,
+    public func parser(_ parser: XMLParser,
                 didEndElement elementName: String,
                 namespaceURI: String?,
                 qualifiedName qName: String?) {
@@ -132,7 +131,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
-    func parserDidEndDocument(_ parser: XMLParser) {
+    public func parserDidEndDocument(_ parser: XMLParser) {
         // If we still don't have a valid subscription info after parsing the entire document,
         // try to create one from the currently collected data
         if subscriptionInfo == nil {

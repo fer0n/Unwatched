@@ -1,12 +1,14 @@
 //
 //  VideoListItemThumbnail.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import SwiftUI
-import UnwatchedShared
 
-struct VideoListItemThumbnail: View {
+/// Renders a video's thumbnail (with duration/progress overlay) from anything conforming to
+/// `VideoData` — a live `Video` model or a lightweight `SendableVideo` preview both work, so this
+/// is shared between the main app's video lists and the Share Extension's link preview.
+public struct VideoListItemThumbnail: View {
     let video: VideoData
     let config: VideoListItemConfig
     let fixedSize: CGSize?
@@ -16,7 +18,7 @@ struct VideoListItemThumbnail: View {
 
     let imageUrls: [URL?]
 
-    init(
+    public init(
         _ video: VideoData,
         config: VideoListItemConfig,
         size: CGSize? = nil,
@@ -27,12 +29,12 @@ struct VideoListItemThumbnail: View {
         self.fixedSize = size
         self.largeThumbnail = largeThumbnail
         self.imageUrls = [
-            UrlService.getImageUrl(video.thumbnailUrl, largeThumbnail ? .large : .small),
-            UrlService.getImageUrl(video.thumbnailUrl, .medium)
+            ThumbnailUrlService.getImageUrl(video.thumbnailUrl, largeThumbnail ? .large : .small),
+            ThumbnailUrlService.getImageUrl(video.thumbnailUrl, .medium)
         ]
     }
 
-    var body: some View {
+    public var body: some View {
         CachedImageView(urls: imageUrls) { image in
             image
                 .resizable()
@@ -86,5 +88,4 @@ struct VideoListItemThumbnail: View {
     .modelContainer(DataProvider.previewContainer)
     .frame(width: 300, height: 300)
     .background(.gray)
-
 }

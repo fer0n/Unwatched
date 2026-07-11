@@ -1,14 +1,13 @@
 //
 //  VideoCrawler.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 import OSLog
-import UnwatchedShared
 
-struct VideoCrawler {
-    static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
+public struct VideoCrawler {
+    public static func parseFeedUrl(_ url: URL, limitVideos: Int?) async throws -> RSSParserDelegate {
         let (data, response) = try await URLSession.shared.data(from: url)
 
         if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
@@ -18,7 +17,7 @@ struct VideoCrawler {
         return parseFeedData(data: data, limitVideos: limitVideos)
     }
 
-    static func parseFeedData(data: Data, limitVideos: Int?) -> RSSParserDelegate {
+    public static func parseFeedData(data: Data, limitVideos: Int?) -> RSSParserDelegate {
         let parser = XMLParser(data: data)
         let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos)
         parser.delegate = rssParserDelegate
@@ -26,24 +25,24 @@ struct VideoCrawler {
         return rssParserDelegate
     }
 
-    static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
+    public static func loadVideosFromRSS(url: URL) async throws -> [SendableVideo] {
         let rssParserDelegate = try await self.parseFeedUrl(url, limitVideos: nil)
         return rssParserDelegate.videos.map {
             var video = $0
             if let url = $0.url {
                 // RSS feeds apparently include "/shorts/" urls now
-                video.isYtShort = UrlService.isYtShortUrl(url: url)
+                video.isYtShort = YoutubeUrlParser.isShort(url)
             }
             return video
         }
     }
 
-    static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
+    public static func loadSubscriptionFromRSS(feedUrl: URL) async throws -> SendableSubscription {
         Log.info("loadSubscriptionFromRSS \(feedUrl)")
         let rssParserDelegate = try await self.parseFeedUrl(feedUrl, limitVideos: 0)
         if var subscriptionInfo = rssParserDelegate.subscriptionInfo {
             subscriptionInfo.link = feedUrl
-            if let playlistId = UrlService.getPlaylistIdFromUrl(feedUrl.absoluteString) {
+            if let playlistId = YoutubeUrlParser.getPlaylistId(from: feedUrl.absoluteString) {
                 subscriptionInfo.youtubePlaylistId = playlistId
             }
             if let author = subscriptionInfo.author, author == subscriptionInfo.title {
@@ -55,7 +54,7 @@ struct VideoCrawler {
         throw VideoCrawlerError.subscriptionInfoNotFound
     }
 
-    static func isYtShort(_ title: String, description: String?) -> Bool? {
+    public static func isYtShort(_ title: String, description: String?) -> Bool? {
         // search title and desc for #short -> definitly short
         let regexYtShort = #"#[sS]horts"#
         if title.matching(regex: regexYtShort) != nil {

@@ -1,12 +1,12 @@
 //
 //  YtChannelId.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 
-struct YtChannelId: Decodable {
-    struct Item: Decodable {
+public struct YtChannelId: Decodable {
+    public struct Item: Decodable {
         var id: String
     }
 

@@ -1,8 +1,13 @@
+//
+//  YoutubeDataAPI.swift
+//  UnwatchedShared
+//
+
 import Foundation
 import OSLog
-import UnwatchedShared
+import SwiftData
 
-struct YoutubeDataAPI {
+public struct YoutubeDataAPI {
     /// A user-provided YouTube Data API key (set in Debug settings, synced via iCloud).
     /// When set, it overrides both the standard and premium keys for all API calls.
     private static var customApiKey: String? {
@@ -10,25 +15,25 @@ struct YoutubeDataAPI {
         return key?.isEmpty == false ? key : nil
     }
 
-    static var apiKey: String {
+    public static var apiKey: String {
         customApiKey ?? Credentials.youtubeApiKey
     }
 
-    static var premiumApiKey: String {
+    public static var premiumApiKey: String {
         customApiKey ?? Credentials.unwatchedPremiumApiKey
     }
 
-    static let baseUrl = "https://www.googleapis.com/youtube/v3/"
+    public static let baseUrl = "https://www.googleapis.com/youtube/v3/"
 
     /// Validates an API key by making a minimal request. Throws if the key is rejected
     /// (e.g. invalid key, disabled API, exceeded quota) or the request otherwise fails.
-    static func verifyApiKey(_ key: String) async throws {
+    public static func verifyApiKey(_ key: String) async throws {
         // "jNQXAC9IVRw" is the first video ever uploaded to YouTube – stable and guaranteed to exist.
         let apiUrl = "\(baseUrl)videos?key=\(key)&id=jNQXAC9IVRw&part=id"
         _ = try await handleYoutubeRequest(url: apiUrl, model: YtChannelId.self)
     }
 
-    static func getYtChannelId(from handle: String) async throws -> String {
+    public static func getYtChannelId(from handle: String) async throws -> String {
         Log.info("getYtChannelId")
         let apiUrl = "\(baseUrl)channels?key=\(apiKey)&forHandle=\(handle)&part=id"
 
@@ -59,7 +64,7 @@ struct YoutubeDataAPI {
 
     }
 
-    static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
+    public static func getYtVideoInfo(_ youtubeVideoId: String) async throws -> SendableVideo? {
         if youtubeVideoId.isEmpty {
             throw VideoError.noYoutubeId
         }
@@ -81,7 +86,7 @@ struct YoutubeDataAPI {
         throw VideoError.noVideoFound
     }
 
-    static func getYtVideoDurations(_ ids: [String]) async throws -> [VideoDurationInfo] {
+    public static func getYtVideoDurations(_ ids: [String]) async throws -> [VideoDurationInfo] {
         Log.info("getYtVideoDurations, for: \(ids.count)")
         let idsPerRequest = Const.maxVideoIdsPerRequest
 
@@ -132,7 +137,7 @@ struct YoutubeDataAPI {
         }
     }
 
-    static func createVideo(_ snippet: YtVideoSnippet, videoId: String, duration: String? = nil) -> SendableVideo {
+    public static func createVideo(_ snippet: YtVideoSnippet, videoId: String, duration: String? = nil) -> SendableVideo {
         let publishedDate = try? Date(snippet.publishedAt, strategy: .iso8601)
         let parsedDuration = {
             if let duration = duration {
@@ -159,14 +164,14 @@ struct YoutubeDataAPI {
             videoDescription: snippet.description)
     }
 
-    static func getYtPlaylistUrl(_ youtubePlaylistId: String, _ pageToken: String?) -> String {
+    public static func getYtPlaylistUrl(_ youtubePlaylistId: String, _ pageToken: String?) -> String {
         let pageTokenString = pageToken?.isEmpty == false ? "&pageToken=\(pageToken!)" : ""
 
         return "\(baseUrl)playlistItems?key=\(apiKey)&playlistId=\(youtubePlaylistId)"
             + "&maxResults=50&part=snippet,contentDetails\(pageTokenString)"
     }
 
-    static func getYtVideoInfoFromPlaylist(_ youtubePlaylistId: String) async throws -> [SendableVideo] {
+    public static func getYtVideoInfoFromPlaylist(_ youtubePlaylistId: String) async throws -> [SendableVideo] {
         if youtubePlaylistId.isEmpty {
             throw VideoError.noYoutubePlaylistId
         }
@@ -196,12 +201,16 @@ struct YoutubeDataAPI {
     }
 }
 
-import SwiftData
+public struct VideoDurationInfo {
+    public let youtubeId: String
+    public let duration: Double?
+    public let noDuration: Bool?
+    public var persistentId: PersistentIdentifier?
+    public let updatedDate = Date()
 
-struct VideoDurationInfo {
-    let youtubeId: String
-    let duration: Double?
-    let noDuration: Bool?
-    var persistentId: PersistentIdentifier?
-    let updatedDate = Date()
+    public init(youtubeId: String, duration: Double?, noDuration: Bool?) {
+        self.youtubeId = youtubeId
+        self.duration = duration
+        self.noDuration = noDuration
+    }
 }

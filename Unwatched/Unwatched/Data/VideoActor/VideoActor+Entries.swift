@@ -275,40 +275,19 @@ extension VideoActor {
     }
 
     private func addVideosToInbox(_ videos: [Video]) {
-        for video in videos {
-            VideoActor.clearEntries(
-                from: video,
-                except: InboxEntry.self,
-                modelContext: modelContext
-            )
-            if video.inboxEntry == nil {
-                let inboxEntry = InboxEntry(video)
-                modelContext.insert(inboxEntry)
-                video.inboxEntry = inboxEntry
-            }
-        }
+        QueueInsertionService.addVideosToInbox(videos, modelContext: modelContext)
     }
 
     func clearEntries(from videoId: PersistentIdentifier) throws {
         if let video = self[videoId, as: Video.self] {
-            VideoActor.clearEntries(
+            VideoService.clearEntries(
                 from: video,
                 modelContext: modelContext,
-                )
+                save: false
+            )
             try modelContext.save()
         } else {
             Log.info("clearEntries: model not found")
-        }
-    }
-
-    private static func clearEntries(from video: Video,
-                                     except model: (any PersistentModel.Type)? = nil,
-                                     modelContext: ModelContext) {
-        if model != InboxEntry.self, let inboxEntry = video.inboxEntry {
-            VideoService.deleteInboxEntry(inboxEntry, modelContext: modelContext)
-        }
-        if model != QueueEntry.self, let queueEntry = video.queueEntry {
-            VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
         }
     }
 
@@ -358,53 +337,7 @@ extension VideoActor {
     }
 
     static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
-        do {
-            let sort = SortDescriptor<QueueEntry>(\.order)
-            let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
-            var queue = try modelContext.fetch(fetch)
-            let queueWasEmpty = queue.isEmpty
-
-            for (index, video) in videos.enumerated() {
-                VideoActor.clearEntries(
-                    from: video,
-                    except: QueueEntry.self,
-                    modelContext: modelContext
-                )
-                if let queueEntry = video.queueEntry {
-                    queue.removeAll { $0 == queueEntry }
-                }
-
-                let queueEntry: QueueEntry
-                if let existingQueueEntry = video.queueEntry {
-                    // workaround: context sometimes still contains an already deleted entry
-                    // (e.g. undo marking current video as watched)
-                    modelContext.insert(existingQueueEntry)
-
-                    queueEntry = existingQueueEntry
-                } else {
-                    let newQueueEntry = QueueEntry(video: video, order: 0)
-                    modelContext.insert(newQueueEntry)
-                    video.queueEntry = newQueueEntry
-                    queueEntry = newQueueEntry
-                }
-
-                if queueWasEmpty || startIndex == -1 {
-                    queue.append(queueEntry)
-                } else {
-                    let targetIndex = startIndex + index
-                    if targetIndex >= queue.count {
-                        queue.append(queueEntry)
-                    } else {
-                        queue.insert(queueEntry, at: targetIndex)
-                    }
-                }
-            }
-            for (index, queueEntry) in queue.enumerated() where queueEntry.order != index {
-                queueEntry.order = index
-            }
-        } catch {
-            Log.error("insertQueueEntries: \(error)")
-        }
+        QueueInsertionService.insertQueueEntries(at: startIndex, videos: videos, modelContext: modelContext)
     }
 
     func clearList(

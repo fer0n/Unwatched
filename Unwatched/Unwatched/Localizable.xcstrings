@@ -4303,6 +4303,7 @@
       }
     },
     "Could not subscribe: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4337,6 +4338,7 @@
       }
     },
     "Couldn't convert to URL: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6173,6 +6175,7 @@
       }
     },
     "emptyYoutubeId" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6819,6 +6822,7 @@
       }
     },
     "failedGettingChannelIdFromUsername%@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6853,6 +6857,7 @@
       }
     },
     "failedGettingVideoInfo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -6887,6 +6892,7 @@
       }
     },
     "failedToParse" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -8341,6 +8347,7 @@
       }
     },
     "HTTP request failed: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -9055,6 +9062,7 @@
       }
     },
     "invalidUrl" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -9529,6 +9537,9 @@
           }
         }
       }
+    },
+    "Loading…" : {
+
     },
     "loadingTranscript" : {
       "localizations" : {
@@ -10346,6 +10357,9 @@
         }
       }
     },
+    "No link found" : {
+
+    },
     "noBookmarkedVideosYet" : {
       "localizations" : {
         "de" : {
@@ -10619,6 +10633,7 @@
       }
     },
     "noInfoFoundToSubscribeTo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -10653,6 +10668,7 @@
       }
     },
     "noInfoFoundToUnsibscribe" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -10958,6 +10974,9 @@
         }
       }
     },
+    "Not a YouTube link" : {
+
+    },
     "notAllVideosFaqA" : {
       "localizations" : {
         "de" : {
@@ -11231,6 +11250,7 @@
       }
     },
     "notSupported" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11265,6 +11285,7 @@
       }
     },
     "noVideoFound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11299,6 +11320,7 @@
       }
     },
     "noVideoInfo" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11333,6 +11355,7 @@
       }
     },
     "noVideosFoundInPlaylist" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11435,6 +11458,7 @@
       }
     },
     "noVideoUrl" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11503,6 +11527,7 @@
       }
     },
     "noYoutubeIdFound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11537,6 +11562,7 @@
       }
     },
     "noYoutubePlaylistId" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -13202,40 +13228,6 @@
         }
       }
     },
-    "playerTypeNativeMenu" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nativ (experimentell)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Native (experimental)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nativo (experimental)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natif (expérimental)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Natywny (eksperymentalny)"
-          }
-        }
-      }
-    },
     "playerTypeNativeHelper" : {
       "localizations" : {
         "de" : {
@@ -13266,6 +13258,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Odtwarza filmy za pomocą natywnego odtwarzacza systemu. Ta funkcja może zostać usunięta w przyszłej aktualizacji.\n\nOparte na [SmartTube](https://github.com/milika/SmartTubeIOS)"
+          }
+        }
+      }
+    },
+    "playerTypeNativeMenu" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nativ (experimentell)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Native (experimental)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nativo (experimental)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natif (expérimental)"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natywny (eksperymentalny)"
           }
         }
       }
@@ -13373,6 +13399,7 @@
       }
     },
     "potentiallyFaultyYoutubeId%@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16500,6 +16527,124 @@
         }
       }
     },
+    "shareExtensionAction" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktion der Teilen-Erweiterung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Extension Action"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acción de la extensión para compartir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action de l'extension de partage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akcja rozszerzenia udostępniania"
+          }
+        }
+      }
+    },
+    "shareExtensionActionFooter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lege fest, was automatisch passiert, wenn du ein Video aus einer anderen App mit Unwatched teilst. „Jedes Mal fragen“ zeigt dir jedes Mal die Auswahl."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose what happens automatically when you share a video to Unwatched from other apps. “Ask Every Time” shows the picker so you can choose each time."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige qué ocurre automáticamente al compartir un video con Unwatched desde otras apps. “Preguntar siempre” te mostrará las opciones cada vez."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez ce qui se passe automatiquement lorsque vous partagez une vidéo vers Unwatched depuis d'autres apps. « Toujours demander » affiche le choix à chaque fois."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz, co ma się dziać automatycznie po udostępnieniu filmu do Unwatched z innej aplikacji. „Zawsze pytaj” za każdym razem pokaże wybór."
+          }
+        }
+      }
+    },
+    "shareExtensionAskEveryTime" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedes Mal fragen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Every Time"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preguntar siempre"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toujours demander"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zawsze pytaj"
+          }
+        }
+      }
+    },
+    "shareExtensionRememberConfirm" : {
+
+    },
+    "shareExtensionRememberDecline" : {
+
+    },
+    "shareExtensionRememberInfo" : {
+
+    },
+    "shareExtensionRememberMessage" : {
+
+    },
+    "shareExtensionRememberTitle" : {
+
+    },
     "shareVideo" : {
       "localizations" : {
         "de" : {
@@ -17815,6 +17960,7 @@
       }
     },
     "subscriptionInfoNotFound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

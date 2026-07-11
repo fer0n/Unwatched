@@ -1,16 +1,16 @@
 //
 //  VideoCrawlerError.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import SwiftUI
 
-enum VideoCrawlerError: LocalizedError {
+public enum VideoCrawlerError: LocalizedError {
     case subscriptionInfoNotFound
     case invalidUrl
     case failedToParse
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .subscriptionInfoNotFound:
             return String(localized: "subscriptionInfoNotFound")

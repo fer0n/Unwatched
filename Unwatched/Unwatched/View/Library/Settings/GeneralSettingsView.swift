@@ -16,6 +16,8 @@ struct GeneralSettingsView: View {
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
+    @AppStorage(Const.shareExtensionAction, store: .appGroup)
+    var shareExtensionAction: ShareExtensionActionSetting = .askEveryTime
 
     var body: some View {
         ZStack {
@@ -67,6 +69,15 @@ struct GeneralSettingsView: View {
                         Text("enableQueueContextMenu")
                     }
                     #endif
+                }
+
+                MySection(footer: "shareExtensionActionFooter") {
+                    Picker("shareExtensionAction", selection: $shareExtensionAction) {
+                        ForEach(ShareExtensionActionSetting.allCases, id: \.self) {
+                            Text($0.title)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 }
             }
             .myNavigationTitle("generalSettings")

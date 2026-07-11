@@ -1,11 +1,11 @@
 //
 //  SubscriptionError.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import SwiftUI
 
-enum SubscriptionError: Error, LocalizedError {
+public enum SubscriptionError: Error, LocalizedError {
     case notSupported
     case failedGettingChannelIdFromUsername(_ message: String?)
     case failedGettingVideoInfo
@@ -15,7 +15,7 @@ enum SubscriptionError: Error, LocalizedError {
     case noInfoFoundToUnsubscribe
     case couldNotSubscribe(_ message: String)
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .notSupported:
             return String(localized: "notSupported")

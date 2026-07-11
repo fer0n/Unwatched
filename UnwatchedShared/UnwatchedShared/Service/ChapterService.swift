@@ -1,16 +1,15 @@
 //
 //  ChapterService.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 import OSLog
 import SwiftData
-import UnwatchedShared
 
-struct ChapterService {
+public struct ChapterService {
 
-    static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
+    public static func extractChapters(from description: String, videoDuration: Double?) -> [SendableChapter] {
         let input = description
         do {
             let regexTimeThenTitle = try NSRegularExpression(
@@ -82,7 +81,7 @@ struct ChapterService {
     /// Ensures there's always a chapter starting at the beginning of the video.
     /// Video descriptions often don't define a chapter at 0:00, so the time before
     /// the first listed chapter would otherwise be left uncovered.
-    static func addBeginningChapterIfNeeded(to chapters: [SendableChapter]) -> [SendableChapter] {
+    public static func addBeginningChapterIfNeeded(to chapters: [SendableChapter]) -> [SendableChapter] {
         guard let earliest = chapters.min(by: { $0.startTime < $1.startTime }) else {
             return chapters
         }
@@ -98,7 +97,7 @@ struct ChapterService {
         return [beginning] + chapters
     }
 
-    static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
+    public static func updateDurationAndEndTime(in chapters: [SendableChapter], videoDuration: Double?) -> [SendableChapter] {
         var chapters = {
             if let videoDuration {
                 chapters.filter { $0.startTime < videoDuration }
@@ -123,7 +122,7 @@ struct ChapterService {
         return chapters
     }
 
-    static func updateDuration(in chapters: [SendableChapter]) -> [SendableChapter] {
+    public static func updateDuration(in chapters: [SendableChapter]) -> [SendableChapter] {
         var newChapters = [SendableChapter]()
         for chapter in chapters {
             var newChapter = chapter
@@ -135,7 +134,7 @@ struct ChapterService {
         return newChapters
     }
 
-    static func timeToSeconds(_ time: String) -> Double? {
+    public static func timeToSeconds(_ time: String) -> Double? {
         let components = time.components(separatedBy: ":")
 
         switch components.count {
@@ -161,7 +160,7 @@ struct ChapterService {
         }
     }
 
-    static func secondsToTimestamp(_ seconds: Double, includeMilliseconds: Bool = false) -> String {
+    public static func secondsToTimestamp(_ seconds: Double, includeMilliseconds: Bool = false) -> String {
         let hours = Int(seconds / 3600)
         let minutes = Int((seconds.truncatingRemainder(dividingBy: 3600)) / 60)
         let secs = seconds.truncatingRemainder(dividingBy: 60)
@@ -185,28 +184,7 @@ struct ChapterService {
         }
     }
 
-    static func updateDuration(
-        _ video: Video,
-        duration: Double
-    ) {
-        if let lastNormalChapter = (video.chapters ?? []).max(by: { $0.startTime < $1.startTime }) {
-            if  lastNormalChapter.endTime == nil, duration > lastNormalChapter.startTime {
-                lastNormalChapter.endTime = duration
-                lastNormalChapter.duration = duration - lastNormalChapter.startTime
-            }
-        }
-
-        if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
-            let context = DataProvider.newContext()
-            let hasChanges = fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
-            if hasChanges {
-                video.mergedChapters = chapters
-                try? context.save()
-            }
-        }
-    }
-
-    static func chapterEqual(_ sendable: SendableChapter, _ chapter: Chapter?) -> Bool {
+    public static func chapterEqual(_ sendable: SendableChapter, _ chapter: Chapter?) -> Bool {
         guard let chapter else { return false }
 
         return sendable.startTime == chapter.startTime
@@ -215,7 +193,7 @@ struct ChapterService {
             && sendable.title == chapter.title
     }
 
-    static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
+    public static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
         Log.info("updateIfNeeded")
         var newChapters = [Chapter]()
         let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
@@ -248,7 +226,7 @@ struct ChapterService {
     }
 
     // function that detects what percentage of chapters are equal between two arrays
-    static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
+    public static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
         guard !chapters1.isEmpty, !chapters2.isEmpty else { return 0.0 }
         let minCount = min(chapters1.count, chapters2.count)
         var equalCount = 0
@@ -266,7 +244,7 @@ struct ChapterService {
         return false
     }
 
-    static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
+    public static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
         if !skipSponsorBlock { return }
 
         for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
@@ -275,7 +253,7 @@ struct ChapterService {
         }
     }
 
-    static func skipSponsorSegments(in chapters: [Chapter]) {
+    public static func skipSponsorSegments(in chapters: [Chapter]) {
         guard skipSponsorBlock else { return }
         for chapter in chapters where chapter.category == .sponsor {
             Log.info("skipping: \(chapter)")
@@ -283,7 +261,7 @@ struct ChapterService {
         }
     }
 
-    static func filterChapters(in video: Video?) {
+    public static func filterChapters(in video: Video?) {
         guard let skipChapterText = NSUbiquitousKeyValueStore.default.string(forKey: Const.skipChapterText),
               !skipChapterText.isEmpty else {
             Log.info("No skip chapter text")
@@ -303,36 +281,7 @@ struct ChapterService {
         }
     }
 
-    @MainActor
-    static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
-        var chapterModels: [Chapter] = []
-        for chapter in chapters {
-            let chapterModel = chapter.getChapter
-            context.insert(chapterModel)
-            chapterModels.append(chapterModel)
-        }
-
-        if !chapterModels.isEmpty {
-            CleanupService.deleteChapters(from: video, context)
-        }
-
-        video.chapters = chapterModels
-        try? context.save()
-
-        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
-            PlayerManager.shared.video = video
-            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-        }
-    }
-
-    @MainActor
-    static func restoreChapters(for video: Video) {
-        let context = DataProvider.mainContext
-        let chapters = extractChapters(from: video.videoDescription ?? "", videoDuration: video.duration)
-        insertChapters(chapters, for: video, in: context)
-    }
-
-    static func getChaptersHash(from chapters: [Chapter], duration: Double?) -> String {
+    public static func getChaptersHash(from chapters: [Chapter], duration: Double?) -> String {
         let combinedString = chapters.map { chapter in
             "\(chapter.startTime)-\(chapter.isActive ? "1" : "0")"
         }.joined(separator: ";")

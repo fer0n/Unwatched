@@ -46,7 +46,7 @@ enum VideoDestination: String, AppEnum {
         case .queueNext:
             return 1
         case .queueLast:
-            return Int.max
+            return -1
         case .inbox:
             return 0
         }

@@ -57,6 +57,13 @@ InnerTube/
 unresolvable streams. Backfills descriptions for videos added without one (e.g. from
 search). Kept out of `Core/` so `InnerTubeAPI+Player.swift` stays vanilla.
 
+`InnerTubeAPI+Search.swift`'s `fetchChannelAvatarURL(channelId:)` delegates to
+`UnwatchedShared/UnwatchedShared/Service/ChannelAvatarService.swift` instead of making the
+`browse` request itself — the Share Extension needs this same channel-avatar fetch (for its
+channel-share preview) but can't import InnerTube, so the one request lives in the shared
+package and both call into it. If it starts failing, update the embedded WEB client version
+in `ChannelAvatarService.swift`, not here.
+
 ### `SmartTube/` diffs vs upstream
 
 | File | Change | Reason |

@@ -1,13 +1,13 @@
 //
 //  DateTimeConversion.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 
 // converts "PT3M20S" to seconds
 // PT3H2M27S
-func parseDurationToSeconds(_ duration: String) -> Double? {
+public func parseDurationToSeconds(_ duration: String) -> Double? {
     // Check if the string starts with "PT" and ends with "S"
     guard duration.hasPrefix("PT") else {
         return nil

@@ -1,5 +1,6 @@
 import Foundation
 import os
+import UnwatchedShared
 
 private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTubeSearch")
 
@@ -75,34 +76,14 @@ extension InnerTubeAPI {
     /// Fetches a channel's avatar URL via a lightweight `browse` request for the
     /// channel's About tab (`params = EgVhYm91dA==` → header only, no video grid).
     /// Mirrors SmartTubeIOS `fetchChannelThumbnailURL`. Returns nil on failure.
+    ///
+    /// The actual request/parsing lives in `UnwatchedShared/Service/ChannelAvatarService.swift`,
+    /// not here — the Share Extension needs this same fetch but can't import InnerTube (too much
+    /// video-playback-specific dependency surface for what should stay a lightweight extension),
+    /// so it's kept in the shared package instead and InnerTube just calls into it. Update the
+    /// WEB client version there (not here) if this ever starts failing.
     func fetchChannelAvatarURL(channelId: String) async throws -> URL? {
-        var body = makeBody(client: webClientContext)
-        body["browseId"] = channelId
-        body["params"] = "EgVhYm91dA=="
-        let data = try await post(endpoint: "browse", body: body)
-
-        let headerDict = data["header"] as? [String: Any]
-        let header = (headerDict?["c4TabbedHeaderRenderer"] as? [String: Any])
-            ?? (headerDict?["pageHeaderRenderer"] as? [String: Any])
-
-        // c4TabbedHeaderRenderer.avatar.thumbnails[-1]
-        if let urlStr = ((header?["avatar"] as? [String: Any])?["thumbnails"] as? [[String: Any]])?
-            .last?["url"] as? String {
-            return URL(string: urlStr)
-        }
-        // pageHeaderViewModel: content.pageHeaderViewModel.image.decoratedAvatarViewModel
-        //   .avatar.avatarViewModel.image.sources[-1]
-        if let hvm = (header?["content"] as? [String: Any])?["pageHeaderViewModel"] as? [String: Any],
-           let image = ((((hvm["image"] as? [String: Any])?["decoratedAvatarViewModel"] as? [String: Any])?["avatar"] as? [String: Any])?["avatarViewModel"] as? [String: Any])?["image"] as? [String: Any],
-           let urlStr = (image["sources"] as? [[String: Any]])?.last?["url"] as? String {
-            return URL(string: urlStr)
-        }
-        // metadata fallback: metadata.channelMetadataRenderer.avatar.thumbnails[-1]
-        if let urlStr = (((data["metadata"] as? [String: Any])?["channelMetadataRenderer"] as? [String: Any])?["avatar"] as? [String: Any])
-            .flatMap({ ($0["thumbnails"] as? [[String: Any]])?.last?["url"] as? String }) {
-            return URL(string: urlStr)
-        }
-        return nil
+        try await ChannelAvatarService.fetchAvatarURL(channelId: channelId)
     }
 
     /// Fetches the playlists a channel publishes (its "Playlists" tab) via `browse`.
