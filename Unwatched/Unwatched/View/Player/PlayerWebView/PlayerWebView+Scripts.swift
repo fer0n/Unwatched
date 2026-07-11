@@ -34,6 +34,38 @@ extension PlayerWebView {
         return true
     }
 
+    /// Neutralizes the Page Visibility API (and related lifecycle signals) so YouTube's own
+    /// player script can't tell the page is backgrounded and pause on its own.
+    static func blockVisibilityChangeScript() -> String {
+        """
+        (function() {
+            try {
+                Object.defineProperty(document, 'hidden', { get: () => false, configurable: true });
+                Object.defineProperty(document, 'visibilityState', { get: () => 'visible', configurable: true });
+                document.hasFocus = () => true;
+
+                const blockedTypes = ['visibilitychange', 'webkitvisibilitychange', 'pagehide', 'freeze'];
+                const originalAddEventListener = EventTarget.prototype.addEventListener;
+                EventTarget.prototype.addEventListener = function(type, listener, options) {
+                    if (blockedTypes.includes(type)) {
+                        return;
+                    }
+                    return originalAddEventListener.call(this, type, listener, options);
+                };
+
+                Object.defineProperty(document, 'onvisibilitychange', {
+                    get: () => null, set: () => {}, configurable: true
+                });
+                Object.defineProperty(document, 'onwebkitvisibilitychange', {
+                    get: () => null, set: () => {}, configurable: true
+                });
+            } catch (error) {
+                // best-effort: if this throws, just leave visibility reporting untouched
+            }
+        })();
+        """
+    }
+
     func getPlayScript() -> String {
         if player.unstarted {
             Log.info("PLAY: unstarted")

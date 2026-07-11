@@ -41,6 +41,17 @@ struct PlayerWebView: PlatformViewRepresentable {
         #if os(iOS) || os(visionOS)
         webViewConfig.allowsPictureInPictureMediaPlayback = true
         webViewConfig.allowsInlineMediaPlayback = !(Const.playVideoFullscreen.bool ?? false)
+
+        // runs before YouTube's own scripts, so it can override how the page perceives
+        // its own visibility before anything reads/listens to it
+        if Const.backgroundPlayback.bool ?? true {
+            let visibilityScript = WKUserScript(
+                source: PlayerWebView.blockVisibilityChangeScript(),
+                injectionTime: .atDocumentStart,
+                forMainFrameOnly: true
+            )
+            webViewConfig.userContentController.addUserScript(visibilityScript)
+        }
         #endif
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
