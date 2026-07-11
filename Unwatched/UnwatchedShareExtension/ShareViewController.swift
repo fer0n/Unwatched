@@ -18,6 +18,7 @@ private let logger = Logger(subsystem: "com.pentlandFirth.Unwatched.share", cate
 class ShareViewController: UIViewController {
 
     private let model = ShareCardModel()
+    private let imageCacheManager = ImageCacheManager()
     private var sharedURL: URL?
 
     override func viewDidLoad() {
@@ -26,6 +27,7 @@ class ShareViewController: UIViewController {
         let hosting = UIHostingController(
             rootView: ShareCardView(
                 model: model,
+                imageCacheManager: imageCacheManager,
                 onSelect: { [weak self] action in
                     self?.handle(action)
                 },
@@ -184,7 +186,7 @@ class ShareViewController: UIViewController {
                     model.state = .done(message)
                     await sleep(0.5)
                 }
-                finish()
+                await finish()
             } catch {
                 logger.error("share action failed: \(error.localizedDescription, privacy: .public)")
                 model.loadingAction = nil
@@ -217,7 +219,7 @@ class ShareViewController: UIViewController {
         Task { @MainActor in
             // Give the system time to act on the open request before tearing down.
             await sleep(0.3)
-            finish()
+            await finish()
         }
     }
 
@@ -339,7 +341,12 @@ class ShareViewController: UIViewController {
 
     // MARK: - Dismissal
 
-    private func finish() {
+    /// Persists any images downloaded during this share (channel avatar, video thumbnail) to the
+    /// shared on-disk cache before handing control back — the extension's process is liable to be
+    /// suspended right after `completeRequest`, so this can't be fire-and-forget.
+    @MainActor
+    private func finish() async {
+        await imageCacheManager.persistCache()
         extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
     }
 }

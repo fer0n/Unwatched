@@ -11,6 +11,7 @@ import UnwatchedShared
 
 struct ShareCardView: View {
     @Bindable var model: ShareCardModel
+    var imageCacheManager: ImageCacheManager
     var onSelect: (ShareAction) -> Void
     var onConfirmRemember: (Bool) -> Void
     var onSetAutoAction: (ShareExtensionActionSetting) -> Void
@@ -23,7 +24,7 @@ struct ShareCardView: View {
             // app) — that named asset lives only in the main app's own asset catalog and can't
             // resolve from the extension's bundle, so its exact values are reproduced below.
             .background(Color.shareSheetBackground)
-            .environment(ImageCacheManager())
+            .environment(imageCacheManager)
             .animation(.snappy(duration: 0.28), value: model.state)
             .alert(
                 "shareExtensionRememberTitle",
@@ -198,6 +199,7 @@ struct ShareCardView: View {
     )
     return ShareCardView(
         model: model,
+        imageCacheManager: ImageCacheManager(),
         onSelect: { _ in },
         onConfirmRemember: { _ in },
         onSetAutoAction: { _ in },
@@ -215,6 +217,7 @@ struct ShareCardView: View {
     )
     return ShareCardView(
         model: model,
+        imageCacheManager: ImageCacheManager(),
         onSelect: { _ in },
         onConfirmRemember: { _ in },
         onSetAutoAction: { _ in },
@@ -227,6 +230,7 @@ struct ShareCardView: View {
     model.state = .error("Something went wrong")
     return ShareCardView(
         model: model,
+        imageCacheManager: ImageCacheManager(),
         onSelect: { _ in },
         onConfirmRemember: { _ in },
         onSetAutoAction: { _ in },
@@ -239,6 +243,7 @@ struct ShareCardView: View {
     model.state = .notYouTube
     return ShareCardView(
         model: model,
+        imageCacheManager: ImageCacheManager(),
         onSelect: { _ in },
         onConfirmRemember: { _ in },
         onSetAutoAction: { _ in },

@@ -106,13 +106,24 @@ public final class DataProvider: Sendable {
         let schema = Schema([CachedImage.self, Transcript.self])
         let fileName = "imageCache.sqlite"
 
-        #if os(tvOS)
-        let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
-        #elseif os(macOS)
-        let storeURL = URL.applicationSupportDirectory.appending(path: fileName)
-        #else
-        let storeURL = URL.documentsDirectory.appending(path: fileName)
-        #endif
+        // Shared with `UnwatchedShareExtension` (same reasoning as `groupContainer` above) so
+        // images cached by one target are visible to the other, instead of each target
+        // maintaining its own separate, never-synced `imageCache.sqlite`. Falls back to the
+        // per-target sandbox location on targets without the entitlement (tvOS, previews, …).
+        let storeURL: URL
+        if let groupURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: DataProvider.appGroupIdentifier
+        ) {
+            storeURL = groupURL.appendingPathComponent(fileName)
+        } else {
+            #if os(tvOS)
+            storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent(fileName)
+            #elseif os(macOS)
+            storeURL = URL.applicationSupportDirectory.appending(path: fileName)
+            #else
+            storeURL = URL.documentsDirectory.appending(path: fileName)
+            #endif
+        }
 
         let config = ModelConfiguration(
             schema: schema,
