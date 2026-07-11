@@ -103,6 +103,9 @@ struct SubscriptionDetailView: View {
         .onDisappear {
             handleOnDisappear()
         }
+        .task {
+            await loadThumbnailIfMissing()
+        }
     }
 
     var imageUrl: URL? {
@@ -129,6 +132,17 @@ struct SubscriptionDetailView: View {
         if navManager.tab == .library {
             navManager.lastLibrarySubscriptionId = nil
         }
+    }
+
+    /// Fallback for subscriptions that never got a channel avatar (e.g. the one-shot
+    /// fetch in `SubscriptionActor.enrichThumbnail` failed at subscribe time).
+    func loadThumbnailIfMissing() async {
+        guard subscription.thumbnailUrl == nil,
+              let channelId = subscription.youtubeChannelId,
+              let avatarUrl = try? await InnerTubeAPI().fetchChannelAvatarURL(channelId: channelId) else {
+            return
+        }
+        subscription.thumbnailUrl = avatarUrl
     }
 
     func loadNewVideos() {
