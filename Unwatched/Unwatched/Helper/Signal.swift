@@ -17,10 +17,7 @@ struct Signal {
         #if os(iOS)
         if !isTestFlight { return }
         if !(Const.analytics.bool ?? true) { return }
-        let config = TelemetryDeck.Config(appID: Credentials.telemetry)
-        config.defaultSignalPrefix = "Unwatched."
-        config.defaultParameterPrefix = "Unwatched."
-        TelemetryDeck.initialize(config: config)
+        // disabled
         #endif
     }
 
