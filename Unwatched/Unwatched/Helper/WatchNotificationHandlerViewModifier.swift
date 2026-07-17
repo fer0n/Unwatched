@@ -22,6 +22,9 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             .onReceive(NotificationCenter.default.publisher(for: .queueInUnwatched)) {
                 handleQueueInUnwatched($0)
             }
+            .onReceive(NotificationCenter.default.publisher(for: .inboxInUnwatched)) {
+                handleInboxInUnwatched($0)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .pasteAndWatch)) { _ in
                 handlePasteAndPlay()
             }
@@ -126,6 +129,13 @@ struct WatchNotificationHandlerViewModifier: ViewModifier {
             } else {
                 addAndQueueAtBottom(youtubeUrl)
             }
+        }
+    }
+
+    func handleInboxInUnwatched(_ notification: NotificationCenter.Publisher.Output) {
+        Log.info("handleInboxInUnwatched")
+        if let userInfo = notification.userInfo, let youtubeUrl = userInfo["youtubeUrl"] as? URL {
+            _ = VideoService.addForeignUrls([youtubeUrl], in: .inbox)
         }
     }
 

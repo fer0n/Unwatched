@@ -93,6 +93,22 @@ struct DeepLinkHandler: ViewModifier {
                let xSuccessURL = URL(string: xSuccess) {
                 UrlService.open(xSuccessURL)
             }
+        case "inbox":
+            // unwatched://inbox?url=https://www.youtube.com/watch?v=O_0Wn73AnC8
+            guard
+                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                let queryItems = components.queryItems
+            else { return }
+
+            guard
+                let youtubeUrlString = queryItems.first(where: { $0.name == "url" })?.value,
+                let youtubeUrl = URL(string: youtubeUrlString)
+            else {
+                Log.error("No youtube URL found in deep link: \(url)")
+                return
+            }
+            let inboxUserInfo: [AnyHashable: Any] = ["youtubeUrl": youtubeUrl]
+            NotificationCenter.default.post(name: .inboxInUnwatched, object: nil, userInfo: inboxUserInfo)
         default:
             break
         }
