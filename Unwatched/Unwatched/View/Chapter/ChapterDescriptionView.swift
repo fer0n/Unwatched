@@ -130,7 +130,9 @@ struct ChapterDescriptionView: View {
             Signal.videoAction("play", .detail)
         } label: {
             Image(systemName: "play.fill")
+                .padding(.leading, 20)
         }
+        .largerTapTarget()
 
         Button {
             addToQueueNext()
@@ -138,6 +140,7 @@ struct ChapterDescriptionView: View {
         } label: {
             Image(systemName: Const.queueNextSF)
         }
+        .largerTapTarget()
 
         Button {
             addToQueueLast()
@@ -145,6 +148,7 @@ struct ChapterDescriptionView: View {
         } label: {
             Image(systemName: Const.queueLastSF)
         }
+        .largerTapTarget()
 
         Button {
             clearVideo()
@@ -152,17 +156,20 @@ struct ChapterDescriptionView: View {
         } label: {
             #if os(visionOS)
             Text("clear")
+                .padding(.trailing, 20)
             #else
             Image(systemName: Const.clearNoFillSF)
+                .padding(.trailing, 20)
             #endif
         }
+        .largerTapTarget()
         .disabled(!canBeCleared)
         .buttonBorderShape(.automatic)
     }
 
     @ViewBuilder
     var actionOverlay: some View {
-        HStack(spacing: 25) {
+        HStack(spacing: 0) {
             buttons
                 .buttonStyle(.plain)
         }
@@ -263,6 +270,14 @@ struct ChapterDescriptionView: View {
         } else {
             dismiss()
         }
+    }
+}
+
+extension View {
+    func largerTapTarget() -> some View {
+        self
+            .frame(minWidth: 45, minHeight: 50)
+            .controlSize(.extraLarge)
     }
 }
 
