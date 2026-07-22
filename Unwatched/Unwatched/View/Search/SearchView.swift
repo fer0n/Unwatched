@@ -33,13 +33,13 @@ struct SearchView: View {
             .toolbar {
                 RefreshToolbarContent()
                 if vm.hasSearched {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItem(placement: topBarTrailingPlacement) {
                         SearchFilterMenu(vm: vm)
                             .font(.footnote)
                             .fontWeight(.bold)
                     }
                 }
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: topBarLeadingPlacement) {
                     AddToLibraryView()
                         .font(.footnote)
                         .fontWeight(.bold)
@@ -87,6 +87,22 @@ struct SearchView: View {
             }
         }
         .tint(.neutralAccentColor)
+    }
+
+    var topBarTrailingPlacement: ToolbarItemPlacement {
+        #if os(macOS)
+        .primaryAction
+        #else
+        .topBarTrailing
+        #endif
+    }
+
+    var topBarLeadingPlacement: ToolbarItemPlacement {
+        #if os(macOS)
+        .navigation
+        #else
+        .topBarLeading
+        #endif
     }
 
     func search(for term: String) {

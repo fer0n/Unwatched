@@ -8,7 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		104954347CFD4B4591227EA8 /* AVPlayerPrefetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */; };
-		5A4E5E0000000000000000B2 /* UnwatchedShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000000A2 /* UnwatchedShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5A4E5E0000000000000000B2 /* UnwatchedShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000000A2 /* UnwatchedShareExtension.appex */; platformFilters = (ios, xros, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5A4E5E0000000000000001B1 /* ShareCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A1 /* ShareCardView.swift */; platformFilters = (ios, xros, ); };
+		5A4E5E0000000000000001B2 /* ShareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A2 /* ShareAction.swift */; platformFilters = (ios, xros, ); };
+		5A4E5E0000000000000001B3 /* ShareCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A3 /* ShareCardModel.swift */; platformFilters = (ios, xros, ); };
+		5A4E5E0000000000000001B4 /* ShareSheetStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A4 /* ShareSheetStyles.swift */; platformFilters = (ios, xros, ); };
+		5A4E5E0000000000000001B5 /* ShareCardView+VideoPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A5 /* ShareCardView+VideoPreview.swift */; platformFilters = (ios, xros, ); };
+		5A4E5E0000000000000001B6 /* ShareCardView+ChannelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4E5E0000000000000001A6 /* ShareCardView+ChannelPreview.swift */; platformFilters = (ios, xros, ); };
 		606225489AAD4B75802D5FFD /* AVPlayerViewModel+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0DD1B9C0A34CB595032683 /* AVPlayerViewModel+Loading.swift */; };
 		79FA11A5B74A4C5FBA7686EA /* AVPlayerStreamHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */; };
 		816F44C17FD04972B2D4EC07 /* AVPlayerViewModel+NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F6959E647463E9DA39786 /* AVPlayerViewModel+NowPlaying.swift */; };
@@ -904,6 +910,12 @@
 		39205759BFC648CB9CBED597 /* AVPlayerViewModel+Quality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerViewModel+Quality.swift"; sourceTree = "<group>"; };
 		3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerPrefetchManager.swift; sourceTree = "<group>"; };
 		5A4E5E0000000000000000A2 /* UnwatchedShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = UnwatchedShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A4E5E0000000000000001A1 /* ShareCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareCardView.swift"; sourceTree = "<group>"; };
+		5A4E5E0000000000000001A2 /* ShareAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareAction.swift"; sourceTree = "<group>"; };
+		5A4E5E0000000000000001A3 /* ShareCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareCardModel.swift"; sourceTree = "<group>"; };
+		5A4E5E0000000000000001A4 /* ShareSheetStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareSheetStyles.swift"; sourceTree = "<group>"; };
+		5A4E5E0000000000000001A5 /* ShareCardView+VideoPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareCardView+VideoPreview.swift"; sourceTree = "<group>"; };
+		5A4E5E0000000000000001A6 /* ShareCardView+ChannelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UnwatchedShareExtension/ShareCardView+ChannelPreview.swift"; sourceTree = "<group>"; };
 		8800CAFE2B000001000000AA /* PlayerTypeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTypeSettingsView.swift; sourceTree = "<group>"; };
 		88017FD62B96161B00192AEA /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		8802F84E2C691A51008A7778 /* ImageServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageServiceTests.swift; sourceTree = "<group>"; };
@@ -1352,18 +1364,6 @@
 			);
 			target = 880A0AA22E6D8AD800264C03 /* UnwatchedWidgetExtension */;
 		};
-		885D4FAF30018B9E000E7622 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				ShareCardView.swift,
-				ShareAction.swift,
-				ShareCardModel.swift,
-				ShareSheetStyles.swift,
-				"ShareCardView+VideoPreview.swift",
-				"ShareCardView+ChannelPreview.swift",
-			);
-			target = 88DFC0AA2B44843A001895C8 /* Unwatched */;
-		};
 		8865F0242E6DBA4E00E821E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -1395,7 +1395,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5A4E5E0000000000000000A3 /* UnwatchedShareExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (885D4FAF30018B9E000E7622 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 5A4E5E0000000000000000B3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnwatchedShareExtension; sourceTree = "<group>"; };
+		5A4E5E0000000000000000A3 /* UnwatchedShareExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (5A4E5E0000000000000000B3 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnwatchedShareExtension; sourceTree = "<group>"; };
 		880A0AA82E6D8AD900264C03 /* UnwatchedWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (880A0ABA2E6D8ADB00264C03 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = UnwatchedWidget; sourceTree = "<group>"; };
 		881931D02E4C9FC400DB3843 /* Icons */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (88F1AA1A2E70D3AE00676C26 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 8865F0242E6DBA4E00E821E2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Icons; sourceTree = "<group>"; };
 		8847772B2D214FAE0044E812 /* UserDataService */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UserDataService; sourceTree = "<group>"; };
@@ -3053,6 +3053,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A4E5E0000000000000001B1 /* ShareCardView.swift in Sources */,
+				5A4E5E0000000000000001B2 /* ShareAction.swift in Sources */,
+				5A4E5E0000000000000001B3 /* ShareCardModel.swift in Sources */,
+				5A4E5E0000000000000001B4 /* ShareSheetStyles.swift in Sources */,
+				5A4E5E0000000000000001B5 /* ShareCardView+VideoPreview.swift in Sources */,
+				5A4E5E0000000000000001B6 /* ShareCardView+ChannelPreview.swift in Sources */,
 				FE100002AA0000000010F106 /* ChannelHeaderView.swift in Sources */,
 				FE100002AA0000000010F105 /* ChannelPreviewView.swift in Sources */,
 				FE100002AA0000000010F101 /* SearchFilter.swift in Sources */,
