@@ -237,6 +237,11 @@ import UnwatchedShared
             return
         }
 
+        openBrowser(url)
+    }
+
+    @MainActor
+    func openBrowser(_ url: BrowserUrl?) {
         UserDefaults.standard.set(false, forKey: Const.hideControlsFullscreen)
         if let url {
             BrowserManager.shared.loadUrl(url.getUrl)

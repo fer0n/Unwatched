@@ -57,6 +57,14 @@ import UnwatchedShared
         return nil
     }
 
+    @MainActor
+    func isLoggedIntoYoutube() async -> Bool {
+        let cookies = await withCheckedContinuation { (continuation: CheckedContinuation<[HTTPCookie], Never>) in
+            WKWebsiteDataStore.default().httpCookieStore.getAllCookies { continuation.resume(returning: $0) }
+        }
+        return cookies.contains { $0.name == "LOGIN_INFO" && $0.domain.contains("youtube.com") }
+    }
+
     func setFoundInfo(_ info: SubscriptionInfo) {
         self.info = info
     }

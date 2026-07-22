@@ -21,6 +21,7 @@ struct UrlService {
         staticString: "https://www.icloud.com/shortcuts/de93db94377f4849a3b2174d31b57fd3"
     )
     static let youtubeTakeoutUrl = URL(staticString: "https://takeout.google.com/takeout/custom/youtube")
+    static let youtubeLoginUrl = URL(staticString: "https://www.youtube.com/signin")
     static let youtubeApiKeyUrl = URL(staticString: "https://console.cloud.google.com/apis/credentials")
 
     static let writeReviewUrl = URL(staticString: "https://apps.apple.com/app/id6477287463?action=write-review")
