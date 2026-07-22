@@ -10,6 +10,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
     @AppStorage(Const.surroundingEffect) var surroundingEffect = true
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
+    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -119,7 +120,7 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
             Divider()
             Menu {
-                ForEach(PlayerTypeSetting.allCases, id: \.self) { type in
+                ForEach(selectablePlayerTypes, id: \.self) { type in
                     Button {
                         playerType = type
                         Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
@@ -178,6 +179,12 @@ struct PlayerMoreMenuButton<Content>: View where Content: View {
 
     var transition: ContentTransition {
         ContentTransition.symbolEffect(.replace.magic(fallback: .replace))
+    }
+
+    var selectablePlayerTypes: [PlayerTypeSetting] {
+        PlayerTypeSetting.allCases.filter {
+            $0 != .native || showExperimentalPlayerTypes || playerType == .native
+        }
     }
 
     var deferDateButton: some View {

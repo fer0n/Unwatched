@@ -334,6 +334,7 @@ public struct Const {
     public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
 
     public static let playerType = "playerType"
+    public static let showExperimentalPlayerTypes = "showExperimentalPlayerTypes"
 
     public static let shareExtensionAction = "shareExtensionAction"
     public static let shareExtensionAskedToRemember = "shareExtensionAskedToRemember"

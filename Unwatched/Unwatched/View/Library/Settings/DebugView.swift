@@ -11,6 +11,7 @@ struct DebugView: View {
     @AppStorage(Const.showTutorial) var showTutorial: Bool = true
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
     @AppStorage(Const.inboxTipHiddenPermanently) var inboxTipHiddenPermanently = false
+    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
 
@@ -50,6 +51,10 @@ struct DebugView: View {
                 MySection("playback") {
                     Toggle(isOn: $backgroundPlayback) {
                         Text("backgroundPlayback")
+                    }
+
+                    Toggle(isOn: $showExperimentalPlayerTypes) {
+                        Text("showExperimentalPlayerTypes")
                     }
                 }
                 #endif

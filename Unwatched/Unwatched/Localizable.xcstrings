@@ -17109,6 +17109,16 @@
         }
       }
     },
+    "showExperimentalPlayerTypes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Experimental Player Types"
+          }
+        }
+      }
+    },
     "showNotificationBadge" : {
       "localizations" : {
         "de" : {

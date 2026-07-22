@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct PlayerTypeSettingsView: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
 
     var body: some View {
         ZStack {
@@ -16,8 +17,12 @@ struct PlayerTypeSettingsView: View {
                 optionSection(.youtubeEmbedded, footer: "playerTypeEmbeddedHelper")
                 optionSection(.youtubeEmbeddedMinimal, footer: "playerTypeMinimalHelper")
                 optionSection(.youtubeCustomUI, footer: "playerTypeCustomUIHelper")
-                nativeSection
-                PlayerTypeComparisonTable()
+
+                if showExperimentalPlayerTypes {
+                    nativeSection
+                }
+
+                PlayerTypeComparisonTable(showNative: showExperimentalPlayerTypes)
             }
             .myNavigationTitle("playerType")
         }
@@ -59,6 +64,8 @@ struct PlayerTypeSettingsView: View {
 }
 
 private struct PlayerTypeComparisonTable: View {
+    let showNative: Bool
+
     struct Feature {
         let title: LocalizedStringKey
         let youtube: Bool
@@ -98,9 +105,11 @@ private struct PlayerTypeComparisonTable: View {
             Text("playerTypeCustomUIShort")
                 .frame(width: colWidth)
                 .multilineTextAlignment(.center)
-            Text("playerTypeNative")
-                .frame(width: colWidth)
-                .multilineTextAlignment(.center)
+            if showNative {
+                Text("playerTypeNative")
+                    .frame(width: colWidth)
+                    .multilineTextAlignment(.center)
+            }
         }
         .font(.caption)
         .foregroundStyle(.secondary)
@@ -114,7 +123,9 @@ private struct PlayerTypeComparisonTable: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             comparisonIcon(feature.youtube).frame(width: colWidth)
             comparisonIcon(feature.customUI).frame(width: colWidth)
-            comparisonIcon(feature.native).frame(width: colWidth)
+            if showNative {
+                comparisonIcon(feature.native).frame(width: colWidth)
+            }
         }
     }
 
