@@ -616,6 +616,9 @@ extension PlayerWebView {
                     #player-control-overlay {
                         display: none !important;
                     }
+                    .ytmEmbedsInfoPanelRendererHost {
+                        display: none !important;
+                    }
                 ` : ''}
                 ${!isNonEmbedding ? `
                     .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
@@ -643,7 +646,7 @@ extension PlayerWebView {
                     .fullscreen-watch-next-entrypoint-wrapper, .endscreen-replay-button,
                     .player-control-play-pause-icon, .player-controls-spinner,
                     .fullscreen-recommendations-wrapper, .ytmPaidContentOverlayHost, .ytdVolumeControlsHost,
-                    .ytmEmbedsInfoPanelRendererButton, .ytmMuteButtonButton, yt-mute-toggle-button, embedded-player-video-details,
+                    .ytmEmbedsInfoPanelRendererButton, .ytmEmbedsInfoPanelRendererHost, .ytmMuteButtonButton, yt-mute-toggle-button, embedded-player-video-details,
                     .ytmCuedOverlayGradient {
                         display: none !important;
                     }
