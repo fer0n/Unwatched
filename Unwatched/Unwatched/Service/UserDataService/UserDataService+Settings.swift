@@ -8,9 +8,15 @@ import OSLog
 
 // MARK: - Settings Management
 extension UserDataService {
+    /// These settings describe the current installation and are unsafe to carry between
+    /// devices or between signed App Store builds and unsigned local builds.
+    private static let nonPortableSettings: Set<String> = [
+        Const.enableIcloudSync
+    ]
+
     static func getSettings() -> [String: AnyCodable] {
         var result = [String: AnyCodable]()
-        for (key, _) in Const.settingsDefaults {
+        for (key, _) in Const.settingsDefaults where !nonPortableSettings.contains(key) {
             if let value = UserDefaults.standard.object(forKey: key) {
                 result[key] = AnyCodable(value)
             } else {
@@ -33,6 +39,10 @@ extension UserDataService {
         }
         resetDefaultSettingsIfNeeded()
         for (key, value) in settings {
+            guard !nonPortableSettings.contains(key) else {
+                Log.info("Ignoring non-portable backup setting: \(key)")
+                continue
+            }
             if Const.syncedSettingsDefaults.contains(where: { $0.key == key }) {
                 NSUbiquitousKeyValueStore.default.set(value.value, forKey: key)
             } else {
@@ -54,7 +64,7 @@ extension UserDataService {
     }
 
     static private func resetDefaultSettingsIfNeeded() {
-        for (key, value) in Const.settingsDefaults {
+        for (key, value) in Const.settingsDefaults where !nonPortableSettings.contains(key) {
             let oldValue = UserDefaults.standard.object(forKey: key)
             if oldValue != nil {
                 UserDefaults.standard.setValue(value, forKey: key)

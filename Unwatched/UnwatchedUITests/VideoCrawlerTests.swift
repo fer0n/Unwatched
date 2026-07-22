@@ -9,6 +9,165 @@ import UnwatchedShared
 
 class VideoCrawlerTests: XCTestCase {
 
+    actor FetchConcurrencyProbe {
+        private(set) var active = 0
+        private(set) var maximum = 0
+
+        func started() {
+            active += 1
+            maximum = max(maximum, active)
+        }
+
+        func finished() {
+            active -= 1
+        }
+    }
+
+    func makeInMemoryContainer() throws -> ModelContainer {
+        let schema = Schema(DataProvider.dbEntries)
+        let configuration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: true,
+            cloudKitDatabase: .none
+        )
+        return try ModelContainer(for: schema, configurations: [configuration])
+    }
+
+    func testSubscriptionFetchesAreBoundedAndKeepPartialResults() async {
+        let subscriptions = (0..<12).map {
+            SendableSubscription(title: "subscription-\($0)")
+        }
+        let probe = FetchConcurrencyProbe()
+
+        let results = await SubscriptionFeedFetcher.fetch(
+            subscriptions,
+            maxConcurrent: 3
+        ) { subscription in
+            await probe.started()
+            try await Task.sleep(for: .milliseconds(20))
+            await probe.finished()
+
+            if subscription.title == "subscription-5" {
+                throw URLError(.badServerResponse)
+            }
+            return [SendableVideo(
+                youtubeId: subscription.title,
+                title: subscription.title,
+                url: nil
+            )]
+        }
+
+        let maximum = await probe.maximum
+        XCTAssertEqual(results.count, subscriptions.count)
+        XCTAssertEqual(results.compactMap(\.videos).count, subscriptions.count - 1)
+        XCTAssertEqual(maximum, 3)
+    }
+
+    func testExistingOrphanVideoIsReused() async throws {
+        let container = try makeInMemoryContainer()
+        let context = ModelContext(container)
+
+        let subscription = Subscription(
+            link: URL(string: "https://example.com/feed"),
+            title: "Subscription",
+            youtubeChannelId: "channel-id"
+        )
+        let orphan = Video(
+            title: "Existing",
+            url: URL(string: "https://youtube.com/watch?v=abcdefghijk"),
+            youtubeId: "abcdefghijk",
+            publishedDate: .now,
+            isYtShort: false
+        )
+        context.insert(subscription)
+        context.insert(orphan)
+        try context.save()
+
+        let actor = VideoActor(modelContainer: container)
+        let incoming = SendableVideo(
+            youtubeId: orphan.youtubeId,
+            title: "Existing",
+            url: orphan.url,
+            publishedDate: orphan.publishedDate,
+            isYtShort: false
+        )
+        let placement = DefaultVideoPlacement(
+            videoPlacement: .inbox,
+            hideShorts: false,
+            filterVideoTitleText: "",
+            allowOnMatch: false
+        )
+
+        guard let sendableSubscription = subscription.toExport else {
+            XCTFail("Could not export subscription")
+            return
+        }
+        _ = await actor.handleNewVideos(
+            sendableSubscription,
+            [incoming, incoming],
+            defaultPlacement: placement
+        )
+        try await actor.modelContext.save()
+
+        let verificationContext = ModelContext(container)
+        let videos = try verificationContext.fetch(FetchDescriptor<Video>())
+        XCTAssertEqual(videos.filter { $0.youtubeId == incoming.youtubeId }.count, 1)
+        XCTAssertEqual(videos.first?.subscription?.youtubeChannelId, "channel-id")
+    }
+
+    func testMalformedFeedReportsParseFailure() {
+        let data = Data("<feed><entry>".utf8)
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: nil)
+
+        XCTAssertFalse(delegate.parsingSucceeded)
+        XCTAssertFalse(delegate.intentionallyStoppedParsing)
+    }
+
+    func testDuplicateCleanupPreservesInboxAndPlaybackState() async throws {
+        let container = try makeInMemoryContainer()
+        let context = ModelContext(container)
+        let youtubeId = "abcdefghijk"
+        let subscription = Subscription(
+            link: URL(string: "https://example.com/feed"),
+            title: "Subscription",
+            youtubeChannelId: "channel-id"
+        )
+        let linkedVideo = Video(
+            title: "Linked",
+            url: URL(string: "https://youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId,
+            isYtShort: false
+        )
+        linkedVideo.subscription = subscription
+        let inboxVideo = Video(
+            title: "Inbox",
+            url: URL(string: "https://youtu.be/\(youtubeId)"),
+            youtubeId: youtubeId,
+            elapsedSeconds: 42,
+            watchedDate: .now,
+            isYtShort: false
+        )
+        context.insert(subscription)
+        context.insert(linkedVideo)
+        context.insert(inboxVideo)
+        context.insert(InboxEntry(inboxVideo))
+        try context.save()
+
+        let cleanupActor = CleanupActor(modelContainer: container)
+        let result = await cleanupActor.removeDuplicates(quickCheck: false, videoOnly: true)
+
+        let verificationContext = ModelContext(container)
+        let videos = try verificationContext.fetch(FetchDescriptor<Video>())
+        let inboxEntries = try verificationContext.fetch(FetchDescriptor<InboxEntry>())
+        XCTAssertEqual(result.countVideos, 1)
+        XCTAssertEqual(videos.count, 1)
+        XCTAssertEqual(videos.first?.subscription?.youtubeChannelId, "channel-id")
+        XCTAssertEqual(videos.first?.elapsedSeconds, 42)
+        XCTAssertNotNil(videos.first?.watchedDate)
+        XCTAssertEqual(inboxEntries.count, 1)
+        XCTAssertEqual(inboxEntries.first?.video?.youtubeId, youtubeId)
+    }
+
     func testParseDurationToSeconds() {
         let time = "PT3H2M27S"
         let duration = parseDurationToSeconds(time)

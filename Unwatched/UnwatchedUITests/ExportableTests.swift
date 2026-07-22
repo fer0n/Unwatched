@@ -226,7 +226,6 @@ class ExportableTests: XCTestCase {
                 // User Data
                 Const.automaticBackups: false,
                 Const.minimalBackups: false,
-                Const.enableIcloudSync: true,
                 Const.exludeWatchHistoryInBackup: true,
             ]
 
@@ -256,6 +255,17 @@ class ExportableTests: XCTestCase {
             XCTFail("Failed: \(error)")
             return
         }
+    }
+
+    func testICloudSyncSettingIsNotPortable() {
+        UserDefaults.standard.set(true, forKey: Const.enableIcloudSync)
+        XCTAssertNil(UserDataService.getSettings()[Const.enableIcloudSync])
+
+        UserDefaults.standard.set(false, forKey: Const.enableIcloudSync)
+        UserDataService.restoreSettings([
+            Const.enableIcloudSync: AnyCodable(true)
+        ])
+        XCTAssertFalse(UserDefaults.standard.bool(forKey: Const.enableIcloudSync))
     }
 
     func testSubscription() {
@@ -370,7 +380,5 @@ class ExportableTests: XCTestCase {
         }
     }
 }
-
-
 
 // swiftlint:enable all

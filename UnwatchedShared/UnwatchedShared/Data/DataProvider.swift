@@ -5,6 +5,9 @@
 
 import SwiftData
 import OSLog
+#if os(macOS)
+import Security
+#endif
 
 public extension ProcessInfo {
     var isXcodePreview: Bool {
@@ -22,21 +25,48 @@ public final class DataProvider: Sendable {
         enableIcloudSync = true
         #endif
 
+        #if os(macOS)
+        if enableIcloudSync && !DataProvider.hasCloudKitContainerEntitlement {
+            Log.warning("Disabling iCloud sync: the app does not have the required CloudKit entitlement")
+            enableIcloudSync = false
+            UserDefaults.standard.set(false, forKey: Const.enableIcloudSync)
+        }
+        #endif
+
         #if DEBUG
         if CommandLine.arguments.contains("enable-testing") || ProcessInfo.processInfo.isXcodePreview {
             return DataProvider.previewContainer
         }
         #endif
 
-        let config = ModelConfiguration(
-            schema: DataProvider.schema,
-            isStoredInMemoryOnly: false,
-            cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
-        )
-
-        Log.info("getModelContainer: config set")
-
+        #if os(macOS)
+        let storeURLs: [URL]
         do {
+            storeURLs = try DataProvider.storeURLs()
+        } catch {
+            fatalError("Could not prepare ModelContainer directory: \(error)")
+        }
+        #else
+        let storeURLs: [URL?] = [nil]
+        #endif
+
+        var lastError: Error?
+        for storeURL in storeURLs {
+            #if os(macOS)
+            Log.info("getModelContainer: trying store \(storeURL)")
+            let config = ModelConfiguration(
+                schema: DataProvider.schema,
+                url: storeURL,
+                cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
+            )
+            #else
+            let config = ModelConfiguration(
+                schema: DataProvider.schema,
+                isStoredInMemoryOnly: false,
+                cloudKitDatabase: enableIcloudSync ? .private("iCloud.com.pentlandFirth.Unwatched") : .none
+            )
+            #endif
+
             do {
                 return try ModelContainer(
                     for: DataProvider.schema,
@@ -49,24 +79,77 @@ public final class DataProvider: Sendable {
 
             // workaround for migration (disable sync for initial launch)
             Log.info("getModelContainer: fallback")
-            let config = ModelConfiguration(
+            #if os(macOS)
+            let fallbackConfig = ModelConfiguration(
+                schema: DataProvider.schema,
+                url: storeURL,
+                cloudKitDatabase: .none
+            )
+            #else
+            let fallbackConfig = ModelConfiguration(
                 schema: DataProvider.schema,
                 isStoredInMemoryOnly: false,
                 cloudKitDatabase: .none
             )
-            let container = try ModelContainer(
-                for: DataProvider.schema,
-                migrationPlan: UnwatchedMigrationPlan.self,
-                configurations: [config]
-            )
-            Task { @MainActor in
-                DataProvider.migrationWorkaround(container.mainContext)
+            #endif
+
+            do {
+                let container = try ModelContainer(
+                    for: DataProvider.schema,
+                    migrationPlan: UnwatchedMigrationPlan.self,
+                    configurations: [fallbackConfig]
+                )
+                Task { @MainActor in
+                    DataProvider.migrationWorkaround(container.mainContext)
+                }
+                return container
+            } catch {
+                Log.error("getModelContainer fallback error: \(error)")
+                lastError = error
             }
-            return container
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
         }
+
+        fatalError("Could not create ModelContainer: \(String(describing: lastError))")
     }()
+
+    #if os(macOS)
+    private static let hasCloudKitContainerEntitlement: Bool = {
+        guard let task = SecTaskCreateFromSelf(nil),
+              let containerIdentifiers = SecTaskCopyValueForEntitlement(
+                task,
+                "com.apple.developer.icloud-container-identifiers" as CFString,
+                nil
+              ) as? [String] else {
+            return false
+        }
+        return containerIdentifiers.contains("iCloud.com.pentlandFirth.Unwatched")
+    }()
+
+    /// Older builds used SwiftData's generic `default.store` directly in Application Support.
+    /// Try it for existing installs, then fall back to an app-specific store when it belongs
+    /// to another SwiftData app or has an unsupported schema.
+    private static func storeURLs(fileManager: FileManager = .default) throws -> [URL] {
+        let applicationSupportURL = URL.applicationSupportDirectory
+        let appDirectoryURL = applicationSupportURL.appending(
+            path: Const.bundleId,
+            directoryHint: .isDirectory
+        )
+        try fileManager.createDirectory(
+            at: appDirectoryURL,
+            withIntermediateDirectories: true
+        )
+
+        let appStoreURL = appDirectoryURL.appending(path: "default.store")
+        let legacyStoreURL = applicationSupportURL.appending(path: "default.store")
+        let appStoreExists = fileManager.fileExists(atPath: appStoreURL.path)
+        let legacyStoreExists = fileManager.fileExists(atPath: legacyStoreURL.path)
+
+        if !appStoreExists && legacyStoreExists {
+            return [legacyStoreURL, appStoreURL]
+        }
+        return [appStoreURL]
+    }
+    #endif
 
     private static func migrationWorkaround(_ context: ModelContext) {
         // workaround: migration fails during willMigrate (https://developer.apple.com/forums/thread/775060)

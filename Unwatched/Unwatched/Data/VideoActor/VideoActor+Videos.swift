@@ -4,6 +4,67 @@ import Observation
 import OSLog
 import UnwatchedShared
 
+struct SubscriptionVideoFetchResult: Sendable {
+    let subscription: SendableSubscription
+    let videos: [SendableVideo]?
+}
+
+enum SubscriptionFeedFetcher {
+    static let maxConcurrentFetches = 8
+
+    static func fetch(
+        _ subscriptions: [SendableSubscription],
+        maxConcurrent: Int = maxConcurrentFetches,
+        fetch: @escaping @Sendable (SendableSubscription) async throws -> [SendableVideo]
+    ) async -> [SubscriptionVideoFetchResult] {
+        guard !subscriptions.isEmpty else {
+            return []
+        }
+
+        let concurrency = max(1, min(maxConcurrent, subscriptions.count))
+        return await withTaskGroup(of: SubscriptionVideoFetchResult.self) { group in
+            var nextIndex = 0
+            var results = [SubscriptionVideoFetchResult]()
+            results.reserveCapacity(subscriptions.count)
+
+            func addNextFetch() {
+                guard nextIndex < subscriptions.count else {
+                    return
+                }
+                let subscription = subscriptions[nextIndex]
+                nextIndex += 1
+                group.addTask {
+                    do {
+                        return SubscriptionVideoFetchResult(
+                            subscription: subscription,
+                            videos: try await fetch(subscription)
+                        )
+                    } catch {
+                        Log.error(
+                            "Failed to fetch subscription \(subscription.title): "
+                                + error.localizedDescription
+                        )
+                        return SubscriptionVideoFetchResult(
+                            subscription: subscription,
+                            videos: nil
+                        )
+                    }
+                }
+            }
+
+            for _ in 0..<concurrency {
+                addNextFetch()
+            }
+
+            while let result = await group.next() {
+                results.append(result)
+                addNextFetch()
+            }
+            return results
+        }
+    }
+}
+
 // Video
 @ModelActor actor VideoActor {
     var newVideos = NewVideosNotificationInfo()
@@ -134,36 +195,42 @@ import UnwatchedShared
             consumeDeferredVideos()
         }
 
-        try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
-            Log.info("loadVideos for \(sendableSubs.count) subscriptions")
-            for sub in sendableSubs {
-                group.addTask {
-                    try await self.fetchVideos(sub)
-                }
-            }
+        Log.info("loadVideos for \(sendableSubs.count) subscriptions")
+        let fetchResults = await SubscriptionFeedFetcher.fetch(sendableSubs) { sub in
+            try await self.fetchVideos(sub).1
+        }
 
-            var newVideoInfo = [(loadedVideos: [Video], addedVideos: [Video])]()
-            for try await (sub, videos) in group {
-                let result = await handleNewVideos(
-                    sub,
-                    videos,
-                    defaultPlacement: placementInfo
-                )
-                if result.addedVideos.count > 0 {
-                    // save sooner if videos got added
-                    try modelContext.save()
-                }
-                newVideoInfo.append(result)
+        var successfulFetchCount = 0
+        var newVideoInfo = [(loadedVideos: [Video], addedVideos: [Video])]()
+        for result in fetchResults {
+            guard let videos = result.videos else {
+                continue
             }
-            if fetchDurations {
-                try await handleFetchDurationsLoaded(
-                    newVideoInfo,
-                    onlyForAdded: subscriptionIds == nil // for all if specific subscription
-                )
+            successfulFetchCount += 1
+            let sub = result.subscription
+            let result = await handleNewVideos(
+                sub,
+                videos,
+                defaultPlacement: placementInfo
+            )
+            if result.addedVideos.count > 0 {
+                // save sooner if videos got added
+                try modelContext.save()
             }
+            newVideoInfo.append(result)
+        }
+        if fetchDurations {
+            try await handleFetchDurationsLoaded(
+                newVideoInfo,
+                onlyForAdded: subscriptionIds == nil // for all if specific subscription
+            )
         }
 
         await deferredVideosTask.value
+
+        if !sendableSubs.isEmpty && successfulFetchCount == 0 {
+            throw URLError(.badServerResponse)
+        }
 
         try modelContext.save()
         return newVideos

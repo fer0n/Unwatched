@@ -6,7 +6,6 @@
 import SwiftUI
 import UnwatchedShared
 
-
 struct MiniPlayerContent: View {
     var videoTitle: String?
     var handleMiniPlayerTap: () -> Void

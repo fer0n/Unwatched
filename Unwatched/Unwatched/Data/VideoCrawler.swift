@@ -15,14 +15,18 @@ struct VideoCrawler {
             throw URLError(.badServerResponse)
         }
 
-        return parseFeedData(data: data, limitVideos: limitVideos)
+        let delegate = parseFeedData(data: data, limitVideos: limitVideos)
+        guard delegate.parsingSucceeded || delegate.intentionallyStoppedParsing else {
+            throw VideoCrawlerError.failedToParse
+        }
+        return delegate
     }
 
     static func parseFeedData(data: Data, limitVideos: Int?) -> RSSParserDelegate {
         let parser = XMLParser(data: data)
         let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos)
         parser.delegate = rssParserDelegate
-        parser.parse()
+        rssParserDelegate.parsingSucceeded = parser.parse()
         return rssParserDelegate
     }
 

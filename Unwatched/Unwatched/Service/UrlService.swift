@@ -44,14 +44,14 @@ struct UrlService {
         return URL(string: "mailto:unwatched@icloud.com?\(subject)body=\n\n\(body)")!
     }
 
-    static func getNonEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double? = nil) -> String {
+    static func getNonEmbeddedYoutubeUrl(_ youtubeId: String, _ startAt: Double? = nil) -> String {
         if let startAt {
             return "https://www.youtube.com/watch?v=\(youtubeId)&t=\(startAt)s"
         }
         return "https://www.youtube.com/watch?v=\(youtubeId)"
     }
 
-    static func getEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
+    static func getEmbeddedYoutubeUrl(_ youtubeId: String, _ startAt: Double) -> String {
         let useNoCookieUrl = UserDefaults.standard.bool(forKey: Const.useNoCookieUrl)
         let cookieUrl = useNoCookieUrl ? "-nocookie" : ""
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
@@ -83,7 +83,7 @@ struct UrlService {
         return components.url
     }
 
-    static func stringContainsUrl (_ text: String) -> Bool {
+    static func stringContainsUrl(_ text: String) -> Bool {
         let regex = #"https?:\/\/\w+\.\w+"#
         return text.matching(regex: regex) != nil
     }

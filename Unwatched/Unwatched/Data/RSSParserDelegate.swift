@@ -11,6 +11,8 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
     var videos: [SendableVideo] = []
     var subscriptionInfo: SendableSubscription?
     var limitVideos: Int?
+    var parsingSucceeded = false
+    var intentionallyStoppedParsing = false
 
     var currentElement = ""
     var currentTitle: String = ""
@@ -113,6 +115,7 @@ class RSSParserDelegate: NSObject, XMLParserDelegate {
                         currentUri.trimmingCharacters(in: .whitespacesAndNewlines)
                     )
                     subscriptionInfo?.youtubeChannelId = channelId
+                    intentionallyStoppedParsing = true
                     parser.abortParsing()
                     return
                 }

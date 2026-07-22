@@ -42,7 +42,7 @@ extension VideoActor {
         let subId = sub.persistentModelID
         let past = Date.distantPast
         let fetch = FetchDescriptor<Video>(predicate: #Predicate {
-            $0.subscription?.persistentModelID == subId &&
+            ($0.subscription?.persistentModelID == subId || $0.subscription == nil) &&
                 ($0.publishedDate ?? past) >= oldestDate
         })
         return try? modelContext.fetch(fetch)
@@ -56,13 +56,22 @@ extension VideoActor {
         }
         var subVideosDict = [String: Video]()
         for video in subVideos {
+            let existing = subVideosDict[video.youtubeId]
+            if existing?.subscription != nil && video.subscription == nil {
+                continue
+            }
             subVideosDict[video.youtubeId] = video
         }
 
         var newVideos = [SendableVideo]()
+        var seenYouTubeIds = Set<String>()
         var imagesToBeDeleted = [URL]()
-        for video in videos {
+        for video in videos where seenYouTubeIds.insert(video.youtubeId).inserted {
             if let oldVideo = subVideosDict[video.youtubeId] {
+                if oldVideo.subscription == nil {
+                    oldVideo.subscription = sub
+                    oldVideo.youtubeChannelId = sub.youtubeChannelId
+                }
                 if oldVideo.updatedDate != video.updatedDate {
                     if let url = updateVideoAndGetImageToDelete(oldVideo, video) {
                         imagesToBeDeleted.append(url)

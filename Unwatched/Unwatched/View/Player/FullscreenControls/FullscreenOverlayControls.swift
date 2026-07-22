@@ -100,8 +100,6 @@ struct FullscreenOverlayControls: View {
     }
 }
 
-
-
 enum OverlayIcon: Equatable {
     case play
     case pause
