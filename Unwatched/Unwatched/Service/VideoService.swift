@@ -12,13 +12,19 @@ extension VideoService {
     static func fetchDescriptionInBg(youtubeId: String) {
         Task.detached {
             let repo = VideoActor(modelContainer: DataProvider.shared.container)
-            let didSet = await repo.fetchAndSetDescription(youtubeId: youtubeId)
-            // Refresh the player's chapter state if the backfilled video is the one playing.
-            if didSet {
-                await MainActor.run {
-                    if PlayerManager.shared.video?.youtubeId == youtubeId {
-                        PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
-                    }
+            let description = await repo.fetchAndSetDescription(youtubeId: youtubeId)
+            guard let description else { return }
+            // The actor saved to its own context — an already-registered Video in the main
+            // context won't pick that up on its own, so mirror the description there too
+            // (chapters were already persisted by the actor; a fresh fetch will see them).
+            await MainActor.run {
+                let context = DataProvider.mainContext
+                if let video = getVideo(for: youtubeId, modelContext: context) {
+                    video.videoDescription = description
+                    try? context.save()
+                }
+                if PlayerManager.shared.video?.youtubeId == youtubeId {
+                    PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
                 }
             }
         }
