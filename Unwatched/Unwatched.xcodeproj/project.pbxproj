@@ -744,6 +744,7 @@
 		88F85F482E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */; };
 		88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */; };
+		8FEE66D6B58FE2808570CCFA /* NextVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5119A44971DFAF56FFC579D7 /* NextVideo.swift */; };
 		88F85F4D2E100AD000FB15A1 /* PreviousVideoChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */; };
 		88F85F4F2E100B1F00FB15A1 /* ChapterControlError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */; };
 		88F85F502E100B1F00FB15A1 /* ChapterControlError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */; };
@@ -1303,6 +1304,7 @@
 		88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScrubberOverlay.swift; sourceTree = "<group>"; };
 		88F85F472E1004EF00FB15A1 /* AppStateObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateObserver.swift; sourceTree = "<group>"; };
 		88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideoChapter.swift; sourceTree = "<group>"; };
+		5119A44971DFAF56FFC579D7 /* NextVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextVideo.swift; sourceTree = "<group>"; };
 		88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviousVideoChapter.swift; sourceTree = "<group>"; };
 		88F85F4E2E100B1F00FB15A1 /* ChapterControlError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterControlError.swift; sourceTree = "<group>"; };
 		88F901F72EA8C3FB001E0579 /* BackgroundMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMonitor.swift; sourceTree = "<group>"; };
@@ -1842,6 +1844,7 @@
 				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
 				887E82A92CD8FC4600B196EA /* VideoEntity.swift */,
 				887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */,
+				5119A44971DFAF56FFC579D7 /* NextVideo.swift */,
 				88F85F4A2E1006D400FB15A1 /* NextVideoChapter.swift */,
 				88F85F4C2E100AD000FB15A1 /* PreviousVideoChapter.swift */,
 				881EEE542D02F0D40028EAF8 /* AddSubscription.swift */,
@@ -3319,6 +3322,7 @@
 				8808A9192B95116A004D7CE2 /* NewVideosNotificationInfo.swift in Sources */,
 				887255F82D9420A2008F1DE1 /* NSApplicationDelegate.swift in Sources */,
 				88F85F4B2E1006D400FB15A1 /* NextVideoChapter.swift in Sources */,
+				8FEE66D6B58FE2808570CCFA /* NextVideo.swift in Sources */,
 				888E1E042B70E84A00608F99 /* AnimationCompletionCallback.swift in Sources */,
 				888F74A92BA1FD8400B94822 /* GeneralSettingsView.swift in Sources */,
 				88C965EB2D0AB4F800D1AE3E /* PlayerBackgroundGestureRecognizer.swift in Sources */,

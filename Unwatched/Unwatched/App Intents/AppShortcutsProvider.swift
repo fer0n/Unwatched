@@ -34,6 +34,12 @@ struct UnwatchedAppShortcuts: AppShortcutsProvider {
             systemImageName: "play.circle.fill"
         )
         AppShortcut(
+            intent: NextVideo(),
+            phrases: ["Skip to next Video in ${applicationName}", "Next ${applicationName} Video"],
+            shortTitle: "nextVideo",
+            systemImageName: "forward.end.fill"
+        )
+        AppShortcut(
             intent: NextVideoChapter(),
             phrases: ["Skip to next Video Chapter in ${applicationName}", "Next ${applicationName} Chapter"],
             shortTitle: "nextChapter",

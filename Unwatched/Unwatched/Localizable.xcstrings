@@ -10348,6 +10348,40 @@
         }
       }
     },
+    "nextVideoDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Springt zum nächsten Video in der Warteschlange."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skips to the next video in the queue."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salta al siguiente vídeo en la cola."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passe à la vidéo suivante dans la file d'attente."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Przechodzi do następnego filmu w kolejce."
+          }
+        }
+      }
+    },
     "nineMonths" : {
       "localizations" : {
         "de" : {
