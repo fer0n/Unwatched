@@ -23,6 +23,7 @@ struct BrowserView: View, KeyboardReadable {
 
     var showHeader = true
     var safeArea = true
+    var hideYoutubeChrome = false
 
     var ytBrowserTip = YtBrowserTip()
     var addButtonTip = AddButtonTip()
@@ -107,7 +108,8 @@ struct BrowserView: View, KeyboardReadable {
 
                 ZStack {
                     YtBrowserWebView(browserManager: $browserManager,
-                                     onDismiss: handleDismiss)
+                                     onDismiss: handleDismiss,
+                                     hideYoutubeChrome: hideYoutubeChrome)
                         .id("\(playBrowserVideosInApp ? "inApp" : "external")")
                     if !isKeyboardVisible {
                         VStack {

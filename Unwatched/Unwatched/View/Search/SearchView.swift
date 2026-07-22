@@ -12,6 +12,7 @@ import UnwatchedShared
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
+    @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
     @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
@@ -56,13 +57,16 @@ struct SearchView: View {
         .searchPresentationToolbarBehavior(.avoidHidingContent)
         .searchFocused($searchFocused)
         .onSubmit(of: .search) {
-            showBrowserFallback = false
-            vm.search()
+            search(for: vm.query)
         }
         .onChange(of: vm.query) { _, newValue in
-            showBrowserFallback = false
             if newValue.isEmpty {
                 vm.clear()
+            }
+        }
+        .onChange(of: searchFocused) { _, focused in
+            if focused {
+                showBrowserFallback = false
             }
         }
 
@@ -85,9 +89,20 @@ struct SearchView: View {
         .tint(.neutralAccentColor)
     }
 
-    var youtubeSearchURL: URL? {
-        guard !vm.activeQuery.isEmpty,
-              let encoded = vm.activeQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+    func search(for term: String) {
+        vm.query = term
+        let trimmed = term.trimmingCharacters(in: .whitespacesAndNewlines)
+        if searchAlwaysUseYoutube, let url = youtubeSearchURL(for: trimmed) {
+            openBrowserFallback(url)
+        } else {
+            showBrowserFallback = false
+            vm.search()
+        }
+    }
+
+    func youtubeSearchURL(for query: String) -> URL? {
+        guard !query.isEmpty,
+              let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         else { return nil }
         return URL(string: "https://www.youtube.com/results?search_query=\(encoded)")
     }
@@ -109,7 +124,7 @@ struct SearchView: View {
     @ViewBuilder
     var content: some View {
         if showBrowserFallback {
-            BrowserView(showHeader: false, safeArea: false)
+            BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
         } else if vm.isSearching && vm.results.isEmpty {
             ProgressView()
         } else if let error = vm.errorMessage, vm.results.isEmpty {
@@ -119,7 +134,7 @@ struct SearchView: View {
                 Text(verbatim: error)
             } actions: {
                 Button("retry") { vm.search() }
-                if let url = youtubeSearchURL {
+                if let url = youtubeSearchURL(for: vm.activeQuery) {
                     Button("searchInBrowser") {
                         openBrowserFallback(url)
                     }
@@ -131,14 +146,14 @@ struct SearchView: View {
             } description: {
                 Text("searchNoResultsDescription")
             } actions: {
-                if let url = youtubeSearchURL {
+                if let url = youtubeSearchURL(for: vm.activeQuery) {
                     Button("searchInBrowser") {
                         openBrowserFallback(url)
                     }
                 }
             }
         } else if !vm.hasSearched || searchFocused {
-            SearchSuggestionsView(vm: vm, searchFocused: $searchFocused)
+            SearchSuggestionsView(vm: vm, searchFocused: $searchFocused, onSelect: search(for:))
         } else {
             resultsList
         }

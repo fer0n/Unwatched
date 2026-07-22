@@ -18,13 +18,16 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
     var onDismiss: (() -> Void)?
     @Bindable var browserManager: BrowserManager
+    var hideYoutubeChrome = false
 
     init(
         browserManager: Bindable<BrowserManager>,
-        onDismiss: (() -> Void)? = nil
+        onDismiss: (() -> Void)? = nil,
+        hideYoutubeChrome: Bool = false
     ) {
         self._browserManager = browserManager
         self.onDismiss = onDismiss
+        self.hideYoutubeChrome = hideYoutubeChrome
     }
 
     func makeView(_ coordinator: Coordinator) -> WKWebView {

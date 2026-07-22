@@ -15507,6 +15507,16 @@
         }
       }
     },
+    "searchAlwaysUseYoutube" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open YouTube for Search"
+          }
+        }
+      }
+    },
     "searchFailed" : {
       "localizations" : {
         "de" : {

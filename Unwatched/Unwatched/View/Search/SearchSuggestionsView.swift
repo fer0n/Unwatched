@@ -18,27 +18,34 @@ import UnwatchedShared
 struct SearchSuggestionsView: View {
     let vm: SearchVM
     @FocusState.Binding var searchFocused: Bool
+    let onSelect: (String) -> Void
 
     var body: some View {
         List {
             if !vm.query.isEmpty {
                 Section {
                     ForEach(vm.suggestions, id: \.self) { suggestion in
-                        suggestionRow(suggestion, systemImage: "magnifyingglass")
+                        suggestionRow(suggestion, systemImage: "magnifyingglass") {
+                            searchFocused = false
+                            onSelect(suggestion)
+                        }
                     }
                 }
                 .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
             } else if !vm.recentSearches.isEmpty {
                 Section {
                     ForEach(vm.recentSearches.prefix(10), id: \.self) { recent in
-                        suggestionRow(recent, systemImage: "clock.arrow.circlepath")
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .destructive) {
-                                    vm.removeRecentSearch(recent)
-                                } label: {
-                                    Label("delete", systemImage: "trash")
-                                }
+                        suggestionRow(recent, systemImage: "clock.arrow.circlepath") {
+                            searchFocused = false
+                            onSelect(recent)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                vm.removeRecentSearch(recent)
+                            } label: {
+                                Label("delete", systemImage: "trash")
                             }
+                        }
                     }
                     Button(role: .destructive) {
                         vm.clearRecentSearches()
@@ -63,13 +70,9 @@ struct SearchSuggestionsView: View {
         .task(id: vm.query) { vm.updateSuggestions() }
     }
 
-    /// A tappable suggestion/recent row that runs the search for its term.
-    func suggestionRow(_ term: String, systemImage: String) -> some View {
-        Button {
-            vm.query = term
-            searchFocused = false
-            vm.search()
-        } label: {
+    /// A tappable suggestion/recent row that runs `action` for its term.
+    func suggestionRow(_ term: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
             suggestionLabel(Text(term), systemImage: systemImage)
         }
         .buttonStyle(.plain)

@@ -309,6 +309,7 @@ public struct Const {
     public static let showTabBarBadge = "showTabBarBadge"
     public static let browserAsTab = "browserAsTab"
     public static let browserDisplayMode = "browserDisplayMode"
+    public static let searchAlwaysUseYoutube = "searchAlwaysUseYoutube"
 
     public static let selectedDetent = "selectedDetent"
     public static let playerControlHeight = "playerControlHeight"
