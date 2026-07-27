@@ -14,7 +14,7 @@ import UnwatchedShared
 @MainActor
 final class SearchVM {
     var query: String = ""
-    private(set) var results: [SendableVideo] = []
+    var results: [SendableVideo] = []
     private(set) var suggestions: [String] = []
     private(set) var recentSearches: [String] = []
     private(set) var isSearching = false
@@ -23,7 +23,14 @@ final class SearchVM {
     /// The query that produced the current `results` (used to ignore stale responses).
     private(set) var activeQuery: String = ""
 
+    /// Matches from data already stored in the app, shown above the YouTube results
+    /// (see `SearchVM+Local`).
+    var localResults = LocalSearchResults()
+    var enabledSources = SearchSource.loadEnabled()
+
     var hasSearched: Bool { !activeQuery.isEmpty }
+
+    var hasAnyResults: Bool { !results.isEmpty || !localResults.isEmpty }
 
     /// Upload-date filter for the search. Changing it re-runs the active search so
     /// results update immediately (mirrors YouTube's "Upload date" search filter).
@@ -40,6 +47,7 @@ final class SearchVM {
     private var filter = SearchFilter.default
     private var nextPageToken: String?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
+    @ObservationIgnored var localTask: Task<Void, Never>?
     @ObservationIgnored private var suggestionsTask: Task<Void, Never>?
     /// Prefix → suggestions cache, with an insertion-ordered key list for simple LRU eviction.
     @ObservationIgnored private var suggestionCache: [String: [String]] = [:]
@@ -60,12 +68,24 @@ final class SearchVM {
         recordRecentSearch(trimmed)
 
         searchTask?.cancel()
-        isSearching = true
         errorMessage = nil
         activeQuery = trimmed
 
         suggestionsTask?.cancel()
         suggestions = []
+
+        searchLocal()
+
+        guard enabledSources.contains(.youtube) else {
+            withAnimation {
+                results = []
+            }
+            nextPageToken = nil
+            isSearching = false
+            isLoadingMore = false
+            return
+        }
+        isSearching = true
 
         searchTask = Task {
             do {
@@ -93,15 +113,18 @@ final class SearchVM {
 
     /// Re-runs the search for the currently active query (e.g. after a filter change),
     /// leaving the search field text untouched.
-    private func rerunActiveSearch() {
+    func rerunActiveSearch() {
         guard hasSearched else { return }
         query = activeQuery
         search()
     }
 
-    /// Fetches the next page when the user scrolls near the end of the list.
+    /// Fetches the next page when the user scrolls near the end of the list. Triggers on
+    /// any of the last few results rather than strictly the last one — `youtubeResults`
+    /// may have dropped the tail as a duplicate of a local hit.
     func loadMoreIfNeeded(currentItem: SendableVideo) {
-        guard currentItem.youtubeId == results.last?.youtubeId else { return }
+        guard let index = results.firstIndex(where: { $0.youtubeId == currentItem.youtubeId }),
+              index >= results.count - 3 else { return }
         guard let token = nextPageToken, !isLoadingMore, !isSearching else { return }
         let queryAtStart = activeQuery
         isLoadingMore = true
@@ -219,60 +242,11 @@ final class SearchVM {
         suggestionCacheOrder.append(query)
     }
 
-    /// Refreshes a single result's inbox/queue/watched status from the store after an
-    /// action (e.g. adding to the queue). If the video has since been persisted, its
-    /// `SendableVideo` is swapped for the stored one so `VideoListItem` shows the badge.
-    func refreshStatus(for youtubeId: String) {
-        guard let idx = results.firstIndex(where: { $0.youtubeId == youtubeId }) else { return }
-        if let updated = Self.storedStatus(for: youtubeId) {
-            withAnimation { results[idx] = updated }
-        }
-    }
-
-    /// Overlays stored status onto all current results (e.g. items already in the
-    /// queue/inbox, or after returning from playback).
-    func refreshAllStatuses() {
-        guard !results.isEmpty else { return }
-        let stored = Self.storedStatuses(for: results.map(\.youtubeId))
-        guard !stored.isEmpty else { return }
-        var updated = results
-        var didChange = false
-        for index in updated.indices {
-            if let match = stored[updated[index].youtubeId] {
-                updated[index] = match
-                didChange = true
-            }
-        }
-        if didChange {
-            withAnimation { results = updated }
-        }
-    }
-
-    @MainActor private static func storedStatus(for youtubeId: String) -> SendableVideo? {
-        let context = DataProvider.mainContext
-        guard let video = VideoService.getVideo(for: youtubeId, modelContext: context) else {
-            return nil
-        }
-        return video.toExportWithSubscription ?? video.toExport
-    }
-
-    /// Fetches stored status for many videos in a single query, keyed by `youtubeId`.
-    @MainActor private static func storedStatuses(for youtubeIds: [String]) -> [String: SendableVideo] {
-        let context = DataProvider.mainContext
-        let fetch = FetchDescriptor<Video>(predicate: #Predicate { youtubeIds.contains($0.youtubeId) })
-        guard let videos = try? context.fetch(fetch) else { return [:] }
-        return Dictionary(
-            videos.compactMap { video -> (String, SendableVideo)? in
-                guard let export = video.toExportWithSubscription ?? video.toExport else { return nil }
-                return (video.youtubeId, export)
-            },
-            uniquingKeysWith: { first, _ in first }
-        )
-    }
-
     func clear() {
         searchTask?.cancel()
         suggestionsTask?.cancel()
+        localTask?.cancel()
+        localResults = LocalSearchResults()
         query = ""
         activeQuery = ""
         results = []

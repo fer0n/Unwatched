@@ -14,6 +14,7 @@ struct SearchView: View {
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
+    @Environment(\.modelContext) private var modelContext
     @Environment(PlayerManager.self) private var player
     @Environment(NavigationManager.self) private var navManager
     @Environment(BrowserManager.self) private var browserManager
@@ -46,7 +47,13 @@ struct SearchView: View {
                 }
             }
             .navigationDestination(for: SendableSubscription.self) { sub in
-                ChannelPreviewView(sub)
+                // Subscriptions matched in the library open their regular detail view;
+                // channels found on YouTube (no persistent id) get the read-only preview.
+                if sub.persistentId != nil {
+                    SendableSubscriptionDetailView(sub, modelContext)
+                } else {
+                    ChannelPreviewView(sub)
+                }
             }
             .myTint()
         }
@@ -141,9 +148,9 @@ struct SearchView: View {
     var content: some View {
         if showBrowserFallback {
             BrowserView(showHeader: false, safeArea: false, hideYoutubeChrome: true)
-        } else if vm.isSearching && vm.results.isEmpty {
+        } else if vm.isSearching && !vm.hasAnyResults {
             ProgressView()
-        } else if let error = vm.errorMessage, vm.results.isEmpty {
+        } else if let error = vm.errorMessage, !vm.hasAnyResults {
             ContentUnavailableView {
                 Label("searchFailed", systemImage: "wifi.exclamationmark")
             } description: {
@@ -156,7 +163,7 @@ struct SearchView: View {
                     }
                 }
             }
-        } else if vm.hasSearched && vm.results.isEmpty {
+        } else if vm.hasSearched && !vm.hasAnyResults {
             ContentUnavailableView {
                 Label("searchNoResults", systemImage: "magnifyingglass")
             } description: {
@@ -177,42 +184,106 @@ struct SearchView: View {
 
     var resultsList: some View {
         List {
-            ForEach(vm.results, id: \.youtubeId) { video in
-                VideoListItem(
-                    video,
-                    video.youtubeId,
-                    config: VideoListItemConfig(
-                        hasInboxEntry: video.hasInboxEntry,
-                        hasQueueEntry: video.queueEntry != nil,
-                        videoDuration: video.duration,
-                        watched: video.watchedDate != nil,
-                        showAllStatus: true,
-                        showQueueButton: showAddToQueueButton,
-                        showContextMenu: true,
-                        showDelete: false
-                    ),
-                    onChange: { _, _ in
-                        vm.refreshStatus(for: video.youtubeId)
+            if !vm.localResults.subscriptions.isEmpty {
+                section(.subscriptions) {
+                    ForEach(vm.localResults.subscriptions, id: \.persistentId) { sub in
+                        NavigationLink(value: sub) {
+                            SearchSubscriptionListItem(subscription: sub)
+                        }
                     }
-                )
-                .equatable()
-                .videoListItemEntry()
-                .onAppear {
-                    vm.loadMoreIfNeeded(currentItem: video)
+                    .myListRowBackground()
                 }
             }
-            .myListRowBackground()
 
-            if vm.isLoadingMore {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .listRowSeparator(.hidden)
-                    .myListRowBackground()
+            if !vm.localResults.bookmarks.isEmpty {
+                section(.bookmarks) {
+                    videoRows(vm.localResults.bookmarks)
+                }
+            }
+
+            if !vm.localResults.videos.isEmpty {
+                section(.library) {
+                    videoRows(vm.localResults.videos)
+                }
+            }
+
+            if !vm.youtubeResults.isEmpty {
+                section(.youtube) {
+                    videoRows(vm.youtubeResults, loadMore: true)
+
+                    if vm.isLoadingMore {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .listRowSeparator(.hidden)
+                            .myListRowBackground()
+                    }
+                }
             }
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
         .environment(\.videoListContext, .search)
+    }
+
+    /// Sections are only labelled once something local matched — a lone "YouTube"
+    /// header above a plain search would just be noise.
+    var showSectionHeaders: Bool {
+        !vm.localResults.isEmpty
+    }
+
+    /// The label is an ordinary row rather than a `Section` header: a plain list pins
+    /// headers, which makes them float free of the rows they label while scrolling.
+    func section<Content: View>(
+        _ source: SearchSource,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        Section {
+            if showSectionHeaders {
+                source.label
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 10)
+                    .padding(.top, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .myListRowBackground()
+            }
+            content()
+        }
+    }
+
+    func videoRows(_ videos: [SendableVideo], loadMore: Bool = false) -> some View {
+        ForEach(videos, id: \.youtubeId) { video in
+            VideoListItem(
+                video,
+                video.youtubeId,
+                config: VideoListItemConfig(
+                    hasInboxEntry: video.hasInboxEntry,
+                    hasQueueEntry: video.queueEntry != nil,
+                    videoDuration: video.duration,
+                    watched: video.watchedDate != nil,
+                    deferred: video.deferDate != nil,
+                    isNew: video.isNew,
+                    showAllStatus: true,
+                    showQueueButton: showAddToQueueButton,
+                    showContextMenu: true,
+                    showDelete: false
+                ),
+                onChange: { _, _ in
+                    vm.refreshStatus(for: video.youtubeId)
+                }
+            )
+            .equatable()
+            .videoListItemEntry()
+            .onAppear {
+                if loadMore {
+                    vm.loadMoreIfNeeded(currentItem: video)
+                }
+            }
+        }
+        .myListRowBackground()
     }
 }
 
