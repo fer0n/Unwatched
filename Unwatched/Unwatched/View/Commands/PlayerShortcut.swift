@@ -234,6 +234,8 @@ enum PlayerShortcut: String, CaseIterable {
 
             _ = VideoService.setVideoWatchedAsync(video.id)
             try? context.save()
+
+            TinyUndoManager.shared.registerAction(.moveToQueue([video.id], order: 0))
         }
     }
 

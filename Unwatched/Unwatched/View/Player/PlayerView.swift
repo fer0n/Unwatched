@@ -241,6 +241,10 @@ struct PlayerView: View {
                 // workaround: sync clear is sometimes unreliable (e.g. screen locked);
                 // async version ensures the queue entry is actually removed
                 _ = VideoService.clearFromEverywhereAsync(video.youtubeId)
+
+                TinyUndoManager.shared.registerAction(
+                    .moveToQueue([video.persistentModelID], order: 0)
+                )
             }
             player.autoSetNextVideo(.continuousPlay, modelContext)
         } else {
