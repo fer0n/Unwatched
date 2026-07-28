@@ -34,6 +34,27 @@ actor StatsActor {
         }
     }
 
+    /// Adds `duration` to the given day's entry for the video's channel, creating it if needed.
+    func addWatchTime(videoId: String, day: Date, duration: TimeInterval) throws {
+        var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
+        videoFetch.fetchLimit = 1
+        guard let video = try modelContext.fetch(videoFetch).first,
+              let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId else {
+            return
+        }
+
+        let entryFetch = FetchDescriptor<WatchTimeEntry>(
+            predicate: #Predicate { $0.channelId == channelId && $0.date == day }
+        )
+        // Duplicates exist until CleanupService merges them; the largest is the accumulated one
+        if let entry = try modelContext.fetch(entryFetch).max(by: { $0.watchTime < $1.watchTime }) {
+            entry.watchTime += duration
+        } else {
+            modelContext.insert(WatchTimeEntry(date: day, channelId: channelId, watchTime: duration))
+        }
+        try modelContext.save()
+    }
+
     func deleteStats(from startDate: Date, to endDate: Date, channelId: String?) throws {
         let descriptor: FetchDescriptor<WatchTimeEntry>
         if let channelId {

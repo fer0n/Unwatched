@@ -16,6 +16,10 @@ final class StatsService {
     private var lastVideoTime: Double?
     private var lastWallClockTime: Date?
 
+    /// One long-lived actor rather than one per call, so the read-modify-write in `addWatchTime`
+    /// stays serialized and concurrent ticks can't lose an update.
+    private let statsActor = StatsActor(modelContainer: DataProvider.shared.container)
+
     private init() {}
 
     func handleVideoTimeUpdate(videoId: String, time: Double) {
@@ -40,31 +44,14 @@ final class StatsService {
 
         Log.info("StatsService: +\(duration)s for \(videoId)")
 
-        let context = DataProvider.mainContext
-        let predicate = #Predicate<Video> { $0.youtubeId == videoId }
-        guard let video = try? context.fetch(FetchDescriptor(predicate: predicate)).first,
-              let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId else { return }
-
-        saveStat(channelId: channelId, duration: duration, context: context)
-    }
-
-    private func saveStat(channelId: String, duration: TimeInterval, context: ModelContext) {
-        guard let today = getNormalizedDate(.now) else { return }
-
-        let predicate = #Predicate<WatchTimeEntry> { $0.channelId == channelId && $0.date == today }
-        let descriptor = FetchDescriptor(predicate: predicate)
-
-        do {
-            let stats = try context.fetch(descriptor)
-            if let stat = stats.max(by: { $0.watchTime < $1.watchTime }) {
-                stat.watchTime += duration
-            } else {
-                let stat = WatchTimeEntry(date: today, channelId: channelId, watchTime: duration)
-                context.insert(stat)
+        guard let day = getNormalizedDate(now) else { return }
+        let actor = statsActor
+        Task {
+            do {
+                try await actor.addWatchTime(videoId: videoId, day: day, duration: duration)
+            } catch {
+                Log.error("StatsService: Failed to save stat: \(error)")
             }
-            try context.save()
-        } catch {
-            Log.error("StatsService: Failed to save stat: \(error)")
         }
     }
 
