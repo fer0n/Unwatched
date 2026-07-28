@@ -9,6 +9,9 @@ import UnwatchedShared
 struct TranscriptList: View {
     @Environment(PlayerManager.self) var player
     let transcript: [TranscriptDisplayItem]
+    /// The playhead, resolved once by the parent. Passed as a plain value rather than read from
+    /// `player` here — see the note in `body`.
+    let activeTime: Double
     let isCurrentVideo: Bool
     let isSearching: Bool
 
@@ -17,6 +20,10 @@ struct TranscriptList: View {
         // doesn't have to project `_ConditionalContent` for every entry when
         // walking the list (e.g. during `scrollTo`), which caused hangs on
         // long transcripts.
+        //
+        // Nothing in here may read an @Observable (`player`): `scrollTo` walks the ForEach from
+        // the top to find the target's offset and evaluates every item on the way, so a single
+        // observable read costs one observation registration per transcript line.
         ForEach(transcript) { item in
             TranscriptItemRow(
                 item: item,
@@ -27,16 +34,12 @@ struct TranscriptList: View {
         }
     }
 
-    var time: Double {
-        (player.currentTime ?? 0) + 1
-    }
-
     private func isActive(_ item: TranscriptDisplayItem) -> Bool {
         guard case .entry(let entry, _) = item else { return false }
         if !isCurrentVideo {
             return true
         }
-        return entry.start < time && (entry.start + entry.duration) >= time
+        return entry.start < activeTime && (entry.start + entry.duration) >= activeTime
     }
 
     func handleTap(_ entry: TranscriptEntry) {
