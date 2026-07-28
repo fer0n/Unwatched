@@ -76,14 +76,11 @@ public struct Const {
     /// Update the current time if it differs by x seconds
     public static let updateTimeMinimum: Double = 10
 
-    /// Playback speeds that will be spelled out
-    public static let highlightedPlaybackSpeeds = [1, 1.5, 2, 3]
-
-    /// Playback speeds that can savely shown at smaller sizes without line break
-    public static let highlightedSpeedsInt = [1.0, 2.0, 3.0]
     public static let speeds = [
         0.2,
+        0.3,
         0.4,
+        0.5,
         0.6,
         0.7,
         0.8,
@@ -216,6 +213,7 @@ public struct Const {
     public static let chaptersSF = "checklist.checked"
 
     public static let youtubeSF = "play.rectangle.fill"
+    public static let viewOnYouTubeSF = "arrow.up.right"
 
     public static let nextChapterSF = "chevron.right.2"
     public static let previousChapterSF = "chevron.left.2"

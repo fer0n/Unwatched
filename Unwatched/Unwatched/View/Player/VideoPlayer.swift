@@ -22,7 +22,6 @@ struct VideoPlayer: View {
 
     var compactSize = false
     var horizontalLayout = false
-    var limitWidth = false
     var landscapeFullscreen = true
     let hideControls: Bool
 
@@ -61,7 +60,6 @@ struct VideoPlayer: View {
 
                         PlayerControls(compactSize: compactSize,
                                        horizontalLayout: horizontalLayout,
-                                       limitWidth: limitWidth,
                                        enableHideControls: enableHideControls,
                                        hideControls: hideControls,
                                        sleepTimerVM: sleepTimerVM,
@@ -205,7 +203,6 @@ struct VideoPlayer: View {
 
     VideoPlayer(compactSize: false,
                 horizontalLayout: false,
-                limitWidth: false,
                 landscapeFullscreen: false,
                 hideControls: false,
                 )

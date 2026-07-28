@@ -41,9 +41,12 @@ struct AirPlayView: View {
             (button as? UIButton)?.sendActions(for: .touchUpInside)
             Signal.log("Player.AirPlay")
         } label: {
-            Image(systemName: "airplay.video")
+            Image(systemName: "airplay.audio")
                 .fontWeight(.black)
-                .playerToggleModifier(isOn: isOn, isSmall: true)
+                .playerToggleModifier(
+                    isOn: isOn,
+                    isSmall: true
+                )
         }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .buttonStyle(.plain)

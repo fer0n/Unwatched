@@ -25,6 +25,11 @@ struct FullscreenSpeedControlContent: View {
     let triggerInteraction: () -> Void
     @Binding var isInteracting: Bool
 
+    var fontSize: CGFloat = 18
+    var fontWidth: Font.Width = .compressed
+    /// Width the control occupies; the scroll area itself stays wider so wide speeds aren't cut off.
+    var frameWidth: CGFloat = 30
+
     @State var viewModel = ViewModel()
 
     var body: some View {
@@ -38,9 +43,9 @@ struct FullscreenSpeedControlContent: View {
                         .fixedSize()
                         .id(index)
                 }
-                .font(.system(size: 18))
+                .font(.system(size: fontSize))
                 .frame(height: Values.height)
-                .fontWidth(.compressed)
+                .fontWidth(fontWidth)
                 .fontWeight(.bold)
             }
             .scrollTargetLayout()
@@ -62,9 +67,15 @@ struct FullscreenSpeedControlContent: View {
         .scrollPosition(id: $viewModel.currentPage, anchor: .center)
         .scrollIndicators(.never)
         .mask(viewModel.mask)
-        .frame(width: 50, height: Values.frameHeight)
+        .frame(width: frameWidth + 20, height: Values.frameHeight)
         .frame(width: viewModel.isScrolling ? nil : 22, height: viewModel.isScrolling ? nil : 22)
-        .frame(width: 30, height: 30)
+        .frame(width: frameWidth, height: 30)
+        #if os(macOS)
+        // the scroll view moves too far per wheel detent, so it's stepped manually instead
+        .overlay {
+            ScrollWheelStepper(onStep: handleStep)
+        }
+        #endif
         .onChange(of: viewModel.currentPage) { old, _ in
             guard let currentPage = viewModel.currentPage, old != nil else {
                 return
@@ -88,6 +99,34 @@ struct FullscreenSpeedControlContent: View {
         }
     }
 
+    #if os(macOS)
+    /// Moves the selection by one speed, taking over what the scroll view's own scrolling does elsewhere.
+    func handleStep(_ direction: Int) {
+        guard let currentPage = viewModel.currentPage else {
+            return
+        }
+        let next = currentPage + direction
+        guard viewModel.speeds.indices.contains(next) else {
+            return
+        }
+
+        viewModel.handleScrolling(true)
+        isInteracting = true
+        withAnimation {
+            viewModel.currentPage = next
+        }
+
+        viewModel.stepEndTask?.cancel()
+        viewModel.stepEndTask = Task {
+            do {
+                try await Task.sleep(for: .milliseconds(700))
+                viewModel.handleScrolling(false)
+                isInteracting = false
+            } catch { }
+        }
+    }
+    #endif
+
     func triggerChange(_ currentPage: Int?) {
         guard let currentPage else {
             return
@@ -105,6 +144,11 @@ extension FullscreenSpeedControlContent {
         var isScrolling = false
         var task: Task<Void, Never>?
         var currentPage: Int?
+
+        #if os(macOS)
+        /// Ends the scrolling state after the last scroll wheel step, in place of the scroll phase
+        var stepEndTask: Task<Void, Never>?
+        #endif
 
         private var scrollingMask: LinearGradient {
             LinearGradient(gradient: Gradient(

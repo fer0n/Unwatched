@@ -60,11 +60,27 @@ struct SubscriptionInfoDetails: View {
 
                     if let shareURL {
                         ShareLink(item: shareURL) {
-                            Image(systemName: "square.and.arrow.up.fill")
+                            Image(systemName: Const.shareSF)
                                 .padding(10)
                                 .frame(maxHeight: .infinity)
                         }
                         .accessibilityLabel("shareVideo")
+                        .buttonStyle(CapsuleButtonStyle(primary: false))
+                    }
+
+                    if let rssFeedUrl = subscription.link {
+                        Menu {
+                            ShareLink(item: rssFeedUrl) {
+                                Label("shareRssFeed", systemImage: Const.shareSF)
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .fontWeight(.bold)
+                                .padding(10)
+                                .frame(maxHeight: .infinity)
+                        }
+                        .menuIndicator(.hidden)
+                        .accessibilityLabel("moreOptions")
                         .buttonStyle(CapsuleButtonStyle(primary: false))
                     }
                 }

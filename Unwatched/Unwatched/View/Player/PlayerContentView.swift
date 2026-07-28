@@ -14,7 +14,6 @@ struct PlayerContentView: View {
 
     let compactSize: Bool
     let horizontalLayout: Bool
-    var limitWidth = false
     let enableHideControls: Bool
     let hideControls: Bool
 
@@ -31,7 +30,6 @@ struct PlayerContentView: View {
             TabView(selection: $navManager.playerTab) {
                 PlayerControls(compactSize: compactSize,
                                horizontalLayout: horizontalLayout,
-                               limitWidth: limitWidth,
                                enableHideControls: enableHideControls,
                                hideControls: hideControls,
                                sleepTimerVM: sleepTimerVM,

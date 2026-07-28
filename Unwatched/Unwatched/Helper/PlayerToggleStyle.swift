@@ -22,14 +22,17 @@ struct PlayerToggleStyle: ToggleStyle {
 }
 
 struct PlayerToggleModifier: ViewModifier {
+    static let baseSmallSize: CGFloat = 43
+    static let baseNormalSize: CGFloat = 55
+
     let isOn: Bool
     var isSmall: Bool = false
     var stroke: Bool = true
     var backgroundColor: Color?
 
     @Environment(\.isEnabled) var isEnabled
-    @ScaledMetric var smallSize: CGFloat = 40
-    @ScaledMetric var normalSize: CGFloat = 50
+    @ScaledMetric var smallSize: CGFloat = PlayerToggleModifier.baseSmallSize
+    @ScaledMetric var normalSize: CGFloat = PlayerToggleModifier.baseNormalSize
 
     func body(content: Content) -> some View {
         content
@@ -37,12 +40,12 @@ struct PlayerToggleModifier: ViewModifier {
             #if os(macOS)
             .font(.headline)
             #else
-            .font(isSmall ? .subheadline : .headline)
+            .font(isSmall ? .headline : .title2)
             #endif
             .fontWeight(.regular)
             .frame(width: size, height: size)
-            .foregroundStyle(color, color.opacity(0.7))
-            .opacity(isEnabled ? 1 : 0.4)
+            .foregroundStyle(color, color.opacity(0.4))
+            .opacity(isEnabled ? 1 : 0.3)
             .background(background.padding(-5))
             .clipShape(Circle())
             #if !os(visionOS)

@@ -6,132 +6,88 @@
 import SwiftUI
 import UnwatchedShared
 
-struct CompactFullscreenSpeedControl: View {
-    @Environment(PlayerManager.self) var player
-    @State var showSpeedControl = false
-
-    var body: some View {
-        Text(verbatim: speedText)
-            .font(.system(size: 17))
-            .fontWidth(.compressed)
-            .fontWeight(.bold)
-            .playerToggleModifier(isOn: player.temporaryPlaybackSpeed != nil, isSmall: true)
-            .onTapGesture {
-                if player.temporaryPlaybackSpeed != nil {
-                    player.temporaryPlaybackSpeed = nil
-                } else {
-                    showSpeedControl = true
-                }
-            }
-            .popover(isPresented: $showSpeedControl) {
-                CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
-                    .padding(.horizontal)
-                    .frame(width: 350)
-                    .presentationBackground(.clear)
-                    .presentationCompactAdaptation(.popover)
-                    .fontWeight(nil)
-                    .preferredColorScheme(.dark)
-            }
-    }
-
-    var speedText: String {
-        let speedText = SpeedHelper.formatSpeed(player.debouncedPlaybackSpeed)
-        return "\(speedText)\(speedText.count <= 1 ? "×" : "")"
-    }
-}
-
 struct FullscreenSpeedControl: View {
-    @Namespace private var namespace
-    let transitionId = "popoverTransition"
-
     @Environment(PlayerManager.self) var player
     @Environment(\.playerControlsSecondary) var secondary
-    @State var showSpeedControl = false
     @Binding var autoHideVM: AutoHideVM
 
     @State var isInteracting = false
 
-    var arrowEdge: Edge = .trailing
     let size: CGFloat
 
     var body: some View {
-        Button {
-            // nothing
-        } label: {
-            ZStack {
-                #if !os(visionOS)
-                Image(systemName: "circle.fill")
-                    .resizable()
-                    .frame(width: size, height: size)
-                    // relies on the glass background from PlayerControlButtonStyle
-                    .foregroundStyle(Color.clear)
-                #endif
-
-                HStack(spacing: -3) {
-                    #if os(visionOS)
-                    if hasCustomSetting || hasTempSpeed {
-                        Spacer()
-                            .frame(width: 4)
-                        Image(systemName: hasTempSpeed ? "waveform" : Const.customPlaybackSpeedSF)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    #endif
-
-                    FullscreenSpeedControlContent(
-                        value: player.debouncedPlaybackSpeed,
-                        onChange: { player.playbackSpeed = $0 },
-                        triggerInteraction: { autoHideVM.setShowControls() },
-                        isInteracting: Binding(
-                            get: { isInteracting },
-                            set: {
-                                isInteracting = $0
-                                autoHideVM.keepVisible = $0
-                            }
-                        )
-                    )
-                    .disabled(hasTempSpeed)
+        PlayerSpeedMenu {
+            label
+        }
+        .overlay {
+            if hasTempSpeed {
+                // tapping clears the temporary speed instead of opening the menu.
+                // it sits on top so the speed keeps its scroll position instead of being rebuilt
+                Button {
+                    player.temporaryPlaybackSpeed = nil
+                } label: {
+                    Color.clear
+                        .contentShape(Rectangle())
                 }
-                .animation(.default, value: hasCustomSetting)
-                #if os(visionOS)
-                .foregroundStyle(.primary)
-                .tint(nil)
-                #else
-                .foregroundStyle(Color.playerControl(secondary: secondary))
-                #endif
+                .buttonStyle(.plain)
             }
-            #if !os(visionOS)
-            .modifier(PlayerControlButtonStyle(isOn: hasCustomSetting))
-            #endif
         }
         .onChange(of: player.video?.subscription) {
             // workaround: refresh speed
         }
-        .highPriorityGesture(
-            TapGesture()
-                .onEnded { _ in
-                    handleTap()
-                }
-        )
         .fontWeight(.medium)
         #if !os(visionOS)
         .frame(width: 35)
         #endif
-        .matchedTransitionSource(id: transitionId, in: namespace)
-        #if !os(visionOS)
-        .padding(.horizontal) // workaround: safearea pushing content in pop over
-        #endif
-        .popover(isPresented: $showSpeedControl, arrowEdge: arrowEdge) {
+        .accessibilityLabel(accessibilityLabel)
+    }
+
+    var label: some View {
+        ZStack {
+            #if !os(visionOS)
+            Image(systemName: "circle.fill")
+                .resizable()
+                .frame(width: size, height: size)
+                // relies on the glass background from PlayerControlButtonStyle
+                .foregroundStyle(Color.clear)
+            #endif
+
+            HStack(spacing: -3) {
+                #if os(visionOS)
+                if hasCustomSetting || hasTempSpeed {
+                    Spacer()
+                        .frame(width: 4)
+                    Image(systemName: hasTempSpeed ? "waveform" : Const.customPlaybackSpeedSF)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+                #endif
+
+                FullscreenSpeedControlContent(
+                    value: player.debouncedPlaybackSpeed,
+                    onChange: { player.playbackSpeed = $0 },
+                    triggerInteraction: { autoHideVM.setShowControls() },
+                    isInteracting: Binding(
+                        get: { isInteracting },
+                        set: {
+                            isInteracting = $0
+                            autoHideVM.keepVisible = $0
+                        }
+                    )
+                )
+                .disabled(hasTempSpeed)
+            }
+            .animation(.default, value: hasCustomSetting)
             #if os(visionOS)
-            visionPopOver
+            .foregroundStyle(.primary)
+            .tint(nil)
             #else
-            regularPopOver
+            .foregroundStyle(Color.playerControl(secondary: secondary))
             #endif
         }
-        .accessibilityLabel(accessibilityLabel)
-        .accessibilityAction {
-            handleTap()
-        }
+        #if !os(visionOS)
+        .modifier(PlayerControlButtonStyle(isOn: hasCustomSetting))
+        #endif
     }
 
     var hasTempSpeed: Bool {
@@ -145,48 +101,6 @@ struct FullscreenSpeedControl: View {
     var accessibilityLabel: String {
         let speedText = SpeedHelper.formatSpeed(player.debouncedPlaybackSpeed)
         return String(localized: "playbackSpeed \(speedText)")
-    }
-
-    func handleTap() {
-        if hasTempSpeed {
-            player.temporaryPlaybackSpeed = nil
-        } else if !showSpeedControl && !isInteracting {
-            showSpeedControl = true
-            autoHideVM.keepVisible = true
-        }
-    }
-
-    var regularPopOver: some View {
-        CombinedPlaybackSpeedSettingPlayer(isExpanded: true, hasHaptics: false)
-            .padding(.horizontal)
-            .frame(width: 350)
-            .environment(\.colorScheme, .dark)
-            .presentationCompactAdaptation(.popover)
-            .onDisappear {
-                autoHideVM.keepVisible = false
-            }
-            .fontWeight(nil)
-            #if os(iOS)
-            .navigationTransition(.zoom(sourceID: transitionId, in: namespace))
-        #endif
-    }
-
-    var visionPopOver: some View {
-        let selectedSpeed = Binding<Double>(
-            get: { player.debouncedPlaybackSpeed },
-            set: { value in player.playbackSpeed = value }
-        )
-        let isOn = Binding(get: {
-            player.video?.subscription?.customSpeedSetting != nil
-        }, set: { value in
-            player.video?.subscription?.customSpeedSetting = value ? player.defaultPlaybackSpeed : nil
-        })
-
-        return CombinedPlaybackSpeedSettingVision(
-            selectedSpeed: selectedSpeed,
-            isOn: isOn
-        )
-        .presentationCompactAdaptation(.popover)
     }
 }
 

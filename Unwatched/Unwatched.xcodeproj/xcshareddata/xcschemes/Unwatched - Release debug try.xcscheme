@@ -41,9 +41,6 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "SpeedControlViewModelTests">
-               </Test>
-               <Test
                   Identifier = "UnwatchedUITests">
                </Test>
                <Test

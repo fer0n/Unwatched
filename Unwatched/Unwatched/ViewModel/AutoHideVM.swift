@@ -20,19 +20,20 @@ import UnwatchedShared
     init() {}
 
     @MainActor
-    private var showControlsLocal = false {
-        didSet {
-            if showControlsLocal {
-                hideControlsTask?.cancel()
-                hideControlsTask = Task {
-                    do {
-                        try await Task.sleep(s: Const.controlsAutoHideDebounce)
-                        withAnimation(.bouncy(duration: 1)) {
-                            showControlsLocal = false
-                        }
-                    } catch { }
+    private var showControlsLocal = false
+
+    /// Restarts the auto-hide timeout without touching observable state: repeated
+    /// interactions extend the timeout without invalidating everything observing `showControls`.
+    @MainActor
+    private func restartHideControlsTask() {
+        hideControlsTask?.cancel()
+        hideControlsTask = Task {
+            do {
+                try await Task.sleep(s: Const.controlsAutoHideDebounce)
+                withAnimation(.bouncy(duration: 1)) {
+                    showControlsLocal = false
                 }
-            }
+            } catch { }
         }
     }
 
@@ -49,7 +50,10 @@ import UnwatchedShared
 
     @MainActor
     func setShowControls() {
-        showControlsLocal = true
+        if !showControlsLocal {
+            showControlsLocal = true
+        }
+        restartHideControlsTask()
     }
 
     @MainActor
@@ -63,6 +67,9 @@ import UnwatchedShared
     }
 
     func setKeepVisible(_ value: Bool, _ source: String) {
+        guard keepVisibleDict.contains(source) != value else {
+            return
+        }
         if value {
             keepVisibleDict.insert(source)
         } else {

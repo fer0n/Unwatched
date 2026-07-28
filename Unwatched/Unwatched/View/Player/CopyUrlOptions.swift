@@ -22,7 +22,7 @@ struct CopyUrlOptions: View {
                 options
             } label: {
                 Text("copyUrl")
-                Image(systemName: Const.copySF)
+                Image(systemName: Const.shareSF)
             }
         }
     }
@@ -32,8 +32,8 @@ struct CopyUrlOptions: View {
         copyUrlButton
         copyUrlTimestampButton
         copyPlaylistUrlButton
+        Divider()
         copyChannelUrlButton
-        copyRssFeedUrlButton
     }
 
     @ViewBuilder
@@ -49,7 +49,7 @@ struct CopyUrlOptions: View {
                     copyUrl(urlString, "channel")
                 }
             } label: {
-                Text("channel")
+                Label("channel", systemImage: "person.fill")
             }
         }
     }
@@ -71,23 +71,13 @@ struct CopyUrlOptions: View {
     }
 
     @ViewBuilder
-    var copyRssFeedUrlButton: some View {
-        if let urlString = video.subscription?.link?.absoluteString {
-            Button {
-                copyUrl(urlString, "rssFeed")
-            } label: {
-                Text("rssFeed")
-            }
-        }
-    }
-
-    @ViewBuilder
     var copyUrlButton: some View {
         Button {
             let text = UrlService.getShortenedUrl(video.youtubeId)
             copyUrl(text, "video")
         } label: {
-            Text("video")
+            Label("video", systemImage: "play.rectangle.fill")
+                .fontWeight(.black)
         }
     }
 

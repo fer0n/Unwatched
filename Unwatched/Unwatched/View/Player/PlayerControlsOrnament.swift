@@ -107,7 +107,6 @@ struct PlayerControlsOrnament: View {
 
             FullscreenSpeedControl(
                 autoHideVM: .constant(AutoHideVM()),
-                arrowEdge: .bottom,
                 size: 40
             )
 

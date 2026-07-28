@@ -31,7 +31,6 @@ struct MacOSSplitView: View {
                 VideoPlayer(
                     compactSize: bigScreen,
                     horizontalLayout: horizontalLayout,
-                    limitWidth: shouldLimitWidth(proxy.size, horizontalLayout),
                     landscapeFullscreen: landscapeFullscreen,
                     hideControls: detailOnly
                 )
@@ -72,14 +71,6 @@ struct MacOSSplitView: View {
     func horizontalLayout(_ size: CGSize) -> Bool {
         (isLandscape && bigScreen) &&
             (navManager.isMacosFullscreen || spaceRequiresHorizontalLayout(size))
-    }
-
-    func shouldLimitWidth(_ size: CGSize, _ horizontalLayout: Bool) -> Bool {
-        if horizontalLayout {
-            size.width < 750
-        } else {
-            size.width < 600
-        }
     }
 
     func spaceRequiresHorizontalLayout(_ size: CGSize) -> Bool {
@@ -173,7 +164,6 @@ struct IOSSPlitView: View {
             VideoPlayer(
                 compactSize: bigScreen,
                 horizontalLayout: hideControlsFullscreen && isLandscape,
-                limitWidth: limitWidth,
                 landscapeFullscreen: landscapeFullscreen,
                 hideControls: hideControlsFullscreen,
                 )
@@ -231,10 +221,6 @@ struct IOSSPlitView: View {
         #else
         dynamicTypeSize >= .accessibility1 ? 410 : 360
         #endif
-    }
-
-    var limitWidth: Bool {
-        dynamicTypeSize > .large || (bigScreen && (proxy.size.width - (menuWidth ?? 0)) < 720)
     }
 
     var menuWidth: CGFloat? {

@@ -14,11 +14,10 @@ struct PlayerControls: View {
     @Environment(SheetPositionReader.self) var sheetPos
     @Environment(NavigationManager.self) var navManager
 
-    @ScaledMetric var speedSpacingScaled = 8
+    @ScaledMetric var speedSpacingScaled = 10
 
     let compactSize: Bool
     let horizontalLayout: Bool
-    let limitWidth: Bool
     let enableHideControls: Bool
     let hideControls: Bool
 
@@ -114,40 +113,14 @@ struct PlayerControls: View {
                 }
 
                 layout {
-                    HStack(spacing: speedSpacing) {
-                        CombinedPlaybackSpeedSettingPlayer(
-                            spacing: speedSpacing,
-                            showTemporarySpeed: compactSize,
-                            limitWidth: limitWidth,
-                            indicatorSpacing: 2,
-                            isTransparent: false
-                        )
-                        .fixedSize(horizontal: compactSize, vertical: false)
-
-                        #if os(iOS)
-                        PipButton()
-                        AirPlayButton()
-                        #endif
-
-                        if compactSize {
-                            DescriptionButton(show: $autoHideVM.showDescription)
-                        }
-
-                        PlayerMoreMenuButton(
-                            sleepTimerVM: sleepTimerVM,
-                            ) { image in
-                            image
-                                .playerToggleModifier(
-                                    isOn: sleepTimerVM.isOn,
-                                    isSmall: true
-                                )
-                                .fontWeight(.bold)
-                        }
-
-                        if showRotateFullscreen && player.embeddingDisabled {
-                            RotateOrientationButton()
-                        }
-                    }
+                    PlayerActionsRow(
+                        maxSpacing: compactSize ? 8 : 40,
+                        minSpacing: speedSpacing,
+                        compactSize: compactSize,
+                        showRotateButton: showRotateFullscreen && player.embeddingDisabled,
+                        sleepTimerVM: sleepTimerVM,
+                        autoHideVM: $autoHideVM
+                    )
 
                     HStack(spacing: hasSmallControls ? speedSpacing : nil) {
                         WatchedButton(isSmall: hasSmallControls)
@@ -267,7 +240,6 @@ struct PlayerControls: View {
 
     return PlayerControls(compactSize: true,
                           horizontalLayout: true,
-                          limitWidth: false,
                           enableHideControls: false,
                           hideControls: true,
                           sleepTimerVM: SleepTimerViewModel(),
