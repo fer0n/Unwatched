@@ -15,6 +15,12 @@ public enum YoutubeUrlParser {
     public static func getYoutubeId(from url: URL) -> String? {
         let string = url.absoluteString
 
+        // Each regex below backtracks catastrophically on long non-matching URLs — the kind the
+        // in-app browser produces constantly while browsing (cost grows superlinearly with URL
+        // length, reaching seconds on the main thread). Each is therefore guarded by the literal
+        // substring its pattern requires, so a URL that cannot match never reaches the matcher.
+        // Keep each guard in sync with the delimiters in the pattern beside it.
+
         // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
         // https://www.youtube.com/watch/?v=epBbbysk5cU
@@ -22,20 +28,23 @@ public enum YoutubeUrlParser {
         // https://m.youtube.com/watch?v=Sa-FI9exq8o&pp=ygUTRGV2aWwgR2VvcmdpYSBjb3Zlcg%3D%3D
         let regex
             = #"(?:https\:\/\/)?(?:www\.)?(?:m\.)?(?:\S+\.\S+\/(?:(?:watch\/?\?v=)|(?:shorts\/))([^\s\/\?\&\n]+))"#
-        if let res = firstCapture(in: string, regex: regex) {
+        if string.contains("watch?v=") || string.contains("watch/?v=") || string.contains("shorts/"),
+           let res = firstCapture(in: string, regex: regex) {
             return res
         }
 
         // https://youtu.be/dtp6b76pMak
         let shortRegex = #"(?:https\:\/\/)?(?:www\.)?youtu\.be\/([^\s\/\?\n]+)"#
-        if let res = firstCapture(in: string, regex: shortRegex) {
+        if string.contains("youtu.be/"),
+           let res = firstCapture(in: string, regex: shortRegex) {
             return res
         }
 
         // https://www.youtube.com/live/l6p4bWw_oEk?t=1h54m11s
         // https://www.youtube.com/embed/Udl16tb2xv8?t=1414.0486603120037s&enablejsapi=1
         let embedOrLiveRegex = #"(?:https:\/\/)?(?:www\.)?youtube\.com\/(?:live|embed)\/([^\s\/\?\n]+)"#
-        if let res = firstCapture(in: string, regex: embedOrLiveRegex) {
+        if string.contains("youtube.com/live/") || string.contains("youtube.com/embed/"),
+           let res = firstCapture(in: string, regex: embedOrLiveRegex) {
             return res
         }
 
