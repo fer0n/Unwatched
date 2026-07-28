@@ -2484,7 +2484,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  if [ \"${ENABLE_PREVIEWS}\" = \"NO\" ]; then \n    swiftlint --fix --format && swiftlint  \n  fi\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\n# Skip during preview builds; Xcode sets ENABLE_PREVIEWS=YES only for those.\nif [ \"${ENABLE_PREVIEWS}\" != \"NO\" ]; then\n  exit 0\nfi\n\nif ! which swiftlint >/dev/null; then\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n  exit 0\nfi\n\ncd \"${SRCROOT}\" || exit 0\n\n# Linting the whole project costs ~50s per build, so lint only what changed\n# since the last build that linted cleanly. The marker lives in the build\n# directory, so a clean/fresh checkout has none and everything gets linted.\nSTATE=\"${PROJECT_TEMP_DIR}/swiftlint-last-commit\"\nHEAD_SHA=$(git rev-parse HEAD 2>/dev/null)\n\nLAST=\"\"\nif [ -n \"${HEAD_SHA}\" ] && [ -r \"${STATE}\" ]; then\n  LAST=$(cat \"${STATE}\" 2>/dev/null)\n  # A stored commit can vanish via rebase, branch delete or gc; treat as unset.\n  if [ -n \"${LAST}\" ] && ! git cat-file -e \"${LAST}^{commit}\" 2>/dev/null; then\n    LAST=\"\"\n  fi\nfi\n\nif [ -z \"${LAST}\" ]; then\n  # No usable marker: lint the whole project. Passing no paths makes SwiftLint\n  # walk the config's own include/exclude rules.\n  swiftlint --fix --format --quiet\n  swiftlint --quiet || exit $?\nelse\n  # git diff needs --relative; git ls-files is already cwd-relative.\n  FILES=$( { git diff --name-only --relative --diff-filter=d \"${LAST}\" -- '*.swift'\n             git ls-files --others --exclude-standard -- '*.swift'; } | sort -u | sed '/^$/d' )\n\n  # Guard the empty case: bare swiftlint with no paths lints the entire project.\n  if [ -n \"${FILES}\" ]; then\n    printf '%s\\n' \"${FILES}\" | tr '\\n' '\\0' | xargs -0 swiftlint --fix --format --quiet\n    printf '%s\\n' \"${FILES}\" | tr '\\n' '\\0' | xargs -0 swiftlint --quiet || exit $?\n  fi\nfi\n\n# Only advance the marker after a clean pass, so unresolved violations keep\n# being reported on subsequent builds.\nif [ -n \"${HEAD_SHA}\" ]; then\n  mkdir -p \"${PROJECT_TEMP_DIR}\" && printf '%s' \"${HEAD_SHA}\" > \"${STATE}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3690,7 +3690,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 333;
+				CURRENT_PROJECT_VERSION = 334;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3715,7 +3715,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.8.8;
+				MARKETING_VERSION = 1.8.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -3740,7 +3740,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 333;
+				CURRENT_PROJECT_VERSION = 334;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3765,7 +3765,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.8.8;
+				MARKETING_VERSION = 1.8.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;

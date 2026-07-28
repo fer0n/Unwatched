@@ -129,7 +129,7 @@ struct CloudAiButton<Label: View>: View {
             components.queryItems = [
                 URLQueryItem(name: "name", value: name),
                 URLQueryItem(name: "x-success", value: successUrl),
-                URLQueryItem(name: "x-error", value: errorUrl),
+                URLQueryItem(name: "x-error", value: errorUrl)
             ]
             if let url = components.url {
                 if enablePip {
