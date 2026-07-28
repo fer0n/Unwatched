@@ -502,9 +502,13 @@ struct CleanupService {
         guard let subs = try? modelContext.fetch(fetch) else { return [] }
         var ids = Set<PersistentIdentifier>()
         for sub in subs {
-            let recent = (sub.videos ?? [])
-                .sorted { ($0.publishedDate ?? .distantPast) > ($1.publishedDate ?? .distantPast) }
-                .prefix(count)
+            let subId = sub.persistentModelID
+            var recentFetch = FetchDescriptor<Video>(
+                predicate: #Predicate { $0.subscription?.persistentModelID == subId },
+                sortBy: [SortDescriptor(\.publishedDate, order: .reverse)]
+            )
+            recentFetch.fetchLimit = count
+            guard let recent = try? modelContext.fetch(recentFetch) else { continue }
             for video in recent {
                 ids.insert(video.persistentModelID)
             }

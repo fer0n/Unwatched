@@ -37,8 +37,11 @@ public struct VideoService {
         updateOrder: Bool = true,
         modelContext: ModelContext
     ) {
-        if queueEntry.video?.isNew == true {
-            queueEntry.video?.isNew = false
+        guard let queueEntry = modelContext.resolvedModel(queueEntry) else {
+            return
+        }
+        if let video = queueEntry.video.flatMap({ modelContext.resolvedModel($0) }), video.isNew {
+            video.isNew = false
         }
         let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
@@ -48,7 +51,12 @@ public struct VideoService {
     }
 
     public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
-        entry.video?.isNew = false
+        guard let entry = modelContext.resolvedModel(entry) else {
+            return
+        }
+        if let video = entry.video.flatMap({ modelContext.resolvedModel($0) }) {
+            video.isNew = false
+        }
         modelContext.delete(entry)
     }
 
