@@ -270,6 +270,10 @@ public struct Const {
     public static let autoDeleteOrphanedVideos = "autoDeleteOrphanedVideos"
     public static let autoDeleteInboxVideosLimit = "autoDeleteInboxVideosLimit"
 
+    /// Persisted history tokens, keyed by model type name
+    public static let historyTokens = "historyTokens"
+    public static let cleanupHistoryTransactions = "cleanupHistoryTransactions"
+
     /// Legacy setting, moved to `defaultShortsSetting`
     public static let hideShorts = "hideShortsEverywhere"
     public static let defaultShortsSetting = "defaultShortsSetting"

@@ -154,6 +154,13 @@ struct SetupView: View {
             }
         }
 
+        if #available(iOS 18, *),
+           UserDefaults.standard.shouldPerform(Const.cleanupHistoryTransactions, interval: .daily) {
+            Task.detached {
+                HistoryMaintenance.pruneConsumedHistory()
+            }
+        }
+
         Log.info("saved state")
     }
 
