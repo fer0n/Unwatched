@@ -31,6 +31,7 @@ struct TranscriptView: View {
                         Section {
                             TranscriptList(
                                 transcript: viewModel.filteredTranscript,
+                                activeTime: activeTime,
                                 isCurrentVideo: isCurrentVideo,
                                 isSearching: !viewModel.text.debounced.isEmpty
                             )
@@ -121,9 +122,13 @@ struct TranscriptView: View {
         return "transcriptUnavailable"
     }
 
+    var activeTime: Double {
+        (player.currentTime ?? 0) + 1
+    }
+
     var activeEntryId: UUID? {
         guard isCurrentVideo, let transcript = viewModel.transcript else { return nil }
-        let time = (player.currentTime ?? 0) + 1
+        let time = activeTime
         return transcript.first(where: {
             $0.start < time && ($0.start + $0.duration) >= time
         })?.id
@@ -131,7 +136,7 @@ struct TranscriptView: View {
 
     var scrollTargetId: UUID? {
         guard isCurrentVideo, let transcript = viewModel.transcript else { return nil }
-        let time = (player.currentTime ?? 0) + 1
+        let time = activeTime
         guard let activeIndex = transcript.firstIndex(where: {
             $0.start < time && ($0.start + $0.duration) >= time
         }) else { return nil }
@@ -151,22 +156,45 @@ struct TranscriptView: View {
 
 extension TranscriptView {
     @Observable class ViewModel {
-        var transcript: [TranscriptEntry]?
+        var transcript: [TranscriptEntry]? {
+            didSet { transcriptVersion += 1 }
+        }
         var text = DebouncedText()
         var isLoading = false
 
         @ObservationIgnored
         var transcriptYoutubeId: String = ""
 
+        @ObservationIgnored
+        private var transcriptVersion = 0
+
+        @ObservationIgnored
+        private var cache: FilterCache?
+
         var filteredTranscript: [TranscriptDisplayItem] {
+            // Read both before the cache check so this stays observed even when returning the cache.
+            let transcript = transcript
+            let searchText = text.debounced
+
+            if let cache, cache.version == transcriptVersion, cache.searchText == searchText {
+                return cache.items
+            }
+            let items = makeFilteredTranscript(transcript, searchText)
+            cache = FilterCache(version: transcriptVersion, searchText: searchText, items: items)
+            return items
+        }
+
+        private func makeFilteredTranscript(
+            _ transcript: [TranscriptEntry]?,
+            _ searchText: String
+        ) -> [TranscriptDisplayItem] {
             guard let transcript = transcript else { return [] }
 
-            if text.debounced.isEmpty {
+            if searchText.isEmpty {
                 return transcript.map { .entry($0, isMatch: false) }
             }
 
             var result: [TranscriptDisplayItem] = []
-            let searchText = text.debounced
 
             let matchIndices = transcript.indices.filter { index in
                 transcript[index].text.localizedCaseInsensitiveContains(searchText)
@@ -219,4 +247,10 @@ extension TranscriptView {
             transcriptYoutubeId = youtubeId
         }
     }
+}
+
+private struct FilterCache {
+    let version: Int
+    let searchText: String
+    let items: [TranscriptDisplayItem]
 }

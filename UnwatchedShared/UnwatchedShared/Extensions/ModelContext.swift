@@ -24,4 +24,22 @@ public extension ModelContext {
         }
         return nil
     }
+
+    /// Re-resolves a model reached through a relationship, returning nil if its row was deleted.
+    func resolvedModel<T>(_ model: T) -> T? where T: PersistentModel {
+        existingModelViaFetch(for: model.persistentModelID)
+    }
+
+    private func existingModelViaFetch<T>(for objectID: PersistentIdentifier) -> T? where T: PersistentModel {
+        var fetchDescriptor = FetchDescriptor<T>(
+            predicate: #Predicate {
+                $0.persistentModelID == objectID
+            })
+        fetchDescriptor.fetchLimit = 1
+
+        guard let model = try? fetch(fetchDescriptor).first, !model.isDeleted else {
+            return nil
+        }
+        return model
+    }
 }

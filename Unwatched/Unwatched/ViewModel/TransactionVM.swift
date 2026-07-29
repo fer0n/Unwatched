@@ -8,19 +8,108 @@ import UnwatchedShared
 import SwiftUI
 import OSLog
 
+/// Persists SwiftData history tokens across launches, keyed by model type.
+///
+/// Without a persisted token every cold launch reads the whole persistent history table,
+/// which the app never prunes — installs have been measured at >140k transactions.
+enum HistoryTokenStore {
+    static func token(forModel model: String) -> DefaultHistoryToken? {
+        guard let data = storedTokens()[model] else {
+            return nil
+        }
+        return try? JSONDecoder().decode(DefaultHistoryToken.self, from: data)
+    }
+
+    static func setToken(_ token: DefaultHistoryToken, forModel model: String) {
+        guard let data = try? JSONEncoder().encode(token) else {
+            Log.error("setToken: failed to encode history token for \(model)")
+            return
+        }
+        var tokens = storedTokens()
+        tokens[model] = data
+        UserDefaults.standard.set(tokens, forKey: Const.historyTokens)
+    }
+
+    static func removeToken(forModel model: String) {
+        var tokens = storedTokens()
+        tokens[model] = nil
+        UserDefaults.standard.set(tokens, forKey: Const.historyTokens)
+    }
+
+    /// Oldest token across all lists: history before this has been seen by every consumer.
+    static func lowestToken() -> DefaultHistoryToken? {
+        storedTokens().values
+            .compactMap { try? JSONDecoder().decode(DefaultHistoryToken.self, from: $0) }
+            .min()
+    }
+
+    private static func storedTokens() -> [String: Data] {
+        UserDefaults.standard.dictionary(forKey: Const.historyTokens) as? [String: Data] ?? [:]
+    }
+}
+
+enum HistoryMaintenance {
+    /// CloudKit tracks pending exports through the same history table, so transactions are
+    /// only dropped once they are far older than any plausible sync lag. 7 days is the window
+    /// Apple uses in "Consuming relevant store changes"; they document no CloudKit-specific
+    /// guidance, so the token check below is what actually keeps unsynced changes safe.
+    static let retentionDays = 7
+
+    static func pruneConsumedHistory() {
+        guard let token = HistoryTokenStore.lowestToken(),
+              let cutoff = Calendar.current.date(byAdding: .day, value: -retentionDays, to: .now) else {
+            return
+        }
+
+        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+        descriptor.predicate = #Predicate {
+            $0.token < token && $0.timestamp < cutoff
+        }
+
+        do {
+            let context = DataProvider.newContext()
+            try context.deleteHistory(descriptor)
+            Log.info("pruneConsumedHistory: pruned before \(cutoff)")
+        } catch {
+            Log.error("pruneConsumedHistory: \(error)")
+        }
+    }
+}
+
 @Observable class TransactionVM<T: PersistentModel> {
     @ObservationIgnored
     var historyToken: DefaultHistoryToken? {
         get {
-            localhistoryToken as? DefaultHistoryToken
+            HistoryTokenStore.token(forModel: Self.modelKey)
         }
         set {
-            localhistoryToken = newValue
+            guard let newValue else {
+                return
+            }
+            HistoryTokenStore.setToken(newValue, forModel: Self.modelKey)
         }
     }
-    private var localhistoryToken: Any?
+
+    private static var modelKey: String {
+        String(describing: T.self)
+    }
 
     static func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
+        do {
+            return try fetchTransactions(after: token)
+        } catch let error {
+            guard (error as? SwiftDataError) == .historyTokenExpired else {
+                Log.error("findTransactions: \(error)")
+                return []
+            }
+            // the bookmarked transaction is gone from the stream, so resync from what's left
+            Log.info("findTransactions: history token expired, resetting")
+            HistoryTokenStore.removeToken(forModel: modelKey)
+            return (try? fetchTransactions(after: nil)) ?? []
+        }
+    }
+
+    private static func fetchTransactions(after token: DefaultHistoryToken?) throws -> [DefaultHistoryTransaction] {
         var historyDescriptor = HistoryDescriptor<DefaultHistoryTransaction>()
         if let token {
             historyDescriptor.predicate = #Predicate { transaction in
@@ -28,30 +117,7 @@ import OSLog
             }
         }
 
-        var transactions: [DefaultHistoryTransaction] = []
-        let taskContext = DataProvider.newContext()
-        do {
-            transactions = try taskContext.fetchHistory(historyDescriptor)
-        } catch let error {
-            Log.error("findTransactions: \(error)")
-        }
-
-        return transactions
-    }
-
-    static func deleteTransactions(before token: DefaultHistoryToken? = nil) {
-        do {
-            var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
-            if let token {
-                descriptor.predicate = #Predicate {
-                    $0.token < token
-                }
-            }
-            let context = DataProvider.newContext()
-            try context.deleteHistory(descriptor)
-        } catch {
-            Log.error("deleteTransactions: \(error)")
-        }
+        return try DataProvider.newContext().fetchHistory(historyDescriptor)
     }
 
     static func getModelUpdates(_ transactions: [DefaultHistoryTransaction]) -> Set<PersistentIdentifier>? {

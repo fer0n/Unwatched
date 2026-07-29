@@ -370,8 +370,6 @@
 		8891F0BA2B4F54940098A3FB /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891F0B92B4F54940098A3FB /* Double.swift */; };
 		88959E272C47A976004E1518 /* ConfirmableMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */; };
 		88974D232D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */; };
-		88AB10012F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
-		88AB10022F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
 		88974D242D9962330076EC06 /* FullscreenSpeedControlContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */; };
 		8897E94D2C599031006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
 		8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */; };
@@ -555,6 +553,8 @@
 		88A4F40D2E6F89650074126C /* AnimatableDetents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A4F40B2E6F89650074126C /* AnimatableDetents.swift */; };
 		88AA01022F000001000000A2 /* PlayerActionsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA01012F000001000000A1 /* PlayerActionsRow.swift */; };
 		88AA01032F000001000000A3 /* PlayerActionsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA01012F000001000000A1 /* PlayerActionsRow.swift */; };
+		88AB10012F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
+		88AB10022F9C000100AAAA01 /* ScrollWheelStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */; };
 		88ABDF442D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88ABDF452D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */; };
 		88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AD06662B74ADE900151B07 /* AddToLibraryView.swift */; };
@@ -1156,7 +1156,6 @@
 		8891F0B92B4F54940098A3FB /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		88959E262C47A976004E1518 /* ConfirmableMenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmableMenuButton.swift; sourceTree = "<group>"; };
 		88974D222D9962320076EC06 /* FullscreenSpeedControlContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenSpeedControlContent.swift; sourceTree = "<group>"; };
-		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
 		8897E94C2C599031006093B5 /* FullscreenOverlayControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenOverlayControls.swift; sourceTree = "<group>"; };
 		8898B6762B480C3700348D01 /* AddSubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubscriptionView.swift; sourceTree = "<group>"; };
 		8898B6782B481F2100348D01 /* SubscriptionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionActor.swift; sourceTree = "<group>"; };
@@ -1189,6 +1188,7 @@
 		88A2921D2E3F4BFA00BE437D /* VideoChangeReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoChangeReason.swift; sourceTree = "<group>"; };
 		88A4F40B2E6F89650074126C /* AnimatableDetents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableDetents.swift; sourceTree = "<group>"; };
 		88AA01012F000001000000A1 /* PlayerActionsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerActionsRow.swift; sourceTree = "<group>"; };
+		88AB10002F9C000100AAAA01 /* ScrollWheelStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollWheelStepper.swift; sourceTree = "<group>"; };
 		88ABDF432D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsToggleStyle.swift; sourceTree = "<group>"; };
 		88AD06662B74ADE900151B07 /* AddToLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToLibraryView.swift; sourceTree = "<group>"; };
 		88AEB5D62B98A69300A2FF0D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -3919,7 +3919,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 333;
+				CURRENT_PROJECT_VERSION = 334;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3944,7 +3944,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.8.8;
+				MARKETING_VERSION = 1.9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -3969,7 +3969,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Unwatched/Unwatched.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 333;
+				CURRENT_PROJECT_VERSION = 334;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Unwatched/Preview Content\"";
 				DEVELOPMENT_TEAM = HU6B6E9383;
@@ -3994,7 +3994,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.8.8;
+				MARKETING_VERSION = 1.9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pentlandFirth.Unwatched;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
