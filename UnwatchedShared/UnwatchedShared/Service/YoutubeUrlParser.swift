@@ -15,12 +15,6 @@ public enum YoutubeUrlParser {
     public static func getYoutubeId(from url: URL) -> String? {
         let string = url.absoluteString
 
-        // Each regex below backtracks catastrophically on long non-matching URLs — the kind the
-        // in-app browser produces constantly while browsing (cost grows superlinearly with URL
-        // length, reaching seconds on the main thread). Each is therefore guarded by the literal
-        // substring its pattern requires, so a URL that cannot match never reaches the matcher.
-        // Keep each guard in sync with the delimiters in the pattern beside it.
-
         // https://m.youtube.com/shorts/jH_QIBtX1gY
         // https://www.youtube.com/watch?v=epBbbysk5cU
         // https://www.youtube.com/watch/?v=epBbbysk5cU

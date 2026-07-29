@@ -51,7 +51,7 @@ struct UrlService {
         return "https://www.youtube.com/watch?v=\(youtubeId)"
     }
 
-    static func getEmbeddedYoutubeUrl (_ youtubeId: String, _ startAt: Double) -> String {
+    static func getEmbeddedYoutubeUrl(_ youtubeId: String, _ startAt: Double) -> String {
         let useNoCookieUrl = UserDefaults.standard.bool(forKey: Const.useNoCookieUrl)
         let cookieUrl = useNoCookieUrl ? "-nocookie" : ""
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)

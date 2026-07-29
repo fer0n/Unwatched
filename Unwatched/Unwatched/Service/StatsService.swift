@@ -16,8 +16,6 @@ final class StatsService {
     private var lastVideoTime: Double?
     private var lastWallClockTime: Date?
 
-    /// One long-lived actor rather than one per call, so the read-modify-write in `addWatchTime`
-    /// stays serialized and concurrent ticks can't lose an update.
     private let statsActor = StatsActor(modelContainer: DataProvider.shared.container)
 
     private init() {}

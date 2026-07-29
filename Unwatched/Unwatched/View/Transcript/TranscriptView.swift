@@ -122,8 +122,6 @@ struct TranscriptView: View {
         return "transcriptUnavailable"
     }
 
-    /// Resolved here once per body pass and handed to `TranscriptList` as a plain value, so the
-    /// rows never have to touch `player` themselves.
     var activeTime: Double {
         (player.currentTime ?? 0) + 1
     }
@@ -173,14 +171,8 @@ extension TranscriptView {
         @ObservationIgnored
         private var cache: FilterCache?
 
-        /// Memoized because `TranscriptView.body` re-evaluates roughly once a second during
-        /// playback (it reads `player.currentTime` via `activeEntryId`), and building this walks
-        /// the whole transcript — with a search term, that's a localized search per entry. It also
-        /// keeps the `.separator` UUIDs stable, which would otherwise be re-minted on every pass
-        /// and churn the list's identity.
         var filteredTranscript: [TranscriptDisplayItem] {
-            // Both inputs are read before the cache check so this property stays observed by the
-            // view even when it returns the cached array.
+            // Read both before the cache check so this stays observed even when returning the cache.
             let transcript = transcript
             let searchText = text.debounced
 

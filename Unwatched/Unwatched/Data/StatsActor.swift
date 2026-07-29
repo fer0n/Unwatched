@@ -34,7 +34,6 @@ actor StatsActor {
         }
     }
 
-    /// Adds `duration` to the given day's entry for the video's channel, creating it if needed.
     func addWatchTime(videoId: String, day: Date, duration: TimeInterval) throws {
         var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
         videoFetch.fetchLimit = 1
