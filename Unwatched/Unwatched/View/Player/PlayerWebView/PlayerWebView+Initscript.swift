@@ -616,9 +616,6 @@ extension PlayerWebView {
                     #player-control-overlay {
                         display: none !important;
                     }
-                    .ytmEmbedsInfoPanelRendererHost {
-                        display: none !important;
-                    }
                 ` : ''}
                 ${!isNonEmbedding ? `
                     .ytChapteredProgressBarChapteredPlayerBarChapterSeen,
