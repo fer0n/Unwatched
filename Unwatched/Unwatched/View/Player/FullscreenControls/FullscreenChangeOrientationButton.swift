@@ -13,40 +13,41 @@ struct FullscreenChangeOrientationButton: View {
     let showLeft: Bool
 
     var body: some View {
-        Button {
-            if player.tallFullscreenOverlay {
-                player.setTallFullscreen(false)
-            } else {
-                OrientationManager.changeOrientation(to: .portrait)
-            }
-        } label: {
-            Image(systemName: "arrow.down.right.and.arrow.up.left.circle.fill")
-                .resizable()
-                .frame(width: size, height: size)
-                .modifier(PlayerControlButtonStyle())
+        Image(systemName: "arrow.down.right.and.arrow.up.left.circle.fill")
+            .resizable()
+            .frame(width: size, height: size)
+            .modifier(PlayerControlButtonStyle())
+            .buttonWithMenu(
+                accessibilityLabel: String(localized: "exitFullscreen"),
+                groups: [MenuActionGroup([pipAction, rotateAction])],
+                onTap: handlePress
+            )
+    }
+
+    private var pipAction: MenuAction {
+        MenuAction(
+            player.pipEnabled ? String(localized: "exitPip") : String(localized: "enterPip"),
+            systemImage: player.pipEnabled ? "pip.exit" : "pip.enter"
+        ) {
+            player.togglePip()
         }
-        .accessibilityLabel("exitFullscreen")
-        .contentShape(.contextMenuPreview, Circle())
-        .contextMenu {
-            Button {
-                player.togglePip()
-            } label: {
-                Text(player.pipEnabled ? "exitPip" : "enterPip")
-                Image(systemName: player.pipEnabled ? "pip.exit" : "pip.enter")
+    }
+
+    private var rotateAction: MenuAction {
+        showLeft
+            ? MenuAction(String(localized: "fullscreenRight"), systemImage: Const.enableFullscreenSF) {
+                OrientationManager.changeOrientation(to: .landscapeRight)
             }
-            if showLeft {
-                Button {
-                    OrientationManager.changeOrientation(to: .landscapeRight)
-                } label: {
-                    Label("fullscreenRight", systemImage: Const.enableFullscreenSF)
-                }
-            } else {
-                Button {
-                    OrientationManager.changeOrientation(to: .landscapeLeft)
-                } label: {
-                    Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
-                }
+            : MenuAction(String(localized: "fullscreenLeft"), systemImage: Const.enableFullscreenSF) {
+                OrientationManager.changeOrientation(to: .landscapeLeft)
             }
+    }
+
+    func handlePress() {
+        if player.tallFullscreenOverlay {
+            player.setTallFullscreen(false)
+        } else {
+            OrientationManager.changeOrientation(to: .portrait)
         }
     }
 }

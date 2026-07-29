@@ -29,49 +29,52 @@ struct CorePlayButton<Content>: View where Content: View {
     }
 
     var body: some View {
-        Button {
-            player.handlePlayButton()
-            Signal.log("Player.PlayPause", throttle: .daily)
-            if enableHaptics {
-                hapticToggle.toggle()
-            }
-        } label: {
-            contentImage(
-                Image(systemName: player.isPlaying && !player.videoEnded
-                        ? "pause\(circle).fill"
-                        : "play\(circle).fill")
-            )
-            .rotationEffect(.degrees(player.videoEnded
-                                        ? 180
-                                        : 0)
-            )
-            .foregroundStyle(Color.neutralAccentColor)
-            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7)))
+        contentImage(
+            Image(systemName: player.isPlaying && !player.videoEnded
+                    ? "pause\(circle).fill"
+                    : "play\(circle).fill")
+        )
+        .rotationEffect(.degrees(player.videoEnded
+                                    ? 180
+                                    : 0)
+        )
+        .foregroundStyle(Color.neutralAccentColor)
+        .contentTransition(.symbolEffect(.replace.magic(fallback: .replace), options: .speed(7)))
+        .buttonWithMenu(
+            accessibilityLabel: player.isPlaying ? String(localized: "pause") : String(localized: "play"),
+            groups: enableHelperPopup ? menuGroups : [],
+            onTap: handlePress
+        )
+        .background {
+            // the tap is a gesture on the hosted view now, so the space bar needs its own button
+            Button(action: handlePress) { }
+                .keyboardShortcut(.space, modifiers: [])
+                .opacity(0)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(player.isPlaying ? "pause" : "play")
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .contextMenu {
-            if enableHelperPopup {
-                PlayButtonContextMenu()
-            }
-        }
-        .keyboardShortcut(.space, modifiers: [])
     }
-}
 
-struct PlayButtonContextMenu: View {
-    @Environment(PlayerManager.self) var player
+    var menuGroups: [MenuActionGroup] {
+        [
+            MenuActionGroup([
+                MenuAction(String(localized: "restartVideo"), systemImage: "restart") {
+                    player.restartVideo()
+                }
+            ]),
+            MenuActionGroup([
+                MenuAction(String(localized: "reloadPlayer"), systemImage: Const.reloadSF) {
+                    ReloadPlayerButton.reload(player)
+                }
+            ])
+        ]
+    }
 
-    var body: some View {
-        Button {
-            player.restartVideo()
-        } label: {
-            Image(systemName: "restart")
-            Text("restartVideo")
+    func handlePress() {
+        player.handlePlayButton()
+        Signal.log("Player.PlayPause", throttle: .daily)
+        if enableHaptics {
+            hapticToggle.toggle()
         }
-        Divider()
-        ReloadPlayerButton()
     }
 }
 

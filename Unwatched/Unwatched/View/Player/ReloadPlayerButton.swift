@@ -11,13 +11,17 @@ struct ReloadPlayerButton: View {
 
     var body: some View {
         Button {
-            player.embeddingDisabled = false
-            player.hotReloadPlayer()
-            player.handleChapterRefresh(forceRefresh: true)
-            Signal.log("Player.MoreMenu", parameters: ["action": "reload"])
+            Self.reload(player)
         } label: {
             Image(systemName: Const.reloadSF)
             Text("reloadPlayer")
         }
+    }
+
+    static func reload(_ player: PlayerManager) {
+        player.embeddingDisabled = false
+        player.hotReloadPlayer()
+        player.handleChapterRefresh(forceRefresh: true)
+        Signal.log("Player.MoreMenu", parameters: ["action": "reload"])
     }
 }

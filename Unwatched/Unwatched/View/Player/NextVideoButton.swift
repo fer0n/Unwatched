@@ -32,71 +32,71 @@ struct CoreNextButton<Content>: View where Content: View {
     var body: some View {
         let label = String(localized: "nextVideo")
 
-        Button {
-            player.markVideoWatched(showMenu: false, source: .userInteraction)
-            hapticToggle.toggle()
-            Signal.log("Player.NextVideo", parameters: [
-                "source": endOverlay ? "ended" : "controls",
-                "fullscreen": player.fullscreenContext
-            ])
-        } label: {
-            contentImage(
-                Image(
-                    systemName: isCircleVariant
-                        ? Const.nextVideoCircleSF
-                        : Const.nextVideoSF
-                ),
-                continuousPlay || player.isRepeating
-            )
-            .symbolEffect(.bounce.down, value: player.video)
-            .contentTransition(.symbolEffect(.replace, options: .speed(7)))
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(label)
+        contentImage(
+            Image(
+                systemName: isCircleVariant
+                    ? Const.nextVideoCircleSF
+                    : Const.nextVideoSF
+            ),
+            continuousPlay || player.isRepeating
+        )
+        .symbolEffect(.bounce.down, value: player.video)
+        .contentTransition(.symbolEffect(.replace, options: .speed(7)))
+        .buttonWithMenu(
+            accessibilityLabel: label,
+            groups: menuGroups,
+            onTap: handlePress
+        )
         .help(label)
-        #if os(iOS)
-        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 5))
-        #endif
-        .contextMenu {
-            let text = continuousPlay
-                ? String(localized: "continuousPlayOn")
-                :  String(localized: "continuousPlayOff")
-            Button {
-                continuousPlay.toggle()
-            } label: {
-                Text(text)
-                if continuousPlay {
-                    Image("custom.text.line.first.and.arrowtriangle.forward.badge.checkmark")
-                } else {
-                    Image(systemName: Const.continuousPlaySF)
-                }
-            }
+        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
 
-            if player.isRepeating {
-                Button {
-                    player.isRepeating = false
-                } label: {
-                    Image(systemName: "repeat.1")
-                    Text("loopVideoEnabled")
-                }
-            } else {
-                Button {
-                    player.isRepeating = true
-                } label: {
-                    Image(systemName: "repeat")
-                    Text("loopVideo")
-                }
-            }
+    var menuGroups: [MenuActionGroup] {
+        var groups = [MenuActionGroup([continuousPlayAction, repeatAction])]
 
-            if extendedContextMenu {
-                Divider()
-                Button("restartVideo", systemImage: "restart") {
+        if extendedContextMenu {
+            var extended = [
+                MenuAction(String(localized: "restartVideo"), systemImage: "restart") {
                     player.restartVideo()
                 }
-                ExtendedPlayerActions()
-            }
+            ]
+            extended += ExtendedPlayerActions.actions(player: player, modelContext: modelContext)
+            groups.append(MenuActionGroup(extended))
         }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+
+        return groups
+    }
+
+    private var continuousPlayAction: MenuAction {
+        MenuAction(
+            continuousPlay
+                ? String(localized: "continuousPlayOn")
+                : String(localized: "continuousPlayOff"),
+            icon: continuousPlay
+                ? .asset("custom.text.line.first.and.arrowtriangle.forward.badge.checkmark")
+                : .system(Const.continuousPlaySF)
+        ) {
+            continuousPlay.toggle()
+        }
+    }
+
+    private var repeatAction: MenuAction {
+        player.isRepeating
+            ? MenuAction(String(localized: "loopVideoEnabled"), systemImage: "repeat.1") {
+                player.isRepeating = false
+            }
+            : MenuAction(String(localized: "loopVideo"), systemImage: "repeat") {
+                player.isRepeating = true
+            }
+    }
+
+    func handlePress() {
+        player.markVideoWatched(showMenu: false, source: .userInteraction)
+        hapticToggle.toggle()
+        Signal.log("Player.NextVideo", parameters: [
+            "source": endOverlay ? "ended" : "controls",
+            "fullscreen": player.fullscreenContext
+        ])
     }
 }
 

@@ -26,39 +26,44 @@ struct AirPlayView: View {
     @State var hapticToggle = false
 
     var body: some View {
-        Button {
-            if routePickerView == nil {
-                let picker = AVRoutePickerView()
-                picker.isHidden = true
-                picker.prioritizesVideoDevices = true
-                routePickerView = picker
-            }
-            guard let button = routePickerView?.subviews.first(where: { $0 is UIButton }) else {
-                Log.info("AirPlay button not found")
-                return
-            }
-            hapticToggle.toggle()
-            (button as? UIButton)?.sendActions(for: .touchUpInside)
-            Signal.log("Player.AirPlay")
-        } label: {
-            Image(systemName: "airplay.audio")
-                .fontWeight(.black)
-                .playerToggleModifier(
-                    isOn: isOn,
-                    isSmall: true
-                )
+        Image(systemName: "airplay.audio")
+            .fontWeight(.black)
+            .playerToggleModifier(
+                isOn: isOn,
+                isSmall: true
+            )
+            .buttonWithMenu(
+                accessibilityLabel: String(localized: "airPlay"),
+                groups: [
+                    MenuActionGroup(title: String(localized: "autoAirplayHDHelperShort"), [
+                        MenuAction(
+                            isOn
+                                ? String(localized: "airplayHDOn")
+                                : String(localized: "airplayHDOff")
+                        ) {
+                            player.setAirplayHD(!isOn)
+                        }
+                    ])
+                ],
+                onTap: handlePress
+            )
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
+
+    func handlePress() {
+        if routePickerView == nil {
+            let picker = AVRoutePickerView()
+            picker.isHidden = true
+            picker.prioritizesVideoDevices = true
+            routePickerView = picker
         }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .buttonStyle(.plain)
-        .contextMenu {
-            Section("autoAirplayHDHelperShort") {
-                Button {
-                    player.setAirplayHD(!isOn)
-                } label: {
-                    Text(isOn ? "airplayHDOn" : "airplayHDOff")
-                }
-            }
+        guard let button = routePickerView?.subviews.first(where: { $0 is UIButton }) else {
+            Log.info("AirPlay button not found")
+            return
         }
+        hapticToggle.toggle()
+        (button as? UIButton)?.sendActions(for: .touchUpInside)
+        Signal.log("Player.AirPlay")
     }
 
     var isOn: Bool {

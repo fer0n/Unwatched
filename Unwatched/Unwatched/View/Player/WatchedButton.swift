@@ -16,39 +16,41 @@ struct WatchedButton: View {
     var backgroundColor: Color?
 
     var body: some View {
-        Button {
-            player.markVideoWatched(showMenu: true, source: .nextUp)
-            hapticToggle.toggle()
-            try? modelContext.save()
-            Signal.log("Player.WatchedVideo")
-        } label: {
-            Image(systemName: "checkmark")
-                .fontWeight(.bold)
-                .playerToggleModifier(
-                    isOn: false,
-                    isSmall: isSmall,
-                    backgroundColor: backgroundColor
-                )
-        }
-        .buttonStyle(.plain)
-        .symbolEffect(.bounce.down, value: hapticToggle)
-        .help("markWatched")
-        .accessibilityElement()
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel(LocalizedStringKey("markWatched"))
-        .contextMenu {
-            if player.video != nil {
-                Button {
+        Image(systemName: "checkmark")
+            .fontWeight(.bold)
+            .playerToggleModifier(
+                isOn: false,
+                isSmall: isSmall,
+                backgroundColor: backgroundColor
+            )
+            .symbolEffect(.bounce.down, value: hapticToggle)
+            .buttonWithMenu(
+                accessibilityLabel: String(localized: "markWatched"),
+                groups: menuGroups,
+                onTap: handlePress
+            )
+            .help("markWatched")
+            .fontWeight(.bold)
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            .geometryGroup()
+    }
+
+    var menuGroups: [MenuActionGroup] {
+        guard player.video != nil else { return [] }
+        return [
+            MenuActionGroup([
+                MenuAction(String(localized: "clearVideo"), systemImage: Const.clearNoFillSF) {
                     player.clearVideo(modelContext)
-                } label: {
-                    Image(systemName: Const.clearNoFillSF)
-                    Text("clearVideo")
                 }
-            }
-        }
-        .fontWeight(.bold)
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .geometryGroup()
+            ])
+        ]
+    }
+
+    func handlePress() {
+        player.markVideoWatched(showMenu: true, source: .nextUp)
+        hapticToggle.toggle()
+        try? modelContext.save()
+        Signal.log("Player.WatchedVideo")
     }
 }
 

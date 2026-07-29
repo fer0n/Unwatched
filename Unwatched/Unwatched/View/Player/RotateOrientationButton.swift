@@ -11,33 +11,38 @@ struct CoreRotateOrientationButton<Content>: View where Content: View {
     let contentImage: ((Image) -> Content)
 
     var body: some View {
-        Button {
-            hapticToggle.toggle()
-            #if os(iOS)
-            OrientationManager.changeOrientation(to: .landscapeRight)
-            #endif
-            Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
-        } label: {
-            contentImage(
-                Image(systemName: Const.enableFullscreenSF)
-            )
-        }
-        .buttonStyle(.plain)
+        contentImage(
+            Image(systemName: Const.enableFullscreenSF)
+        )
         .contentShape(Rectangle())
+        .buttonWithMenu(
+            accessibilityLabel: String(localized: "fullscreenRight"),
+            groups: [
+                MenuActionGroup([
+                    MenuAction(
+                        String(localized: "fullscreenLeft"),
+                        systemImage: Const.enableFullscreenSF
+                    ) {
+                        rotate(toLeft: true)
+                    }
+                ])
+            ],
+            onTap: handlePress
+        )
         .help("fullscreenRight")
-        .accessibilityLabel("fullscreenRight")
-        .contextMenu {
-            Button {
-                #if os(iOS)
-                OrientationManager.changeOrientation(to: .landscapeLeft)
-                #endif
-                Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
-            } label: {
-                Label("fullscreenLeft", systemImage: Const.enableFullscreenSF)
-            }
-        }
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+    }
 
+    func handlePress() {
+        hapticToggle.toggle()
+        rotate(toLeft: false)
+    }
+
+    func rotate(toLeft: Bool) {
+        #if os(iOS)
+        OrientationManager.changeOrientation(to: toLeft ? .landscapeLeft : .landscapeRight)
+        #endif
+        Signal.log("Player.Fullscreen", parameters: ["type": "landscape"])
     }
 }
 

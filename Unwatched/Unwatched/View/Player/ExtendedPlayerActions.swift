@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 struct ExtendedPlayerActions: View {
@@ -14,16 +15,41 @@ struct ExtendedPlayerActions: View {
     var showWatched = true
 
     var body: some View {
-        if showWatched {
-            Button("markWatched", systemImage: "checkmark") {
-                player.markVideoWatched(showMenu: true, source: .nextUp)
+        let actions = Self.actions(
+            player: player,
+            modelContext: modelContext,
+            showClear: showClear,
+            showWatched: showWatched
+        )
+
+        ForEach(actions) { action in
+            Button(action: action.action) {
+                Text(action.title)
+                action.icon.image
             }
+        }
+    }
+
+    static func actions(
+        player: PlayerManager,
+        modelContext: ModelContext,
+        showClear: Bool = true,
+        showWatched: Bool = true
+    ) -> [MenuAction] {
+        var actions: [MenuAction] = []
+
+        if showWatched {
+            actions.append(MenuAction(String(localized: "markWatched"), systemImage: "checkmark") {
+                player.markVideoWatched(showMenu: true, source: .nextUp)
+            })
         }
 
         if showClear {
-            Button("clearVideo", systemImage: Const.clearNoFillSF) {
+            actions.append(MenuAction(String(localized: "clearVideo"), systemImage: Const.clearNoFillSF) {
                 player.clearVideo(modelContext)
-            }
+            })
         }
+
+        return actions
     }
 }
