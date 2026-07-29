@@ -8,6 +8,9 @@ import UnwatchedShared
 @ModelActor actor VideoActor {
     var newVideos = NewVideosNotificationInfo()
 
+    /// Feed fetch failures collected during the current `loadVideos` run.
+    var fetchErrors = [any Error]()
+
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
@@ -126,6 +129,7 @@ import UnwatchedShared
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
+        fetchErrors = []
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()
@@ -166,6 +170,10 @@ import UnwatchedShared
         await deferredVideosTask.value
 
         try modelContext.save()
+
+        if fetchErrors.count == sendableSubs.count, let firstError = fetchErrors.first {
+            throw firstError
+        }
         return newVideos
     }
 

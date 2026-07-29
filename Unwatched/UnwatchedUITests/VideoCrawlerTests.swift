@@ -121,10 +121,98 @@ class VideoCrawlerTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - fetchVideos (url fetch)
+
+    func testFetchVideosValidFeedReturnsVideos() async throws {
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
+        let sub = SendableSubscription(
+            link: url, title: "Working sub", videoPlacement: .defaultPlacement, isArchived: false
+        )
+
+        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+
+        XCTAssertEqual(returnedSub.title, sub.title)
+        XCTAssertGreaterThan(videos.count, 0, "Expected videos from a valid feed")
+    }
+
+    func testFetchVideosInvalidFeedReturnsEmptyWithoutThrowing() async throws {
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let sub = SendableSubscription(
+            link: url, title: "Broken sub", videoPlacement: .defaultPlacement, isArchived: false
+        )
+
+        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+
+        XCTAssertEqual(returnedSub.title, sub.title)
+        XCTAssertEqual(videos.count, 0, "A failing feed should return no videos instead of throwing")
+    }
+
+    func testLoadVideosPartialFailureStillLoadsWorkingSubscription() async throws {
+        let context = DataProvider.newContext()
+
+        let workingUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
+        let workingSub = Subscription(
+            link: workingUrl,
+            title: "Working sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.workingChannelId
+        )
+
+        let brokenUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let brokenSub = Subscription(
+            link: brokenUrl,
+            title: "Broken sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.brokenChannelId
+        )
+
+        context.insert(workingSub)
+        context.insert(brokenSub)
+        try context.save()
+
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let subIds = [workingSub.persistentModelID, brokenSub.persistentModelID]
+        // should not throw: the broken subscription must not abort the whole refresh
+        _ = try await repo.loadVideos(subIds, fetchDurations: false)
+
+        let workingSubId = workingSub.persistentModelID
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> {
+            $0.subscription?.persistentModelID == workingSubId
+        })
+        let videos = try context.fetch(fetch)
+        XCTAssertGreaterThan(videos.count, 0, "Working subscription's videos should still be loaded")
+    }
+
+    func testLoadVideosAllFailingSubscriptionsThrows() async throws {
+        let context = DataProvider.newContext()
+
+        let brokenUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let brokenSub = Subscription(
+            link: brokenUrl,
+            title: "Broken sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.brokenChannelId
+        )
+        context.insert(brokenSub)
+        try context.save()
+
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        do {
+            _ = try await repo.loadVideos([brokenSub.persistentModelID], fetchDurations: false)
+            XCTFail("Expected loadVideos to throw when every subscription fails")
+        } catch {
+            // expected
+        }
+    }
 }
 
 // swiftlint:disable all
 struct VideoCrawlerTestData {
+    /// A real, stable YouTube channel id whose feed returns 200.
+    static let workingChannelId = "UCnrAvt4i_2WV3yEKWyEUMlg"
+    /// A well-formed but nonexistent channel id whose feed returns 404.
+    static let brokenChannelId = "UCInvalidChannelIdForUnitTests0"
+
     static let subs: [(String, String)] = [
         (
             "Beardo Benjo",
