@@ -40,9 +40,18 @@ extension AVPlayerViewModel {
 
     // MARK: - Primary race (iOS client HLS vs WKWebView extraction)
 
+    /// How long `primaryRace` waits for the WKWebView extraction before giving up on it and
+    /// letting `exhaustiveRetry` run. The extractor's own timeout is 40 s (see
+    /// `YouTubeWebViewHLSExtractor.extractHLSURL`), and blocking for it stalls playback for
+    /// videos the parallel client fan-out resolves in well under two seconds. On expiry the
+    /// extraction is *not* cancelled — it keeps running and caches its URL in `WKHLSManager`,
+    /// so the next load of the same video takes `fetchAndPlay`'s fast path.
+    static let webViewRaceTimeout: Double = 3.5
+
     /// Starts WKWebView HLS extraction in parallel with the iOS client fetch. If iOS returns HLS,
     /// that plays immediately and the extractor is cancelled. Otherwise the in-progress extraction
-    /// (already ~1–2 s in) is awaited and played. Returns `true` if a stream reached `.readyToPlay`.
+    /// (already ~1–2 s in) is awaited for at most `webViewRaceTimeout` and played. Returns `true`
+    /// if a stream reached `.readyToPlay`.
     @MainActor
     func primaryRace(videoId: String) async -> Bool {
         let webViewTask = Task { await YouTubeWebViewHLSExtractor.shared.extractHLSURL(videoId: videoId) }
@@ -66,16 +75,22 @@ extension AVPlayerViewModel {
             return await tryHLS(videoId: videoId, info: info, client: "iOS")
         }
 
-        // iOS has no HLS — await the in-progress WKWebView extraction.
-        Log.info("[AVPlayerView] iOS has no HLS — awaiting WKWebView extraction: \(videoId)")
-        let webViewURL = await webViewTask.value
+        // iOS has no HLS — await the in-progress WKWebView extraction, but only briefly.
+        Log.info("[AVPlayerView] iOS has no HLS — awaiting WKWebView extraction"
+                    + " (max \(Self.webViewRaceTimeout)s): \(videoId)")
+        guard case .finished(let webViewURL) = await awaitWebView(webViewTask, seconds: Self.webViewRaceTimeout) else {
+            Log.info("[AVPlayerView] WKWebView extraction still running after \(Self.webViewRaceTimeout)s"
+                        + " — continuing with exhaustiveRetry: \(videoId)")
+            cacheWebViewExtractionWhenDone(webViewTask, videoId: videoId)
+            return false
+        }
         if Task.isCancelled { return false }
 
         let pot = YouTubeWebViewHLSExtractor.shared.extractedPoToken
         let nSolver = YouTubeWebViewHLSExtractor.shared.extractedNSolver
         if let pot { await api.storeExternalPoToken(pot, for: videoId) }
         if let url = webViewURL {
-            WKHLSManager.shared.store(url: url, nSolver: nSolver, for: videoId)
+            WKHLSManager.shared.store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
             originalAudioLanguage = info.originalAudioLanguage
             applyTranscriptUrl(from: info)
             if await playWebViewHLS(url: url, nSolver: nSolver, poToken: pot, videoId: videoId) {
@@ -83,6 +98,54 @@ extension AVPlayerViewModel {
             }
         }
         return false
+    }
+
+    enum WebViewRaceOutcome {
+        /// The extraction completed in time — `url` is nil when it failed or was cancelled.
+        case finished(URL?)
+        /// The deadline expired first; the extraction is still running.
+        case stillRunning
+    }
+
+    /// Awaits `task` for at most `seconds`. On expiry the task is deliberately left running —
+    /// the caller decides whether to keep it alive (see `cacheWebViewExtractionWhenDone`).
+    @MainActor
+    func awaitWebView(_ task: Task<URL?, Never>, seconds: Double) async -> WebViewRaceOutcome {
+        let (stream, cont) = AsyncStream<WebViewRaceOutcome>.makeStream()
+        let waiter = Task { @MainActor in
+            let url = await task.value
+            cont.yield(.finished(url))
+            cont.finish()
+        }
+        let timer = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+            cont.yield(.stillRunning)
+            cont.finish()
+        }
+        var outcome: WebViewRaceOutcome = .stillRunning
+        for await value in stream {
+            outcome = value
+            break
+        }
+        waiter.cancel()
+        timer.cancel()
+        return outcome
+    }
+
+    /// Keeps a WKWebView extraction that outlived the race alive so its URL still lands in
+    /// `WKHLSManager`'s cache. Playback has already moved on to `exhaustiveRetry`; this only
+    /// makes the *next* load of the same video take the cached fast path.
+    @MainActor
+    func cacheWebViewExtractionWhenDone(_ task: Task<URL?, Never>, videoId: String) {
+        webViewCacheTask?.cancel()
+        webViewCacheTask = Task { @MainActor in
+            guard let url = await task.value, !Task.isCancelled else { return }
+            let pot = YouTubeWebViewHLSExtractor.shared.extractedPoToken
+            let nSolver = YouTubeWebViewHLSExtractor.shared.extractedNSolver
+            if let pot { await self.api.storeExternalPoToken(pot, for: videoId) }
+            WKHLSManager.shared.store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
+            Log.info("[AVPlayerView] late WKWebView extraction cached for \(videoId)")
+        }
     }
 
     // MARK: - Exhaustive parallel retry
@@ -276,17 +339,7 @@ extension AVPlayerViewModel {
     @MainActor
     func tryHLS(videoId: String, info: PlayerInfo, client: String) async -> Bool {
         guard let hlsURL = info.hlsURL else { return false }
-        let hlsUA: String
-        switch client {
-        case "WebSafari": hlsUA = InnerTubeClients.WebSafari.userAgent
-        case "iOS":       hlsUA = InnerTubeClients.Web.userAgent
-        default:          hlsUA = InnerTubeClients.iOS.userAgent
-        }
-        let headers = [
-            "User-Agent": hlsUA,
-            "Origin": "https://www.youtube.com",
-            "Referer": "https://www.youtube.com/"
-        ]
+        let headers = StreamHeaders.hls(forClient: client)
         let asset = AVURLAsset(url: hlsURL, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
         let item = AVPlayerItem(asset: asset)
         let qualities = StreamQualityHelper.videoQualities(from: info, muxedOnly: false)

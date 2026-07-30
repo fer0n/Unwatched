@@ -1,6 +1,30 @@
 #if !os(macOS)
 import UnwatchedShared
 
+enum StreamHeaders {
+    /// UA the CDN accepts for an HLS manifest signed by `client`. Mirrors SmartTubeIOS's
+    /// two playback paths:
+    ///  • iOS client HLS → Chrome/Web UA unlocks higher-quality variants
+    ///  • WebSafari HLS  → Safari macOS UA (CDN validates it)
+    ///  • all other HLS  → iOS UA
+    /// Shared by the playback loop and the prefetch so the two can't drift apart.
+    static func hlsUserAgent(forClient client: String) -> String {
+        switch client {
+        case "WebSafari": return InnerTubeClients.WebSafari.userAgent
+        case "iOS":       return InnerTubeClients.Web.userAgent
+        default:          return InnerTubeClients.iOS.userAgent
+        }
+    }
+
+    static func hls(forClient client: String) -> [String: String] {
+        [
+            "User-Agent": hlsUserAgent(forClient: client),
+            "Origin": "https://www.youtube.com",
+            "Referer": "https://www.youtube.com/"
+        ]
+    }
+}
+
 enum StreamQualityHelper {
     static let bitRateCaps: [Int: Double] = [
         2160: 45_000_000,

@@ -156,7 +156,11 @@ struct AVPlayerView: View {
     /// Pre-warm the second (next-up) video. Gated on the current video having finished
     /// loading so the prefetch doesn't compete with the current stream for bandwidth.
     private func prefetchNextHLS() {
-        guard player.isLoading == nil, let nextId = nextPrefetchVideoId else { return }
+        guard player.isLoading == nil else { return }
+        guard let nextId = nextPrefetchVideoId else {
+            vm.discardPrefetch(keeping: player.video?.youtubeId)
+            return
+        }
         vm.prefetchNext(videoId: nextId)
     }
 

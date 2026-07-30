@@ -22,6 +22,8 @@ final class AVPlayerViewModel {
 
     @ObservationIgnored var loadTask: Task<Void, Never>?
     @ObservationIgnored var backgroundQualityUpgradeTask: Task<Void, Never>?
+    /// Outlives `loadTask`: caches a WKWebView extraction that lost the `primaryRace` deadline.
+    @ObservationIgnored var webViewCacheTask: Task<Void, Never>?
     @ObservationIgnored var endObserverTask: Task<Void, Never>?
     @ObservationIgnored var statusObserverTask: Task<Void, Never>?
     @ObservationIgnored var presentationSizeObserver: NSKeyValueObservation?
@@ -128,6 +130,7 @@ final class AVPlayerViewModel {
         endObserverTask?.cancel()
         loadTask?.cancel()
         backgroundQualityUpgradeTask?.cancel()
+        webViewCacheTask?.cancel()
         interruptionObserverTask?.cancel()
         rateObserverTask?.cancel()
         startTimeObserver()
@@ -195,7 +198,7 @@ final class AVPlayerViewModel {
 
         // Use a pre-built item if the prefetch completed for this video.
         if let pre = prefetchManager.consumeResult(for: videoId) {
-            loadTask = Task { await MainActor.run { self.applyPrefetchResult(pre, videoId: videoId) } }
+            loadTask = Task { await self.applyPrefetchResult(pre, videoId: videoId) }
             return
         }
         // Cancel any still-running prefetch; fetchAndPlay runs directly.
@@ -260,6 +263,7 @@ final class AVPlayerViewModel {
         captionFetchTask?.cancel()
         loadTask?.cancel()
         backgroundQualityUpgradeTask?.cancel()
+        webViewCacheTask?.cancel()
         prefetchManager.cancelAll()
         statusObserverTask?.cancel()
         endObserverTask?.cancel()
@@ -277,8 +281,25 @@ final class AVPlayerViewModel {
         prefetchManager.prefetchNext(videoId: videoId)
     }
 
+    /// Drops a prefetched/warming stream once the queue no longer has a next-up video —
+    /// otherwise it would keep buffering a video that isn't coming.
+    ///
+    /// `keeping` is the currently playing video. The queue and `player.video` update in the
+    /// same pass during a transition, so with a two-entry queue "next" makes the prefetched
+    /// video current *and* empties the next-up slot; without this guard the result would be
+    /// discarded in the same pass that `loadVideoIfNeeded` is about to consume it, and the
+    /// most common prefetch hit would be lost to an onChange ordering detail.
     @MainActor
-    private func applyPrefetchResult(_ pre: AVPlayerPrefetchManager.PrefetchResult, videoId: String) {
+    func discardPrefetch(keeping videoId: String?) {
+        prefetchManager.discardUnlessHolding(videoId)
+    }
+
+    /// Adopts a prefetched item. Goes through `attemptItem` rather than `startObservingItem`
+    /// so the prefetched path gets the same terminal-status timeout as every other stream —
+    /// otherwise an item that never reaches `.readyToPlay` or `.failed` would leave
+    /// `player.isLoading` set forever. On failure it falls back to the full load.
+    @MainActor
+    private func applyPrefetchResult(_ pre: AVPlayerPrefetchManager.PrefetchResult, videoId: String) async {
         guard !Task.isCancelled else { return }
         Log.info("[AVPlayerView] using prefetched item for \(videoId)")
         originalAudioLanguage = pre.originalAudioLanguage
@@ -299,9 +320,16 @@ final class AVPlayerViewModel {
             player.selectedAudioLanguage = pre.audioTracks.first(where: \.isOriginal)?.languageCode
                 ?? pre.audioTracks.first?.languageCode ?? ""
         }
-        if let info = pre.playerInfo { applyTranscriptUrl(from: info) }
-        startObservingItem(pre.item, videoId: videoId)
-        avPlayer.replaceCurrentItem(with: pre.item)
+        if let info = pre.playerInfo {
+            applyTranscriptUrl(from: info)
+            applyAspectRatioFromFormats(info)
+        }
+        // Fresh item from the warmed asset — see `PrefetchResult.asset`.
+        if await attemptItem(AVPlayerItem(asset: pre.asset), videoId: videoId) { return }
+
+        guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
+        Log.info("[AVPlayerView] prefetched item did not become ready — falling back to full load: \(videoId)")
+        await fetchAndPlay(videoId: videoId)
     }
 }
 #endif
