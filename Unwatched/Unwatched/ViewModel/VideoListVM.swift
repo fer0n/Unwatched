@@ -22,8 +22,9 @@ import OSLog
     var manualFilter: (@Sendable (Video) -> Bool)?
     private var sort: [SortDescriptor<Video>] = []
 
-    init(initialBatchSize: Int = 50) {
+    init(listId: String, initialBatchSize: Int = 50) {
         self.initialBatchSize = initialBatchSize
+        super.init(listId: listId)
     }
 
     @MainActor

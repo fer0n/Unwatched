@@ -99,25 +99,35 @@ enum HistoryMaintenance {
 }
 
 @Observable class TransactionVM<T: PersistentModel> {
+    /// Each list reads the history stream at its own pace, so they can't share a token
+    @ObservationIgnored private let listId: String
+
+    init(listId: String) {
+        self.listId = listId
+    }
+
     @available(iOS 18.0, *)
     var historyToken: DefaultHistoryToken? {
         get {
-            HistoryTokenStore.token(forModel: Self.modelKey)
+            HistoryTokenStore.token(forModel: tokenKey)
         }
         set {
             guard let newValue else {
                 return
             }
-            HistoryTokenStore.setToken(newValue, forModel: Self.modelKey)
+            HistoryTokenStore.setToken(newValue, forModel: tokenKey)
         }
     }
 
-    private static var modelKey: String {
-        String(describing: T.self)
+    var tokenKey: String {
+        "\(String(describing: T.self)).\(listId)"
     }
 
     @available(iOS 18, *)
-    static func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
+    static func findTransactions(
+        after token: DefaultHistoryToken?,
+        tokenKey: String
+    ) -> [DefaultHistoryTransaction] {
         do {
             return try fetchTransactions(after: token)
         } catch let error {
@@ -127,7 +137,7 @@ enum HistoryMaintenance {
             }
             // the bookmarked transaction is gone from the stream, so resync from what's left
             Log.info("findTransactions: history token expired, resetting")
-            HistoryTokenStore.removeToken(forModel: modelKey)
+            HistoryTokenStore.removeToken(forModel: tokenKey)
             return (try? fetchTransactions(after: nil)) ?? []
         }
     }
@@ -169,9 +179,10 @@ enum HistoryMaintenance {
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         if #available(iOS 18, *) {
             let token = historyToken
+            let tokenKey = tokenKey
             let task = Task.detached {
                 var modelUpdates: Set<PersistentIdentifier>?
-                let transactions = TransactionVM.findTransactions(after: token)
+                let transactions = TransactionVM.findTransactions(after: token, tokenKey: tokenKey)
                 Log.info("modelsHaveChanges: \(transactions.count)")
                 if transactions.count <= 20 {
                     // if there's more than 20 changes, simply fetch everything

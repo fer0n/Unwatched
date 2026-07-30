@@ -11,7 +11,7 @@ struct GlobalTitleFilterWithPreview: View {
     @CloudStorage(Const.filterVideoTitleText) var filterVideoTitleText: String = ""
     @CloudStorage(Const.allowOnMatch) var allowOnMatch: Bool = false
 
-    @State var videoListVM = VideoListVM(initialBatchSize: 500)
+    @State var videoListVM = VideoListVM(listId: "globalTitleFilterPreview", initialBatchSize: 500)
 
     var body: some View {
         ZStack {

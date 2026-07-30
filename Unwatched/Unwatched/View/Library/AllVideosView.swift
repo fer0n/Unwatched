@@ -3,7 +3,7 @@ import SwiftData
 import UnwatchedShared
 
 struct AllVideosView: View {
-    @State var videoListVM = VideoListVM()
+    @State var videoListVM = VideoListVM(listId: "allVideos")
     @State var text = DebouncedText(0.5)
 
     var body: some View {

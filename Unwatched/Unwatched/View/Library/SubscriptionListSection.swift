@@ -9,7 +9,7 @@ import OSLog
 import UnwatchedShared
 
 struct SubscriptionListSection: View {
-    @State var subscriptionsVM = SubscriptionListVM()
+    @State var subscriptionsVM = SubscriptionListVM(listId: "subscriptionList")
     @Binding var subManager: SubscribeManager
     var theme: ThemeColor
 

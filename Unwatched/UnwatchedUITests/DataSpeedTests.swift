@@ -13,7 +13,7 @@ final class DataSpeedTests: XCTestCase {
         let data = (try? DataSpeedTests.loadFileData(for: "backup-file.json"))!
         UserDataService.importBackup(data)
 
-        let videoListVM = VideoListVM()
+        let videoListVM = VideoListVM(listId: "speedTest")
         let sorting = SortDescriptor<Video>(\.publishedDate)
         await videoListVM.setSorting([sorting])
 
