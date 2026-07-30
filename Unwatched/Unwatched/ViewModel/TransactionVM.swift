@@ -37,13 +37,6 @@ enum HistoryTokenStore {
         UserDefaults.standard.set(tokens, forKey: Const.historyTokens)
     }
 
-    /// Oldest token across all lists: history before this has been seen by every consumer.
-    static func lowestToken() -> DefaultHistoryToken? {
-        storedTokens().values
-            .compactMap { try? JSONDecoder().decode(DefaultHistoryToken.self, from: $0) }
-            .min()
-    }
-
     private static func storedTokens() -> [String: Data] {
         UserDefaults.standard.dictionary(forKey: Const.historyTokens) as? [String: Data] ?? [:]
     }
@@ -55,25 +48,53 @@ enum HistoryMaintenance {
     /// used by Apple's own Core Data + CloudKit sample.
     static let retentionDays = 7
 
+    /// Keeps each delete short enough not to stall the main thread behind the store's write lock
+    static let chunkDays = 1
+
     @available(iOS 18, *)
-    static func pruneConsumedHistory() {
-        guard let token = HistoryTokenStore.lowestToken(),
-              let cutoff = Calendar.current.date(byAdding: .day, value: -retentionDays, to: .now) else {
+    static func pruneConsumedHistory() async {
+        let calendar = Calendar.current
+        guard let cutoff = calendar.date(byAdding: .day, value: -retentionDays, to: .now),
+              let oldest = oldestTransactionDate(),
+              oldest < cutoff else {
+            UserDefaults.standard.markPerformed(Const.cleanupHistoryTransactions)
             return
         }
 
-        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
-        descriptor.predicate = #Predicate {
-            $0.token < token && $0.timestamp < cutoff
-        }
-
+        let context = DataProvider.newContext()
+        var prunedUpTo = oldest
         do {
-            let context = DataProvider.newContext()
-            try context.deleteHistory(descriptor)
+            while prunedUpTo < cutoff {
+                prunedUpTo = min(
+                    calendar.date(byAdding: .day, value: chunkDays, to: prunedUpTo) ?? cutoff,
+                    cutoff
+                )
+                try deleteHistory(before: prunedUpTo, context: context)
+                await Task.yield()
+            }
+            UserDefaults.standard.markPerformed(Const.cleanupHistoryTransactions)
             Log.info("pruneConsumedHistory: pruned before \(cutoff)")
         } catch {
-            Log.error("pruneConsumedHistory: \(error)")
+            Log.error("pruneConsumedHistory: stopped at \(prunedUpTo): \(error)")
         }
+    }
+
+    @available(iOS 18, *)
+    private static func oldestTransactionDate() -> Date? {
+        // history is append-only, so the first transaction is the oldest (`sortBy` is iOS 26+)
+        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+        descriptor.fetchLimit = 1
+        let transactions = (try? DataProvider.newContext().fetchHistory(descriptor)) ?? []
+        return transactions.first?.timestamp
+    }
+
+    @available(iOS 18, *)
+    private static func deleteHistory(before date: Date, context: ModelContext) throws {
+        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+        descriptor.predicate = #Predicate {
+            $0.timestamp < date
+        }
+        try context.deleteHistory(descriptor)
     }
 }
 
