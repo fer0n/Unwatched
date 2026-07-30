@@ -12,7 +12,11 @@ public struct Const {
     public static let youtubePremium = "youtubePremium"
     public static let unwatchedPremiumAcknowledged = "unwatchedPremiumAcknowledged"
     public static let hidePremium = "hidePremium"
+    /// Legacy on/off skip toggle, folded into `sponsorSegmentSetting`
+    /// (see `SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded`)
     public static let skipSponsorSegments = "skipSponsorSegments"
+    public static let sponsorSegmentSetting = "sponsorSegmentSetting"
+    public static let selfPromoSegmentSetting = "selfPromoSegmentSetting"
     public static let skipChapterText = "skipChapterText"
     public static let customYoutubeApiKey = "customYoutubeApiKey"
     public static let filterVideoTitleText = "filterVideoTitleText"

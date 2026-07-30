@@ -28,6 +28,7 @@ struct UnwatchedApp: App {
             SetupView()
                 .task {
                     PlayerTypeSetting.migrateMinimalPlayerUIIfNeeded()
+                    SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)

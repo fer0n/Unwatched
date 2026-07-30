@@ -9,7 +9,10 @@ import UnwatchedShared
 struct SponsorBlockSettingsView: View {
     @CloudStorage(Const.mergeSponsorBlockChapters) var mergeSponsorBlockChapters: Bool = false
     @CloudStorage(Const.youtubePremium) var youtubePremium: Bool = false
-    @CloudStorage(Const.skipSponsorSegments) var skipSponsorSegments: Bool = false
+    @CloudStorage(Const.sponsorSegmentSetting)
+    var sponsorSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsorDefault
+    @CloudStorage(Const.selfPromoSegmentSetting)
+    var selfPromoSegmentSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromoDefault
 
     @State var showAlert = false
 
@@ -19,6 +22,20 @@ struct SponsorBlockSettingsView: View {
                 Text("sponsorBlockChapters")
             }
         }
+
+        MySection(footer: "skipSponsorSegmentsHelper") {
+            SegmentSettingPicker(
+                title: "sponsorSegments",
+                selection: $sponsorSegmentSetting,
+                allowsSkipping: youtubePremium
+            )
+            SegmentSettingPicker(
+                title: "selfPromoSegments",
+                selection: $selfPromoSegmentSetting,
+                allowsSkipping: youtubePremium
+            )
+        }
+        .disabled(!mergeSponsorBlockChapters)
 
         MySection(footer: "considerGettingYoutubePremium") {
             HStack {
@@ -33,7 +50,7 @@ struct SponsorBlockSettingsView: View {
                     showAlert = true
                 } else {
                     youtubePremium = false
-                    skipSponsorSegments = false
+                    stopSkipping()
                 }
             }
         }
@@ -51,18 +68,63 @@ struct SponsorBlockSettingsView: View {
                                 Button("cancel", role: .cancel) {}
                             },
                             message: { Text("considerGettingYoutubePremium") })
+    }
 
-        Section(footer: Text("skipSponsorSegmentsHelper")) {
-            Toggle(isOn: $skipSponsorSegments) {
-                Text("skipSponsorSegments")
-            }
-            .disabled(!mergeSponsorBlockChapters)
+    func stopSkipping() {
+        if sponsorSegmentSetting.skips {
+            sponsorSegmentSetting = .show
         }
-        .opacity(youtubePremium ? 1 : 0)
-        #if !os(visionOS)
-        .listRowBackground(youtubePremium ? Color.insetBackgroundColor : Color.clear)
-        #endif
-        .animation(.default, value: youtubePremium)
+        if selfPromoSegmentSetting.skips {
+            selfPromoSegmentSetting = .show
+        }
+    }
+}
+
+/// Looks like a Form picker row, but a `Picker` ignores `disabled` on its options and
+/// "Show & Skip" has to stay visible while being unselectable without YouTube Premium.
+private struct SegmentSettingPicker: View {
+    @Environment(\.isEnabled) var isEnabled
+
+    let title: LocalizedStringKey
+    @Binding var selection: SponsorBlockSegmentSetting
+    let allowsSkipping: Bool
+
+    var body: some View {
+        Menu {
+            ForEach(SponsorBlockSegmentSetting.allCases, id: \.self) { option in
+                Button {
+                    selection = option
+                } label: {
+                    if selection == option {
+                        Label(option.description, systemImage: Const.checkmarkSF)
+                    } else {
+                        Text(option.description)
+                    }
+                }
+                .disabled(option.skips && !allowsSkipping)
+            }
+        } label: {
+            HStack {
+                Text(title)
+                    .foregroundStyle(isEnabled ? Color.neutralAccentColor : Color.secondary)
+                Spacer()
+                Text(selection.description)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.footnote)
+                    .fontWeight(.medium)
+            }
+        }
+    }
+}
+
+extension SponsorBlockSegmentSetting {
+    var description: String {
+        switch self {
+        case .nothing: return String(localized: "segmentSettingNothing")
+        case .show: return String(localized: "segmentSettingShow")
+        case .showAndSkip: return String(localized: "segmentSettingShowAndSkip")
+        @unknown default: return "\(self.rawValue)"
+        }
     }
 }
 

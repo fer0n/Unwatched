@@ -43,8 +43,35 @@ public enum ChapterCategory: Int, Codable, CaseIterable, CustomStringConvertible
         }
     }
 
+    /// Category identifier used by the SponsorBlock API, `nil` for categories it doesn't know
+    public var apiName: String? {
+        switch self {
+        case .sponsor:
+            return "sponsor"
+        case .filler:
+            return "filler"
+        case .intro:
+            return "intro"
+        case .selfpromo:
+            return "selfpromo"
+        case .interaction:
+            return "interaction"
+        case .outro:
+            return "outro"
+        case .preview:
+            return "preview"
+        case .musicOfftopic:
+            return "music_offtopic"
+        case .chapter:
+            return "chapter"
+        case .generated:
+            return nil
+        }
+    }
+
+    /// Segments with exact times from SponsorBlock win over the video's own chapters when they overlap
     public var hasPriority: Bool {
-        self == .sponsor
+        self == .sponsor || self == .selfpromo
     }
 
     public var isExternal: Bool {

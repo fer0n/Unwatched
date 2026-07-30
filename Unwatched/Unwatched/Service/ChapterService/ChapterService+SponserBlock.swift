@@ -17,6 +17,13 @@ extension ChapterService {
         forceRefresh: Bool = false,
         overrideSettingOn: Bool? = nil
     ) async throws -> [SendableChapter]? {
+        let loadAllSegments = videoChapters.isEmpty
+        let categories = SponsorBlockSegmentSetting.requestedCategories(videoHasChapters: !loadAllSegments)
+        if categories.isEmpty {
+            Log.info("SponsorBlock: every segment category is turned off")
+            return nil
+        }
+
         if !shouldRefreshSponserBlock(videoId, forceRefresh, overrideSettingOn) {
             Log.info("SponsorBlock: not refreshing")
             return nil
@@ -24,8 +31,7 @@ extension ChapterService {
 
         Log.info("SponsorBlock, old: \(videoChapters)")
 
-        let loadAllSegments = videoChapters.isEmpty
-        let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, allSegments: loadAllSegments)
+        let segments = try await SponsorBlockAPI.skipSegments(for: youtubeId, categories: categories)
         let externalChapters = SponsorBlockAPI.getChapters(from: segments)
         let cleanedExternalChapters = cleanExternalChapters(externalChapters)
 
