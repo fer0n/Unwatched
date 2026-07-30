@@ -136,6 +136,28 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
     #endif
 
+    /// Releases the shared reference when this web view leaves the hierarchy (player type
+    /// switched, player reloaded). Without it a detached web view stays reachable for the rest
+    /// of the app run, and `repairVideo` keeps probing its `<video>` — which reads
+    /// `readyState === 0` once detached and reloads the player on every foregrounding.
+    ///
+    /// Identity-checked because a reload dismantles the old view around the time the new one is
+    /// made, and the order isn't guaranteed; only the instance still on file may clear it.
+    static func dismantleView(_ view: WKWebView) {
+        guard WebViewState.shared.webView === view else { return }
+        WebViewState.shared.webView = nil
+    }
+
+    #if os(macOS)
+    static func dismantleNSView(_ view: WKWebView, coordinator: PlayerWebViewCoordinator) {
+        dismantleView(view)
+    }
+    #elseif os(iOS) || os(visionOS)
+    static func dismantleUIView(_ view: WKWebView, coordinator: PlayerWebViewCoordinator) {
+        dismantleView(view)
+    }
+    #endif
+
     func evaluateJavaScript(_ view: WKWebView, _ script: String) {
         view.evaluateJavaScript(script + " undefined;", completionHandler: handleJsError)
     }

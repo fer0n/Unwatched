@@ -90,6 +90,13 @@ struct SetupView: View {
     }
 
     func checkVideoHealth() {
+        // The native player resolves its own stream and recovers from a failed item on its own
+        // (see AVPlayerViewModel.handleItemFailure). A reload here would be counterproductive:
+        // PlayerView keys the player on `reloadVideoId`, so it discards AVPlayerView's view model
+        // and re-runs the whole InnerTube fetch — including for a load that is merely slow.
+        let rawPlayerType = UserDefaults.standard.string(forKey: Const.playerType) ?? ""
+        guard PlayerTypeSetting(rawValue: rawPlayerType) != .native else { return }
+
         let secondsSinceLoading = player.isLoading?.distance(to: Date()) ?? 0
         Log.info("videoHealth: loading for \(secondsSinceLoading)s")
         if secondsSinceLoading > 30 {
