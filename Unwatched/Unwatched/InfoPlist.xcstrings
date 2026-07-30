@@ -17,6 +17,12 @@
             "value" : "Unwatched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -47,6 +53,12 @@
             "value" : "Unwatched"
           }
         },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -67,6 +79,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aus Zwischenablage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From Clipboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desde el portapapeles"
           }
         },
         "fr" : {
@@ -91,6 +115,18 @@
             "value" : "Play"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducir"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -113,6 +149,18 @@
             "value" : "Queue"
           }
         },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cola"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -128,7 +176,38 @@
       }
     },
     "Search YouTube" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YouTube durchsuchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search YouTube"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar en YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher sur YouTube"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szukaj w YouTube"
+          }
+        }
+      }
     },
     "Unwatched Backup File" : {
       "localizations" : {
@@ -136,6 +215,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched Backup Datei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwatched Backup File"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Archivo de copia de seguridad de Unwatched"
           }
         },
         "fr" : {
