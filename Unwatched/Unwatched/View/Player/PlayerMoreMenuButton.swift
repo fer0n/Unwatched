@@ -190,7 +190,7 @@ struct PlayerMoreMenuContent: View {
                 Menu {
                     PlayerTypeMenuContent()
                 } label: {
-                    Label("playerType", systemImage: PlayerMenuItem.playerType.systemName)
+                    Label("playerType", systemImage: playerType.systemImage ?? PlayerMenuItem.playerType.systemName)
                 }
             }
             ReloadPlayerButton()
@@ -296,6 +296,7 @@ enum PlayerMenuItem: Int, CaseIterable, Identifiable {
 
 /// A more menu entry shown as its own button in the player controls
 struct PlayerMenuItemButton: View {
+    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
     @State var flashSymbol: String?
@@ -310,7 +311,7 @@ struct PlayerMenuItemButton: View {
                 item: item
             )
         } label: {
-            Image(systemName: flashSymbol ?? item.systemName)
+            Image(systemName: flashSymbol ?? iconName)
                 .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
                 .playerToggleModifier(isOn: false, isSmall: true)
                 .task(id: flashSymbol) {
@@ -329,6 +330,12 @@ struct PlayerMenuItemButton: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help(item.label)
         .accessibilityLabel(item.label)
+    }
+
+    var iconName: String {
+        item == .playerType
+            ? (playerType.systemImage ?? item.systemName)
+            : item.systemName
     }
 }
 
@@ -379,6 +386,8 @@ struct PlayerTypeMenuContent: View {
             } label: {
                 if type == playerType {
                     Label(type.menuDescription, systemImage: "checkmark")
+                } else if let icon = type.systemImage {
+                    Label(type.menuDescription, systemImage: icon)
                 } else {
                     Text(type.menuDescription)
                 }

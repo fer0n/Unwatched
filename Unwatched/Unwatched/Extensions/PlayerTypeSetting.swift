@@ -23,4 +23,14 @@ extension PlayerTypeSetting {
         default: return description
         }
     }
+
+    /// `nil` for types without a dedicated icon; callers fall back to a generic symbol.
+    var systemImage: String? {
+        switch self {
+        case .youtubeEmbedded: return "play.tv.fill"
+        case .youtubeEmbeddedMinimal: return nil
+        case .youtubeCustomUI: return "tv"
+        case .native: return "sparkles.tv.fill"
+        }
+    }
 }
