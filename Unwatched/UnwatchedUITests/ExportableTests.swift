@@ -189,6 +189,41 @@ class ExportableTests: XCTestCase {
         XCTAssert(sub3?.mostRecentVideoDate == date3, "sub3 mostRecentVideoDate not correct")
     }
 
+    func testHandleNewVideosDoesNotResetMostRecentVideoDateOnEmptyResult() async throws {
+        let existingDate = Date(timeIntervalSince1970: 1_700_000_000)
+
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let sub = TestData.subscription()
+        sub.mostRecentVideoDate = existingDate
+        sub.youtubeChannelId = "channelId-\(UUID())"
+
+        let context = DataProvider.newContext()
+        context.insert(sub)
+        try context.save()
+        let subId = sub.persistentModelID
+
+        guard let sendableSub = sub.toExport else {
+            XCTFail("No subscription for testing")
+            return
+        }
+
+        let placement = DefaultVideoPlacement(videoPlacement: .inbox, hideShorts: false, filterVideoTitleText: "", allowOnMatch: true)
+
+        // an empty result (failed fetch, or a feed with no entries) must not wipe out a known mostRecentVideoDate
+        _ = await repo.handleNewVideos(sendableSub, [], defaultPlacement: placement)
+        try await repo.modelContext.save()
+
+        let subFetch = FetchDescriptor<Subscription>(predicate: #Predicate<Subscription> { $0.persistentModelID == subId })
+        let subs = try context.fetch(subFetch)
+        let updatedSub = subs.first
+
+        XCTAssertEqual(
+            updatedSub?.mostRecentVideoDate,
+            existingDate,
+            "mostRecentVideoDate must not be reset when a fetch returns no videos"
+        )
+    }
+
     func testSettingsBackup() {
         do {
             UserDefaults.standard.register(defaults: Const.settingsDefaults)

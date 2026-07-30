@@ -214,7 +214,6 @@ import UnwatchedShared
         let addedVideos = triageSubscriptionVideos(subModel,
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement)
-        subModel.mostRecentVideoDate = mostRecentDate
         updateRecentVideoDate(subModel, mostRecentDate)
         return (videoModels, addedVideos)
     }
