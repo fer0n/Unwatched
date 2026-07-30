@@ -88,6 +88,61 @@ class VideoCrawlerTests: XCTestCase {
         XCTAssertEqual(firstVideo.updatedDate, updatedDate)
     }
 
+    // MARK: - malformed feeds
+
+    func testValidFeedCountsAsParsed() {
+        let data = VideoCrawlerTestData.rssFeedContent.data(using: .utf8)!
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: nil)
+
+        XCTAssertTrue(delegate.parsingSucceeded)
+        XCTAssertFalse(delegate.didStopAfterLimit)
+        XCTAssertTrue(VideoCrawler.hasUsableResult(delegate))
+    }
+
+    func testMalformedFeedIsNotTreatedAsEmptyFeed() {
+        let data = Data("<feed><title>Broken".utf8)
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: nil)
+
+        XCTAssertFalse(delegate.parsingSucceeded)
+        XCTAssertFalse(delegate.didStopAfterLimit)
+        XCTAssertTrue(delegate.videos.isEmpty)
+        XCTAssertFalse(
+            VideoCrawler.hasUsableResult(delegate),
+            "a broken feed must not pass as a successfully refreshed, empty one"
+        )
+    }
+
+    func testTruncatedFeedKeepsVideosParsedBeforeTheError() {
+        let content = VideoCrawlerTestData.rssFeedContent
+        guard let lastEntry = content.range(of: "<entry>", options: .backwards) else {
+            XCTFail("Test feed doesn't contain any entries")
+            return
+        }
+        // cut the feed off in the middle of the second entry
+        let truncated = content[..<lastEntry.upperBound] + "<yt:videoId>truncated"
+        let delegate = VideoCrawler.parseFeedData(data: Data(truncated.utf8), limitVideos: nil)
+
+        XCTAssertFalse(delegate.parsingSucceeded)
+        XCTAssertEqual(delegate.videos.count, 1)
+        XCTAssertTrue(
+            VideoCrawler.hasUsableResult(delegate),
+            "videos parsed before the error should still be used"
+        )
+    }
+
+    func testStoppingAfterVideoLimitIsNotAParseFailure() {
+        let data = VideoCrawlerTestData.rssFeedContent.data(using: .utf8)!
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: 0)
+
+        XCTAssertFalse(delegate.parsingSucceeded, "abortParsing() makes parsing fail")
+        XCTAssertTrue(delegate.didStopAfterLimit)
+        XCTAssertNotNil(delegate.subscriptionInfo)
+        XCTAssertTrue(
+            VideoCrawler.hasUsableResult(delegate),
+            "adding a subscription stops parsing on purpose, that's not a broken feed"
+        )
+    }
+
     func testfetchVideoDurationsQueueInbox() {
         let context = DataProvider.newContext()
         let video = Video.getDummy()

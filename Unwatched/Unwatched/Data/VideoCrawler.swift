@@ -15,14 +15,25 @@ struct VideoCrawler {
             throw URLError(.badServerResponse)
         }
 
-        return parseFeedData(data: data, limitVideos: limitVideos)
+        let delegate = parseFeedData(data: data, limitVideos: limitVideos)
+        guard hasUsableResult(delegate) else {
+            throw VideoCrawlerError.failedToParse
+        }
+        return delegate
+    }
+
+    /// A broken feed otherwise looks like an empty one and counts as a successful refresh.
+    static func hasUsableResult(_ delegate: RSSParserDelegate) -> Bool {
+        delegate.parsingSucceeded
+            || delegate.didStopAfterLimit
+            || !delegate.videos.isEmpty
     }
 
     static func parseFeedData(data: Data, limitVideos: Int?) -> RSSParserDelegate {
         let parser = XMLParser(data: data)
         let rssParserDelegate = RSSParserDelegate(limitVideos: limitVideos)
         parser.delegate = rssParserDelegate
-        parser.parse()
+        rssParserDelegate.parsingSucceeded = parser.parse()
         return rssParserDelegate
     }
 
