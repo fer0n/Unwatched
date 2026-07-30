@@ -34,7 +34,7 @@ extension NSUbiquitousKeyValueStore: KeyValueStoring { }
 
 public extension SponsorBlockSegmentSetting {
     static let sponsorDefault: SponsorBlockSegmentSetting = .show
-    static let selfPromoDefault: SponsorBlockSegmentSetting = .nothing
+    static let selfPromoDefault: SponsorBlockSegmentSetting = .show
 
     static var sponsor: SponsorBlockSegmentSetting {
         stored(Const.sponsorSegmentSetting, default: sponsorDefault)
@@ -87,9 +87,14 @@ public extension SponsorBlockSegmentSetting {
     }
 
     /// Folds the former `skipSponsorSegments` toggle into the per-category settings.
-    /// Runs once: whoever had auto-skip enabled keeps skipping sponsor segments, everyone
-    /// else lands on the new defaults. The legacy key is checked in both stores because a
-    /// restored backup from before the iCloud move puts it into `UserDefaults`.
+    /// The legacy key is checked in both stores because a restored backup from before the
+    /// iCloud move puts it into `UserDefaults`.
+    ///
+    /// Its presence is what marks the account as unmigrated, so the legacy value wins over
+    /// whatever `sponsorSegmentSetting` currently holds: deleting the key syncs to the other
+    /// devices, so it only ever survives where the old toggle was the user's last word. It's
+    /// removed only once it has actually been folded in — dropping it on a run that migrates
+    /// nothing would lose the setting for good, with no way to retry.
     static func migrateSkipSponsorSegmentsIfNeeded(
         store: KeyValueStoring = NSUbiquitousKeyValueStore.default,
         defaults: UserDefaults = .standard
@@ -104,14 +109,13 @@ public extension SponsorBlockSegmentSetting {
             return nil
         }()
 
+        guard let wasSkipping = legacyValue else { return }
+
+        let migrated: SponsorBlockSegmentSetting = wasSkipping ? .showAndSkip : .show
+        Log.info("Migrating skipSponsorSegments (\(wasSkipping)) to sponsorSegmentSetting \(migrated.rawValue)")
+        store.set(Int64(migrated.rawValue), forKey: Const.sponsorSegmentSetting)
+
         store.removeObject(forKey: Const.skipSponsorSegments)
         defaults.removeObject(forKey: Const.skipSponsorSegments)
-
-        guard let wasSkipping = legacyValue,
-              store.object(forKey: Const.sponsorSegmentSetting) == nil else {
-            return
-        }
-        let migrated: SponsorBlockSegmentSetting = wasSkipping ? .showAndSkip : .show
-        store.set(Int64(migrated.rawValue), forKey: Const.sponsorSegmentSetting)
     }
 }

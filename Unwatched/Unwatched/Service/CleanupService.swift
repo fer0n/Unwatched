@@ -126,17 +126,30 @@ struct CleanupService {
         video.sponserBlockUpdateDate = nil
     }
 
-    static func deleteOldWatchedVideos(olderThan days: Int) {
-        Task.detached {
-            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
-            await actor.deleteOldWatchedVideos(olderThan: days)
+    /// Runs the due auto-delete jobs one after another, sharing a single actor.
+    ///
+    /// They must not run in parallel: each one deletes videos in its own context, and a model one
+    /// context hands out can have its row deleted by the other. Reading any property on it after
+    /// that traps in SwiftData (see `ModelContext.resolvedModel`).
+    static func runScheduledCleanup(
+        deleteWatchedOlderThan watchedDays: Int?,
+        deleteOrphanedOlderThan orphanedDays: Int?,
+        inboxLimit: Int?
+    ) {
+        if watchedDays == nil && orphanedDays == nil && inboxLimit == nil {
+            return
         }
-    }
-
-    static func deleteOrphanedVideos(olderThan days: Int) {
         Task.detached {
             let actor = CleanupActor(modelContainer: DataProvider.shared.container)
-            await actor.deleteOrphanedVideos(olderThan: days)
+            if let watchedDays {
+                await actor.deleteOldWatchedVideos(olderThan: watchedDays)
+            }
+            if let orphanedDays {
+                await actor.deleteOrphanedVideos(olderThan: orphanedDays)
+            }
+            if let inboxLimit {
+                _ = await actor.clearOldInboxEntries(keep: inboxLimit)
+            }
         }
     }
 

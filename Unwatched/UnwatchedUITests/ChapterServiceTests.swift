@@ -1451,7 +1451,7 @@ final class SponsorBlockSegmentSettingTests: XCTestCase {
 
     func testDefaults() {
         XCTAssertEqual(SponsorBlockSegmentSetting.sponsorDefault, .show)
-        XCTAssertEqual(SponsorBlockSegmentSetting.selfPromoDefault, .nothing)
+        XCTAssertEqual(SponsorBlockSegmentSetting.selfPromoDefault, .show)
     }
 
     func testUnsetKeysFallBackToDefaults() {
@@ -1461,8 +1461,8 @@ final class SponsorBlockSegmentSettingTests: XCTestCase {
             .show
         )
         XCTAssertEqual(
-            SponsorBlockSegmentSetting.stored(Const.selfPromoSegmentSetting, default: .nothing, store: store),
-            .nothing
+            SponsorBlockSegmentSetting.stored(Const.selfPromoSegmentSetting, default: .show, store: store),
+            .show
         )
     }
 
@@ -1522,7 +1522,7 @@ final class SponsorBlockSegmentSettingTests: XCTestCase {
             SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
             .showAndSkip
         )
-        // self promotion is new, it stays on its default
+        // self promotion isn't migrated, it stays unset and falls back to its (now `.show`) default
         XCTAssertNil(store.object(forKey: Const.selfPromoSegmentSetting))
         XCTAssertNil(store.object(forKey: Const.skipSponsorSegments))
     }
@@ -1546,7 +1546,9 @@ final class SponsorBlockSegmentSettingTests: XCTestCase {
         XCTAssertNil(store.object(forKey: Const.selfPromoSegmentSetting))
     }
 
-    func testMigrationDoesNotOverwriteExistingSetting() {
+    /// The legacy key surviving means the old toggle was the user's last word, so it wins over
+    /// a stale `sponsorSegmentSetting` rather than being dropped on the floor
+    func testLegacyKeyOverwritesExistingSetting() {
         let store = FakeKeyValueStore([
             Const.skipSponsorSegments: true,
             Const.sponsorSegmentSetting: Int64(SponsorBlockSegmentSetting.nothing.rawValue)
@@ -1555,9 +1557,22 @@ final class SponsorBlockSegmentSettingTests: XCTestCase {
 
         XCTAssertEqual(
             SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
-            .nothing
+            .showAndSkip
         )
         XCTAssertNil(store.object(forKey: Const.skipSponsorSegments))
+    }
+
+    /// Dropping the legacy key on a run that migrates nothing would lose the setting for good
+    func testMigrationWithoutLegacyKeyKeepsExistingSetting() {
+        let store = FakeKeyValueStore([
+            Const.sponsorSegmentSetting: Int64(SponsorBlockSegmentSetting.nothing.rawValue)
+        ])
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: makeDefaults())
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .nothing
+        )
     }
 
     /// A backup made before the iCloud move restores the legacy key into UserDefaults
