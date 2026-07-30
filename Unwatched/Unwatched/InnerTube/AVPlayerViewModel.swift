@@ -12,7 +12,7 @@ final class AVPlayerViewModel {
     // MARK: - View-facing state
 
     let avPlayer = AVPlayer()
-    internal(set) var loadError: Error? 
+    internal(set) var loadError: Error?
 
     // MARK: - Internal state
 
@@ -33,7 +33,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored var loadedVideoId: String?
     @ObservationIgnored var hasRetriedPlayback = false
     @ObservationIgnored var hasAppliedH264Cap = false
-    @ObservationIgnored var originalAudioLanguage: String? = nil
+    @ObservationIgnored var originalAudioLanguage: String?
     @ObservationIgnored var commandsSetUp = false
     @ObservationIgnored var artworkImage: UIImage?
     @ObservationIgnored var seekAnchor = SeekAnchor()
@@ -46,7 +46,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored var webViewHLSPoToken: String?
     @ObservationIgnored var webViewHLSProxyLoader: YTHLSProxyLoader?
     @ObservationIgnored var webViewHLSAudioContentIDs: [String: String?] = [:]
-    @ObservationIgnored var webViewHLSSelectedContentID: String? = nil
+    @ObservationIgnored var webViewHLSSelectedContentID: String?
     @ObservationIgnored var pendingSeekToTime: Double?
     @ObservationIgnored var captionFetchTask: Task<Void, Never>?
     @ObservationIgnored var captionTimeObserverToken: Any?

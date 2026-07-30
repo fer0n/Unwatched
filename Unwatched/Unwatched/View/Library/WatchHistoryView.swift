@@ -8,7 +8,7 @@ import SwiftData
 import UnwatchedShared
 
 struct WatchHistoryView: View {
-    @State var videoListVM = VideoListVM()
+    @State var videoListVM = VideoListVM(listId: "watchHistory")
 
     var body: some View {
         ZStack {

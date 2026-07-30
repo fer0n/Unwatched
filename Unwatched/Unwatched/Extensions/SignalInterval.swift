@@ -7,15 +7,25 @@ import Foundation
 
 extension UserDefaults {
     func shouldPerform(_ identifier: String, interval: SignalInterval) -> Bool {
-        let key = "lastSent_\(identifier)"
-        let lastSent = object(forKey: key) as? Date ?? Date.distantPast
-        let shouldSend = Date().timeIntervalSince(lastSent) >= interval.timeInterval
-
-        if shouldSend {
-            set(Date(), forKey: key)
+        guard isDue(identifier, interval: interval) else {
+            return false
         }
+        markPerformed(identifier)
+        return true
+    }
 
-        return shouldSend
+    /// Pair with `markPerformed` when work should only count as done once it finishes
+    func isDue(_ identifier: String, interval: SignalInterval) -> Bool {
+        let lastSent = object(forKey: lastSentKey(identifier)) as? Date ?? Date.distantPast
+        return Date().timeIntervalSince(lastSent) >= interval.timeInterval
+    }
+
+    func markPerformed(_ identifier: String) {
+        set(Date(), forKey: lastSentKey(identifier))
+    }
+
+    private func lastSentKey(_ identifier: String) -> String {
+        "lastSent_\(identifier)"
     }
 }
 

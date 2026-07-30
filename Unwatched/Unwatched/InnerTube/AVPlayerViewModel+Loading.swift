@@ -310,9 +310,9 @@ extension AVPlayerViewModel {
         let videoURL: URL? = {
             let candidates = info.formats.filter {
                 $0.mimeType.hasPrefix("video/mp4") &&
-                !$0.mimeType.contains(", ") &&
-                !$0.mimeType.contains("vp09") &&
-                $0.url != nil
+                    !$0.mimeType.contains(", ") &&
+                    !$0.mimeType.contains("vp09") &&
+                    $0.url != nil
             }
             return candidates.sorted { lhs, rhs in
                 let lH264 = lhs.mimeType.contains("avc1")

@@ -36,13 +36,6 @@ enum HistoryTokenStore {
         UserDefaults.standard.set(tokens, forKey: Const.historyTokens)
     }
 
-    /// Oldest token across all lists: history before this has been seen by every consumer.
-    static func lowestToken() -> DefaultHistoryToken? {
-        storedTokens().values
-            .compactMap { try? JSONDecoder().decode(DefaultHistoryToken.self, from: $0) }
-            .min()
-    }
-
     private static func storedTokens() -> [String: Data] {
         UserDefaults.standard.dictionary(forKey: Const.historyTokens) as? [String: Data] ?? [:]
     }
@@ -52,49 +45,85 @@ enum HistoryMaintenance {
     /// CloudKit tracks pending exports through the same history table, so transactions are
     /// only dropped once they are far older than any plausible sync lag. 7 days is the window
     /// Apple uses in "Consuming relevant store changes"; they document no CloudKit-specific
-    /// guidance, so the token check below is what actually keeps unsynced changes safe.
+    /// guidance.
     static let retentionDays = 7
 
-    static func pruneConsumedHistory() {
-        guard let token = HistoryTokenStore.lowestToken(),
-              let cutoff = Calendar.current.date(byAdding: .day, value: -retentionDays, to: .now) else {
+    /// Keeps each delete short enough not to stall the main thread behind the store's write lock
+    static let chunkDays = 1
+
+    static func pruneConsumedHistory() async {
+        let calendar = Calendar.current
+        guard let cutoff = calendar.date(byAdding: .day, value: -retentionDays, to: .now),
+              let oldest = oldestTransactionDate(),
+              oldest < cutoff else {
+            UserDefaults.standard.markPerformed(Const.cleanupHistoryTransactions)
             return
         }
 
-        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
-        descriptor.predicate = #Predicate {
-            $0.token < token && $0.timestamp < cutoff
-        }
-
+        let context = DataProvider.newContext()
+        var prunedUpTo = oldest
         do {
-            let context = DataProvider.newContext()
-            try context.deleteHistory(descriptor)
+            while prunedUpTo < cutoff {
+                prunedUpTo = min(
+                    calendar.date(byAdding: .day, value: chunkDays, to: prunedUpTo) ?? cutoff,
+                    cutoff
+                )
+                try deleteHistory(before: prunedUpTo, context: context)
+                await Task.yield()
+            }
+            UserDefaults.standard.markPerformed(Const.cleanupHistoryTransactions)
             Log.info("pruneConsumedHistory: pruned before \(cutoff)")
         } catch {
-            Log.error("pruneConsumedHistory: \(error)")
+            Log.error("pruneConsumedHistory: stopped at \(prunedUpTo): \(error)")
         }
+    }
+
+    private static func oldestTransactionDate() -> Date? {
+        // history is append-only, so the first transaction is the oldest (`sortBy` is iOS 26+)
+        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+        descriptor.fetchLimit = 1
+        let transactions = (try? DataProvider.newContext().fetchHistory(descriptor)) ?? []
+        return transactions.first?.timestamp
+    }
+
+    private static func deleteHistory(before date: Date, context: ModelContext) throws {
+        var descriptor = HistoryDescriptor<DefaultHistoryTransaction>()
+        descriptor.predicate = #Predicate {
+            $0.timestamp < date
+        }
+        try context.deleteHistory(descriptor)
     }
 }
 
 @Observable class TransactionVM<T: PersistentModel> {
+    /// Each list reads the history stream at its own pace, so they can't share a token
+    @ObservationIgnored private let listId: String
+
+    init(listId: String) {
+        self.listId = listId
+    }
+
     @ObservationIgnored
     var historyToken: DefaultHistoryToken? {
         get {
-            HistoryTokenStore.token(forModel: Self.modelKey)
+            HistoryTokenStore.token(forModel: tokenKey)
         }
         set {
             guard let newValue else {
                 return
             }
-            HistoryTokenStore.setToken(newValue, forModel: Self.modelKey)
+            HistoryTokenStore.setToken(newValue, forModel: tokenKey)
         }
     }
 
-    private static var modelKey: String {
-        String(describing: T.self)
+    var tokenKey: String {
+        "\(String(describing: T.self)).\(listId)"
     }
 
-    static func findTransactions(after token: DefaultHistoryToken?) -> [DefaultHistoryTransaction] {
+    static func findTransactions(
+        after token: DefaultHistoryToken?,
+        tokenKey: String
+    ) -> [DefaultHistoryTransaction] {
         do {
             return try fetchTransactions(after: token)
         } catch let error {
@@ -104,7 +133,7 @@ enum HistoryMaintenance {
             }
             // the bookmarked transaction is gone from the stream, so resync from what's left
             Log.info("findTransactions: history token expired, resetting")
-            HistoryTokenStore.removeToken(forModel: modelKey)
+            HistoryTokenStore.removeToken(forModel: tokenKey)
             return (try? fetchTransactions(after: nil)) ?? []
         }
     }
@@ -143,9 +172,10 @@ enum HistoryMaintenance {
     @MainActor
     func modelsHaveChangesUpdateToken() async -> Set<PersistentIdentifier>? {
         let token = historyToken
+        let tokenKey = tokenKey
         let task = Task.detached {
             var modelUpdates: Set<PersistentIdentifier>?
-            let transactions = TransactionVM.findTransactions(after: token)
+            let transactions = TransactionVM.findTransactions(after: token, tokenKey: tokenKey)
             Log.info("modelsHaveChanges: \(transactions.count)")
             if transactions.count <= 20 {
                 // if there's more than 20 changes, simply fetch everything

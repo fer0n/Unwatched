@@ -6,8 +6,8 @@ enum StreamQualityHelper {
         2160: 45_000_000,
         1440: 20_000_000,
         1080: 15_000_000,
-         720:  8_000_000,
-         480:  4_000_000,
+        720: 8_000_000,
+        480: 4_000_000
     ]
 
     static func peakBitRate(for height: Int) -> Double {

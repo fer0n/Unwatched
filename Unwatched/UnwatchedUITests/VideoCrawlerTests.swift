@@ -88,6 +88,61 @@ class VideoCrawlerTests: XCTestCase {
         XCTAssertEqual(firstVideo.updatedDate, updatedDate)
     }
 
+    // MARK: - malformed feeds
+
+    func testValidFeedCountsAsParsed() {
+        let data = VideoCrawlerTestData.rssFeedContent.data(using: .utf8)!
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: nil)
+
+        XCTAssertTrue(delegate.parsingSucceeded)
+        XCTAssertFalse(delegate.didStopAfterLimit)
+        XCTAssertTrue(VideoCrawler.hasUsableResult(delegate))
+    }
+
+    func testMalformedFeedIsNotTreatedAsEmptyFeed() {
+        let data = Data("<feed><title>Broken".utf8)
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: nil)
+
+        XCTAssertFalse(delegate.parsingSucceeded)
+        XCTAssertFalse(delegate.didStopAfterLimit)
+        XCTAssertTrue(delegate.videos.isEmpty)
+        XCTAssertFalse(
+            VideoCrawler.hasUsableResult(delegate),
+            "a broken feed must not pass as a successfully refreshed, empty one"
+        )
+    }
+
+    func testTruncatedFeedKeepsVideosParsedBeforeTheError() {
+        let content = VideoCrawlerTestData.rssFeedContent
+        guard let lastEntry = content.range(of: "<entry>", options: .backwards) else {
+            XCTFail("Test feed doesn't contain any entries")
+            return
+        }
+        // cut the feed off in the middle of the second entry
+        let truncated = content[..<lastEntry.upperBound] + "<yt:videoId>truncated"
+        let delegate = VideoCrawler.parseFeedData(data: Data(truncated.utf8), limitVideos: nil)
+
+        XCTAssertFalse(delegate.parsingSucceeded)
+        XCTAssertEqual(delegate.videos.count, 1)
+        XCTAssertTrue(
+            VideoCrawler.hasUsableResult(delegate),
+            "videos parsed before the error should still be used"
+        )
+    }
+
+    func testStoppingAfterVideoLimitIsNotAParseFailure() {
+        let data = VideoCrawlerTestData.rssFeedContent.data(using: .utf8)!
+        let delegate = VideoCrawler.parseFeedData(data: data, limitVideos: 0)
+
+        XCTAssertFalse(delegate.parsingSucceeded, "abortParsing() makes parsing fail")
+        XCTAssertTrue(delegate.didStopAfterLimit)
+        XCTAssertNotNil(delegate.subscriptionInfo)
+        XCTAssertTrue(
+            VideoCrawler.hasUsableResult(delegate),
+            "adding a subscription stops parsing on purpose, that's not a broken feed"
+        )
+    }
+
     func testfetchVideoDurationsQueueInbox() {
         let context = DataProvider.newContext()
         let video = Video.getDummy()
@@ -121,10 +176,98 @@ class VideoCrawlerTests: XCTestCase {
             }
         }
     }
+
+    // MARK: - fetchVideos (url fetch)
+
+    func testFetchVideosValidFeedReturnsVideos() async throws {
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
+        let sub = SendableSubscription(
+            link: url, title: "Working sub", videoPlacement: .defaultPlacement, isArchived: false
+        )
+
+        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+
+        XCTAssertEqual(returnedSub.title, sub.title)
+        XCTAssertGreaterThan(videos.count, 0, "Expected videos from a valid feed")
+    }
+
+    func testFetchVideosInvalidFeedReturnsEmptyWithoutThrowing() async throws {
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let sub = SendableSubscription(
+            link: url, title: "Broken sub", videoPlacement: .defaultPlacement, isArchived: false
+        )
+
+        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+
+        XCTAssertEqual(returnedSub.title, sub.title)
+        XCTAssertEqual(videos.count, 0, "A failing feed should return no videos instead of throwing")
+    }
+
+    func testLoadVideosPartialFailureStillLoadsWorkingSubscription() async throws {
+        let context = DataProvider.newContext()
+
+        let workingUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
+        let workingSub = Subscription(
+            link: workingUrl,
+            title: "Working sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.workingChannelId
+        )
+
+        let brokenUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let brokenSub = Subscription(
+            link: brokenUrl,
+            title: "Broken sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.brokenChannelId
+        )
+
+        context.insert(workingSub)
+        context.insert(brokenSub)
+        try context.save()
+
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let subIds = [workingSub.persistentModelID, brokenSub.persistentModelID]
+        // should not throw: the broken subscription must not abort the whole refresh
+        _ = try await repo.loadVideos(subIds, fetchDurations: false)
+
+        let workingSubId = workingSub.persistentModelID
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> {
+            $0.subscription?.persistentModelID == workingSubId
+        })
+        let videos = try context.fetch(fetch)
+        XCTAssertGreaterThan(videos.count, 0, "Working subscription's videos should still be loaded")
+    }
+
+    func testLoadVideosAllFailingSubscriptionsThrows() async throws {
+        let context = DataProvider.newContext()
+
+        let brokenUrl = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
+        let brokenSub = Subscription(
+            link: brokenUrl,
+            title: "Broken sub \(UUID())",
+            youtubeChannelId: VideoCrawlerTestData.brokenChannelId
+        )
+        context.insert(brokenSub)
+        try context.save()
+
+        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        do {
+            _ = try await repo.loadVideos([brokenSub.persistentModelID], fetchDurations: false)
+            XCTFail("Expected loadVideos to throw when every subscription fails")
+        } catch {
+            // expected
+        }
+    }
 }
 
 // swiftlint:disable all
 struct VideoCrawlerTestData {
+    /// A real, stable YouTube channel id whose feed returns 200.
+    static let workingChannelId = "UCnrAvt4i_2WV3yEKWyEUMlg"
+    /// A well-formed but nonexistent channel id whose feed returns 404.
+    static let brokenChannelId = "UCInvalidChannelIdForUnitTests0"
+
     static let subs: [(String, String)] = [
         (
             "Beardo Benjo",

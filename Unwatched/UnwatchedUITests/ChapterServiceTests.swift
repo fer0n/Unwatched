@@ -1416,6 +1416,309 @@ final class ChapterServiceTests: XCTestCase {
     }
 }
 
+/// In-memory stand-in for NSUbiquitousKeyValueStore so settings tests don't touch iCloud
+final class FakeKeyValueStore: KeyValueStoring {
+    private var values = [String: Any]()
+
+    init(_ values: [String: Any] = [:]) {
+        self.values = values
+    }
+
+    func object(forKey aKey: String) -> Any? {
+        values[aKey]
+    }
+
+    func set(_ anObject: Any?, forKey aKey: String) {
+        values[aKey] = anObject
+    }
+
+    func removeObject(forKey aKey: String) {
+        values.removeValue(forKey: aKey)
+    }
+
+    func longLong(forKey aKey: String) -> Int64 {
+        (values[aKey] as? Int64) ?? Int64((values[aKey] as? Int) ?? 0)
+    }
+
+    func bool(forKey aKey: String) -> Bool {
+        (values[aKey] as? Bool) ?? false
+    }
+}
+
+final class SponsorBlockSegmentSettingTests: XCTestCase {
+
+    // MARK: - Defaults
+
+    func testDefaults() {
+        XCTAssertEqual(SponsorBlockSegmentSetting.sponsorDefault, .show)
+        XCTAssertEqual(SponsorBlockSegmentSetting.selfPromoDefault, .nothing)
+    }
+
+    func testUnsetKeysFallBackToDefaults() {
+        let store = FakeKeyValueStore()
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .show
+        )
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.selfPromoSegmentSetting, default: .nothing, store: store),
+            .nothing
+        )
+    }
+
+    /// `.nothing` is stored as 0, which an unset key also reads back as
+    func testStoredNothingIsNotMistakenForUnset() {
+        let store = FakeKeyValueStore([
+            Const.sponsorSegmentSetting: Int64(SponsorBlockSegmentSetting.nothing.rawValue)
+        ])
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .nothing
+        )
+    }
+
+    func testStoredValueIsRead() {
+        let store = FakeKeyValueStore([
+            Const.selfPromoSegmentSetting: Int64(SponsorBlockSegmentSetting.showAndSkip.rawValue)
+        ])
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.selfPromoSegmentSetting, default: .nothing, store: store),
+            .showAndSkip
+        )
+    }
+
+    func testUnknownRawValueFallsBackToDefault() {
+        let store = FakeKeyValueStore([Const.sponsorSegmentSetting: Int64(99)])
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .show
+        )
+    }
+
+    func testShowsChaptersAndSkips() {
+        XCTAssertFalse(SponsorBlockSegmentSetting.nothing.showsChapters)
+        XCTAssertFalse(SponsorBlockSegmentSetting.nothing.skips)
+
+        XCTAssertTrue(SponsorBlockSegmentSetting.show.showsChapters)
+        XCTAssertFalse(SponsorBlockSegmentSetting.show.skips)
+
+        XCTAssertTrue(SponsorBlockSegmentSetting.showAndSkip.showsChapters)
+        XCTAssertTrue(SponsorBlockSegmentSetting.showAndSkip.skips)
+    }
+
+    // MARK: - Migration
+
+    private func makeDefaults(_ name: String = #function) -> UserDefaults {
+        let suite = "SponsorBlockSegmentSettingTests.\(name)"
+        UserDefaults.standard.removePersistentDomain(forName: suite)
+        return UserDefaults(suiteName: suite)!
+    }
+
+    func testMigratesEnabledAutoSkipToShowAndSkip() {
+        let store = FakeKeyValueStore([Const.skipSponsorSegments: true])
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: makeDefaults())
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .showAndSkip
+        )
+        // self promotion is new, it stays on its default
+        XCTAssertNil(store.object(forKey: Const.selfPromoSegmentSetting))
+        XCTAssertNil(store.object(forKey: Const.skipSponsorSegments))
+    }
+
+    func testMigratesDisabledAutoSkipToShow() {
+        let store = FakeKeyValueStore([Const.skipSponsorSegments: false])
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: makeDefaults())
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .nothing, store: store),
+            .show
+        )
+        XCTAssertNil(store.object(forKey: Const.skipSponsorSegments))
+    }
+
+    func testMigrationWithoutLegacyKeyWritesNothing() {
+        let store = FakeKeyValueStore()
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: makeDefaults())
+
+        XCTAssertNil(store.object(forKey: Const.sponsorSegmentSetting))
+        XCTAssertNil(store.object(forKey: Const.selfPromoSegmentSetting))
+    }
+
+    func testMigrationDoesNotOverwriteExistingSetting() {
+        let store = FakeKeyValueStore([
+            Const.skipSponsorSegments: true,
+            Const.sponsorSegmentSetting: Int64(SponsorBlockSegmentSetting.nothing.rawValue)
+        ])
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: makeDefaults())
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .nothing
+        )
+        XCTAssertNil(store.object(forKey: Const.skipSponsorSegments))
+    }
+
+    /// A backup made before the iCloud move restores the legacy key into UserDefaults
+    func testMigratesLegacyKeyFromUserDefaults() {
+        let store = FakeKeyValueStore()
+        let defaults = makeDefaults()
+        defaults.set(true, forKey: Const.skipSponsorSegments)
+
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: defaults)
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .showAndSkip
+        )
+        XCTAssertNil(defaults.object(forKey: Const.skipSponsorSegments))
+    }
+
+    func testMigrationIsIdempotent() {
+        let store = FakeKeyValueStore([Const.skipSponsorSegments: true])
+        let defaults = makeDefaults()
+
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: defaults)
+        store.set(Int64(SponsorBlockSegmentSetting.nothing.rawValue), forKey: Const.sponsorSegmentSetting)
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded(store: store, defaults: defaults)
+
+        XCTAssertEqual(
+            SponsorBlockSegmentSetting.stored(Const.sponsorSegmentSetting, default: .show, store: store),
+            .nothing
+        )
+    }
+}
+
+final class SponsorBlockSegmentBehaviorTests: XCTestCase {
+
+    // MARK: - Requested categories
+
+    func testDefaultSettingsRequestSponsorOnly() {
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: true,
+            sponsorSetting: .show,
+            selfPromoSetting: .nothing
+        )
+        XCTAssertEqual(categories, [.sponsor])
+    }
+
+    func testSelfPromoIsRequestedWhenEnabled() {
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: true,
+            sponsorSetting: .showAndSkip,
+            selfPromoSetting: .show
+        )
+        XCTAssertEqual(categories, [.sponsor, .selfpromo])
+    }
+
+    func testSponsorIsNotRequestedWhenTurnedOff() {
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: true,
+            sponsorSetting: .nothing,
+            selfPromoSetting: .showAndSkip
+        )
+        XCTAssertEqual(categories, [.selfpromo])
+    }
+
+    /// Without chapters of its own a video falls back to SponsorBlock's chapters
+    func testChapterSegmentsAreRequestedWhenVideoHasNoChapters() {
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: false,
+            sponsorSetting: .nothing,
+            selfPromoSetting: .nothing
+        )
+        XCTAssertEqual(categories, [.chapter])
+    }
+
+    func testNothingIsRequestedWhenBothCategoriesAreOff() {
+        let categories = SponsorBlockSegmentSetting.requestedCategories(
+            videoHasChapters: true,
+            sponsorSetting: .nothing,
+            selfPromoSetting: .nothing
+        )
+        XCTAssertTrue(categories.isEmpty)
+    }
+
+    // MARK: - Skipping
+
+    private var sampleChapters: [SendableChapter] {
+        [
+            .init(0, to: 10, category: .sponsor),
+            .init(10, to: 20, category: .selfpromo),
+            .init(20, to: 30, "Content")
+        ]
+    }
+
+    func testShowDoesNotSkip() {
+        var chapters = sampleChapters
+        ChapterService.skipSponsorBlockSegments(in: &chapters, sponsorSetting: .show, selfPromoSetting: .show)
+        XCTAssertEqual(chapters.map(\.isActive), [true, true, true])
+    }
+
+    func testShowAndSkipDeactivatesSponsorOnly() {
+        var chapters = sampleChapters
+        ChapterService.skipSponsorBlockSegments(in: &chapters, sponsorSetting: .showAndSkip, selfPromoSetting: .show)
+        XCTAssertEqual(chapters.map(\.isActive), [false, true, true])
+    }
+
+    func testShowAndSkipDeactivatesSelfPromoOnly() {
+        var chapters = sampleChapters
+        ChapterService.skipSponsorBlockSegments(in: &chapters, sponsorSetting: .show, selfPromoSetting: .showAndSkip)
+        XCTAssertEqual(chapters.map(\.isActive), [true, false, true])
+    }
+
+    func testShowAndSkipDeactivatesBoth() {
+        var chapters = sampleChapters
+        ChapterService.skipSponsorBlockSegments(
+            in: &chapters,
+            sponsorSetting: .showAndSkip,
+            selfPromoSetting: .showAndSkip
+        )
+        XCTAssertEqual(chapters.map(\.isActive), [false, false, true])
+    }
+
+    func testSkippingNeverTouchesRegularChapters() {
+        var chapters: [SendableChapter] = [.init(0, to: 10, "Intro"), .init(10, to: 20, category: .chapter)]
+        ChapterService.skipSponsorBlockSegments(
+            in: &chapters,
+            sponsorSetting: .showAndSkip,
+            selfPromoSetting: .showAndSkip
+        )
+        XCTAssertEqual(chapters.map(\.isActive), [true, true])
+    }
+
+    func testModelChaptersAreSkipped() {
+        let chapters = [
+            Chapter(title: nil, time: 0, endTime: 10, category: .sponsor),
+            Chapter(title: nil, time: 10, endTime: 20, category: .selfpromo),
+            Chapter(title: "Content", time: 20, endTime: 30, category: nil)
+        ]
+        ChapterService.skipSponsorBlockSegments(in: chapters, sponsorSetting: .showAndSkip, selfPromoSetting: .show)
+        XCTAssertEqual(chapters.map(\.isActive), [false, true, true])
+    }
+
+    // MARK: - API query
+
+    func testCategoryApiNames() {
+        XCTAssertEqual(ChapterCategory.sponsor.apiName, "sponsor")
+        XCTAssertEqual(ChapterCategory.selfpromo.apiName, "selfpromo")
+        XCTAssertEqual(ChapterCategory.chapter.apiName, "chapter")
+        XCTAssertNil(ChapterCategory.generated.apiName)
+    }
+
+    func testSkipSegmentsRequiresAtLeastOneCategory() async {
+        do {
+            _ = try await SponsorBlockAPI.skipSegments(for: "gIMOtNzjHL4", categories: [])
+            XCTFail("expected an error when no category is enabled")
+        } catch SponsorBlockError.noCategories {
+            // expected
+        } catch {
+            XCTFail("unexpected error: \(error)")
+        }
+    }
+}
+
 struct ChapterServiceTestData {
 
     static func getSponsoredVideo() -> Video {

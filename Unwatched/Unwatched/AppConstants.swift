@@ -17,7 +17,8 @@ extension Const {
         Const.allowOnMatch: false,
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
-        Const.skipSponsorSegments: false
+        Const.sponsorSegmentSetting: SponsorBlockSegmentSetting.sponsorDefault.rawValue,
+        Const.selfPromoSegmentSetting: SponsorBlockSegmentSetting.selfPromoDefault.rawValue
 
     ]
 

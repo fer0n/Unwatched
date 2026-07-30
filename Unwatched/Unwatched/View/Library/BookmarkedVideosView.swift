@@ -4,7 +4,7 @@ import UnwatchedShared
 
 struct BookmarkedVideosView: View {
 
-    @State var videoListVM = VideoListVM()
+    @State var videoListVM = VideoListVM(listId: "bookmarked")
 
     var body: some View {
         ZStack {

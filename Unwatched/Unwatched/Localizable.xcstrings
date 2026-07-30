@@ -16263,6 +16263,108 @@
         }
       }
     },
+    "segmentSettingNothing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nic"
+          }
+        }
+      }
+    },
+    "segmentSettingShow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż"
+          }
+        }
+      }
+    },
+    "segmentSettingShowAndSkip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anzeigen & überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show & Skip"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar y omitir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher et passer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż i pomiń"
+          }
+        }
+      }
+    },
     "selectAll" : {
       "localizations" : {
         "de" : {
@@ -16395,6 +16497,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wybierz plik"
+          }
+        }
+      }
+    },
+    "selfPromoSegments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigenwerbung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Self-Promotion"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autopromoción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-promotion"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autopromocja"
           }
         }
       }
@@ -17717,40 +17853,6 @@
         }
       }
     },
-    "skipSponsorSegments" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sponsor-Abschnitte überspringen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto-Skip Sponsor Segments"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Omitir automáticamente los segmentos de patrocinio"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Passer automatiquement les segments sponsorisés"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Automatycznie pomijaj segmenty sponsorowane"
-          }
-        }
-      }
-    },
     "skipSponsorSegmentsHelper" : {
       "localizations" : {
         "de" : {
@@ -17994,31 +18096,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SponsorBlock Kapitel einbeziehen"
+            "value" : "SponsorBlock Kapitel"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Include SponsorBlock Chapters"
+            "value" : "SponsorBlock Chapters"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Incluir capítulos de SponsorBlock"
+            "value" : "Capítulos de SponsorBlock"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inclure les chapitres SponsorBlock"
+            "value" : "Chapitres SponsorBlock"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uwzględnij rozdziały z SponsorBlock"
+            "value" : "Rozdziały SponsorBlock"
           }
         }
       }
@@ -18087,6 +18189,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jeśli dostępne, zostaną wyświetlone rozdziały SponsorBlock. Jeśli wideo ma już rozdziały, dodane zostaną tylko segmenty sponsorów. Jeśli wideo nie ma rozdziałów, zostaną użyte rozdziały SponsorBlock."
+          }
+        }
+      }
+    },
+    "sponsorSegments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sponsor"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sponsor"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patrocinador"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sponsor"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sponsor"
           }
         }
       }

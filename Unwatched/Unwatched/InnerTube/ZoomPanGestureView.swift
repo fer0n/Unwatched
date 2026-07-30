@@ -32,7 +32,7 @@ struct ZoomPanModifier: ViewModifier {
             // the tail after one finger lifts — so nothing jumps and the single-finger swipe /
             // long-press gestures stacked below never hijack it mid-zoom.
             .gesture(PinchPanRepresentable(
-                zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
+                        zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
         #endif
     }
 }
@@ -142,19 +142,19 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
     }
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
-        var getZoom:         () -> CGFloat     = { 1 }
-        var setZoom:         (CGFloat) -> Void = { _ in }
-        var getOffset:       () -> CGSize      = { .zero }
-        var setOffset:       (CGSize) -> Void  = { _ in }
-        var setGesturing:    (Bool) -> Void    = { _ in }
+        var getZoom: () -> CGFloat     = { 1 }
+        var setZoom: (CGFloat) -> Void = { _ in }
+        var getOffset: () -> CGSize      = { .zero }
+        var setOffset: (CGSize) -> Void  = { _ in }
+        var setGesturing: (Bool) -> Void    = { _ in }
         var getContentFrame: () -> CGRect      = { .zero }
 
         // Baseline captured at `.began` and re-captured whenever the finger count changes.
-        private var startZoom:        CGFloat = 1
-        private var startOffset:      CGSize  = .zero
-        private var startCentroid:    CGPoint = .zero
-        private var startSpread:      CGFloat = 0
-        private var lastTouchCount:   Int     = 0
+        private var startZoom: CGFloat = 1
+        private var startOffset: CGSize  = .zero
+        private var startCentroid: CGPoint = .zero
+        private var startSpread: CGFloat = 0
+        private var lastTouchCount: Int     = 0
 
         func gestureRecognizer(_ gr: UIGestureRecognizer,
                                shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
@@ -198,7 +198,7 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
                 } else if getZoom() > 1 {
                     // One finger left from a pinch: keep panning the zoomed video with it
                     // (matches Photos) instead of freezing.
-                    let newOff = CGSize(width:  startOffset.width  + point.x - startCentroid.x,
+                    let newOff = CGSize(width: startOffset.width  + point.x - startCentroid.x,
                                         height: startOffset.height + point.y - startCentroid.y)
                     setOffset(clamped(newOff, zoom: getZoom(), size: size))
                 }
@@ -228,7 +228,7 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
             guard zoom > 1 else { return .zero }
             let mx = size.width  * (zoom - 1) / 2
             let my = size.height * (zoom - 1) / 2
-            return CGSize(width:  max(-mx, min(mx, off.width)),
+            return CGSize(width: max(-mx, min(mx, off.width)),
                           height: max(-my, min(my, off.height)))
         }
     }

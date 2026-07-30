@@ -102,7 +102,10 @@ extension VideoActor {
         sub.videos?.append(video)
     }
 
-    /// Fetches all videos for the specified subscription
+    /// Fetches all videos for the specified subscription.
+    ///
+    /// A failing feed is recorded in `fetchErrors` and returned as an empty result rather than thrown,
+    /// so one broken subscription can't abort the refresh for all the others. Cancellation still throws.
     func fetchVideos(_ sub: SendableSubscription) async throws -> (SendableSubscription, [SendableVideo]) {
         guard let url = sub.link else {
             Log.info("sub has no url: \(sub.title)")
@@ -112,10 +115,14 @@ extension VideoActor {
             let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
             return (sub, videos)
         } catch {
+            if Task.isCancelled {
+                throw error
+            }
             Log.error(
                 "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
             )
-            throw error
+            fetchErrors.append(error)
+            return (sub, [])
         }
     }
 

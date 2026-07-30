@@ -157,6 +157,112 @@ class CleanupServiceTests: XCTestCase {
         }
     }
 
+    func testDedupeAcrossDifferentUrlsKeepsState() async {
+        let context = DataProvider.newContext()
+        let youtubeId = "differentUrls-\(UUID().uuidString)"
+
+        let sub = Subscription.getDummy()
+        context.insert(sub)
+
+        let keeper = Video(
+            title: "keeper-\(youtubeId)",
+            url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(keeper)
+        sub.videos?.append(keeper)
+
+        let duplicate = Video(
+            title: "duplicate-\(youtubeId)",
+            url: URL(string: "https://youtu.be/\(youtubeId)"),
+            youtubeId: youtubeId,
+            elapsedSeconds: 120,
+            watchedDate: .now,
+            bookmarkedDate: .now
+        )
+        context.insert(duplicate)
+        let inboxEntry = InboxEntry(duplicate)
+        context.insert(inboxEntry)
+        duplicate.inboxEntry = inboxEntry
+
+        try? context.save()
+
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+        _ = await task.value
+
+        do {
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.youtubeId == youtubeId })
+            let videos = try context.fetch(fetch)
+
+            XCTAssertEqual(videos.count, 1, "differing urls prevented dedup")
+            let kept = videos.first
+            XCTAssertEqual(kept?.title, "keeper-\(youtubeId)", "kept wrong duplicate")
+            XCTAssertEqual(kept?.elapsedSeconds, 120, "watch progress lost during dedup")
+            XCTAssertNotNil(kept?.watchedDate, "watched date lost during dedup")
+            XCTAssertNotNil(kept?.bookmarkedDate, "bookmark lost during dedup")
+            XCTAssertNotNil(kept?.inboxEntry, "inbox entry lost during dedup")
+
+            cleanUp(videos: videos, sub: sub, context: context)
+        } catch {
+            XCTFail("Fetching failed: \(error)")
+        }
+    }
+
+    func testDedupeMovesQueueEntryToKeeper() async {
+        let context = DataProvider.newContext()
+        let youtubeId = "queueMove-\(UUID().uuidString)"
+
+        let sub = Subscription.getDummy()
+        context.insert(sub)
+
+        let keeper = Video(
+            title: "keeper-\(youtubeId)",
+            url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(keeper)
+        sub.videos?.append(keeper)
+
+        let duplicate = Video(
+            title: "duplicate-\(youtubeId)",
+            url: URL(string: "https://youtu.be/\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(duplicate)
+        let queueEntry = QueueEntry(video: duplicate, order: 3)
+        context.insert(queueEntry)
+        duplicate.queueEntry = queueEntry
+
+        try? context.save()
+
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+        _ = await task.value
+
+        do {
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.youtubeId == youtubeId })
+            let videos = try context.fetch(fetch)
+
+            XCTAssertEqual(videos.count, 1)
+            let kept = videos.first
+            XCTAssertEqual(kept?.title, "keeper-\(youtubeId)", "kept wrong duplicate")
+            XCTAssertEqual(kept?.queueEntry?.order, 3, "queue entry lost during dedup")
+            XCTAssertNil(kept?.inboxEntry, "video must never have an inbox and a queue entry")
+
+            cleanUp(videos: videos, sub: sub, context: context)
+        } catch {
+            XCTFail("Fetching failed: \(error)")
+        }
+    }
+
+    /// The container is shared between tests, testDedup asserts on the total video count.
+    private func cleanUp(videos: [Video], sub: Subscription, context: ModelContext) {
+        for video in videos {
+            CleanupService.deleteVideo(video, context)
+        }
+        context.delete(sub)
+        try? context.save()
+    }
+
     func testDedupeWatchTimeEntry() async {
         let context = DataProvider.newContext()
 

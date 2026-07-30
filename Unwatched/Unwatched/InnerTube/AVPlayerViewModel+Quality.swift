@@ -121,12 +121,12 @@ extension AVPlayerViewModel {
         if height == 0 {
             videoURL = info.formats.filter {
                 $0.mimeType.hasPrefix("video/mp4") && !$0.mimeType.contains(", ") &&
-                !$0.mimeType.contains("vp09") && $0.url != nil
+                    !$0.mimeType.contains("vp09") && $0.url != nil
             }.sorted { ($0.bitrate ?? 0) > ($1.bitrate ?? 0) }.first?.url
         } else {
             videoURL = info.formats.filter {
                 $0.height == height && $0.mimeType.hasPrefix("video/") &&
-                !$0.mimeType.contains("vp09") && $0.url != nil
+                    !$0.mimeType.contains("vp09") && $0.url != nil
             }.sorted { ($0.bitrate ?? 0) > ($1.bitrate ?? 0) }.first?.url
         }
 

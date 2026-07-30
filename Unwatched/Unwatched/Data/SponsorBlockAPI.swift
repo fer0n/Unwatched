@@ -10,11 +10,18 @@ import UnwatchedShared
 struct SponsorBlockAPI {
     static let baseUrl = "https://sponsor.ajay.app/api/"
 
-    static func skipSegments(for videoID: String, allSegments: Bool) async throws -> [SponsorBlockSegmentModel] {
-        let segmentsQuery = allSegments
-            ? #"&categories=["sponsor","selfpromo","chapter"]"#
-            : ""
-        let actionTypeQuery = allSegments ? #"&actionTypes=["chapter","skip"]"# : ""
+    static func skipSegments(
+        for videoID: String,
+        categories: [ChapterCategory]
+    ) async throws -> [SponsorBlockSegmentModel] {
+        let names = categories.compactMap(\.apiName)
+        guard !names.isEmpty else {
+            throw SponsorBlockError.noCategories
+        }
+        let segmentsQuery = "&categories=[" + names.map { "\"\($0)\"" }.joined(separator: ",") + "]"
+
+        // chapter segments are only returned when the chapter action type is requested explicitly
+        let actionTypeQuery = categories.contains(.chapter) ? #"&actionTypes=["chapter","skip"]"# : ""
         let urlString = baseUrl + "skipSegments?videoID=\(videoID)" + segmentsQuery + actionTypeQuery
         guard let url = URL(string: urlString) else {
             throw SponsorBlockError.noValidUrl
@@ -68,4 +75,5 @@ struct SponsorBlockSegmentModel: Codable {
 enum SponsorBlockError: Error {
     case httpRequestFailed(String)
     case noValidUrl
+    case noCategories
 }

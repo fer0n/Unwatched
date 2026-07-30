@@ -155,9 +155,9 @@ struct SetupView: View {
             }
         }
 
-        if UserDefaults.standard.shouldPerform(Const.cleanupHistoryTransactions, interval: .daily) {
+        if UserDefaults.standard.isDue(Const.cleanupHistoryTransactions, interval: .daily) {
             Task.detached {
-                HistoryMaintenance.pruneConsumedHistory()
+                await HistoryMaintenance.pruneConsumedHistory()
             }
         }
 

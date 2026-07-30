@@ -7,7 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct SubscriptionTitleFitlerPreview: View {
-    @State var videoListVM = VideoListVM(initialBatchSize: 800)
+    @State var videoListVM = VideoListVM(listId: "subscriptionTitleFilterPreview", initialBatchSize: 800)
     @Bindable var subscription: Subscription
 
     var body: some View {

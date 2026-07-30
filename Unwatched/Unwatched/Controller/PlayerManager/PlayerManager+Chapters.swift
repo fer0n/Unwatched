@@ -226,7 +226,7 @@ extension PlayerManager {
         let sendableChapters = chapters.map(\.toExport)
         let duration = video?.duration
         if let mergedChapters = video?.mergedChapters {
-            ChapterService.skipSponsorSegments(in: mergedChapters)
+            ChapterService.skipSponsorBlockSegments(in: mergedChapters)
             self.handleChapterChange()
         }
 
@@ -244,7 +244,7 @@ extension PlayerManager {
                     return
                 }
                 Log.info("SponsorBlock: Refreshed")
-                ChapterService.skipSponsorSegments(in: &newChapters)
+                ChapterService.skipSponsorBlockSegments(in: &newChapters)
 
                 let modelContext = DataProvider.mainContext
                 ChapterService.updateIfNeeded(newChapters, video, modelContext)

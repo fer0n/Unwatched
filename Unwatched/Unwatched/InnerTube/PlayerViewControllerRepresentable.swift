@@ -78,6 +78,6 @@ final class AVPlayerLayerViewController: UIViewController {
 // Tracks the intended seek target between rapid seeks so relative seeks don't
 // re-read avPlayer.currentTime(), which lags behind until a seek completes.
 final class SeekAnchor {
-    var time: Double? = nil
+    var time: Double?
 }
 #endif

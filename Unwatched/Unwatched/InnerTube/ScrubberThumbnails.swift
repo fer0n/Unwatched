@@ -183,8 +183,8 @@ final class ScrubberThumbnailProvider {
                 self.spec = spec
                 if let level = spec?.preferredLevel {
                     Log.info("[Storyboard] ready for \(videoId): \(spec?.levels.count ?? 0) level(s); "
-                        + "using \(level.thumbWidth)x\(level.thumbHeight), \(level.totalFrames) frames, "
-                        + "grid \(level.cols)x\(level.rows)")
+                                + "using \(level.thumbWidth)x\(level.thumbHeight), \(level.totalFrames) frames, "
+                                + "grid \(level.cols)x\(level.rows)")
                 } else {
                     Log.warning("[Storyboard] no usable spec for \(videoId)")
                 }
@@ -227,7 +227,7 @@ final class ScrubberThumbnailProvider {
         let bounds = CGRect(x: 0, y: 0, width: sheet.width, height: sheet.height)
         guard bounds.contains(tile.cropRect) else {
             Log.warning("[Storyboard] crop \(tile.cropRect.debugDescription) out of bounds for "
-                + "sheet \(sheet.width)x\(sheet.height) (frame \(tile.frameIndex))")
+                            + "sheet \(sheet.width)x\(sheet.height) (frame \(tile.frameIndex))")
             return nil
         }
         return sheet.cropping(to: tile.cropRect)
@@ -285,4 +285,3 @@ struct ScrubberThumbnailView: View {
         }
     }
 }
-

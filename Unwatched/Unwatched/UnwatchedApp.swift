@@ -27,6 +27,7 @@ struct UnwatchedApp: App {
         WindowGroup {
             SetupView()
                 .task {
+                    SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
                     try? Tips.configure([
                         .displayFrequency(.immediate),
                         .datastoreLocation(.applicationDefault)

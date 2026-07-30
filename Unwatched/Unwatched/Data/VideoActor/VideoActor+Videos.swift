@@ -8,6 +8,9 @@ import UnwatchedShared
 @ModelActor actor VideoActor {
     var newVideos = NewVideosNotificationInfo()
 
+    /// Feed fetch failures collected during the current `loadVideos` run.
+    var fetchErrors = [any Error]()
+
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
@@ -162,6 +165,7 @@ import UnwatchedShared
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
+        fetchErrors = []
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()
@@ -202,6 +206,10 @@ import UnwatchedShared
         await deferredVideosTask.value
 
         try modelContext.save()
+
+        if fetchErrors.count == sendableSubs.count, let firstError = fetchErrors.first {
+            throw firstError
+        }
         return newVideos
     }
 
@@ -242,7 +250,6 @@ import UnwatchedShared
         let addedVideos = triageSubscriptionVideos(subModel,
                                                    videos: videoModels,
                                                    defaultPlacement: defaultPlacement)
-        subModel.mostRecentVideoDate = mostRecentDate
         updateRecentVideoDate(subModel, mostRecentDate)
         return (videoModels, addedVideos)
     }
@@ -317,40 +324,6 @@ import UnwatchedShared
         return videosWithImage
     }
 
-    static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
-        do {
-            if let url = imageUrl {
-                let imageData = try await ImageService.loadImageData(url: url)
-                if let isShort = ImageService.isYtShort(imageData) {
-                    return (isShort, imageData)
-                }
-            }
-        } catch {
-            Log.error("isYtShort detection failed to load image data: \(error)")
-        }
-        return (nil, nil)
-    }
-
-    func getDefaultVideoPlacement() -> DefaultVideoPlacement {
-        let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
-        let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
-
-        let shortsSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
-        let shortsSetting = ShortsSetting(rawValue: Int(shortsSettingRaw)) ?? .show
-        let showShorts = shortsSetting != .hide
-
-        let filterVideoTitleText = NSUbiquitousKeyValueStore.default.string(forKey: Const.filterVideoTitleText) ?? ""
-        let allowOnMatch = NSUbiquitousKeyValueStore.default.bool(forKey: Const.allowOnMatch)
-
-        let info = DefaultVideoPlacement(
-            videoPlacement: videoPlacement,
-            hideShorts: !showShorts,
-            filterVideoTitleText: filterVideoTitleText,
-            allowOnMatch: allowOnMatch
-        )
-        return info
-    }
-
     private func createVideo(youtubeId: String? = nil,
                              sendableVideo: SendableVideo? = nil,
                              url: URL? = nil) async throws -> (video: Video, feedTitle: String?)? {
@@ -406,5 +379,41 @@ import UnwatchedShared
         return videos?.compactMap {
             $0.toExportWithSubscription
         } ?? []
+    }
+}
+
+extension VideoActor {
+    static func isYtShort(_ imageUrl: URL?) async -> (Bool?, Data?) {
+        do {
+            if let url = imageUrl {
+                let imageData = try await ImageService.loadImageData(url: url)
+                if let isShort = ImageService.isYtShort(imageData) {
+                    return (isShort, imageData)
+                }
+            }
+        } catch {
+            Log.error("isYtShort detection failed to load image data: \(error)")
+        }
+        return (nil, nil)
+    }
+
+    func getDefaultVideoPlacement() -> DefaultVideoPlacement {
+        let videoPlacementRaw = UserDefaults.standard.integer(forKey: Const.defaultVideoPlacement)
+        let videoPlacement = VideoPlacement(rawValue: videoPlacementRaw) ?? .inbox
+
+        let shortsSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+        let shortsSetting = ShortsSetting(rawValue: Int(shortsSettingRaw)) ?? .show
+        let showShorts = shortsSetting != .hide
+
+        let filterVideoTitleText = NSUbiquitousKeyValueStore.default.string(forKey: Const.filterVideoTitleText) ?? ""
+        let allowOnMatch = NSUbiquitousKeyValueStore.default.bool(forKey: Const.allowOnMatch)
+
+        let info = DefaultVideoPlacement(
+            videoPlacement: videoPlacement,
+            hideShorts: !showShorts,
+            filterVideoTitleText: filterVideoTitleText,
+            allowOnMatch: allowOnMatch
+        )
+        return info
     }
 }

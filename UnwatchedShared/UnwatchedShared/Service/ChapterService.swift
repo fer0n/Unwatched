@@ -236,26 +236,31 @@ public struct ChapterService {
         return Double(equalCount) / Double(minCount)
     }
 
-    private static var skipSponsorBlock: Bool {
-        if NSUbiquitousKeyValueStore.default.bool(forKey: Const.skipSponsorSegments) {
-            return true
-        }
-        Log.info("SponsorBlock: skipping sponsor segments is disabled")
-        return false
-    }
-
-    public static func skipSponsorSegments(in chapters: inout [SendableChapter]) {
-        if !skipSponsorBlock { return }
-
-        for (index, chapter) in chapters.enumerated() where chapter.category == .sponsor {
+    /// Only ever deactivates chapters: `isActive` can also be toggled by hand, so a segment
+    /// that's no longer skipped stays as the user left it until the chapters are rebuilt.
+    public static func skipSponsorBlockSegments(
+        in chapters: inout [SendableChapter],
+        sponsorSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsor,
+        selfPromoSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromo
+    ) {
+        for (index, chapter) in chapters.enumerated()
+        where SponsorBlockSegmentSetting.skips(
+            chapter.category, sponsorSetting: sponsorSetting, selfPromoSetting: selfPromoSetting
+        ) {
             Log.info("skipping: \(chapter)")
             chapters[index].isActive = false
         }
     }
 
-    public static func skipSponsorSegments(in chapters: [Chapter]) {
-        guard skipSponsorBlock else { return }
-        for chapter in chapters where chapter.category == .sponsor {
+    public static func skipSponsorBlockSegments(
+        in chapters: [Chapter],
+        sponsorSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.sponsor,
+        selfPromoSetting: SponsorBlockSegmentSetting = SponsorBlockSegmentSetting.selfPromo
+    ) {
+        for chapter in chapters
+        where SponsorBlockSegmentSetting.skips(
+            chapter.category, sponsorSetting: sponsorSetting, selfPromoSetting: selfPromoSetting
+        ) {
             Log.info("skipping: \(chapter)")
             chapter.isActive = false
         }

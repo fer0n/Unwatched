@@ -39,6 +39,8 @@ extension UserDataService {
                 UserDefaults.standard.setValue(value.value, forKey: key)
             }
         }
+        // a backup can still carry the legacy skipSponsorSegments toggle
+        SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
         #if os(iOS)
         NotificationManager.ensurePermissionsAreGivenForSettings()
         #endif

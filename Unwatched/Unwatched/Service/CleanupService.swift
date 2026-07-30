@@ -393,13 +393,22 @@ struct CleanupService {
             return
         }
         removeMultipleEntries(from: videos)
-        let duplicates = getDuplicates(from: videos, keySelector: {
-            ($0.url?.absoluteString ?? "")
-        }, sort: sortVideos)
-        duplicateInfo.countVideos = duplicates.count
-        for duplicate in duplicates {
-            CleanupService.deleteVideo(duplicate, modelContext)
+
+        // keyed by youtubeId: the same video can be stored under different urls
+        let grouped = Dictionary(grouping: videos, by: \.youtubeId)
+        var removedCount = 0
+        for (_, group) in grouped where group.count > 1 {
+            let sortedGroup = sortVideos(group)
+            guard let keeper = sortedGroup.first else {
+                continue
+            }
+            for duplicate in sortedGroup.dropFirst() {
+                mergeVideoState(from: duplicate, into: keeper)
+                CleanupService.deleteVideo(duplicate, modelContext)
+                removedCount += 1
+            }
         }
+        duplicateInfo.countVideos = removedCount
     }
 
     /// Removes inbox entry for videos that have both an inbox and queue entry, which should never be the case.
@@ -535,6 +544,52 @@ struct CleanupService {
 
     func sortWatchTimeEntries(_ entries: [WatchTimeEntry]) -> [WatchTimeEntry] {
         entries.sorted { $0.watchTime > $1.watchTime }
+    }
+}
+
+extension CleanupActor {
+    func mergeVideoState(from duplicate: Video, into keeper: Video) {
+        if keeper.subscription == nil {
+            keeper.subscription = duplicate.subscription
+        }
+        if keeper.youtubeChannelId == nil {
+            keeper.youtubeChannelId = duplicate.youtubeChannelId
+        }
+        if let duplicateWatchedDate = duplicate.watchedDate,
+           duplicateWatchedDate > (keeper.watchedDate ?? .distantPast) {
+            keeper.watchedDate = duplicateWatchedDate
+        }
+        if (duplicate.elapsedSeconds ?? 0) > (keeper.elapsedSeconds ?? 0) {
+            keeper.elapsedSeconds = duplicate.elapsedSeconds
+        }
+        if keeper.bookmarkedDate == nil {
+            keeper.bookmarkedDate = duplicate.bookmarkedDate
+        }
+        if keeper.deferDate == nil {
+            keeper.deferDate = duplicate.deferDate
+        }
+        moveEntries(from: duplicate, to: keeper)
+    }
+
+    /// Moves entries over before they get deleted along with the duplicate.
+    /// A video must never have an inbox and a queue entry at the same time.
+    private func moveEntries(from duplicate: Video, to keeper: Video) {
+        if let queueEntry = duplicate.queueEntry {
+            if let keeperQueueEntry = keeper.queueEntry {
+                keeperQueueEntry.order = min(keeperQueueEntry.order, queueEntry.order)
+            } else if keeper.inboxEntry == nil {
+                duplicate.queueEntry = nil
+                queueEntry.video = keeper
+                keeper.queueEntry = queueEntry
+            }
+        }
+        if let inboxEntry = duplicate.inboxEntry,
+           keeper.inboxEntry == nil,
+           keeper.queueEntry == nil {
+            duplicate.inboxEntry = nil
+            inboxEntry.video = keeper
+            keeper.inboxEntry = inboxEntry
+        }
     }
 }
 

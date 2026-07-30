@@ -28,7 +28,7 @@ extension InnerTubeAPI {
         guard let storyboards = data["storyboards"] as? [String: Any] else {
             let status = (data["playabilityStatus"] as? [String: Any])?["status"] as? String ?? "?"
             Log.info("[Storyboard] \(videoId): response has no `storyboards` field "
-                + "(playabilityStatus=\(status); top keys: \(data.keys.sorted().joined(separator: ", ")))")
+                        + "(playabilityStatus=\(status); top keys: \(data.keys.sorted().joined(separator: ", ")))")
             return nil
         }
         guard
@@ -36,7 +36,7 @@ extension InnerTubeAPI {
             let spec = renderer["spec"] as? String
         else {
             Log.info("[Storyboard] \(videoId): no playerStoryboardSpecRenderer.spec "
-                + "(storyboards keys: \(storyboards.keys.sorted().joined(separator: ", ")))")
+                        + "(storyboards keys: \(storyboards.keys.sorted().joined(separator: ", ")))")
             return nil
         }
         guard let parsed = StoryboardSpec(spec: spec) else {
