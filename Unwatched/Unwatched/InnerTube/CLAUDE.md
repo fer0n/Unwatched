@@ -29,7 +29,7 @@ so future merges are a straight diff-and-apply):
 
 - **Repo:** `../SmartTubeIOS` (sibling checkout, alongside this repo)
 - **Package path:** `SmartTubeIOS/Sources/SmartTubeIOSCore/`
-- **Last synced commit:** `1af1440` — update after every sync
+- **Last synced commit:** `efb7dc5` — update after every sync
 
 ---
 

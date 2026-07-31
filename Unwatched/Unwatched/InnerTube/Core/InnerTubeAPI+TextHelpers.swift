@@ -15,6 +15,24 @@ extension InnerTubeAPI {
         return nil
     }
 
+    /// For collab videos YouTube renders the author line as multiple runs, e.g.
+    /// [{"text":"Inequality Media", browseId:"UC_IM"}, {"text":" and "},
+    ///  {"text":"Robert Reich", browseId:"UC_RBR"}].
+    /// extractText() joins them all → "Inequality Media and Robert Reich".
+    /// This helper returns only the run whose browseEndpoint.browseId matches
+    /// `channelId`, falling back to the full extractText result when no run matches.
+    func extractText(_ dict: [String: Any], matchingChannelId channelId: String) -> String? {
+        guard let runs = dict["runs"] as? [[String: Any]] else {
+            return extractText(dict)
+        }
+        for run in runs {
+            guard let text = run["text"] as? String, !text.trimmingCharacters(in: .whitespaces).isEmpty else { continue }
+            let browseId = ((run["navigationEndpoint"] as? [String: Any])?["browseEndpoint"] as? [String: Any])?["browseId"] as? String
+            if browseId == channelId { return text }
+        }
+        return extractText(dict)
+    }
+
     func parseDuration(_ text: String) -> TimeInterval? {
         let parts = text.split(separator: ":").compactMap { Int($0) }
         switch parts.count {
