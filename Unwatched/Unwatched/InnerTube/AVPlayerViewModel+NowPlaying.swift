@@ -136,7 +136,7 @@ extension AVPlayerViewModel {
             return
         }
 
-        let raw = elapsedOverride ?? avPlayer.currentTime().seconds
+        let raw = elapsedOverride ?? lastObservedTime ?? avPlayer.currentTime().seconds
         let elapsed = (raw.isNaN || raw.isInfinite) ? 0.0 : raw
         var info: [String: Any] = [
             MPMediaItemPropertyTitle: video.title,

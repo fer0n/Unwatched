@@ -31,6 +31,10 @@ final class AVPlayerViewModel {
     @ObservationIgnored var rateObserverTask: Task<Void, Never>?
     @ObservationIgnored var timeObserverToken: Any?
     @ObservationIgnored var timeObserverTickCount = 0
+    /// Last playback position seen by the periodic observer. Stands in for
+    /// `avPlayer.currentTime()` on the play/pause path, which blocks the main thread
+    /// for tens of milliseconds right after a rate change.
+    @ObservationIgnored var lastObservedTime: Double?
 
     @ObservationIgnored var loadedVideoId: String?
     @ObservationIgnored var hasRetriedPlayback = false
@@ -77,6 +81,7 @@ final class AVPlayerViewModel {
             guard !seconds.isNaN, !seconds.isInfinite else { return }
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                lastObservedTime = seconds
                 let seekInFlight = seekAnchor.time != nil
                     || player.seekAbsolute != nil
                 if player.isPlaying {
@@ -115,6 +120,7 @@ final class AVPlayerViewModel {
         Log.info("loadVideo: \(videoId)")
         guard let videoId, videoId != loadedVideoId else { return }
         loadedVideoId = videoId
+        lastObservedTime = nil
         hasRetriedPlayback = false
         hasAppliedH264Cap = false
         loadError = nil
@@ -223,6 +229,7 @@ final class AVPlayerViewModel {
     @MainActor
     func applyAbsoluteSeek() {
         guard let time = player.seekAbsolute else { return }
+        lastObservedTime = time
         seekAnchor.time = time
         let anchor = seekAnchor
         avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),

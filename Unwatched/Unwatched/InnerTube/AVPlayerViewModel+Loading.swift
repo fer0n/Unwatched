@@ -788,21 +788,46 @@ extension AVPlayerViewModel {
     @MainActor
     func syncPlayPause(persistTime: Bool = true) {
         if player.isPlaying {
-            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
-            try? AVAudioSession.sharedInstance().setActive(true)
+            activateAudioSession()
             avPlayer.rate = Float(player.playbackSpeed)
         } else {
             avPlayer.pause()
             if persistTime {
-                let t = avPlayer.currentTime().seconds
-                if !t.isNaN && !t.isInfinite {
-                    player.updateElapsedTime(t)
-                    if let videoId = player.video?.youtubeId {
-                        StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: t)
-                    }
-                }
+                persistPlaybackPosition()
             }
         }
+    }
+
+    /// `setCategory` is a cross-process call that costs milliseconds every time, so it only
+    /// runs when the session isn't already configured the way playback needs it.
+    @MainActor
+    private func activateAudioSession() {
+        let session = AVAudioSession.sharedInstance()
+        if session.category != .playback || session.mode != .spokenAudio {
+            try? session.setCategory(.playback, mode: .spokenAudio)
+        }
+        try? session.setActive(true)
+    }
+
+    /// Reads the player clock off the main thread: `AVPlayer.currentTime()` blocks for tens of
+    /// milliseconds right after a rate change, which would stall the pause the user just asked for.
+    @MainActor
+    private func persistPlaybackPosition() {
+        let avp = avPlayer
+        Task { @MainActor [weak self] in
+            let time = await Self.readCurrentTime(from: avp)
+            guard let self, !time.isNaN, !time.isInfinite else { return }
+            lastObservedTime = time
+            player.updateElapsedTime(time)
+            if let videoId = player.video?.youtubeId {
+                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time)
+            }
+            updateNowPlayingInfo(elapsed: time)
+        }
+    }
+
+    private nonisolated static func readCurrentTime(from avPlayer: AVPlayer) async -> Double {
+        await Task.detached(priority: .utility) { avPlayer.currentTime().seconds }.value
     }
 }
 
