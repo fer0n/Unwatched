@@ -148,8 +148,12 @@ field not in upstream — preserve it in the struct and in `applyingPoToken(_:)`
 which depends on `VideoPreloadCache`/`BotGuardWebViewRunner` (not mirrored). Flow:
 
 1. **Fast path** — cached WKWebView HLS URL (`WKHLSManager.validEntry`).
-2. **`primaryRace`** — iOS client HLS vs. in-flight WKWebView extraction; lightweight
-   stand-in for upstream's BotGuard race, no extra infrastructure needed.
+2. **`primaryRace`** — iOS client fetch with a WKWebView extraction started alongside it;
+   lightweight stand-in for upstream's BotGuard race, no extra infrastructure needed.
+   iOS HLS plays immediately and cancels the extraction. If iOS has no HLS the extraction
+   is *not* waited for (it takes seconds to tens of seconds) — playback falls through to
+   `exhaustiveRetry` and `cacheWebViewExtractionWhenDone` caches the late URL and, while
+   still on the 360p muxed fallback, swaps it in via `swapInWebViewHLS`.
 3. **`exhaustiveRetry`** — 3 attempts; each fires ~6 InnerTube clients in parallel
    (`withTaskGroup`: MWEB, TVEmbedded, WebSafari, iOS, Android, AndroidVR). HLS results
    play immediately as they arrive (first `.readyToPlay` wins via `attemptItem`);

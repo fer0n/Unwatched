@@ -20,6 +20,8 @@ final class AVPlayerPrefetchManager {
         let headers: [String: String]
         let originalAudioLanguage: String
         let isWebViewHLS: Bool
+        /// The 360p muxed MP4 last resort — see `AVPlayerViewModel.muxedFallbackStartedAt`.
+        let isMuxed: Bool
         let masterURL: URL?
         let nSolver: (unsolved: String, solved: String)?
         let poToken: String?
@@ -163,7 +165,7 @@ final class AVPlayerPrefetchManager {
             return PrefetchResult(videoId: videoId, asset: asset,
                                   playerInfo: hit.info, headers: headers,
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
-                                  isWebViewHLS: false, masterURL: nil, nSolver: nil,
+                                  isWebViewHLS: false, isMuxed: false, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
                                   qualities: StreamQualityHelper.videoQualities(from: hit.info))
         }
@@ -183,7 +185,7 @@ final class AVPlayerPrefetchManager {
             return PrefetchResult(videoId: videoId, asset: asset,
                                   playerInfo: hit.info, headers: [:],
                                   originalAudioLanguage: hit.info.originalAudioLanguage,
-                                  isWebViewHLS: false, masterURL: nil, nSolver: nil,
+                                  isWebViewHLS: false, isMuxed: true, masterURL: nil, nSolver: nil,
                                   poToken: nil, proxyLoader: nil, audioTracks: [],
                                   qualities: StreamQualityHelper.videoQualities(from: hit.info, muxedOnly: true))
         }
@@ -267,7 +269,7 @@ final class AVPlayerPrefetchManager {
         return PrefetchResult(videoId: videoId, asset: asset,
                               playerInfo: playerInfo, headers: [:],
                               originalAudioLanguage: originalAudioLanguage,
-                              isWebViewHLS: true, masterURL: url, nSolver: nSolver,
+                              isWebViewHLS: true, isMuxed: false, masterURL: url, nSolver: nSolver,
                               poToken: poToken, proxyLoader: proxyLoader, audioTracks: audioTracks,
                               qualities: qualities)
     }

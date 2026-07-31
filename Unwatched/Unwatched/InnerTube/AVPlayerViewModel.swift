@@ -43,6 +43,12 @@ final class AVPlayerViewModel {
     @ObservationIgnored var currentHLSHeaders: [String: String] = [:]
     @ObservationIgnored var isUsingComposition = false
     @ObservationIgnored var isUsingWebViewHLS = false
+    /// When the 360p muxed MP4 last resort was installed; nil while playing anything else.
+    /// Doubles as the "am I on the fallback" test — the only state a late WKWebView extraction
+    /// is allowed to upgrade out of — and as the age the swap deadline is measured against.
+    /// Deliberately not the playback position: a resumed video starts minutes in and would
+    /// never qualify (see `swapInWebViewHLS`).
+    @ObservationIgnored var muxedFallbackStartedAt: Date?
     @ObservationIgnored var webViewHLSMasterURL: URL?
     @ObservationIgnored var webViewHLSNSolver: (unsolved: String, solved: String)?
     @ObservationIgnored var webViewHLSPoToken: String?
@@ -118,6 +124,7 @@ final class AVPlayerViewModel {
         currentHLSHeaders = [:]
         isUsingComposition = false
         isUsingWebViewHLS = false
+        muxedFallbackStartedAt = nil
         webViewHLSMasterURL = nil
         webViewHLSNSolver = nil
         webViewHLSPoToken = nil
@@ -307,6 +314,7 @@ final class AVPlayerViewModel {
         currentHLSHeaders = pre.headers
         isUsingComposition = false
         isUsingWebViewHLS = pre.isWebViewHLS
+        muxedFallbackStartedAt = pre.isMuxed ? Date() : nil
         webViewHLSMasterURL = pre.masterURL
         webViewHLSNSolver = pre.nSolver
         webViewHLSPoToken = pre.poToken

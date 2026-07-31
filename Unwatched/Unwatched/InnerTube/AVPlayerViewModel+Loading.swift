@@ -11,8 +11,9 @@ extension AVPlayerViewModel {
 
     /// Loads and plays `videoId`. Mirrors SmartTubeIOS's playback strategy adapted for Unwatched:
     ///   1. Fast path — a cached WKWebView HLS URL from a prior extraction / prefetch.
-    ///   2. Primary race — iOS client HLS vs. an in-flight WKWebView extraction (Unwatched's
-    ///      lightweight stand-in for upstream's BotGuard race; needs no extra infrastructure).
+    ///   2. `primaryRace` — the iOS client, with a WKWebView extraction started alongside it
+    ///      (Unwatched's lightweight stand-in for upstream's BotGuard race; needs no extra
+    ///      infrastructure). iOS HLS plays immediately; the extraction is never waited for.
     ///   3. `exhaustiveRetry` — the 3-attempt loop that fetches ~6 InnerTube clients in parallel,
     ///      plays the first HLS to arrive, then adaptive in priority order, then muxed.
     ///
@@ -40,18 +41,10 @@ extension AVPlayerViewModel {
 
     // MARK: - Primary race (iOS client HLS vs WKWebView extraction)
 
-    /// How long `primaryRace` waits for the WKWebView extraction before giving up on it and
-    /// letting `exhaustiveRetry` run. The extractor's own timeout is 40 s (see
-    /// `YouTubeWebViewHLSExtractor.extractHLSURL`), and blocking for it stalls playback for
-    /// videos the parallel client fan-out resolves in well under two seconds. On expiry the
-    /// extraction is *not* cancelled — it keeps running and caches its URL in `WKHLSManager`,
-    /// so the next load of the same video takes `fetchAndPlay`'s fast path.
-    static let webViewRaceTimeout: Double = 3.5
-
     /// Starts WKWebView HLS extraction in parallel with the iOS client fetch. If iOS returns HLS,
-    /// that plays immediately and the extractor is cancelled. Otherwise the in-progress extraction
-    /// (already ~1–2 s in) is awaited for at most `webViewRaceTimeout` and played. Returns `true`
-    /// if a stream reached `.readyToPlay`.
+    /// that plays immediately and the extractor is cancelled. Otherwise playback falls through to
+    /// `exhaustiveRetry` at once and the extraction is left running to upgrade the stream in place
+    /// (see `cacheWebViewExtractionWhenDone`). Returns `true` if a stream reached `.readyToPlay`.
     @MainActor
     func primaryRace(videoId: String) async -> Bool {
         let webViewTask = Task { await YouTubeWebViewHLSExtractor.shared.extractHLSURL(videoId: videoId) }
@@ -75,66 +68,31 @@ extension AVPlayerViewModel {
             return await tryHLS(videoId: videoId, info: info, client: "iOS")
         }
 
-        // iOS has no HLS — await the in-progress WKWebView extraction, but only briefly.
-        Log.info("[AVPlayerView] iOS has no HLS — awaiting WKWebView extraction"
-                    + " (max \(Self.webViewRaceTimeout)s): \(videoId)")
-        guard case .finished(let webViewURL) = await awaitWebView(webViewTask, seconds: Self.webViewRaceTimeout) else {
-            Log.info("[AVPlayerView] WKWebView extraction still running after \(Self.webViewRaceTimeout)s"
-                        + " — continuing with exhaustiveRetry: \(videoId)")
-            cacheWebViewExtractionWhenDone(webViewTask, videoId: videoId)
-            return false
-        }
-        if Task.isCancelled { return false }
-
-        let pot = YouTubeWebViewHLSExtractor.shared.extractedPoToken
-        let nSolver = YouTubeWebViewHLSExtractor.shared.extractedNSolver
-        if let pot { await api.storeExternalPoToken(pot, for: videoId) }
-        if let url = webViewURL {
-            WKHLSManager.shared.store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
-            originalAudioLanguage = info.originalAudioLanguage
-            applyTranscriptUrl(from: info)
-            if await playWebViewHLS(url: url, nSolver: nSolver, poToken: pot, videoId: videoId) {
-                return true
-            }
-        }
+        // iOS has no HLS. The extraction is the only route above 360p for these videos, but it
+        // takes seconds to tens of seconds — far longer than `exhaustiveRetry` needs to find a
+        // playable stream (measured: 3.7 s of a 5.4 s cold load was spent waiting for it, and it
+        // had not finished even then). So don't wait: fall through now and let the extraction
+        // upgrade the stream in place if it lands while playback is still on the muxed fallback.
+        Log.info("[AVPlayerView] iOS has no HLS — continuing with exhaustiveRetry,"
+                    + " WKWebView extraction upgrades in place: \(videoId)")
+        cacheWebViewExtractionWhenDone(webViewTask, videoId: videoId)
         return false
     }
 
-    enum WebViewRaceOutcome {
-        /// The extraction completed in time — `url` is nil when it failed or was cancelled.
-        case finished(URL?)
-        /// The deadline expired first; the extraction is still running.
-        case stillRunning
-    }
+    // MARK: - Late WKWebView extraction
 
-    /// Awaits `task` for at most `seconds`. On expiry the task is deliberately left running —
-    /// the caller decides whether to keep it alive (see `cacheWebViewExtractionWhenDone`).
-    @MainActor
-    func awaitWebView(_ task: Task<URL?, Never>, seconds: Double) async -> WebViewRaceOutcome {
-        let (stream, cont) = AsyncStream<WebViewRaceOutcome>.makeStream()
-        let waiter = Task { @MainActor in
-            let url = await task.value
-            cont.yield(.finished(url))
-            cont.finish()
-        }
-        let timer = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-            cont.yield(.stillRunning)
-            cont.finish()
-        }
-        var outcome: WebViewRaceOutcome = .stillRunning
-        for await value in stream {
-            outcome = value
-            break
-        }
-        waiter.cancel()
-        timer.cancel()
-        return outcome
-    }
+    /// How long after the muxed fallback started a late extraction may still swap the stream.
+    /// Past this the rebuffer costs more than the quality gain is worth; the URL is cached either
+    /// way, so the next play of the same video starts on HLS via `fetchAndPlay`'s fast path.
+    static let webViewLateSwapMaxAge: Double = 20
 
-    /// Keeps a WKWebView extraction that outlived the race alive so its URL still lands in
-    /// `WKHLSManager`'s cache. Playback has already moved on to `exhaustiveRetry`; this only
-    /// makes the *next* load of the same video take the cached fast path.
+    /// Keeps the WKWebView extraction started by `primaryRace` alive after playback has moved on:
+    /// its URL is cached for the next play, and — while playback is still on the 360p muxed
+    /// fallback — swapped in live.
+    ///
+    /// Worth a mid-playback swap because for videos no InnerTube client serves HLS for, this is
+    /// the only route above 360p: `backgroundQualityUpgrade` asks TVEmbedded and MWEB and comes
+    /// back empty on exactly those videos.
     @MainActor
     func cacheWebViewExtractionWhenDone(_ task: Task<URL?, Never>, videoId: String) {
         webViewCacheTask?.cancel()
@@ -145,7 +103,44 @@ extension AVPlayerViewModel {
             if let pot { await self.api.storeExternalPoToken(pot, for: videoId) }
             WKHLSManager.shared.store(url: url, nSolver: nSolver, poToken: pot, for: videoId)
             Log.info("[AVPlayerView] late WKWebView extraction cached for \(videoId)")
+
+            guard !Task.isCancelled, self.player.video?.youtubeId == videoId else { return }
+            await self.swapInWebViewHLS(url: url, nSolver: nSolver, poToken: pot, videoId: videoId)
         }
+    }
+
+    /// Upgrades a playing 360p muxed fallback to a freshly extracted WKWebView HLS stream,
+    /// resuming at the current position. Mirrors `backgroundQualityUpgrade`'s swap, down to
+    /// restoring the fallback when the new item never becomes ready.
+    @MainActor
+    func swapInWebViewHLS(url: URL, nSolver: (unsolved: String, solved: String)?,
+                          poToken: String?, videoId: String) async {
+        // `backgroundQualityUpgrade` may still be deciding; both replace the current item, so
+        // let it settle first rather than have the two swap over each other.
+        if let upgrade = backgroundQualityUpgradeTask { _ = await upgrade.value }
+        guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
+        guard let startedAt = muxedFallbackStartedAt else {
+            Log.info("[AVPlayerView] late wkHLS: not on the muxed fallback — cached only: \(videoId)")
+            return
+        }
+        let age = startedAt.distance(to: Date())
+        if age > Self.webViewLateSwapMaxAge {
+            Log.info("[AVPlayerView] late wkHLS: fallback running for \(Int(age))s — cached only: \(videoId)")
+            return
+        }
+
+        let pos = avPlayer.currentTime().seconds
+        let resume = (pos > 0.5 && !pos.isNaN && !pos.isInfinite) ? pos : nil
+
+        let fallbackInfo = currentPlayerInfo
+        pendingSeekToTime = resume
+        Log.info("[AVPlayerView] late wkHLS: upgrading muxed → HLS: \(videoId)")
+        if await playWebViewHLS(url: url, nSolver: nSolver, poToken: poToken, videoId: videoId) { return }
+
+        guard !Task.isCancelled, player.video?.youtubeId == videoId, let fallbackInfo else { return }
+        Log.info("[AVPlayerView] late wkHLS: upgrade failed — restoring muxed fallback: \(videoId)")
+        pendingSeekToTime = resume
+        _ = await tryMuxed(videoId: videoId, info: fallbackInfo, client: "Android")
     }
 
     // MARK: - Exhaustive parallel retry
@@ -349,6 +344,7 @@ extension AVPlayerViewModel {
         currentHLSHeaders = headers
         isUsingComposition = false
         isUsingWebViewHLS = false
+        muxedFallbackStartedAt = nil
         player.availableVideoQualities = qualities
         applyTranscriptUrl(from: info)
         applyAspectRatioFromFormats(info)
@@ -437,6 +433,7 @@ extension AVPlayerViewModel {
             currentPlayerInfo = info
             isUsingComposition = true
             isUsingWebViewHLS = false
+            muxedFallbackStartedAt = nil
             player.availableVideoQualities = qualities
             applyTranscriptUrl(from: info)
             applyAspectRatioFromFormats(info)
@@ -467,6 +464,7 @@ extension AVPlayerViewModel {
         currentHLSHeaders = [:]
         isUsingComposition = false
         isUsingWebViewHLS = false
+        muxedFallbackStartedAt = Date()
         player.availableVideoQualities = qualities
         applyTranscriptUrl(from: info)
         applyAspectRatioFromFormats(info)
@@ -544,6 +542,7 @@ extension AVPlayerViewModel {
         currentHLSHeaders = [:]
         isUsingComposition = false
         isUsingWebViewHLS = true
+        muxedFallbackStartedAt = nil
         webViewHLSMasterURL = url
         webViewHLSNSolver = nSolver
         webViewHLSPoToken = poToken
