@@ -321,7 +321,7 @@ extension PlayerManager {
     var fullscreenContext: String {
         SheetPositionReader.shared.landscapeFullscreen
             ? "landscape"
-            : (tallFullscreenOverlay ? "portrait" : "off")
+            : (tallFullscreenActive ? "portrait" : "off")
     }
 
     @MainActor

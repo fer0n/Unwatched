@@ -24,7 +24,7 @@ struct MenuSheetDetents: ViewModifier {
             .modifier(AnimatableDetents(
                 selectedDetent: $sheetPos.selectedDetent,
                 // no minimized bar in portrait fullscreen -> dragging down dismisses back to fullscreen
-                allowMinSheet: sheetPos.allowMinSheet && hasVideo && !player.tallFullscreenOverlay,
+                allowMinSheet: sheetPos.allowMinSheet && hasVideo && !player.tallFullscreenActive,
                 preferLarge: !hasVideo,
                 allowPlayerControlHeight: allowPlayerControlHeight,
                 maxSheetHeight: sheetPos.maxSheetHeight,
@@ -54,7 +54,7 @@ struct MenuSheetDetents: ViewModifier {
             })
             // allow swipe-to-dismiss in landscape and portrait fullscreen (returns to the fullscreen player)
             .interactiveDismissDisabled(
-                (!landscapeFullscreen && !player.tallFullscreenOverlay) || player.video == nil
+                (!landscapeFullscreen && !player.tallFullscreenActive) || player.video == nil
             )
             .disabled(
                 sheetPos.isMinimumSheet

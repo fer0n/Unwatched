@@ -118,7 +118,7 @@ struct PlayerView: View {
                         showLeft: false
                     )
                     .frame(width: 60)
-                    .frame(maxHeight: player.tallFullscreenOverlay ? 400 : nil)
+                    .frame(maxHeight: player.tallFullscreenActive ? 400 : nil)
                     .opacity(tallOverlayShowControls ? 1 : 0)
                     .animation(.easeInOut, value: tallOverlayShowControls)
                 }
@@ -155,7 +155,7 @@ struct PlayerView: View {
     var layoutMode: PlayerLayoutMode {
         PlayerLayoutMode(
             landscapeFullscreen: landscapeFullscreen,
-            tallFullscreenOverlay: player.tallFullscreenOverlay,
+            tallFullscreenOverlay: player.tallFullscreenActive,
             hideMiniPlayer: hideMiniPlayer
         )
     }
@@ -281,7 +281,7 @@ struct PlayerView: View {
                 setHideControlsFullscreen(true)
             } else if !landscapeFullscreen {
                 #if os(iOS)
-                if PlayerManager.shared.tallFullscreenOverlay {
+                if PlayerManager.shared.tallFullscreenActive {
                     // already in portrait fullscreen -> reveal menu, stay fullscreen
                     player.setShowMenu()
                 } else if PlayerManager.shared.isTallAspectRatio {
@@ -309,7 +309,7 @@ struct PlayerView: View {
                 #if os(iOS)
                 OrientationManager.changeOrientation(to: .portrait)
                 #endif
-            } else if PlayerManager.shared.tallFullscreenOverlay {
+            } else if PlayerManager.shared.tallFullscreenActive {
                 if NavigationManager.shared.showMenu {
                     // menu is revealed over portrait fullscreen -> hide it, stay fullscreen
                     NavigationManager.shared.showMenu = false
