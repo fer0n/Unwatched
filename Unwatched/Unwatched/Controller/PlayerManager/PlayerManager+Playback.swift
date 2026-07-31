@@ -258,11 +258,7 @@ extension PlayerManager {
     }
 
     var tempSpeedUpValue: Double {
-        let value = UserDefaults.standard.value(forKey: Const.temporarySpeedUp) as? Double ?? Const.speedMax
-        if UserDefaults.standard.string(forKey: Const.playerType) == PlayerTypeSetting.native.rawValue {
-            return min(value, Const.speedMax)
-        }
-        return value
+        UserDefaults.standard.value(forKey: Const.temporarySpeedUp) as? Double ?? Const.speedMax
     }
 
     var tempSlowDownValue: Double {

@@ -36,7 +36,7 @@ struct FullscreenSpeedControlContent: View {
         ScrollView {
             VStack(spacing: 10) {
                 ForEach(
-                    viewModel.formattedSpeedsEnumerated,
+                    ViewModel.formattedSpeedsEnumerated,
                     id: \.offset
                 ) { index, speed in
                     Text(verbatim: speed)
@@ -106,7 +106,7 @@ struct FullscreenSpeedControlContent: View {
             return
         }
         let next = currentPage + direction
-        guard viewModel.speeds.indices.contains(next) else {
+        guard ViewModel.speeds.indices.contains(next) else {
             return
         }
 
@@ -131,7 +131,7 @@ struct FullscreenSpeedControlContent: View {
         guard let currentPage else {
             return
         }
-        let speed = viewModel.speeds[currentPage]
+        let speed = ViewModel.speeds[currentPage]
         guard speed != self.value else {
             return
         }
@@ -179,7 +179,7 @@ extension FullscreenSpeedControlContent {
         }
 
         func setCurrentPage(_ value: Double) {
-            if let index = speeds.firstIndex(of: value),
+            if let index = ViewModel.speeds.firstIndex(of: value),
                currentPage != index {
                 currentPage = index
             }
@@ -199,22 +199,12 @@ extension FullscreenSpeedControlContent {
             setCurrentPage(value)
         }
 
-        let speeds: [Double]
-        let formattedSpeeds: [String]
-        let formattedSpeedsEnumerated: [(offset: Int, element: String)]
-
-        init() {
-            let isNativePlayer = UserDefaults.standard.string(forKey: Const.playerType) == PlayerTypeSetting.native.rawValue
-            let allSpeeds = Array(Const.speeds.reversed())
-            let filtered = isNativePlayer ? allSpeeds.filter { $0 <= Const.speedMax } : allSpeeds
-            let formatted = filtered.map { speed -> String in
-                let speedText = SpeedHelper.formatSpeed(speed)
-                return "\(speedText)\(speedText.count <= 1 ? "×" : "")"
-            }
-            self.speeds = filtered
-            self.formattedSpeeds = formatted
-            self.formattedSpeedsEnumerated = Array(formatted.enumerated())
+        static let speeds: [Double] = Const.speeds.reversed()
+        static let formattedSpeeds: [String] = speeds.map { speed in
+            let speedText = SpeedHelper.formatSpeed(speed)
+            return "\(speedText)\(speedText.count <= 1 ? "×" : "")"
         }
+        static let formattedSpeedsEnumerated: [(offset: Int, element: String)] = Array(formattedSpeeds.enumerated())
     }
 }
 
