@@ -92,8 +92,8 @@ struct VideoPlayer: View {
         .onChange(of: landscapeFullscreen) {
             handleFullscreenChange(.landscape, active: landscapeFullscreen)
         }
-        .onChange(of: player.tallFullscreenOverlay) {
-            handleFullscreenChange(.portrait, active: player.tallFullscreenOverlay)
+        .onChange(of: player.tallFullscreenActive) {
+            handleFullscreenChange(.portrait, active: player.tallFullscreenActive)
         }
         .hideCursorOnInactive(
             after: 2,
@@ -116,7 +116,7 @@ struct VideoPlayer: View {
     var layoutMode: PlayerLayoutMode {
         PlayerLayoutMode(
             landscapeFullscreen: landscapeFullscreen,
-            tallFullscreenOverlay: player.tallFullscreenOverlay,
+            tallFullscreenOverlay: player.tallFullscreenActive,
             hideMiniPlayer: hideMiniPlayer
         )
     }
@@ -149,12 +149,15 @@ struct VideoPlayer: View {
                     detent: sheetPos.selectedDetent
                 )
                 navManager.showMenu = false
+                #if os(iOS)
+                OrientationManager.changeOrientation(to: .portrait)
+                #endif
             }
         } else {
             // exiting -> keep the menu hidden if the other fullscreen mode is still active
             switch mode {
             case .landscape:
-                if player.tallFullscreenOverlay { return }
+                if player.tallFullscreenActive { return }
                 if navManager.showMenu {
                     // menu was open in landscape -> show it in portrait at the player detent
                     sheetPos.setDetentVideoPlayer()

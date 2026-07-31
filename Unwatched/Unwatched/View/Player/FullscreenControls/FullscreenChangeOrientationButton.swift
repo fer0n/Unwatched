@@ -14,7 +14,7 @@ struct FullscreenChangeOrientationButton: View {
 
     var body: some View {
         Button {
-            if player.tallFullscreenOverlay {
+            if player.tallFullscreenActive {
                 player.setTallFullscreen(false)
             } else {
                 OrientationManager.changeOrientation(to: .portrait)

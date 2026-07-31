@@ -176,6 +176,12 @@ import UnwatchedShared
         videoAspectRatio <= Const.consideredTallAspectRatio
     }
 
+    /// `tallFullscreenOverlay` is the toggle intent; it only applies while the playing video is portrait.
+    @MainActor
+    var tallFullscreenActive: Bool {
+        tallFullscreenOverlay && isTallAspectRatio
+    }
+
     @MainActor
     var limitHeight: Bool {
         embeddingDisabled || isTallAspectRatio
@@ -416,19 +422,12 @@ extension PlayerManager {
         }
     }
 
-    /// Enters/exits the portrait ("tall") custom fullscreen.
-    /// Animates the layout change and, when entering, locks the device to portrait
-    /// so the behavior mirrors the landscape fullscreen (which animates via rotation).
+    /// Sets the toggle intent for portrait fullscreen (see `tallFullscreenActive`).
     @MainActor
     func setTallFullscreen(_ value: Bool) {
         withAnimation {
             tallFullscreenOverlay = value
         }
-        #if os(iOS)
-        if value {
-            OrientationManager.changeOrientation(to: .portrait)
-        }
-        #endif
     }
 
     @MainActor
