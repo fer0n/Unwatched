@@ -20,6 +20,9 @@ private extension View {
                     ChannelPreviewView(sub)
                 }
             }
+            #if !os(visionOS)
+            .foregroundStyle(Color.neutralAccentColor)
+            #endif
             #if os(macOS)
             .navigationStackWorkaround()
             #endif
