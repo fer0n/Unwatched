@@ -12,6 +12,8 @@ import UnwatchedShared
         AutoHideVM()
     }()
 
+    @ObservationIgnored static let hideAnimation: Animation = .bouncy(duration: 1)
+
     @ObservationIgnored var hideControlsTask: (Task<(), Never>)?
 
     private var keepVisibleDict = Set<String>()
@@ -33,7 +35,7 @@ import UnwatchedShared
         hideControlsTask = Task {
             do {
                 try await Task.sleep(s: Const.controlsAutoHideDebounce)
-                withAnimation(.bouncy(duration: 1)) {
+                withAnimation(Self.hideAnimation) {
                     showControlsLocal = false
                 }
             } catch { }
@@ -82,7 +84,10 @@ import UnwatchedShared
         if value {
             keepVisibleDict.insert(source)
         } else {
-            keepVisibleDict.remove(source)
+            // matches the auto-hide fade; the timeout usually expired while the menu was open
+            withAnimation(Self.hideAnimation) {
+                keepVisibleDict.remove(source)
+            }
         }
     }
 
