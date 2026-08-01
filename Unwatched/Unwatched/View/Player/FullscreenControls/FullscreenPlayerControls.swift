@@ -62,7 +62,8 @@ struct FullscreenPlayerControls: View {
             FullscreenChapterDescriptionButton(
                 arrowEdge: arrowEdge,
                 menuOpen: $autoHideVM.keepVisible,
-                size: size
+                size: size,
+                openTrigger: autoHideVM.descriptionPopoverRequest
             )
             .buttonStyle(.plain)
             .frame(minHeight: size)

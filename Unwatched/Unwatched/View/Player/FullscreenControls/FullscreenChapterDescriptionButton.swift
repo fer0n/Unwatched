@@ -17,13 +17,12 @@ struct FullscreenChapterDescriptionButton: View {
     @Binding var menuOpen: Bool
     var size: CGFloat?
     var showPadding = true
+    /// Opens the popover when the value changes; nil where no gesture triggers it.
+    var openTrigger: Int?
 
     var body: some View {
         Button {
-            if !show {
-                show = true
-                menuOpen = true
-            }
+            openPopover()
         } label: {
             if let size {
                 Image(Const.videoDescriptionCircleSF)
@@ -38,6 +37,9 @@ struct FullscreenChapterDescriptionButton: View {
         .accessibilityLabel("videoDescription")
         .padding(.horizontal, showPadding ? 15 : 0) // workaround: safearea pushing content in pop over
         .modifier(MyMatchedTransitionSource(id: transitionId, namespace: namespace))
+        .onChange(of: openTrigger) {
+            openPopover()
+        }
         .popover(isPresented: $show, arrowEdge: arrowEdge) {
             if let video = player.video {
                 ZStack {
@@ -72,6 +74,12 @@ struct FullscreenChapterDescriptionButton: View {
                 #endif
             }
         }
+    }
+
+    private func openPopover() {
+        guard !show else { return }
+        show = true
+        menuOpen = true
     }
 }
 

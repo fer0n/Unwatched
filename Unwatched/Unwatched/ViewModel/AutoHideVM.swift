@@ -17,6 +17,9 @@ import UnwatchedShared
     private var keepVisibleDict = Set<String>()
     var positionLeft = false
 
+    /// Bumped to open `FullscreenChapterDescriptionButton`'s popover from a gesture.
+    var descriptionPopoverRequest = 0
+
     init() {}
 
     @MainActor
@@ -54,6 +57,12 @@ import UnwatchedShared
             showControlsLocal = true
         }
         restartHideControlsTask()
+    }
+
+    @MainActor
+    func openDescriptionPopover() {
+        setShowControls()
+        descriptionPopoverRequest += 1
     }
 
     @MainActor

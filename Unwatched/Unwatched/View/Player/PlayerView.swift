@@ -41,6 +41,17 @@ struct PlayerView: View {
                 fullscreenControlsSetting: fullscreenControlsSetting,
                 landscapeFullscreen: landscapeFullscreen
             )
+            // placeholder overlay: spans the screen, stays behind video and controls
+            #if os(iOS)
+            .overlay {
+                if layoutMode == .landscapeFullscreen && showFullscreenControls {
+                    FullscreenEdgeSwipeArea(
+                        autoHideVM: $autoHideVM,
+                        showLeft: showLeft
+                    )
+                }
+            }
+            #endif
 
             HStack(spacing: 0) {
                 if player.video == nil {

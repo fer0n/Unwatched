@@ -34,6 +34,12 @@ struct FullscreenPlayerControlsWrapper: View {
                     autoHideVM.setShowControls()
                 }
             })
+            // buttons swallow the touch before the player's gesture overlay sees it
+            .descriptionEdgeSwipe(
+                autoHideVM: $autoHideVM,
+                side: PlayerEdgeSwipe.Side(showLeft: showLeft),
+                minimumDistance: PlayerEdgeSwipe.minimumDistanceOnControls
+            )
             .frame(width: nonEmbedding ? 60 : 0)
             .modifier(ShowFullscreenControlsViewModifier(showControls: showControls))
         }
@@ -43,20 +49,5 @@ struct FullscreenPlayerControlsWrapper: View {
         fullscreenControlsSetting == .enabled
             || !player.isPlaying
             || autoHideVM.showControls
-    }
-}
-
-struct ShowFullscreenControlsViewModifier: ViewModifier {
-    @Environment(PlayerManager.self) var player
-    var showControls: Bool
-
-    func body(content: Content) -> some View {
-        content
-            .opacity(showControlsLocal ? 1 : 0)
-            .animation(.easeInOut(duration: 3), value: player.videoIsCloseToEnd)
-    }
-
-    var showControlsLocal: Bool {
-        showControls || player.videoIsCloseToEnd
     }
 }
