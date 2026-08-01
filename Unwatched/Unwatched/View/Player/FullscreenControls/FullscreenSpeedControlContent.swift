@@ -34,7 +34,7 @@ struct FullscreenSpeedControlContent: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 10) {
+            VStack(spacing: 11) {
                 ForEach(
                     ViewModel.formattedSpeedsEnumerated,
                     id: \.offset
