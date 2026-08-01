@@ -25,6 +25,7 @@ extension PlayerWebView {
         let originalAudio: Bool
         let playbackId: String
         let blockOverlay: Bool
+        let clickTogglesPlay: Bool
         let seekSeconds: Double
     }
 
@@ -46,6 +47,7 @@ extension PlayerWebView {
         const playbackId = "\(options.playbackId)";
         const blockOverlay = \(options.blockOverlay);
         const ownsPlaybackRate = blockOverlay;
+        const clickTogglesPlay = \(options.clickTogglesPlay);
         const seekSeconds = \(options.seekSeconds);
 
         var video = null;
@@ -149,6 +151,20 @@ extension PlayerWebView {
                 handleOverlayTap();
             }
         }, { passive: true });
+
+        // With the overlay blocked there is nothing left for a click to reveal, so it plays and
+        // pauses instead. Deliberately not gated on isVideoElement: the hidden overlay changes
+        // which element ends up under the cursor. A double click still reaches the fullscreen
+        // handler, the two toggles cancelling each other out.
+        if (clickTogglesPlay) {
+            document.addEventListener('pointerup', function(event) {
+                if (event.pointerType !== 'mouse') return;
+                if (!video) return;
+                if (event.target?.closest?.('a, button, [role="button"], .ytp-button')) return;
+                togglePlay();
+                sendMessage("centerTouch", video.paused ? "play" : "pause");
+            }, { passive: true });
+        }
         document.addEventListener('pointermove', function(event) {
             if (event.pointerType !== 'mouse') return;
             if (isVideoElement(event)) {

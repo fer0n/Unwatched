@@ -56,8 +56,10 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
 
         var hijackFullscreenButton = false
+        var clickTogglesPlay = false
         #if os(macOS)
         hijackFullscreenButton = true
+        clickTogglesPlay = blockOverlay
         #endif
         let options = PlayerWebView.InitScriptOptions(
             playbackSpeed: parent.player.playbackSpeed,
@@ -73,6 +75,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             originalAudio: originalAudio,
             playbackId: playbackId,
             blockOverlay: blockOverlay,
+            clickTogglesPlay: clickTogglesPlay,
             seekSeconds: UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double ?? Const.seekSeconds
         )
         let script = PlayerWebView.initScript(options)
