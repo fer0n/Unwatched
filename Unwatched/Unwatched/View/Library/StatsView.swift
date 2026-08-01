@@ -51,9 +51,6 @@ struct StatsView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            #if os(macOS)
-            .showStatsToolbarItem(false)
-            #endif
         }
         .task {
             await viewModel.loadStats()

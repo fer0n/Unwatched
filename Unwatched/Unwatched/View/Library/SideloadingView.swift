@@ -43,22 +43,20 @@ struct SideloadingView: View {
             }
         }
         .concentricMacWorkaround()
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Menu {
-                    ForEach(sortingOptions, id: \.self) { sort in
-                        Button(sort.description, systemImage: sort.systemName) {
-                            sideloadingSortOrder = sort
-                        }
-                        .disabled(sideloadingSortOrder == sort)
+        .paneToolbar(placement: .primaryAction) {
+            Menu {
+                ForEach(sortingOptions, id: \.self) { sort in
+                    Button(sort.description, systemImage: sort.systemName) {
+                        sideloadingSortOrder = sort
                     }
-                } label: {
-                    Image(systemName: sideloadingSortOrder == .createdDate
-                            ? Const.filterEmptySF
-                            : Const.filterSF)
+                    .disabled(sideloadingSortOrder == sort)
                 }
-                .accessibilityLabel("videoSorting")
+            } label: {
+                Image(systemName: sideloadingSortOrder == .createdDate
+                        ? Const.filterEmptySF
+                        : Const.filterSF)
             }
+            .accessibilityLabel("videoSorting")
         }
     }
 

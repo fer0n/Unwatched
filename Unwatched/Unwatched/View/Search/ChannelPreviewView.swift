@@ -76,8 +76,8 @@ struct ChannelPreviewView: View {
             MyBackgroundColor()
         }
         .myNavigationTitle(LocalizedStringKey(sub.displayTitle), titleHidden: !showTitle)
-        .toolbar {
-            RefreshToolbarContent(forceNeutral: true)
+        .paneToolbar(placement: .confirmationAction) {
+            RefreshButton(forceNeutral: true)
         }
         .tint(.neutralAccentColor)
         .task {

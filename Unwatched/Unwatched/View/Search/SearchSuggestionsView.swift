@@ -6,6 +6,17 @@
 import SwiftUI
 import UnwatchedShared
 
+private extension View {
+    /// The inset background reads as a stray stripe in the macOS pane.
+    func suggestionRowBackground() -> some View {
+        #if os(macOS)
+        listRowBackground(Color.clear)
+        #else
+        myListInsetBackground()
+        #endif
+    }
+}
+
 /// Shows either query suggestions or recent searches while the search field is focused.
 ///
 /// A single stable `List` root (sections switch, empty state as an overlay) instead of
@@ -52,7 +63,9 @@ struct SearchSuggestionsView: View {
                     } label: {
                         suggestionLabel(Text("clearRecentSearches"), systemImage: "xmark.circle")
                     }
-                    .myListInsetBackground()
+                    // macOS would otherwise use the bordered style and draw its own capsule.
+                    .buttonStyle(.plain)
+                    .suggestionRowBackground()
                 }
                 .listRowSeparatorTint(Color.automaticBlack.opacity(0.08))
             }
@@ -76,7 +89,7 @@ struct SearchSuggestionsView: View {
             suggestionLabel(Text(term), systemImage: systemImage)
         }
         .buttonStyle(.plain)
-        .myListInsetBackground()
+        .suggestionRowBackground()
     }
 
     /// Matches the look of the native `.searchSuggestions` rows: secondary-coloured,

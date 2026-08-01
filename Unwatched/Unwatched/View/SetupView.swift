@@ -44,6 +44,14 @@ struct SetupView: View {
             .environment(navTitleManager)
             #endif
             .handleDeepLinks()
+            #if os(macOS)
+            // Root-mounted so File > Paste URL works with the sidebar hidden; the overlay
+            // reports failures.
+            .background {
+                AddToLibraryView(hidden: true)
+            }
+            .appNotificationOverlay()
+            #endif
             #if os(iOS)
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {

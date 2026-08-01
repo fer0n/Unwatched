@@ -83,9 +83,9 @@ struct SubscriptionDetailView: View {
         .myNavigationTitle(LocalizedStringKey(subscription.title),
                            titleHidden: !showTitle
         )
-        .toolbar {
+        .paneToolbar(placement: .confirmationAction) {
             if !subscription.isArchived {
-                RefreshToolbarContent(refreshOnlySubscription: subscription.persistentModelID)
+                RefreshButton(refreshOnlySubscription: subscription.persistentModelID)
             }
         }
         #if os(visionOS)

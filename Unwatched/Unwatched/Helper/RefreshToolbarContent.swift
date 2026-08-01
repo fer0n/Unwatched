@@ -59,22 +59,33 @@ struct CoreRefreshButton: View {
     }
 }
 
-struct RefreshToolbarContent: ToolbarContent {
+/// The refresh button outside a toolbar — the macOS pane header renders its own actions.
+struct RefreshButton: View {
     @Environment(RefreshManager.self) var refresher
+    var refreshOnlySubscription: PersistentIdentifier?
+    var forceNeutral: Bool = false
+
+    var body: some View {
+        CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
+            .symbolEffect(.pulse,
+                          options: .speed(0.8),
+                          isActive: refresher.isSyncingIcloud)
+            .saturation(refresher.isSyncingIcloud ? 0 : 1)
+            .if(forceNeutral) {
+                $0.tint(.neutralAccentColor)
+            }
+            .myTint(neutral: true)
+    }
+}
+
+struct RefreshToolbarContent: ToolbarContent {
     var refreshOnlySubscription: PersistentIdentifier?
     var forceNeutral: Bool = false
 
     var body: some ToolbarContent {
         ToolbarItemGroup(placement: .confirmationAction) {
-            CoreRefreshButton(refreshOnlySubscription: refreshOnlySubscription)
-                .symbolEffect(.pulse,
-                              options: .speed(0.8),
-                              isActive: refresher.isSyncingIcloud)
-                .saturation(refresher.isSyncingIcloud ? 0 : 1)
-                .if(forceNeutral) {
-                    $0.tint(.neutralAccentColor)
-                }
-                .myTint(neutral: true)
+            RefreshButton(refreshOnlySubscription: refreshOnlySubscription,
+                          forceNeutral: forceNeutral)
         }
     }
 }

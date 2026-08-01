@@ -26,6 +26,7 @@ struct AppCommands: Commands {
                     PlayerShortcut.goToQueue.render()
                     PlayerShortcut.goToInbox.render()
                     PlayerShortcut.goToLibrary.render()
+                    PlayerShortcut.goToSearch.render()
                 } label: {
                     Text("goToTab")
                 }
@@ -65,6 +66,15 @@ struct AppCommands: Commands {
         #endif
 
         CommandGroup(after: .importExport) {
+            #if os(macOS)
+            Section {
+                Button("pasteUrl") {
+                    NotificationCenter.default.post(name: .pasteAddToLibrary, object: nil)
+                }
+                .keyboardShortcut("v", modifiers: [.command, .shift])
+            }
+            #endif
+
             Section {
                 Link(destination: UrlService.shareShortcutUrl) {
                     Text("setupShareSheetAction")

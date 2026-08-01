@@ -4,8 +4,28 @@
 //
 
 import SwiftUI
+import SwiftData
 import OSLog
 import UnwatchedShared
+
+private extension View {
+    /// Library matches open the regular detail view; YouTube-only channels get the preview.
+    /// The macOS wrapper draws the pane header — without it the pushed view renders blank.
+    func searchSubscriptionDestination(_ modelContext: ModelContext) -> some View {
+        navigationDestination(for: SendableSubscription.self) { sub in
+            ZStack {
+                if sub.persistentId != nil {
+                    SendableSubscriptionDetailView(sub, modelContext)
+                } else {
+                    ChannelPreviewView(sub)
+                }
+            }
+            #if os(macOS)
+            .navigationStackWorkaround()
+            #endif
+        }
+    }
+}
 
 /// The Search tab: searches YouTube via the InnerTube WEB client and renders the
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
@@ -29,6 +49,12 @@ struct SearchView: View {
             ZStack {
                 MyBackgroundColor()
                 content
+                    .paneSearchField(
+                        text: $vm.query,
+                        focused: $searchFocused,
+                        prompt: "searchVideosPrompt",
+                        onSubmit: { search(for: vm.query) }
+                    )
             }
             .myNavigationTitle("search")
             .toolbar {
@@ -40,32 +66,24 @@ struct SearchView: View {
                             .fontWeight(.bold)
                     }
                 }
+                #if !os(macOS)
+                // macOS uses the File menu: a toolbar item here lands outside the sidebar.
                 ToolbarItem(placement: topBarLeadingPlacement) {
                     AddToLibraryView()
                         .font(.footnote)
                         .fontWeight(.bold)
                 }
+                #endif
             }
-            .navigationDestination(for: SendableSubscription.self) { sub in
-                // Subscriptions matched in the library open their regular detail view;
-                // channels found on YouTube (no persistent id) get the read-only preview.
-                if sub.persistentId != nil {
-                    SendableSubscriptionDetailView(sub, modelContext)
-                } else {
-                    ChannelPreviewView(sub)
-                }
-            }
+            .searchSubscriptionDestination(modelContext)
             .myTint()
         }
-        .searchable(
+        .nativeSearchable(
             text: $vm.query,
-            prompt: Text("searchVideosPrompt")
+            focused: $searchFocused,
+            prompt: "searchVideosPrompt",
+            onSubmit: { search(for: vm.query) }
         )
-        .searchPresentationToolbarBehavior(.avoidHidingContent)
-        .searchFocused($searchFocused)
-        .onSubmit(of: .search) {
-            search(for: vm.query)
-        }
         .onChange(of: vm.query) { _, newValue in
             if newValue.isEmpty {
                 vm.clear()

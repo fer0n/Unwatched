@@ -12,6 +12,12 @@ struct AddToLibraryView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(RefreshManager.self) var refresher
 
+    /// nil outside the macOS root mount, where the button reports failure itself.
+    @Environment(AppNotificationVM.self) private var appNotification: AppNotificationVM?
+
+    /// Mounts the sheets and dialogs without the button; macOS triggers it from the File menu.
+    var hidden = false
+
     @State var addText: String = ""
     @State var addVideosSuccess: Bool?
     @State var isLoadingVideos = false
@@ -21,57 +27,68 @@ struct AddToLibraryView: View {
     @State private var subManager = SubscribeManager()
 
     var body: some View {
-        pasteButton
-            .disabled(subManager.isLoading)
-            .sheet(isPresented: $subManager.showDropResults) {
-                AddSubscriptionView(subManager: subManager)
-                    .environment(\.colorScheme, colorScheme)
+        Group {
+            if hidden {
+                Color.clear.frame(width: 0, height: 0)
+            } else {
+                pasteButton
             }
-            .task(id: addVideosSuccess) {
-                await delayedVideoCheckmarkReset()
+        }
+        .disabled(subManager.isLoading)
+        .onReceive(NotificationCenter.default.publisher(for: .pasteAddToLibrary)) { _ in
+            if let text = ClipboardService.get() {
+                handleTextFieldSubmit(text)
             }
-            .task(id: subManager.isSubscribedSuccess) {
-                if subManager.isSubscribedSuccess == true {
-                    await refresher.refreshAll()
-                }
+        }
+        .sheet(isPresented: $subManager.showDropResults) {
+            AddSubscriptionView(subManager: subManager)
+                .environment(\.colorScheme, colorScheme)
+        }
+        .task(id: addVideosSuccess) {
+            await delayedVideoCheckmarkReset()
+        }
+        .task(id: subManager.isSubscribedSuccess) {
+            if subManager.isSubscribedSuccess == true {
+                await refresher.refreshAll()
             }
-            .task(id: addVideosSuccess) {
-                if addVideosSuccess == true {
-                    await refresher.refreshAll()
-                }
+        }
+        .task(id: addVideosSuccess) {
+            if addVideosSuccess == true {
+                await refresher.refreshAll()
             }
-            .task(id: subManager.isSubscribedSuccess) {
-                await delayedSubscriptionCheckmarkReset()
-            }
-            .task(id: addSubscriptionFromText) {
-                await handleAddSubscriptionFromText()
-            }
-            .confirmationDialog("textContainsPlaylist",
-                                isPresented: Binding(
-                                    get: { textContainingPlaylist != nil },
-                                    set: { if !$0 { textContainingPlaylist = nil } }
-                                ),
-                                actions: {
-                                    Button("addAsPlaylist") {
-                                        if let text = textContainingPlaylist {
-                                            addUrlsFromText(text.str)
-                                        }
+        }
+        .task(id: subManager.isSubscribedSuccess) {
+            await delayedSubscriptionCheckmarkReset()
+        }
+        .task(id: addSubscriptionFromText) {
+            await handleAddSubscriptionFromText()
+        }
+        .confirmationDialog("textContainsPlaylist",
+                            isPresented: Binding(
+                                get: { textContainingPlaylist != nil },
+                                set: { if !$0 { textContainingPlaylist = nil } }
+                            ),
+                            actions: {
+                                Button("addAsPlaylist") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str)
                                     }
-                                    Button("addAsVideosToQueue") {
-                                        if let text = textContainingPlaylist {
-                                            addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
-                                        }
+                                }
+                                Button("addAsVideosToQueue") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str, playListAsVideos: true, target: .queue)
                                     }
-                                    Button("addAsVideosToInbox") {
-                                        if let text = textContainingPlaylist {
-                                            addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
-                                        }
+                                }
+                                Button("addAsVideosToInbox") {
+                                    if let text = textContainingPlaylist {
+                                        addUrlsFromText(text.str, playListAsVideos: true, target: .inbox)
                                     }
-                                    Button("cancel", role: .cancel) {
-                                        textContainingPlaylist = nil
-                                    }
-                                },
-                                message: { Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)") })
+                                }
+                                Button("cancel", role: .cancel) {
+                                    textContainingPlaylist = nil
+                                }
+                            },
+                            message: { Text("textContainsPlaylistMessage \(Const.playlistPageRequestLimit * 50)") })
     }
 
     @ViewBuilder var pasteButton: some View {
@@ -102,6 +119,7 @@ struct AddToLibraryView: View {
         let text = inputText ?? self.addText
         guard !text.isEmpty, UrlService.stringContainsUrl(text) else {
             Log.warning("no url found")
+            appNotification?.show("pasteNoUrlFound", isError: true)
             return
         }
         if containsPlaylistUrl(text) {
@@ -186,6 +204,7 @@ struct AddToLibraryView: View {
                 return
             } catch {
                 Log.error("\(error)")
+                appNotification?.show(.error(error))
                 addVideosSuccess = false
                 isLoadingVideos = false
             }

@@ -11620,6 +11620,17 @@
         }
       }
     },
+    "pasteNoUrlFound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No YouTube link in the clipboard"
+          }
+        }
+      }
+    },
     "pasteUrl" : {
       "localizations" : {
         "de" : {

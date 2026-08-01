@@ -18,7 +18,7 @@ struct NavigationStackWorkaround: ViewModifier {
                 .frame(maxHeight: .infinity)
         }
         .toolbar(.hidden, for: .windowToolbar)
-        .overlay {
+        .overlayPreferenceValue(PaneToolbarKey.self) { actions in
             HStack(alignment: .center, spacing: 10) {
                 TrafficLights()
                     .padding(11)
@@ -30,11 +30,13 @@ struct NavigationStackWorkaround: ViewModifier {
                     .lineLimit(1)
                     .padding(.trailing, 30)
 
-                if navigationTitleManager.showStatsItem {
+                if !actions.isEmpty {
                     Spacer()
-                    ShowStatsItem()
-                        .buttonStyle(.plain)
-                        .padding(.horizontal)
+                    HStack(spacing: 14) {
+                        ForEach(actions.indices, id: \.self) { actions[$0] }
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)

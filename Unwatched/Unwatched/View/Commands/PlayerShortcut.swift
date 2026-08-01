@@ -28,6 +28,7 @@ enum PlayerShortcut: String, CaseIterable {
     case goToQueue
     case goToInbox
     case goToLibrary
+    case goToSearch
     case goToBrowser
     case openInAppBrowser
     case openInExternalBrowser
@@ -54,6 +55,7 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToQueue: return NavigationTab.queue.stringKey
         case .goToInbox: return NavigationTab.inbox.stringKey
         case .goToLibrary: return NavigationTab.library.stringKey
+        case .goToSearch: return NavigationTab.search.stringKey
         case .goToBrowser: return NavigationTab.browser.stringKey
         case .openInAppBrowser: return "openInAppBrowser"
         case .openInExternalBrowser: return "openInExternalBrowser"
@@ -82,7 +84,8 @@ enum PlayerShortcut: String, CaseIterable {
         case .goToQueue: return [("1", [.command])]
         case .goToInbox: return [("2", [.command])]
         case .goToLibrary: return [("3", [.command])]
-        case .goToBrowser: return [("4", [.command])]
+        case .goToSearch: return [("4", [.command])]
+        case .goToBrowser: return [("5", [.command])]
         case .openInAppBrowser: return [("o", [])]
         case .openInExternalBrowser: return [("o", [.shift])]
         }
@@ -195,6 +198,8 @@ enum PlayerShortcut: String, CaseIterable {
             NavigationManager.shared.navigateTo(.inbox)
         case .goToLibrary:
             NavigationManager.shared.navigateTo(.library)
+        case .goToSearch:
+            NavigationManager.shared.navigateTo(.search)
         case .goToBrowser:
             NavigationManager.shared.openUrlInApp(nil)
         case .openInAppBrowser:
