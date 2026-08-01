@@ -17,9 +17,12 @@ export default {
       // active user keeps a rolling 30-day window instead of being logged out.
       const setCookie = await dashboardCookieHeader(env);
       if (url.pathname === "/dashboard/data" || url.pathname === "/dashboard/recent") {
+        // Build channel to report on. Unknown/missing values fall back to the default
+        // inside the dashboard module, which validates against a fixed set of filters.
+        const channel = url.searchParams.get("channel") ?? "";
         const res = url.pathname === "/dashboard/recent"
-          ? await handleRecentData(env)
-          : await handleDashboardData(env);
+          ? await handleRecentData(env, channel)
+          : await handleDashboardData(env, channel);
         res.headers.append("Set-Cookie", setCookie);
         return res;
       }
@@ -67,10 +70,16 @@ export default {
         // stored as JSON since Signal.log() call sites pass varying keys.
         // userId is a random, non-identifying per-install id (see AnalyticsEvent.swift)
         // used to count unique/active users and dedupe per-user settings snapshots.
+        // channel is the build that produced the event ("release" / "testflight" /
+        // "debug"), so local testing can be filtered out of the dashboard. Every real
+        // build sends it — the dataset was cut over to v3 when channels landed, so
+        // there are no untagged rows. A missing one therefore means a payload that
+        // didn't come from the app, and "unknown" keeps it out of the live numbers.
         blobs: [
           event.name ?? "unknown",
           JSON.stringify(event.params ?? {}),
           event.userId ?? "unknown",
+          event.channel ?? "unknown",
         ],
         // doubles: numeric fields, up to 20. clientTimestamp preserves when the
         // event actually happened, since ingestion time reflects when it was sent.

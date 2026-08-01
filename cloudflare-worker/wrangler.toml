@@ -11,7 +11,7 @@ custom_domain = true
 
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
-dataset = "unwatched_analytics_v2"
+dataset = "unwatched_analytics_v3"
 
 # Per-IP rate limit on the ingest endpoint. The bearer token that authorizes writes
 # ships inside the app and is therefore extractable; this caps how much any single

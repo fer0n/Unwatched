@@ -193,16 +193,46 @@ function tallyParam(rows, paramKey) {
   return counts;
 }
 
+// Build channel (blob4) the row came from — see Signal.buildChannel (Signal.swift).
+// Keeps local testing out of the live numbers without throwing it away: debug events
+// still ingest and can be inspected by switching channel, they just don't count.
+//
+// `live` is an allowlist rather than "not debug" on purpose: anything unexpected — a
+// channel added to the app before it's added here, or an "unknown" from a payload that
+// didn't come from a real build — stays out of the live numbers until it's deliberately
+// let in. The dataset was cut over to v3 when channels landed, so every row has one.
+//
+// SQL fragments, never the raw query value: `channelFilter` looks the requested channel
+// up in this map and falls back to the default, so nothing user-supplied reaches the query.
+const CHANNEL_FILTERS = {
+  live: "blob4 IN ('release', 'testflight')",
+  release: "blob4 = 'release'",
+  testflight: "blob4 = 'testflight'",
+  debug: "blob4 = 'debug'",
+  all: "1 = 1",
+};
+export const DEFAULT_CHANNEL = "live";
+
+function channelFilter(channel) {
+  return CHANNEL_FILTERS[channel] ?? CHANNEL_FILTERS[DEFAULT_CHANNEL];
+}
+
+// Normalized back to the client so the UI can reflect what was actually queried
+// rather than what it asked for.
+function resolveChannel(channel) {
+  return channel in CHANNEL_FILTERS ? channel : DEFAULT_CHANNEL;
+}
+
 // Last 50 events, newest first. Shared by the full dashboard payload and the
 // lightweight /dashboard/recent refresh so the two never drift apart.
-const RECENT_EVENTS_SQL =
-  `SELECT blob1 AS name, blob2 AS params, double1 AS clientTimestamp FROM unwatched_analytics_v2 ORDER BY clientTimestamp DESC LIMIT 50`;
+const recentEventsSql = (channel) =>
+  `SELECT blob1 AS name, blob2 AS params, blob4 AS channel, double1 AS clientTimestamp FROM unwatched_analytics_v3 WHERE ${channelFilter(channel)} ORDER BY clientTimestamp DESC LIMIT 50`;
 
 // Just the recent-events query, for the section's own refresh button — avoids
 // re-running the ~13 queries handleDashboardData fans out.
-export async function handleRecentData(env) {
+export async function handleRecentData(env, channel) {
   try {
-    const recent = await queryAnalytics(env, RECENT_EVENTS_SQL);
+    const recent = await queryAnalytics(env, recentEventsSql(channel));
     return new Response(JSON.stringify({ recent: recent.data }), {
       headers: { "Content-Type": "application/json" },
     });
@@ -214,7 +244,8 @@ export async function handleRecentData(env) {
   }
 }
 
-export async function handleDashboardData(env) {
+export async function handleDashboardData(env, channel) {
+  const ch = channelFilter(channel);
   try {
     const [
       counts,
@@ -236,64 +267,66 @@ export async function handleDashboardData(env) {
       // table (per-active-user rates, adoption %), funnels, and comparisons.
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, count() AS count, count(DISTINCT blob3) AS users FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY name ORDER BY count DESC LIMIT 200`
+        `SELECT blob1 AS name, count() AS count, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY name ORDER BY count DESC LIMIT 200`
       ),
-      queryAnalytics(env, RECENT_EVENTS_SQL),
+      queryAnalytics(env, recentEventsSql(channel)),
       queryAnalytics(
         env,
-        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '1' DAY AND blob3 != 'unknown'`
-      ),
-      queryAnalytics(
-        env,
-        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '7' DAY AND blob3 != 'unknown'`
+        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '1' DAY AND blob3 != 'unknown'`
       ),
       queryAnalytics(
         env,
-        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '30' DAY AND blob3 != 'unknown'`
+        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '7' DAY AND blob3 != 'unknown'`
+      ),
+      queryAnalytics(
+        env,
+        `SELECT count(DISTINCT blob3) AS uniqueUsers FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '30' DAY AND blob3 != 'unknown'`
       ),
       // Daily active users over the trend window (one point per day).
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, count(DISTINCT blob3) AS users FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY AND blob3 != 'unknown' GROUP BY day ORDER BY day`
       ),
       // Total event volume per day over the trend window.
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS events FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, count() AS events FROM unwatched_analytics_v3 WHERE ${ch} AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
       // Data points written per day over a longer window — one row = one writeDataPoint
       // call = one event, which is exactly the Analytics Engine "data points written"
       // billing metric. Since a request batches up to 25 events, writes/day is an upper
       // bound on requests/day, so one line answers both free-plan caps (see FREE_DAILY_LIMIT).
+      // Deliberately NOT channel-filtered: debug and TestFlight writes bill the same as
+      // release ones, so the capacity chart has to show every row actually written.
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS writes FROM unwatched_analytics_v2 WHERE timestamp > NOW() - INTERVAL '${CAPACITY_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, count() AS writes FROM unwatched_analytics_v3 WHERE timestamp > NOW() - INTERVAL '${CAPACITY_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v2 WHERE blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SettingsSnapshot' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v2 WHERE blob1 IN ('Queue.Count', 'Inbox.Count') AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob1 AS name, blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Queue.Count', 'Inbox.Count') AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v2 WHERE blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
+        `SELECT blob2 AS params, blob3 AS userId, double1 AS ts FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'SubscriptionCount' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY LIMIT ${RAW_ROW_LIMIT}`
       ),
       queryAnalytics(
         env,
-        `SELECT blob2 AS params, count() AS count FROM unwatched_analytics_v2 WHERE blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY params ORDER BY count DESC LIMIT 50`
+        `SELECT blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY params ORDER BY count DESC LIMIT 50`
       ),
       queryAnalytics(
         env,
-        `SELECT toStartOfDay(timestamp) AS day, count() AS count FROM unwatched_analytics_v2 WHERE blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
+        `SELECT toStartOfDay(timestamp) AS day, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 = 'Error' AND timestamp > NOW() - INTERVAL '${SNAPSHOT_WINDOW_DAYS}' DAY GROUP BY day ORDER BY day`
       ),
       // Consolidated param-carrying events, grouped by their raw params JSON so the
       // client can break them out by dimension (Video.Action by action/context, etc).
       queryAnalytics(
         env,
-        `SELECT blob1 AS name, blob2 AS params, count() AS count FROM unwatched_analytics_v2 WHERE blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 500`
+        `SELECT blob1 AS name, blob2 AS params, count() AS count FROM unwatched_analytics_v3 WHERE ${ch} AND blob1 IN ('Video.Action', 'Player.MoreMenu', 'Search.Submitted', 'Player.Start') AND timestamp > NOW() - INTERVAL '${TREND_WINDOW_DAYS}' DAY GROUP BY name, params ORDER BY count DESC LIMIT 500`
       ),
     ]);
 
@@ -313,6 +346,9 @@ export async function handleDashboardData(env) {
 
     return new Response(
       JSON.stringify({
+        // Echoed back normalized so the picker shows what was actually queried
+        // (an unknown value silently falls back to DEFAULT_CHANNEL).
+        channel: resolveChannel(channel),
         // count/users are per-event over TREND_WINDOW_DAYS; the client derives
         // per-active-user rates and adoption % against activeUsers.
         counts: counts.data,
@@ -419,7 +455,16 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
     body.loading .table-scroll, body.loading .settings-grid,
     body.loading #funnels, body.loading #compare, body.loading #breakdowns { animation: none; }
   }
-  h1 { font-size: 1.2rem; margin: 0 0 0.5rem; }
+  h1 { font-size: 1.2rem; margin: 0; }
+  .page-head { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin: 0 0 0.5rem; }
+  .channel-select {
+    background: #1b1b1b; border: 1px solid #2a2a2a; border-radius: 8px;
+    color: #ccc; font-size: 0.78rem; padding: 0.3rem 0.5rem; cursor: pointer;
+  }
+  /* Anything other than the default view is loud on purpose: debug/TestFlight-only
+     numbers look exactly like real ones, so the picker has to be hard to overlook. */
+  .channel-select.alt { border-color: #fbbf24; color: #fbbf24; }
+  .channel-note { font-size: 0.75rem; color: #fbbf24; margin: 0 0 0.5rem; }
   h2 { font-size: 0.95rem; color: #aaa; margin: 1.5rem 0 0.5rem; }
   h2.section-head { display: flex; align-items: center; gap: 0.5rem; }
   .refresh-btn {
@@ -510,7 +555,11 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 </style>
 </head>
 <body class="loading">
-<h1>Unwatched Analytics</h1>
+<div class="page-head">
+  <h1>Unwatched Analytics</h1>
+  <select id="channel" class="channel-select" aria-label="Build channel"></select>
+</div>
+<div class="channel-note" id="channelNote" hidden></div>
 <div id="error"></div>
 
 <h2>Active users (anonymous, on-device id only)</h2>
@@ -528,7 +577,7 @@ export const DASHBOARD_HTML = `<!DOCTYPE html>
 
 <h2 class="section-head">Recent events <button id="recentRefresh" class="refresh-btn" title="Refresh recent events" aria-label="Refresh recent events"><span class="refresh-icon">↻</span></button></h2>
 <div class="table-scroll">
-<table id="recent"><thead><tr><th>Event</th><th>Params</th><th>When</th></tr></thead><tbody></tbody></table>
+<table id="recent"><thead><tr><th>Event</th><th>Params</th><th>Channel</th><th>When</th></tr></thead><tbody></tbody></table>
 </div>
 <button id="recentToggle" class="toggle-btn" hidden></button>
 
@@ -602,6 +651,46 @@ const COLORS = { on: '#4ade80', off: '#fb923c', notTouched: '#555' };
 const BUCKET_COLORS = ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#38bdf8', '#22d3ee', '#34d399', '#a3e635', '#facc15'];
 const SETTINGS_COLLAPSED_COUNT = 8;
 const RECENT_COLLAPSED_COUNT = 5;
+
+// Build channel to report on. Kept in the URL rather than in memory so the choice
+// survives a reload, can be bookmarked, and — since the page renders once from a
+// single payload — switching can just reload instead of re-rendering in place.
+const CHANNEL_OPTIONS = [
+  ['live', 'Live (release + TestFlight)'],
+  ['release', 'Release only'],
+  ['testflight', 'TestFlight only'],
+  ['debug', 'Debug only'],
+  ['all', 'All channels'],
+];
+const DEFAULT_CHANNEL = 'live';
+const CHANNEL_NOTES = {
+  release: 'Release builds only — TestFlight beta activity is excluded.',
+  testflight: 'TestFlight builds only — this is beta activity, not your live numbers.',
+  debug: 'Debug builds only — this is your own local testing, not real usage.',
+  all: 'All channels, including your own debug builds — not your live numbers.',
+};
+const currentChannel = new URLSearchParams(location.search).get('channel') || DEFAULT_CHANNEL;
+const channelQuery = '?channel=' + encodeURIComponent(currentChannel);
+
+const channelSelect = document.getElementById('channel');
+for (const [value, label] of CHANNEL_OPTIONS) {
+  const option = document.createElement('option');
+  option.value = value;
+  option.textContent = label;
+  channelSelect.appendChild(option);
+}
+channelSelect.value = CHANNEL_OPTIONS.some(([v]) => v === currentChannel) ? currentChannel : DEFAULT_CHANNEL;
+channelSelect.classList.toggle('alt', channelSelect.value !== DEFAULT_CHANNEL);
+channelSelect.onchange = () => {
+  // Drop the saved scroll position: a different channel is a different page of numbers.
+  sessionStorage.removeItem('dashboardScroll');
+  location.search = '?channel=' + encodeURIComponent(channelSelect.value);
+};
+const channelNote = document.getElementById('channelNote');
+if (CHANNEL_NOTES[channelSelect.value]) {
+  channelNote.textContent = CHANNEL_NOTES[channelSelect.value];
+  channelNote.hidden = false;
+}
 
 function donutSVG(on, off, notTouched, size) {
   size = size || 64;
@@ -1000,7 +1089,10 @@ function renderRecent(recent) {
     const tr = document.createElement('tr');
     const when = timeAgo(row.clientTimestamp);
     tr.title = new Date(row.clientTimestamp).toLocaleString();
-    tr.innerHTML = \`<td>\${row.name}</td><td>\${row.params}</td><td title="\${tr.title}">\${when}</td>\`;
+    // Stripped to bare letters because this goes in via innerHTML and the value
+    // comes off the wire.
+    const channel = String(row.channel || 'unknown').replace(/[^a-z]/g, '');
+    tr.innerHTML = \`<td>\${row.name}</td><td>\${row.params}</td><td>\${channel}</td><td title="\${tr.title}">\${when}</td>\`;
     recentBody.appendChild(tr);
     recentRows.push(tr);
   });
@@ -1022,7 +1114,7 @@ const recentRefresh = document.getElementById('recentRefresh');
 recentRefresh.onclick = () => {
   recentRefresh.disabled = true;
   recentRefresh.classList.add('spinning');
-  fetch('/dashboard/recent')
+  fetch('/dashboard/recent' + channelQuery)
     .then((r) => r.json())
     .then((d) => { if (d && d.recent) renderRecent(d.recent); })
     .catch(() => {})
@@ -1050,7 +1142,7 @@ function finishLoading() {
   if (savedScroll) scrollTo(0, savedScroll);
 }
 
-fetch('/dashboard/data').then(r => r.json()).then(data => {
+fetch('/dashboard/data' + channelQuery).then(r => r.json()).then(data => {
   if (data.error) {
     document.getElementById('error').textContent = data.error;
     finishLoading();
@@ -1088,7 +1180,7 @@ fetch('/dashboard/data').then(r => r.json()).then(data => {
   var writes = data.writes || {};
   document.getElementById('writesHint').textContent =
     'Data points written/day (one per event) vs. the ' + fmtNum(writes.freeDailyLimit || 0) +
-    '/day free-plan cap. Requests are batched (up to 25 events each), so this line — the write count — is the upper bound on both caps.';
+    '/day free-plan cap. Requests are batched (up to 25 events each), so this line — the write count — is the upper bound on both caps. Always counts every channel, including debug: all writes bill the same.';
   renderLineChart(document.getElementById('writesTrend'), writes.trend, 'writes', '#fbbf24', writes.freeDailyLimit || 0);
 
   document.getElementById('funnelHint').textContent = 'Distinct users reaching each step ' + win;

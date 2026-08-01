@@ -15,6 +15,18 @@ struct Signal {
         Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
     }
 
+    /// Which build produced an event. Rides along on every event so local testing can be
+    /// kept out of the live numbers: the dashboard excludes `debug` by default while still
+    /// letting it be inspected, which means the analytics path stays exercised in
+    /// development instead of only being proven after release.
+    static var buildChannel: String {
+        #if DEBUG
+        return "debug"
+        #else
+        return isTestFlight ? "testflight" : "release"
+        #endif
+    }
+
     static func setup() {
         #if os(iOS) || os(visionOS)
         if !(Const.analytics.bool ?? true) { return }
@@ -59,7 +71,15 @@ struct Signal {
         if let throttle {
             // `throttleKey` lets callers rate-limit per sub-type (e.g. per gesture) while
             // keeping a single low-cardinality event name. Defaults to the event name.
-            if !UserDefaults.standard.shouldPerform(throttleKey ?? signalName, interval: throttle) {
+            // Namespaced in debug because a development build shares UserDefaults with an
+            // installed release build: an un-namespaced key would let local testing consume
+            // the weekly/fortnightly snapshot window and suppress the real event.
+            #if DEBUG
+            let throttleId = "debug.\(throttleKey ?? signalName)"
+            #else
+            let throttleId = throttleKey ?? signalName
+            #endif
+            if !UserDefaults.standard.shouldPerform(throttleId, interval: throttle) {
                 return
             }
         }

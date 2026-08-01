@@ -3,7 +3,13 @@
 Privacy-first, self-hosted product analytics. Two halves:
 
 - **App side** — `Signal.log()` in `Unwatched/Unwatched/Helper/Signal.swift` enqueues events; `AnalyticsQueue` batches and POSTs them to the Worker. Event shape in `AnalyticsEvent.swift`.
-- **Worker side** — `cloudflare-worker/src/` ingests events into a Cloudflare Analytics Engine dataset (`unwatched_analytics_v2`) and serves the `/dashboard`.
+- **Worker side** — `cloudflare-worker/src/` ingests events into a Cloudflare Analytics Engine dataset (`unwatched_analytics_v3`) and serves the `/dashboard`.
+
+Analytics Engine is **append-only** — no `UPDATE`, `DELETE` or `TRUNCATE`, and rows expire on their
+own after three months. A dataset therefore can't be cleaned or backfilled: the only reset is to
+bump the dataset name in `wrangler.toml` (and every query in `dashboard.js`) and let the old one age
+out. That's what `_v3` is — the cutover when build channels landed, discarding a dataset that only
+ever held local test events. Weigh it accordingly once real data is flowing.
 
 ## Guiding principle
 
@@ -24,6 +30,27 @@ Concretely, before adding or changing a signal, it must pass all of:
 - Raw counts that could be fingerprinting — bucket them with `Signal.bucket()`.
 - Exception/error *messages*. `Signal.error(id)` takes a short, fixed id only.
 
+## Build channels
+
+Every event carries a `channel` — `debug` (local dev builds), `testflight`, or `release` — from
+`Signal.buildChannel`, stored as `blob4`. The point is to keep local testing out of the live
+numbers *without* dropping it: debug events still ingest, so the analytics path stays exercised
+in development instead of only being proven after release.
+
+- **Dashboard default is `live`** = `blob4 IN ('release', 'testflight')`. The picker in the header
+  switches channel via `?channel=`; anything other than the default is highlighted and captioned so
+  debug numbers can't be misread as real ones. Valid values are the keys of `CHANNEL_FILTERS` in
+  `dashboard.js` — the query value is looked up there, never interpolated. `live` is an allowlist
+  rather than "not debug" so a channel added to the app, or an `unknown` from a payload that didn't
+  come from a real build, can't land in the live numbers before it's deliberately let in.
+- **The capacity/writes chart is deliberately unfiltered** — debug writes bill against the free-plan
+  cap exactly like release ones, so it has to show every row actually written.
+- **Throttle keys are namespaced in debug** (`Signal.log`): a dev build shares `UserDefaults` with an
+  installed release build, so an un-namespaced key would let local testing consume the
+  weekly/fortnightly snapshot window and suppress the real user's snapshot.
+- `AnalyticsEvent.channel` is `String?` only for backward compatibility — a non-optional would fail
+  to decode queue files written by an older build and drop every event in them.
+
 ## Conventions
 
 - **Naming:** `Area.Action` in PascalCase, e.g. `Player.NextVideo`, `Search.Submitted`. Group related actions under one event with a low-cardinality parameter rather than exploding into many event names, e.g. `Player.MoreMenu` with `action: "reload" | "bookmark" | "defer"`.
@@ -40,7 +67,7 @@ Concretely, before adding or changing a signal, it must pass all of:
 ## Dashboard (Worker)
 
 - `src/index.js` — ingestion (`POST /`, bearer `API_SECRET`) + dashboard auth.
-- `src/dashboard.js` — `handleDashboardData()` (SQL queries) + `DASHBOARD_HTML` (inline UI).
+- `src/dashboard.js` — `handleDashboardData(env, channel)` (SQL queries) + `DASHBOARD_HTML` (inline UI).
 - Auth: HTTP Basic, upgraded to a 30-day rolling `HttpOnly; Secure` cookie (`dashboard_auth`, SHA-256 of the password).
 - Analytics Engine SQL is a ClickHouse subset. Confirmed available: `count(DISTINCT …)`, `toStartOfDay`, `toStartOfInterval`, `now()`. No `uniq()`.
 - `BOOL_SETTINGS` in `dashboard.js` mirrors the app's boolean settings **manually** — keep it in sync when settings are added/removed.
