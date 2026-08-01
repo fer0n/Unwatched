@@ -26,4 +26,11 @@ public enum PlayerTypeSetting: String, CaseIterable, Hashable {
     public var minimalPlayerUI: Bool {
         self == .youtubeEmbeddedMinimal
     }
+
+    /// Whether YouTube's own overlay/controls are blocked so the app's replacement controls take over.
+    /// visionOS does this for every embedded player; without embedding the full website is shown,
+    /// which always keeps its own controls.
+    public func blocksOverlay(embeddingDisabled: Bool) -> Bool {
+        !embeddingDisabled && (self == .youtubeCustomUI || Device.isVision)
+    }
 }

@@ -163,18 +163,11 @@ struct PlayerView: View {
         )
     }
 
-    /// On iOS the custom UI has its own view (`PlayerEmbeddedCustomUI`); elsewhere blocking
-    /// YouTube's overlays is all that's needed, the replacement controls already sit outside the video.
-    var embeddedPlayerType: PlayerType {
-        playerType == .youtubeCustomUI ? .youtubeCustomUI : .youtubeEmbedded
-    }
-
     @ViewBuilder
     var embeddedPlayer: some View {
         PlayerEmbedded(
             autoHideVM: $autoHideVM,
             overlayVM: $overlayVM,
-            playerType: embeddedPlayerType,
             handleVideoEnded: handleVideoEnded,
             handleSwipe: handleSwipe,
             showFullscreenControls: showFullscreenControls,

@@ -16,7 +16,6 @@ struct PlayerEmbedded: View {
     @Binding var autoHideVM: AutoHideVM
     @Binding var overlayVM: OverlayFullscreenVM
 
-    var playerType: PlayerType = .youtubeEmbedded
     var handleVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
     var showFullscreenControls: Bool
@@ -31,7 +30,6 @@ struct PlayerEmbedded: View {
                 PlayerWebView(
                     overlayVM: $overlayVM,
                     autoHideVM: $autoHideVM,
-                    playerType: playerType,
                     onVideoEnded: handleVideoEnded,
                     handleSwipe: handleSwipe
                 )

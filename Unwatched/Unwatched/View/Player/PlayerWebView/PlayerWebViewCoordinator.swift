@@ -45,12 +45,9 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
         let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
             || parent.playerType == .youtubeCustomUI
         let autoCaptionsOnSeekBack = UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack)
-        let playerTypeSetting = UserDefaults.standard.string(forKey: Const.playerType)
-            .flatMap(PlayerTypeSetting.init(rawValue:)) ?? .youtubeEmbedded
-        let minimalPlayerUI = playerTypeSetting.minimalPlayerUI
         let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
         let originalAudio = UserDefaults.standard.bool(forKey: Const.originalAudio)
-        let blockOverlay = parent.playerType == .youtubeCustomUI || (Device.isVision && !parent.player.embeddingDisabled)
+        let blockOverlay = parent.blocksOverlay
 
         let playbackId = UUID().uuidString
         UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
@@ -67,7 +64,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
             requiresFetchingVideoData: parent.player.requiresFetchingVideoData(),
             disableCaptions: disableCaptions,
             autoCaptionsOnSeekBack: autoCaptionsOnSeekBack,
-            minimalPlayerUI: minimalPlayerUI || blockOverlay,
+            minimalPlayerUI: parent.playerTypeSetting.minimalPlayerUI || blockOverlay,
             isNonEmbedding: parent.player.embeddingDisabled,
             hijackFullscreenButton: hijackFullscreenButton,
             fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",

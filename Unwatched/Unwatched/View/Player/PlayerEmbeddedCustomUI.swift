@@ -40,7 +40,6 @@ struct PlayerEmbeddedCustomUI: View {
                 PlayerWebView(
                     overlayVM: $overlayVM,
                     autoHideVM: $autoHideVM,
-                    playerType: .youtubeCustomUI,
                     onVideoEnded: handleVideoEnded,
                     handleSwipe: handleSwipe
                 )

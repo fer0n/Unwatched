@@ -22,7 +22,6 @@ struct PlayerWebsite: View {
             PlayerWebView(
                 overlayVM: $overlayVM,
                 autoHideVM: $autoHideVM,
-                playerType: .youtube,
                 onVideoEnded: handleVideoEnded,
                 handleSwipe: handleSwipe
             )

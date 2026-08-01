@@ -24,6 +24,18 @@ extension PlayerTypeSetting {
         }
     }
 
+    /// The web player variant this setting loads. Without embedding the full website is used
+    /// regardless of the setting; `.native` doesn't use a web player at all.
+    ///
+    /// On iOS the custom UI has its own view (`PlayerEmbeddedCustomUI`); elsewhere blocking
+    /// YouTube's overlays is all that's needed, the replacement controls already sit outside the video.
+    func webPlayerType(embeddingDisabled: Bool) -> PlayerType {
+        if embeddingDisabled {
+            return .youtube
+        }
+        return self == .youtubeCustomUI ? .youtubeCustomUI : .youtubeEmbedded
+    }
+
     /// `nil` for types without a dedicated icon; callers fall back to a generic symbol.
     var systemImage: String? {
         switch self {

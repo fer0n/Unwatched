@@ -21,17 +21,26 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 }
 
 struct PlayerWebView: PlatformViewRepresentable {
+    @AppStorage(Const.playerType) var playerTypeSetting: PlayerTypeSetting = .youtubeEmbedded
+
     @Environment(PlayerManager.self) var player
     @Environment(AppNotificationVM.self) var appNotificationVM
 
     @Binding var overlayVM: OverlayFullscreenVM
     @Binding var autoHideVM: AutoHideVM
 
-    let playerType: PlayerType
     let onVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
 
     @State var webViewState = WebViewState.shared
+
+    var playerType: PlayerType {
+        playerTypeSetting.webPlayerType(embeddingDisabled: player.embeddingDisabled)
+    }
+
+    var blocksOverlay: Bool {
+        playerTypeSetting.blocksOverlay(embeddingDisabled: player.embeddingDisabled)
+    }
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
@@ -325,7 +334,6 @@ struct PlayerWebView: PlatformViewRepresentable {
         PlayerWebView(
             overlayVM: .constant(OverlayFullscreenVM.shared),
             autoHideVM: .constant(AutoHideVM()),
-            playerType: .youtubeEmbedded,
             onVideoEnded: {
 
             },
