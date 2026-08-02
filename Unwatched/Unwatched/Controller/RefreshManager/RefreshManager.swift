@@ -87,16 +87,16 @@ actor RefreshActor {
     }
 
     func startLoading() async -> Bool {
-        isLoading = true
         let canStartLoading = await refreshActor.startLoading()
+        if canStartLoading {
+            isLoading = true
+        }
         return canStartLoading
     }
 
-    func stopLoading() {
+    func stopLoading() async {
+        await refreshActor.stopLoading()
         isLoading = false
-        Task {
-            await refreshActor.stopLoading()
-        }
     }
 
     private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
@@ -106,10 +106,11 @@ actor RefreshActor {
             return
         }
 
-        defer {
-            stopLoading()
-        }
+        await performRefresh(subscriptionIds: subscriptionIds, hardRefresh: hardRefresh)
+        await stopLoading()
+    }
 
+    private func performRefresh(subscriptionIds: [PersistentIdentifier]?, hardRefresh: Bool) async {
         let isFullRefresh = subscriptionIds?.isEmpty ?? true
         if isFullRefresh {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
@@ -289,32 +290,29 @@ extension RefreshManager {
     func handleBackgroundVideoRefresh() async {
         #if os(iOS)
         Log.info("Background task running now")
+        scheduleVideoRefresh()
+
+        NotificationManager.notifyRun(.setup)
+
+        let canStartLoading = await startLoading()
+        guard canStartLoading else {
+            Log.info("Already refreshing")
+            NotificationManager.notifyRun(.abort)
+            return
+        }
+
         do {
-            scheduleVideoRefresh()
-
-            NotificationManager.notifyRun(.setup)
-
-            let canStartLoading = await refreshActor.startLoading()
-            guard canStartLoading else {
-                Log.info("Already refreshing")
-                NotificationManager.notifyRun(.abort)
-                return
-            }
-
-            defer {
-                Task {
-                    await refreshActor.stopLoading()
-                    NotificationManager.notifyRun(.stopLoading)
-                }
-            }
-
             NotificationManager.notifyRun(.start)
 
             let task = VideoService.loadNewVideosInBg(fetchDurations: false)
             // batch fetch durations only when necessary, e.g. when opening the app
             UserDefaults.standard.set(true, forKey: Const.requiresDurationFetch)
 
-            let newVideos = try await task.value
+            let newVideos = try await withTaskCancellationHandler {
+                try await task.value
+            } onCancel: {
+                task.cancel()
+            }
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
             if newVideos.videoCount > 0 {
                 Log.info("notifyNewVideos")
@@ -325,6 +323,9 @@ extension RefreshManager {
             Log.error("Error during background refresh: \(error)")
             NotificationManager.notifyRun(.error, error.localizedDescription)
         }
+
+        await stopLoading()
+        NotificationManager.notifyRun(.stopLoading)
         #endif
     }
 }
