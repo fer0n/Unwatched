@@ -344,14 +344,25 @@ import UnwatchedShared
 
     @MainActor
     var videoAspectRatio: Double {
-        aspectRatio
-            ?? video?.subscription?.customAspectRatio
-            ?? Const.defaultVideoAspectRatio
+        // an earlier build could persist NaN/infinity onto the subscription; ignoring those here is
+        // what gets an affected channel playing again
+        if let aspectRatio, aspectRatio.isUsableAspectRatio {
+            return aspectRatio
+        }
+        if let customAspectRatio = video?.subscription?.customAspectRatio,
+           customAspectRatio.isUsableAspectRatio {
+            return customAspectRatio
+        }
+        return Const.defaultVideoAspectRatio
     }
 
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
         Log.info("handleAspectRatio \(aspectRatio)")
+        guard aspectRatio.isUsableAspectRatio else {
+            Log.warning("Ignoring unusable aspect ratio: \(aspectRatio)")
+            return
+        }
         guard let video,
               let subscription = video.subscription else {
             Log.info("No video/subscription to set aspect ratio for")

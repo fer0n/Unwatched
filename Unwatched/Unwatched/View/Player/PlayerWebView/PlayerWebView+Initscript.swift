@@ -404,7 +404,8 @@ extension PlayerWebView {
             }
         }, { capture: true, once: true, passive: true });
         document.addEventListener('loadeddata', (e) => {
-            if (e.target.tagName === 'VIDEO') {
+            // both are 0 while there's no video track, which would send "NaN"
+            if (e.target.tagName === 'VIDEO' && e.target.videoWidth > 0 && e.target.videoHeight > 0) {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
             }
         }, { passive: true, capture: true });

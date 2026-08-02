@@ -46,4 +46,10 @@ extension Double {
         }
         return self
     }
+
+    /// Whether this can be handed to layout: `.aspectRatio(_:contentMode:)` turns NaN or infinity
+    /// into NaN sizes, which CALayer rejects with an uncatchable `CALayerInvalidGeometry` exception.
+    var isUsableAspectRatio: Bool {
+        isFinite && self > 0
+    }
 }

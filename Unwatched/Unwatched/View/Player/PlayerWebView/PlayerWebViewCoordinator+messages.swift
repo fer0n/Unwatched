@@ -198,6 +198,12 @@ extension PlayerWebViewCoordinator {
             Log.warning("Aspect ratio couldn't be parsed: \(payload ?? "-")")
             return
         }
+        // videoWidth/videoHeight is 0/0 while there's no video track, which the page sends as
+        // "NaN"/"Infinity" — both of which `Double(_:)` happily parses.
+        guard aspectRatio.isUsableAspectRatio else {
+            Log.warning("Aspect ratio isn't a usable number: \(value)")
+            return
+        }
         parent.player.handleAspectRatio(aspectRatio)
     }
 
