@@ -175,18 +175,19 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     nonisolated func handleBackgroundRefresh() {
         Log.info("register handleBackgroundRefresh()")
         BGTaskScheduler.shared.register(forTaskWithIdentifier: Const.backgroundAppRefreshId, using: nil) { task in
-            task.expirationHandler = {
-                Log.info("experied")
-                NotificationManager.notifyRun(.error, "Experied")
-            }
-
-            Task { @MainActor in
+            let refreshTask = Task { @MainActor in
                 Log.info("handleBackgroundVideoRefresh")
                 await RefreshManager.shared.handleBackgroundVideoRefresh()
 
-                task.setTaskCompleted(success: true)
+                task.setTaskCompleted(success: !Task.isCancelled)
                 // workaround: iOS 18.4 background crash when using .backgroundTask(.appRefresh ...)
                 // https://developer.apple.com/forums/thread/775182?login=true
+            }
+
+            task.expirationHandler = {
+                Log.info("expired")
+                NotificationManager.notifyRun(.error, "Expired")
+                refreshTask.cancel()
             }
         }
     }
