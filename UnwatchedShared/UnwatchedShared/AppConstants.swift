@@ -41,6 +41,7 @@ public struct Const {
 
     public static let dotString = "•"
     public static let sensoryFeedback = SensoryFeedback.impact(intensity: 0.6)
+    public static let deniedFeedback = SensoryFeedback.error
 
     public static let playerAboveSheetHeight: CGFloat = 75
     public static let minSheetDetent: CGFloat = 75
@@ -339,6 +340,8 @@ public struct Const {
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
 
     public static let videoListFormat = "videoListFormat"
+    public static let inboxAppearance = "inboxAppearance"
+    public static let inboxOldestFirst = "inboxOldestFirst"
     public static let hidePlayerPageIndicator = "hidePlayerPageIndicator"
 
     public static let playerType = "playerType"

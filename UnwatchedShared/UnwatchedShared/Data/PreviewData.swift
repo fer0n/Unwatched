@@ -50,7 +50,7 @@ public extension Video {
             youtubeId: "_7vP9vsnYPc",
             thumbnailUrl: URL(string: "https://i4.ytimg.com/vi/_7vP9vsnYPc/hqdefault.jpg")!,
             publishedDate: try? Date("2024-08-20T20:15:00Z", strategy: .iso8601),
-            duration: 160,
+            duration: 460,
             videoDescription: """
             "AI in a Box. But a different box.
 
@@ -87,7 +87,7 @@ public extension Video {
             16:42 FUTURE
             """,
             chapters: chapters,
-            isYtShort: true
+            isYtShort: false
 
             // videoDescription: "The Resident Evil 4 Remake VR mode...
         )

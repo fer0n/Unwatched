@@ -67,6 +67,8 @@ extension Const {
         Const.showTabBarBadge: true,
         Const.hidePlayerPageIndicator: false,
         Const.videoListFormat: VideoListFormat.compact.rawValue,
+        Const.inboxAppearance: InboxAppearance.cards.rawValue,
+        Const.inboxOldestFirst: false,
         Const.lightModeTheme: AppAppearance.unwatched.rawValue,
         Const.darkModeTheme: AppAppearance.dark.rawValue,
         Const.themeColor: ThemeColor().rawValue,

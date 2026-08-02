@@ -29,9 +29,17 @@ public struct CachedImageView<Content, Content2>: View where Content: View, Cont
         @ViewBuilder content: @escaping (Image) -> Content,
         @ViewBuilder placeholder: @escaping () -> Content2
     ) {
-        self.imageUrls = urls.compactMap { $0 }
+        let imageUrls = urls.compactMap { $0 }
+        self.imageUrls = imageUrls
         self.contentImage = content
         self.placeholder = placeholder
+        // loading is asynchronous even for an already decoded image, a view recreated around one
+        // would blank for a frame
+        _image = State(
+            initialValue: imageUrls.lazy
+                .compactMap { ImageService.decodedImageCache[$0.absoluteString] }
+                .first
+        )
     }
 
     public init(

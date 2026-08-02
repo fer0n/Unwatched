@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UnwatchedShared
 
 struct UndoToolbarButton: ToolbarContent {
     @Environment(TinyUndoManager.self) private var undoManager
@@ -16,6 +17,7 @@ struct UndoToolbarButton: ToolbarContent {
                 } label: {
                     Image(systemName: "arrow.uturn.backward")
                 }
+                .keyboardShortcut("z", modifiers: .command)
                 .accessibilityLabel("undo")
                 .font(.footnote)
                 .fontWeight(.bold)
@@ -25,8 +27,36 @@ struct UndoToolbarButton: ToolbarContent {
     }
 }
 
+/// Switches the inbox between list and cards, long press sorts it instead
+struct InboxAppearanceToolbarButton: ToolbarContent {
+    @AppStorage(Const.inboxAppearance) private var inboxAppearance: InboxAppearance = .cards
+    @AppStorage(Const.inboxOldestFirst) private var oldestFirst: Bool = false
+
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .confirmationAction) {
+            Menu {
+                Picker("inboxSorting", selection: $oldestFirst) {
+                    Label("inboxNewestFirst", systemImage: "arrow.down").tag(false)
+                    Label("inboxOldestFirst", systemImage: "arrow.up").tag(true)
+                }
+                .pickerStyle(.inline)
+            } label: {
+                Image(systemName: inboxAppearance == .cards
+                        ? "square.stack.3d.up.fill"
+                        : "list.bullet")
+            } primaryAction: {
+                inboxAppearance = inboxAppearance == .cards ? .list : .cards
+            }
+            .accessibilityLabel("inboxAppearance")
+            // same size as the refresh button next to it
+            .font(.footnote)
+            .fontWeight(.bold)
+            .myTint(neutral: true)
+        }
+    }
+}
+
 struct InboxToolbar: ViewModifier {
-    @Environment(\.modelContext) var modelContext
     var showCancelButton: Bool = false
 
     func body(content: Content) -> some View {
@@ -37,6 +67,7 @@ struct InboxToolbar: ViewModifier {
                 }
                 UndoToolbarButton()
                 ToolbarSpacerWorkaround()
+                InboxAppearanceToolbarButton()
                 RefreshToolbarContent()
             }
     }
@@ -47,7 +78,6 @@ extension View {
         modifier(InboxToolbar(showCancelButton: showCancelButton))
     }
 }
-import UnwatchedShared
 
 #Preview {
     @Previewable @State var show = true

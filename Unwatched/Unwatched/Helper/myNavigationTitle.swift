@@ -9,6 +9,11 @@ import UnwatchedShared
 struct MyNavigationTitle: ViewModifier {
     var title: LocalizedStringKey?
     var titleHidden = false
+    /// Fades the title on its own, e.g. while a gesture drags something towards it. A closure, so
+    /// an observable it reads invalidates only the title rather than the whole screen.
+    var titleOpacity: () -> Double = { 1 }
+    /// Appended after the title, e.g. an inbox count, and faded along with it
+    var titleAccessory: Text?
 
     func body(content: Content) -> some View {
         content
@@ -19,14 +24,7 @@ struct MyNavigationTitle: ViewModifier {
             .toolbar {
                 if let title {
                     ToolbarItem(placement: .principal) {
-                        VStack {
-                            Text(title)
-                                .fontWeight(.black)
-                                .offset(y: titleHidden ? 10 : 0)
-                                .opacity(titleHidden ? 0 : 1)
-                                .blur(radius: titleHidden ? 3 : 0)
-                                .lineLimit(1)
-                        }
+                        TitleLabel(text: titleText(title), hidden: titleHidden, opacity: titleOpacity)
                     }
                 }
             }
@@ -35,15 +33,42 @@ struct MyNavigationTitle: ViewModifier {
         .updateNavTitle(title, titleHidden: titleHidden)
         #endif
     }
+
+    private func titleText(_ title: LocalizedStringKey) -> Text {
+        let text = Text(title).fontWeight(.black)
+        guard let titleAccessory else { return text }
+        return text + Text(" ") + titleAccessory
+    }
+}
+
+/// Its own view, so a changing `opacity` doesn't invalidate the toolbar around it
+private struct TitleLabel: View {
+    let text: Text
+    let hidden: Bool
+    let opacity: () -> Double
+
+    var body: some View {
+        text
+            .offset(y: hidden ? 10 : 0)
+            .opacity(hidden ? 0 : opacity())
+            .blur(radius: hidden ? 3 : 0)
+            .lineLimit(1)
+    }
 }
 
 extension View {
-    func myNavigationTitle(_ title: LocalizedStringKey? = nil, titleHidden: Bool = false
+    func myNavigationTitle(
+        _ title: LocalizedStringKey? = nil,
+        titleHidden: Bool = false,
+        titleOpacity: @escaping () -> Double = { 1 },
+        titleAccessory: Text? = nil
     ) -> some View {
         self.modifier(
             MyNavigationTitle(
                 title: title,
-                titleHidden: titleHidden
+                titleHidden: titleHidden,
+                titleOpacity: titleOpacity,
+                titleAccessory: titleAccessory
             )
         )
     }

@@ -29,6 +29,12 @@
         }
       }
     },
+    " " : {
+
+    },
+    ", " : {
+
+    },
     "%@" : {
       "localizations" : {
         "de" : {
@@ -161,6 +167,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ pozostało"
+          }
+        }
+      }
+    },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
           }
         }
       }
@@ -8510,6 +8526,54 @@
         }
       }
     },
+    "inboxAppearance" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Darstellung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox Appearance"
+          }
+        }
+      }
+    },
+    "inboxAppearanceCards" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cards"
+          }
+        }
+      }
+    },
+    "inboxAppearanceList" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List"
+          }
+        }
+      }
+    },
     "inboxHiddenEntries" : {
       "localizations" : {
         "de" : {
@@ -8540,6 +8604,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Starsze wpisy ukryte"
+          }
+        }
+      }
+    },
+    "inboxNewestFirst" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neueste zuerst"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Newest first"
+          }
+        }
+      }
+    },
+    "inboxOldestFirst" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Älteste zuerst"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oldest first"
           }
         }
       }
@@ -8642,6 +8738,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dodaj filmy, które chcesz obejrzeć, do swojej queue, usuń resztę. Usunięte filmy pozostają dostępne w Bibliotece."
+          }
+        }
+      }
+    },
+    "inboxSorting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortierung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorting"
           }
         }
       }
@@ -17225,6 +17337,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wymaga rozdziałów SponsorBlock. Upewnij się, że jesteś zalogowany na swoje konto YouTube Premium."
+          }
+        }
+      }
+    },
+    "skipVideo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
           }
         }
       }

@@ -116,6 +116,8 @@
 		882153522FC03C6900167AEE /* MiniPlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882153502FC03C6900167AEE /* MiniPlayerLayout.swift */; };
 		8823EB782B5519C60010A12F /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		88250C612B49273100174C8D /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88250C602B49273100174C8D /* Date.swift */; };
+		29EE86C9FD4A24E9668CDBCE /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11282F2B5571721EF8905E29 /* CGSize.swift */; };
+		27D59BC2152E1D6D07916DDA /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11282F2B5571721EF8905E29 /* CGSize.swift */; };
 		8826DD222E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		8826DD232E6EE9CA008234B3 /* PrivacySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */; };
 		88274EFC301E46FC0033352A /* PlayerEdgeSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */; };
@@ -128,6 +130,38 @@
 		88274F07301E47320033352A /* ShowFullscreenControlsViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274F05301E47320033352A /* ShowFullscreenControlsViewModifier.swift */; };
 		88274F09301E47800033352A /* GestureTrackingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274F08301E47800033352A /* GestureTrackingState.swift */; };
 		88274F0A301E47800033352A /* GestureTrackingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88274F08301E47800033352A /* GestureTrackingState.swift */; };
+		88275571301E4BB90033352A /* InboxAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275570301E4BB90033352A /* InboxAppearance.swift */; };
+		88275572301E4BB90033352A /* InboxAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275570301E4BB90033352A /* InboxAppearance.swift */; };
+		88275575301E4BCE0033352A /* InboxCardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275574301E4BCE0033352A /* InboxCardAction.swift */; };
+		88275576301E4BCE0033352A /* InboxCardAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275574301E4BCE0033352A /* InboxCardAction.swift */; };
+		88275578301E4BE40033352A /* InboxCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275577301E4BE40033352A /* InboxCard.swift */; };
+		88275579301E4BE40033352A /* InboxCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275577301E4BE40033352A /* InboxCard.swift */; };
+		8827557B301E4BF10033352A /* InboxCardChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827557A301E4BF10033352A /* InboxCardChapters.swift */; };
+		8827557C301E4BF10033352A /* InboxCardChapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827557A301E4BF10033352A /* InboxCardChapters.swift */; };
+		8827558B301E4BF10033352A /* InboxCardCommits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827558A301E4BF10033352A /* InboxCardCommits.swift */; };
+		8827558C301E4BF10033352A /* InboxCardCommits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827558A301E4BF10033352A /* InboxCardCommits.swift */; };
+		8827557E301E4BFA0033352A /* InboxCardActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827557D301E4BFA0033352A /* InboxCardActionBar.swift */; };
+		8827557F301E4BFA0033352A /* InboxCardActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8827557D301E4BFA0033352A /* InboxCardActionBar.swift */; };
+		88275581301E4C130033352A /* InboxCardStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275580301E4C130033352A /* InboxCardStack.swift */; };
+		C6727CDEAC4D58DB4B84CC07 /* InboxCardPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */; };
+		FE9450DABB70B202FC000EB3 /* InboxCardPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */; };
+		022DD0987D143E03FFAB8840 /* InboxCardTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43B892740109ED8000D54F2 /* InboxCardTransform.swift */; };
+		CD8955D2C8A479CB06354842 /* InboxCardTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43B892740109ED8000D54F2 /* InboxCardTransform.swift */; };
+		7EA4ED4307E95D5A7FBF5D2E /* InboxCardFlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A44E856D548259E59C9836 /* InboxCardFlight.swift */; };
+		CF4E5C1022F4529ED4960C99 /* InboxCardFlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A44E856D548259E59C9836 /* InboxCardFlight.swift */; };
+		1300D22C8E3C7180E8721674 /* InboxCardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96788AA439F0D955B88A288F /* InboxCardLayout.swift */; };
+		84CD31F8457AC2C9116601B7 /* InboxCardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96788AA439F0D955B88A288F /* InboxCardLayout.swift */; };
+		472C23AEC31D000B794A88CB /* InboxCardScrollSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */; };
+		A0531532C648722E47D13F87 /* InboxCardScrollSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */; };
+		C7EE8450F3EE12A26C7EEB1C /* CollapsingDescriptionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */; };
+		B08193B720FD48BE7B73E45D /* CollapsingDescriptionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */; };
+		9F4DA39C2D57E3EFAA06DF5C /* TwoRowChipLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */; };
+		0C3D09182D27E3EBB4BFF29D /* TwoRowChipLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */; };
+		29E927CC97728CCD53828549 /* InboxCardDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */; };
+		BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */; };
+		BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A57C76B1628092FD746792 /* InboxCardSwipe.swift */; };
+		6302111413B74E042F4AD469 /* InboxCardSwipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A57C76B1628092FD746792 /* InboxCardSwipe.swift */; };
+		88275582301E4C130033352A /* InboxCardStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88275580301E4C130033352A /* InboxCardStack.swift */; };
 		882966F62CCE1F9400E96D3C /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882966F52CCE1F9100E96D3C /* View.swift */; };
 		882966F72CCE1F9400E96D3C /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882966F52CCE1F9100E96D3C /* View.swift */; };
 		88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */; };
@@ -1006,12 +1040,29 @@
 		882153502FC03C6900167AEE /* MiniPlayerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerLayout.swift; sourceTree = "<group>"; };
 		8823EB772B5519C60010A12F /* SubStateOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubStateOverview.swift; sourceTree = "<group>"; };
 		88250C602B49273100174C8D /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		11282F2B5571721EF8905E29 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		8826DD212E6EE9CA008234B3 /* PrivacySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsView.swift; sourceTree = "<group>"; };
 		88274EFB301E46FC0033352A /* PlayerEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEdgeSwipe.swift; sourceTree = "<group>"; };
 		88274EFF301E47250033352A /* DescriptionEdgeSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionEdgeSwipe.swift; sourceTree = "<group>"; };
 		88274F02301E472E0033352A /* FullscreenEdgeSwipeArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenEdgeSwipeArea.swift; sourceTree = "<group>"; };
 		88274F05301E47320033352A /* ShowFullscreenControlsViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowFullscreenControlsViewModifier.swift; sourceTree = "<group>"; };
 		88274F08301E47800033352A /* GestureTrackingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureTrackingState.swift; sourceTree = "<group>"; };
+		88275570301E4BB90033352A /* InboxAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxAppearance.swift; sourceTree = "<group>"; };
+		88275574301E4BCE0033352A /* InboxCardAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardAction.swift; sourceTree = "<group>"; };
+		88275577301E4BE40033352A /* InboxCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCard.swift; sourceTree = "<group>"; };
+		8827557A301E4BF10033352A /* InboxCardChapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardChapters.swift; sourceTree = "<group>"; };
+		8827558A301E4BF10033352A /* InboxCardCommits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardCommits.swift; sourceTree = "<group>"; };
+		8827557D301E4BFA0033352A /* InboxCardActionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardActionBar.swift; sourceTree = "<group>"; };
+		88275580301E4C130033352A /* InboxCardStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardStack.swift; sourceTree = "<group>"; };
+		8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardPlacement.swift; sourceTree = "<group>"; };
+		C43B892740109ED8000D54F2 /* InboxCardTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardTransform.swift; sourceTree = "<group>"; };
+		D3A44E856D548259E59C9836 /* InboxCardFlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardFlight.swift; sourceTree = "<group>"; };
+		96788AA439F0D955B88A288F /* InboxCardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardLayout.swift; sourceTree = "<group>"; };
+		0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardScrollSwipe.swift; sourceTree = "<group>"; };
+		9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsingDescriptionLayout.swift; sourceTree = "<group>"; };
+		1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoRowChipLayout.swift; sourceTree = "<group>"; };
+		967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardDrag.swift; sourceTree = "<group>"; };
+		20A57C76B1628092FD746792 /* InboxCardSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardSwipe.swift; sourceTree = "<group>"; };
 		882966F52CCE1F9100E96D3C /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionMiniProgressBar.swift; sourceTree = "<group>"; };
 		882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterServiceTests.swift; sourceTree = "<group>"; };
@@ -1732,6 +1783,20 @@
 				8809D8902DE8E38200B28165 /* InboxSwipeTipView.swift */,
 				8809D8932DE8E54400B28165 /* HiddenEntriesInfo.swift */,
 				8809D8962DE8EE7300B28165 /* InboxOverflowTip.swift */,
+				88275577301E4BE40033352A /* InboxCard.swift */,
+				8827557A301E4BF10033352A /* InboxCardChapters.swift */,
+				8827558A301E4BF10033352A /* InboxCardCommits.swift */,
+				8827557D301E4BFA0033352A /* InboxCardActionBar.swift */,
+				88275580301E4C130033352A /* InboxCardStack.swift */,
+				8368DEA68B942E193EDDF71B /* InboxCardPlacement.swift */,
+				C43B892740109ED8000D54F2 /* InboxCardTransform.swift */,
+				D3A44E856D548259E59C9836 /* InboxCardFlight.swift */,
+				96788AA439F0D955B88A288F /* InboxCardLayout.swift */,
+				0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */,
+				9188F162CA1319558F37116B /* CollapsingDescriptionLayout.swift */,
+				1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */,
+				967BA74E83FCF892E693F4DB /* InboxCardDrag.swift */,
+				20A57C76B1628092FD746792 /* InboxCardSwipe.swift */,
 			);
 			path = Inbox;
 			sourceTree = "<group>";
@@ -1848,6 +1913,7 @@
 				888CDF772C997A1C007A8A54 /* FullscreenControls.swift */,
 				88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */,
 				88250C602B49273100174C8D /* Date.swift */,
+				11282F2B5571721EF8905E29 /* CGSize.swift */,
 				8891F0AF2B4E9F330098A3FB /* String.swift */,
 				8808A9142B937C66004D7CE2 /* PresentationDetent.swift */,
 				88AEB5D62B98A69300A2FF0D /* Logger.swift */,
@@ -2303,6 +2369,8 @@
 				88D2B0B02E190E600024F8C0 /* FetchVideoData.swift */,
 				883A292C2E5FA34B00FE4E65 /* PremiumFeature.swift */,
 				883D44F13018078100950B89 /* SearchSource.swift */,
+				88275570301E4BB90033352A /* InboxAppearance.swift */,
+				88275574301E4BCE0033352A /* InboxCardAction.swift */,
 			);
 			path = HelperModel;
 			sourceTree = "<group>";
@@ -2717,6 +2785,7 @@
 				FE100002AA0000000010F215 /* InnerTubeAPI+TextHelpers.swift in Sources */,
 				FE100002AA0000000010F216 /* InnerTubeAPI.swift in Sources */,
 				FE100002AA0000000010F217 /* InnerTubeClients.swift in Sources */,
+				88275575301E4BCE0033352A /* InboxCardAction.swift in Sources */,
 				FE100002AA0000000010F218 /* InnerTubeModels.swift in Sources */,
 				FE100002AA0000000010F219 /* QualityRecoveryPolicy.swift in Sources */,
 				FE100002AA0000000010F21A /* RetryWithBackoff.swift in Sources */,
@@ -2842,6 +2911,16 @@
 				889AF8FF2C50ECCD001CEDE6 /* OrientationManager.swift in Sources */,
 				88A2921F2E3F4BFA00BE437D /* VideoChangeReason.swift in Sources */,
 				888B09212E2382AA0014C66C /* TranscriptParser.swift in Sources */,
+				88275582301E4C130033352A /* InboxCardStack.swift in Sources */,
+				FE9450DABB70B202FC000EB3 /* InboxCardPlacement.swift in Sources */,
+				CD8955D2C8A479CB06354842 /* InboxCardTransform.swift in Sources */,
+				CF4E5C1022F4529ED4960C99 /* InboxCardFlight.swift in Sources */,
+				84CD31F8457AC2C9116601B7 /* InboxCardLayout.swift in Sources */,
+				A0531532C648722E47D13F87 /* InboxCardScrollSwipe.swift in Sources */,
+				B08193B720FD48BE7B73E45D /* CollapsingDescriptionLayout.swift in Sources */,
+				0C3D09182D27E3EBB4BFF29D /* TwoRowChipLayout.swift in Sources */,
+				BDFD7892557E62ECF4D225B5 /* InboxCardDrag.swift in Sources */,
+				6302111413B74E042F4AD469 /* InboxCardSwipe.swift in Sources */,
 				883D44FF30180A4E00950B89 /* SearchVM+Status.swift in Sources */,
 				889AF9002C50ECCD001CEDE6 /* SubscribeManager.swift in Sources */,
 				883D4CAB2CF4791300BB2581 /* PlayerContentView.swift in Sources */,
@@ -2902,6 +2981,7 @@
 				889AF8D02C50ECA9001CEDE6 /* fullscreenSafeArea.swift in Sources */,
 				889AF8D12C50ECA9001CEDE6 /* MyForm.swift in Sources */,
 				889F760D2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */,
+				88275579301E4BE40033352A /* InboxCard.swift in Sources */,
 				889AF8D22C50ECA9001CEDE6 /* SleepTimer.swift in Sources */,
 				889AF8D32C50ECA9001CEDE6 /* Alerter.swift in Sources */,
 				889AF8D42C50ECA9001CEDE6 /* ShareView.swift in Sources */,
@@ -2937,11 +3017,14 @@
 				889AF9082C50ECD8001CEDE6 /* MenuViewSheet.swift in Sources */,
 				881964F32CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
 				889AF9092C50ECD8001CEDE6 /* TabItemView.swift in Sources */,
+				88275571301E4BB90033352A /* InboxAppearance.swift in Sources */,
 				889AF90A2C50ECD8001CEDE6 /* MenuView.swift in Sources */,
 				88DA0EBA2CC8F7D00041841E /* VideoListViewAsync.swift in Sources */,
 				88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				889AF90B2C50ECD8001CEDE6 /* BrowserViewSheet.swift in Sources */,
 				882A75102C74A7070051BBF0 /* ChapterServiceTests.swift in Sources */,
+				8827557B301E4BF10033352A /* InboxCardChapters.swift in Sources */,
+				8827558B301E4BF10033352A /* InboxCardCommits.swift in Sources */,
 				88339AAC2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */,
 				889AF8F42C50ECC5001CEDE6 /* String.swift in Sources */,
 				889AF8F52C50ECC5001CEDE6 /* PresentationDetent.swift in Sources */,
@@ -2991,6 +3074,7 @@
 				8802F8522C6950A3008A7778 /* HideShortsTip.swift in Sources */,
 				883A0F712E5F5D9E000CE416 /* PremiumNavListItem.swift in Sources */,
 				88F2876D2DEAF3E600309C36 /* ClearAllInboxEntriesButton.swift in Sources */,
+				8827557E301E4BFA0033352A /* InboxCardActionBar.swift in Sources */,
 				889AF8FA2C50ECCA001CEDE6 /* UIApplicationDelegate.swift in Sources */,
 				889AF8E72C50ECA9001CEDE6 /* ConfirmableMenuButton.swift in Sources */,
 				889AF8E82C50ECA9001CEDE6 /* KeyboardReadable.swift in Sources */,
@@ -3008,6 +3092,7 @@
 				8843E1022E57D00B00A303F5 /* PremiumPopupMessage.swift in Sources */,
 				88190EF62EC235EE00C1C321 /* MyTint.swift in Sources */,
 				88415BFD2C50EB500072778F /* Date.swift in Sources */,
+				27D59BC2152E1D6D07916DDA /* CGSize.swift in Sources */,
 				88CD38902E213D1D00E7B21C /* TranscriptFieldClearButton.swift in Sources */,
 				88CD38962E21480200E7B21C /* DeleteTranscriptCacheButton.swift in Sources */,
 				882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */,
@@ -3190,6 +3275,7 @@
 				88F287732DEAF9AE00309C36 /* InboxToolbar.swift in Sources */,
 				8891AAEE2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */,
 				88E83F6F2D5D5D0600F596A9 /* AirPlayView.swift in Sources */,
+				88275578301E4BE40033352A /* InboxCard.swift in Sources */,
 				88E58AAC2D0768CE008C4F31 /* ExtendedPlayerActions.swift in Sources */,
 				88DD147E2E7E99A4007BA1F4 /* PlayerWebsite.swift in Sources */,
 				888C49BE2B5EADCA00CDEC76 /* YtBrowserTip.swift in Sources */,
@@ -3233,6 +3319,7 @@
 				884128842FC838A7001B06AE /* HLSAudioLanguageParser.swift in Sources */,
 				884128712FC838A7001B06AE /* WKHLSManager.swift in Sources */,
 				88F1EE4C2B5C48F5009866A0 /* VideoNotAvailableView.swift in Sources */,
+				88275576301E4BCE0033352A /* InboxCardAction.swift in Sources */,
 				8866B6952CF68C6C0034F44A /* PlayerMoreMenuButton.swift in Sources */,
 				881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */,
 				88373C1C2C8B3E5000ACBB3B /* SetColorScheme.swift in Sources */,
@@ -3272,6 +3359,7 @@
 				880505032C83016B005F0972 /* QueueVideoButton.swift in Sources */,
 				88F149D92F03D99600516422 /* StatsService.swift in Sources */,
 				88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */,
+				88275572301E4BB90033352A /* InboxAppearance.swift in Sources */,
 				881942A32C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				883CA8062B5A8FFA00028D52 /* VideoListView.swift in Sources */,
 				8874BF332F20DB9B007202E2 /* DeepLinkHandler.swift in Sources */,
@@ -3392,9 +3480,11 @@
 				88E83E4F2D5D403D00F596A9 /* ReloadPlayerButton.swift in Sources */,
 				88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */,
 				88F2876F2DEAF4EB00309C36 /* SendableSubscriptionDestination.swift in Sources */,
+				8827557F301E4BFA0033352A /* InboxCardActionBar.swift in Sources */,
 				88D34D752B58F86800533B74 /* Alerter.swift in Sources */,
 				88DB36922D561B55007CF5F8 /* DescriptionButton.swift in Sources */,
 				88250C612B49273100174C8D /* Date.swift in Sources */,
+				29EE86C9FD4A24E9668CDBCE /* CGSize.swift in Sources */,
 				886555332E7340CB00F4A2DA /* ChapterSettingsMenu.swift in Sources */,
 				888C49CB2B602B4500CDEC76 /* CapsulePicker.swift in Sources */,
 				8816A2FE2CCD5125001FE63E /* PageControl.swift in Sources */,
@@ -3446,6 +3536,8 @@
 				880C211F2D7ECEB500E859A5 /* DeferDateButtonStyle.swift in Sources */,
 				8897E94D2C599031006093B5 /* FullscreenOverlayControls.swift in Sources */,
 				88ABDF452D64F0A400DBD7F8 /* CustomSettingsToggleStyle.swift in Sources */,
+				8827557C301E4BF10033352A /* InboxCardChapters.swift in Sources */,
+				8827558C301E4BF10033352A /* InboxCardCommits.swift in Sources */,
 				8868178B2D773BD300E06A0D /* FaqWindow.swift in Sources */,
 				888F74AB2BA1FEC600B94822 /* PlaybackSettingsView.swift in Sources */,
 				8800CAFE2B000001000000AB /* PlayerTypeSettingsView.swift in Sources */,
@@ -3508,6 +3600,16 @@
 				883EE0962B7ABD5700D0A83A /* SleepTimerViewModel.swift in Sources */,
 				88CC8FD82CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */,
 				883C38372EBC817500741119 /* CleanupDuplicatesView.swift in Sources */,
+				88275581301E4C130033352A /* InboxCardStack.swift in Sources */,
+				C6727CDEAC4D58DB4B84CC07 /* InboxCardPlacement.swift in Sources */,
+				022DD0987D143E03FFAB8840 /* InboxCardTransform.swift in Sources */,
+				7EA4ED4307E95D5A7FBF5D2E /* InboxCardFlight.swift in Sources */,
+				1300D22C8E3C7180E8721674 /* InboxCardLayout.swift in Sources */,
+				472C23AEC31D000B794A88CB /* InboxCardScrollSwipe.swift in Sources */,
+				C7EE8450F3EE12A26C7EEB1C /* CollapsingDescriptionLayout.swift in Sources */,
+				9F4DA39C2D57E3EFAA06DF5C /* TwoRowChipLayout.swift in Sources */,
+				29E927CC97728CCD53828549 /* InboxCardDrag.swift in Sources */,
+				BED604C449CA906A7F8272D6 /* InboxCardSwipe.swift in Sources */,
 				88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
 				AA774D739DF04181814EF02A /* ChapterService+Player.swift in Sources */,
 				88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,

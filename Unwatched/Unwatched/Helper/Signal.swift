@@ -172,6 +172,7 @@ extension View {
 enum VideoListContext: String {
     case queue
     case inbox
+    case inboxCards
     case search
     case browser
     case subscription

@@ -5,14 +5,31 @@
 
 import SwiftUI
 
-struct VideoListItemDurationOverlay: View {
+public struct VideoListItemDurationOverlay: View {
     let video: VideoData
     let videoDuration: Double?
     let roughDuration: Double?
     let radius: CGFloat
     let padding: CGFloat
+    let font: Font
 
-    var body: some View {
+    public init(
+        video: VideoData,
+        videoDuration: Double?,
+        roughDuration: Double?,
+        radius: CGFloat,
+        padding: CGFloat,
+        font: Font = .subheadline
+    ) {
+        self.video = video
+        self.videoDuration = videoDuration
+        self.roughDuration = roughDuration
+        self.radius = radius
+        self.padding = padding
+        self.font = font
+    }
+
+    public var body: some View {
         ZStack {
             if video.isYtShort == true {
                 Text(verbatim: "#s")
@@ -37,7 +54,7 @@ struct VideoListItemDurationOverlay: View {
                     .padding(.vertical, 1)
             }
         }
-        .font(.subheadline)
+        .font(font)
         .foregroundStyle(.primary.opacity(0.9))
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))

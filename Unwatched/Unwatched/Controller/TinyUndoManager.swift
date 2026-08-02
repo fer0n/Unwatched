@@ -15,6 +15,11 @@ class TinyUndoManager {
 
     var actions: [UndoAction] = []
 
+    /// Set by a view that registers its actions late, e.g. the inbox card stack, which holds a
+    /// swipe back until its card has landed rather than writing it mid-flight
+    @ObservationIgnored
+    var willUndo: (@MainActor () -> Void)?
+
     var canUndo: Bool {
         !actions.isEmpty
     }
@@ -75,6 +80,7 @@ class TinyUndoManager {
 
     @MainActor
     func undo() {
+        willUndo?()
         guard let undoAction = actions.popLast() else {
             Log.info("No actions to undo")
             return

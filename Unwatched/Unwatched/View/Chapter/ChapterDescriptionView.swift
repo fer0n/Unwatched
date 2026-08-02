@@ -123,22 +123,15 @@ struct ChapterDescriptionView: View {
         .tint(.neutralAccentColor)
     }
 
+    /// Same order as the inbox card actions (see `InboxCardAction`)
     @ViewBuilder
     var buttons: some View {
-        Button {
-            playVideo()
-            Signal.videoAction("play", .detail)
-        } label: {
-            Image(systemName: "play.fill")
-                .padding(.leading, 20)
-        }
-        .largerTapTarget()
-
         Button {
             addToQueueNext()
             Signal.videoAction("queueTop", .detail)
         } label: {
             Image(systemName: Const.queueNextSF)
+                .padding(.leading, 20)
         }
         .largerTapTarget()
 
@@ -147,6 +140,14 @@ struct ChapterDescriptionView: View {
             Signal.videoAction("queueBottom", .detail)
         } label: {
             Image(systemName: Const.queueLastSF)
+        }
+        .largerTapTarget()
+
+        Button {
+            playVideo()
+            Signal.videoAction("play", .detail)
+        } label: {
+            Image(systemName: "play.fill")
         }
         .largerTapTarget()
 
