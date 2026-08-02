@@ -3,29 +3,17 @@
 //  Unwatched
 //
 
-import TelemetryDeck
 import SwiftUI
 import SwiftData
 import UnwatchedShared
 
 struct Signal {
-    static var isTestFlight: Bool {
-        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    }
-
     static func setup() {
-        #if os(iOS)
-        if !isTestFlight { return }
-        if !(Const.analytics.bool ?? true) { return }
-        // disabled
-        #endif
+        // Remote analytics are disabled; signals are only written to the local log.
     }
 
     static func signalBool(_ signalName: String, value: Bool) {
-        if !isTestFlight { return }
-        #if os(iOS)
-        TelemetryDeck.signal(signalName, parameters: ["value": value ? "On" : "Off"])
-        #endif
+        log(signalName, parameters: ["value": value ? "On" : "Off"])
     }
 
     static func log(_ signalName: String, parameters: [String: String] = [:], throttle: SignalInterval? = nil) {
@@ -36,16 +24,13 @@ struct Signal {
             }
         }
         if !(Const.analytics.bool ?? true) { return }
-        Log.info("Signal: \(signalName)")
-        if !isTestFlight { return }
-        TelemetryDeck.signal(signalName, parameters: parameters)
+        Log.info("Signal: \(signalName) \(parameters)")
         #endif
     }
 
     static func error(_ id: String) {
         if !(Const.analytics.bool ?? true) { return }
-        if !isTestFlight { return }
-        TelemetryDeck.errorOccurred(id: id)
+        Log.error("Signal error: \(id)")
     }
 }
 
