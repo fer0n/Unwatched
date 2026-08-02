@@ -445,7 +445,8 @@ extension PlayerWebView {
             }
         }, { capture: true, once: true, passive: true });
         document.addEventListener('loadeddata', (e) => {
-            if (e.target.tagName === 'VIDEO') {
+            // both are 0 while there's no video track, which would send "NaN"
+            if (e.target.tagName === 'VIDEO' && e.target.videoWidth > 0 && e.target.videoHeight > 0) {
                 sendMessage("aspectRatio", `${e.target.videoWidth/e.target.videoHeight}`);
                 // YouTube swaps the MediaSource on resume from background, reloading the media
                 // and resetting the rate to 1.0 without firing a ratechange we observe — which

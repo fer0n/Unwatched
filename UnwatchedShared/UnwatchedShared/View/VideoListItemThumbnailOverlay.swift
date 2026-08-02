@@ -91,7 +91,11 @@ public struct VideoListItemThumbnailOverlay: View {
 
     private var cleanedProgress: Double? {
         guard let elapsed = video.elapsedSeconds, let total = videoDuration ?? video.duration else { return nil }
+        // a zero duration (livestream, unfetched) would make this infinite and hand a NaN width to
+        // the progress bar's layout
+        guard total > 0 else { return nil }
         let progress = elapsed / total
+        guard progress.isFinite else { return nil }
         return (progress > 0 && progress < 0.1) ? 0.1 : progress
     }
 }
