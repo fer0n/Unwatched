@@ -244,6 +244,11 @@ struct InboxCardStack: View {
         }
 
         commits.append(action, video, via: via)
+        // the write waits for the card to land, the undo button must not. A skip stays in the
+        // inbox and has nothing to take back.
+        if action != .skip {
+            undoManager.setHasPendingAction(true)
+        }
         land(departure, after: flight.duration)
     }
 

@@ -20,8 +20,19 @@ class TinyUndoManager {
     @ObservationIgnored
     var willUndo: (@MainActor () -> Void)?
 
+    /// A swipe whose write is still waiting for its card to land
+    private(set) var hasPendingAction = false
+
+    /// Pending swipes count: `undo` registers them through `willUndo` before it pops anything,
+    /// so there is something to take back well before the write itself has happened
     var canUndo: Bool {
-        !actions.isEmpty
+        hasPendingAction || !actions.isEmpty
+    }
+
+    /// `@Observable` invalidates on any write, even one that changes nothing
+    func setHasPendingAction(_ pending: Bool) {
+        guard hasPendingAction != pending else { return }
+        hasPendingAction = pending
     }
 
     func registerAction(_ undoAction: UndoAction?) {

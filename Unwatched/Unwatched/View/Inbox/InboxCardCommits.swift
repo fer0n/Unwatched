@@ -28,6 +28,9 @@ final class InboxCardCommits {
 
     /// Writes everything swiped so far, in the order it was swiped
     func flush(_ modelContext: ModelContext, _ player: PlayerManager, _ undoManager: TinyUndoManager) {
+        // nothing is waiting on its card any more, whatever the undo button was standing in for
+        // is about to be registered for real
+        undoManager.setHasPendingAction(false)
         guard !pending.isEmpty else { return }
         let commits = pending
         pending = []
