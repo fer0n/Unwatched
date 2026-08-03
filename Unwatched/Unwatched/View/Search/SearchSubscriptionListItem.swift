@@ -10,7 +10,7 @@ import UnwatchedShared
 /// than the inline title image, smaller than a video thumbnail — so subscriptions stay
 /// visually distinct from the video rows they're listed above.
 struct SearchSubscriptionListItem: View {
-    @ScaledMetric var imageSize = 55
+    @ScaledMetric var imageSize = 70
 
     let subscription: SendableSubscription
 

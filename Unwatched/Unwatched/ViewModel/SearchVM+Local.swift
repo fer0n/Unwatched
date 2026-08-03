@@ -18,6 +18,47 @@ extension SearchVM {
         return results.filter { !localIds.contains($0.youtubeId) }
     }
 
+    /// Channels whose name matches the query closely enough, mined from the video
+    /// results themselves — YouTube's InnerTube search is video-only server-side (see
+    /// `InnerTubeAPI+Search`), so there's no direct channel search to call. Shown above
+    /// the video results in the YouTube section, minus channels already listed as an
+    /// added subscription.
+    var youtubeChannelResults: [SendableSubscription] {
+        guard !activeQuery.isEmpty else { return [] }
+        let alreadyAdded = Set(localResults.subscriptions.compactMap(\.youtubeChannelId))
+        var seen = Set<String>()
+        var channels: [SendableSubscription] = []
+        for video in results {
+            guard var sub = video.subscription,
+                  let channelId = sub.youtubeChannelId,
+                  !alreadyAdded.contains(channelId),
+                  seen.insert(channelId).inserted,
+                  LocalSearchService.matchesQuery(sub.title, query: activeQuery) else { continue }
+            sub.thumbnailUrl = channelAvatarURLs[channelId]
+            channels.append(sub)
+            if channels.count >= Self.maxYoutubeChannelResults { break }
+        }
+        return channels
+    }
+
+    private static var maxYoutubeChannelResults: Int { 2 }
+
+    func loadYoutubeChannelAvatarsIfNeeded() {
+        let missing = youtubeChannelResults
+            .compactMap(\.youtubeChannelId)
+            .filter { channelAvatarURLs[$0] == nil }
+        guard !missing.isEmpty else { return }
+        avatarTask?.cancel()
+        avatarTask = Task {
+            for channelId in missing {
+                if Task.isCancelled { return }
+                guard let url = try? await api.fetchChannelAvatarURL(channelId: channelId) else { continue }
+                if Task.isCancelled { return }
+                channelAvatarURLs[channelId] = url
+            }
+        }
+    }
+
     func isEnabled(_ source: SearchSource) -> Bool {
         enabledSources.contains(source)
     }

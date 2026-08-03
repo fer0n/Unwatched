@@ -129,6 +129,16 @@ enum LocalSearchService {
             .map(\.item)
     }
 
+    /// True when every word of `query` appears in `title` — the same bar `search` uses
+    /// for subscriptions/videos, reused so a channel mined from a YouTube video result
+    /// (see `SearchVM+Local.youtubeChannelResults`) only surfaces on a genuine match.
+    static func matchesQuery(_ title: String, query: String) -> Bool {
+        let query = query.folded
+        let tokens = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        guard query.count >= minQueryLength, !tokens.isEmpty else { return false }
+        return score(title, nil, query, tokens) != nil
+    }
+
     /// `nil` when not every query word is present, otherwise higher is a better match:
     /// the full query beats scattered words, and the title beats the channel name.
     private static func score(

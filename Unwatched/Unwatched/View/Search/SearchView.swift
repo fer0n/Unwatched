@@ -237,8 +237,10 @@ struct SearchView: View {
                 }
             }
 
-            if !vm.youtubeResults.isEmpty {
+            if !vm.youtubeResults.isEmpty || !vm.youtubeChannelResults.isEmpty {
                 section(.youtube) {
+                    youtubeChannelRows(vm.youtubeChannelResults)
+
                     videoRows(vm.youtubeResults, loadMore: true)
 
                     if vm.isLoadingMore {
@@ -281,6 +283,26 @@ struct SearchView: View {
                     .myListRowBackground()
             }
             content()
+        }
+    }
+
+    @ViewBuilder
+    func youtubeChannelRows(_ channels: [SendableSubscription]) -> some View {
+        if !channels.isEmpty {
+            ForEach(channels, id: \.youtubeChannelId) { sub in
+                NavigationLink(value: sub) {
+                    SearchSubscriptionListItem(subscription: sub)
+                }
+            }
+            .myListRowBackground()
+            .videoListItemEntry()
+
+            VStack {
+                Divider()
+                    .padding(.horizontal)
+            }
+            .videoListItemEntry()
+            .myListRowBackground()
         }
     }
 

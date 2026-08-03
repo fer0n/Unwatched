@@ -43,11 +43,14 @@ final class SearchVM {
         }
     }
 
-    private let api = InnerTubeAPI()
+    var channelAvatarURLs: [String: URL] = [:]
+
+    let api = InnerTubeAPI()
     private var filter = SearchFilter.default
     private var nextPageToken: String?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
     @ObservationIgnored var localTask: Task<Void, Never>?
+    @ObservationIgnored var avatarTask: Task<Void, Never>?
     @ObservationIgnored private var suggestionsTask: Task<Void, Never>?
     /// Prefix → suggestions cache, with an insertion-ordered key list for simple LRU eviction.
     @ObservationIgnored private var suggestionCache: [String: [String]] = [:]
@@ -98,6 +101,7 @@ final class SearchVM {
                 }
                 Signal.log("Search.Submitted", parameters: ["resultCount": Signal.bucket(results.count)])
                 refreshAllStatuses()
+                loadYoutubeChannelAvatarsIfNeeded()
             } catch is CancellationError {
                 // superseded by a newer query — leave state to the newer task
             } catch {
@@ -143,6 +147,7 @@ final class SearchVM {
                     isLoadingMore = false
                 }
                 refreshAllStatuses()
+                loadYoutubeChannelAvatarsIfNeeded()
             } catch {
                 Log.error("search loadMore failed: \(error)")
                 isLoadingMore = false
@@ -246,6 +251,7 @@ final class SearchVM {
         searchTask?.cancel()
         suggestionsTask?.cancel()
         localTask?.cancel()
+        avatarTask?.cancel()
         localResults = LocalSearchResults()
         query = ""
         activeQuery = ""
@@ -255,6 +261,7 @@ final class SearchVM {
         errorMessage = nil
         isSearching = false
         isLoadingMore = false
+        channelAvatarURLs = [:]
     }
 
     // MARK: - Mapping
