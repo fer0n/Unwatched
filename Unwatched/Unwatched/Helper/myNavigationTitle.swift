@@ -48,20 +48,25 @@ private struct TitleLabel: View {
     let opacity: () -> Double
 
     var body: some View {
-        // Workaround: separate views instead of one concatenated `Text`, whose glyphs the
-        // navigation bar garbles when the accessory changes. Remove once iOS renders that right.
-        HStack(alignment: .firstTextBaseline, spacing: 4) {
+        HStack(spacing: 0) {
             Text(title)
                 .fontWeight(.black)
-            if let accessory {
-                accessory
-                    .contentTransition(.numericText())
-            }
+            accessoryLabel
         }
         .offset(y: hidden ? 10 : 0)
         .opacity(hidden ? 0 : opacity())
         .blur(radius: hidden ? 3 : 0)
         .lineLimit(1)
+    }
+
+    @ViewBuilder private var accessoryLabel: some View {
+        if let accessory {
+            accessory
+                .contentTransition(.numericText())
+                .fixedSize()
+                .frame(width: 0, alignment: .leading)
+                .offset(x: 4)
+        }
     }
 }
 
@@ -86,6 +91,6 @@ extension View {
 #Preview {
     NavigationStack {
         Color.backgroundColor
-            .myNavigationTitle("Title here")
+            .myNavigationTitle("Title here", titleAccessory: Text("3"))
     }
 }
