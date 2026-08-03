@@ -24,7 +24,12 @@ struct MyNavigationTitle: ViewModifier {
             .toolbar {
                 if let title {
                     ToolbarItem(placement: .principal) {
-                        TitleLabel(text: titleText(title), hidden: titleHidden, opacity: titleOpacity)
+                        TitleLabel(
+                            title: title,
+                            accessory: titleAccessory,
+                            hidden: titleHidden,
+                            opacity: titleOpacity
+                        )
                     }
                 }
             }
@@ -33,26 +38,30 @@ struct MyNavigationTitle: ViewModifier {
         .updateNavTitle(title, titleHidden: titleHidden)
         #endif
     }
-
-    private func titleText(_ title: LocalizedStringKey) -> Text {
-        let text = Text(title).fontWeight(.black)
-        guard let titleAccessory else { return text }
-        return text + Text(" ") + titleAccessory
-    }
 }
 
 /// Its own view, so a changing `opacity` doesn't invalidate the toolbar around it
 private struct TitleLabel: View {
-    let text: Text
+    let title: LocalizedStringKey
+    let accessory: Text?
     let hidden: Bool
     let opacity: () -> Double
 
     var body: some View {
-        text
-            .offset(y: hidden ? 10 : 0)
-            .opacity(hidden ? 0 : opacity())
-            .blur(radius: hidden ? 3 : 0)
-            .lineLimit(1)
+        // Workaround: separate views instead of one concatenated `Text`, whose glyphs the
+        // navigation bar garbles when the accessory changes. Remove once iOS renders that right.
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text(title)
+                .fontWeight(.black)
+            if let accessory {
+                accessory
+                    .contentTransition(.numericText())
+            }
+        }
+        .offset(y: hidden ? 10 : 0)
+        .opacity(hidden ? 0 : opacity())
+        .blur(radius: hidden ? 3 : 0)
+        .lineLimit(1)
     }
 }
 

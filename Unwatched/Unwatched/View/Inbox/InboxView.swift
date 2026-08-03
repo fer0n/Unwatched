@@ -85,7 +85,7 @@ private struct InboxContent: View {
     /// The card stack shows one video at a time, this says how much is still ahead
     private var titleCount: Text? {
         guard inboxAppearance == .cards, hasEntries else { return nil }
-        return Text("\(inboxEntries.count)")
+        return Text(inboxEntries.count, format: .number)
             .monospacedDigit()
             .foregroundStyle(countColor)
     }
