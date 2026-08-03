@@ -40,6 +40,7 @@ import UnwatchedShared
     // Toggled (e.g. via the "Search" home-screen quick action) to request the
     // Search tab focus its search field. SearchView observes and consumes it.
     var pendingSearchFocus = false
+    var searchTabShouldAutoFocus = true
     var presentedLibrary = NavigationPath()
 
     @ObservationIgnored var topListItemId: String?

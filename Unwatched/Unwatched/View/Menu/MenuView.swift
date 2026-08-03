@@ -59,6 +59,9 @@ struct MenuView: View {
             #if os(iOS)
             .scrollEdgeEffectHidden(for: .bottom)
             #endif
+            #if !os(macOS)
+            .tabViewSearchActivation(navManager.searchTabShouldAutoFocus ? .searchTabSelection : .automatic)
+            #endif
             #if os(macOS)
             .popover(isPresented: showVideoDetail) {
                 Group {
@@ -129,6 +132,12 @@ struct MenuView: View {
                     }
                 }
             }
+        } else if newTab == .search {
+            #if os(macOS)
+            if navManager.searchTabShouldAutoFocus {
+                navManager.pendingSearchFocus = true
+            }
+            #endif
         }
     }
 

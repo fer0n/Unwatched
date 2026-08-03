@@ -43,6 +43,7 @@ struct SearchView: View {
     @Environment(BrowserManager.self) private var browserManager
     @State private var vm = SearchVM()
     @State private var showBrowserFallback = false
+    @State private var hasAppearedOnce = false
     @FocusState private var searchFocused: Bool
 
     var body: some View {
@@ -103,16 +104,18 @@ struct SearchView: View {
         .onChange(of: player.video?.youtubeId) {
             vm.refreshAllStatuses()
         }
-        // Focus the search field when requested (e.g. the "Search" home-screen quick action).
-        .onChange(of: navManager.pendingSearchFocus) { _, pending in
-            if pending {
-                focusSearchField()
-            }
+        // Focus the search field for explicit requests: "Search YouTube" quick action,
+        // AddFeedsMenu, macOS tab selection (handleTabChanged guards on searchTabShouldAutoFocus),
+        // and when already pending on first appearance.
+        .onChange(of: navManager.pendingSearchFocus, initial: true) { _, pending in
+            guard pending else { return }
+            // The very first appearance may still be mounting (notably on cold launch);
+            // later visits are already mounted, so focus can happen immediately.
+            focusSearchField(delay: hasAppearedOnce ? .zero : .milliseconds(300))
         }
-        .onAppear {
-            if navManager.pendingSearchFocus {
-                focusSearchField()
-            }
+        .onAppear { hasAppearedOnce = true }
+        .onChange(of: shouldAutoFocusSearch, initial: true) { _, newValue in
+            navManager.searchTabShouldAutoFocus = newValue
         }
         .tint(.neutralAccentColor)
     }
@@ -156,11 +159,17 @@ struct SearchView: View {
         showBrowserFallback = true
     }
 
-    func focusSearchField() {
+    var shouldAutoFocusSearch: Bool {
+        !vm.hasSearched && vm.query.isEmpty
+    }
+
+    func focusSearchField(delay: Duration = .milliseconds(300)) {
         navManager.pendingSearchFocus = false
         // Defer so the searchable field is in the hierarchy (notably on cold launch).
         Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(300))
+            if delay > .zero {
+                try? await Task.sleep(for: delay)
+            }
             searchFocused = true
         }
     }
