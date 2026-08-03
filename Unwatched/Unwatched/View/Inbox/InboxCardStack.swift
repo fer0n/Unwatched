@@ -20,7 +20,11 @@ struct InboxCardStack: View {
     /// shared with the parent, which fades the navigation title as the front card is dragged
     var swipe = InboxCardSwipe()
 
-    @State private var awaitingRemovalIds = Set<String>()
+    /// Entries whose card has left, held back until the query has caught up with the write.
+    /// Keyed by the entry rather than by the video: undoing a swipe files the video under a new
+    /// inbox entry, and that one was never swiped away — an id left over from the old one has
+    /// nothing to say about it.
+    @State private var awaitingRemovalEntryIds = Set<PersistentIdentifier>()
     @State private var landedIds = Set<String>()
     @State private var flung = [FlungCard]()
     @State private var departing = [Departure]()
@@ -93,8 +97,8 @@ struct InboxCardStack: View {
             swipe.setSkipDisabled(videos.count <= 1)
         }
         .onChange(of: entries) {
-            guard !awaitingRemovalIds.isEmpty else { return }
-            awaitingRemovalIds.formIntersection(entries.compactMap { $0.video?.youtubeId })
+            guard !awaitingRemovalEntryIds.isEmpty else { return }
+            awaitingRemovalEntryIds.formIntersection(entries.map(\.persistentModelID))
         }
         // an undo has to find the swipe it is meant to take back already registered
         .onAppear { undoManager.willUndo = commitPending }
@@ -173,15 +177,14 @@ struct InboxCardStack: View {
 
     /// The videos the stack keeps around, skipped ones last
     private var visibleVideos: [Video] {
-        let hidden = awaitingRemovalIds
-            .union(departing.map(\.id))
-            .union(landedIds)
+        let hidden = Set(departing.map(\.id)).union(landedIds)
         let skippedIds = commits.skippedIds
         let skipped = Set(skippedIds)
         var result = [Video]()
         var skippedVideos = [String: Video]()
 
         for entry in entries {
+            guard !awaitingRemovalEntryIds.contains(entry.persistentModelID) else { continue }
             guard let video = entry.video, !hidden.contains(video.youtubeId) else { continue }
             guard !skipped.contains(video.youtubeId) else {
                 skippedVideos[video.youtubeId] = video
@@ -219,7 +222,12 @@ struct InboxCardStack: View {
             towards: direction ?? action.direction,
             speed: speed
         )
-        let departure = Departure(video: video, target: flight.target, action: action)
+        let departure = Departure(
+            video: video,
+            entryId: video.inboxEntry?.persistentModelID,
+            target: flight.target,
+            action: action
+        )
 
         withAnimation(Self.promoteAnimation) {
             // the card carries on off screen on its own, the stack moves up behind it right away
@@ -253,7 +261,9 @@ struct InboxCardStack: View {
             // A skip stays in the inbox and has nothing to undo.
             if departure.action != .skip {
                 rememberFlung(FlungCard(youtubeId: youtubeId, offset: departure.target))
-                awaitingRemovalIds.insert(youtubeId)
+                if let entryId = departure.entryId {
+                    awaitingRemovalEntryIds.insert(entryId)
+                }
             }
             departing.removeAll { $0.id == youtubeId }
             // one more turn, so a skipped card is torn down before it comes back at the very back
@@ -289,6 +299,8 @@ struct InboxCardStack: View {
     /// A card that was thrown, on its way off screen above the stack
     private struct Departure: Identifiable {
         let video: Video
+        /// The inbox entry the card was showing, the one the swipe is about to delete
+        let entryId: PersistentIdentifier?
         let target: CGSize
         let action: InboxCardAction
 
