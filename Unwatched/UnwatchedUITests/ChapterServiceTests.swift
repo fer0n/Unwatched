@@ -1390,8 +1390,25 @@ final class ChapterServiceTests: XCTestCase {
             Chapter(title: "B", time: 110, endTime: 120, category: nil),
             Chapter(title: "End", time: 20, endTime: 30, category: nil)
         ]
+        // sorted by start time before pairing, so "B" lands opposite "Middle" and shifts "End"
         let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
-        XCTAssertEqual(similarity, 2.0 / 3.0)
+        XCTAssertEqual(similarity, 1.0 / 3.0)
+    }
+
+    func testChaptersSimilarity_ignoresChapterOrder() {
+        let chapters1: [SendableChapter] = [
+            .init(0, to: 10, "Intro"),
+            .init(10, to: 20, "Middle"),
+            .init(20, to: 30, "End")
+        ]
+        // a relationship hands its chapters back in no particular order
+        let chapters2: [Chapter] = [
+            Chapter(title: "End", time: 20, endTime: 30, category: nil),
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil)
+        ]
+        let similarity = ChapterService.chaptersSimilarity(chapters1, chapters2)
+        XCTAssertEqual(similarity, 1.0)
     }
 
     func testChaptersSimilarity_emptyArrays() {

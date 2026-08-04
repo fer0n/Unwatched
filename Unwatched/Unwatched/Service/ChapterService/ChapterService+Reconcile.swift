@@ -10,21 +10,19 @@ import UnwatchedShared
 
 extension ChapterService {
 
-    /// Brings a set of chapter rows in line with `desired`, reusing the rows that are already there.
+    /// Brings a set of chapter rows in line with `desired`, reusing the rows already there.
     ///
-    /// Rows are paired with the incoming chapters by position in start-time order, then updated in
-    /// place; only a surplus row is deleted and only a missing one inserted. Reuse is the point:
-    /// deleting a chapter that the player or a list row still holds leaves that reader with a row
-    /// that traps on the next property read, and rebuilding the full list on every refresh made
-    /// that easy to hit.
-    ///
-    /// A row that already matches is left untouched, so a hand-toggled `isActive` survives a
-    /// refresh that changes nothing else — same as back when this replaced chapters wholesale.
+    /// Existing rows are paired with the incoming chapters by position in start-time order and
+    /// updated in place; only surplus is deleted, only genuinely new chapters inserted. Reuse is
+    /// the point: a deleted chapter that the player or a list row still holds traps that reader on
+    /// its next property read. A row that already matches is left untouched, so a hand-toggled
+    /// `isActive` survives a refresh that changes nothing else.
     static func reconcileChapters(
         _ desired: [SendableChapter],
         with existing: [Chapter],
         in modelContext: ModelContext
     ) -> (chapters: [Chapter], hasChanges: Bool) {
+        let desired = desired.sorted { $0.startTime < $1.startTime }
         let existing = existing.sorted { $0.startTime < $1.startTime }
         var result = [Chapter]()
         result.reserveCapacity(desired.count)
@@ -55,7 +53,7 @@ extension ChapterService {
         return (result, hasChanges)
     }
 
-    /// Rewrites every field, matching what a freshly created `Chapter` would have carried.
+    /// Rewrites every field a freshly created `Chapter` would have carried.
     private static func overwrite(_ chapter: Chapter, with sendable: SendableChapter) {
         chapter.title = sendable.title
         chapter.startTime = sendable.startTime

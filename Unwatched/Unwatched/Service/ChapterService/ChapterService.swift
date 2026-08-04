@@ -189,8 +189,7 @@ struct ChapterService {
         _ video: Video,
         duration: Double
     ) {
-        // has to be the video's own context: the filler chapter this can add is inserted into it
-        // and then attached to `video`, and a model from a foreign context can't be
+        // has to be the video's own context: a filler chapter from a foreign one can't be attached
         guard let context = video.modelContext else {
             Log.warning("updateDuration: video has no context")
             return
@@ -236,9 +235,12 @@ struct ChapterService {
         }
     }
 
-    // function that detects what percentage of chapters are equal between two arrays
+    /// What percentage of the two arrays is equal, paired the same way `reconcileChapters` pairs
+    /// them — a relationship hands its chapters back in no particular order.
     static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
         guard !chapters1.isEmpty, !chapters2.isEmpty else { return 0.0 }
+        let chapters1 = chapters1.sorted { $0.startTime < $1.startTime }
+        let chapters2 = chapters2.sorted { $0.startTime < $1.startTime }
         let minCount = min(chapters1.count, chapters2.count)
         var equalCount = 0
         for index in 0..<minCount where chapterEqual(chapters1[index], chapters2[index]) {
