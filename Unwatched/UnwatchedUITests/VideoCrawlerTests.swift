@@ -167,9 +167,10 @@ class VideoCrawlerTests: XCTestCase {
             let queueEntry2 = QueueEntry(video: video, order: 2)
             context.insert(queueEntry2)
 
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             do {
-                let result = try await repo.fetchVideoDurations(for: [video], optional: [video])
+                let videoId = video.persistentModelID
+                let result = try await repo.fetchVideoDurations(for: [videoId], optional: [videoId])
                 print("result", result)
             } catch {
                 XCTFail("\(error)")
@@ -180,7 +181,7 @@ class VideoCrawlerTests: XCTestCase {
     // MARK: - fetchVideos (url fetch)
 
     func testFetchVideosValidFeedReturnsVideos() async throws {
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
         let sub = SendableSubscription(
             link: url, title: "Working sub", videoPlacement: .defaultPlacement, isArchived: false
@@ -193,7 +194,7 @@ class VideoCrawlerTests: XCTestCase {
     }
 
     func testFetchVideosInvalidFeedReturnsEmptyWithoutThrowing() async throws {
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
         let sub = SendableSubscription(
             link: url, title: "Broken sub", videoPlacement: .defaultPlacement, isArchived: false
@@ -226,7 +227,7 @@ class VideoCrawlerTests: XCTestCase {
         context.insert(brokenSub)
         try context.save()
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let subIds = [workingSub.persistentModelID, brokenSub.persistentModelID]
         // should not throw: the broken subscription must not abort the whole refresh
         _ = try await repo.loadVideos(subIds, fetchDurations: false)
@@ -251,7 +252,7 @@ class VideoCrawlerTests: XCTestCase {
         context.insert(brokenSub)
         try context.save()
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         do {
             _ = try await repo.loadVideos([brokenSub.persistentModelID], fetchDurations: false)
             XCTFail("Expected loadVideos to throw when every subscription fails")
@@ -412,3 +413,79 @@ VR Gaming,Virtual Reality Gaming,VR Games,Virtual Reality Games,Meta Quest,Meta 
 """
 }
 // swiftlint:enable all
+
+/// Network smoke test: a real feed refresh while another context deletes videos underneath it.
+///
+/// Worth being clear about what this does and does not show. It passes both with and without the
+/// id-hoisting in `loadVideos`/`fetchVideoDurations` — deletions land mid-refresh (the counter
+/// asserts that) and the old model-holding code still didn't trap. So this is a regression guard
+/// on the refresh path, not evidence that the path used to crash.
+///
+/// The same race *is* reproducible on the cleanup side, deterministically, in
+/// `DataWriterConcurrencyTests` — the trap is real, it just hasn't been provoked here.
+///
+/// Needs network and a YouTube API key.
+class RefreshUnderCleanupTests: XCTestCase {
+    override func tearDown() async throws {
+        let context = DataProvider.newContext()
+        try context.delete(model: QueueEntry.self)
+        try context.delete(model: InboxEntry.self)
+        try context.delete(model: Chapter.self)
+        try context.delete(model: Video.self)
+        try context.delete(model: Subscription.self)
+        try context.save()
+    }
+
+    func testRefreshSurvivesConcurrentCleanup() async throws {
+        let context = DataProvider.newContext()
+        for (title, channelId) in VideoCrawlerTestData.subs {
+            guard let url = try? UrlService.getFeedUrlFromChannelId(channelId) else { continue }
+            context.insert(Subscription(link: url, title: title, youtubeChannelId: channelId))
+        }
+        try context.save()
+
+        // Deletes videos on a loop for as long as the refresh runs, from its own context — the
+        // same shape as the UI or a wipe removing rows mid-refresh.
+        //
+        // It deliberately doesn't go through the auto-delete jobs: those keep the 15 most recent
+        // videos of every active subscription, which is exactly what a refresh just wrote, so
+        // they never touch the rows it is holding and the collision never happens.
+        let deleted = DeletionCounter()
+        let hammer = Task.detached {
+            while !Task.isCancelled {
+                let context = DataProvider.newContext()
+                let videos = (try? context.fetch(FetchDescriptor<Video>())) ?? []
+                guard !videos.isEmpty else { continue }
+                for video in videos {
+                    context.delete(video)
+                }
+                try? context.save()
+                await deleted.add(videos.count)
+            }
+        }
+
+        var refreshError: (any Error)?
+        do {
+            _ = try await VideoActor().loadVideos(nil, fetchDurations: true)
+        } catch {
+            refreshError = error
+        }
+        hammer.cancel()
+
+        // Not trapping is what the test is for. The other two assertions keep it from passing
+        // vacuously: the refresh has to have really run, and rows have to have really been
+        // deleted while it did. Needs network, like the other feed tests here.
+        XCTAssertNil(refreshError, "refresh failed, so the concurrent path was never exercised")
+        let deletedCount = await deleted.count
+        XCTAssertGreaterThan(
+            deletedCount, 0,
+            "nothing was deleted during the refresh, so it never raced anything"
+        )
+    }
+}
+
+/// Counts rows removed while a refresh is in flight, so the race can be shown to have happened.
+actor DeletionCounter {
+    private(set) var count = 0
+    func add(_ number: Int) { count += number }
+}

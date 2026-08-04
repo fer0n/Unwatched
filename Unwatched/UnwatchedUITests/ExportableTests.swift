@@ -113,7 +113,7 @@ class ExportableTests: XCTestCase {
         let cutOffDate = Date(timeIntervalSince1970: oneDay)
         let date3 = Date(timeIntervalSince1970: oneDay * 2)
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let sub = TestData.subscription()
         sub.videoPlacement = .defaultPlacement
         sub.mostRecentVideoDate = cutOffDate
@@ -192,7 +192,7 @@ class ExportableTests: XCTestCase {
     func testHandleNewVideosDoesNotResetMostRecentVideoDateOnEmptyResult() async throws {
         let existingDate = Date(timeIntervalSince1970: 1_700_000_000)
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let sub = TestData.subscription()
         sub.mostRecentVideoDate = existingDate
         sub.youtubeChannelId = "channelId-\(UUID())"

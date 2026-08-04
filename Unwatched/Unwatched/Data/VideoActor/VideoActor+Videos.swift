@@ -5,7 +5,15 @@ import OSLog
 import UnwatchedShared
 
 // Video
-@ModelActor actor VideoActor {
+actor VideoActor: SharedContextActor {
+    nonisolated let modelContainer: ModelContainer
+    nonisolated let modelExecutor: any ModelExecutor
+
+    init(writer: DataWriter) {
+        modelContainer = writer.container
+        modelExecutor = writer.executor
+    }
+
     var newVideos = NewVideosNotificationInfo()
 
     /// Feed fetch failures collected during the current `loadVideos` run.
@@ -146,7 +154,10 @@ import UnwatchedShared
                 }
             }
 
-            var newVideoInfo = [(loadedVideos: [Video], addedVideos: [Video])]()
+            // Ids, not models: this accumulates across every subscription's feed request, so
+            // models kept here would sit on the shared context for the whole refresh while other
+            // jobs take turns on it — including ones that delete videos.
+            var newVideoInfo = [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])]()
             for try await (sub, videos) in group {
                 let result = await handleNewVideos(
                     sub,
@@ -157,7 +168,10 @@ import UnwatchedShared
                     // save sooner if videos got added
                     try modelContext.save()
                 }
-                newVideoInfo.append(result)
+                newVideoInfo.append((
+                    loadedVideos: result.loadedVideos.map(\.persistentModelID),
+                    addedVideos: result.addedVideos.map(\.persistentModelID)
+                ))
             }
             if fetchDurations {
                 try await handleFetchDurationsLoaded(
@@ -178,13 +192,13 @@ import UnwatchedShared
     }
 
     private func handleFetchDurationsLoaded(
-        _ newVideoInfo: [(loadedVideos: [Video], addedVideos: [Video])],
+        _ newVideoInfo: [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])],
         onlyForAdded: Bool = true
     ) async throws {
         Log.info("handleFetchDurationsLoaded")
-        let videos = newVideoInfo.flatMap { $0.addedVideos }
-        let optionalVideos = newVideoInfo.flatMap { $0.loadedVideos }
-        let videoInfo = try await fetchVideoDurations(for: videos, optional: optionalVideos)
+        let videoIds = newVideoInfo.flatMap { $0.addedVideos }
+        let optionalVideoIds = newVideoInfo.flatMap { $0.loadedVideos }
+        let videoInfo = try await fetchVideoDurations(for: videoIds, optional: optionalVideoIds)
         Task { @MainActor in
             await VideoService.forceUpdateDurations(videoInfo)
         }

@@ -16,7 +16,7 @@ final class StatsService {
     private var lastVideoTime: Double?
     private var lastWallClockTime: Date?
 
-    private let statsActor = StatsActor(modelContainer: DataProvider.shared.container)
+    private let statsActor = StatsActor()
 
     private init() {}
 

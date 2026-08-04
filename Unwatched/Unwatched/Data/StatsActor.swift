@@ -7,8 +7,15 @@ import SwiftData
 import Foundation
 import UnwatchedShared
 
-@ModelActor
-actor StatsActor {
+actor StatsActor: SharedContextActor {
+    nonisolated let modelContainer: ModelContainer
+    nonisolated let modelExecutor: any ModelExecutor
+
+    init(writer: DataWriter) {
+        modelContainer = writer.container
+        modelExecutor = writer.executor
+    }
+
     func getStats() throws -> [SendableWatchTimeEntry] {
         let descriptor = FetchDescriptor<WatchTimeEntry>(sortBy: [SortDescriptor(\.date)])
         let entries = try modelContext.fetch(descriptor)

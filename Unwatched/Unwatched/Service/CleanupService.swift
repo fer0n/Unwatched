@@ -42,7 +42,7 @@ struct CleanupService {
     > {
         Log.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
-            let repo = CleanupActor(modelContainer: DataProvider.shared.container)
+            let repo = CleanupActor()
             let info = await repo.removeDuplicates(
                 quickCheck: quickCheck,
                 videoOnly: videoOnly
@@ -54,7 +54,7 @@ struct CleanupService {
 
     static func cleanupHiddenShorts() -> Task<Int, Error> {
         return Task.detached {
-            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            let actor = CleanupActor()
             return try await actor.cleanupHiddenShorts()
         }
     }
@@ -129,11 +129,11 @@ struct CleanupService {
         video.sponserBlockUpdateDate = nil
     }
 
-    /// Runs the due auto-delete jobs one after another, sharing a single actor.
+    /// Runs the due auto-delete jobs one after another.
     ///
-    /// They must not run in parallel: each one deletes videos in its own context, and a model one
-    /// context hands out can have its row deleted by the other. Reading any property on it after
-    /// that traps in SwiftData (see `ModelContext.resolvedModel`).
+    /// Every data actor now writes through `DataProvider.writer`, so overlapping deletes can no
+    /// longer hand one job a row another already removed. Keeping these sequential still avoids
+    /// three passes fetching the same videos at once for no benefit.
     static func runScheduledCleanup(
         deleteWatchedOlderThan watchedDays: Int?,
         deleteOrphanedOlderThan orphanedDays: Int?,
@@ -143,7 +143,7 @@ struct CleanupService {
             return
         }
         Task.detached {
-            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            let actor = CleanupActor()
             if let watchedDays {
                 await actor.deleteOldWatchedVideos(olderThan: watchedDays)
             }
@@ -187,7 +187,15 @@ struct CleanupService {
     }
 }
 
-@ModelActor actor CleanupActor {
+actor CleanupActor: SharedContextActor {
+    nonisolated let modelContainer: ModelContainer
+    nonisolated let modelExecutor: any ModelExecutor
+
+    init(writer: DataWriter) {
+        modelContainer = writer.container
+        modelExecutor = writer.executor
+    }
+
     var duplicateInfo = RemovedDuplicatesInfo()
 
     func cleanupHiddenShorts() throws -> Int {
