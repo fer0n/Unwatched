@@ -117,10 +117,8 @@ struct CleanupService {
     }
 
     /// Drops the SponsorBlock merge, which is derived from `video.chapters` and stops describing
-    /// the video as soon as those change.
-    ///
-    /// Clearing the relationship matters as much as the delete: leaving it listing rows that are
-    /// gone is what lets a reader pick one up and trap on it later.
+    /// the video as soon as those change. Clearing the relationship matters as much as the
+    /// delete: leaving it listing gone rows lets a reader pick one up and trap on it later.
     static func deleteMergedChapters(from video: Video, _ modelContext: ModelContext) {
         for chapter in video.mergedChapters ?? [] {
             modelContext.delete(chapter)
@@ -129,11 +127,8 @@ struct CleanupService {
         video.sponserBlockUpdateDate = nil
     }
 
-    /// Runs the due auto-delete jobs one after another.
-    ///
-    /// Every data actor now writes through `DataProvider.writer`, so overlapping deletes can no
-    /// longer hand one job a row another already removed. Keeping these sequential still avoids
-    /// three passes fetching the same videos at once for no benefit.
+    /// Runs the due auto-delete jobs one after another, so three passes don't fetch the same
+    /// videos at once for no benefit.
     static func runScheduledCleanup(
         deleteWatchedOlderThan watchedDays: Int?,
         deleteOrphanedOlderThan orphanedDays: Int?,
@@ -188,14 +183,6 @@ struct CleanupService {
 }
 
 actor CleanupActor: SharedContextActor {
-    nonisolated let modelContainer: ModelContainer
-    nonisolated let modelExecutor: any ModelExecutor
-
-    init(writer: DataWriter) {
-        modelContainer = writer.container
-        modelExecutor = writer.executor
-    }
-
     var duplicateInfo = RemovedDuplicatesInfo()
 
     func cleanupHiddenShorts() throws -> Int {

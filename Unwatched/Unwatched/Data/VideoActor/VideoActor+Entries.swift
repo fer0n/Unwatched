@@ -616,10 +616,8 @@ extension VideoActor {
             return []
         }
 
-        // Takes ids rather than models, and hands only ids to the request. A model left on the
-        // shared context across an await is there while the context goes to another job, which is
-        // free to delete its row; touching it afterwards traps (see `ModelContext.resolvedModel`).
-        // Resolving and selecting are synchronous, so nothing here spans the suspension.
+        // Ids, not models: a model held across the request sits on the shared context while other
+        // jobs take turns on it, and one of those may delete its row.
         let videos: [Video] = videoIds.compactMap { modelContext.resolvedModel(withID: $0) }
         let optionalVideos: [Video] = optionalVideoIds.compactMap { modelContext.resolvedModel(withID: $0) }
 

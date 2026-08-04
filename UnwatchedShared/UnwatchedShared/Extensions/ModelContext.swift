@@ -30,12 +30,11 @@ public extension ModelContext {
         resolvedModel(withID: model.persistentModelID)
     }
 
-    /// Looks a model up by id, returning nil if its row is gone.
+    /// Looks a model up by id, returning nil if its row is gone. Use it to pick models back up
+    /// after an `await`, where the id rather than the model should have crossed the suspension.
     ///
-    /// Use this to pick models back up after an `await`, where the id is what should have crossed
-    /// the suspension rather than the model. Unlike `existingModel(for:)` it never goes through
-    /// `registeredModel(for:)`, which hands back an object whose row another context deleted —
-    /// reading any property on that traps.
+    /// Unlike `existingModel(for:)` it never goes through `registeredModel(for:)`, which hands
+    /// back an object whose row another context deleted — reading any property on that traps.
     func resolvedModel<T>(withID objectID: PersistentIdentifier) -> T? where T: PersistentModel {
         existingModelViaFetch(for: objectID)
     }

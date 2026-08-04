@@ -6,14 +6,6 @@ import UnwatchedShared
 
 // Video
 actor VideoActor: SharedContextActor {
-    nonisolated let modelContainer: ModelContainer
-    nonisolated let modelExecutor: any ModelExecutor
-
-    init(writer: DataWriter) {
-        modelContainer = writer.container
-        modelExecutor = writer.executor
-    }
-
     var newVideos = NewVideosNotificationInfo()
 
     /// Feed fetch failures collected during the current `loadVideos` run.
@@ -155,8 +147,7 @@ actor VideoActor: SharedContextActor {
             }
 
             // Ids, not models: this accumulates across every subscription's feed request, so
-            // models kept here would sit on the shared context for the whole refresh while other
-            // jobs take turns on it — including ones that delete videos.
+            // models kept here would outlive the shared context's turn on this job.
             var newVideoInfo = [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])]()
             for try await (sub, videos) in group {
                 let result = await handleNewVideos(

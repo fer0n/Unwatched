@@ -112,17 +112,8 @@ public final class DataProvider: Sendable {
         ModelContext(shared.container)
     }
 
-    /// The one context every background data actor writes through.
-    ///
-    /// Actors that share an executor also share its context and, because the executor is serial,
-    /// can never run at the same time. That's what keeps one actor from deleting a row another
-    /// one is holding — reading any property on such a model traps in SwiftData
-    /// (`_InvalidFutureBackingData.getValue`).
-    ///
-    /// Serialisation stops at suspension points: an actor that awaits mid-job hands the executor
-    /// to the next one. Anything that mutates has to stay synchronous from fetch to save, with
-    /// network work hoisted out.
-    public static let writer = DataWriter()
+    /// Owns the one context every background data actor writes through, see `SharedContextActor`.
+    public static let writeExecutor = DefaultSerialModelExecutor(modelContext: newContext())
 
     @MainActor
     public static var mainContext: ModelContext {
@@ -157,30 +148,4 @@ public final class DataProvider: Sendable {
         }()
         return sharedModelContainer
     }()
-}
-
-public struct DataWriter: Sendable {
-    public let container: ModelContainer
-    public let executor: DefaultSerialModelExecutor
-
-    init() {
-        let container = DataProvider.shared.container
-        self.container = container
-        self.executor = DefaultSerialModelExecutor(modelContext: ModelContext(container))
-    }
-}
-
-/// A data actor that writes through the app's shared context instead of one of its own.
-///
-/// Replaces `@ModelActor`, which generates an initialiser that always creates a fresh context.
-/// Conformers still get `modelContext` from `ModelActor`; instances stay cheap, so per-call
-/// instances are fine and per-job scratch state on them stays isolated.
-public protocol SharedContextActor: ModelActor {
-    init(writer: DataWriter)
-}
-
-public extension SharedContextActor {
-    init() {
-        self.init(writer: DataProvider.writer)
-    }
 }
