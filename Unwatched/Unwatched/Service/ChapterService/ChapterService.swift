@@ -189,6 +189,13 @@ struct ChapterService {
         _ video: Video,
         duration: Double
     ) {
+        // has to be the video's own context: the filler chapter this can add is inserted into it
+        // and then attached to `video`, and a model from a foreign context can't be
+        guard let context = video.modelContext else {
+            Log.warning("updateDuration: video has no context")
+            return
+        }
+
         if let lastNormalChapter = (video.chapters ?? []).max(by: { $0.startTime < $1.startTime }) {
             if  lastNormalChapter.endTime == nil, duration > lastNormalChapter.startTime {
                 lastNormalChapter.endTime = duration
@@ -197,13 +204,13 @@ struct ChapterService {
         }
 
         if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
-            let context = DataProvider.newContext()
             let hasChanges = fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
             if hasChanges {
                 video.mergedChapters = chapters
-                try? context.save()
             }
         }
+
+        try? context.save()
     }
 
     static func chapterEqual(_ sendable: SendableChapter, _ chapter: Chapter?) -> Bool {
@@ -217,33 +224,15 @@ struct ChapterService {
 
     static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
         Log.info("updateIfNeeded")
-        var newChapters = [Chapter]()
-        let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
-        newChapters.reserveCapacity(chapters.count)
-
-        var hasChanges = false
-        chapters.indices.forEach { index in
-            let newChapter = chapters[index]
-            let oldChapter = index < oldChapters.count
-                ? oldChapters[index]
-                : nil
-            if !chapterEqual(newChapter, oldChapter) {
-                Log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
-                hasChanges = true
-                if let oldChapter {
-                    modelContext.delete(oldChapter)
-                }
-                let newChapterModel = newChapter.getChapter
-                modelContext.insert(newChapterModel)
-
-                newChapters.append(newChapterModel)
-            } else if let oldChapter {
-                newChapters.append(oldChapter)
-            }
+        guard let video else {
+            // without a video to attach them to, anything built here is an orphan row
+            Log.warning("updateIfNeeded: no video")
+            return
         }
 
-        if hasChanges {
-            video?.mergedChapters = newChapters
+        let reconciled = reconcileChapters(chapters, with: video.mergedChapters ?? [], in: modelContext)
+        if reconciled.hasChanges {
+            video.mergedChapters = reconciled.chapters
         }
     }
 
@@ -310,18 +299,11 @@ struct ChapterService {
 
     @MainActor
     static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
-        var chapterModels: [Chapter] = []
-        for chapter in chapters {
-            let chapterModel = chapter.getChapter
-            context.insert(chapterModel)
-            chapterModels.append(chapterModel)
+        let reconciled = reconcileChapters(chapters, with: video.chapters ?? [], in: context)
+        if reconciled.hasChanges {
+            video.chapters = reconciled.chapters
+            CleanupService.deleteMergedChapters(from: video, context)
         }
-
-        if !chapterModels.isEmpty {
-            CleanupService.deleteChapters(from: video, context)
-        }
-
-        video.chapters = chapterModels
         try? context.save()
 
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {

@@ -1416,6 +1416,231 @@ final class ChapterServiceTests: XCTestCase {
     }
 }
 
+final class ChapterReconcileTests: XCTestCase {
+
+    private func insert(_ chapters: [Chapter], into context: ModelContext) -> [Chapter] {
+        chapters.forEach(context.insert)
+        return chapters
+    }
+
+    func testUnchangedChaptersKeepTheirRows() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertFalse(result.hasChanges)
+        XCTAssertTrue(result.chapters[0] === existing[0])
+        XCTAssertTrue(result.chapters[1] === existing[1])
+    }
+
+    func testChangedChapterIsUpdatedInPlaceInsteadOfReplaced() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: nil, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertTrue(result.hasChanges)
+        XCTAssertTrue(result.chapters[0] === existing[0], "the row has to survive, not be recreated")
+        XCTAssertFalse(existing[0].isDeleted)
+        XCTAssertEqual(result.chapters[0].endTime, 10)
+    }
+
+    func testSurplusChaptersAreDeleted() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
+            Chapter(title: "End", time: 20, endTime: 30, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertTrue(result.hasChanges)
+        XCTAssertEqual(result.chapters.count, 1)
+        XCTAssertTrue(existing[1].isDeleted)
+        XCTAssertTrue(existing[2].isDeleted)
+    }
+
+    func testMissingChaptersAreInserted() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertTrue(result.hasChanges)
+        XCTAssertEqual(result.chapters.count, 2)
+        XCTAssertTrue(result.chapters[0] === existing[0])
+        XCTAssertEqual(result.chapters[1].title, "Middle")
+        XCTAssertFalse(result.chapters[1].isDeleted)
+    }
+
+    func testExistingRowsArePairedInStartTimeOrder() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertFalse(result.hasChanges)
+        XCTAssertTrue(result.chapters[0] === existing[1])
+        XCTAssertTrue(result.chapters[1] === existing[0])
+    }
+
+    /// A hand-toggled `isActive` used to survive an otherwise identical refresh because the row
+    /// was kept as-is. Reusing the row has to keep that true.
+    func testManualIsActiveSurvivesAnOtherwiseIdenticalChapter() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertFalse(result.hasChanges)
+        XCTAssertFalse(result.chapters[0].isActive)
+    }
+
+    /// The counterpart: a changed chapter used to be recreated from the incoming one, so
+    /// `isActive` went back to what the feed said. Overwriting in place keeps that.
+    func testIsActiveIsRestoredWhenTheChapterChanged() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Renamed")],
+            with: existing,
+            in: context
+        )
+
+        XCTAssertTrue(result.hasChanges)
+        XCTAssertTrue(result.chapters[0].isActive)
+        XCTAssertEqual(result.chapters[0].title, "Renamed")
+    }
+
+    func testEmptyDesiredDeletesEverything() {
+        let context = DataProvider.newContext()
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
+        ], into: context)
+
+        let result = ChapterService.reconcileChapters([], with: existing, in: context)
+
+        XCTAssertTrue(result.hasChanges)
+        XCTAssertTrue(result.chapters.isEmpty)
+        XCTAssertTrue(existing[0].isDeleted)
+    }
+
+    func testReconcilingNothingIntoNothingReportsNoChanges() {
+        let context = DataProvider.newContext()
+        let result = ChapterService.reconcileChapters([], with: [], in: context)
+
+        XCTAssertFalse(result.hasChanges)
+        XCTAssertTrue(result.chapters.isEmpty)
+    }
+
+    /// A shorter merge used to leave the extra rows both listed on the video and undeleted.
+    func testUpdateIfNeededTrimsASurplusMerge() {
+        let context = DataProvider.newContext()
+        let video = Video(title: "My Video", url: nil, youtubeId: "1234")
+        context.insert(video)
+        let existing = insert([
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Ad", time: 10, endTime: 20, category: .sponsor)
+        ], into: context)
+        video.mergedChapters = existing
+
+        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], video, context)
+
+        XCTAssertEqual(video.mergedChapters?.count, 1)
+        XCTAssertTrue(existing[1].isDeleted)
+    }
+
+    /// Without a video the old version still built and inserted chapter rows, then dropped them
+    /// on the floor when the assignment no-oped.
+    func testUpdateIfNeededWithoutAVideoInsertsNothing() {
+        let context = DataProvider.newContext()
+
+        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], nil, context)
+
+        XCTAssertTrue(context.insertedModelsArray.isEmpty)
+    }
+
+    /// Deleting a row does not take it out of the relationship that lists it — checked against the
+    /// old `deleteChapters`, which left both arrays pointing at rows it had just deleted. That is
+    /// the state a reader picks up and traps on, so clearing has to be explicit.
+    func testDeleteMergedChaptersClearsTheRelationship() {
+        let context = DataProvider.newContext()
+        let video = Video(title: "My Video", url: nil, youtubeId: "merged-cleared")
+        context.insert(video)
+        let merged = Chapter(title: "Ad", time: 10, endTime: 20, category: .sponsor)
+        context.insert(merged)
+        video.mergedChapters = [merged]
+
+        CleanupService.deleteMergedChapters(from: video, context)
+
+        XCTAssertEqual(video.mergedChapters?.count ?? 0, 0)
+        XCTAssertTrue(merged.isDeleted)
+        XCTAssertNil(video.sponserBlockUpdateDate)
+    }
+
+    /// `updateDuration` used to save a throwaway context, so the edits it made to the video's own
+    /// chapters were left sitting unsaved and only persisted if something else happened to save.
+    func testUpdateDurationPersistsThroughTheVideosContext() {
+        let context = DataProvider.newContext()
+        let youtubeId = "duration-persist-\(UUID().uuidString)"
+        let video = Video(title: "My Video", url: nil, youtubeId: youtubeId)
+        context.insert(video)
+        let openEnded = Chapter(title: "Intro", time: 0, endTime: nil, category: nil)
+        context.insert(openEnded)
+        video.chapters = [openEnded]
+        try? context.save()
+
+        ChapterService.updateDuration(video, duration: 70)
+
+        // read back through a separate context: only a save on the video's own context shows up here
+        let fresh = DataProvider.newContext()
+        let descriptor = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
+        let reloaded = try? fresh.fetch(descriptor).first
+        XCTAssertEqual(reloaded?.chapters?.first?.endTime, 70)
+    }
+}
+
 /// In-memory stand-in for NSUbiquitousKeyValueStore so settings tests don't touch iCloud
 final class FakeKeyValueStore: KeyValueStoring {
     private var values = [String: Any]()

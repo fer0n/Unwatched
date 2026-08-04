@@ -127,13 +127,11 @@ extension VideoActor {
         }
 
         if shouldUpdateChapters {
-            CleanupService.deleteChapters(from: video, modelContext)
-            let newChapterModels = newChapters.map {
-                let chapter = $0.getChapter
-                modelContext.insert(chapter)
-                return chapter
+            let reconciled = ChapterService.reconcileChapters(newChapters, with: currentChapters, in: modelContext)
+            if reconciled.hasChanges {
+                video.chapters = reconciled.chapters
+                CleanupService.deleteMergedChapters(from: video, modelContext)
             }
-            video.chapters = newChapterModels
         }
     }
 

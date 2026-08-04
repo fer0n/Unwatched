@@ -68,6 +68,8 @@
 		880F03842D8EE73D0049B902 /* CursorHideModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880F03822D8EE73D0049B902 /* CursorHideModifier.swift */; };
 		8813465E2B88A2A3005A4790 /* SubscriptionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */; };
 		88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
+		88146F412C74EDDC00704B90 /* ChapterService+Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F432C74EDDC00704B90 /* ChapterService+Reconcile.swift */; };
+		88146F422C74EDDC00704B90 /* ChapterService+Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F432C74EDDC00704B90 /* ChapterService+Reconcile.swift */; };
 		88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */; };
 		8816A2002CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
 		8816A2012CCD0D19001FE63E /* PipButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816A1FF2CCD0D19001FE63E /* PipButton.swift */; };
@@ -899,6 +901,7 @@
 		880F03822D8EE73D0049B902 /* CursorHideModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorHideModifier.swift; sourceTree = "<group>"; };
 		8813465D2B88A2A3005A4790 /* SubscriptionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionInfo.swift; sourceTree = "<group>"; };
 		88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+SponserBlock.swift"; sourceTree = "<group>"; };
+		88146F432C74EDDC00704B90 /* ChapterService+Reconcile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+Reconcile.swift"; sourceTree = "<group>"; };
 		8816A1FF2CCD0D19001FE63E /* PipButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipButton.swift; sourceTree = "<group>"; };
 		8816A2FC2CCD5125001FE63E /* PageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControl.swift; sourceTree = "<group>"; };
 		8817FA9E2C30668E002DE44F /* ChangeChapterButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeChapterButtonStyle.swift; sourceTree = "<group>"; };
@@ -1488,6 +1491,7 @@
 				CD93E71E2E23AAD500FF6447 /* GenerationService.swift */,
 				882A75092C74A6A40051BBF0 /* ChapterService.swift */,
 				88146F3E2C74EDDC00704B90 /* ChapterService+SponserBlock.swift */,
+				88146F432C74EDDC00704B90 /* ChapterService+Reconcile.swift */,
 			);
 			path = ChapterService;
 			sourceTree = "<group>";
@@ -2827,6 +2831,7 @@
 				88899D992E035EA1002C05BC /* TitleFilterContent.swift in Sources */,
 				88F73D8F2D2EFD8900F61E99 /* AppNotificationData.swift in Sources */,
 				88146F402C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
+				88146F412C74EDDC00704B90 /* ChapterService+Reconcile.swift in Sources */,
 				880E87002F6562F2001DAAE8 /* VideoListItemActions.swift in Sources */,
 				889AF9102C50ECE7001CEDE6 /* SettingsView.swift in Sources */,
 				8897E94E2C59903B006093B5 /* FullscreenOverlayControls.swift in Sources */,
@@ -3258,6 +3263,7 @@
 				88CC8FD82CE3BDBC00F6F49D /* SponsorBlockSettingsView.swift in Sources */,
 				883C38372EBC817500741119 /* CleanupDuplicatesView.swift in Sources */,
 				88146F3F2C74EDDC00704B90 /* ChapterService+SponserBlock.swift in Sources */,
+				88146F422C74EDDC00704B90 /* ChapterService+Reconcile.swift in Sources */,
 				88296ADA2CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift in Sources */,
 				88C205282B516D2A008EC51D /* ChapterListItem.swift in Sources */,
 				883A0F742E5F7333000CE416 /* RequiresPremiumActionMac.swift in Sources */,

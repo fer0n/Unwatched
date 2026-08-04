@@ -116,13 +116,16 @@ struct CleanupService {
         try? modelContext.save()
     }
 
-    static func deleteChapters(from video: Video, _ modelContext: ModelContext) {
-        for chapter in video.chapters ?? [] {
-            modelContext.delete(chapter)
-        }
+    /// Drops the SponsorBlock merge, which is derived from `video.chapters` and stops describing
+    /// the video as soon as those change.
+    ///
+    /// Clearing the relationship matters as much as the delete: leaving it listing rows that are
+    /// gone is what lets a reader pick one up and trap on it later.
+    static func deleteMergedChapters(from video: Video, _ modelContext: ModelContext) {
         for chapter in video.mergedChapters ?? [] {
             modelContext.delete(chapter)
         }
+        video.mergedChapters = []
         video.sponserBlockUpdateDate = nil
     }
 
