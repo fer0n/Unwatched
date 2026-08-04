@@ -35,11 +35,14 @@ struct InboxCardStack: View {
     @ScaledMetric(wrappedValue: InboxCard.Layout.baseDetailHeight) private var minDetailHeight
 
     /// Below this the release was a let-go, not a flick, and the card leaves the way it was dragged
-    private static let flickSpeed: CGFloat = 250
+    private static let letGoSpeed: CGFloat = 120
+    /// Above this the throw alone says where the card goes
+    private static let flickSpeed: CGFloat = 500
     /// Mirrors `DragGesture.Value.predictedEndTranslation`
     private static let flickPrediction: CGFloat = 0.25
-    private static let promoteDuration: TimeInterval = 0.2
-    private static let promoteAnimation: Animation = .snappy(duration: promoteDuration)
+    /// The stack behind moves up on the flight's own animation; the hardest flick is still too
+    /// short to tear the card out over
+    private static let minSettleDuration: TimeInterval = 0.2
     private static let titleReturnAnimation: Animation = .easeInOut(duration: 0.4).delay(0.1)
     private static let maxFlung = 10
     /// one more than is ever visible, so the next card is built before it moves up
@@ -149,9 +152,29 @@ struct InboxCardStack: View {
             }
             return
         }
-        // a flicked card leaves the way it was thrown, one merely let go the way it was dragged
-        let direction = velocity.length > Self.flickSpeed ? velocity : translation
-        perform(action, video, via: "swipe", direction: direction, speed: velocity.length)
+        let heading = Self.heading(translation, velocity)
+        perform(
+            action,
+            video,
+            via: "swipe",
+            direction: heading,
+            // the flight goes along `heading`; speed across it is not speed along it, and would
+            // throw the card out faster than it was ever travelling that way
+            speed: max(0, velocity.projected(on: heading))
+        )
+    }
+
+    /// Where the card was going when it was let go
+    ///
+    /// A flick leaves the way it was thrown, one merely let go the way it was dragged. In between
+    /// the two are blended: the speed a finger is read at as it leaves the glass is jittery, so at
+    /// a single cutoff two otherwise identical swipes head off in different directions.
+    private static func heading(_ translation: CGSize, _ velocity: CGSize) -> CGSize {
+        let range = flickSpeed - letGoSpeed
+        let thrown = min(1, max(0, (velocity.length - letGoSpeed) / range))
+        let blended = translation.normalized * (1 - thrown) + velocity.normalized * thrown
+        // a finger that reverses as it lifts can cancel the two out; the drag is never zero here
+        return blended.length > 0.01 ? blended.normalized : translation.normalized
     }
 
     private func flungOffset(_ video: Video) -> CGSize {
@@ -229,14 +252,13 @@ struct InboxCardStack: View {
             action: action
         )
 
-        withAnimation(Self.promoteAnimation) {
-            // the card carries on off screen on its own, the stack moves up behind it right away
-            swipe.trigger(action)
-        }
-        // `departing` alone both takes the card out of the stack and flies it out, so its whole way
-        // off screen belongs to this one transaction: anything else hiding it here would describe
-        // the same move under the promotion's, and only one of the two can win
+        // `departing` alone both takes the card out of the stack and flies it out, and letting go
+        // of the drag describes the very same move — in a transaction of its own it is a second
+        // answer to where the card is, and the one that wins is anyone's guess. One transaction,
+        // one answer. The stack behind doesn't need the drag cleared to move up: it reads the
+        // translation of whichever card is at the front, and that is the next one from here on.
         withAnimation(flight.animation) {
+            swipe.trigger(action)
             departing.append(departure)
         }
         withAnimation(Self.titleReturnAnimation) {
@@ -259,7 +281,7 @@ struct InboxCardStack: View {
     private func land(_ departure: Departure, after duration: TimeInterval) {
         let youtubeId = departure.id
         // never before the stack behind it has settled, however hard the card was thrown
-        let settled = max(duration, Self.promoteDuration)
+        let settled = max(duration, Self.minSettleDuration)
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(settled))
             // takes over holding the card back from `departing`, until the store has caught up.
