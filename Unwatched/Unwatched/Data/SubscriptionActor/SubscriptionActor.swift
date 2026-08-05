@@ -8,8 +8,7 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
-@ModelActor
-actor SubscriptionActor {
+actor SubscriptionActor: SharedContextActor {
     var imageUrlsToBeDeleted = [URL]()
 
     func getActiveSubscriptions(

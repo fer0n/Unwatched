@@ -195,39 +195,24 @@ public struct ChapterService {
 
     public static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
         Log.info("updateIfNeeded")
-        var newChapters = [Chapter]()
-        let oldChapters = video?.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) ?? []
-        newChapters.reserveCapacity(chapters.count)
-
-        var hasChanges = false
-        chapters.indices.forEach { index in
-            let newChapter = chapters[index]
-            let oldChapter = index < oldChapters.count
-                ? oldChapters[index]
-                : nil
-            if !chapterEqual(newChapter, oldChapter) {
-                Log.info("Update needed: \(oldChapter?.description ?? "-") vs \(newChapter)")
-                hasChanges = true
-                if let oldChapter {
-                    modelContext.delete(oldChapter)
-                }
-                let newChapterModel = newChapter.getChapter
-                modelContext.insert(newChapterModel)
-
-                newChapters.append(newChapterModel)
-            } else if let oldChapter {
-                newChapters.append(oldChapter)
-            }
+        guard let video else {
+            // without a video to attach them to, anything built here is an orphan row
+            Log.warning("updateIfNeeded: no video")
+            return
         }
 
-        if hasChanges {
-            video?.mergedChapters = newChapters
+        let reconciled = reconcileChapters(chapters, with: video.mergedChapters ?? [], in: modelContext)
+        if reconciled.hasChanges {
+            video.mergedChapters = reconciled.chapters
         }
     }
 
-    // function that detects what percentage of chapters are equal between two arrays
+    /// What percentage of the two arrays is equal, paired the same way `reconcileChapters` pairs
+    /// them — a relationship hands its chapters back in no particular order.
     public static func chaptersSimilarity(_ chapters1: [SendableChapter], _ chapters2: [Chapter]) -> Double {
         guard !chapters1.isEmpty, !chapters2.isEmpty else { return 0.0 }
+        let chapters1 = chapters1.sorted { $0.startTime < $1.startTime }
+        let chapters2 = chapters2.sorted { $0.startTime < $1.startTime }
         let minCount = min(chapters1.count, chapters2.count)
         var equalCount = 0
         for index in 0..<minCount where chapterEqual(chapters1[index], chapters2[index]) {

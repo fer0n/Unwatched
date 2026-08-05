@@ -12,6 +12,19 @@ class CleanupServiceTests: XCTestCase {
     func testDedup() async {
         let context = DataProvider.newContext()
 
+        // the container is shared between tests, only assert on the videos inserted here
+        let testIds = [
+            "subDiffYoutubeId",
+            "watchedDiffYoutubeId",
+            "elapsedDiffYoutubeId",
+            "queueDiffYoutubeId",
+            "newEntryDiffYoutubeId",
+            "queueOrderDiffYoutubeId",
+            "inboxDiffYoutubeId",
+            "bothInboxQueueYoutubeId"
+        ]
+        let testVideos = FetchDescriptor<Video>(predicate: #Predicate<Video> { testIds.contains($0.youtubeId) })
+
         let sub = Subscription.getDummy()
         context.insert(sub)
 
@@ -89,8 +102,7 @@ class CleanupServiceTests: XCTestCase {
         try? context.save()
 
         do {
-            let fetch = FetchDescriptor<Video>()
-            let videos = try context.fetch(fetch)
+            let videos = try context.fetch(testVideos)
 
             print("before")
             for video in videos {
@@ -104,8 +116,7 @@ class CleanupServiceTests: XCTestCase {
         _ = await task.value
 
         do {
-            let fetch = FetchDescriptor<Video>()
-            let videos = try context.fetch(fetch)
+            let videos = try context.fetch(testVideos)
 
             print("after")
             for video in videos {
@@ -152,6 +163,7 @@ class CleanupServiceTests: XCTestCase {
             // 15 videos inserted, 7 duplicates removed → 8 should remain
             XCTAssertEqual(videos.count, 8, "too many videos deleted during dedup")
 
+            cleanUp(videos: videos, sub: sub, context: context)
         } catch {
             XCTFail("Fetching failed: \(error)")
         }
@@ -254,7 +266,7 @@ class CleanupServiceTests: XCTestCase {
         }
     }
 
-    /// The container is shared between tests, testDedup asserts on the total video count.
+    /// The container is shared between tests, leftovers break suites that fetch unscoped.
     private func cleanUp(videos: [Video], sub: Subscription, context: ModelContext) {
         for video in videos {
             CleanupService.deleteVideo(video, context)
@@ -267,7 +279,10 @@ class CleanupServiceTests: XCTestCase {
         let context = DataProvider.newContext()
 
         let now = Date()
-        let channelId = "channel1"
+        // the container is shared between tests, only assert on the entries inserted here
+        let suffix = UUID().uuidString
+        let channelId = "channel1-\(suffix)"
+        let otherChannelId = "channel2-\(suffix)"
 
         // 1. Exact Duplicate
         let exact1 = WatchTimeEntry(date: now, channelId: channelId, watchTime: 100)
@@ -288,7 +303,7 @@ class CleanupServiceTests: XCTestCase {
         context.insert(diffDateEntry)
 
         // 4. Different Channel (Keep both)
-        let otherChannelEntry = WatchTimeEntry(date: now, channelId: "channel2", watchTime: 100)
+        let otherChannelEntry = WatchTimeEntry(date: now, channelId: otherChannelId, watchTime: 100)
         context.insert(otherChannelEntry)
 
         try? context.save()
@@ -296,7 +311,9 @@ class CleanupServiceTests: XCTestCase {
         let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false, videoOnly: false)
         _ = await task.value
 
-        let fetch = FetchDescriptor<WatchTimeEntry>()
+        let fetch = FetchDescriptor<WatchTimeEntry>(
+            predicate: #Predicate<WatchTimeEntry> { $0.channelId == channelId || $0.channelId == otherChannelId }
+        )
         guard let entries = try? context.fetch(fetch) else {
             XCTFail("Failed to fetch entries")
             return

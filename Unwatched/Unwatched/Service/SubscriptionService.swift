@@ -9,7 +9,7 @@ struct SubscriptionService {
         _ sort: [SortDescriptor<Subscription>]
     ) async -> [SendableSubscription] {
         let task = Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             return await repo.getActiveSubscriptions(searchText ?? "", sort)
         }
         let subs = await task.value
@@ -18,21 +18,21 @@ struct SubscriptionService {
 
     static func getActiveSubscriptionCount() -> Task<Int?, Never> {
         Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             return await repo.getActiveSubscriptionCount()
         }
     }
 
     static func addSubscriptions(
         subscriptionInfo: [SubscriptionInfo]) async throws -> [SubscriptionState] {
-        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        let repo = SubscriptionActor()
         return try await repo.addSubscriptions(subscriptionInfo: subscriptionInfo)
     }
 
     static func addSubscriptions(
         from sendableSubs: [SendableSubscription]
     ) async throws -> [SubscriptionState] {
-        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        let repo = SubscriptionActor()
         return try await repo.addSubscriptions(sendableSubs: sendableSubs)
     }
 
@@ -42,17 +42,17 @@ struct SubscriptionService {
         guard subscriptionInfo != nil || subscriptionId != nil else {
             throw SubscriptionError.noInfoFoundToSubscribeTo
         }
-        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        let repo = SubscriptionActor()
         return try await repo.subscribeTo(subscriptionInfo, subscriptionId)
     }
 
     static func addSubscriptionWithoutRSS(_ info: SubscriptionInfo) async throws {
-        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        let repo = SubscriptionActor()
         try await repo.addSubscriptionWithoutRSS(info)
     }
 
     static func getAllFeedUrls() async throws -> [(title: String, link: URL?)] {
-        let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+        let repo = SubscriptionActor()
         return try await repo.getAllFeedUrls()
     }
 
@@ -60,14 +60,14 @@ struct SubscriptionService {
         _ subscriptionIds: [PersistentIdentifier]
     ) -> Task<(), Error> {
         return Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             return try await repo.deleteSubscriptions(subscriptionIds)
         }
     }
 
     static func unsubscribe(_ info: SubscriptionInfo) -> Task<(), Error> {
         return Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             return try await repo.unsubscribe(info.channelId, playlistId: info.playlistId)
         }
     }
@@ -88,7 +88,7 @@ struct SubscriptionService {
 
     static func cleanupArchivedSubscriptions() {
         Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             return try await repo.cleanupArchivedSubscriptions()
         }
     }
@@ -101,7 +101,7 @@ struct SubscriptionService {
                              playlistId: String? = nil,
                              updateSubscriptionInfo: SubscriptionInfo? = nil) -> Task<(Bool), Never> {
         return Task.detached {
-            let repo = SubscriptionActor(modelContainer: DataProvider.shared.container)
+            let repo = SubscriptionActor()
             let isSubscribed = await repo.isSubscribed(channelId: channelId,
                                                        playlistId: playlistId,
                                                        updateInfo: updateSubscriptionInfo)

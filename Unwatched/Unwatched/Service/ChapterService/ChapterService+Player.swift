@@ -15,6 +15,12 @@ extension ChapterService {
         _ video: Video,
         duration: Double
     ) {
+        // has to be the video's own context: a filler chapter from a foreign one can't be attached
+        guard let context = video.modelContext else {
+            Log.warning("updateDuration: video has no context")
+            return
+        }
+
         if let lastNormalChapter = (video.chapters ?? []).max(by: { $0.startTime < $1.startTime }) {
             if  lastNormalChapter.endTime == nil, duration > lastNormalChapter.startTime {
                 lastNormalChapter.endTime = duration
@@ -23,29 +29,22 @@ extension ChapterService {
         }
 
         if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
-            let context = DataProvider.newContext()
             let hasChanges = fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
             if hasChanges {
                 video.mergedChapters = chapters
-                try? context.save()
             }
         }
+
+        try? context.save()
     }
 
     @MainActor
     static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
-        var chapterModels: [Chapter] = []
-        for chapter in chapters {
-            let chapterModel = chapter.getChapter
-            context.insert(chapterModel)
-            chapterModels.append(chapterModel)
+        let reconciled = reconcileChapters(chapters, with: video.chapters ?? [], in: context)
+        if reconciled.hasChanges {
+            video.chapters = reconciled.chapters
+            CleanupService.deleteMergedChapters(from: video, context)
         }
-
-        if !chapterModels.isEmpty {
-            CleanupService.deleteChapters(from: video, context)
-        }
-
-        video.chapters = chapterModels
         try? context.save()
 
         if video.youtubeId == PlayerManager.shared.video?.youtubeId {

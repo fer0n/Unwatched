@@ -22,7 +22,7 @@ public struct VideoCrawler {
     }
 
     /// A broken feed otherwise looks like an empty one and counts as a successful refresh.
-    static func hasUsableResult(_ delegate: RSSParserDelegate) -> Bool {
+    public static func hasUsableResult(_ delegate: RSSParserDelegate) -> Bool {
         delegate.parsingSucceeded
             || delegate.didStopAfterLimit
             || !delegate.videos.isEmpty

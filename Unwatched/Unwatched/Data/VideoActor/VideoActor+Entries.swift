@@ -127,13 +127,11 @@ extension VideoActor {
         }
 
         if shouldUpdateChapters {
-            CleanupService.deleteChapters(from: video, modelContext)
-            let newChapterModels = newChapters.map {
-                let chapter = $0.getChapter
-                modelContext.insert(chapter)
-                return chapter
+            let reconciled = ChapterService.reconcileChapters(newChapters, with: currentChapters, in: modelContext)
+            if reconciled.hasChanges {
+                video.chapters = reconciled.chapters
+                CleanupService.deleteMergedChapters(from: video, modelContext)
             }
-            video.chapters = newChapterModels
         }
     }
 
@@ -541,41 +539,49 @@ extension VideoActor {
     ///  - videos: videos to check for duration
     ///  - optionalVideos: videos that will be checked if the request limit is not yet reached
     func fetchVideoDurations(
-        for videos: [Video],
-        optional optionalVideos: [Video] = [],
+        for videoIds: [PersistentIdentifier],
+        optional optionalVideoIds: [PersistentIdentifier] = [],
         includeEntries: Bool = true,
         ) async throws -> [VideoDurationInfo] {
-        Log.info("fetchUpdateDurations, videos: \(videos.count)")
-        guard !videos.isEmpty || includeEntries else {
+        Log.info("fetchUpdateDurations, videos: \(videoIds.count)")
+        guard !videoIds.isEmpty || includeEntries else {
             Log.info("fetchUpdateDurations, no videos without duration")
             return []
         }
 
-        let filteredVideos = getVideosToFetchDurationFor(
+        // Ids, not models: a model held across the request sits on the shared context while other
+        // jobs take turns on it, and one of those may delete its row.
+        let videos: [Video] = videoIds.compactMap { modelContext.resolvedModel(withID: $0) }
+        let optionalVideos: [Video] = optionalVideoIds.compactMap { modelContext.resolvedModel(withID: $0) }
+
+        let selected = getVideosToFetchDurationFor(
             videos,
             optional: optionalVideos,
             includeEntries: includeEntries
-        )
-        let ids = filteredVideos.map { $0.youtubeId }
-        let infos = try await YoutubeDataAPI.getYtVideoDurations(ids)
-        // make sure all loaded videos are considered updated, there might be deleted videos
-        // that are not in the response
-        filteredVideos.forEach { $0.apiUpdatedDate = Date() }
+        ).map { (youtubeId: $0.youtubeId, modelId: $0.persistentModelID) }
 
-        let videoLookup = Dictionary(
-            filteredVideos.map { ($0.youtubeId, $0) },
+        let infos = try await YoutubeDataAPI.getYtVideoDurations(selected.map(\.youtubeId))
+
+        let durations = Dictionary(
+            infos.map { ($0.youtubeId, $0) },
             uniquingKeysWith: { _, new in new }
         )
 
         var results = [VideoDurationInfo]()
-        for info in infos {
-            if let video = videoLookup[info.youtubeId] {
-                video.duration = info.duration
-                var newInfo = info
-                newInfo.persistentId = video.persistentModelID
-
-                results.append(newInfo)
+        for entry in selected {
+            guard let video: Video = modelContext.resolvedModel(withID: entry.modelId) else {
+                // deleted while the request was in flight
+                continue
             }
+            // mark as updated even without a duration: deleted videos aren't in the response
+            video.apiUpdatedDate = Date()
+
+            guard var info = durations[entry.youtubeId] else {
+                continue
+            }
+            video.duration = info.duration
+            info.persistentId = video.persistentModelID
+            results.append(info)
         }
         try modelContext.save()
         return results

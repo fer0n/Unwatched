@@ -27,7 +27,16 @@ public extension ModelContext {
 
     /// Re-resolves a model reached through a relationship, returning nil if its row was deleted.
     func resolvedModel<T>(_ model: T) -> T? where T: PersistentModel {
-        existingModelViaFetch(for: model.persistentModelID)
+        resolvedModel(withID: model.persistentModelID)
+    }
+
+    /// Looks a model up by id, returning nil if its row is gone. Use it to pick models back up
+    /// after an `await`, where the id rather than the model should have crossed the suspension.
+    ///
+    /// Unlike `existingModel(for:)` it never goes through `registeredModel(for:)`, which hands
+    /// back an object whose row another context deleted — reading any property on that traps.
+    func resolvedModel<T>(withID objectID: PersistentIdentifier) -> T? where T: PersistentModel {
+        existingModelViaFetch(for: objectID)
     }
 
     private func existingModelViaFetch<T>(for objectID: PersistentIdentifier) -> T? where T: PersistentModel {

@@ -167,9 +167,10 @@ class VideoCrawlerTests: XCTestCase {
             let queueEntry2 = QueueEntry(video: video, order: 2)
             context.insert(queueEntry2)
 
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             do {
-                let result = try await repo.fetchVideoDurations(for: [video], optional: [video])
+                let videoId = video.persistentModelID
+                let result = try await repo.fetchVideoDurations(for: [videoId], optional: [videoId])
                 print("result", result)
             } catch {
                 XCTFail("\(error)")
@@ -180,7 +181,7 @@ class VideoCrawlerTests: XCTestCase {
     // MARK: - fetchVideos (url fetch)
 
     func testFetchVideosValidFeedReturnsVideos() async throws {
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.workingChannelId)
         let sub = SendableSubscription(
             link: url, title: "Working sub", videoPlacement: .defaultPlacement, isArchived: false
@@ -193,7 +194,7 @@ class VideoCrawlerTests: XCTestCase {
     }
 
     func testFetchVideosInvalidFeedReturnsEmptyWithoutThrowing() async throws {
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let url = try UrlService.getFeedUrlFromChannelId(VideoCrawlerTestData.brokenChannelId)
         let sub = SendableSubscription(
             link: url, title: "Broken sub", videoPlacement: .defaultPlacement, isArchived: false
@@ -226,7 +227,7 @@ class VideoCrawlerTests: XCTestCase {
         context.insert(brokenSub)
         try context.save()
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         let subIds = [workingSub.persistentModelID, brokenSub.persistentModelID]
         // should not throw: the broken subscription must not abort the whole refresh
         _ = try await repo.loadVideos(subIds, fetchDurations: false)
@@ -251,7 +252,7 @@ class VideoCrawlerTests: XCTestCase {
         context.insert(brokenSub)
         try context.save()
 
-        let repo = VideoActor(modelContainer: DataProvider.shared.container)
+        let repo = VideoActor()
         do {
             _ = try await repo.loadVideos([brokenSub.persistentModelID], fetchDurations: false)
             XCTFail("Expected loadVideos to throw when every subscription fails")

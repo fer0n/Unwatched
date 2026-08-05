@@ -27,7 +27,7 @@ final class StatsVM {
         }
 
         let task = Task.detached {
-            let actor = StatsActor(modelContainer: DataProvider.shared.container)
+            let actor = StatsActor()
             return try await actor.getStats()
         }
 
@@ -63,7 +63,7 @@ final class StatsVM {
         }
 
         let task = Task.detached {
-            let actor = StatsActor(modelContainer: DataProvider.shared.container)
+            let actor = StatsActor()
             try await actor.deleteStats(from: startDate, to: endDate, channelId: channelId)
         }
 

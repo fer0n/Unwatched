@@ -7,8 +7,7 @@ import SwiftData
 import Foundation
 import UnwatchedShared
 
-@ModelActor
-actor StatsActor {
+actor StatsActor: SharedContextActor {
     func getStats() throws -> [SendableWatchTimeEntry] {
         let descriptor = FetchDescriptor<WatchTimeEntry>(sortBy: [SortDescriptor(\.date)])
         let entries = try modelContext.fetch(descriptor)

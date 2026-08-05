@@ -42,7 +42,7 @@ struct CleanupService {
     > {
         Log.info("cleanupDuplicatesAndInboxDate")
         return Task.detached {
-            let repo = CleanupActor(modelContainer: DataProvider.shared.container)
+            let repo = CleanupActor()
             let info = await repo.removeDuplicates(
                 quickCheck: quickCheck,
                 videoOnly: videoOnly
@@ -54,7 +54,7 @@ struct CleanupService {
 
     static func cleanupHiddenShorts() -> Task<Int, Error> {
         return Task.detached {
-            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            let actor = CleanupActor()
             return try await actor.cleanupHiddenShorts()
         }
     }
@@ -116,21 +116,19 @@ struct CleanupService {
         try? modelContext.save()
     }
 
-    static func deleteChapters(from video: Video, _ modelContext: ModelContext) {
-        for chapter in video.chapters ?? [] {
-            modelContext.delete(chapter)
-        }
+    /// Drops the SponsorBlock merge, which is derived from `video.chapters` and stops describing
+    /// the video as soon as those change. Clearing the relationship matters as much as the
+    /// delete: leaving it listing gone rows lets a reader pick one up and trap on it later.
+    static func deleteMergedChapters(from video: Video, _ modelContext: ModelContext) {
         for chapter in video.mergedChapters ?? [] {
             modelContext.delete(chapter)
         }
+        video.mergedChapters = []
         video.sponserBlockUpdateDate = nil
     }
 
-    /// Runs the due auto-delete jobs one after another, sharing a single actor.
-    ///
-    /// They must not run in parallel: each one deletes videos in its own context, and a model one
-    /// context hands out can have its row deleted by the other. Reading any property on it after
-    /// that traps in SwiftData (see `ModelContext.resolvedModel`).
+    /// Runs the due auto-delete jobs one after another, so three passes don't fetch the same
+    /// videos at once for no benefit.
     static func runScheduledCleanup(
         deleteWatchedOlderThan watchedDays: Int?,
         deleteOrphanedOlderThan orphanedDays: Int?,
@@ -140,7 +138,7 @@ struct CleanupService {
             return
         }
         Task.detached {
-            let actor = CleanupActor(modelContainer: DataProvider.shared.container)
+            let actor = CleanupActor()
             if let watchedDays {
                 await actor.deleteOldWatchedVideos(olderThan: watchedDays)
             }
@@ -184,7 +182,7 @@ struct CleanupService {
     }
 }
 
-@ModelActor actor CleanupActor {
+actor CleanupActor: SharedContextActor {
     var duplicateInfo = RemovedDuplicatesInfo()
 
     func cleanupHiddenShorts() throws -> Int {

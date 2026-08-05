@@ -11,8 +11,8 @@ public class RSSParserDelegate: NSObject, XMLParserDelegate {
     public var subscriptionInfo: SendableSubscription?
     var limitVideos: Int?
 
-    var parsingSucceeded = false
-    var didStopAfterLimit = false
+    public internal(set) var parsingSucceeded = false
+    public internal(set) var didStopAfterLimit = false
 
     var currentElement = ""
     var currentTitle: String = ""

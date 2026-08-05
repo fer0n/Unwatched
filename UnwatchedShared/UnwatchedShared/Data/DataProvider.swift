@@ -148,6 +148,9 @@ public final class DataProvider: Sendable {
         ModelContext(shared.container)
     }
 
+    /// Owns the one context every background data actor writes through, see `SharedContextActor`.
+    public static let writeExecutor = DefaultSerialModelExecutor(modelContext: newContext())
+
     @MainActor
     public static var mainContext: ModelContext {
         shared.container.mainContext

@@ -11,10 +11,10 @@ extension VideoService {
     /// from any context.
     static func fetchDescriptionInBg(youtubeId: String) {
         Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             let description = await repo.fetchAndSetDescription(youtubeId: youtubeId)
             guard let description else { return }
-            // The actor saved to its own context — an already-registered Video in the main
+            // The actor saved to the background context — an already-registered Video in the main
             // context won't pick that up on its own, so mirror the description there too
             // (chapters were already persisted by the actor; a fresh fetch will see them).
             await MainActor.run {
@@ -36,7 +36,7 @@ extension VideoService {
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Log.info("loadNewVideosInBg")
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             let hasPremium = NSUbiquitousKeyValueStore.default.bool(forKey: Const.unwatchedPremiumAcknowledged)
             do {
                 return try await repo.loadVideos(
@@ -53,7 +53,7 @@ extension VideoService {
     static func clearEntriesAsync(from videoId: PersistentIdentifier,
                                   except model: (any PersistentModel.Type)? = nil) -> Task<Void, Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             return try await repo.clearEntries(from: videoId)
         }
         return task
@@ -67,7 +67,7 @@ extension VideoService {
         _ limit: Int? = nil
     ) async -> [SendableVideo] {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             return await repo.getSendableVideos(filter, manualFilter, sort, skip, limit)
         }
         return await task.value
@@ -90,7 +90,7 @@ extension VideoService {
 
     static func moveVideoToInboxAsync(_ videoId: PersistentIdentifier) -> Task<Void, Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             return try await repo.moveVideoToInbox(videoId)
         }
         return task
@@ -142,7 +142,7 @@ extension VideoService {
             return
         }
         let task: Task<[VideoDurationInfo], Error> = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             return try await repo.fetchVideoDurationsQueueInbox()
         }
         Task { @MainActor in
@@ -228,7 +228,7 @@ extension VideoService {
         watched: Bool = true
     ) -> Task<Void, Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             try await repo.setVideoWatched(videoId, watched: watched)
         }
         return task
@@ -238,7 +238,7 @@ extension VideoService {
         return Task.detached {
             let videoId = getModelId(for: youtubeId)
             if let videoId = videoId {
-                let repo = VideoActor(modelContainer: DataProvider.shared.container)
+                let repo = VideoActor()
                 try await repo.clearEntries(from: videoId)
             } else {
                 Log.info("Video not found")
@@ -279,7 +279,7 @@ extension VideoService {
     static func insertQueueEntriesAsync(at index: Int = 0,
                                         videoIds: [PersistentIdentifier]) -> Task<(), Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             try await repo.insertQueueEntries(at: index, videoIds: videoIds)
         }
         return task
@@ -287,7 +287,7 @@ extension VideoService {
 
     static func addToBottomQueueAsync(videoId: PersistentIdentifier) -> Task<(), Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             try await repo.addToBottomQueue(videoId: videoId)
         }
         return task
@@ -304,7 +304,7 @@ extension VideoService {
     ) -> Task<(), Error> {
         Log.info("addForeignUrls")
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             try await repo.addForeignUrls(
                 urls,
                 in: videoPlacement,
@@ -375,7 +375,7 @@ extension VideoService {
                                index: Int?,
                                date: Date?) -> Task<(), Error> {
         let task = Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             try await repo.clearList(list, direction, index: index, date: date)
         }
         return task
@@ -383,7 +383,7 @@ extension VideoService {
 
     static func inboxShortsCount() -> Task<Int?, Never> {
         return Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             return await repo.inboxShortsCount()
         }
     }
@@ -536,7 +536,7 @@ extension VideoService {
 
     static func consumeDeferredVideos(_ clearedYouTubeId: String? = nil) {
         Task.detached {
-            let repo = VideoActor(modelContainer: DataProvider.shared.container)
+            let repo = VideoActor()
             await repo.consumeDeferredVideos(clearedYouTubeId)
         }
     }
