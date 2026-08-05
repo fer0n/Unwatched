@@ -44,6 +44,9 @@ struct UnwatchedApp: App {
                 }
 
                 #if os(macOS)
+                // without this, every incoming unwatched:// link opens a second window,
+                // which then fights over the shared web view and app delegate state
+                .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
                 .frame(
                     minWidth: isFakePip ? 300 : 800,
                     idealWidth: isFakePip ? 400 : 1000,
