@@ -35,7 +35,9 @@ actor RefreshActor {
 
     var isLoading = false
     var isSyncingIcloud = false
-    var lastRefreshFailed = false
+
+    var failedSubscriptionsCount = 0
+    var totalSubscriptionsCount = 0
 
     @ObservationIgnored var triggerPasteAction = false
     @ObservationIgnored var triggerPasteAndQueueAction = false
@@ -120,16 +122,17 @@ actor RefreshActor {
                 subscriptionIds: subscriptionIds,
                 fetchDurations: true
             )
-            _ = try await task.value
+            let result = try await task.value
             if isFullRefresh {
-                lastRefreshFailed = false
+                failedSubscriptionsCount = result.failedSubscriptionsCount
+                totalSubscriptionsCount = result.totalSubscriptionsCount
             }
         } catch {
             Log.info("Error during refresh: \(error)")
-            if isFullRefresh,
-               let urlError = error as? URLError,
-               urlError.code == .badServerResponse {
-                lastRefreshFailed = true
+            if isFullRefresh {
+                // couldn't even get as far as fetching individual feeds — treat as a total failure
+                failedSubscriptionsCount = 1
+                totalSubscriptionsCount = 1
             }
         }
         await cleanup(hardRefresh: hardRefresh)

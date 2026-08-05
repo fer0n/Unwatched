@@ -27,7 +27,7 @@ struct CoreRefreshButton: View {
             }
             .accessibilityLabel("refresh")
             .contextMenu {
-                Section(refresher.lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : "") {
+                Section(lastRefreshFailed && !refresher.isLoading ? "refreshFailedMessage" : "") {
                     Button {
                         Task { @MainActor in
                             await refresh(hardRefresh: true)
@@ -43,9 +43,16 @@ struct CoreRefreshButton: View {
     }
 
     private var refreshIconName: String {
-        refresher.lastRefreshFailed && !refresher.isLoading
+        lastRefreshFailed && !refresher.isLoading
             ? Const.refreshFailedSF
             : Const.refreshSF
+    }
+
+    /// A handful of dead feeds among many shouldn't flag this; a broad outage should.
+    private var lastRefreshFailed: Bool {
+        guard refresher.totalSubscriptionsCount > 0 else { return false }
+        let failureShare = Double(refresher.failedSubscriptionsCount) / Double(refresher.totalSubscriptionsCount)
+        return failureShare >= Const.refreshFailedThreshold
     }
 
     @MainActor

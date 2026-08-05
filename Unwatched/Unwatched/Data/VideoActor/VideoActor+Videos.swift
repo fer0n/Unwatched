@@ -216,9 +216,8 @@ actor VideoActor: SharedContextActor {
 
         try modelContext.save()
 
-        if fetchErrors.count == sendableSubs.count, let firstError = fetchErrors.first {
-            throw firstError
-        }
+        newVideos.failedSubscriptionsCount = fetchErrors.count
+        newVideos.totalSubscriptionsCount = sendableSubs.count
         return newVideos
     }
 

@@ -125,6 +125,10 @@ public struct Const {
     public static let triageNewSubs = 5
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
+    /// Share of subscriptions whose feed fetch has to fail in the same refresh before the
+    /// reload button shows its failed state — stand-in until failures are tracked per subscription.
+    public static let refreshFailedThreshold: Double = 0.5
+
     public static let earliestBackgroundBeginSeconds: Double = 30 * 60
     public static let backgroundAppRefreshId = "com.pentlandFirth.Unwatched.refreshVideos"
 
