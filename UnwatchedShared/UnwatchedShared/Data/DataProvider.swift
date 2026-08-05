@@ -52,6 +52,8 @@ public final class DataProvider: Sendable {
         }
         #endif
 
+        SettingsMigration.run()
+
         let config = ModelConfiguration(
             schema: DataProvider.schema,
             groupContainer: DataProvider.groupContainer,
@@ -61,29 +63,29 @@ public final class DataProvider: Sendable {
         Log.info("getModelContainer: config set")
 
         do {
+            let container: ModelContainer
             do {
-                let container = try ModelContainer(
+                container = try ModelContainer(
                     for: DataProvider.schema,
                     migrationPlan: UnwatchedMigrationPlan.self,
                     configurations: [config]
                 )
-                return container
             } catch {
                 Log.error("getModelContainer error: \(error)")
-            }
 
-            // workaround for migration (disable sync for initial launch)
-            Log.info("getModelContainer: fallback")
-            let config = ModelConfiguration(
-                schema: DataProvider.schema,
-                groupContainer: DataProvider.groupContainer,
-                cloudKitDatabase: .none
-            )
-            let container = try ModelContainer(
-                for: DataProvider.schema,
-                migrationPlan: UnwatchedMigrationPlan.self,
-                configurations: [config]
-            )
+                // workaround for migration (disable sync for initial launch)
+                Log.info("getModelContainer: fallback")
+                let config = ModelConfiguration(
+                    schema: DataProvider.schema,
+                    groupContainer: DataProvider.groupContainer,
+                    cloudKitDatabase: .none
+                )
+                container = try ModelContainer(
+                    for: DataProvider.schema,
+                    migrationPlan: UnwatchedMigrationPlan.self,
+                    configurations: [config]
+                )
+            }
             Task { @MainActor in
                 DataProvider.migrationWorkaround(container.mainContext)
             }
@@ -93,13 +95,15 @@ public final class DataProvider: Sendable {
         }
     }()
 
+    /// Applies video placements that `migrateV1p6toV1p7` collected but never got to write back.
+    ///
+    /// Runs on both container paths, not just the fallback: the stage's `didMigrate` can be
+    /// skipped while the container itself opens fine (https://developer.apple.com/forums/thread/775060),
+    /// so a successful open is no evidence the stage completed. No-op once the placements are gone.
     private static func migrationWorkaround(_ context: ModelContext) {
-        // workaround: migration fails during willMigrate (https://developer.apple.com/forums/thread/775060)
-        let dict = UnwatchedMigrationPlan.subPlaceVideosIn
-        if !dict.isEmpty {
+        if !UnwatchedMigrationPlan.subPlaceVideosIn.isEmpty {
             UnwatchedMigrationPlan.migrateV1p6toV1p7DidMigrate(context)
         }
-        UnwatchedMigrationPlan.migrateV1p9toV1p10DidMigrate()
     }
 
     public let localCacheContainer: ModelContainer = {

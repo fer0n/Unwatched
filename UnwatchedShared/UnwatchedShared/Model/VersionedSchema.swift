@@ -75,68 +75,66 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
     )
     
-    public static var migrateV1p2toV1p3 = MigrationStage.custom(
+    public static let migrateV1p2toV1p3 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p2.self,
-        toVersion: UnwatchedSchemaV1p3.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p3.self
     )
     
-    public static var migrateV1p3toV1p4 = MigrationStage.custom(
+    /// The `hideShorts` -> `defaultShortsSetting` conversion this used to carry now runs from
+    /// `SettingsMigration`; it only ever touched `UserDefaults`.
+    public static let migrateV1p3toV1p4 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p3.self,
-        toVersion: UnwatchedSchemaV1p4.self,
-        willMigrate: { _ in
-            migrateHideShortsSetting()
-        },
-        didMigrate: { _ in
-            migrateHideShortsSetting()
-        }
+        toVersion: UnwatchedSchemaV1p4.self
+    )
+
+    public static let migrateV1p4toV1p5 = MigrationStage.lightweight(
+        fromVersion: UnwatchedSchemaV1p4.self,
+        toVersion: UnwatchedSchemaV1p5.self
     )
     
-    private static func migrateHideShortsSetting() {
-        if UserDefaults.standard.object(forKey: Const.defaultShortsSetting) == nil {
-            let hideShorts = UserDefaults.standard.bool(forKey: Const.hideShorts)
-            let shortSetting = hideShorts ? ShortsSetting.hide : ShortsSetting.show
-            UserDefaults.standard.setValue(shortSetting.rawValue, forKey: Const.defaultShortsSetting)
+    public static let migrateV1p5toV1p6 = MigrationStage.lightweight(
+        fromVersion: UnwatchedSchemaV1p5.self,
+        toVersion: UnwatchedSchemaV1p6.self
+    )
+    
+    /// Carried between this stage's two passes on disk rather than in memory: if the app is
+    /// killed between `willMigrate` and `didMigrate`, an in-memory dictionary takes the pending
+    /// placements with it and `DataProvider`'s recovery pass has nothing left to apply.
+    static var subPlaceVideosIn: [String: Int] {
+        get { UserDefaults.standard.dictionary(forKey: pendingVideoPlacementKey) as? [String: Int] ?? [:] }
+        set {
+            if newValue.isEmpty {
+                UserDefaults.standard.removeObject(forKey: pendingVideoPlacementKey)
+            } else {
+                UserDefaults.standard.set(newValue, forKey: pendingVideoPlacementKey)
+            }
         }
     }
-    
-    public static var migrateV1p4toV1p5 = MigrationStage.custom(
-        fromVersion: UnwatchedSchemaV1p4.self,
-        toVersion: UnwatchedSchemaV1p5.self,
-        willMigrate: nil,
-        didMigrate: nil
-    )
-    
-    public static var migrateV1p5toV1p6 = MigrationStage.custom(
-        fromVersion: UnwatchedSchemaV1p5.self,
-        toVersion: UnwatchedSchemaV1p6.self,
-        willMigrate: nil,
-        didMigrate: nil
-    )
-    
-    static var subPlaceVideosIn = [String: Int]()
-    public static var migrateV1p6toV1p7 = MigrationStage.custom(
+    private static let pendingVideoPlacementKey = "migrationPendingVideoPlacement"
+
+    public static let migrateV1p6toV1p7 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p6.self,
         toVersion: UnwatchedSchemaV1p7.self,
         willMigrate: {
             context in
             let fetch = FetchDescriptor<UnwatchedSchemaV1p6.Subscription>()
-            UnwatchedMigrationPlan.subPlaceVideosIn = [:]
+            var pending = [String: Int]()
             if let subs = try? context.fetch(fetch) {
                 for sub in subs {
                     if let channelId = sub.youtubeChannelId {
-                        UnwatchedMigrationPlan.subPlaceVideosIn[channelId] = sub.placeVideosIn.rawValue
+                        pending[channelId] = sub.placeVideosIn.rawValue
                     }
                 }
             }
+            UnwatchedMigrationPlan.subPlaceVideosIn = pending
         },
         didMigrate: { context in
+            let pending = UnwatchedMigrationPlan.subPlaceVideosIn
             let fetch = FetchDescriptor<UnwatchedSchemaV1p7.Subscription>()
             if let subs = try? context.fetch(fetch) {
                 for sub in subs {
                     if let channelId = sub.youtubeChannelId,
-                       let videoPlacement = UnwatchedMigrationPlan.subPlaceVideosIn[channelId] {
+                       let videoPlacement = pending[channelId] {
                         sub._videoPlacement = videoPlacement
                     }
                 }
@@ -145,12 +143,16 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
             UnwatchedMigrationPlan.subPlaceVideosIn = [:]
         }
     )
+
+    /// Same write-back as the stage's `didMigrate`, against the current `Subscription`, for
+    /// `DataProvider`'s recovery pass.
     public static func migrateV1p6toV1p7DidMigrate(_ context: ModelContext) {
+        let pending = UnwatchedMigrationPlan.subPlaceVideosIn
         let fetch = FetchDescriptor<Subscription>()
         if let subs = try? context.fetch(fetch) {
             for sub in subs {
                 if let channelId = sub.youtubeChannelId,
-                   let videoPlacement = UnwatchedMigrationPlan.subPlaceVideosIn[channelId] {
+                   let videoPlacement = pending[channelId] {
                     sub._videoPlacement = videoPlacement
                 }
             }
@@ -158,8 +160,11 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         try? context.save()
         UnwatchedMigrationPlan.subPlaceVideosIn = [:]
     }
-    
-    public static var migrateV1p7toV1p8 = MigrationStage.custom(
+
+    /// Still custom: unlike the other settings conversions this one has no idempotent guard —
+    /// it has to run exactly at this boundary, or it would overwrite a `useNoCookieUrl` the user
+    /// has since changed.
+    public static let migrateV1p7toV1p8 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p7.self,
         toVersion: UnwatchedSchemaV1p8.self,
         willMigrate: nil,
@@ -169,83 +174,36 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }
     )
     
-    public static var migrateV1p8toV1p9 = MigrationStage.custom(
+    public static let migrateV1p8toV1p9 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p8.self,
-        toVersion: UnwatchedSchemaV1p9.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p9.self
     )
     
-    public static var migrateV1p9toV1p10 = MigrationStage.custom(
+    /// The `UserDefaults` -> `NSUbiquitousKeyValueStore` move this used to carry now runs from
+    /// `SettingsMigration`; it only ever touched settings.
+    public static let migrateV1p9toV1p10 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p9.self,
-        toVersion: UnwatchedSchemaV1p10.self,
-        willMigrate: { _ in
-            migrateV1p9toV1p10DidMigrate()
-        },
-        didMigrate: { _ in
-            migrateV1p9toV1p10DidMigrate()
-        }
+        toVersion: UnwatchedSchemaV1p10.self
     )
-    public static func migrateV1p9toV1p10DidMigrate() {
-        Log.info("Migrating UserDefaults to iCloud KeyValueStore")
-        if UserDefaults.standard.bool(forKey: "v1p9toV1p10DidMigrate") {
-            Log.info("Migration already done")
-            return
-        }
-        if let value = UserDefaults.standard.value(forKey: Const.defaultShortsSetting) as? Int64 {
-            Log.info("Migrate: defaultShortsSetting \(value)")
-            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.defaultShortsSetting)
-            UserDefaults.standard.removeObject(forKey: Const.defaultShortsSetting)
-        }
-        if let value = UserDefaults.standard.value(forKey: Const.skipChapterText) as? String {
-            Log.info("Migrate: skipChapterText \(value)")
-            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.skipChapterText)
-            UserDefaults.standard.removeObject(forKey: Const.skipChapterText)
-        }
-        if let value = UserDefaults.standard.value(forKey: Const.mergeSponsorBlockChapters) as? Bool {
-            Log.info("Migrate: mergeSponsorBlockChapters \(value)")
-            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.mergeSponsorBlockChapters)
-            UserDefaults.standard.removeObject(forKey: Const.mergeSponsorBlockChapters)
-        }
-        if let value = UserDefaults.standard.value(forKey: Const.youtubePremium) as? Bool {
-            Log.info("Migrate: youtubePremium \(value)")
-            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.youtubePremium)
-            UserDefaults.standard.removeObject(forKey: Const.youtubePremium)
-        }
-        if let value = UserDefaults.standard.value(forKey: Const.skipSponsorSegments) as? Bool {
-            Log.info("Migrate: skipSponsorSegments \(value)")
-            NSUbiquitousKeyValueStore.default.set(value, forKey: Const.skipSponsorSegments)
-            UserDefaults.standard.removeObject(forKey: Const.skipSponsorSegments)
-        }
-        UserDefaults.standard.set(true, forKey: "v1p9toV1p10DidMigrate")
-    }
-    
-    public static var migrateV1p10toV1p11 = MigrationStage.custom(
+
+    public static let migrateV1p10toV1p11 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p10.self,
-        toVersion: UnwatchedSchemaV1p11.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p11.self
     )
     
-    public static var migrateV1p11toV1p12 = MigrationStage.custom(
+    public static let migrateV1p11toV1p12 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p11.self,
-        toVersion: UnwatchedSchemaV1p12.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p12.self
     )
     
-    public static var migrateV1p12toV1p13 = MigrationStage.custom(
+    public static let migrateV1p12toV1p13 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p12.self,
-        toVersion: UnwatchedSchemaV1p13.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p13.self
     )
     
-    public static var migrateV1p13toV1p14 = MigrationStage.custom(
+    public static let migrateV1p13toV1p14 = MigrationStage.lightweight(
         fromVersion: UnwatchedSchemaV1p13.self,
-        toVersion: UnwatchedSchemaV1p14.self,
-        willMigrate: nil,
-        didMigrate: nil
+        toVersion: UnwatchedSchemaV1p14.self
     )
 
     public static var stages: [MigrationStage] {
