@@ -6,10 +6,10 @@
 import SwiftData
 import SwiftUI
 
-enum CachedImageSchemaV2p1: VersionedSchema {
-    static let versionIdentifier = Schema.Version(2, 1, 0)
+public enum CachedImageSchemaV2p1: VersionedSchema {
+    public static let versionIdentifier = Schema.Version(2, 1, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [CachedImage.self, Transcript.self]
     }
 }

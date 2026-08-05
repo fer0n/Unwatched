@@ -36,7 +36,10 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
         }, didMigrate: nil
     )
     
-    static var watchedDates = [PersistentIdentifier: Date]()
+    /// Keyed by `youtubeId`, not `PersistentIdentifier`: the identifiers handed out before the
+    /// migration don't resolve to the post-migration models, so `context.model(for:)` used to
+    /// return something that never cast to a `Video` and every watch date was dropped.
+    static var watchedDates = [String: Date]()
     static let migrateV1p1toV1p2 = MigrationStage.custom(
         fromVersion: UnwatchedSchemaV1p1.self,
         toVersion: UnwatchedSchemaV1p2.self,
@@ -51,20 +54,24 @@ public enum UnwatchedMigrationPlan: SchemaMigrationPlan {
                     })?.date else {
                         continue
                     }
-                    UnwatchedMigrationPlan.watchedDates[video.persistentModelID] = mostRecentWatchDate
+                    UnwatchedMigrationPlan.watchedDates[video.youtubeId] = mostRecentWatchDate
                 }
                 try? context.delete(model: UnwatchedSchemaV1.WatchEntry.self)
             }
-            
+
             try? context.save()
         },
         didMigrate: { context in
-            for (videoId, date) in UnwatchedMigrationPlan.watchedDates {
-                if let video = context.model(for: videoId) as? Video {
-                    video.watchedDate = date
+            let fetch = FetchDescriptor<UnwatchedSchemaV1p2.Video>()
+            if let videos = try? context.fetch(fetch) {
+                for video in videos {
+                    if let date = UnwatchedMigrationPlan.watchedDates[video.youtubeId] {
+                        video.watchedDate = date
+                    }
                 }
             }
             try? context.save()
+            UnwatchedMigrationPlan.watchedDates = [:]
         }
     )
     

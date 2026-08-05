@@ -6,10 +6,10 @@
 import SwiftData
 import SwiftUI
 
-enum UnwatchedSchemaV1p1: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 1, 0)
+public enum UnwatchedSchemaV1p1: VersionedSchema {
+    public static let versionIdentifier = Schema.Version(1, 1, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [
             Video.self,
             Subscription.self,
@@ -21,34 +21,34 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
     }
 
     @Model
-    final class Video {
-        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
-        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-        @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
-        var youtubeId: String = UUID().uuidString
+    public final class Video {
+        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) public var inboxEntry: InboxEntry?
+        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) public var queueEntry: QueueEntry?
+        @Relationship(inverse: \WatchEntry.video) public var watchEntries: [WatchEntry]? = []
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) public var chapters: [Chapter]? = []
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) public var mergedChapters: [Chapter]? = []
+        public var youtubeId: String = UUID().uuidString
 
-        var title: String = "-"
-        var url: URL?
+        public var title: String = "-"
+        public var url: URL?
 
-        var thumbnailUrl: URL?
-        var publishedDate: Date?
-        var updatedDate: Date?
-        var duration: Double?
-        var elapsedSeconds: Double?
-        var videoDescription: String?
-        var watched: Bool = false
-        var subscription: Subscription?
-        var youtubeChannelId: String?
-        var isYtShort: Bool = false
-        var bookmarkedDate: Date?
-        var clearedInboxDate: Date?
-        var createdDate: Date?
+        public var thumbnailUrl: URL?
+        public var publishedDate: Date?
+        public var updatedDate: Date?
+        public var duration: Double?
+        public var elapsedSeconds: Double?
+        public var videoDescription: String?
+        public var watched: Bool = false
+        public var subscription: Subscription?
+        public var youtubeChannelId: String?
+        public var isYtShort: Bool = false
+        public var bookmarkedDate: Date?
+        public var clearedInboxDate: Date?
+        public var createdDate: Date?
 
-        var sponserBlockUpdateDate: Date?
+        public var sponserBlockUpdateDate: Date?
 
-        init(title: String,
+        public init(title: String,
              url: URL?,
              youtubeId: String,
              thumbnailUrl: URL? = nil,
@@ -84,12 +84,12 @@ enum UnwatchedSchemaV1p1: VersionedSchema {
     }
 
     @Model
-    final class WatchEntry {
+    public final class WatchEntry {
 
-        var video: Video?
-        var date: Date?
+        public var video: Video?
+        public var date: Date?
 
-        init(video: Video?, date: Date? = .now) {
+        public init(video: Video?, date: Date? = .now) {
             self.video = video
             self.date = date
         }

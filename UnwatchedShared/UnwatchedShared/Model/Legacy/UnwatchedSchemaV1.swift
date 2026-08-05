@@ -6,10 +6,10 @@
 import SwiftData
 import SwiftUI
 
-enum UnwatchedSchemaV1: VersionedSchema {
-    static var versionIdentifier = Schema.Version(1, 0, 0)
+public enum UnwatchedSchemaV1: VersionedSchema {
+    public static var versionIdentifier = Schema.Version(1, 0, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [
             Video.self,
             Subscription.self,
@@ -21,14 +21,14 @@ enum UnwatchedSchemaV1: VersionedSchema {
         ]
     }
 
-    @Model final class CachedImage {
-        var imageUrl: URL?
+    @Model public final class CachedImage {
+        public var imageUrl: URL?
         @Attribute(.externalStorage) var imageData: Data?
-        var video: Video?
-        var subscription: Subscription?
-        var createdOn: Date?
+        public var video: Video?
+        public var subscription: Subscription?
+        public var createdOn: Date?
 
-        init(_ imageUrl: URL, imageData: Data, video: Video? = nil) {
+        public init(_ imageUrl: URL, imageData: Data, video: Video? = nil) {
             self.imageUrl = imageUrl
             self.imageData = imageData
             self.video = video
@@ -37,36 +37,36 @@ enum UnwatchedSchemaV1: VersionedSchema {
     }
 
     @Model
-    final class Subscription: CustomStringConvertible, Exportable {
-        @Relationship(deleteRule: .nullify, inverse: \Video.subscription) var videos: [Video]? = []
-        @Relationship(deleteRule: .cascade, inverse: \CachedImage.subscription) var cachedImage: CachedImage?
-        var link: URL?
+    public final class Subscription: CustomStringConvertible, Exportable {
+        @Relationship(deleteRule: .nullify, inverse: \Video.subscription) public var videos: [Video]? = []
+        @Relationship(deleteRule: .cascade, inverse: \CachedImage.subscription) public var cachedImage: CachedImage?
+        public var link: URL?
 
-        var title: String = "-"
-        var author: String?
-        var subscribedDate: Date?
-        var placeVideosIn = VideoPlacement.defaultPlacement
-        var isArchived: Bool = false
+        public var title: String = "-"
+        public var author: String?
+        public var subscribedDate: Date?
+        public var placeVideosIn = VideoPlacement.defaultPlacement
+        public var isArchived: Bool = false
 
-        var customSpeedSetting: Double?
-        var customAspectRatio: Double?
-        var mostRecentVideoDate: Date?
+        public var customSpeedSetting: Double?
+        public var customAspectRatio: Double?
+        public var mostRecentVideoDate: Date?
 
-        var youtubeChannelId: String?
-        var youtubePlaylistId: String?
-        var youtubeUserName: String?
+        public var youtubeChannelId: String?
+        public var youtubePlaylistId: String?
+        public var youtubeUserName: String?
 
-        var thumbnailUrl: URL?
+        public var thumbnailUrl: URL?
 
-        var displayTitle: String {
+        public var displayTitle: String {
             "\(title)\(author != nil ? " - \(author ?? "")" : "")"
         }
 
-        var description: String {
+        public var description: String {
             return title
         }
 
-        init(videos: [Video] = [],
+        public init(videos: [Video] = [],
              link: URL?,
 
              title: String,
@@ -99,7 +99,7 @@ enum UnwatchedSchemaV1: VersionedSchema {
             self.thumbnailUrl = thumbnailUrl
         }
 
-        var toExport: SendableSubscription? {
+        public var toExport: SendableSubscription? {
             SendableSubscription(
                 persistentId: self.persistentModelID,
                 videosIds: videos?.map { $0.persistentModelID.hashValue } ?? [],
@@ -121,36 +121,36 @@ enum UnwatchedSchemaV1: VersionedSchema {
     }
 
     @Model
-    final class Video: CustomStringConvertible {
-        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
-        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-        @Relationship(inverse: \WatchEntry.video) var watchEntries: [WatchEntry]? = []
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
-        @Relationship(deleteRule: .cascade, inverse: \CachedImage.video) var cachedImage: CachedImage?
-        var youtubeId: String = UUID().uuidString
+    public final class Video: CustomStringConvertible {
+        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) public var inboxEntry: InboxEntry?
+        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) public var queueEntry: QueueEntry?
+        @Relationship(inverse: \WatchEntry.video) public var watchEntries: [WatchEntry]? = []
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) public var chapters: [Chapter]? = []
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) public var mergedChapters: [Chapter]? = []
+        @Relationship(deleteRule: .cascade, inverse: \CachedImage.video) public var cachedImage: CachedImage?
+        public var youtubeId: String = UUID().uuidString
 
-        var title: String = "-"
-        var url: URL?
+        public var title: String = "-"
+        public var url: URL?
 
-        var thumbnailUrl: URL?
-        var publishedDate: Date?
-        var updatedDate: Date?
-        var duration: Double?
-        var elapsedSeconds: Double?
-        var videoDescription: String?
-        var watched = false
-        var subscription: Subscription?
-        var youtubeChannelId: String?
-        var isYtShort: Bool = false
-        var bookmarkedDate: Date?
-        var clearedInboxDate: Date?
-        var createdDate: Date?
+        public var thumbnailUrl: URL?
+        public var publishedDate: Date?
+        public var updatedDate: Date?
+        public var duration: Double?
+        public var elapsedSeconds: Double?
+        public var videoDescription: String?
+        public var watched = false
+        public var subscription: Subscription?
+        public var youtubeChannelId: String?
+        public var isYtShort: Bool = false
+        public var bookmarkedDate: Date?
+        public var clearedInboxDate: Date?
+        public var createdDate: Date?
 
-        var sponserBlockUpdateDate: Date?
+        public var sponserBlockUpdateDate: Date?
 
         // MARK: Computed Properties
-        var sortedChapters: [Chapter] {
+        public var sortedChapters: [Chapter] {
             var result = [Chapter]()
 
             let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
@@ -162,23 +162,23 @@ enum UnwatchedSchemaV1: VersionedSchema {
             return result.sorted(by: { $0.startTime < $1.startTime })
         }
 
-        var remainingTime: Double? {
+        public var remainingTime: Double? {
             guard let duration = duration else { return nil }
             return duration - (elapsedSeconds ?? 0)
         }
 
-        var hasFinished: Bool? {
+        public var hasFinished: Bool? {
             guard let duration = duration else {
                 return nil
             }
             return duration - 10 < (elapsedSeconds ?? 0)
         }
 
-        var description: String {
+        public var description: String {
             return "Video: \(title) (\(url?.absoluteString ?? ""))"
         }
 
-        init(title: String,
+        public init(title: String,
              url: URL?,
              youtubeId: String,
              thumbnailUrl: URL? = nil,
@@ -214,12 +214,12 @@ enum UnwatchedSchemaV1: VersionedSchema {
     }
 
     @Model
-    final class WatchEntry {
+    public final class WatchEntry {
 
-        var video: Video?
-        var date: Date?
+        public var video: Video?
+        public var date: Date?
 
-        init(video: Video?, date: Date? = .now) {
+        public init(video: Video?, date: Date? = .now) {
             self.video = video
             self.date = date
         }

@@ -6,19 +6,19 @@
 import SwiftData
 import SwiftUI
 
-enum CachedImageSchemaV1: VersionedSchema {
-    static var versionIdentifier = Schema.Version(1, 0, 0)
+public enum CachedImageSchemaV1: VersionedSchema {
+    public static var versionIdentifier = Schema.Version(1, 0, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [CachedImage.self]
     }
 
-    @Model final class CachedImage {
-        var imageUrl: URL?
+    @Model public final class CachedImage {
+        public var imageUrl: URL?
         @Attribute(.externalStorage) var imageData: Data?
-        var createdOn: Date?
+        public var createdOn: Date?
 
-        init(_ imageUrl: URL, imageData: Data) {
+        public init(_ imageUrl: URL, imageData: Data) {
             self.imageUrl = imageUrl
             self.imageData = imageData
             self.createdOn = .now

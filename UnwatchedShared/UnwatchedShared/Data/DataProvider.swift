@@ -165,7 +165,7 @@ public final class DataProvider: Sendable {
         WatchTimeEntry.self
     ]
 
-    static let schema = Schema(DataProvider.dbEntries)
+    public static let schema = Schema(DataProvider.dbEntries)
 
     public static let previewContainer: ModelContainer = {
         var sharedModelContainer: ModelContainer = {

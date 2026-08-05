@@ -7,10 +7,10 @@
  import SwiftUI
 
 
- enum UnwatchedSchemaV1p12: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 12, 0)
+ public enum UnwatchedSchemaV1p12: VersionedSchema {
+    public static let versionIdentifier = Schema.Version(1, 12, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [
             Video.self,
             Subscription.self,

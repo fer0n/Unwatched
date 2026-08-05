@@ -6,10 +6,10 @@
 import SwiftData
 import SwiftUI
 
-enum UnwatchedSchemaV1p10: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 10, 0)
+public enum UnwatchedSchemaV1p10: VersionedSchema {
+    public static let versionIdentifier = Schema.Version(1, 10, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [
             Video.self,
             Subscription.self,

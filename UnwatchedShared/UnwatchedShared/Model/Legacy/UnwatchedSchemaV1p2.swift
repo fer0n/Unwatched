@@ -6,10 +6,10 @@
 import SwiftData
 import SwiftUI
 
-enum UnwatchedSchemaV1p2: VersionedSchema {
-    static let versionIdentifier = Schema.Version(1, 2, 0)
+public enum UnwatchedSchemaV1p2: VersionedSchema {
+    public static let versionIdentifier = Schema.Version(1, 2, 0)
 
-    static var models: [any PersistentModel.Type] {
+    public static var models: [any PersistentModel.Type] {
         [
             Video.self,
             Subscription.self,
@@ -20,34 +20,34 @@ enum UnwatchedSchemaV1p2: VersionedSchema {
     }
 
     @Model
-    final class Video: CustomStringConvertible {
-        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) var inboxEntry: InboxEntry?
-        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) var queueEntry: QueueEntry?
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) var chapters: [Chapter]? = []
-        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) var mergedChapters: [Chapter]? = []
-        var youtubeId: String = UUID().uuidString
+    public final class Video: CustomStringConvertible {
+        @Relationship(deleteRule: .cascade, inverse: \InboxEntry.video) public var inboxEntry: InboxEntry?
+        @Relationship(deleteRule: .cascade, inverse: \QueueEntry.video) public var queueEntry: QueueEntry?
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.video) public var chapters: [Chapter]? = []
+        @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo) public var mergedChapters: [Chapter]? = []
+        public var youtubeId: String = UUID().uuidString
 
-        var title: String = "-"
-        var url: URL?
+        public var title: String = "-"
+        public var url: URL?
 
-        var thumbnailUrl: URL?
-        var publishedDate: Date?
-        var updatedDate: Date?
-        var duration: Double?
-        var elapsedSeconds: Double?
-        var videoDescription: String?
-        var watchedDate: Date?
-        var subscription: Subscription?
-        var youtubeChannelId: String?
-        var isYtShort: Bool = false
-        var bookmarkedDate: Date?
-        var clearedInboxDate: Date?
-        var createdDate: Date?
+        public var thumbnailUrl: URL?
+        public var publishedDate: Date?
+        public var updatedDate: Date?
+        public var duration: Double?
+        public var elapsedSeconds: Double?
+        public var videoDescription: String?
+        public var watchedDate: Date?
+        public var subscription: Subscription?
+        public var youtubeChannelId: String?
+        public var isYtShort: Bool = false
+        public var bookmarkedDate: Date?
+        public var clearedInboxDate: Date?
+        public var createdDate: Date?
 
-        var sponserBlockUpdateDate: Date?
+        public var sponserBlockUpdateDate: Date?
 
         // MARK: Computed Properties
-        var sortedChapters: [Chapter] {
+        public var sortedChapters: [Chapter] {
             var result = [Chapter]()
 
             let settingOn = UserDefaults.standard.bool(forKey: Const.mergeSponsorBlockChapters)
@@ -59,23 +59,23 @@ enum UnwatchedSchemaV1p2: VersionedSchema {
             return result.sorted(by: { $0.startTime < $1.startTime })
         }
 
-        var remainingTime: Double? {
+        public var remainingTime: Double? {
             guard let duration = duration else { return nil }
             return duration - (elapsedSeconds ?? 0)
         }
 
-        var hasFinished: Bool? {
+        public var hasFinished: Bool? {
             guard let duration = duration else {
                 return nil
             }
             return duration - 10 < (elapsedSeconds ?? 0)
         }
 
-        var description: String {
+        public var description: String {
             return "Video: \(title) (\(url?.absoluteString ?? ""))"
         }
 
-        init(title: String,
+        public init(title: String,
              url: URL?,
              youtubeId: String,
              thumbnailUrl: URL? = nil,
