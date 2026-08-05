@@ -874,6 +874,27 @@
 		FE100002AA0000000010F219 /* QualityRecoveryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000D2 /* QualityRecoveryPolicy.swift */; };
 		FE100002AA0000000010F21A /* RetryWithBackoff.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000D1 /* RetryWithBackoff.swift */; };
 		FE100003AA0000000010C002 /* CaptionScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100003AA0000000010C001 /* CaptionScheduler.swift */; };
+		FE7A00000000000000000000 /* AVPlayerCaptionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */; };
+		FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */; };
+		FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */; };
+		FE7A00000000000000000003 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000B1 /* AVPlayerView.swift */; };
+		FE7A00000000000000000004 /* AVPlayerViewModel+Captions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */; };
+		FE7A00000000000000000005 /* AVPlayerViewModel+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0DD1B9C0A34CB595032683 /* AVPlayerViewModel+Loading.swift */; };
+		FE7A00000000000000000006 /* AVPlayerViewModel+NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F6959E647463E9DA39786 /* AVPlayerViewModel+NowPlaying.swift */; };
+		FE7A00000000000000000007 /* AVPlayerViewModel+Quality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39205759BFC648CB9CBED597 /* AVPlayerViewModel+Quality.swift */; };
+		FE7A00000000000000000008 /* AVPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821534B2FC03C3000167AEE /* AVPlayerViewModel.swift */; };
+		FE7A00000000000000000009 /* AudioTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884128812FC838A7001B06AE /* AudioTrack.swift */; };
+		FE7A0000000000000000000A /* CaptionScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100003AA0000000010C001 /* CaptionScheduler.swift */; };
+		FE7A0000000000000000000B /* HLSAudioLanguageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884128832FC838A7001B06AE /* HLSAudioLanguageParser.swift */; };
+		FE7A0000000000000000000C /* InnerTubeAPI+Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */; };
+		FE7A0000000000000000000D /* InnerTubeAPI+Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */; };
+		FE7A0000000000000000000E /* PlayerScrubberOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */; };
+		FE7A0000000000000000000F /* PlayerViewControllerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821534C2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift */; };
+		FE7A00000000000000000010 /* ScrubberThumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */; };
+		FE7A00000000000000000011 /* WKHLSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884128722FC838A7001B06AE /* WKHLSManager.swift */; };
+		FE7A00000000000000000012 /* YTHLSProxyLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841286E2FC838A7001B06AE /* YTHLSProxyLoader.swift */; };
+		FE7A00000000000000000013 /* YouTubeWebViewHLSExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8841286D2FC838A7001B06AE /* YouTubeWebViewHLSExtractor.swift */; };
+		FE7A00000000000000000014 /* ZoomPanGestureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2773,6 +2794,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE7A00000000000000000000 /* AVPlayerCaptionOverlay.swift in Sources */,
+				FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */,
+				FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */,
+				FE7A00000000000000000003 /* AVPlayerView.swift in Sources */,
+				FE7A00000000000000000004 /* AVPlayerViewModel+Captions.swift in Sources */,
+				FE7A00000000000000000005 /* AVPlayerViewModel+Loading.swift in Sources */,
+				FE7A00000000000000000006 /* AVPlayerViewModel+NowPlaying.swift in Sources */,
+				FE7A00000000000000000007 /* AVPlayerViewModel+Quality.swift in Sources */,
+				FE7A00000000000000000008 /* AVPlayerViewModel.swift in Sources */,
+				FE7A00000000000000000009 /* AudioTrack.swift in Sources */,
+				FE7A0000000000000000000A /* CaptionScheduler.swift in Sources */,
+				FE7A0000000000000000000B /* HLSAudioLanguageParser.swift in Sources */,
+				FE7A0000000000000000000C /* InnerTubeAPI+Metadata.swift in Sources */,
+				FE7A0000000000000000000D /* InnerTubeAPI+Storyboard.swift in Sources */,
+				FE7A0000000000000000000E /* PlayerScrubberOverlay.swift in Sources */,
+				FE7A0000000000000000000F /* PlayerViewControllerRepresentable.swift in Sources */,
+				FE7A00000000000000000010 /* ScrubberThumbnails.swift in Sources */,
+				FE7A00000000000000000011 /* WKHLSManager.swift in Sources */,
+				FE7A00000000000000000012 /* YTHLSProxyLoader.swift in Sources */,
+				FE7A00000000000000000013 /* YouTubeWebViewHLSExtractor.swift in Sources */,
+				FE7A00000000000000000014 /* ZoomPanGestureView.swift in Sources */,
 				FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */,
 				FE100002AA0000000010F205 /* ChannelPreviewView.swift in Sources */,
 				FE100002AA0000000010F201 /* SearchFilter.swift in Sources */,
