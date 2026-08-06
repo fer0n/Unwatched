@@ -16,6 +16,9 @@ struct ChapterDescriptionView: View {
 
     @State var hapticToggle = false
 
+    static let buttonSize: CGFloat = 46
+    @ScaledMetric(wrappedValue: buttonSize) private var buttonSizeScaled: CGFloat
+
     let video: Video
     var bottomSpacer: CGFloat = 0
     var isCompact = false
@@ -103,13 +106,43 @@ struct ChapterDescriptionView: View {
                     }
                     #else
                     view.toolbar {
-                        ToolbarItemGroup(placement: Device.isVision ? .topBarTrailing : .bottomBar) {
-                            #if os(visionOS)
-                            buttons
-                                .buttonBorderShape(.circle)
-                            #else
-                            buttons
-                            #endif
+                        let placement: ToolbarItemPlacement = Device.isVision ? .topBarTrailing : .bottomBar
+
+                        ToolbarItem(placement: placement) {
+                            detailButton(Const.queueNextSF, label: "queueNext", withBackground: false) {
+                                addToQueueNext()
+                                Signal.videoAction("queueTop", .detail)
+                            }
+                        }
+                        
+                        ToolbarSpacer(.fixed, placement: placement)
+
+                        ToolbarItem(placement: placement) {
+                            detailButton(Const.queueLastSF, label: "queueLast", withBackground: false) {
+                                addToQueueLast()
+                                Signal.videoAction("queueBottom", .detail)
+                            }
+                        }
+                        ToolbarSpacer(.fixed, placement: placement)
+
+                        ToolbarItem(placement: placement) {
+                            detailButton("play.fill", label: "play", withBackground: false) {
+                                playVideo()
+                                Signal.videoAction("play", .detail)
+                            }
+                        }
+                        ToolbarSpacer(.fixed, placement: placement)
+
+                        ToolbarItem(placement: placement) {
+                            detailButton(
+                                Const.clearNoFillSF,
+                                label: "clearVideo",
+                                disabled: !canBeCleared,
+                                withBackground: false
+                            ) {
+                                clearVideo()
+                                Signal.videoAction("clear", .detail)
+                            }
                         }
                     }
                     #endif
@@ -126,56 +159,57 @@ struct ChapterDescriptionView: View {
     /// Same order as the inbox card actions (see `InboxCardAction`)
     @ViewBuilder
     var buttons: some View {
-        Button {
+        detailButton(Const.queueNextSF, label: "queueNext") {
             addToQueueNext()
             Signal.videoAction("queueTop", .detail)
-        } label: {
-            Image(systemName: Const.queueNextSF)
-                .padding(.leading, 20)
         }
-        .largerTapTarget()
 
-        Button {
+        detailButton(Const.queueLastSF, label: "queueLast") {
             addToQueueLast()
             Signal.videoAction("queueBottom", .detail)
-        } label: {
-            Image(systemName: Const.queueLastSF)
         }
-        .largerTapTarget()
 
-        Button {
+        detailButton("play.fill", label: "play") {
             playVideo()
             Signal.videoAction("play", .detail)
-        } label: {
-            Image(systemName: "play.fill")
         }
-        .largerTapTarget()
 
-        Button {
+        detailButton(Const.clearNoFillSF, label: "clearVideo", disabled: !canBeCleared) {
             clearVideo()
             Signal.videoAction("clear", .detail)
-        } label: {
-            #if os(visionOS)
-            Text("clear")
-                .padding(.trailing, 20)
-            #else
-            Image(systemName: Const.clearNoFillSF)
-                .padding(.trailing, 20)
-            #endif
         }
-        .largerTapTarget()
-        .disabled(!canBeCleared)
-        .buttonBorderShape(.automatic)
+    }
+
+    /// `withBackground` is `false` inside the native toolbar (iOS/visionOS), which already renders
+    /// each `ToolbarItem` as its own glass circle when separated by a `ToolbarSpacer` — adding our
+    /// own background there doubles up the circle.
+    private func detailButton(
+        _ systemImage: String,
+        label: LocalizedStringKey,
+        disabled: Bool = false,
+        withBackground: Bool = true,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.system(size: buttonSizeScaled * 0.4, weight: .semibold))
+                .foregroundStyle(Color.neutralAccentColor)
+                .frame(width: buttonSizeScaled, height: buttonSizeScaled)
+                .if(withBackground) { $0.detailActionGlass() }
+                .opacity(disabled ? 0.35 : 1)
+        }
+        .buttonStyle(.plain)
+        .buttonBorderShape(.circle)
+        .disabled(disabled)
+        .accessibilityLabel(label)
     }
 
     @ViewBuilder
     var actionOverlay: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 12) {
             buttons
-                .buttonStyle(.plain)
         }
         .padding(15)
-        .backgroundTransparentEffect(fallback: .ultraThinMaterial, shape: .capsule)
         .frame(maxHeight: .infinity, alignment: .bottom)
         #if os(macOS)
         .padding()
@@ -274,11 +308,14 @@ struct ChapterDescriptionView: View {
     }
 }
 
-extension View {
-    func largerTapTarget() -> some View {
-        self
-            .frame(minWidth: 45, minHeight: 50)
-            .controlSize(.extraLarge)
+private extension View {
+    @ViewBuilder
+    func detailActionGlass() -> some View {
+        #if os(visionOS)
+        background(.ultraThinMaterial, in: .circle)
+        #else
+        glassEffect(.regular.interactive(), in: .circle)
+        #endif
     }
 }
 
