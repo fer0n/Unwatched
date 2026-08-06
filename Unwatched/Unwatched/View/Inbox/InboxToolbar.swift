@@ -27,6 +27,18 @@ struct UndoToolbarButton: ToolbarContent {
     }
 }
 
+/// Shared picker content for the inbox sort order, used by the toolbar menu and the settings screen
+struct InboxSortOrderPicker: View {
+    @Binding var oldestFirst: Bool
+
+    var body: some View {
+        Picker("inboxSorting", selection: $oldestFirst) {
+            Label("inboxNewestFirst", systemImage: "arrow.down").tag(false)
+            Label("inboxOldestFirst", systemImage: "arrow.up").tag(true)
+        }
+    }
+}
+
 /// Switches the inbox between list and cards, long press sorts it instead
 struct InboxAppearanceToolbarButton: ToolbarContent {
     @AppStorage(Const.inboxAppearance) private var inboxAppearance: InboxAppearance = .cards
@@ -35,11 +47,8 @@ struct InboxAppearanceToolbarButton: ToolbarContent {
     var body: some ToolbarContent {
         ToolbarItem(placement: .confirmationAction) {
             Menu {
-                Picker("inboxSorting", selection: $oldestFirst) {
-                    Label("inboxNewestFirst", systemImage: "arrow.down").tag(false)
-                    Label("inboxOldestFirst", systemImage: "arrow.up").tag(true)
-                }
-                .pickerStyle(.inline)
+                InboxSortOrderPicker(oldestFirst: $oldestFirst)
+                    .pickerStyle(.inline)
             } label: {
                 if inboxAppearance == .cards {
                     Image("line.3.text.square.stack.fill")

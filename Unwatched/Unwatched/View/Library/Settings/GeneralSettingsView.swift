@@ -14,6 +14,7 @@ struct GeneralSettingsView: View {
     @AppStorage(Const.requireClearConfirmation) var requireClearConfirmation: Bool = true
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
+    @AppStorage(Const.inboxOldestFirst) var inboxOldestFirst: Bool = false
     @AppStorage(Const.autoRefresh) var autoRefresh: Bool = true
     @AppStorage(Const.enableQueueContextMenu) var enableQueueContextMenu: Bool = false
     @AppStorage(Const.autoRefreshIgnoresSync) var autoRefreshIgnoresSync: Bool = false
@@ -56,6 +57,8 @@ struct GeneralSettingsView: View {
                 }
 
                 MySection("videoTriage") {
+                    InboxSortOrderPicker(oldestFirst: $inboxOldestFirst)
+                        .pickerStyle(.menu)
                     Toggle(isOn: $requireClearConfirmation) {
                         Text("requireClearConfirmation")
                     }
