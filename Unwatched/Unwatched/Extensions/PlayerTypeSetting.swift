@@ -36,6 +36,10 @@ extension PlayerTypeSetting {
         return self == .youtubeCustomUI ? .youtubeCustomUI : .youtubeEmbedded
     }
 
+    func toggled(previous: PlayerTypeSetting, nativeEnabled: Bool) -> PlayerTypeSetting {
+        self == .native ? previous : (nativeEnabled ? .native : .youtubeCustomUI)
+    }
+
     /// `nil` for types without a dedicated icon; callers fall back to a generic symbol.
     var systemImage: String? {
         switch self {

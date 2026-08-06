@@ -297,6 +297,8 @@ enum PlayerMenuItem: Int, CaseIterable, Identifiable {
 /// A more menu entry shown as its own button in the player controls
 struct PlayerMenuItemButton: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
     @State var flashSymbol: String?
@@ -304,24 +306,36 @@ struct PlayerMenuItemButton: View {
     let item: PlayerMenuItem
 
     var body: some View {
-        Menu {
-            PlayerMenuItemContent(
-                hapticToggle: $hapticToggle,
-                flashSymbol: $flashSymbol,
-                item: item
-            )
-        } label: {
-            Image(systemName: flashSymbol ?? iconName)
-                .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
-                .playerToggleModifier(isOn: false, isSmall: true)
-                .task(id: flashSymbol) {
-                    if flashSymbol != nil {
-                        try? await Task.sleep(s: 1)
-                        withAnimation {
-                            flashSymbol = nil
-                        }
+        Group {
+            if item == .playerType {
+                Menu {
+                    PlayerMenuItemContent(
+                        hapticToggle: $hapticToggle,
+                        flashSymbol: $flashSymbol,
+                        item: item
+                    )
+                } label: {
+                    label
+                } primaryAction: {
+                    let next = playerType.toggled(previous: previousPlayerType, nativeEnabled: showExperimentalPlayerTypes)
+                    if playerType != .native {
+                        previousPlayerType = playerType
                     }
+                    playerType = next
+                    hapticToggle.toggle()
+                    Signal.log("Player.MoreMenu", parameters: ["action": "playerTypeToggle"])
                 }
+            } else {
+                Menu {
+                    PlayerMenuItemContent(
+                        hapticToggle: $hapticToggle,
+                        flashSymbol: $flashSymbol,
+                        item: item
+                    )
+                } label: {
+                    label
+                }
+            }
         }
         .buttonStyle(.plain)
         .menuIndicator(.hidden)
@@ -330,6 +344,20 @@ struct PlayerMenuItemButton: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help(item.label)
         .accessibilityLabel(item.label)
+    }
+
+    var label: some View {
+        Image(systemName: flashSymbol ?? iconName)
+            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
+            .playerToggleModifier(isOn: false, isSmall: true)
+            .task(id: flashSymbol) {
+                if flashSymbol != nil {
+                    try? await Task.sleep(s: 1)
+                    withAnimation {
+                        flashSymbol = nil
+                    }
+                }
+            }
     }
 
     var iconName: String {
@@ -376,11 +404,15 @@ struct PlayerMenuItemContent: View {
 /// Player type selection, shared between the more menu and its inline button
 struct PlayerTypeMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
 
     var body: some View {
         ForEach(selectablePlayerTypes, id: \.self) { type in
             Button {
+                if playerType != .native {
+                    previousPlayerType = playerType
+                }
                 playerType = type
                 Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
             } label: {
