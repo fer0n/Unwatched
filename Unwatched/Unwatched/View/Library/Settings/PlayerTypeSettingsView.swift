@@ -31,11 +31,7 @@ struct PlayerTypeSettingsView: View {
     func optionSection(_ type: PlayerTypeSetting, footer: LocalizedStringKey) -> some View {
         MySection(footer: footer) {
             HStack {
-                if let icon = type.systemImage {
-                    Label(type.description, systemImage: icon)
-                } else {
-                    Text(type.description)
-                }
+                Label(type.description, systemImage: type.systemImage)
                 Spacer()
                 if playerType == type {
                     Image(systemName: "checkmark")
@@ -49,11 +45,7 @@ struct PlayerTypeSettingsView: View {
     var nativeSection: some View {
         MySection(footer: "playerTypeNativeHelper") {
             HStack {
-                if let icon = PlayerTypeSetting.native.systemImage {
-                    Label(PlayerTypeSetting.native.description, systemImage: icon)
-                } else {
-                    Text(PlayerTypeSetting.native.description)
-                }
+                Label(PlayerTypeSetting.native.description, systemImage: PlayerTypeSetting.native.systemImage)
                 Text("experimental")
                     .font(.caption)
                     .foregroundStyle(.orange)

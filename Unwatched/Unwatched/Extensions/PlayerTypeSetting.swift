@@ -40,13 +40,16 @@ extension PlayerTypeSetting {
         self == .native ? previous : (nativeEnabled ? .native : .youtubeCustomUI)
     }
 
-    /// `nil` for types without a dedicated icon; callers fall back to a generic symbol.
-    var systemImage: String? {
+    var systemImage: String {
         switch self {
         case .youtubeEmbedded: return "play.tv.fill"
-        case .youtubeEmbeddedMinimal: return nil
+        case .youtubeEmbeddedMinimal: return "play.tv.fill"
         case .youtubeCustomUI: return "tv"
         case .native: return "sparkles.tv.fill"
         }
+    }
+
+    var showsIconInTypeMenu: Bool {
+        self != .youtubeEmbeddedMinimal
     }
 }

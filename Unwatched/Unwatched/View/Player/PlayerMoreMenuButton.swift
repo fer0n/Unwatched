@@ -190,7 +190,7 @@ struct PlayerMoreMenuContent: View {
                 Menu {
                     PlayerTypeMenuContent()
                 } label: {
-                    Label("playerType", systemImage: playerType.systemImage ?? PlayerMenuItem.playerType.systemName)
+                    Label("playerType", systemImage: playerType.systemImage)
                 }
             }
             ReloadPlayerButton()
@@ -362,7 +362,7 @@ struct PlayerMenuItemButton: View {
 
     var iconName: String {
         item == .playerType
-            ? (playerType.systemImage ?? item.systemName)
+            ? playerType.systemImage
             : item.systemName
     }
 }
@@ -418,8 +418,8 @@ struct PlayerTypeMenuContent: View {
             } label: {
                 if type == playerType {
                     Label(type.menuDescription, systemImage: "checkmark")
-                } else if let icon = type.systemImage {
-                    Label(type.menuDescription, systemImage: icon)
+                } else if type.showsIconInTypeMenu {
+                    Label(type.menuDescription, systemImage: type.systemImage)
                 } else {
                     Text(type.menuDescription)
                 }
