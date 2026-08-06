@@ -41,9 +41,11 @@ struct InboxAppearanceToolbarButton: ToolbarContent {
                 }
                 .pickerStyle(.inline)
             } label: {
-                Image(systemName: inboxAppearance == .cards
-                        ? "square.stack.3d.up.fill"
-                        : "list.bullet")
+                if inboxAppearance == .cards {
+                    Image("line.3.text.square.stack.fill")
+                } else {
+                    Image(systemName: "list.bullet")
+                }
             } primaryAction: {
                 inboxAppearance = inboxAppearance == .cards ? .list : .cards
             }
