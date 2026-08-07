@@ -351,6 +351,7 @@ public struct Const {
     public static let playerType = "playerType"
     public static let previousPlayerType = "previousPlayerType"
     public static let showExperimentalPlayerTypes = "showExperimentalPlayerTypes"
+    public static let pipAutoEnable = "pipAutoEnable"
 
     public static let shareExtensionAction = "shareExtensionAction"
     public static let shareExtensionAskedToRemember = "shareExtensionAskedToRemember"

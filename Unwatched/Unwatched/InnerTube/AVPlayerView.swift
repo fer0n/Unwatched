@@ -13,6 +13,7 @@ import UnwatchedShared
 struct AVPlayerView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(Const.pipAutoEnable) private var pipAutoEnable = true
 
     var handleVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
@@ -35,6 +36,7 @@ struct AVPlayerView: View {
         PlayerViewControllerRepresentable(
             avPlayer: vm.avPlayer,
             pipEnabled: player.pipEnabled,
+            autoPip: pipAutoEnable,
             onPipChanged: { active in player.setPip(active) }
         )
         .aspectRatio(player.videoAspectRatio, contentMode: .fit)

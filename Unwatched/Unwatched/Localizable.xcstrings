@@ -12015,6 +12015,38 @@
         }
       }
     },
+    "pipAutoEnable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto enable"
+          }
+        }
+      }
+    },
+    "pipAutoEnableExplanation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nativer Player: Pip beim Verlassen der App starten, sonst nur Ton abspielen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Native player: enter Pip when leaving the app, otherwise play audio only"
+          }
+        }
+      }
+    },
     "play" : {
       "localizations" : {
         "de" : {
