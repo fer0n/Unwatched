@@ -308,23 +308,12 @@ struct PlayerMenuItemButton: View {
     var body: some View {
         Group {
             if item == .playerType {
-                Menu {
-                    PlayerMenuItemContent(
-                        hapticToggle: $hapticToggle,
-                        flashSymbol: $flashSymbol,
-                        item: item
+                label
+                    .buttonWithMenu(
+                        accessibilityLabel: String(localized: "playerType"),
+                        groups: playerTypeMenuGroups,
+                        onTap: togglePlayerType
                     )
-                } label: {
-                    label
-                } primaryAction: {
-                    let next = playerType.toggled(previous: previousPlayerType, nativeEnabled: showExperimentalPlayerTypes)
-                    if playerType != .native {
-                        previousPlayerType = playerType
-                    }
-                    playerType = next
-                    hapticToggle.toggle()
-                    Signal.log("Player.MoreMenu", parameters: ["action": "playerTypeToggle"])
-                }
             } else {
                 Menu {
                     PlayerMenuItemContent(
@@ -344,6 +333,43 @@ struct PlayerMenuItemButton: View {
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
         .help(item.label)
         .accessibilityLabel(item.label)
+    }
+
+    var playerTypeMenuGroups: [MenuActionGroup] {
+        [
+            MenuActionGroup(title: String(localized: "playerType"), selectablePlayerTypes.map { type in
+                MenuAction(
+                    type.menuDescription,
+                    icon: type == playerType
+                        ? .system("checkmark")
+                        : type.showsIconInTypeMenu
+                        ? .system(type.systemImage)
+                        : .none
+                ) {
+                    if playerType != .native {
+                        previousPlayerType = playerType
+                    }
+                    playerType = type
+                    Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
+                }
+            })
+        ]
+    }
+
+    var selectablePlayerTypes: [PlayerTypeSetting] {
+        PlayerTypeSetting.allCases.filter {
+            $0 != .native || showExperimentalPlayerTypes || playerType == .native
+        }
+    }
+
+    func togglePlayerType() {
+        let next = playerType.toggled(previous: previousPlayerType, nativeEnabled: showExperimentalPlayerTypes)
+        if playerType != .native {
+            previousPlayerType = playerType
+        }
+        playerType = next
+        hapticToggle.toggle()
+        Signal.log("Player.MoreMenu", parameters: ["action": "playerTypeToggle"])
     }
 
     var label: some View {

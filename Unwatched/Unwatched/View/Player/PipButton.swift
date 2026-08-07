@@ -14,32 +14,27 @@ struct PipButton: View {
     @State var hapticToggle = false
 
     var body: some View {
-        Group {
-            if showsAutoEnable {
-                Menu {
-                    Section("pipAutoEnableExplanation") {
-                        Toggle(isOn: $pipAutoEnable) {
-                            Label("pipAutoEnable", systemImage: "pip.enter")
-                        }
-                    }
-                } label: {
-                    label
-                } primaryAction: {
-                    togglePip()
+        label
+            .buttonWithMenu(
+                accessibilityLabel: helper,
+                groups: showsAutoEnable ? menuGroups : [],
+                onTap: togglePip
+            )
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            .help(helper)
+    }
+
+    var menuGroups: [MenuActionGroup] {
+        [
+            MenuActionGroup(title: String(localized: "pipAutoEnableExplanation"), [
+                MenuAction(
+                    String(localized: "pipAutoEnable"),
+                    icon: pipAutoEnable ? .system("checkmark") : .none
+                ) {
+                    pipAutoEnable.toggle()
                 }
-                .menuIndicator(.hidden)
-            } else {
-                Button {
-                    togglePip()
-                } label: {
-                    label
-                }
-            }
-        }
-        .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .help(helper)
-        .accessibilityLabel(helper)
-        .buttonStyle(.plain)
+            ])
+        ]
     }
 
     var label: some View {
