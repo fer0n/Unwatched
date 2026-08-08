@@ -32,8 +32,6 @@
 		8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8804F91E2B4805A100E19B7A /* LibraryView.swift */; };
 		880505002C81E493005F0972 /* VersionAndBuildNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */; };
 		880505012C81E4BC005F0972 /* VersionAndBuildNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */; };
-		880505032C83016B005F0972 /* QueueVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505022C83016B005F0972 /* QueueVideoButton.swift */; };
-		880505042C83016B005F0972 /* QueueVideoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505022C83016B005F0972 /* QueueVideoButton.swift */; };
 		880505122C836882005F0972 /* FaqView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505112C836882005F0972 /* FaqView.swift */; };
 		880505132C836882005F0972 /* FaqView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880505112C836882005F0972 /* FaqView.swift */; };
 		880882072E564EBF008C38DA /* SetContinuousPlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880882062E564EBF008C38DA /* SetContinuousPlay.swift */; };
@@ -1006,7 +1004,6 @@
 		8804A3F62B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerManager+Chapters.swift"; sourceTree = "<group>"; };
 		8804F91E2B4805A100E19B7A /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		880504FF2C81E493005F0972 /* VersionAndBuildNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionAndBuildNumber.swift; sourceTree = "<group>"; };
-		880505022C83016B005F0972 /* QueueVideoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueVideoButton.swift; sourceTree = "<group>"; };
 		880505112C836882005F0972 /* FaqView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaqView.swift; sourceTree = "<group>"; };
 		880882062E564EBF008C38DA /* SetContinuousPlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContinuousPlay.swift; sourceTree = "<group>"; };
 		880882092E565AD8008C38DA /* HideControlsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideControlsSettings.swift; sourceTree = "<group>"; };
@@ -1589,7 +1586,6 @@
 				8804A3F12B8B898000D3F4F1 /* VideoListItemStatus.swift */,
 				8899246C2C480112001185A6 /* HandleVideoListItemTap.swift */,
 				8899246E2C48150A001185A6 /* VideoListItemMoreMenu.swift */,
-				880505022C83016B005F0972 /* QueueVideoButton.swift */,
 			);
 			path = VideoListItem;
 			sourceTree = "<group>";
@@ -3232,7 +3228,6 @@
 				88E1132C2D0EE22D00076DF2 /* EnvironmentValues.swift in Sources */,
 				881942A22C97379400B7A7B1 /* PlayerLoadingTimeout.swift in Sources */,
 				88F7E24B2DE59962001E1F3F /* DebugLoggerView.swift in Sources */,
-				880505042C83016B005F0972 /* QueueVideoButton.swift in Sources */,
 				CD93E71F2E23AAD800FF6447 /* GenerationService.swift in Sources */,
 				88F149E12F03E81E00516422 /* StatsActor.swift in Sources */,
 			);
@@ -3414,7 +3409,6 @@
 				885723042E6596FA006D1EE9 /* Signal.swift in Sources */,
 				88CD387B2E20E59100E7B21C /* PlayerError.swift in Sources */,
 				88AD06672B74ADE900151B07 /* AddToLibraryView.swift in Sources */,
-				880505032C83016B005F0972 /* QueueVideoButton.swift in Sources */,
 				88F149D92F03D99600516422 /* StatsService.swift in Sources */,
 				88C194792BBFD1560073E2E1 /* CustomSettingsButton.swift in Sources */,
 				88275572301E4BB90033352A /* InboxAppearance.swift in Sources */,

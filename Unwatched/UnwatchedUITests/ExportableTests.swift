@@ -239,7 +239,6 @@ class ExportableTests: XCTestCase {
                 Const.defaultShortsSetting: ShortsSetting.hide.rawValue,
                 Const.requireClearConfirmation: false,
                 Const.showClearQueueButton: false,
-                Const.showAddToQueueButton: true,
                 Const.mergeSponsorBlockChapters: true,
                 Const.useNoCookieUrl: false,
                 Const.autoRefresh: false,

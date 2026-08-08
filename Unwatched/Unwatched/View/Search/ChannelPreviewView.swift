@@ -18,7 +18,6 @@ struct ChannelPreviewView: View {
     @Environment(RefreshManager.self) var refresher
 
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
-    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
 
     let sub: SendableSubscription
 
@@ -158,7 +157,6 @@ struct ChannelPreviewView: View {
                     config: VideoListItemConfig(
                         videoDuration: video.duration,
                         showAllStatus: false,
-                        showQueueButton: showAddToQueueButton,
                         showContextMenu: false,
                         showDelete: false
                     )

@@ -16807,40 +16807,6 @@
         }
       }
     },
-    "showAddToQueueButton" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Video-Hinzufügen” Button bei Inbox Einträgen anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show “Queue Next”-Button on Inbox Entries"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar el botón \"Siguiente en la cola\" en los elementos de la bandeja de entrada"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher le bouton \"Ajouter à la file d'attente\" sur les entrées de l'Inbox"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pokaż przycisk “Następny w kolejce” na filmach w skrzynce"
-          }
-        }
-      }
-    },
     "showAllQueueEntries" : {
       "localizations" : {
         "de" : {

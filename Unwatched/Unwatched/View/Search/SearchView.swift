@@ -34,7 +34,6 @@ private extension View {
 /// results using the same `VideoListItem` rows as the rest of the app. Tapping a
 /// result (or its queue/swipe actions) materialises it into the library on demand.
 struct SearchView: View {
-    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.searchAlwaysUseYoutube) var searchAlwaysUseYoutube: Bool = false
 
     @Environment(\.modelContext) private var modelContext
@@ -319,7 +318,6 @@ struct SearchView: View {
                     deferred: video.deferDate != nil,
                     isNew: video.isNew,
                     showAllStatus: true,
-                    showQueueButton: showAddToQueueButton,
                     showContextMenu: true,
                     showDelete: false
                 ),

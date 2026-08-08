@@ -78,8 +78,7 @@ public struct VideoListItemThumbnail: View {
             hasInboxEntry: false,
             hasQueueEntry: true,
             watched: true,
-            isNew: true,
-            showQueueButton: true
+            isNew: true
         ),
         size: nil
     )

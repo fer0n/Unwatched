@@ -296,7 +296,6 @@ public struct Const {
     public static let showTabBarLabels = "showTabBarLabels"
     public static let requireClearConfirmation = "requireClearConfirmation"
     public static let showClearQueueButton = "showClearQueueButton"
-    public static let showAddToQueueButton = "showAddToQueueButton"
     public static let useNoCookieUrl = "useNoCookieUrl"
     public static let enableQueueContextMenu = "enableQueueContextMenu"
     public static let disableCaptions = "disableCaptions"

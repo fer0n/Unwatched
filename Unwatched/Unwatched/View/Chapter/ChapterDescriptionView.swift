@@ -114,7 +114,7 @@ struct ChapterDescriptionView: View {
                                 Signal.videoAction("queueTop", .detail)
                             }
                         }
-                        
+
                         ToolbarSpacer(.fixed, placement: placement)
 
                         ToolbarItem(placement: placement) {

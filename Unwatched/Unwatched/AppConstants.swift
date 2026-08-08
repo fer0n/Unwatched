@@ -33,7 +33,6 @@ extension Const {
         Const.autoClearNew: false,
         Const.autoRefresh: true,
         Const.requireClearConfirmation: true,
-        Const.showAddToQueueButton: false,
         Const.showClearQueueButton: true,
         Const.enableQueueContextMenu: false,
         Const.autoRefreshIgnoresSync: false,

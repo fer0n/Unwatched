@@ -27,7 +27,6 @@ struct InboxView: View {
 }
 
 private struct InboxContent: View {
-    @AppStorage(Const.showAddToQueueButton) var showAddToQueueButton: Bool = false
     @AppStorage(Const.inboxAppearance) var inboxAppearance: InboxAppearance = .cards
 
     @Environment(\.modelContext) var modelContext
@@ -131,7 +130,6 @@ private struct InboxContent: View {
                                 clearRole: .destructive,
                                 queueRole: .destructive,
                                 clearAboveBelowList: .inbox,
-                                showQueueButton: showAddToQueueButton,
                                 showDelete: false
                             ),
                             onChange: { reason, _ in

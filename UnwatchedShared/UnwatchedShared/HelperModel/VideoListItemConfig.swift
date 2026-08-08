@@ -13,7 +13,6 @@ public struct VideoListItemConfig: Equatable, Sendable {
         lhs.watched == rhs.watched &&
         lhs.deferred == rhs.deferred &&
         lhs.isNew == rhs.isNew &&
-        lhs.showQueueButton == rhs.showQueueButton &&
         lhs.showContextMenu == rhs.showContextMenu
     }
     
@@ -27,7 +26,6 @@ public struct VideoListItemConfig: Equatable, Sendable {
     public let clearRole: ButtonRole?
     public let queueRole: ButtonRole?
     public let clearAboveBelowList: ClearList?
-    public let showQueueButton: Bool
     public let showContextMenu: Bool
     public let showDelete: Bool
     public let async: Bool
@@ -44,7 +42,6 @@ public struct VideoListItemConfig: Equatable, Sendable {
         clearRole: ButtonRole? = nil,
         queueRole: ButtonRole? = nil,
         clearAboveBelowList: ClearList? = nil,
-        showQueueButton: Bool = false,
         showContextMenu: Bool = true,
         showDelete: Bool = true,
         async: Bool = false,
@@ -60,7 +57,6 @@ public struct VideoListItemConfig: Equatable, Sendable {
         self.clearRole = clearRole
         self.queueRole = queueRole
         self.clearAboveBelowList = clearAboveBelowList
-        self.showQueueButton = showQueueButton
         #if os(iOS)
         self.showContextMenu = showContextMenu
         #else

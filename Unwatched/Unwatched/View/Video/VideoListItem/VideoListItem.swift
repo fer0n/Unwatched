@@ -16,7 +16,6 @@ struct VideoListItem: View, Equatable {
 
     @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
-    @ScaledMetric var queueButtonSize = 30
 
     let videoData: any VideoData
     let youtubeId: String
@@ -50,39 +49,29 @@ struct VideoListItem: View, Equatable {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            layout {
-                VideoListItemThumbnail(
-                    videoData,
-                    config: config,
-                    size: compactFormat ? CGSize(width: 168, height: 94.5) : nil,
-                    largeThumbnail: !compactFormat
+        layout {
+            VideoListItemThumbnail(
+                videoData,
+                config: config,
+                size: compactFormat ? CGSize(width: 168, height: 94.5) : nil,
+                largeThumbnail: !compactFormat
+            )
+            .padding([.vertical, .leading], 5)
+            .overlay(alignment: .topLeading) {
+                VideoListItemStatus(
+                    showAllStatus: config.showAllStatus,
+                    youtubeId: youtubeId,
+                    hasInboxEntry: config.hasInboxEntry,
+                    hasQueueEntry: config.hasQueueEntry,
+                    watched: config.watched,
+                    deferred: config.deferred,
+                    isNew: config.isNew
                 )
-                .padding([.vertical, .leading], 5)
-                .overlay(alignment: .topLeading) {
-                    VideoListItemStatus(
-                        showAllStatus: config.showAllStatus,
-                        youtubeId: youtubeId,
-                        hasInboxEntry: config.hasInboxEntry,
-                        hasQueueEntry: config.hasQueueEntry,
-                        watched: config.watched,
-                        deferred: config.deferred,
-                        isNew: config.isNew
-                    )
-                    .limitDynamicType()
-                }
+                .limitDynamicType()
+            }
 
-                VideoListItemDetails(
-                    video: videoData,
-                    queueButtonSize: config.showQueueButton ? queueButtonSize : nil,
-                    )
+            VideoListItemDetails(video: videoData)
                 .padding(.horizontal, videoListFormat == .expansive ? 5 : 0)
-            }
-
-            if config.showQueueButton {
-                QueueVideoButton(videoData, size: queueButtonSize, onChange: onChange)
-                    .foregroundStyle(.secondary)
-            }
         }
         .accessibilityElement(children: .combine)
         .modifier(VideoListItemSwipeActionsModifier(
@@ -128,8 +117,7 @@ extension View {
                 hasInboxEntry: false,
                 hasQueueEntry: true,
                 watched: true,
-                isNew: true,
-                showQueueButton: false
+                isNew: true
             )
         )
         .equatable()

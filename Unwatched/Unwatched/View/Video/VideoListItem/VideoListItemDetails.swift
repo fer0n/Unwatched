@@ -8,7 +8,6 @@ import UnwatchedShared
 
 struct VideoListItemDetails: View {
     let video: VideoData
-    var queueButtonSize: CGFloat?
 
     @ScaledMetric private var titleSize = 15
     @ScaledMetric private var subSize = 14
@@ -52,7 +51,6 @@ struct VideoListItemDetails: View {
                         )
                 }
             }
-            .padding(.trailing, queueButtonSize)
             .foregroundStyle(.secondary)
         }
     }
