@@ -15,10 +15,6 @@ struct MenuView: View {
 
     @AppStorage(Const.showTabBarLabels) var showTabBarLabels = true
 
-    #if os(macOS)
-    @AppStorage(Const.videoListFormat) var videoListFormat: VideoListFormat = .compact
-    #endif
-
     var showCancelButton = false
     var showTabBar = true
     var isSidebar = false
@@ -97,9 +93,6 @@ struct MenuView: View {
             .environment(\.horizontalSizeClass, .compact)
             .environment(\.scrollViewProxy, proxy)
         }
-        #if os(macOS)
-        .id(videoListFormat == .compact) // workaround: expansive thumbnail size when switching setting
-        #endif
         .browserViewSheet(navManager: $navManager)
         .premiumOfferSheet()
         .background {

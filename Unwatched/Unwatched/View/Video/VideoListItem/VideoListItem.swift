@@ -56,7 +56,8 @@ struct VideoListItem: View, Equatable {
                 size: compactFormat ? CGSize(width: 168, height: 94.5) : nil,
                 largeThumbnail: !compactFormat
             )
-            .padding([.vertical, .leading], 5)
+            // stacked: the thumbnail spans the full width, so it needs the trailing inset too
+            .padding(compactFormat ? [.vertical, .leading] : .all, 5)
             .overlay(alignment: .topLeading) {
                 VideoListItemStatus(
                     showAllStatus: config.showAllStatus,
@@ -80,13 +81,29 @@ struct VideoListItem: View, Equatable {
             onChange: onChange
         ))
         #if os(macOS)
-        .drawingGroup()
+        .rasterized(compactFormat)
         .foregroundStyle(Color.neutralAccentColor)
         .handleVideoListItemTap(videoData)
         #else
-        .drawingGroup()
+        .rasterized(compactFormat)
         .handleVideoListItemTap(videoData)
         #endif
+    }
+}
+
+private extension View {
+    /// `drawingGroup()` speeds up scrolling, but it rasterizes the row at the size of an early
+    /// layout pass. In the stacked layout the row's height follows its width (the thumbnail is a
+    /// full-width 16:9 image), which isn't settled yet at that point, so the raster ends up
+    /// cutting off the bottom of the row — the published date and the duration overlay. The
+    /// compact layout uses a fixed-size thumbnail and isn't affected.
+    @ViewBuilder
+    func rasterized(_ enabled: Bool) -> some View {
+        if enabled {
+            drawingGroup()
+        } else {
+            self
+        }
     }
 }
 

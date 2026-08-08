@@ -14,8 +14,6 @@ public struct VideoListItemThumbnail: View {
     let fixedSize: CGSize?
     let largeThumbnail: Bool
 
-    @State var width: CGFloat?
-
     let imageUrls: [URL?]
 
     public init(
@@ -36,22 +34,14 @@ public struct VideoListItemThumbnail: View {
 
     public var body: some View {
         CachedImageView(urls: imageUrls) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: fixedSize?.width ?? width,
-                       height: fixedSize?.height ?? height)
-                .clipped()
+            sized(Color.clear)
+                .overlay {
+                    image
+                        .resizable()
+                        .scaledToFill()
+                }
         } placeholder: {
-            Color.insetBackgroundColor
-                .frame(width: fixedSize?.width ?? width,
-                       height: fixedSize?.height ?? height)
-        }
-        .aspectRatio(contentMode: .fit)
-        .onSizeChange { size in
-            if fixedSize == nil {
-                width = size.width
-            }
+            sized(Color.insetBackgroundColor)
         }
         .overlay {
             VideoListItemThumbnailOverlay(
@@ -62,12 +52,19 @@ public struct VideoListItemThumbnail: View {
         .clipShape(RoundedRectangle(cornerRadius: Const.videoCornerRadius))
     }
 
-    var height: CGFloat? {
-        guard fixedSize == nil, let width = width else {
-            return nil
+    /// Without a fixed size the thumbnail fills the available width and derives its height from
+    /// the video aspect ratio. Measuring the rendered width instead (and feeding it back in via
+    /// `@State`) reports the height one layout pass late, which leaves list rows too short for
+    /// their content.
+    @ViewBuilder
+    private func sized(_ content: Color) -> some View {
+        if let fixedSize {
+            content
+                .frame(width: fixedSize.width, height: fixedSize.height)
+        } else {
+            content
+                .aspectRatio(Const.defaultVideoAspectRatio, contentMode: .fit)
         }
-        let aspectRatio: CGFloat = 16 / 9
-        return width / aspectRatio
     }
 }
 
