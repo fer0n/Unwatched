@@ -16,7 +16,7 @@ struct PlayerViewControllerRepresentable: UIViewControllerRepresentable {
         vc.playerLayer.player = avPlayer
         vc.autoPip = autoPip
         vc.onPipChanged = onPipChanged
-        vc.setUpPip()
+        vc.applyPipState()
         return vc
     }
 
@@ -24,14 +24,7 @@ struct PlayerViewControllerRepresentable: UIViewControllerRepresentable {
         vc.isPipRequested = pipEnabled
         vc.autoPip = autoPip
         vc.onPipChanged = onPipChanged
-
-        guard let pip = vc.pipController else { return }
-        pip.canStartPictureInPictureAutomaticallyFromInline = autoPip
-        if pipEnabled && !pip.isPictureInPictureActive && pip.isPictureInPicturePossible {
-            pip.startPictureInPicture()
-        } else if !pipEnabled && pip.isPictureInPictureActive {
-            pip.stopPictureInPicture()
-        }
+        vc.applyPipState()
     }
 }
 
@@ -48,6 +41,7 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     /// True from `willStart` until PiP is gone again. `isPictureInPictureActive` is still false while
     /// the transition is in flight, which is exactly when backgrounding has to make its decision.
     private var isPipStarting = false
+    private var pipPossibleObservation: NSKeyValueObservation?
 
     /// Holds the player while it's detached for the background; nil while attached.
     private var detachedPlayer: AVPlayer?
@@ -72,8 +66,31 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     }
 
     // MARK: - PiP
+    //
+    // The controller only exists while it can be needed. Auto-PiP needs one sitting inline to start
+    // from, but with auto-PiP off an inline controller is a liability: iOS commits to starting PiP
+    // before the app hears about backgrounding, so clearing
+    // `canStartPictureInPictureAutomaticallyFromInline` or releasing the controller comes too late —
+    // the window would briefly appear and get torn down again. Without a controller there's nothing
+    // to start in the first place.
 
-    func setUpPip() {
+    func applyPipState() {
+        if isPipRequested || autoPip {
+            setUpPip()
+        } else if !isPipStarting, pipController?.isPictureInPictureActive != true {
+            tearDownPip()
+        }
+
+        guard let pip = pipController else { return }
+        pip.canStartPictureInPictureAutomaticallyFromInline = autoPip
+        if isPipRequested && !pip.isPictureInPictureActive && !isPipStarting {
+            startPipWhenPossible()
+        } else if !isPipRequested && pip.isPictureInPictureActive {
+            pip.stopPictureInPicture()
+        }
+    }
+
+    private func setUpPip() {
         guard pipController == nil, AVPictureInPictureController.isPictureInPictureSupported() else { return }
         let pip = AVPictureInPictureController(playerLayer: playerLayer)
         pip?.canStartPictureInPictureAutomaticallyFromInline = autoPip
@@ -81,12 +98,32 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
         pipController = pip
     }
 
-    /// AVKit commits to auto-PiP before `didEnterBackground`, too late to call off by clearing
-    /// `canStartPictureInPictureAutomaticallyFromInline`. Releasing the controller leaves nothing
-    /// that could start it, and doesn't touch the layer, so a Control Center pull stays untouched.
-    private func dropPipForAudioOnly() {
-        guard !autoPip, !isPipRequested, pipController?.isPictureInPictureActive != true else { return }
+    private func tearDownPip() {
+        pipPossibleObservation?.invalidate()
+        pipPossibleObservation = nil
         pipController = nil
+    }
+
+    /// A just-created controller reports `isPictureInPicturePossible == false` for a moment, so a PiP
+    /// the user asked for has to wait for it instead of being dropped.
+    private func startPipWhenPossible() {
+        guard let pip = pipController else { return }
+        if pip.isPictureInPicturePossible {
+            pip.startPictureInPicture()
+            return
+        }
+        guard pipPossibleObservation == nil else { return }
+        pipPossibleObservation = pip.observe(\.isPictureInPicturePossible) { [weak self] _, _ in
+            Task { @MainActor in
+                guard let self,
+                      let pip = self.pipController,
+                      pip.isPictureInPicturePossible else { return }
+                self.pipPossibleObservation?.invalidate()
+                self.pipPossibleObservation = nil
+                guard self.isPipRequested, !pip.isPictureInPictureActive, !self.isPipStarting else { return }
+                pip.startPictureInPicture()
+            }
+        }
     }
 
     func pictureInPictureControllerWillStartPictureInPicture(_ pip: AVPictureInPictureController) {
@@ -100,6 +137,13 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     func pictureInPictureControllerWillStopPictureInPicture(_ pip: AVPictureInPictureController) {
         isPipStarting = false
         onPipChanged?(false)
+    }
+
+    func pictureInPictureControllerDidStopPictureInPicture(_ pip: AVPictureInPictureController) {
+        // Back inline; with auto-PiP off nothing should be left that could start PiP unprompted.
+        if !autoPip && !isPipRequested {
+            tearDownPip()
+        }
     }
 
     func pictureInPictureController(
@@ -124,17 +168,11 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
         let center = NotificationCenter.default
         lifecycleObservers = [
             center.addObserver(
-                forName: UIApplication.willResignActiveNotification, object: nil, queue: .main
-            ) { [weak self] _ in self?.dropPipForAudioOnly() },
-            center.addObserver(
                 forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
             ) { [weak self] _ in self?.detachForBackground() },
             center.addObserver(
                 forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main
-            ) { [weak self] _ in self?.reattachPlayer() },
-            center.addObserver(
-                forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
-            ) { [weak self] _ in self?.setUpPip() }
+            ) { [weak self] _ in self?.reattachPlayer() }
         ]
     }
 
