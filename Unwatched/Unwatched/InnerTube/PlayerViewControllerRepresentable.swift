@@ -45,6 +45,10 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     var isPipRequested = false
     var autoPip = true
 
+    /// True from `willStart` until PiP is gone again. `isPictureInPictureActive` is still false while
+    /// the transition is in flight, which is exactly when backgrounding has to make its decision.
+    private var isPipStarting = false
+
     /// Holds the player while it's detached for the background; nil while attached.
     private var detachedPlayer: AVPlayer?
     private var lifecycleObservers: [NSObjectProtocol] = []
@@ -86,11 +90,28 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     }
 
     func pictureInPictureControllerWillStartPictureInPicture(_ pip: AVPictureInPictureController) {
+        isPipStarting = true
+        // AVKit's ordering against `didEnterBackground` isn't guaranteed, so the background detach
+        // may have won the race; hand the layer its player back so PiP has something to render.
+        reattachPlayer()
         onPipChanged?(true)
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pip: AVPictureInPictureController) {
+        isPipStarting = false
         onPipChanged?(false)
+    }
+
+    func pictureInPictureController(
+        _ pip: AVPictureInPictureController,
+        failedToStartPictureInPictureWithError error: Error
+    ) {
+        isPipStarting = false
+        onPipChanged?(false)
+        // Backgrounded with no PiP window after all: fall back to audio-only so playback survives.
+        if UIApplication.shared.applicationState == .background {
+            detachForBackground()
+        }
     }
 
     // MARK: - Background detach
@@ -110,7 +131,7 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
             ) { [weak self] _ in self?.detachForBackground() },
             center.addObserver(
                 forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main
-            ) { [weak self] _ in self?.reattachForForeground() },
+            ) { [weak self] _ in self?.reattachPlayer() },
             center.addObserver(
                 forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
             ) { [weak self] _ in self?.setUpPip() }
@@ -118,16 +139,17 @@ final class AVPlayerLayerViewController: UIViewController, AVPictureInPictureCon
     }
 
     private func detachForBackground() {
-        // PiP renders from this layer; detaching would kill the PiP window. Its state isn't settled
-        // yet at this point, so `autoPip` decides — with it off the controller is already gone.
-        guard !isPipRequested, pipController?.isPictureInPictureActive != true else { return }
-        guard !autoPip || pipController?.isPictureInPicturePossible != true else { return }
+        // PiP renders from this layer; detaching would kill the PiP window. Only an actual start
+        // counts — auto-PiP fires when the user leaves the app but never on screen lock, so keying
+        // off `autoPip` (or PiP merely being possible) would strand a locked screen with an attached
+        // layer, which iOS then pauses.
+        guard !isPipRequested, !isPipStarting, pipController?.isPictureInPictureActive != true else { return }
         guard let player = playerLayer.player else { return }
         detachedPlayer = player
         playerLayer.player = nil
     }
 
-    private func reattachForForeground() {
+    private func reattachPlayer() {
         guard let player = detachedPlayer else { return }
         playerLayer.player = player
         detachedPlayer = nil
