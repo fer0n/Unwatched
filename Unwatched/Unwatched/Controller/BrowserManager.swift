@@ -44,6 +44,38 @@ import UnwatchedShared
     @MainActor
     @ObservationIgnored var webView: WKWebView?
 
+    /// Counted, not a bool: a hand-off between browser views makes the new one before dismantling the old.
+    @MainActor
+    @ObservationIgnored private var attachCount = 0
+
+    @MainActor
+    func webViewAttached() {
+        attachCount += 1
+    }
+
+    @MainActor
+    func webViewDetached() {
+        attachCount = max(0, attachCount - 1)
+    }
+
+    /// Drops the cached web view so WebKit can tear down its content process. The login lives in the
+    /// shared cookie store and `currentUrl` restores the page, so only history/scroll are lost.
+    @MainActor
+    func releaseWebView() {
+        guard attachCount == 0, let webView else { return }
+        Log.info("releaseWebView")
+        webView.stopLoading()
+        webView.navigationDelegate = nil
+        webView.uiDelegate = nil
+        let controller = webView.configuration.userContentController
+        controller.removeScriptMessageHandler(forName: "iosListener")
+        #if os(macOS)
+        controller.removeScriptMessageHandler(forName: "contextMenuListener")
+        #endif
+        self.webView = nil
+        firstPageLoaded = false
+    }
+
     var channelTextRepresentation: String? {
         if info?.playlistId != nil {
             return "Playlist\(info?.title != nil ? " (\(info?.title ?? ""))" : "")"

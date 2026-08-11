@@ -386,6 +386,7 @@ struct UserDataService {
     static func clearMemory() {
         Log.info("clearMemory")
         Task { @MainActor in
+            BrowserManager.shared.releaseWebView()
             await ImageCacheManager.shared.clearMemory()
         }
     }

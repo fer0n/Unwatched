@@ -67,11 +67,17 @@ struct YtBrowserWebView: PlatformViewRepresentable {
         #endif
 
         coordinator.startObserving(webView: webView)
+        browserManager.webViewAttached()
 
         return webView
     }
 
     func updateView(_ view: WKWebView) { }
+
+    static func dismantleView(_ view: WKWebView) {
+        guard BrowserManager.shared.webView === view else { return }
+        BrowserManager.shared.webViewDetached()
+    }
 
     #if os(macOS)
     func makeNSView(context: Context) -> WKWebView {
@@ -81,6 +87,10 @@ struct YtBrowserWebView: PlatformViewRepresentable {
     func updateNSView(_ view: WKWebView, context: Context) {
         updateView(view)
     }
+
+    static func dismantleNSView(_ view: WKWebView, coordinator: Coordinator) {
+        dismantleView(view)
+    }
     #elseif os(iOS) || os(visionOS)
 
     func makeUIView(context: Context) -> WKWebView {
@@ -89,6 +99,10 @@ struct YtBrowserWebView: PlatformViewRepresentable {
 
     func updateUIView(_ view: WKWebView, context: Context) {
         updateView(view)
+    }
+
+    static func dismantleUIView(_ view: WKWebView, coordinator: Coordinator) {
+        dismantleView(view)
     }
     #endif
 
