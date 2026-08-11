@@ -69,6 +69,11 @@ public extension UIImage {
         guard let cgImage else { return 1 }
         return cgImage.bytesPerRow * cgImage.height
     }
+
+    /// Decodes the image up front so the render pass doesn't have to. Call off the main thread.
+    func readyForDisplay() -> UIImage {
+        preparingForDisplay() ?? self
+    }
 }
 #endif
 
@@ -95,6 +100,8 @@ public extension NSImage {
         guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else { return 1 }
         return cgImage.bytesPerRow * cgImage.height
     }
+
+    func readyForDisplay() -> NSImage { self }
 }
 
 #endif

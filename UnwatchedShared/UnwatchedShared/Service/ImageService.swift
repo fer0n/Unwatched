@@ -273,6 +273,13 @@ public struct ImageService {
         return false
     }
 
+    /// Decodes off the main thread, so neither the view update nor the render pass has to.
+    private static func decodeAndCache(_ data: Data, _ key: String) -> PlatformImage? {
+        guard let image = PlatformImage(data: data)?.readyForDisplay() else { return nil }
+        decodedImageCache[key] = image
+        return image
+    }
+
     @MainActor
     public static func getImage(
         _ url: URL,
@@ -285,13 +292,7 @@ public struct ImageService {
         return Task.detached {
             // load from memory
             if let cacheInfo {
-                // reuse an already-decoded image instead of re-decoding the same bytes
-                if let decoded = decodedImageCache[key] {
-                    return (decoded, cacheInfo)
-                }
-                let image = PlatformImage(data: cacheInfo.data)
-                if let image { decodedImageCache[key] = image }
-                return (image, cacheInfo)
+                return (decodedImageCache[key] ?? decodeAndCache(cacheInfo.data, key), cacheInfo)
             }
 
             // fetch from DB
@@ -306,9 +307,7 @@ public struct ImageService {
                     persistImage: false,
                     persistColor: false
                 )
-                let image = PlatformImage(data: imageData)
-                if let image { decodedImageCache[key] = image }
-                return (image, imageInfo)
+                return (decodedImageCache[key] ?? decodeAndCache(imageData, key), imageInfo)
             }
 
             // fetch online
@@ -318,9 +317,7 @@ public struct ImageService {
                 data: imageData,
                 persistImage: true
             )
-            let image = PlatformImage(data: imageData)
-            if let image { decodedImageCache[key] = image }
-            return (image, imageInfo)
+            return (decodeAndCache(imageData, key), imageInfo)
         }
     }
 
