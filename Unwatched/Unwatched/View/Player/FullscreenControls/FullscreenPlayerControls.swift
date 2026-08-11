@@ -73,6 +73,7 @@ struct FullscreenPlayerControls: View {
 
             FullscreenSpeedControl(
                 autoHideVM: $autoHideVM,
+                arrowEdge: arrowEdge,
                 size: size
             )
             .buttonStyle(.plain)

@@ -180,32 +180,64 @@ struct SpeedMenu<Label: View>: View {
     @Binding var isOn: Bool
 
     var canSetCustomSpeed = true
+    var usePopover = false
+    var arrowEdge: Edge?
+    var onPopoverChange: ((Bool) -> Void)?
     @ViewBuilder var label: () -> Label
 
-    #if os(macOS)
     @Environment(\.colorScheme) var colorScheme
     @State private var showPopover = false
-    #endif
+
+    @Namespace private var namespace
+    private let transitionId = "speedPopoverTransition"
+
+    var showsPopover: Bool {
+        #if os(macOS)
+        true
+        #else
+        usePopover
+        #endif
+    }
 
     var body: some View {
-        #if os(macOS)
-        // no button style: each call site brings its own, same as the menu below
+        if showsPopover {
+            popoverVariant
+        } else {
+            menuVariant
+        }
+    }
+
+    // no button style: each call site brings its own, same as the menu below
+    var popoverVariant: some View {
         Button {
             showPopover.toggle()
         } label: {
             label()
         }
-        .popover(isPresented: $showPopover) {
+        .modifier(MyMatchedTransitionSource(id: transitionId, namespace: namespace))
+        .popover(isPresented: $showPopover, arrowEdge: arrowEdge ?? .top) {
             SpeedPopoverContent(
                 selectedSpeed: $selectedSpeed,
                 isOn: $isOn,
                 canSetCustomSpeed: canSetCustomSpeed
             )
-            .presentationBackground(Color.backgroundColor)
+            .presentationCompactAdaptation(.popover)
             // the popover doesn't inherit the app's appearance
             .environment(\.colorScheme, colorScheme)
+            #if os(iOS) || os(visionOS)
+            .navigationTransition(
+                .zoom(sourceID: transitionId, in: namespace)
+            )
+            #else
+            .presentationBackground(Color.backgroundColor)
+            #endif
         }
-        #else
+        .onChange(of: showPopover) {
+            onPopoverChange?(showPopover)
+        }
+    }
+
+    var menuVariant: some View {
         Menu {
             SpeedMenuContent(
                 selectedSpeed: $selectedSpeed,
@@ -217,6 +249,7 @@ struct SpeedMenu<Label: View>: View {
         }
         .menuIndicator(.hidden)
         .environment(\.menuOrder, .fixed)
+        #if !os(macOS)
         .menuActionDismissBehavior(.disabled)
         #endif
     }
@@ -226,6 +259,9 @@ struct SpeedMenu<Label: View>: View {
 struct PlayerSpeedMenu<Label: View>: View {
     @Environment(PlayerManager.self) var player
 
+    var usePopover = false
+    var arrowEdge: Edge?
+    var onPopoverChange: ((Bool) -> Void)?
     @ViewBuilder var label: () -> Label
 
     var body: some View {
@@ -240,6 +276,9 @@ struct PlayerSpeedMenu<Label: View>: View {
             selectedSpeed: $player.debouncedPlaybackSpeed,
             isOn: isOn,
             canSetCustomSpeed: player.video?.subscription != nil,
+            usePopover: usePopover,
+            arrowEdge: arrowEdge,
+            onPopoverChange: onPopoverChange,
             label: label
         )
     }

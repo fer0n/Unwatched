@@ -13,10 +13,20 @@ struct FullscreenSpeedControl: View {
 
     @State var isInteracting = false
 
+    var arrowEdge: Edge?
     let size: CGFloat
 
     var body: some View {
-        PlayerSpeedMenu {
+        PlayerSpeedMenu(
+            usePopover: true,
+            arrowEdge: arrowEdge,
+            onPopoverChange: { isOpen in
+                autoHideVM.keepVisible = isOpen || isInteracting
+                if isOpen {
+                    autoHideVM.setShowControls()
+                }
+            }
+        ) {
             label
         }
         .overlay {

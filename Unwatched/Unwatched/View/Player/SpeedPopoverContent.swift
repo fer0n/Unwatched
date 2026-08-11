@@ -21,6 +21,9 @@ struct SpeedPopoverContent: View {
     let itemHeight: CGFloat = 36
     let spacing: CGFloat = 6
 
+    static let shapeOpacity: CGFloat = 0.5
+    static let selectedShapeOpacity: CGFloat = 0.7
+
     var body: some View {
         VStack(spacing: spacing) {
             stepper
@@ -31,6 +34,7 @@ struct SpeedPopoverContent: View {
         .padding(spacing * 2)
         .buttonStyle(.plain)
         .sensoryFeedback(Const.sensoryFeedback, trigger: selectedSpeed)
+        .sensoryFeedback(Const.sensoryFeedback, trigger: isOn)
     }
 
     var stepper: some View {
@@ -68,7 +72,7 @@ struct SpeedPopoverContent: View {
                 .fontWeight(.bold)
                 .foregroundStyle(Color.automaticBlack)
                 .frame(width: itemHeight * 1.4, height: itemHeight)
-                .background(Color.insetBackgroundColor, in: .capsule)
+                .background(Color.insetBackgroundColor.opacity(Self.shapeOpacity), in: .capsule)
         }
         .disabled(nextSpeed() == nil)
         .accessibilityLabel(label)
@@ -121,7 +125,12 @@ struct SpeedPopoverItemStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .foregroundStyle(isOn ? Color.backgroundColor : Color.automaticBlack)
-            .background(isOn ? Color.neutralAccentColor : Color.insetBackgroundColor, in: .capsule)
+            .background(
+                isOn
+                    ? Color.neutralAccentColor.opacity(SpeedPopoverContent.selectedShapeOpacity)
+                    : Color.insetBackgroundColor.opacity(SpeedPopoverContent.shapeOpacity),
+                in: .capsule
+            )
             .animation(.default, value: isOn)
     }
 }
