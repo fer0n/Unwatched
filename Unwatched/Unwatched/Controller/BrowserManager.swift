@@ -49,13 +49,31 @@ import UnwatchedShared
     @ObservationIgnored private var attachCount = 0
 
     @MainActor
+    @ObservationIgnored private var releaseTask: Task<Void, Never>?
+
+    @MainActor
     func webViewAttached() {
         attachCount += 1
+        releaseTask?.cancel()
+        releaseTask = nil
     }
 
     @MainActor
     func webViewDetached() {
         attachCount = max(0, attachCount - 1)
+    }
+
+    /// Delayed so jumping straight back into the browser keeps the loaded page. A pending release is
+    /// left alone rather than pushed back, so skipping through videos still gets there.
+    @MainActor
+    func releaseWebViewSoon() {
+        guard releaseTask == nil else { return }
+        releaseTask = Task {
+            try? await Task.sleep(for: .seconds(20))
+            releaseTask = nil
+            guard !Task.isCancelled else { return }
+            releaseWebView()
+        }
     }
 
     /// Drops the cached web view so WebKit can tear down its content process. The login lives in the

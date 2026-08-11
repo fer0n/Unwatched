@@ -165,6 +165,7 @@ import UnwatchedShared
         }
         resetVideoIndependentValues()
         handleChapterRefresh()
+        BrowserManager.shared.releaseWebViewSoon()
         if deferVideoDate != nil {
             deferVideoDate = nil
         }
