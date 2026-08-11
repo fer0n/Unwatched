@@ -36,7 +36,7 @@ struct UserDataService {
             // also happens if subscriptions is called before fetching videos
         }
 
-        if !(Const.excludeStatsInBackup.bool ?? false) {
+        if Const.includeStatsInBackup.bool ?? true {
             let stats = fetchMapExportable(WatchTimeEntry.self)
             let grouped = Dictionary(grouping: stats, by: { $0.channelId })
             backup.channelStatistics = grouped.map { (key, value) in
@@ -59,16 +59,42 @@ struct UserDataService {
         }
 
         let encoder = JSONEncoder()
-        return try encoder.encode(backup)
+        let json = try encoder.encode(backup)
+        return compress(json)
+    }
+
+    // backups are zlib-compressed JSON; older backups (and test fixtures) are still plain JSON
+    private static let compressionMagic = Data([0x55, 0x57, 0x5a, 0x31]) // "UWZ1"
+
+    private static func compress(_ data: Data) -> Data {
+        guard let compressed = try? (data as NSData).compressed(using: .zlib) as Data else {
+            return data
+        }
+        return compressionMagic + compressed
+    }
+
+    private static func decompress(_ data: Data) -> Data {
+        guard data.starts(with: compressionMagic) else {
+            return data
+        }
+        let payload = data.dropFirst(compressionMagic.count)
+        guard let decompressed = try? (payload as NSData).decompressed(using: .zlib) as Data else {
+            return data
+        }
+        return decompressed
     }
 
     static func getVideoFetchIfMinimal() -> FetchDescriptor<Video>? {
-        let minimalBackups = UserDefaults.standard.object(forKey: Const.minimalBackups) as? Bool ?? true
-        if minimalBackups {
+        let includeUnimportantVideos = UserDefaults.standard.object(
+            forKey: Const.includeUnimportantVideosInBackup
+        ) as? Bool ?? false
+        if !includeUnimportantVideos {
             guard let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) else {
                 return nil
             }
-            let includeWatched = !UserDefaults.standard.bool(forKey: Const.exludeWatchHistoryInBackup)
+            let includeWatched = UserDefaults.standard.object(
+                forKey: Const.includeWatchHistoryInBackup
+            ) as? Bool ?? true
             Log.info("returning fetch")
             return FetchDescriptor<Video>(predicate: #Predicate {
                 $0.bookmarkedDate != nil
@@ -128,7 +154,7 @@ struct UserDataService {
         let decoder = JSONDecoder()
 
         do {
-            let backup = try decoder.decode(UnwatchedBackup.self, from: data)
+            let backup = try decoder.decode(UnwatchedBackup.self, from: decompress(data))
             restoreSettings(backup.settings)
             if !settingsOnly {
                 try restoreVideoData(from: backup)
@@ -205,12 +231,48 @@ struct UserDataService {
         }
     }
 
-    static func autoDeleteBackups() -> Int {
-        let files = getFilesToDelete()
-        for file in files {
-            deleteFile(file)
+    // both callers run on @MainActor; hop off it since this reads/writes full
+    // iCloud file contents, which can block on a synchronous download per file
+    static func autoDeleteBackups(recompressLimit: Int? = nil) async -> (deleted: Int, recompressed: Int) {
+        await Task.detached(priority: .utility) {
+            let files = getFilesToDelete()
+            for file in files {
+                deleteFile(file)
+            }
+            let recompressed = recompressExistingBackups(limit: recompressLimit)
+            return (files.count, recompressed)
+        }.value
+    }
+
+    // older backups predate compression; bring them in line with newly written ones.
+    // `limit` stops after that many recompressions (oldest-first) instead of touching
+    // every file, so an automatic run doesn't trigger a large burst of iCloud downloads.
+    @discardableResult
+    static func recompressExistingBackups(limit: Int? = nil) -> Int {
+        guard let directory = getBackupsDirectory(createIfMissing: false),
+              let fileNames = try? FileManager.default.contentsOfDirectory(atPath: directory.path) else {
+            return 0
         }
-        return files.count
+        let files = fileNames
+            .map { directory.appendingPathComponent($0) }
+            .sorted { $0.creationDate < $1.creationDate }
+
+        var recompressedCount = 0
+        for file in files {
+            if let limit, recompressedCount >= limit {
+                break
+            }
+            guard let data = try? Data(contentsOf: file), !data.starts(with: compressionMagic) else {
+                continue
+            }
+            do {
+                try compress(data).write(to: file)
+                recompressedCount += 1
+            } catch {
+                Log.error("recompressExistingBackups: \(error)")
+            }
+        }
+        return recompressedCount
     }
 
     static func getFilesToDelete() -> [URL] {
@@ -232,13 +294,22 @@ struct UserDataService {
 
     static func filterOutKeeperFiles(_ files: [URL]) -> [URL] {
         let calendar = Calendar.current
-        let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: -1, to: Date())!
-        let halfYearAgo = calendar.date(byAdding: .month, value: -6, to: Date())!
+        let now = Date()
+        let oneWeekAgo = calendar.date(byAdding: .weekOfYear, value: -1, to: now)!
+        let halfYearAgo = calendar.date(byAdding: .month, value: -6, to: now)!
+        let oneYearAgo = calendar.date(byAdding: .year, value: -1, to: now)!
 
         var manualFiles = [URL]()
         var lastWeekFiles = [URL]()
-        var weeklyFiles = [URL]()
-        var monthlyFiles = [URL]()
+        var weeklyBuckets = [String: URL]()
+        var monthlyBuckets = [String: URL]()
+        var halfYearlyBuckets = [String: URL]()
+
+        func bucketKey(_ date: Date, _ component: Calendar.Component) -> String {
+            let year = calendar.component(.year, from: date)
+            let value = calendar.component(component, from: date)
+            return "\(year)-\(value)"
+        }
 
         for file in files {
             if file.lastPathComponent.contains("_m") {
@@ -246,26 +317,31 @@ struct UserDataService {
                 continue
             }
 
-            let attributes = try? FileManager.default.attributesOfItem(atPath: file.path)
-            let creationDate = attributes?[.creationDate] as? Date ?? Date()
+            let creationDate = file.creationDate
 
             if creationDate >= oneWeekAgo {
                 lastWeekFiles.append(file)
             } else if creationDate >= halfYearAgo {
-                let weekOfYear = calendar.component(.weekOfYear, from: creationDate)
-                if weeklyFiles.first(where: {
-                    calendar.component(.weekOfYear, from: $0.creationDate) == weekOfYear
-                }) == nil {
-                    weeklyFiles.append(file)
+                let key = bucketKey(creationDate, .weekOfYear)
+                if weeklyBuckets[key] == nil {
+                    weeklyBuckets[key] = file
+                }
+            } else if creationDate >= oneYearAgo {
+                let key = bucketKey(creationDate, .month)
+                if monthlyBuckets[key] == nil {
+                    monthlyBuckets[key] = file
                 }
             } else {
-                let month = calendar.component(.month, from: creationDate)
-                if monthlyFiles.first(where: { calendar.component(.month, from: $0.creationDate) == month }) == nil {
-                    monthlyFiles.append(file)
+                let year = calendar.component(.year, from: creationDate)
+                let half = calendar.component(.month, from: creationDate) <= 6 ? 1 : 2
+                let key = "\(year)-\(half)"
+                if halfYearlyBuckets[key] == nil {
+                    halfYearlyBuckets[key] = file
                 }
             }
         }
-        let keepers = manualFiles + lastWeekFiles + weeklyFiles + monthlyFiles
+        let keepers = manualFiles + lastWeekFiles
+            + Array(weeklyBuckets.values) + Array(monthlyBuckets.values) + Array(halfYearlyBuckets.values)
         return files.filter { !keepers.contains($0) }
     }
 

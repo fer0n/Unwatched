@@ -163,7 +163,7 @@ actor RefreshActor {
 
             // Auto delete
             if UserDefaults.standard.object(forKey: Const.autoDeleteBackups) as? Bool ?? true {
-                _ = UserDataService.autoDeleteBackups()
+                _ = await UserDataService.autoDeleteBackups(recompressLimit: Const.autoRecompressBackupLimit)
             }
         }
     }

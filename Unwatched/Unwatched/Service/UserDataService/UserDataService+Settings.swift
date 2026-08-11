@@ -41,10 +41,36 @@ extension UserDataService {
         }
         // a backup can still carry the legacy skipSponsorSegments toggle
         SponsorBlockSegmentSetting.migrateSkipSponsorSegmentsIfNeeded()
+        // ...or the legacy exclude-toggle backup content settings
+        migrateBackupContentSettingsIfNeeded()
         #if os(iOS)
         NotificationManager.ensurePermissionsAreGivenForSettings()
         #endif
         setAppIconIfNeeded(settings)
+    }
+
+    /// Folds the legacy exclude-toggle keys into their inverted `include...InBackup`
+    /// counterparts. Only migrates when the legacy key is actually set — an untouched
+    /// toggle already resolves to the right default under its new name.
+    static func migrateBackupContentSettingsIfNeeded(defaults: UserDefaults = .standard) {
+        migrateInvertedBool(legacyKey: Const.legacyExcludeWatchHistoryInBackup,
+                            newKey: Const.includeWatchHistoryInBackup,
+                            defaults: defaults)
+        migrateInvertedBool(legacyKey: Const.legacyExcludeStatsInBackup,
+                            newKey: Const.includeStatsInBackup,
+                            defaults: defaults)
+        migrateInvertedBool(legacyKey: Const.legacyMinimalBackups,
+                            newKey: Const.includeUnimportantVideosInBackup,
+                            defaults: defaults)
+    }
+
+    static private func migrateInvertedBool(legacyKey: String, newKey: String, defaults: UserDefaults) {
+        guard defaults.object(forKey: newKey) == nil,
+              let legacyValue = defaults.object(forKey: legacyKey) as? Bool else {
+            return
+        }
+        defaults.set(!legacyValue, forKey: newKey)
+        defaults.removeObject(forKey: legacyKey)
     }
 
     static private func setAppIconIfNeeded(_ settings: [String: AnyCodable]?) {

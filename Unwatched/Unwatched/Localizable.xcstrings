@@ -1768,35 +1768,69 @@
         }
       }
     },
+    "autoRecompressedCount: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Komprimierte Backups: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compressed Backups: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Copias de seguridad comprimidas: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sauvegardes compressées : %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Skompresowane kopie zapasowe: %lld"
+          }
+        }
+      }
+    },
     "autoDeleteHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Die automatische Löschung behält:\n- Alle manuellen Backups\n- Alle Backups der letzten Woche\n- Ein Backup pro Woche in den letzten 6 Monaten\n- Ein Backup pro Monat danach"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto delete will keep: - All manual backups - All backups within the last week - One backup per week within the last 6 months - One backup per month after that"
+            "value" : "Auto delete will keep: - All manual backups - All backups within the last week - One backup per week within the last 6 months - One backup per month within the last year - One backup per 6 months after that Uncompressed backups will also be compressed to save space"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "El borrado automático conservará:\n- Todas las copias de seguridad manuales\n- Todas las copias de seguridad de la última semana\n- Una copia de seguridad por semana durante los últimos 6 meses\n- Una copia de seguridad por mes después de eso"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "La suppression automatique conservera : \n- Toutes les sauvegardes manuelles\n- Toutes les sauvegardes de la dernière semaine \n- Une sauvegarde par semaine pour les 6 derniers mois\n- Une sauvegarde par mois au-delà"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "needs_review",
             "value" : "Automatyczne usuwanie zachowa: - Wszystkie ręczne kopie zapasowe - Wszystkie kopie zapasowe z ostatniego tygodnia - Jedną kopię zapasową na tydzień z ostatnich 6 miesięcy - Jedną kopię zapasową na miesiąc po tym okresie"
           }
         }
@@ -6392,36 +6426,36 @@
         }
       }
     },
-    "excludeStatsInBackup" : {
+    "includeStatsInBackup" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Watch-Statistiken ausschließen"
+            "state" : "needs_review",
+            "value" : "Watch-Statistiken einschließen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exclude Watch Statistics"
+            "value" : "Include Watch Statistics"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Excluir estadísticas de visualización"
+            "state" : "needs_review",
+            "value" : "Incluir estadísticas de visualización"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exclure les statistiques de visionnage"
+            "state" : "needs_review",
+            "value" : "Inclure les statistiques de visionnage"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyklucz statystyki oglądania"
+            "state" : "needs_review",
+            "value" : "Uwzględnij statystyki oglądania"
           }
         }
       }
@@ -6494,36 +6528,36 @@
         }
       }
     },
-    "exludeWatchHistoryInBackup" : {
+    "includeWatchHistoryInBackup" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht alle gesehenen Videos behalten"
+            "state" : "needs_review",
+            "value" : "Wiedergabeverlauf einschließen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Don't Backup all Watched Videos"
+            "value" : "Include Watch History"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "No respaldar todos los videos vistos"
+            "state" : "needs_review",
+            "value" : "Incluir historial de reproducción"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ne pas sauvegarder toutes les vidéos vus"
+            "state" : "needs_review",
+            "value" : "Inclure l'historique de visionnage"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nie twórz kopii zapasowej wszystkich obejrzanych filmów"
+            "state" : "needs_review",
+            "value" : "Uwzględnij historię oglądania"
           }
         }
       }
@@ -9670,36 +9704,36 @@
         }
       }
     },
-    "minimalBackups" : {
+    "includeUnimportantVideosInBackup" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unwichtige Videos ignorieren"
+            "state" : "needs_review",
+            "value" : "Unwichtige Videos einschließen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exclude Unimportant Videos"
+            "value" : "Include Unimportant Videos"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Excluir videos no importantes"
+            "state" : "needs_review",
+            "value" : "Incluir videos no importantes"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exclure les vidéos sans importance"
+            "state" : "needs_review",
+            "value" : "Inclure les vidéos sans importance"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wyklucz nieistotne filmy"
+            "state" : "needs_review",
+            "value" : "Uwzględnij nieistotne filmy"
           }
         }
       }
@@ -9708,32 +9742,32 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Unwichtig\" sind Videos, die nicht angesehen wurden, nicht in der Warteschlange oder im Posteingang sind und älter als eine Woche sind. Es ist am besten, dies eingeschaltet zu lassen, da die Backup-Dateien wahrscheinlich viel kleiner sein werden."
+            "state" : "needs_review",
+            "value" : "\"Unwichtig\" sind Videos, die nicht angesehen wurden, nicht in der Warteschlange oder im Posteingang sind und älter als eine Woche sind. Am besten lässt man dies ausgeschaltet, da die Backup-Dateien so wahrscheinlich viel kleiner sind."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It is best to leave this on, as the backup files will likely be much smaller."
+            "value" : "\"Unimportant\" are videos that haven't been watched, are not in the queue or inbox and are older than one week. It's best to leave this off, as backup files will likely be much smaller."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "No importantes son videos que no se han visto, no están en la cola o en la bandeja de entrada y tienen más de una semana. Es mejor dejar esto activado, ya que los archivos de copia de seguridad probablemente serán mucho más pequeños."
+            "state" : "needs_review",
+            "value" : "Los videos \"no importantes\" son aquellos que no se han visto, no están en la cola ni en la bandeja de entrada y tienen más de una semana. Es mejor dejar esto desactivado, ya que los archivos de copia de seguridad probablemente serán mucho más pequeños."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vus, ne sont pas dans la file d'attente ou bien l'Inbox et datent de plus d'une semaine. Il est préférable de laisser cette option activée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
+            "state" : "needs_review",
+            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vues, ne sont pas dans la file d'attente ou la boîte de réception, et datent de plus d'une semaine. Il est préférable de laisser cette option désactivée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce i są starsze niż tydzień. Najlepiej pozostawić to włączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
+            "state" : "needs_review",
+            "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce odbiorczej i są starsze niż tydzień. Najlepiej pozostawić to wyłączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
           }
         }
       }

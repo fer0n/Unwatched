@@ -76,9 +76,9 @@ extension Const {
         // User Data
         Const.enableIcloudSync: false,
         Const.automaticBackups: true,
-        Const.exludeWatchHistoryInBackup: false,
-        Const.minimalBackups: true,
-        Const.autoDeleteBackups: false,
+        Const.includeWatchHistoryInBackup: true,
+        Const.includeUnimportantVideosInBackup: false,
+        Const.autoDeleteBackups: true,
         Const.autoDeleteWatchedVideos: 0,
         Const.autoDeleteOrphanedVideos: 0,
         Const.autoDeleteInboxVideosLimit: 0,

@@ -8,9 +8,9 @@ import UnwatchedShared
 
 struct BackupSettings: View {
     @AppStorage(Const.automaticBackups) var automaticBackups = true
-    @AppStorage(Const.minimalBackups) var minimalBackups = true
-    @AppStorage(Const.excludeStatsInBackup) var excludeStatsInBackup = false
-    @AppStorage(Const.exludeWatchHistoryInBackup) var exludeWatchHistoryInBackup = false
+    @AppStorage(Const.includeUnimportantVideosInBackup) var includeUnimportantVideosInBackup = false
+    @AppStorage(Const.includeStatsInBackup) var includeStatsInBackup = true
+    @AppStorage(Const.includeWatchHistoryInBackup) var includeWatchHistoryInBackup = true
 
     var body: some View {
         MySection("automaticBackups", footer: "automaticBackupsHelper") {
@@ -20,14 +20,14 @@ struct BackupSettings: View {
         }
 
         MySection(footer: "minimalBackupsHelper") {
-            Toggle(isOn: $exludeWatchHistoryInBackup) {
-                Text("exludeWatchHistoryInBackup")
+            Toggle(isOn: $includeWatchHistoryInBackup) {
+                Text("includeWatchHistoryInBackup")
             }
-            Toggle(isOn: $excludeStatsInBackup) {
-                Text("excludeStatsInBackup")
+            Toggle(isOn: $includeStatsInBackup) {
+                Text("includeStatsInBackup")
             }
-            Toggle(isOn: $minimalBackups) {
-                Text("minimalBackups")
+            Toggle(isOn: $includeUnimportantVideosInBackup) {
+                Text("includeUnimportantVideosInBackup")
             }
         }
     }

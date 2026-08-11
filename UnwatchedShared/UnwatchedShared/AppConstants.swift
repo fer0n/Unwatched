@@ -47,6 +47,11 @@ public struct Const {
     public static let minSheetDetent: CGFloat = 75
     public static let backupType = UTType("com.pentlandFirth.unwatchedbackup")
 
+    /// Legacy (pre-compression) backups recompressed per automatic auto-delete run, to avoid a
+    /// large burst of iCloud downloads all at once; the manual "Auto Delete Backups Now" button
+    /// has no limit, since the user is already waiting on it.
+    public static let autoRecompressBackupLimit = 10
+
     /// Max video IDs supported by a single YouTube API request
     public static let maxVideoIdsPerRequest = 50
     public static let tapDestination = "tapDestination"
@@ -308,10 +313,15 @@ public struct Const {
 
     public static let automaticBackups = "automaticBackups"
     public static let lastAutoBackupDate = "lastAutoBackupDate"
-    public static let minimalBackups = "minimalBackups"
-    public static let excludeStatsInBackup = "excludeStatsInBackup"
-    public static let exludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
+    public static let includeUnimportantVideosInBackup = "includeUnimportantVideosInBackup"
+    public static let includeStatsInBackup = "includeStatsInBackup"
+    public static let includeWatchHistoryInBackup = "includeWatchHistoryInBackup"
     public static let autoDeleteBackups = "autoDeleteBackups"
+    /// Legacy inverted keys, folded into their `include...InBackup` counterparts
+    /// (see `UserDataService.migrateBackupContentSettingsIfNeeded`)
+    public static let legacyMinimalBackups = "minimalBackups"
+    public static let legacyExcludeStatsInBackup = "excludeStatsInBackup"
+    public static let legacyExcludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     public static let analytics = "analytics"
 
     public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"

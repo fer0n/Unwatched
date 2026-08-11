@@ -10,7 +10,9 @@ import UnwatchedShared
 struct AutoDeleteBackupView: View {
     @AppStorage(Const.autoDeleteBackups) var autoDeleteBackups = true
     @State var countDeletedVideos: Int?
+    @State var countRecompressedBackups: Int?
     @State var showDeleteConfirmation: Bool = false
+    @State var isRunning = false
 
     var body: some View {
         MySection(footer: "autoDeleteHelper") {
@@ -20,10 +22,18 @@ struct AutoDeleteBackupView: View {
             Button(role: .destructive, action: {
                 showDeleteConfirmation = true
             }, label: {
-                Text("autoDeleteBackupsNow")
+                if isRunning {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    Text("autoDeleteBackupsNow")
+                }
             })
             if let count = countDeletedVideos {
                 Text("autoDeletedCount: \(count)")
+            }
+            if let count = countRecompressedBackups {
+                Text("autoRecompressedCount: \(count)")
             }
         }
         .confirmationDialog("confirmAutoDeleteBackup",
@@ -38,9 +48,19 @@ struct AutoDeleteBackupView: View {
     }
 
     func autoDeleteNow() {
+        guard !isRunning else { return }
         withAnimation {
             countDeletedVideos = nil
-            countDeletedVideos = UserDataService.autoDeleteBackups()
+            countRecompressedBackups = nil
+            isRunning = true
+        }
+        Task {
+            let result = await UserDataService.autoDeleteBackups()
+            withAnimation {
+                countDeletedVideos = result.deleted
+                countRecompressedBackups = result.recompressed
+                isRunning = false
+            }
         }
     }
 }

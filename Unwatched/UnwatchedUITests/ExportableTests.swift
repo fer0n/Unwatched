@@ -259,9 +259,9 @@ class ExportableTests: XCTestCase {
 
                 // User Data
                 Const.automaticBackups: false,
-                Const.minimalBackups: false,
+                Const.includeUnimportantVideosInBackup: true,
                 Const.enableIcloudSync: true,
-                Const.exludeWatchHistoryInBackup: true,
+                Const.includeWatchHistoryInBackup: false,
             ]
 
             // set different settings to default value
