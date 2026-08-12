@@ -119,7 +119,7 @@ public actor InnerTubeAPI {
     /// Returns c=iOS URLs and an HLS manifest, both playable natively by AVPlayer.
     /// `osVersion` is derived at runtime from ProcessInfo so requests reflect the
     /// actual device OS and are not rejected by YouTube's version validation.
-    var iosClientContext: [String: Any] {
+    public var iosClientContext: [String: Any] {
         let osVer = InnerTubeClients.iOS.currentOSVersionString.replacingOccurrences(of: "_", with: ".")
         return [
             "client": [

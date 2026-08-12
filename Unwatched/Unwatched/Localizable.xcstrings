@@ -15556,6 +15556,7 @@
       }
     },
     "searchDateAnytime" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15590,6 +15591,7 @@
       }
     },
     "searchDateLastHour" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15624,6 +15626,7 @@
       }
     },
     "searchDateThisMonth" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15658,6 +15661,7 @@
       }
     },
     "searchDateThisWeek" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15692,6 +15696,7 @@
       }
     },
     "searchDateThisYear" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15726,6 +15731,7 @@
       }
     },
     "searchDateToday" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15760,6 +15766,7 @@
       }
     },
     "searchDurationAny" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15794,6 +15801,7 @@
       }
     },
     "searchDurationLong" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15828,6 +15836,7 @@
       }
     },
     "searchDurationMedium" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -15862,6 +15871,7 @@
       }
     },
     "searchDurationShort" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16134,6 +16144,7 @@
       }
     },
     "searchSortRating" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16168,6 +16179,7 @@
       }
     },
     "searchSortRelevance" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -16236,6 +16248,7 @@
       }
     },
     "searchSortViewCount" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

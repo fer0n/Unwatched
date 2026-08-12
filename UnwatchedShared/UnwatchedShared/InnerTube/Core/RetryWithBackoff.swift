@@ -15,7 +15,7 @@ private let retryLog = Logger(subsystem: appSubsystem, category: "RetryWithBacko
 /// Inherits the caller's actor isolation via `#isolation` (SE-0420) so closures
 /// captured from `@MainActor` contexts need not be `@Sendable`.
 @discardableResult
-func retryWithBackoff<T>(
+public func retryWithBackoff<T>(
     label: String = "",
     maxAttempts: Int = 3,
     initialDelay: TimeInterval = 1.0,

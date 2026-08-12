@@ -91,7 +91,7 @@ extension InnerTubeAPI {
 
     // MARK: - Body builders
 
-    func makeBody(client: [String: Any], continuationToken: String? = nil, includeVisitorData: Bool = false, includePoToken: Bool = false) -> [String: Any] {
+    public func makeBody(client: [String: Any], continuationToken: String? = nil, includeVisitorData: Bool = false, includePoToken: Bool = false) -> [String: Any] {
         var body: [String: Any] = ["context": client]
         if let token = continuationToken {
             body["continuation"] = token
@@ -105,7 +105,7 @@ extension InnerTubeAPI {
         return body
     }
 
-    func postPlayer(body: [String: Any]) async throws -> [String: Any] {
+    public func postPlayer(body: [String: Any]) async throws -> [String: Any] {
         guard var comps = URLComponents(url: playerBaseURL.appendingPathComponent("player"), resolvingAgainstBaseURL: false) else {
             throw APIError.invalidURL("player")
         }

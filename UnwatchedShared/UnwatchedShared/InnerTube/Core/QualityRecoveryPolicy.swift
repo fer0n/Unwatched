@@ -11,7 +11,7 @@ private let avFoundationErrorDomain = "AVFoundationErrorDomain"
 
 /// Describes what recovery action the player should take when an `AVPlayerItem`
 /// enters the `.failed` state.
-enum QualityRecoveryAction: Sendable {
+public enum QualityRecoveryAction: Sendable {
     /// HTTP 403 — re-fetch fresh signed URLs via the exhaustive retry path.
     case retry403Recovery
     /// A specific quality cap failed — revert the selection to Auto and reload.
@@ -34,7 +34,7 @@ enum QualityRecoveryAction: Sendable {
 ///   - error: The `NSError` from `AVPlayerItem.error`.
 ///   - quality: The quality height in effect when the item failed. `0` means Auto (no cap).
 ///   - hasAppliedH264Cap: `true` if the H.264 bitrate cap has already been tried.
-func qualityRecoveryAction(
+public func qualityRecoveryAction(
     for error: NSError,
     quality: Int,
     hasAppliedH264Cap: Bool

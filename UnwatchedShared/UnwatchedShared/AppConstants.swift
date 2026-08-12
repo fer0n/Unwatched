@@ -72,6 +72,7 @@ public struct Const {
     public static let secondsConsideredCloseToEnd: CGFloat = 18
     public static let autoRefreshIgnoresSync = "autoRefreshIgnoresSync"
     public static let markAsWatched = "markAsWatched"
+    public static let tvPlaybackMode = "tvPlaybackMode"
     public static let descriptionPopover = "descriptionPopover"
 
     /// Cooldown period before fetching the duration again (might happen sooner if batched with other requests)

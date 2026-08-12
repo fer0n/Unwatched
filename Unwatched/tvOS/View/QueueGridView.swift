@@ -13,10 +13,40 @@ struct QueueGridView: View {
     @Query(sort: \QueueEntry.order, animation: .default) var queue: [QueueEntry]
     @FocusState private var focusedVideo: QueueEntry?
     @State private var showAlert = false
+    /// The video the in-app player is showing. Lives here rather than on the grid item so
+    /// marking the video watched — which drops its entry from the queue — can't tear the
+    /// player down mid-video.
+    @State private var playingVideo: Video?
 
     let width: Double = 380
 
     var body: some View {
+        queueGrid
+            // Both presentations sit outside the queue/empty switch: marking the last video
+            // watched empties the queue while the player is still on screen.
+            .fullScreenCover(item: $playingVideo) { video in
+                TvPlayerView(video: video, openYouTube: openYouTube)
+            }
+            .alert("youtubeAppRequired", isPresented: $showAlert) {
+                Button("cancel", role: .cancel) { }
+                Button {
+                    guard let url = URL(string: "https://apps.apple.com/app/id544007664") else {
+                        print("YouTube App Store URL not working")
+                        return
+                    }
+                    UIApplication.shared.open(
+                        url,
+                        options: [:],
+                        completionHandler: nil
+                    )
+                } label: {
+                    Text(verbatim: "App Store")
+                }
+            }
+    }
+
+    @ViewBuilder
+    var queueGrid: some View {
         if queue.isEmpty {
             EmptyQueueView()
         } else {
@@ -35,6 +65,7 @@ struct QueueGridView: View {
                             entry,
                             width: width,
                             openYouTube: openYouTube,
+                            playInApp: { playingVideo = $0 },
                             beforeRemove: beforeRemove
                         )
                         .focused($focusedVideo, equals: entry)
@@ -47,22 +78,6 @@ struct QueueGridView: View {
                 if focusedVideo == nil,
                    let firstEntry = queue.first {
                     focusedVideo = firstEntry
-                }
-            }
-            .alert("youtubeAppRequired", isPresented: $showAlert) {
-                Button("cancel", role: .cancel) { }
-                Button {
-                    guard let url = URL(string: "https://apps.apple.com/app/id544007664") else {
-                        print("YouTube App Store URL not working")
-                        return
-                    }
-                    UIApplication.shared.open(
-                        url,
-                        options: [:],
-                        completionHandler: nil
-                    )
-                } label: {
-                    Text(verbatim: "App Store")
                 }
             }
         }

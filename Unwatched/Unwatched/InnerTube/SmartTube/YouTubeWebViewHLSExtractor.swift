@@ -2,6 +2,7 @@
 import WebKit
 import JavaScriptCore
 import os
+import UnwatchedShared
 
 private let extractLog = Logger(subsystem: appSubsystem, category: "WebViewHLS")
 

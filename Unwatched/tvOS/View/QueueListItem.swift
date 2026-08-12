@@ -8,11 +8,13 @@ import UnwatchedShared
 
 struct QueueEntryListItem: View {
     @AppStorage(Const.markAsWatched) var markAsWatched: Bool = false
+    @AppStorage(Const.tvPlaybackMode) var playbackMode: TvPlaybackMode = .youtubeApp
     @Environment(\.modelContext) var modelContext
     var entry: QueueEntry
     let width: Double
 
     var openYouTube: (String?) async -> Bool
+    var playInApp: (Video) -> Void
     var beforeRemove: (QueueEntry) -> Void
 
     @State var toBeWatched: Video?
@@ -22,11 +24,13 @@ struct QueueEntryListItem: View {
         _ entry: QueueEntry,
         width: Double,
         openYouTube: @escaping (String?) async -> Bool,
+        playInApp: @escaping (Video) -> Void,
         beforeRemove: @escaping (QueueEntry) -> Void
     ) {
         self.entry = entry
         self.width = width
         self.openYouTube = openYouTube
+        self.playInApp = playInApp
         self.beforeRemove = beforeRemove
     }
 
@@ -81,7 +85,13 @@ struct QueueEntryListItem: View {
     }
 
     private func handleItemClick(_ video: Video?) async {
-        if let video {
+        guard let video else { return }
+        switch playbackMode {
+        case .inApp:
+            // The player marks the video watched itself: it knows when playback actually
+            // started, and how far it got.
+            playInApp(video)
+        case .youtubeApp:
             let success = await openYouTube(video.youtubeId)
             if markAsWatched && success {
                 VideoService.setVideoWatched(video, modelContext: modelContext)

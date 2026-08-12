@@ -1,6 +1,7 @@
 #if !os(macOS)
 import Foundation
 import os
+import UnwatchedShared
 
 private let wkHLSLog = Logger(subsystem: appSubsystem, category: "WKHLSManager")
 private let wkHLSDefaultsKey = "wkHLSCache"

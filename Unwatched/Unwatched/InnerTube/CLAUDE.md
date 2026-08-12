@@ -4,6 +4,12 @@ Unwatched's native YouTube playback layer: a subset of SmartTubeIOS adapted for
 Unwatched's architecture. Replaces the WKWebView player when
 `Settings → Debug → useAVPlayer` is enabled.
 
+**The API layer lives in the shared framework:**
+`UnwatchedShared/UnwatchedShared/InnerTube/Core/`. Everything else — the WKWebView extraction,
+the AVPlayer view models, the player UI — stays here in the app target, since it needs WebKit and
+the app's own types. tvOS has no WKWebView, so it drives `InnerTubeAPI` directly
+(`Unwatched/tvOS/Player/TvStreamResolver.swift`); this split is what lets it.
+
 ---
 
 ## Design goals
@@ -41,14 +47,16 @@ so future merges are a straight diff-and-apply):
 ## Directory layout
 
 ```
-InnerTube/
+UnwatchedShared/UnwatchedShared/InnerTube/
+  Core/                    ← SmartTubeIOS API layer; adapted for Unwatched (see below)
+    AppSubsystem.swift, CaptionTrack.swift, InnerTubeAPI*.swift,
+    InnerTubeClients.swift, InnerTubeModels.swift, ITVideo.swift
+
+Unwatched/Unwatched/InnerTube/
   SmartTube/               ← nearly-vanilla SmartTubeIOS files; minimise changes
     Resources/yt.solver.core.min.js, yt.solver.lib.min.js
     AudioTrack.swift, HLSAudioLanguageParser.swift,
     YTHLSProxyLoader.swift, YouTubeWebViewHLSExtractor.swift
-  Core/                    ← SmartTubeIOS API layer; adapted for Unwatched (see below)
-    AppSubsystem.swift, CaptionTrack.swift, InnerTubeAPI*.swift,
-    InnerTubeClients.swift, InnerTubeModels.swift, ITVideo.swift
   AVPlayerView.swift          ← Unwatched-owned
   AVPlayerViewModel.swift     ← Unwatched-owned
   WKHLSManager.swift          ← Unwatched-owned
@@ -56,6 +64,10 @@ InnerTube/
   PlayerViewControllerRepresentable.swift
   CLAUDE.md
 ```
+
+`Core/` is compiled into `UnwatchedShared` via its file-system-synchronized group, so new files
+there need no project edits. Files added to `Unwatched/Unwatched/InnerTube/` still need explicit
+references in `Unwatched.xcodeproj`.
 
 `InnerTubeAPI+Metadata.swift` adds `fetchVideoDescription(videoId:)` — a metadata-only
 `/player` call that parses just `videoDetails.shortDescription`, never throws on
@@ -78,6 +90,7 @@ in `ChannelAvatarService.swift`, not here.
 | `YouTubeWebViewHLSExtractor.swift` | Added `func cancel()` | Abort in-flight extraction when iOS client returns HLS first |
 | `YouTubeWebViewHLSExtractor.swift` | Removed `static var isPreWarming` / `preWarm(videoId:)` | Uses `VideoPreloadCache` (not mirrored); Unwatched uses `WKHLSManager.preExtract` instead |
 | `YTHLSProxyLoader.swift` | Logger subsystem → `appSubsystem` | Unwatched's OSLog subsystem constant |
+| `YTHLSProxyLoader.swift`, `YouTubeWebViewHLSExtractor.swift` | Added `import UnwatchedShared` | `appSubsystem` moved there with `Core/` |
 
 ---
 
@@ -110,9 +123,11 @@ Worth cherry-picking in the future:
 
 ### Per-file adaptations (re-apply on every sync)
 
-**Global:** remove all `package ` access modifiers (SmartTubeIOSCore is a Swift
-package; Unwatched isn't). Regex: `\bpackage\s+(func|var|let|class|struct|enum|init|typealias)\b`
-→ drop the `package ` prefix.
+**Global:** rewrite every `package ` access modifier as `public ` — `Core/` is its own module
+(`UnwatchedShared`), and the app target reaches these declarations across the module boundary.
+Regex: `\bpackage\s+(func|var|let|class|struct|enum|init|typealias)\b` → `public $1`. A public
+struct needs its stored properties and any memberwise construction site public too; a public
+method's parameter and result types must be public as well.
 
 **`ITVideo.swift`** (upstream `Video.swift`):
 - Keep type names `ITVideo`/`ITChapter` everywhere (avoids SwiftData name conflicts).
@@ -199,5 +214,8 @@ Consumes the Core layer. After a sync, check for:
   on composition items — always branch on `isUsingComposition` for quality changes.
 - **VP9 exclusion**: filter `vp09` from every quality list/composition URL picker —
   causes decode failures on some Apple hardware.
-- **`package` keyword**: never use it; Unwatched is not a Swift package.
+- **`package` keyword**: never use it — write `public` instead (see the global adaptation above).
+- **Module boundary**: `Core/` cannot see app types. Anything it would need from the app belongs
+  in `UnwatchedShared` (as `ChannelAvatarService` already is), and app-side extensions of
+  `InnerTubeAPI` can only touch its `public` members.
 - **NaturalLanguage**: `originalAudioLanguage` detection is Unwatched-only.

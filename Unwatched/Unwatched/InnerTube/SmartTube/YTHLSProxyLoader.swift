@@ -6,6 +6,7 @@
 
 #if canImport(WebKit)
 import AVFoundation
+import UnwatchedShared
 import Foundation
 import os.log
 

@@ -1,6 +1,5 @@
 import Foundation
 import os
-import UnwatchedShared
 
 private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTubeSearch")
 
@@ -13,22 +12,22 @@ private let tubeLog = Logger(subsystem: appSubsystem, category: "InnerTubeSearch
 
 extension InnerTubeAPI {
 
-    struct SearchPage: Sendable {
-        var videos: [ITVideo]
-        var nextPageToken: String?
+    public struct SearchPage: Sendable {
+        public var videos: [ITVideo]
+        public var nextPageToken: String?
     }
 
     /// A playlist published by a channel (from the channel's Playlists tab).
-    struct ITPlaylist: Sendable, Identifiable, Hashable {
-        var id: String          // playlistId (e.g. "PL…")
-        var title: String
-        var thumbnailURL: URL?
-        var videoCountText: String?   // e.g. "12 videos" / "5 episodes"
+    public struct ITPlaylist: Sendable, Identifiable, Hashable {
+        public var id: String          // playlistId (e.g. "PL…")
+        public var title: String
+        public var thumbnailURL: URL?
+        public var videoCountText: String?   // e.g. "12 videos" / "5 episodes"
     }
 
     /// Run a search (or fetch the next page when `continuationToken` is set).
     /// Impersonates the desktop WEB client — no auth, no PO token required.
-    func search(
+    public func search(
         query: String,
         continuationToken: String? = nil,
         filter: SearchFilter = .default
@@ -47,7 +46,7 @@ extension InnerTubeAPI {
     }
 
     /// YouTube autocomplete suggestions (public, key-less endpoint).
-    func fetchSearchSuggestions(query: String) async throws -> [String] {
+    public func fetchSearchSuggestions(query: String) async throws -> [String] {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty,
               var components = URLComponents(string: "https://suggestqueries-clients6.youtube.com/complete/search") else {
             return []
@@ -82,14 +81,14 @@ extension InnerTubeAPI {
     /// video-playback-specific dependency surface for what should stay a lightweight extension),
     /// so it's kept in the shared package instead and InnerTube just calls into it. Update the
     /// WEB client version there (not here) if this ever starts failing.
-    func fetchChannelAvatarURL(channelId: String) async throws -> URL? {
+    public func fetchChannelAvatarURL(channelId: String) async throws -> URL? {
         try await ChannelAvatarService.fetchAvatarURL(channelId: channelId)
     }
 
     /// Fetches the playlists a channel publishes (its "Playlists" tab) via `browse`.
     /// `params` is the protobuf-encoded tab selector for the Playlists tab. Returns the
     /// playlists in the channel's own ordering; empty on failure or if the channel has none.
-    func fetchChannelPlaylists(channelId: String) async throws -> [ITPlaylist] {
+    public func fetchChannelPlaylists(channelId: String) async throws -> [ITPlaylist] {
         var body = makeBody(client: webClientContext)
         body["browseId"] = channelId
         body["params"] = "EglwbGF5bGlzdHPyBgQKAkIA"

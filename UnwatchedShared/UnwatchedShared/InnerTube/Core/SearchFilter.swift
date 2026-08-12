@@ -17,17 +17,17 @@ import Foundation
 //   field 2 (type):       varint — VideoType raw value  (0 = omit)
 //   field 3 (duration):   varint — Duration raw value   (0 = omit)
 
-struct SearchFilter: Sendable, Equatable {
+public struct SearchFilter: Sendable, Equatable {
 
     // MARK: - Nested enums (mirror Android Constants)
 
-    enum SortOrder: Int, CaseIterable, Sendable {
+    public enum SortOrder: Int, CaseIterable, Sendable {
         case relevance  = 0   // default — no param emitted
         case rating     = 1
         case uploadDate = 2
         case viewCount  = 3
 
-        var label: String {
+        public var label: String {
             switch self {
             case .relevance:  return String(localized: "searchSortRelevance")
             case .rating:     return String(localized: "searchSortRating")
@@ -37,7 +37,7 @@ struct SearchFilter: Sendable, Equatable {
         }
     }
 
-    enum UploadDate: Int, CaseIterable, Sendable {
+    public enum UploadDate: Int, CaseIterable, Sendable {
         case anytime   = 0   // default — no param emitted
         case lastHour  = 1
         case today     = 2
@@ -45,7 +45,7 @@ struct SearchFilter: Sendable, Equatable {
         case thisMonth = 4
         case thisYear  = 5
 
-        var label: String {
+        public var label: String {
             switch self {
             case .anytime:   return String(localized: "searchDateAnytime")
             case .lastHour:  return String(localized: "searchDateLastHour")
@@ -57,7 +57,7 @@ struct SearchFilter: Sendable, Equatable {
         }
     }
 
-    enum VideoType: Int, CaseIterable, Sendable {
+    public enum VideoType: Int, CaseIterable, Sendable {
         case any      = 0   // default — no param emitted
         case video    = 1
         case channel  = 2
@@ -65,13 +65,13 @@ struct SearchFilter: Sendable, Equatable {
         case movie    = 4
     }
 
-    enum Duration: Int, CaseIterable, Sendable {
+    public enum Duration: Int, CaseIterable, Sendable {
         case any    = 0   // default — no param emitted
         case short  = 1   // < 4 min
         case medium = 2   // 4 – 20 min
         case long   = 3   // > 20 min
 
-        var label: String {
+        public var label: String {
             switch self {
             case .any:    return String(localized: "searchDurationAny")
             case .short:  return String(localized: "searchDurationShort")
@@ -83,23 +83,23 @@ struct SearchFilter: Sendable, Equatable {
 
     // MARK: - Properties
 
-    var sortOrder: SortOrder   = .relevance
-    var uploadDate: UploadDate = .anytime
+    public var sortOrder: SortOrder   = .relevance
+    public var uploadDate: UploadDate = .anytime
     /// Defaults to `.video` so search results render as a clean video list
     /// (channels and playlists are filtered out by YouTube server-side).
-    var type: VideoType        = .video
-    var duration: Duration     = .any
+    public var type: VideoType        = .video
+    public var duration: Duration     = .any
 
-    static let `default` = SearchFilter()
+    public static let `default` = SearchFilter()
 
-    var isDefault: Bool { self == .default }
+    public var isDefault: Bool { self == .default }
 
     // MARK: - Params encoding
     //
     // Produces the base64-encoded protobuf string consumed by InnerTube's
     // `params` search field. Returns nil only when nothing needs encoding.
 
-    func encodedParams() -> String? {
+    public func encodedParams() -> String? {
         var outer = Data()
 
         // field 1 — sort order (varint), only when non-default
