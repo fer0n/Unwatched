@@ -102,11 +102,13 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         isNew: Bool? = nil,
         asyncAction: ((PersistentIdentifier) -> (Task<Void, Error>)?)?,
         syncAction: ((Video) -> Void)?,
-        changeReason: VideoChangeReason? = nil
+        changeReason: VideoChangeReason? = nil,
+        addsToQueue: Bool = false
     ) {
         Log.info("performVideoAction")
 
         var order = videoData.queueEntryData?.order
+        let fillsEmptyQueue = addsToQueue && VideoService.isQueueEmpty(modelContext)
         var task: Task<Void, Error>?
         if config.async, let videoId = videoData.persistentId {
             let isNewTask = handleIsNewAsync(videoId, isNew)
@@ -127,7 +129,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             try? modelContext.save()
             onChange?(changeReason, order)
         }
-        handlePotentialQueueChange(after: task, order: order)
+        handlePotentialQueueChange(after: task, order: order, fillsEmptyQueue: fillsEmptyQueue)
     }
 
     func handleIsNewAsync(_ videoId: PersistentIdentifier, _ isNew: Bool?) -> Task<Void, Error>? {
@@ -172,7 +174,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                         modelContext: modelContext
                     )
                 },
-                changeReason: .moveToQueue
+                changeReason: .moveToQueue,
+                addsToQueue: true
             )
         }
     }
@@ -194,7 +197,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                         modelContext: modelContext
                     )
                 },
-                changeReason: .moveToQueue
+                changeReason: .moveToQueue,
+                addsToQueue: true
             )
         }
     }
@@ -305,8 +309,13 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
     }
 
-    func handlePotentialQueueChange(_ video: Video? = nil, after task: (Task<(), Error>)? = nil, order: Int? = nil) {
-        if order == 0 || video?.queueEntry?.order == 0 {
+    func handlePotentialQueueChange(
+        _ video: Video? = nil,
+        after task: (Task<(), Error>)? = nil,
+        order: Int? = nil,
+        fillsEmptyQueue: Bool = false
+    ) {
+        if order == 0 || video?.queueEntry?.order == 0 || fillsEmptyQueue {
             try? modelContext.save()
             player.loadTopmostVideoFromQueue(after: task)
         }

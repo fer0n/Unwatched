@@ -21,6 +21,7 @@ import UnwatchedShared
     var columnVisibility: NavigationSplitViewVisibility = .automatic
     var showDeferDateSelector = false
     var showPremiumOffer = false
+    var showOnboarding = false
 
     var isMacosFullscreen = false
 
@@ -137,6 +138,12 @@ import UnwatchedShared
             presentedLibrary.append(sendableSub)
             lastLibrarySubscriptionId = sendableSub.persistentId
         }
+    }
+
+    /// The menu is a sheet on iPhone, and only one sheet shows at a time
+    func presentOnboarding() {
+        showMenu = false
+        showOnboarding = true
     }
 
     func navigateTo(_ tab: NavigationTab) {
@@ -257,7 +264,7 @@ import UnwatchedShared
     @MainActor
     func handlePlay() {
         let rotateOnPlay = UserDefaults.standard.bool(forKey: Const.rotateOnPlay)
-        let returnToQueue = UserDefaults.standard.bool(forKey: Const.returnToQueue)
+        let returnToQueue = Const.returnToQueue.bool ?? true
 
         if showBrowser != false {
             showBrowser = false
@@ -267,7 +274,7 @@ import UnwatchedShared
             videoDetail = nil
         }
 
-        if (Const.hideMenuOnPlay.bool ?? true) || (Device.isIphone && rotateOnPlay) {
+        if (Const.hideMenuOnPlay.bool ?? false) || (Device.isIphone && rotateOnPlay) {
             #if os(macOS)
             toggleSidebar(show: false)
             #else

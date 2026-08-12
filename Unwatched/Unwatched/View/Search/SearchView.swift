@@ -55,7 +55,7 @@ struct SearchView: View {
                     .paneSearchField(
                         text: $vm.query,
                         focused: $searchFocused,
-                        prompt: "searchVideosPrompt",
+                        prompt: "search",
                         onSubmit: { search(for: vm.query) }
                     )
             }
@@ -84,7 +84,7 @@ struct SearchView: View {
         .nativeSearchable(
             text: $vm.query,
             focused: $searchFocused,
-            prompt: "searchVideosPrompt",
+            prompt: "search",
             onSubmit: { search(for: vm.query) }
         )
         .onChange(of: vm.query) { _, newValue in

@@ -2,37 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " "
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        }
-      }
-    },
-    " " : {
-
-    },
-    ", " : {
 
     },
     "%@" : {
@@ -171,16 +140,6 @@
         }
       }
     },
-    "%@%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@%2$@"
-          }
-        }
-      }
-    },
     "%@%lld New Videos" : {
       "localizations" : {
         "de" : {
@@ -250,32 +209,7 @@
       }
     },
     "%lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
-          }
-        }
-      }
+
     },
     "%lld min" : {
       "localizations" : {
@@ -341,34 +275,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Nowe filmy"
-          }
-        }
-      }
-    },
-    "%llds" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%llds"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%llds"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%llds"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%llds"
           }
         }
       }
@@ -1768,46 +1674,12 @@
         }
       }
     },
-    "autoRecompressedCount: %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Komprimierte Backups: %lld"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compressed Backups: %lld"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Copias de seguridad comprimidas: %lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Sauvegardes compressées : %lld"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Skompresowane kopie zapasowe: %lld"
-          }
-        }
-      }
-    },
     "autoDeleteHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Die automatische Löschung behält:\n- Alle manuellen Backups\n- Alle Backups der letzten Woche\n- Ein Backup pro Woche in den letzten 6 Monaten\n- Ein Backup pro Monat danach"
+            "state" : "translated",
+            "value" : "Die automatische Löschung behält: - Alle manuellen Backups - Alle Backups der letzten Woche - Ein Backup pro Woche in den letzten 6 Monaten - Ein Backup pro Monat im letzten Jahr - Ein Backup pro 6 Monate danach Unkomprimierte Backups werden außerdem komprimiert, um Speicher zu sparen"
           }
         },
         "en" : {
@@ -1818,20 +1690,20 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "El borrado automático conservará:\n- Todas las copias de seguridad manuales\n- Todas las copias de seguridad de la última semana\n- Una copia de seguridad por semana durante los últimos 6 meses\n- Una copia de seguridad por mes después de eso"
+            "state" : "translated",
+            "value" : "El borrado automático conservará: - Todas las copias de seguridad manuales - Todas las copias de seguridad de la última semana - Una copia de seguridad por semana durante los últimos 6 meses - Una copia de seguridad por mes durante el último año - Una copia de seguridad cada 6 meses después de eso Las copias de seguridad sin comprimir también se comprimirán para ahorrar espacio"
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "La suppression automatique conservera : \n- Toutes les sauvegardes manuelles\n- Toutes les sauvegardes de la dernière semaine \n- Une sauvegarde par semaine pour les 6 derniers mois\n- Une sauvegarde par mois au-delà"
+            "state" : "translated",
+            "value" : "La suppression automatique conservera : - Toutes les sauvegardes manuelles - Toutes les sauvegardes de la dernière semaine - Une sauvegarde par semaine pour les 6 derniers mois - Une sauvegarde par mois pour la dernière année - Une sauvegarde tous les 6 mois au-delà Les sauvegardes non compressées seront également compressées pour économiser de l’espace"
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Automatyczne usuwanie zachowa: - Wszystkie ręczne kopie zapasowe - Wszystkie kopie zapasowe z ostatniego tygodnia - Jedną kopię zapasową na tydzień z ostatnich 6 miesięcy - Jedną kopię zapasową na miesiąc po tym okresie"
+            "state" : "translated",
+            "value" : "Automatyczne usuwanie zachowa: - Wszystkie ręczne kopie zapasowe - Wszystkie kopie zapasowe z ostatniego tygodnia - Jedną kopię zapasową na tydzień z ostatnich 6 miesięcy - Jedną kopię zapasową na miesiąc z ostatniego roku - Jedną kopię zapasową na 6 miesięcy po tym okresie Nieskompresowane kopie zapasowe zostaną również skompresowane, aby zaoszczędzić miejsce"
           }
         }
       }
@@ -2002,6 +1874,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unwatched będzie automatycznie zapisywać codzienne podsumowanie Twoich danych w iCloud Drive każdego dnia, gdy otworzysz aplikację."
+          }
+        }
+      }
+    },
+    "autoRecompressedCount: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komprimierte Backups: %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compressed Backups: %lld"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copias de seguridad comprimidas: %lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegardes compressées : %lld"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skompresowane kopie zapasowe: %lld"
           }
         }
       }
@@ -6426,40 +6332,6 @@
         }
       }
     },
-    "includeStatsInBackup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Watch-Statistiken einschließen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Include Watch Statistics"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Incluir estadísticas de visualización"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Inclure les statistiques de visionnage"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Uwzględnij statystyki oglądania"
-          }
-        }
-      }
-    },
     "exitFullscreen" : {
       "localizations" : {
         "de" : {
@@ -6524,40 +6396,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wyłącz Pip"
-          }
-        }
-      }
-    },
-    "includeWatchHistoryInBackup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Wiedergabeverlauf einschließen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Include Watch History"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Incluir historial de reproducción"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Inclure l'historique de visionnage"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Uwzględnij historię oglądania"
           }
         }
       }
@@ -8573,6 +8411,24 @@
             "state" : "translated",
             "value" : "Inbox Appearance"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apariencia de la bandeja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence de l’inbox"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wygląd skrzynki"
+          }
         }
       }
     },
@@ -8589,6 +8445,24 @@
             "state" : "translated",
             "value" : "Cards"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarjetas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cartes"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karty"
+          }
         }
       }
     },
@@ -8604,6 +8478,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "List"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lista"
           }
         }
       }
@@ -8655,6 +8547,24 @@
             "state" : "translated",
             "value" : "Newest first"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más recientes primero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus récentes d’abord"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najnowsze najpierw"
+          }
         }
       }
     },
@@ -8670,6 +8580,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oldest first"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más antiguas primero"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus anciennes d’abord"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Najstarsze najpierw"
           }
         }
       }
@@ -8789,6 +8717,24 @@
             "state" : "translated",
             "value" : "Sorting"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orden"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tri"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sortowanie"
+          }
         }
       }
     },
@@ -8860,6 +8806,40 @@
         }
       }
     },
+    "includeStatsInBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Watch-Statistiken einschließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Watch Statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir estadísticas de visualización"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclure les statistiques de visionnage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uwzględnij statystyki oglądania"
+          }
+        }
+      }
+    },
     "includeTimestamps" : {
       "localizations" : {
         "de" : {
@@ -8924,6 +8904,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dodaje znaczniki czasu do transkryptu."
+          }
+        }
+      }
+    },
+    "includeUnimportantVideosInBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unwichtige Videos einschließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Unimportant Videos"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir videos no importantes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclure les vidéos sans importance"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uwzględnij nieistotne filmy"
+          }
+        }
+      }
+    },
+    "includeWatchHistoryInBackup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabeverlauf einschließen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Watch History"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incluir historial de reproducción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inclure l'historique de visionnage"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uwzględnij historię oglądania"
           }
         }
       }
@@ -9704,46 +9752,12 @@
         }
       }
     },
-    "includeUnimportantVideosInBackup" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Unwichtige Videos einschließen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Include Unimportant Videos"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Incluir videos no importantes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Inclure les vidéos sans importance"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Uwzględnij nieistotne filmy"
-          }
-        }
-      }
-    },
     "minimalBackupsHelper" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "\"Unwichtig\" sind Videos, die nicht angesehen wurden, nicht in der Warteschlange oder im Posteingang sind und älter als eine Woche sind. Am besten lässt man dies ausgeschaltet, da die Backup-Dateien so wahrscheinlich viel kleiner sind."
+            "state" : "translated",
+            "value" : "\"Unwichtig\" sind Videos, die nicht angesehen wurden, nicht in der Queue oder Inbox sind und älter als eine Woche sind. Am besten lässt man dies ausgeschaltet, da die Backup-Dateien so wahrscheinlich viel kleiner sind."
           }
         },
         "en" : {
@@ -9754,20 +9768,20 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Los videos \"no importantes\" son aquellos que no se han visto, no están en la cola ni en la bandeja de entrada y tienen más de una semana. Es mejor dejar esto desactivado, ya que los archivos de copia de seguridad probablemente serán mucho más pequeños."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Les vidéos \"sans importance\" sont celles qui n'ont pas été vues, ne sont pas dans la file d'attente ou la boîte de réception, et datent de plus d'une semaine. Il est préférable de laisser cette option désactivée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
+            "state" : "translated",
+            "value" : "Les vidéos \"sans importance\" sont celles qui n’ont pas été vues, ne sont pas dans la file d’attente ou l’Inbox, et datent de plus d’une semaine. Il est préférable de laisser cette option désactivée, car les fichiers de sauvegarde seront probablement beaucoup plus petits."
           }
         },
         "pl" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce odbiorczej i są starsze niż tydzień. Najlepiej pozostawić to wyłączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
+            "state" : "translated",
+            "value" : "\"Nieistotne\" to filmy, które nie zostały obejrzane, nie są w kolejce ani w skrzynce i są starsze niż tydzień. Najlepiej pozostawić to wyłączone, ponieważ pliki kopii zapasowych będą prawdopodobnie znacznie mniejsze."
           }
         }
       }
@@ -11426,6 +11440,652 @@
         }
       }
     },
+    "onboardingChannelsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle die Kanäle, die dich interessieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select the channels you care about"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige los canales que te importan"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez les chaînes qui vous intéressent"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wybierz kanały, na których Ci zależy"
+          }
+        }
+      }
+    },
+    "onboardingChannelsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos, ohne Ablenkung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Videos, distraction-free"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vídeos, sin distracciones"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Des vidéos, sans distraction"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filmy bez rozpraszaczy"
+          }
+        }
+      }
+    },
+    "onboardingContinue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dalej"
+          }
+        }
+      }
+    },
+    "onboardingInboxTip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Videos.."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Videos.."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los vídeos nuevos.."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les nouvelles vidéos.."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nowe filmy.."
+          }
+        }
+      }
+    },
+    "onboardingInboxTipClear" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus der Inbox entfernen, bleibt in der Bibliothek"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear from the inbox, stays in your library"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitar de la bandeja, sigue en tu biblioteca"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer de l’inbox, reste dans la bibliothèque"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuń ze skrzynki, zostaje w bibliotece"
+          }
+        }
+      }
+    },
+    "onboardingInboxTipMessage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".. landen in deiner Inbox. Füge zu deiner Queue hinzu, was du dir ansehen möchtest, entferne den Rest. Tippe, um das Video abzuspielen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".. show up in your Inbox. Add to your Queue what you want to watch, dismiss the rest. Tap to play the video."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".. aparecen en tu bandeja de entrada. Añade a tu cola lo que quieras ver, descarta el resto. Toca para reproducir el vídeo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".. arrivent dans votre Inbox. Ajoutez à votre file d’attente ce que vous voulez regarder, écartez le reste. Touchez pour lire la vidéo."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ".. trafiają do Twojej skrzynki. Dodaj do swojej kolejki to, co chcesz obejrzeć, usuń resztę. Dotknij, aby odtworzyć film."
+          }
+        }
+      }
+    },
+    "onboardingInboxTipQueueLast" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ans Ende der Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bottom of the Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al final de la cola"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À la fin de la file d’attente"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na koniec kolejki"
+          }
+        }
+      }
+    },
+    "onboardingInboxTipQueueNext" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An den Anfang der Queue"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top of the Queue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al principio de la cola"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au début de la file d’attente"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na początek kolejki"
+          }
+        }
+      }
+    },
+    "onboardingInboxTipSkip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für jetzt überspringen, kommt später wieder"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now, comes back later"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir por ahora, vuelve más tarde"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer pour l’instant, revient plus tard"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomiń na razie, wróci później"
+          }
+        }
+      }
+    },
+    "onboardingNoChannelsFound" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Kanäle gefunden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No channels found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron canales"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune chaîne trouvée"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono kanałów"
+          }
+        }
+      }
+    },
+    "onboardingSearchChannels" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beliebigen Kanal suchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search any channel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar cualquier canal"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher n'importe quelle chaîne"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Szukaj dowolnego kanału"
+          }
+        }
+      }
+    },
+    "onboardingShortsDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst das später für alle Kanäle oder für jeden einzeln ändern."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can change this later for all channels or for each one individually."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes cambiarlo más tarde para todos los canales o para cada uno por separado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vous pourrez changer cela plus tard pour toutes les chaînes ou pour chacune d’elles."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Możesz to później zmienić dla wszystkich kanałów lub dla każdego z osobna."
+          }
+        }
+      }
+    },
+    "onboardingShortsNo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nein"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie"
+          }
+        }
+      }
+    },
+    "onboardingShortsNoDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts werden gefiltert und landen nie in deiner Inbox."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts are filtered out and never reach your inbox."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los Shorts se filtran y nunca llegan a tu bandeja de entrada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les Shorts sont filtrés et n’arrivent jamais dans votre inbox."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts są filtrowane i nigdy nie trafiają do skrzynki."
+          }
+        }
+      }
+    },
+    "onboardingShortsTitle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#Shorts anzeigen?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Want to see #Shorts?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Quieres ver #Shorts?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher les #Shorts ?"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokazywać #Shorts?"
+          }
+        }
+      }
+    },
+    "onboardingShortsYes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sí"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oui"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tak"
+          }
+        }
+      }
+    },
+    "onboardingShortsYesDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts erscheinen wie normale Videos."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts show up alongside regular videos."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los Shorts aparecen junto a los vídeos normales."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les Shorts apparaissent comme les autres vidéos."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shorts pojawiają się obok zwykłych filmów."
+          }
+        }
+      }
+    },
+    "onboardingShowInbox" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show My Inbox"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar mi bandeja de entrada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher mon inbox"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż moją skrzynkę"
+          }
+        }
+      }
+    },
+    "onboardingSkip" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erstmal überspringen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip for now"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir por ahora"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer pour l’instant"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na razie pomiń"
+          }
+        }
+      }
+    },
     "oneDay" : {
       "localizations" : {
         "de" : {
@@ -11769,10 +12429,34 @@
     "pasteNoUrlFound" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein YouTube-Link in der Zwischenablage"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No YouTube link in the clipboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ningún enlace de YouTube en el portapapeles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun lien YouTube dans le presse-papiers"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brak linku YouTube w schowku"
           }
         }
       }
@@ -12062,6 +12746,24 @@
             "state" : "translated",
             "value" : "Auto enable"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar automáticamente"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer automatiquement"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włącz automatycznie"
+          }
         }
       }
     },
@@ -12077,6 +12779,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Native player: enter Pip when leaving the app, otherwise play audio only"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproductor nativo: entra en Pip al salir de la app, si no reproduce solo el audio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecteur natif : passer en Pip en quittant l’app, sinon lire seulement l’audio"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Natywny odtwarzacz: Pip po wyjściu z aplikacji, w przeciwnym razie tylko dźwięk"
           }
         }
       }
@@ -15316,31 +16036,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Videos für deine Suche gefunden."
+            "value" : "Keine Ergebnisse für deine Suche gefunden."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No videos found for your search."
+            "value" : "No results found for your search."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se encontraron videos para tu búsqueda."
+            "value" : "No se encontraron resultados para tu búsqueda."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucune vidéo trouvée pour votre recherche."
+            "value" : "Aucun résultat trouvé pour votre recherche."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nie znaleziono filmów dla Twojego wyszukiwania."
+            "value" : "Nie znaleziono wyników dla Twojego wyszukiwania."
           }
         }
       }
@@ -15350,31 +16070,31 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Finde Videos zum Ansehen und füge sie deiner Queue hinzu."
+            "value" : "Finde Videos und Kanäle zum Ansehen und füge sie deiner Queue hinzu."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find videos to watch and add to your queue."
+            "value" : "Find videos and channels to watch and add to your queue."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encuentra videos para ver y añádelos a tu cola."
+            "value" : "Encuentra videos y canales para ver y añádelos a tu cola."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trouvez des vidéos à regarder et ajoutez-les à votre file d'attente."
+            "value" : "Trouvez des vidéos et des chaînes à regarder et ajoutez-les à votre file d'attente."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znajdź filmy do obejrzenia i dodaj je do kolejki."
+            "value" : "Znajdź filmy i kanały do obejrzenia i dodaj je do kolejki."
           }
         }
       }
@@ -15613,40 +16333,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Szukaj…"
-          }
-        }
-      }
-    },
-    "searchVideosPrompt" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Videos suchen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search videos"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar videos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rechercher des vidéos"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Szukaj filmów"
           }
         }
       }
@@ -17135,6 +17821,40 @@
         }
       }
     },
+    "showOnboarding" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onboarding anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Onboarding"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar la introducción"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’intégration"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokaż wprowadzenie"
+          }
+        }
+      }
+    },
     "showShorts" : {
       "localizations" : {
         "de" : {
@@ -17385,6 +18105,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skip"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omitir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pomiń"
           }
         }
       }

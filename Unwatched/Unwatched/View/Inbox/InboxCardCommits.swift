@@ -60,7 +60,10 @@ final class InboxCardCommits {
         Signal.videoAction(action.analyticsAction, .inboxCards, via: commit.via)
         skippedIds.removeAll { $0 == video.youtubeId }
 
+        // an empty queue makes an added video the new top one, whichever index it goes in at
+        let addsToQueue = action == .queueNext || action == .queueLast
         let requiresQueueChange = video.queueEntry?.order == 0
+            || (addsToQueue && VideoService.isQueueEmpty(modelContext))
 
         switch action {
         case .skip:

@@ -468,7 +468,7 @@ extension PlayerManager {
                 NavigationManager.shared.toggleSidebar(show: true)
                 #else
                 setShowMenu()
-                if Const.returnToQueue.bool ?? false {
+                if Const.returnToQueue.bool ?? true {
                     NavigationManager.shared.navigateToQueue()
                 }
                 #endif

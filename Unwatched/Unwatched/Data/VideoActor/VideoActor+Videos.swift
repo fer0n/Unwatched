@@ -11,6 +11,9 @@ actor VideoActor: SharedContextActor {
     /// Feed fetch failures collected during the current `loadVideos` run.
     var fetchErrors = [any Error]()
 
+    /// Overrides `Const.triageNewSubs` for the current `loadVideos` run
+    var firstTimeVideoLimit: Int?
+
     func addForeignUrls(_ urls: [URL],
                         in videoplacement: VideoPlacementArea,
                         at index: Int,
@@ -165,11 +168,14 @@ actor VideoActor: SharedContextActor {
 
     func loadVideos(
         _ subscriptionIds: [PersistentIdentifier]?,
-        fetchDurations: Bool
+        fetchDurations: Bool,
+        firstTimeVideoLimit: Int? = nil
     ) async throws -> NewVideosNotificationInfo {
         Log.info("loadVideos")
         newVideos = NewVideosNotificationInfo()
         fetchErrors = []
+        self.firstTimeVideoLimit = firstTimeVideoLimit
+        defer { self.firstTimeVideoLimit = nil }
 
         let sendableSubs = try getSubscriptions(subscriptionIds)
         let placementInfo = getDefaultVideoPlacement()

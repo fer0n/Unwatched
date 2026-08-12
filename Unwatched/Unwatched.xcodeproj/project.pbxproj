@@ -450,6 +450,7 @@
 		889AF8CE2C50ECA9001CEDE6 /* AsyncSharableUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0972B7B422A00D0A83A /* AsyncSharableUrl.swift */; };
 		889AF8CF2C50ECA9001CEDE6 /* SubscriptionSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E513A2B59D577006384E4 /* SubscriptionSorting.swift */; };
 		889AF8D02C50ECA9001CEDE6 /* fullscreenSafeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */; };
+		F09FC4B9A2CE20D70AF8837C /* SoftSafeAreaBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */; };
 		889AF8D12C50ECA9001CEDE6 /* MyForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899247D2C48553F001185A6 /* MyForm.swift */; };
 		889AF8D22C50ECA9001CEDE6 /* SleepTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3AA2B79F0DE00656D63 /* SleepTimer.swift */; };
 		889AF8D32C50ECA9001CEDE6 /* Alerter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D34D742B58F86800533B74 /* Alerter.swift */; };
@@ -494,6 +495,24 @@
 		889AF9012C50ECD1001CEDE6 /* SleepTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883EE0952B7ABD5700D0A83A /* SleepTimerViewModel.swift */; };
 		889AF9022C50ECD1001CEDE6 /* AddVideoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FEBFC72C19DF5B007FC1A5 /* AddVideoViewModel.swift */; };
 		889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */; };
+		CD0FBE00000000000000001A /* YoutubeChannelSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */; };
+		CD0FBE00000000000000001B /* YoutubeChannelSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */; };
+		CD0FBE000000000000000017 /* OnboardingInboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000016 /* OnboardingInboxTip.swift */; };
+		CD0FBE000000000000000018 /* OnboardingInboxTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000016 /* OnboardingInboxTip.swift */; };
+		CD0FBE000000000000000014 /* OnboardingSheetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */; };
+		CD0FBE000000000000000015 /* OnboardingSheetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */; };
+		CD0FBE000000000000000011 /* OnboardingChannelSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */; };
+		CD0FBE000000000000000012 /* OnboardingChannelSuggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */; };
+		CD0FBE00000000000000000E /* OnboardingShortsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000D /* OnboardingShortsPage.swift */; };
+		CD0FBE00000000000000000F /* OnboardingShortsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000D /* OnboardingShortsPage.swift */; };
+		CD0FBE00000000000000000B /* OnboardingChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingChannelRow.swift */; };
+		CD0FBE00000000000000000C /* OnboardingChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE00000000000000000A /* OnboardingChannelRow.swift */; };
+		CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
+		CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */; };
+		CD0FBE000000000000000005 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000004 /* OnboardingViewModel.swift */; };
+		CD0FBE000000000000000006 /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000004 /* OnboardingViewModel.swift */; };
+		CD0FBE000000000000000002 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000001 /* OnboardingView.swift */; };
+		CD0FBE000000000000000003 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0FBE000000000000000001 /* OnboardingView.swift */; };
 		889AF9042C50ECD4001CEDE6 /* VideoNotAvailableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */; };
 		889AF9052C50ECD4001CEDE6 /* SetupShareSheetAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */; };
 		889AF9072C50ECD8001CEDE6 /* InboxTabItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8899246A2C47FAE3001185A6 /* InboxTabItemView.swift */; };
@@ -783,6 +802,7 @@
 		88F3AAA12C9990E60030B2EA /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AAA02C9990E60030B2EA /* TestData.swift */; };
 		88F3AAA22C9990E60030B2EA /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F3AAA02C9990E60030B2EA /* TestData.swift */; };
 		88F4087F2C18F541009F90E6 /* fullscreenSafeArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */; };
+		F44F29F47E0F805EB8AFFDF9 /* SoftSafeAreaBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */; };
 		88F4E75A2CA47EFE00DCF70E /* UrlServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */; };
 		88F73D882D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */; };
 		88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */; };
@@ -1301,6 +1321,15 @@
 		88BE6C302B723B9900456777 /* PlayerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerWebView.swift; sourceTree = "<group>"; };
 		88BF31042CAE812D00AE26EC /* LocalizedStringKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStringKey.swift; sourceTree = "<group>"; };
 		88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFeedsMenu.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeChannelSearch.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000016 /* OnboardingInboxTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingInboxTip.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSheetModifier.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelSuggestions.swift; sourceTree = "<group>"; };
+		CD0FBE00000000000000000D /* OnboardingShortsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingShortsPage.swift; sourceTree = "<group>"; };
+		CD0FBE00000000000000000A /* OnboardingChannelRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelRow.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingChannelsPage.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000004 /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		CD0FBE000000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupShareSheetAction.swift; sourceTree = "<group>"; };
 		88BF35982BC96C37005FA53E /* TextFieldClearButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldClearButton.swift; sourceTree = "<group>"; };
 		88BFA0E92C871E8A0095EFBA /* AutoHideVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHideVM.swift; sourceTree = "<group>"; };
@@ -1402,6 +1431,7 @@
 		88F3AA9D2C998FFD0030B2EA /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		88F3AAA02C9990E60030B2EA /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fullscreenSafeArea.swift; sourceTree = "<group>"; };
+		52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftSafeAreaBar.swift; sourceTree = "<group>"; };
 		88F4E7592CA47EFE00DCF70E /* UrlServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlServiceTests.swift; sourceTree = "<group>"; };
 		88F73D872D2EFCE500F61E99 /* AppNotificationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationVM.swift; sourceTree = "<group>"; };
 		88F73D8E2D2EFD8900F61E99 /* AppNotificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationData.swift; sourceTree = "<group>"; };
@@ -1570,6 +1600,7 @@
 		8802F8532C6950AC008A7778 /* Tips */ = {
 			isa = PBXGroup;
 			children = (
+				CD0FBE000000000000000016 /* OnboardingInboxTip.swift */,
 				88EEFDE72B72E12500A1F441 /* InboxTip.swift */,
 				888C49BD2B5EADCA00CDEC76 /* YtBrowserTip.swift */,
 				8802F8502C6950A2008A7778 /* HideShortsTip.swift */,
@@ -1633,6 +1664,7 @@
 				88E779152D120364003EBDEF /* WatchNotificationHandlerViewModifier.swift */,
 				888E1E032B70E84A00608F99 /* AnimationCompletionCallback.swift */,
 				88F4087E2C18F541009F90E6 /* fullscreenSafeArea.swift */,
+				52E18A913E22C7E3181E2950 /* SoftSafeAreaBar.swift */,
 				883F41062BDEDE7000535952 /* HandleVideoUrlDropModifier.swift */,
 				8899247B2C48552D001185A6 /* MySection.swift */,
 				8899247D2C48553F001185A6 /* MyForm.swift */,
@@ -1992,6 +2024,7 @@
 		888C49C32B5FA73200CDEC76 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				CD0FBE000000000000000019 /* YoutubeChannelSearch.swift */,
 				8847772B2D214FAE0044E812 /* UserDataService */,
 				88146F412C74EDE500704B90 /* ChapterService */,
 				88DFC0C52B448C01001895C8 /* VideoService.swift */,
@@ -2143,6 +2176,13 @@
 		88BF358F2BC91ECE005FA53E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				CD0FBE000000000000000013 /* OnboardingSheetModifier.swift */,
+				CD0FBE000000000000000010 /* OnboardingChannelSuggestions.swift */,
+				CD0FBE00000000000000000D /* OnboardingShortsPage.swift */,
+				CD0FBE00000000000000000A /* OnboardingChannelRow.swift */,
+				CD0FBE000000000000000007 /* OnboardingChannelsPage.swift */,
+				CD0FBE000000000000000004 /* OnboardingViewModel.swift */,
+				CD0FBE000000000000000001 /* OnboardingView.swift */,
 				88F1EE4B2B5C48F5009866A0 /* VideoNotAvailableView.swift */,
 				88BF35922BC91F45005FA53E /* SetupShareSheetAction.swift */,
 				88BF35902BC91F20005FA53E /* AddFeedsMenu.swift */,
@@ -3036,6 +3076,7 @@
 				889AF8CF2C50ECA9001CEDE6 /* SubscriptionSorting.swift in Sources */,
 				88F287722DEAF9AE00309C36 /* InboxToolbar.swift in Sources */,
 				889AF8D02C50ECA9001CEDE6 /* fullscreenSafeArea.swift in Sources */,
+				F09FC4B9A2CE20D70AF8837C /* SoftSafeAreaBar.swift in Sources */,
 				889AF8D12C50ECA9001CEDE6 /* MyForm.swift in Sources */,
 				889F760D2E461B9B00EB55E4 /* AutoRemoveNewViewModifier.swift in Sources */,
 				88275579301E4BE40033352A /* InboxCard.swift in Sources */,
@@ -3157,6 +3198,15 @@
 				882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */,
 				8857669A2C1B9034003687D5 /* AppConstants.swift in Sources */,
 				889AF9032C50ECD4001CEDE6 /* AddFeedsMenu.swift in Sources */,
+				CD0FBE00000000000000001A /* YoutubeChannelSearch.swift in Sources */,
+				CD0FBE000000000000000017 /* OnboardingInboxTip.swift in Sources */,
+				CD0FBE000000000000000014 /* OnboardingSheetModifier.swift in Sources */,
+				CD0FBE000000000000000011 /* OnboardingChannelSuggestions.swift in Sources */,
+				CD0FBE00000000000000000E /* OnboardingShortsPage.swift in Sources */,
+				CD0FBE00000000000000000B /* OnboardingChannelRow.swift in Sources */,
+				CD0FBE000000000000000008 /* OnboardingChannelsPage.swift in Sources */,
+				CD0FBE000000000000000005 /* OnboardingViewModel.swift in Sources */,
+				CD0FBE000000000000000002 /* OnboardingView.swift in Sources */,
 				888050C22D3E5576002D02EB /* DeferDateSelector.swift in Sources */,
 				88F73D892D2EFCE500F61E99 /* AppNotificationVM.swift in Sources */,
 				88C5EF8A2CCABA9300DA802F /* TransactionVM.swift in Sources */,
@@ -3356,6 +3406,7 @@
 				88C10D782D088543005EDB4B /* ShortsSetting.swift in Sources */,
 				8899247A2C4847DD001185A6 /* ChapterTimeRemaining.swift in Sources */,
 				88F4087F2C18F541009F90E6 /* fullscreenSafeArea.swift in Sources */,
+				F44F29F47E0F805EB8AFFDF9 /* SoftSafeAreaBar.swift in Sources */,
 				88F2876A2DEAF2F400309C36 /* ClearAllQueueEntriesButton.swift in Sources */,
 				88F85F492E1004EF00FB15A1 /* AppStateObserver.swift in Sources */,
 				104954347CFD4B4591227EA8 /* AVPlayerPrefetchManager.swift in Sources */,
@@ -3383,6 +3434,15 @@
 				883CA8082B5AE47E00028D52 /* MenuView.swift in Sources */,
 				887E72942B91F6D400928946 /* NextVideoButton.swift in Sources */,
 				88BF35912BC91F20005FA53E /* AddFeedsMenu.swift in Sources */,
+				CD0FBE00000000000000001B /* YoutubeChannelSearch.swift in Sources */,
+				CD0FBE000000000000000018 /* OnboardingInboxTip.swift in Sources */,
+				CD0FBE000000000000000015 /* OnboardingSheetModifier.swift in Sources */,
+				CD0FBE000000000000000012 /* OnboardingChannelSuggestions.swift in Sources */,
+				CD0FBE00000000000000000F /* OnboardingShortsPage.swift in Sources */,
+				CD0FBE00000000000000000C /* OnboardingChannelRow.swift in Sources */,
+				CD0FBE000000000000000009 /* OnboardingChannelsPage.swift in Sources */,
+				CD0FBE000000000000000006 /* OnboardingViewModel.swift in Sources */,
+				CD0FBE000000000000000003 /* OnboardingView.swift in Sources */,
 				8804F91F2B4805A100E19B7A /* LibraryView.swift in Sources */,
 				88CD388D2E213D0B00E7B21C /* TranscriptSearch.swift in Sources */,
 				88A161122FFABBCF00DF192E /* SearchSuggestionsView.swift in Sources */,

@@ -52,10 +52,12 @@ struct CleanupService {
         }
     }
 
-    static func cleanupHiddenShorts() -> Task<Int, Error> {
+    /// - Parameter defaultHideShorts: overrides the stored default. Pass it when the setting was
+    /// just changed — iCloud's key-value store can still be reporting the old value.
+    static func cleanupHiddenShorts(defaultHideShorts: Bool? = nil) -> Task<Int, Error> {
         return Task.detached {
             let actor = CleanupActor()
-            return try await actor.cleanupHiddenShorts()
+            return try await actor.cleanupHiddenShorts(defaultHideShorts: defaultHideShorts)
         }
     }
 
@@ -185,15 +187,16 @@ struct CleanupService {
 actor CleanupActor: SharedContextActor {
     var duplicateInfo = RemovedDuplicatesInfo()
 
-    func cleanupHiddenShorts() throws -> Int {
+    func cleanupHiddenShorts(defaultHideShorts: Bool? = nil) throws -> Int {
         let descriptor = FetchDescriptor<Video>(predicate: #Predicate {
             $0.isYtShort == true && $0.queueEntry == nil
         })
         let videos = try modelContext.fetch(descriptor)
 
-        let defaultShortSettingRaw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
-        let defaultShortSetting = ShortsSetting(rawValue: Int(defaultShortSettingRaw)) ?? .show
-        let defaultHideShorts = defaultShortSetting == .hide
+        let defaultHideShorts = defaultHideShorts ?? {
+            let raw = NSUbiquitousKeyValueStore.default.longLong(forKey: Const.defaultShortsSetting)
+            return (ShortsSetting(rawValue: Int(raw)) ?? .show) == .hide
+        }()
 
         var deletedCount = 0
         for video in videos {

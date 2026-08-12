@@ -128,6 +128,10 @@ public struct Const {
 
     /// Number of videos from new subscriptions that will be triaged
     public static let triageNewSubs = 5
+
+    /// Same for subscriptions added during onboarding, lower so a first inbox stays skimmable
+    public static let triageOnboardingSubs = 3
+
     public static let autoRefreshIntervalSeconds: Double = 10 * 60
 
     /// Share of subscriptions whose feed fetch has to fail in the same refresh before the
@@ -346,6 +350,8 @@ public struct Const {
     public static let lightModeTheme = "lightModeTheme"
     public static let darkModeTheme = "darkModeTheme"
     public static let showTutorial = "showTutorial"
+    public static let onboardingCompleted = "onboardingCompleted"
+    public static let onboardingStarted = "onboardingStarted"
     public static let lightAppIcon = "lightAppIcon"
 
     public static let reloadVideoId = "reloadVideoId"

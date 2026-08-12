@@ -189,7 +189,7 @@ extension VideoActor {
                                   videos: [Video],
                                   defaultPlacement: DefaultVideoPlacement) -> [Video] {
         let isFirstTimeLoading = sub.mostRecentVideoDate == nil
-        let limitVideos = isFirstTimeLoading ? Const.triageNewSubs : nil
+        let limitVideos = isFirstTimeLoading ? (firstTimeVideoLimit ?? Const.triageNewSubs) : nil
 
         var videosToAdd = limitVideos == nil ? videos : Array(videos.prefix(limitVideos!))
         if let cutOffDate = sub.mostRecentVideoDate {

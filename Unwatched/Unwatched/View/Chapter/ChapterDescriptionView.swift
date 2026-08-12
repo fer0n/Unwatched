@@ -228,7 +228,7 @@ struct ChapterDescriptionView: View {
     }
 
     func addToQueueNext() {
-        let requiresQueueChange = requiresQueueChange()
+        let requiresQueueChange = requiresQueueChange(adding: true)
         VideoService.insertQueueEntries(
             at: 1,
             videos: [video],
@@ -241,7 +241,7 @@ struct ChapterDescriptionView: View {
     }
 
     func addToQueueLast() {
-        let requiresQueueChange = requiresQueueChange()
+        let requiresQueueChange = requiresQueueChange(adding: true)
         VideoService.addToBottomQueue(
             video: video,
             modelContext: modelContext
@@ -265,8 +265,13 @@ struct ChapterDescriptionView: View {
         player.loadTopmostVideoFromQueue()
     }
 
-    func requiresQueueChange() -> Bool {
-        return video.queueEntry?.order == 0
+    /// - Parameter adding: pass `true` when the video is about to be queued; filling an empty queue
+    /// makes it the new top video, whichever index it goes in at
+    func requiresQueueChange(adding: Bool = false) -> Bool {
+        if video.queueEntry?.order == 0 {
+            return true
+        }
+        return adding && VideoService.isQueueEmpty(modelContext)
     }
 
     func onTitleTap() {

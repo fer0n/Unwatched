@@ -9,9 +9,9 @@ import UnwatchedShared
 struct PlaybackSettingsView: View {
     @AppStorage(Const.fullscreenControlsSetting) var fullscreenControlsSetting: FullscreenControls = .autoHide
     @AppStorage(Const.continuousPlay) var continuousPlay: Bool = false
-    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = true
+    @AppStorage(Const.hideMenuOnPlay) var hideMenuOnPlay: Bool = false
     @AppStorage(Const.playVideoFullscreen) var playVideoFullscreen: Bool = false
-    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = false
+    @AppStorage(Const.returnToQueue) var returnToQueue: Bool = true
     @AppStorage(Const.rotateOnPlay) var rotateOnPlay: Bool = false
     @AppStorage(Const.autoAirplayHD) var autoAirplayHD: Bool = false
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true

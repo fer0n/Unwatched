@@ -12,8 +12,11 @@ struct DebugView: View {
     @AppStorage(Const.backgroundPlayback) var backgroundPlayback: Bool = true
     @AppStorage(Const.inboxTipHiddenPermanently) var inboxTipHiddenPermanently = false
     @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
+    @AppStorage(Const.onboardingCompleted) var onboardingCompleted = false
+
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) var player
+    @Environment(NavigationManager.self) var navManager
 
     #if os(iOS)
     @Environment(Alerter.self) var alerter
@@ -32,6 +35,13 @@ struct DebugView: View {
                         Text("showTutorial")
                     }
                     .disabled(showTutorial == true && player.video == nil)
+
+                    Button {
+                        onboardingCompleted = false
+                        navManager.presentOnboarding()
+                    } label: {
+                        Text("showOnboarding")
+                    }
 
                     Button {
                         inboxTipHiddenPermanently = false
@@ -107,4 +117,5 @@ struct DebugView: View {
         .modelContainer(DataProvider.previewContainer)
         .environment(Alerter())
         .environment(PlayerManager())
+        .environment(NavigationManager())
 }

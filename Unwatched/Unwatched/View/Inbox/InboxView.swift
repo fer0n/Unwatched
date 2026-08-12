@@ -6,6 +6,7 @@
 import SwiftUI
 import SwiftData
 import OSLog
+import TipKit
 import UnwatchedShared
 
 struct InboxView: View {
@@ -41,6 +42,10 @@ private struct InboxContent: View {
     /// shared with `InboxCardStack` so the title can fade as the front card is dragged towards it
     @State private var cardSwipe = InboxCardSwipe()
 
+    private var onboardingTip: OnboardingInboxTip {
+        OnboardingInboxTip(appearance: inboxAppearance)
+    }
+
     init(oldestFirst: Bool, showCancelButton: Bool) {
         _inboxEntries = Query(InboxContent.descriptor(oldestFirst), animation: .default)
         self.showCancelButton = showCancelButton
@@ -60,7 +65,11 @@ private struct InboxContent: View {
 
             if inboxAppearance == .cards {
                 // kept around while empty: undo animates the last card back from where it was thrown
-                InboxCardStack(entries: inboxEntries, swipe: cardSwipe)
+                InboxCardStack(
+                    entries: inboxEntries,
+                    swipe: cardSwipe,
+                    actionBarTip: onboardingTip
+                )
             } else {
                 listView
             }
@@ -138,6 +147,12 @@ private struct InboxContent: View {
                         )
                         .equatable()
                         .id(NavigationManager.getScrollId(video.youtubeId, ClearList.inbox.rawValue))
+                        // only the topmost row, so the tip points at what's on screen
+                        .popoverTip(
+                            onboardingTip,
+                            arrowEdge: .top,
+                            isActive: entry.id == inboxEntries.first?.id
+                        )
                     } else {
                         EmptyEntry(entry)
                     }

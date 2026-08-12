@@ -80,8 +80,8 @@ actor RefreshActor {
         setupCloudKitListener()
     }
 
-    func refreshAll(hardRefresh: Bool = false) async {
-        await refresh(hardRefresh: hardRefresh)
+    func refreshAll(hardRefresh: Bool = false, firstTimeVideoLimit: Int? = nil) async {
+        await refresh(hardRefresh: hardRefresh, firstTimeVideoLimit: firstTimeVideoLimit)
     }
 
     func refreshSubscription(subscriptionId: PersistentIdentifier, hardRefresh: Bool = false) async {
@@ -101,18 +101,30 @@ actor RefreshActor {
         isLoading = false
     }
 
-    private func refresh(subscriptionIds: [PersistentIdentifier]? = nil, hardRefresh: Bool = false) async {
+    private func refresh(
+        subscriptionIds: [PersistentIdentifier]? = nil,
+        hardRefresh: Bool = false,
+        firstTimeVideoLimit: Int? = nil
+    ) async {
         let canStartLoading = await startLoading()
         guard canStartLoading else {
             Log.info("currently refreshing, stopping now")
             return
         }
 
-        await performRefresh(subscriptionIds: subscriptionIds, hardRefresh: hardRefresh)
+        await performRefresh(
+            subscriptionIds: subscriptionIds,
+            hardRefresh: hardRefresh,
+            firstTimeVideoLimit: firstTimeVideoLimit
+        )
         await stopLoading()
     }
 
-    private func performRefresh(subscriptionIds: [PersistentIdentifier]?, hardRefresh: Bool) async {
+    private func performRefresh(
+        subscriptionIds: [PersistentIdentifier]?,
+        hardRefresh: Bool,
+        firstTimeVideoLimit: Int? = nil
+    ) async {
         let isFullRefresh = subscriptionIds?.isEmpty ?? true
         if isFullRefresh {
             UserDefaults.standard.set(Date(), forKey: Const.lastAutoRefreshDate)
@@ -120,7 +132,8 @@ actor RefreshActor {
         do {
             let task = VideoService.loadNewVideosInBg(
                 subscriptionIds: subscriptionIds,
-                fetchDurations: true
+                fetchDurations: true,
+                firstTimeVideoLimit: firstTimeVideoLimit
             )
             let result = try await task.value
             if isFullRefresh {

@@ -32,7 +32,8 @@ extension VideoService {
 
     static func loadNewVideosInBg(
         subscriptionIds: [PersistentIdentifier]? = nil,
-        fetchDurations: Bool
+        fetchDurations: Bool,
+        firstTimeVideoLimit: Int? = nil
     ) -> Task<NewVideosNotificationInfo, Error> {
         return Task.detached {
             Log.info("loadNewVideosInBg")
@@ -41,7 +42,8 @@ extension VideoService {
             do {
                 return try await repo.loadVideos(
                     subscriptionIds,
-                    fetchDurations: hasPremium && fetchDurations
+                    fetchDurations: hasPremium && fetchDurations,
+                    firstTimeVideoLimit: firstTimeVideoLimit
                 )
             } catch {
                 Log.error("\(error)")
@@ -331,6 +333,12 @@ extension VideoService {
             return nextVideo
         }
         return nil
+    }
+
+    /// Whether the queue currently holds no entries. Check before inserting: filling an empty
+    /// queue makes the video the new top one, whichever index it goes in at.
+    static func isQueueEmpty(_ context: ModelContext) -> Bool {
+        (try? context.fetchCount(FetchDescriptor<QueueEntry>())) == 0
     }
 
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> (first: Video?, second: Video?) {

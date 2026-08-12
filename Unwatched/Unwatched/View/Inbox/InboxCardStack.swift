@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 import UnwatchedShared
 
 /// The inbox as a stack of cards, most recent video on top
@@ -19,6 +20,10 @@ struct InboxCardStack: View {
     let entries: [InboxEntry]
     /// shared with the parent, which fades the navigation title as the front card is dragged
     var swipe = InboxCardSwipe()
+
+    /// Anchored on the action bar: the stack fills the sheet, so a popover hanging off it would
+    /// end up at the bottom of the screen instead of on the card
+    var actionBarTip: (any Tip)?
 
     /// Entries whose card has left, held back until the query has caught up with the write.
     /// Keyed by the entry rather than by the video: undoing a swipe files the video under a new
@@ -88,6 +93,7 @@ struct InboxCardStack: View {
                 // stays while the last card is still in the air
                 .opacity(videos.isEmpty && departing.isEmpty ? 0 : 1)
                 .allowsHitTesting(!videos.isEmpty)
+                .popoverTip(actionBarTip, arrowEdge: .bottom, isActive: !videos.isEmpty)
             }
             .frame(width: layout.size.width)
             .frame(maxWidth: .infinity, maxHeight: .infinity)

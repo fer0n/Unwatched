@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import TipKit
 import UnwatchedShared
 
 extension View {
@@ -26,6 +27,17 @@ extension View {
 
 extension View {
     func apply<V: View>(@ViewBuilder _ block: (Self) -> V) -> V { block(self) }
+
+    /// Shows the tip as an interactive popover, if there is one and `isActive`
+    @ViewBuilder
+    func popoverTip(_ tip: (any Tip)?, arrowEdge: Edge, isActive: Bool) -> some View {
+        if let tip, isActive {
+            self.popoverTip(tip, arrowEdge: arrowEdge)
+                .tipBackgroundInteraction(.enabled)
+        } else {
+            self
+        }
+    }
 }
 
 extension View {
