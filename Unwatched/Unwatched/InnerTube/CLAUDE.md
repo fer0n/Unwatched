@@ -20,6 +20,11 @@ so future merges are a straight diff-and-apply):
 - No AV-player-specific imports/logic outside `InnerTube/`.
 - All interaction with the rest of the app goes through `PlayerManager` (shared
   singleton) and `VideoService`/SwiftData — not direct coupling to other views.
+- Exception, both directions, for seamless player switching (see `PlayerSwitchManager`):
+  `AVPlayerPrefetchManager.shared.warmUp` is called from `PlayerSwitchManager` to
+  pre-build the *current* video before any `AVPlayerViewModel` exists — hence the
+  singleton — and `AVPlayerViewModel`/`PlayerCaptionOverlay` read
+  `PlayerSwitchManager.shared` to tell a hand-over apart from a teardown.
 - Pre-fetch, caching, and quality logic live inside `InnerTube/`; surrounding player
   UI only triggers them via `PlayerManager` state changes.
 

@@ -10,6 +10,7 @@ struct ZoomPanModifier: ViewModifier {
     @Binding var zoom: CGFloat
     @Binding var offset: CGSize
     @Binding var isGesturing: Bool
+    var enabled: Bool = true
 
     // The video's un-transformed layout rect, in the global coordinate space.
     // The gesture math must reference *this* rect (the same one `scaleEffect` anchors
@@ -32,7 +33,8 @@ struct ZoomPanModifier: ViewModifier {
             // the tail after one finger lifts — so nothing jumps and the single-finger swipe /
             // long-press gestures stacked below never hijack it mid-zoom.
             .gesture(PinchPanRepresentable(
-                        zoom: $zoom, offset: $offset, isGesturing: $isGesturing, contentFrame: contentFrame))
+                        zoom: $zoom, offset: $offset, isGesturing: $isGesturing,
+                        contentFrame: contentFrame, enabled: enabled))
         #endif
     }
 }
@@ -116,6 +118,7 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
     @Binding var offset: CGSize
     @Binding var isGesturing: Bool
     var contentFrame: CGRect
+    var enabled: Bool
 
     func makeCoordinator(converter: CoordinateSpaceConverter) -> Coordinator { Coordinator() }
 
@@ -128,6 +131,7 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
     }
 
     func updateUIGestureRecognizer(_ recognizer: PinchPanGestureRecognizer, context: Context) {
+        recognizer.isEnabled = enabled
         let c = context.coordinator
         c.getZoom         = { zoom }
         c.setZoom         = { zoom = $0 }

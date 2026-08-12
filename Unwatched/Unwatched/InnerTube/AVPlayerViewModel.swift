@@ -18,7 +18,7 @@ final class AVPlayerViewModel {
 
     @ObservationIgnored let player = PlayerManager.shared
     @ObservationIgnored let api = InnerTubeAPI()
-    @ObservationIgnored private lazy var prefetchManager = AVPlayerPrefetchManager(api: api)
+    @MainActor private var prefetchManager: AVPlayerPrefetchManager { .shared }
 
     @ObservationIgnored var loadTask: Task<Void, Never>?
     @ObservationIgnored var backgroundQualityUpgradeTask: Task<Void, Never>?
@@ -73,6 +73,11 @@ final class AVPlayerViewModel {
     private func startTimeObserver() {
         stopTimeObserver()
         timeObserverTickCount = 0
+        player.precisePosition = { [weak self] in
+            guard let seconds = self?.avPlayer.currentTime().seconds,
+                  !seconds.isNaN, !seconds.isInfinite else { return nil }
+            return seconds
+        }
         timeObserverToken = avPlayer.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: 1, preferredTimescale: 600), queue: .main
         ) { [weak self] cmTime in
@@ -285,7 +290,11 @@ final class AVPlayerViewModel {
         rateObserverTask?.cancel()
         avPlayer.pause()
         teardownRemoteCommands()
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        player.precisePosition = nil
+        // the web player taking over may already be playing on this session
+        if !PlayerSwitchManager.shared.isTakingOver {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 
     // MARK: - Pre-fetch

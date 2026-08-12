@@ -5,14 +5,14 @@ import UnwatchedShared
 
 struct PlayerCaptionOverlay: View {
     @Environment(PlayerManager.self) var player
-    @AppStorage(Const.playerType) private var playerType: PlayerTypeSetting = .youtubeEmbedded
 
     @State private var displayedLines: [String] = []
     @State private var trackFetchTask: Task<Void, Never>?
     @State private var vttFetchTask: Task<Void, Never>?
     @State private var scheduler = CaptionScheduler()
+    @State private var switchManager = PlayerSwitchManager.shared
 
-    private var isNative: Bool { playerType == .native }
+    private var isNative: Bool { switchManager.activeType == .native }
 
     var body: some View {
         VStack(spacing: 2) {

@@ -5,7 +5,11 @@ import UnwatchedShared
 import WebKit
 
 // Manages background pre-building of AVPlayerItems for the next queued video.
+//
+// Shared rather than owned by the view model: `PlayerSwitchManager` warms up the current video
+// through here before any view model exists to consume it.
 final class AVPlayerPrefetchManager {
+    @MainActor static let shared = AVPlayerPrefetchManager(api: InnerTubeAPI())
 
     struct PrefetchResult {
         let videoId: String
@@ -42,8 +46,9 @@ final class AVPlayerPrefetchManager {
 
     // MARK: - Public interface
 
+    /// `at` is the position playback will resume at, so warming buffers the segments needed next.
     @MainActor
-    func prefetchNext(videoId: String) {
+    func prefetchNext(videoId: String, at time: Double? = nil) {
         if result?.videoId == videoId { return }
         if prefetchingVideoId == videoId { return }
         prefetchTask?.cancel()
@@ -57,8 +62,33 @@ final class AVPlayerPrefetchManager {
                 guard !Task.isCancelled, self.prefetchingVideoId == videoId else { return }
                 self.result = built
                 self.prefetchingVideoId = nil
-                if let built { self.startWarming(built.asset) }
+                if let built {
+                    self.startWarming(built.asset, videoId: videoId, at: time)
+                    self.probeStream(built)
+                }
             }
+        }
+    }
+
+    private static let probeTimeout: Double = 10
+
+    /// Warms `videoId` and returns whether handing playback over to it won't stall. The result is
+    /// left in place either way, for `consumeResult` to pick up.
+    @MainActor
+    func warmUp(videoId: String, at time: Double?, timeout: Double) async -> Bool {
+        prefetchNext(videoId: videoId, at: time)
+        return await Poll.until(timeout: timeout) {
+            guard result?.videoId == videoId else {
+                // the build finished without a playable stream
+                return prefetchingVideoId == nil && result == nil ? .abort : .retry
+            }
+            guard !warmupProbeFailed, let item = warmupItem else {
+                return warmupProbeFailed ? .abort : .retry
+            }
+            if item.status == .readyToPlay || !item.loadedTimeRanges.isEmpty {
+                return .done
+            }
+            return item.status == .failed ? .abort : .retry
         }
     }
 
@@ -106,12 +136,15 @@ final class AVPlayerPrefetchManager {
     /// AVFoundation's HTTP cache.
     @MainActor private var warmupPlayer: AVPlayer?
     @MainActor private var warmupItem: AVPlayerItem?
+    /// Set once the stream URL has answered with something unusable — see `probeStream`.
+    @MainActor private var warmupProbeFailed = false
+    @MainActor private var probeTask: Task<Void, Never>?
 
     /// Caps how much bandwidth warming steals from the video that is actually playing.
     private static let warmupBufferSeconds: Double = 10
 
     @MainActor
-    private func startWarming(_ asset: AVURLAsset) {
+    private func startWarming(_ asset: AVURLAsset, videoId: String, at time: Double?) {
         let player = warmupPlayer ?? {
             let new = AVPlayer()
             new.isMuted = true
@@ -124,16 +157,61 @@ final class AVPlayerPrefetchManager {
         warmupItem = item
         player.replaceCurrentItem(with: item)
         player.pause()
+        if let time, time > 1 {
+            player.seek(to: CMTime(seconds: time, preferredTimescale: 600))
+        }
         Log.info("[AVPlayerView] prefetch warming started")
+    }
+
+    /// Whether the stream URL can be fetched at all — the fast "no" the warmed item can't give:
+    /// its `status` stays `.unknown` while its player is paused, and playing it to force the issue
+    /// would take over the audio session from the player the switch is meant to hand over.
+    @MainActor
+    private func probeStream(_ pre: PrefetchResult) {
+        warmupProbeFailed = false
+        probeTask?.cancel()
+        guard !pre.isWebViewHLS else {
+            // its manifest was already fetched and status-checked while the result was built
+            return
+        }
+        let url = pre.asset.url
+        var headers = pre.headers
+        if headers["User-Agent"] == nil {
+            headers["User-Agent"] = AVPlayerViewModel.userAgent(forStreamURL: url)
+        }
+        let videoId = pre.videoId
+        probeTask = Task { @MainActor [weak self] in
+            var request = URLRequest(url: url, timeoutInterval: Self.probeTimeout)
+            for (field, value) in headers {
+                request.setValue(value, forHTTPHeaderField: field)
+            }
+            request.setValue("bytes=0-1", forHTTPHeaderField: "Range")
+            // `bytes` returns on the response head, so a server that ignores the range header
+            // doesn't get to send the stream body to a request that only wants its status
+            let response = try? await URLSession.shared.bytes(for: request)
+            response?.0.task.cancel()
+            let status = (response?.1 as? HTTPURLResponse)?.statusCode ?? 0
+            guard let self, !Task.isCancelled, self.result?.videoId == videoId else {
+                return
+            }
+            Log.info("[AVPlayerView] prefetch stream probe: \(status) — \(videoId)")
+            self.warmupProbeFailed = !(200...299).contains(status)
+        }
     }
 
     @MainActor
     private func stopWarming() {
         warmupPlayer?.replaceCurrentItem(with: nil)
         warmupItem = nil
+        warmupProbeFailed = false
+        probeTask?.cancel()
+        probeTask = nil
     }
+}
 
-    // MARK: - Building
+// MARK: - Building
+
+extension AVPlayerPrefetchManager {
 
     private struct ClientResult: @unchecked Sendable {
         let priority: Int

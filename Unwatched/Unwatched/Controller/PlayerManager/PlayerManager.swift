@@ -16,6 +16,11 @@ import UnwatchedShared
     @MainActor
     var currentTime: Double?
 
+    /// Exact playhead from the player on screen, for handovers where `currentTime`'s one-second
+    /// resolution would be an audible jump.
+    @MainActor
+    @ObservationIgnored var precisePosition: (() -> Double?)?
+
     @MainActor
     var currentChapter: Chapter?
 

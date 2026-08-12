@@ -11,22 +11,85 @@ import UnwatchedShared
 // swiftlint:disable all
 
 extension PlayerWebView {
+    /// Everything that distinguishes the web player variants, all of it changeable while the page
+    /// stays loaded — see `applyUIModeScript`.
+    struct UIMode: Equatable {
+        let blockOverlay: Bool
+        let minimalPlayerUI: Bool
+        let disableCaptions: Bool
+        let clickTogglesPlay: Bool
+
+        @MainActor
+        static func forSetting(_ setting: PlayerTypeSetting, embeddingDisabled: Bool) -> UIMode {
+            let blockOverlay = setting.blocksOverlay(embeddingDisabled: embeddingDisabled)
+            var clickTogglesPlay = false
+            #if os(macOS)
+            clickTogglesPlay = blockOverlay
+            #endif
+            return UIMode(
+                blockOverlay: blockOverlay,
+                minimalPlayerUI: setting.minimalPlayerUI || blockOverlay,
+                // The custom UI has no caption controls, so captions are always disabled there.
+                disableCaptions: UserDefaults.standard.bool(forKey: Const.disableCaptions)
+                    || setting.webPlayerType(embeddingDisabled: embeddingDisabled) == .youtubeCustomUI,
+                clickTogglesPlay: clickTogglesPlay
+            )
+        }
+    }
+
     struct InitScriptOptions {
         let playbackSpeed: Double
         let startAt: Double
         let requiresFetchingVideoData: Bool?
-        let disableCaptions: Bool
         let autoCaptionsOnSeekBack: Bool
-        let minimalPlayerUI: Bool
         let isNonEmbedding: Bool
         let hijackFullscreenButton: Bool
         let fullscreenTitle: String
         let enableLogging: Bool
         let originalAudio: Bool
         let playbackId: String
-        let blockOverlay: Bool
-        let clickTogglesPlay: Bool
         let seekSeconds: Double
+        let uiMode: UIMode
+    }
+
+    /// Registers a fresh playback id and collects everything the page needs to know at load time.
+    @MainActor
+    static func initScriptOptions(startAt: Double, uiMode: UIMode, player: PlayerManager) -> InitScriptOptions {
+        var hijackFullscreenButton = false
+        #if os(macOS)
+        hijackFullscreenButton = true
+        #endif
+        let playbackId = UUID().uuidString
+        UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
+        let seekSeconds = UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double
+            ?? Const.seekSeconds
+
+        return InitScriptOptions(
+            playbackSpeed: player.playbackSpeed,
+            startAt: startAt,
+            requiresFetchingVideoData: player.requiresFetchingVideoData(),
+            autoCaptionsOnSeekBack: UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack),
+            isNonEmbedding: player.embeddingDisabled,
+            hijackFullscreenButton: hijackFullscreenButton,
+            fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
+            enableLogging: UserDefaults.standard.bool(forKey: Const.enableLogging),
+            originalAudio: UserDefaults.standard.bool(forKey: Const.originalAudio),
+            playbackId: playbackId,
+            seekSeconds: seekSeconds,
+            uiMode: uiMode
+        )
+    }
+
+    /// Pushes a changed `UIMode` into the already-loaded page.
+    static func applyUIModeScript(_ mode: UIMode) -> String {
+        """
+        applyPlayerUIMode({
+            blockOverlay: \(mode.blockOverlay),
+            minimalPlayerUI: \(mode.minimalPlayerUI),
+            disableCaptions: \(mode.disableCaptions),
+            clickTogglesPlay: \(mode.clickTogglesPlay)
+        });
+        """
     }
 
     static func initScript(_ options: InitScriptOptions) -> String {
@@ -34,9 +97,7 @@ extension PlayerWebView {
         var requiresFetchingVideoData = \(options.requiresFetchingVideoData == true);
         var playbackRate = \(options.playbackSpeed);
         var startAtTime = \(options.startAt);
-        var disableCaptions = \(options.disableCaptions);
         var autoCaptionsOnSeekBack = \(options.autoCaptionsOnSeekBack);
-        var minimalPlayerUI = \(options.minimalPlayerUI);
         const interceptKeys = \(PlayerShortcut.interceptKeysJS);
         const isNonEmbedding = \(options.isNonEmbedding);
         const hijackFullscreenButton = \(options.hijackFullscreenButton);
@@ -45,14 +106,36 @@ extension PlayerWebView {
         const enableLogging = \(options.enableLogging);
         const originalAudio = \(options.originalAudio);
         const playbackId = "\(options.playbackId)";
-        const blockOverlay = \(options.blockOverlay);
-        const ownsPlaybackRate = blockOverlay;
-        const clickTogglesPlay = \(options.clickTogglesPlay);
         const seekSeconds = \(options.seekSeconds);
+
+        // Player-variant flags, mutable so a switch can be applied to the running page.
+        var blockOverlay = \(options.uiMode.blockOverlay);
+        var minimalPlayerUI = \(options.uiMode.minimalPlayerUI);
+        var disableCaptions = \(options.uiMode.disableCaptions);
+        var clickTogglesPlay = \(options.uiMode.clickTogglesPlay);
+        var ownsPlaybackRate = blockOverlay;
+
+        function applyPlayerUIMode(mode) {
+            blockOverlay = mode.blockOverlay;
+            minimalPlayerUI = mode.minimalPlayerUI;
+            disableCaptions = mode.disableCaptions;
+            clickTogglesPlay = mode.clickTogglesPlay;
+            ownsPlaybackRate = blockOverlay;
+            styling();
+            // the overlay may have been swapped out while it was hidden
+            isOverlayHealthy();
+            if (!blockOverlay && !minimalPlayerUI && video?.paused) {
+                showOverlay();
+            } else {
+                hideOverlay();
+            }
+        }
 
         var video = null;
         let videoFindAttempts = 0;
         var isSwiping = false;
+        // set while WebPlayerWarmup runs this page off screen, so setupVideo doesn't unmute it
+        var warmupMuted = false;
 
         let overlay = document.querySelector('#player-control-overlay');
 
@@ -110,7 +193,7 @@ extension PlayerWebView {
             window.pendingSeekTarget = null;
             addVideoListeners();
             applyPlaybackRate();
-            video.muted = false;
+            video.muted = warmupMuted;
             handleFullscreenButton();
         }
         function repairVideo(message = "") {
@@ -156,15 +239,14 @@ extension PlayerWebView {
         // pauses instead. Deliberately not gated on isVideoElement: the hidden overlay changes
         // which element ends up under the cursor. A double click still reaches the fullscreen
         // handler, the two toggles cancelling each other out.
-        if (clickTogglesPlay) {
-            document.addEventListener('pointerup', function(event) {
-                if (event.pointerType !== 'mouse') return;
-                if (!video) return;
-                if (event.target?.closest?.('a, button, [role="button"], .ytp-button')) return;
-                togglePlay();
-                sendMessage("centerTouch", video.paused ? "play" : "pause");
-            }, { passive: true });
-        }
+        document.addEventListener('pointerup', function(event) {
+            if (!clickTogglesPlay) return;
+            if (event.pointerType !== 'mouse') return;
+            if (!video) return;
+            if (event.target?.closest?.('a, button, [role="button"], .ytp-button')) return;
+            togglePlay();
+            sendMessage("centerTouch", video.paused ? "play" : "pause");
+        }, { passive: true });
         document.addEventListener('pointermove', function(event) {
             if (event.pointerType !== 'mouse') return;
             if (isVideoElement(event)) {
@@ -614,10 +696,14 @@ extension PlayerWebView {
         }
 
         // styling
+        var variantStyle = null;
         styling()
         function styling() {
-            const style = document.createElement('style');
-            style.textContent = `
+            if (!variantStyle) {
+                variantStyle = document.createElement('style');
+                document.head.appendChild(variantStyle);
+            }
+            variantStyle.textContent = `
                 * {
                     cursor: default !important;
                 }
@@ -680,7 +766,6 @@ extension PlayerWebView {
                     }
                     ` : ''}
                 `;
-            document.head.appendChild(style);
         }
 
 

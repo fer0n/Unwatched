@@ -302,6 +302,8 @@ struct PlayerMenuItemButton: View {
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
     @State var flashSymbol: String?
+    @State var animateSwitch = false
+    @State var switchManager = PlayerSwitchManager.shared
 
     let item: PlayerMenuItem
 
@@ -363,6 +365,12 @@ struct PlayerMenuItemButton: View {
     }
 
     func togglePlayerType() {
+        // the icon already shows where the switch is headed, so tapping again means "never mind"
+        if switchManager.isSwitching {
+            switchManager.cancel()
+            hapticToggle.toggle()
+            return
+        }
         let next = playerType.toggled(previous: previousPlayerType, nativeEnabled: showExperimentalPlayerTypes)
         if playerType != .native {
             previousPlayerType = playerType
@@ -375,7 +383,20 @@ struct PlayerMenuItemButton: View {
     var label: some View {
         Image(systemName: flashSymbol ?? iconName)
             .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
+            .symbolEffect(.bounce, options: .repeat(.periodic(delay: 0.4)), isActive: animateSwitch)
             .playerToggleModifier(isOn: false, isSmall: true)
+            // repeated discrete effect rather than an indefinite one (`.breathe`): ending the
+            // switch drops out of those mid-movement. The delay lets `.replace` play out first.
+            .task(id: isSwitchingPlayer) {
+                guard isSwitchingPlayer else {
+                    animateSwitch = false
+                    return
+                }
+                try? await Task.sleep(s: 0.35)
+                if !Task.isCancelled {
+                    animateSwitch = true
+                }
+            }
             .task(id: flashSymbol) {
                 if flashSymbol != nil {
                     try? await Task.sleep(s: 1)
@@ -390,6 +411,10 @@ struct PlayerMenuItemButton: View {
         item == .playerType
             ? playerType.systemImage
             : item.systemName
+    }
+
+    var isSwitchingPlayer: Bool {
+        item == .playerType && switchManager.isSwitching
     }
 }
 

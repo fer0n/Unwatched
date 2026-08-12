@@ -28,6 +28,9 @@ struct PlayerView: View {
     @State var orientation = OrientationManager.shared
     #endif
     @State var overlayVM = OverlayFullscreenVM.shared
+    /// `playerType` is what the user picked; `activeType` is what's on screen while a switch to or
+    /// from the native player warms up.
+    @State var switchManager = PlayerSwitchManager.shared
 
     var landscapeFullscreen = true
     var enableHideControls: Bool
@@ -59,7 +62,7 @@ struct PlayerView: View {
                         VideoNotAvailableView()
                             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                     }
-                } else if playerType == .native {
+                } else if switchManager.activeType == .native {
                     #if os(iOS)
                     AVPlayerView(
                         handleVideoEnded: handleVideoEnded,
@@ -74,24 +77,7 @@ struct PlayerView: View {
                     .environment(\.layoutDirection, .leftToRight)
                     #endif
                 } else if !player.embeddingDisabled {
-                    #if os(iOS)
-                    if playerType == .youtubeCustomUI {
-                        PlayerEmbeddedCustomUI(
-                            autoHideVM: $autoHideVM,
-                            overlayVM: $overlayVM,
-                            handleVideoEnded: handleVideoEnded,
-                            handleSwipe: handleSwipe,
-                            landscapeFullscreen: landscapeFullscreen,
-                            hideMiniPlayer: hideMiniPlayer,
-                            handleMiniPlayerTap: handleMiniPlayerTap
-                        )
-                        .environment(\.layoutDirection, .leftToRight)
-                    } else {
-                        embeddedPlayer
-                    }
-                    #else
                     embeddedPlayer
-                    #endif
                 } else {
                     PlayerWebsite(
                         autoHideVM: $autoHideVM,
@@ -136,18 +122,22 @@ struct PlayerView: View {
             }
             .fullscreenSafeArea(enable: landscapeFullscreen)
             // force reload if value changed (requires settings update)
-            .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)-\(playerType.rawValue)")
+            .id("videoPlayer-\(playVideoFullscreen)-\(reloadVideoId)-\(switchManager.activeType.usesWebPlayer)")
             .onChange(of: reloadVideoId) {
                 autoHideVM.reset()
             }
             .onChange(of: playVideoFullscreen) {
                 player.handleHotSwap()
             }
-            .onChange(of: playerType) {
-                player.handleHotSwap()
+            // initial: catches a setting change made while no player view was around
+            .onChange(of: playerType, initial: true) {
+                switchManager.handleSettingChanged()
+            }
+            .onChange(of: player.video?.youtubeId) {
+                switchManager.handleVideoChanged()
             }
             .overlay {
-                if player.video != nil && playerType != .native {
+                if player.video != nil && switchManager.activeType != .native {
                     PlayerLoadingTimeout()
                         .opacity(hideMiniPlayer ? 1 : 0)
                 }
@@ -185,9 +175,19 @@ struct PlayerView: View {
             landscapeFullscreen: landscapeFullscreen,
             showEmbeddedThumbnail: showEmbeddedThumbnail,
             hideMiniPlayer: hideMiniPlayer,
-            handleMiniPlayerTap: handleMiniPlayerTap
+            handleMiniPlayerTap: handleMiniPlayerTap,
+            customUI: customUI
         )
         .environment(\.layoutDirection, .leftToRight)
+    }
+
+    /// Only iOS has the replacement controls the custom UI needs.
+    var customUI: Bool {
+        #if os(iOS)
+        switchManager.activeType == .youtubeCustomUI
+        #else
+        false
+        #endif
     }
 
     var showLeft: Bool {

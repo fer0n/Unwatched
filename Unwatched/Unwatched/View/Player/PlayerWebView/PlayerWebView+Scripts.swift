@@ -16,9 +16,15 @@ extension PlayerWebView {
             Log.warning("loadPlayer: no youtubeId")
             return false
         }
+        return PlayerWebView.loadPlayer(webView: webView, youtubeId: youtubeId, startAt: startAt, type: type)
+    }
+
+    /// Also used by `WebPlayerWarmup`, which loads the same page without a player to read from.
+    @MainActor
+    static func loadPlayer(webView: WKWebView, youtubeId: String, startAt: Double, type: PlayerType) -> Bool {
         let urlString = type == .youtube
             ? UrlService.getNonEmbeddedYoutubeUrl(youtubeId, startAt)
-            : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt, forceDisableCaptions: type == .youtubeCustomUI)
+            : UrlService.getEmbeddedYoutubeUrl(youtubeId, startAt)
 
         guard let url = URL(string: urlString) else {
             Log.warning("loadPlayer: no url")
@@ -69,7 +75,15 @@ extension PlayerWebView {
     func getPlayScript() -> String {
         if player.unstarted {
             Log.info("PLAY: unstarted")
-            return """
+            return Self.unstartedPlayScript
+        }
+        return "play();"
+    }
+
+    /// Starts a page that has never played. The click has to happen synchronously inside the
+    /// `evaluateJavaScript` call: that is what carries the user gesture WebKit requires to start
+    /// media, and going through YouTube's own player is what makes the video count as watched.
+    static let unstartedPlayScript = """
                 hideOverlay();
                 function attemptClick() {
                     document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();
@@ -112,14 +126,30 @@ extension PlayerWebView {
                         theaterButton.click();
                     }
                 }
-            """
-        }
-        return "play();"
-    }
+        """
 
     func getPauseScript() -> String {
         """
         video.pause();
+        """
+    }
+
+    /// `warmupMuted` is what makes it stick: `setupVideo()` runs again whenever the page rebuilds
+    /// its media element and would otherwise unmute a page that is still warming up.
+    static func muteScript(_ muted: Bool) -> String {
+        """
+        warmupMuted = \(muted);
+        \(videoPropertyScript("muted", "\(muted)"))
+        """
+    }
+
+    /// Assigns without going through the page's `video` global, which is null until the element
+    /// has been found — the case the warmup runs into.
+    static func videoPropertyScript(_ property: String, _ value: String) -> String {
+        """
+        if (document.querySelector('video')) {
+            document.querySelector('video').\(property) = \(value);
+        }
         """
     }
 
@@ -154,6 +184,21 @@ extension PlayerWebView {
 
     func getExitPipScript() -> String {
         "document.exitPictureInPicture();"
+    }
+
+    static func repairVideo(onRepair: @escaping () -> Void) {
+        guard let webView = WebViewState.shared.webView else {
+            Log.error("repairVideo: no webView")
+            return
+        }
+        let script = PlayerWebView.videoRequiresReloadScript()
+        webView.evaluateJavaScript(script) { result, _ in
+            let requiresReload = result as? String == "true"
+            Log.info("repairVideo: onRepair, requiresReload=\(requiresReload)")
+            if requiresReload {
+                onRepair()
+            }
+        }
     }
 
     // Sometimes on iOS 26, the player is black and unresponsive

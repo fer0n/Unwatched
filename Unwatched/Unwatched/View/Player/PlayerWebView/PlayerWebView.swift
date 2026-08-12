@@ -21,8 +21,6 @@ typealias PlatformViewRepresentable = NSViewRepresentable
 }
 
 struct PlayerWebView: PlatformViewRepresentable {
-    @AppStorage(Const.playerType) var playerTypeSetting: PlayerTypeSetting = .youtubeEmbedded
-
     @Environment(PlayerManager.self) var player
     @Environment(AppNotificationVM.self) var appNotificationVM
 
@@ -33,16 +31,40 @@ struct PlayerWebView: PlatformViewRepresentable {
     var handleSwipe: (SwipeDirecton) -> Void
 
     @State var webViewState = WebViewState.shared
+    @State var switchManager = PlayerSwitchManager.shared
+
+    /// The variant on screen, which lags the setting while a switch to the native player warms up.
+    var playerTypeSetting: PlayerTypeSetting {
+        switchManager.activeType
+    }
 
     var playerType: PlayerType {
         playerTypeSetting.webPlayerType(embeddingDisabled: player.embeddingDisabled)
     }
 
-    var blocksOverlay: Bool {
-        playerTypeSetting.blocksOverlay(embeddingDisabled: player.embeddingDisabled)
+    var uiMode: UIMode {
+        UIMode.forSetting(playerTypeSetting, embeddingDisabled: player.embeddingDisabled)
     }
 
     func makeView(_ coordinator: PlayerWebViewCoordinator) -> WKWebView {
+        if let warmed = WebPlayerWarmup.shared.takeWebView(for: player.video?.youtubeId) {
+            return adopt(warmed, coordinator)
+        }
+
+        let webView = PlayerWebView.buildWebView(airplayHD: player.airplayHD)
+        webViewState.webView = webView
+
+        player.isLoading = Date()
+        player.previousState.videoId = player.video?.youtubeId
+        player.previousState.playbackSpeed = player.playbackSpeed
+
+        attach(coordinator, to: webView)
+        loadWebContent(webView)
+        return webView
+    }
+
+    @MainActor
+    static func buildWebView(airplayHD: Bool) -> WKWebView {
         let webViewConfig = WKWebViewConfiguration()
         webViewConfig.preferences.isTextInteractionEnabled = false
         webViewConfig.mediaTypesRequiringUserActionForPlayback = [.all]
@@ -64,15 +86,6 @@ struct PlayerWebView: PlatformViewRepresentable {
         #endif
 
         let webView = WKWebView(frame: .zero, configuration: webViewConfig)
-        webViewState.webView = webView
-
-        player.isLoading = Date()
-
-        player.previousState.videoId = player.video?.youtubeId
-        player.previousState.playbackSpeed = player.playbackSpeed
-
-        webView.navigationDelegate = coordinator
-        webView.configuration.userContentController.add(coordinator, name: "iosListener")
 
         #if os(iOS)
         // on visionOS, this causes the web content to be zoomed in to much
@@ -81,7 +94,6 @@ struct PlayerWebView: PlatformViewRepresentable {
         #endif
 
         #if os(iOS) || os(visionOS)
-        webView.scrollView.delegate = coordinator
         webView.isOpaque = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         #else
@@ -90,7 +102,7 @@ struct PlayerWebView: PlatformViewRepresentable {
 
         #if os(iOS)
         let userAgent = webView.value(forKey: "userAgent") as? String
-        if player.airplayHD {
+        if airplayHD {
             let newAgent = customAirPlayCompatibilityUserAgent(userAgent)
             webView.customUserAgent = newAgent
         } else if Device.requiresFullscreenWebWorkaround {
@@ -102,11 +114,10 @@ struct PlayerWebView: PlatformViewRepresentable {
         }
         #endif
 
-        loadWebContent(webView)
         return webView
     }
 
-    func updateView(_ view: WKWebView) {
+    func updateView(_ view: WKWebView, _ coordinator: PlayerWebViewCoordinator) {
         #if os(macOS)
         handleShouldStop(view)
         #endif
@@ -117,6 +128,7 @@ struct PlayerWebView: PlatformViewRepresentable {
             return
         }
 
+        handleUIMode(view, coordinator)
         let prev = player.previousState
         handlePlaybackSpeed(prev, view)
         handlePlayPause(prev, view)
@@ -132,7 +144,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func updateNSView(_ view: WKWebView, context: Context) {
-        updateView(view)
+        updateView(view, context.coordinator)
     }
     #elseif os(iOS) || os(visionOS)
 
@@ -141,7 +153,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
 
     func updateUIView(_ view: WKWebView, context: Context) {
-        updateView(view)
+        updateView(view, context.coordinator)
     }
     #endif
 
@@ -168,10 +180,20 @@ struct PlayerWebView: PlatformViewRepresentable {
     #endif
 
     func evaluateJavaScript(_ view: WKWebView, _ script: String) {
+        PlayerWebView.evaluateJavaScript(view, script)
+    }
+
+    static func evaluateJavaScript(_ view: WKWebView, _ script: String) {
         view.evaluateJavaScript(script + " undefined;", completionHandler: handleJsError)
     }
 
-    func handleJsError(result: Any?, _ error: (any Error)?) {
+    @MainActor
+    static func evaluateBool(_ view: WKWebView, _ script: String) async -> Bool {
+        let result = try? await view.evaluateJavaScript(script)
+        return (result as? Bool) ?? false
+    }
+
+    static func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
         Log.error("Error evaluating JavaScript: \(error)")
     }
@@ -212,6 +234,17 @@ struct PlayerWebView: PlatformViewRepresentable {
             view.pauseAllMediaPlayback()
             player.shouldStop = false
         }
+    }
+
+    /// Switches the player variant without touching playback: they all run this same page.
+    func handleUIMode(_ uiView: WKWebView, _ coordinator: PlayerWebViewCoordinator) {
+        let mode = uiMode
+        guard coordinator.appliedUIMode != mode else {
+            return
+        }
+        Log.info("UI MODE: \(mode)")
+        coordinator.appliedUIMode = mode
+        evaluateJavaScript(uiView, PlayerWebView.applyUIModeScript(mode))
     }
 
     func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
@@ -280,7 +313,7 @@ struct PlayerWebView: PlatformViewRepresentable {
         PlayerWebViewCoordinator(self)
     }
 
-    func customAirPlayCompatibilityUserAgent(_ userAgent: String?) -> String {
+    static func customAirPlayCompatibilityUserAgent(_ userAgent: String?) -> String {
         // user agent:
         // Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/604.1
         // ---
@@ -307,21 +340,6 @@ struct PlayerWebView: PlatformViewRepresentable {
 
         // swiftlint:disable:next line_length
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/\(webKitVersion) (KHTML, like Gecko) Version/\(osVersion.replacing("_", with: ".")) Safari/\(webKitVersion)"
-    }
-
-    static func repairVideo(onRepair: @escaping () -> Void) {
-        guard let webView = WebViewState.shared.webView else {
-            Log.error("repairVideo: no webView")
-            return
-        }
-        let script = PlayerWebView.videoRequiresReloadScript()
-        webView.evaluateJavaScript(script) { result, _ in
-            let requiresReload = result as? String == "true"
-            Log.info("repairVideo: onRepair, requiresReload=\(requiresReload)")
-            if requiresReload {
-                onRepair()
-            }
-        }
     }
 }
 

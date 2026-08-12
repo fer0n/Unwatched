@@ -102,8 +102,8 @@ struct SetupView: View {
         // (see AVPlayerViewModel.handleItemFailure). A reload here would be counterproductive:
         // PlayerView keys the player on `reloadVideoId`, so it discards AVPlayerView's view model
         // and re-runs the whole InnerTube fetch — including for a load that is merely slow.
-        let rawPlayerType = UserDefaults.standard.string(forKey: Const.playerType) ?? ""
-        guard PlayerTypeSetting(rawValue: rawPlayerType) != .native else { return }
+        // `activeType` rather than the setting: they differ while a switch warms up.
+        guard PlayerSwitchManager.shared.activeType != .native else { return }
 
         let secondsSinceLoading = player.isLoading?.distance(to: Date()) ?? 0
         Log.info("videoHealth: loading for \(secondsSinceLoading)s")

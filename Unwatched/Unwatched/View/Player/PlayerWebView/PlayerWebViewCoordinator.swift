@@ -12,6 +12,8 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     let parent: PlayerWebView
     var zoomWorkaroundActive = false
     var updateTimeCounter: Int = 0
+    /// Mode currently live in the page, so `handleUIMode` only pushes on an actual change.
+    var appliedUIMode: PlayerWebView.UIMode?
 
     init(_ parent: PlayerWebView) {
         self.parent = parent
@@ -41,39 +43,12 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     }
 
     @MainActor func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
-        // The custom UI player has no caption controls, so captions are always disabled.
-        let disableCaptions = UserDefaults.standard.bool(forKey: Const.disableCaptions)
-            || parent.playerType == .youtubeCustomUI
-        let autoCaptionsOnSeekBack = UserDefaults.standard.bool(forKey: Const.autoCaptionsOnSeekBack)
-        let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
-        let originalAudio = UserDefaults.standard.bool(forKey: Const.originalAudio)
-        let blockOverlay = parent.blocksOverlay
-
-        let playbackId = UUID().uuidString
-        UserDefaults.standard.set(playbackId, forKey: Const.playbackId)
-
-        var hijackFullscreenButton = false
-        var clickTogglesPlay = false
-        #if os(macOS)
-        hijackFullscreenButton = true
-        clickTogglesPlay = blockOverlay
-        #endif
-        let options = PlayerWebView.InitScriptOptions(
-            playbackSpeed: parent.player.playbackSpeed,
+        let uiMode = parent.uiMode
+        appliedUIMode = uiMode
+        let options = PlayerWebView.initScriptOptions(
             startAt: parent.player.getStartPosition(),
-            requiresFetchingVideoData: parent.player.requiresFetchingVideoData(),
-            disableCaptions: disableCaptions,
-            autoCaptionsOnSeekBack: autoCaptionsOnSeekBack,
-            minimalPlayerUI: parent.playerTypeSetting.minimalPlayerUI || blockOverlay,
-            isNonEmbedding: parent.player.embeddingDisabled,
-            hijackFullscreenButton: hijackFullscreenButton,
-            fullscreenTitle: "\(String(localized: "toggleFullscreen")) (f)",
-            enableLogging: enableLogging,
-            originalAudio: originalAudio,
-            playbackId: playbackId,
-            blockOverlay: blockOverlay,
-            clickTogglesPlay: clickTogglesPlay,
-            seekSeconds: UserDefaults.standard.value(forKey: Const.doubleTapSeekDuration) as? Double ?? Const.seekSeconds
+            uiMode: uiMode,
+            player: parent.player
         )
         let script = PlayerWebView.initScript(options)
         Log.info("InitScriptOptions: \(options)")
