@@ -41,7 +41,7 @@ struct OnboardingChannelRow: View {
                     .foregroundStyle(isSelected ? theme.color : Color.secondary.opacity(0.5))
                     .symbolRenderingMode(.hierarchical)
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 9)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

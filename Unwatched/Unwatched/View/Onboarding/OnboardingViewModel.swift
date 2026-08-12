@@ -13,7 +13,15 @@ import UnwatchedShared
     var searchText = ""
     var searchResults = [YoutubeChannelSearchResult]()
     var isSearching = false
-    var searchFailed = false
+    var searchState = SearchState.idle
+
+    enum SearchState: Equatable {
+        case idle
+        /// The search ran and matched nothing
+        case noResults
+        /// The search couldn't run: no connection, or YouTube didn't answer with results
+        case failed
+    }
 
     /// Channels already subscribed to, so re-entering the first page doesn't subscribe twice
     private var subscribedChannelIds = Set<String>()
@@ -74,28 +82,34 @@ import UnwatchedShared
         await search()
     }
 
+    /// Runs the current query again after it failed
+    func retrySearch() async {
+        loadedQuery = nil
+        await search()
+    }
+
     private func search() async {
         let raw = searchText
         let query = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else {
             searchResults = []
-            searchFailed = false
+            searchState = .idle
             isSearching = false
             loadedQuery = nil
             return
         }
         isSearching = true
-        searchFailed = false
+        searchState = .idle
         do {
             let results = try await YoutubeChannelSearch.search(query)
             guard !Task.isCancelled else { return }
             searchResults = results
-            searchFailed = results.isEmpty
+            searchState = results.isEmpty ? .noResults : .idle
         } catch {
             guard !Task.isCancelled else { return }
             Log.error("channelSearch failed: \(error)")
             searchResults = []
-            searchFailed = true
+            searchState = .failed
         }
         isSearching = false
         loadedQuery = raw

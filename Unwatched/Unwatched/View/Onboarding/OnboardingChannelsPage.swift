@@ -27,19 +27,55 @@ struct OnboardingChannelsPage: View {
                     }
                     .padding(.horizontal, OnboardingLayout.horizontalPadding)
                 }
-
-                if viewModel.searchFailed && !viewModel.isSearching {
-                    Text("onboardingNoChannelsFound")
-                        .foregroundStyle(.secondary)
-                        .padding(.horizontal, OnboardingLayout.horizontalPadding)
-                        .padding(.vertical, 6)
-                }
             }
             .padding(.vertical, 6)
+            .background(Color.backgroundColor)
         }
         .scrollDismissesKeyboard(.interactively)
+        .background {
+            ZStack {
+                if let state = visibleSearchState {
+                    searchStateView(state)
+                        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+                }
+            }
+            .animation(.bouncy, value: visibleSearchState)
+        }
         .task(id: viewModel.searchText) {
             await viewModel.searchDebounced()
+        }
+    }
+
+    /// Nil while there's nothing to say about the current search, including while one is running
+    private var visibleSearchState: OnboardingViewModel.SearchState? {
+        guard !viewModel.isSearching, viewModel.searchState != .idle else {
+            return nil
+        }
+        return viewModel.searchState
+    }
+
+    @ViewBuilder
+    func searchStateView(_ state: OnboardingViewModel.SearchState) -> some View {
+        switch state {
+        case .idle:
+            EmptyView()
+        case .noResults:
+            ContentUnavailableView(
+                "onboardingNoChannelsFound",
+                systemImage: "magnifyingglass"
+            )
+        case .failed:
+            ContentUnavailableView {
+                Label("searchFailed", systemImage: "wifi.exclamationmark")
+            } description: {
+                Text("channelLoadFailedDescription")
+            } actions: {
+                Button("retry") {
+                    Task {
+                        await viewModel.retrySearch()
+                    }
+                }
+            }
         }
     }
 }

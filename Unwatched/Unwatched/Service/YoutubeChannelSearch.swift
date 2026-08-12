@@ -19,6 +19,10 @@ struct YoutubeChannelSearchResult: Identifiable, Hashable, Sendable {
     var id: String { channelId }
 }
 
+enum YoutubeChannelSearchError: Error {
+    case responseUnreadable
+}
+
 /// Channel search backed by YouTube's search results page.
 ///
 /// The Data API's `search` endpoint costs 100 quota units per request, which the shared API key
@@ -54,16 +58,19 @@ enum YoutubeChannelSearch {
         let (data, _) = try await URLSession.shared.data(for: request)
         guard let html = String(data: data, encoding: .utf8) else {
             Log.warning("channelSearch: response wasn't utf8")
-            return []
+            throw YoutubeChannelSearchError.responseUnreadable
         }
-        return parse(html)
+        guard let results = parse(html) else {
+            throw YoutubeChannelSearchError.responseUnreadable
+        }
+        return results
     }
 
-    static func parse(_ html: String) -> [YoutubeChannelSearchResult] {
+    static func parse(_ html: String) -> [YoutubeChannelSearchResult]? {
         guard let json = extractYtInitialData(html),
               let root = try? JSONSerialization.jsonObject(with: Data(json.utf8)) else {
             Log.warning("channelSearch: couldn't extract ytInitialData")
-            return []
+            return nil
         }
 
         var renderers = [[String: Any]]()
