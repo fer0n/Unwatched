@@ -65,7 +65,7 @@ public struct VideoService {
             let fetchDescriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
             let queue = try modelContext.fetch(fetchDescriptor)
 
-            for (index, queueEntry) in queue.enumerated() {
+            for (index, queueEntry) in queue.enumerated() where queueEntry.order != index {
                 queueEntry.order = index
             }
         } catch {

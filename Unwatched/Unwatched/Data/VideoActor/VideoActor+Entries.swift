@@ -32,7 +32,7 @@ extension VideoActor {
 
         orderedQueue.move(fromOffsets: source, toOffset: destination)
 
-        for (index, queueEntry) in orderedQueue.enumerated() {
+        for (index, queueEntry) in orderedQueue.enumerated() where queueEntry.order != index {
             queueEntry.order = index
         }
         try modelContext.save()
