@@ -217,7 +217,9 @@ actor CleanupActor: SharedContextActor {
             return
         }
         for entry in entries {
-            entry.date = entry.video?.publishedDate
+            if let publishedDate = entry.video?.publishedDate {
+                entry.date = publishedDate
+            }
         }
         try? modelContext.save()
     }
@@ -531,11 +533,11 @@ actor CleanupActor: SharedContextActor {
 
 extension CleanupActor {
     func mergeVideoState(from duplicate: Video, into keeper: Video) {
-        if keeper.subscription == nil {
-            keeper.subscription = duplicate.subscription
+        if keeper.subscription == nil, let subscription = duplicate.subscription {
+            keeper.subscription = subscription
         }
-        if keeper.youtubeChannelId == nil {
-            keeper.youtubeChannelId = duplicate.youtubeChannelId
+        if keeper.youtubeChannelId == nil, let youtubeChannelId = duplicate.youtubeChannelId {
+            keeper.youtubeChannelId = youtubeChannelId
         }
         if let duplicateWatchedDate = duplicate.watchedDate,
            duplicateWatchedDate > (keeper.watchedDate ?? .distantPast) {
@@ -544,11 +546,11 @@ extension CleanupActor {
         if (duplicate.elapsedSeconds ?? 0) > (keeper.elapsedSeconds ?? 0) {
             keeper.elapsedSeconds = duplicate.elapsedSeconds
         }
-        if keeper.bookmarkedDate == nil {
-            keeper.bookmarkedDate = duplicate.bookmarkedDate
+        if keeper.bookmarkedDate == nil, let bookmarkedDate = duplicate.bookmarkedDate {
+            keeper.bookmarkedDate = bookmarkedDate
         }
-        if keeper.deferDate == nil {
-            keeper.deferDate = duplicate.deferDate
+        if keeper.deferDate == nil, let deferDate = duplicate.deferDate {
+            keeper.deferDate = deferDate
         }
         moveEntries(from: duplicate, to: keeper)
     }
@@ -558,7 +560,9 @@ extension CleanupActor {
     private func moveEntries(from duplicate: Video, to keeper: Video) {
         if let queueEntry = duplicate.queueEntry {
             if let keeperQueueEntry = keeper.queueEntry {
-                keeperQueueEntry.order = min(keeperQueueEntry.order, queueEntry.order)
+                if queueEntry.order < keeperQueueEntry.order {
+                    keeperQueueEntry.order = queueEntry.order
+                }
             } else if keeper.inboxEntry == nil {
                 duplicate.queueEntry = nil
                 queueEntry.video = keeper
