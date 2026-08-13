@@ -48,8 +48,11 @@ extension PlayerManager {
         videoSource = nil
     }
 
+    /// - Parameter immediate: skip the debounce and write through. The model is updated right away
+    ///   either way; only the save is normally deferred, which is no use when the app is about to
+    ///   be suspended.
     @MainActor
-    func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil) {
+    func updateElapsedTime(_ time: Double? = nil, videoId: String? = nil, immediate: Bool = false) {
         if videoId != nil && videoId != video?.youtubeId {
             // avoid updating the wrong video
             Log.info("updateElapsedTime: wrong video to update")
@@ -60,14 +63,22 @@ extension PlayerManager {
         let newTime = time ?? currentTime
 
         guard let time = newTime,
-              video?.elapsedSeconds != time,
               let modelId = video?.persistentModelID else {
+            Log.info("updateElapsedTime: nothing to update")
+            return
+        }
+        // An unchanged value can still be waiting on a debounced save, so `immediate` writes anyway
+        guard video?.elapsedSeconds != time || immediate else {
             Log.info("updateElapsedTime: no change")
             return
         }
 
         video?.elapsedSeconds = time
-        _ = VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
+        if immediate {
+            VideoService.forceUpdateVideoNow(modelId, elapsedSeconds: time)
+        } else {
+            _ = VideoService.forceUpdateVideo(modelId, elapsedSeconds: time)
+        }
     }
 
     @MainActor

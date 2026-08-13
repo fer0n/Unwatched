@@ -7,6 +7,18 @@ import SwiftData
 import Foundation
 import UnwatchedShared
 
+/// Watch time accumulated for one video on one (GMT-normalized) day, before it has been
+/// resolved to the channel row it will be written to.
+struct PendingWatchTime: Hashable, Sendable {
+    let videoId: String
+    let day: Date
+}
+
+private struct WatchTimeBucket: Hashable {
+    let channelId: String
+    let day: Date
+}
+
 actor StatsActor: SharedContextActor {
     func getStats() throws -> [SendableWatchTimeEntry] {
         let descriptor = FetchDescriptor<WatchTimeEntry>(sortBy: [SortDescriptor(\.date)])
@@ -33,24 +45,49 @@ actor StatsActor: SharedContextActor {
         }
     }
 
-    func addWatchTime(videoId: String, day: Date, duration: TimeInterval) throws {
-        var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
-        videoFetch.fetchLimit = 1
-        guard let video = try modelContext.fetch(videoFetch).first,
-              let channelId = video.subscription?.youtubeChannelId ?? video.youtubeChannelId else {
-            return
+    func addWatchTime(_ pending: [PendingWatchTime: TimeInterval]) throws {
+        guard !pending.isEmpty else { return }
+
+        // Resolve to channels first: several videos, and several days' worth of them, can collapse
+        // onto the same (channel, day) row, which should only be fetched and bumped once.
+        var channelIds = [String: String?]()
+        var buckets = [WatchTimeBucket: TimeInterval]()
+
+        for (key, duration) in pending {
+            let channelId: String?
+            if let cached = channelIds[key.videoId] {
+                channelId = cached
+            } else {
+                channelId = try fetchChannelId(videoId: key.videoId)
+                channelIds[key.videoId] = channelId
+            }
+            guard let channelId else { continue }
+            buckets[WatchTimeBucket(channelId: channelId, day: key.day), default: 0] += duration
         }
 
-        let entryFetch = FetchDescriptor<WatchTimeEntry>(
-            predicate: #Predicate { $0.channelId == channelId && $0.date == day }
-        )
-        // Duplicates exist until CleanupService merges them; the largest is the accumulated one
-        if let entry = try modelContext.fetch(entryFetch).max(by: { $0.watchTime < $1.watchTime }) {
-            entry.watchTime += duration
-        } else {
-            modelContext.insert(WatchTimeEntry(date: day, channelId: channelId, watchTime: duration))
+        guard !buckets.isEmpty else { return }
+
+        for (bucket, duration) in buckets {
+            let channelId = bucket.channelId
+            let day = bucket.day
+            let entryFetch = FetchDescriptor<WatchTimeEntry>(
+                predicate: #Predicate { $0.channelId == channelId && $0.date == day }
+            )
+            // Duplicates exist until CleanupService merges them; the largest is the accumulated one
+            if let entry = try modelContext.fetch(entryFetch).max(by: { $0.watchTime < $1.watchTime }) {
+                entry.watchTime += duration
+            } else {
+                modelContext.insert(WatchTimeEntry(date: day, channelId: channelId, watchTime: duration))
+            }
         }
         try modelContext.save()
+    }
+
+    private func fetchChannelId(videoId: String) throws -> String? {
+        var videoFetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == videoId })
+        videoFetch.fetchLimit = 1
+        guard let video = try modelContext.fetch(videoFetch).first else { return nil }
+        return video.subscription?.youtubeChannelId ?? video.youtubeChannelId
     }
 
     func deleteStats(from startDate: Date, to endDate: Date, channelId: String?) throws {

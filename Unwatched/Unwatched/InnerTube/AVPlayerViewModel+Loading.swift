@@ -820,7 +820,7 @@ extension AVPlayerViewModel {
             lastObservedTime = time
             player.updateElapsedTime(time)
             if let videoId = player.video?.youtubeId {
-                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time)
+                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: true)
             }
             updateNowPlayingInfo(elapsed: time)
         }

@@ -12,6 +12,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     let parent: PlayerWebView
     var zoomWorkaroundActive = false
     var updateTimeCounter: Int = 0
+    var statsTimeCounter: Int = 0
     /// Mode currently live in the page, so `handleUIMode` only pushes on an actual change.
     var appliedUIMode: PlayerWebView.UIMode?
 

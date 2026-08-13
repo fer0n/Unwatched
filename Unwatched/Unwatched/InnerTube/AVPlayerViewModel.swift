@@ -31,6 +31,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored var rateObserverTask: Task<Void, Never>?
     @ObservationIgnored var timeObserverToken: Any?
     @ObservationIgnored var timeObserverTickCount = 0
+    @ObservationIgnored var statsTickCount = 0
     /// Last playback position seen by the periodic observer. Stands in for
     /// `avPlayer.currentTime()` on the play/pause path, which blocks the main thread
     /// for tens of milliseconds right after a rate change.
@@ -73,6 +74,7 @@ final class AVPlayerViewModel {
     private func startTimeObserver() {
         stopTimeObserver()
         timeObserverTickCount = 0
+        statsTickCount = 0
         player.precisePosition = { [weak self] in
             guard let seconds = self?.avPlayer.currentTime().seconds,
                   !seconds.isNaN, !seconds.isInfinite else { return nil }
@@ -91,16 +93,21 @@ final class AVPlayerViewModel {
                     || player.seekAbsolute != nil
                 if player.isPlaying {
                     if !seekInFlight { player.monitorChapters(time: seconds) }
-                    timeObserverTickCount += 1
-                    if timeObserverTickCount >= Const.updateDbTimeSeconds {
-                        timeObserverTickCount = 0
-                        player.updateElapsedTime(seconds)
+                    statsTickCount += 1
+                    if statsTickCount >= Const.updateDbTimeSeconds {
+                        statsTickCount = 0
                         if let videoId = player.video?.youtubeId {
                             StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: seconds)
                         }
                     }
+                    timeObserverTickCount += 1
+                    if timeObserverTickCount >= Const.elapsedTimePersistSeconds {
+                        timeObserverTickCount = 0
+                        player.updateElapsedTime(seconds)
+                    }
                 } else {
                     timeObserverTickCount = 0
+                    statsTickCount = 0
                     if player.isLoading == nil && !seekInFlight {
                         if player.currentTime != seconds { player.currentTime = seconds }
                     }
