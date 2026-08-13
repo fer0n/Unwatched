@@ -21,17 +21,19 @@ import UnwatchedShared
     @MainActor
     @ObservationIgnored var precisePosition: (() -> Double?)?
 
+    /// Values, not rows: most chapters are parsed from the description and have no row to point
+    /// at. `chapterId` identifies one across a re-parse and across being materialized.
     @MainActor
-    var currentChapter: Chapter?
+    var currentChapter: SendableChapter?
 
     @MainActor
-    var currentChapterPreview: Chapter?
+    var currentChapterPreview: SendableChapter?
 
     @MainActor
-    var previousChapter: Chapter?
+    var previousChapter: SendableChapter?
 
     @MainActor
-    var nextChapter: Chapter?
+    var nextChapter: SendableChapter?
 
     @MainActor
     var transcriptUrl: String?

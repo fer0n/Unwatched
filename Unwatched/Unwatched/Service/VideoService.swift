@@ -4,11 +4,10 @@ import OSLog
 import UnwatchedShared
 
 extension VideoService {
-    /// Fetches a video's description (and chapters parsed from it) in the background when it
-    /// was added without one — e.g. a video added from the search tab, whose results carry no
-    /// description. Runs once at materialisation so the description is present for every action
-    /// (play, queue, swipe) and every player type. Keyed by `youtubeId` so it's safe to dispatch
-    /// from any context.
+    /// Fetches a video's description in the background when it was added without one — e.g. a
+    /// video added from the search tab, whose results carry no description. Runs once at
+    /// materialisation so the description is present for every action (play, queue, swipe) and
+    /// every player type. Keyed by `youtubeId` so it's safe to dispatch from any context.
     static func fetchDescriptionInBg(youtubeId: String) {
         Task.detached {
             let repo = VideoActor()
@@ -16,7 +15,7 @@ extension VideoService {
             guard let description else { return }
             // The actor saved to the background context — an already-registered Video in the main
             // context won't pick that up on its own, so mirror the description there too
-            // (chapters were already persisted by the actor; a fresh fetch will see them).
+            // (chapters are parsed from it on demand, so they follow automatically).
             await MainActor.run {
                 let context = DataProvider.mainContext
                 if let video = getVideo(for: youtubeId, modelContext: context) {
@@ -423,7 +422,7 @@ extension VideoService {
             return (duration, durationText)
         }
 
-        if let lastChapter = video.sortedChapters.last {
+        if let lastChapter = video.sortedChapterData.last {
             let time = lastChapter.endTime ?? lastChapter.startTime
             return (duration, ">\(time.formattedSecondsColon)")
         }
@@ -447,7 +446,7 @@ extension VideoService {
             if let existing = getVideo(for: video.youtubeId, modelContext: modelContext) {
                 model = existing
             } else {
-                model = video.createVideo(extractChapters: ChapterService.extractChapters)
+                model = video.createVideo()
                 modelContext.insert(model)
                 associateSubscription(
                     model,

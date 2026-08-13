@@ -10,7 +10,7 @@ import UnwatchedShared
 /// info panel and markers on the scrubber — no custom menu needed.
 enum TvChapters {
     static func markerGroups(for video: Video) -> [AVNavigationMarkersGroup] {
-        let chapters = video.sortedChapters
+        let chapters = video.sortedChapterData
         guard !chapters.isEmpty else { return [] }
 
         let markers = chapters.enumerated().compactMap { index, chapter -> AVTimedMetadataGroup? in

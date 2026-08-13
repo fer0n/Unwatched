@@ -12,7 +12,7 @@ struct InboxCardChapters: View {
     @Environment(PlayerManager.self) private var player
 
     let video: Video
-    let chapters: [Chapter]
+    let chapters: [SendableChapter]
     var bleedEdges: Edge.Set = .horizontal
 
     @ScaledMetric private var fontSize = 13
@@ -22,7 +22,7 @@ struct InboxCardChapters: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(alignment: .top, spacing: 6) {
-                ForEach(chapters) { chapter in
+                ForEach(chapters, id: \.chapterId) { chapter in
                     chip(for: chapter)
                 }
             }
@@ -33,7 +33,7 @@ struct InboxCardChapters: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    private func chip(for chapter: Chapter) -> some View {
+    private func chip(for chapter: SendableChapter) -> some View {
         Button {
             setChapter(chapter)
         } label: {
@@ -53,8 +53,8 @@ struct InboxCardChapters: View {
     }
 
     /// One run of text, so the duration can flow inline after a wrapped title
-    private func chipLabel(for chapter: Chapter, _ variant: TwoRowChipLayout.Variant) -> Text {
-        var title = AttributedString(chapter.titleTextForced)
+    private func chipLabel(for chapter: SendableChapter, _ variant: TwoRowChipLayout.Variant) -> Text {
+        var title = AttributedString(chapter.titleText(fallback: video.title))
         title.font = .system(size: fontSize, weight: .semibold)
 
         guard let duration = chapter.duration?.formattedSeconds else {
@@ -66,7 +66,7 @@ struct InboxCardChapters: View {
         return Text(title + time)
     }
 
-    private func setChapter(_ chapter: Chapter) {
+    private func setChapter(_ chapter: SendableChapter) {
         if video != player.video {
             video.elapsedSeconds = chapter.startTime
             player.playVideo(video)
@@ -82,10 +82,14 @@ struct InboxCardChapters: View {
     InboxCardChapters(
         video: DataProvider.dummyVideo,
         chapters: [
-            Chapter(title: "Intro", time: 0, duration: 42),
-            Chapter(title: "A considerably longer chapter title that needs to wrap", time: 42, duration: 305),
-            Chapter(title: "Two words", time: 347, duration: 90),
-            Chapter(title: "Supercalifragilisticexpialidocious", time: 437, duration: 12)
+            SendableChapter(title: "Intro", startTime: 0, duration: 42),
+            SendableChapter(
+                title: "A considerably longer chapter title that needs to wrap",
+                startTime: 42,
+                duration: 305
+            ),
+            SendableChapter(title: "Two words", startTime: 347, duration: 90),
+            SendableChapter(title: "Supercalifragilisticexpialidocious", startTime: 437, duration: 12)
         ]
     )
     .previewEnvironments()

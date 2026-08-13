@@ -14,6 +14,14 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     public var category: ChapterCategory?
     public var link: URL?
 
+    public var persistentId: PersistentIdentifier? {
+        persistentModelID
+    }
+
+    public var videoId: String? {
+        video?.youtubeId ?? mergedChapterVideo?.youtubeId
+    }
+
     public init(
         title: String?,
         time: Double,
@@ -43,7 +51,10 @@ public final class Chapter: ChapterData, CustomStringConvertible {
             endTime: endTime,
             duration: duration,
             isActive: isActive,
-            link: link
+            category: category,
+            link: link,
+            videoId: videoId,
+            persistentId: persistentId
         )
     }
 
@@ -52,7 +63,13 @@ public final class Chapter: ChapterData, CustomStringConvertible {
     }
 }
 
-public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, Hashable {
+public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, Hashable, Codable {
+    /// `videoId` is the cache key and gets stamped back on read; `persistentId` refers to a row
+    /// in a different store and would be meaningless once decoded.
+    private enum CodingKeys: String, CodingKey {
+        case title, startTime, endTime, duration, isActive, category, link
+    }
+
     public var title: String?
     public var startTime: Double
     public var endTime: Double?
@@ -60,15 +77,8 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
     public var isActive: Bool = true
     public var category: ChapterCategory?
     public var link: URL?
-
-    /// Chapter origin isn't the video directly
-    public var isExternal: Bool {
-        category?.isExternal ?? false
-    }
-
-    public var hasPriority: Bool {
-        category?.hasPriority ?? false
-    }
+    public var videoId: String?
+    public var persistentId: PersistentIdentifier?
 
     public var description: String {
         "\(startTime)-\(endTime, default: "nil"): \(title ?? category?.description ?? "-")"
@@ -107,7 +117,9 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         duration: Double? = nil,
         isActive: Bool? = nil,
         category: ChapterCategory? = nil,
-        link: URL? = nil
+        link: URL? = nil,
+        videoId: String? = nil,
+        persistentId: PersistentIdentifier? = nil
     ) {
         self.title = title
         self.startTime = startTime
@@ -116,5 +128,7 @@ public struct SendableChapter: ChapterData, Sendable, CustomStringConvertible, H
         self.isActive = isActive ?? true
         self.category = category
         self.link = link
+        self.videoId = videoId
+        self.persistentId = persistentId
     }
 }

@@ -126,12 +126,15 @@ actor VideoActor: SharedContextActor {
         return videos?.first
     }
 
-    /// Fetches and stores a video's description (and chapters parsed from it) when it was
-    /// created without one — e.g. a video added from search, whose results carry no
-    /// description. Prefers InnerTube's player endpoint (no Data API quota) and falls back
-    /// to the official YouTube Data API. Returns the description once persisted here so the
-    /// caller can push it into the main context too — this actor's own context isn't the one
-    /// the UI is observing, so a save here alone never appears on screen.
+    /// Fetches and stores a video's description when it was created without one — e.g. a video
+    /// added from search, whose results carry no description. Prefers InnerTube's player endpoint
+    /// (no Data API quota) and falls back to the official YouTube Data API. Returns the
+    /// description once persisted here so the caller can push it into the main context too —
+    /// this actor's own context isn't the one the UI is observing, so a save here alone never
+    /// appears on screen.
+    ///
+    /// The description is all that's stored: chapters come from parsing it, which
+    /// `ChapterService.derivedChapters` does on demand.
     @discardableResult
     func fetchAndSetDescription(youtubeId: String) async -> String? {
         guard let existing = videoAlreadyExists(youtubeId),
@@ -155,13 +158,6 @@ actor VideoActor: SharedContextActor {
         guard let video: Video = modelContext.resolvedModel(withID: videoId) else { return nil }
 
         video.videoDescription = description
-        let chapters = ChapterService.extractChapters(from: description, videoDuration: video.duration)
-        if !chapters.isEmpty {
-            let reconciled = ChapterService.reconcileChapters(chapters, with: video.chapters ?? [], in: modelContext)
-            if reconciled.hasChanges {
-                video.chapters = reconciled.chapters
-            }
-        }
         try? modelContext.save()
         return description
     }
@@ -279,7 +275,7 @@ actor VideoActor: SharedContextActor {
     private func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
-            let video = vid.createVideo(extractChapters: ChapterService.extractChapters)
+            let video = vid.createVideo()
             videoModels.append(video)
             modelContext.insert(video)
             video.subscription = sub
@@ -362,8 +358,7 @@ actor VideoActor: SharedContextActor {
 
         let video = videoData.createVideo(
             url: url,
-            youtubeId: youtubeId,
-            extractChapters: ChapterService.extractChapters
+            youtubeId: youtubeId
         )
         modelContext.insert(video)
         if let channelId = videoData.youtubeChannelId {

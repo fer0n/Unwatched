@@ -44,6 +44,8 @@ extension ChapterService {
         if reconciled.hasChanges {
             video.chapters = reconciled.chapters
             CleanupService.deleteMergedChapters(from: video, context)
+            // rows now describe this video; a derived copy alongside them would only drift
+            invalidateDerivedChapters(youtubeId: video.youtubeId)
         }
         try? context.save()
 
@@ -53,10 +55,59 @@ extension ChapterService {
         }
     }
 
+    /// The `Chapter` row for a chapter the user just acted on, creating the video's rows the first
+    /// time one is needed.
+    ///
+    /// Chapters are normally parsed from the description and stay out of the synced store
+    /// entirely — see `ChapterService.derivedChapters`. An edit is the point where they have to
+    /// become rows: there's nowhere else to record that this one chapter is now inactive, and an
+    /// edit is exactly the kind of thing worth carrying to the user's other devices.
+    ///
+    /// Returns nil only if the chapter isn't among the video's own — a caller acting on a chapter
+    /// that belongs to some other video.
+    @MainActor
+    static func materialize(
+        _ chapter: SendableChapter,
+        of video: Video,
+        in context: ModelContext
+    ) -> Chapter? {
+        if let id = chapter.persistentId, let row: Chapter = context.existingModel(for: id) {
+            return row
+        }
+
+        let reconciled = reconcileChapters(video.ownChapterData, with: video.chapters ?? [], in: context)
+        if reconciled.hasChanges {
+            video.chapters = reconciled.chapters
+        }
+        // the rows are the source of truth from here on; a derived copy alongside them would only
+        // be a second one that drifts
+        invalidateDerivedChapters(youtubeId: video.youtubeId)
+
+        return reconciled.chapters.first { $0.startTime == chapter.startTime }
+    }
+
+    /// Puts a video's chapters back to what its description says, dropping whatever was edited
+    /// into them.
+    ///
+    /// Deletes rather than rewrites: with no rows left, the chapters come from parsing the
+    /// description again, which is what restoring means now. The SponsorBlock merge goes too —
+    /// it was built on the rows being removed, and `handleChapterRefresh` rebuilds it.
     @MainActor
     static func restoreChapters(for video: Video) {
         let context = DataProvider.mainContext
-        let chapters = extractChapters(from: video.videoDescription ?? "", videoDuration: video.duration)
-        insertChapters(chapters, for: video, in: context)
+
+        let rows = video.chapters ?? []
+        video.chapters = []
+        for row in rows {
+            context.delete(row)
+        }
+        CleanupService.deleteMergedChapters(from: video, context)
+        invalidateDerivedChapters(youtubeId: video.youtubeId)
+        try? context.save()
+
+        if video.youtubeId == PlayerManager.shared.video?.youtubeId {
+            PlayerManager.shared.video = video
+            PlayerManager.shared.handleChapterRefresh(forceRefresh: true)
+        }
     }
 }

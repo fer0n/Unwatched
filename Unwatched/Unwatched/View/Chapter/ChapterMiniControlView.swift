@@ -22,7 +22,7 @@ struct ChapterMiniControlView: View {
 
     var body: some View {
         let hasChapters = player.currentChapter != nil
-        let hasAnyChapters = player.video?.chapters?.isEmpty
+        let hasAnyChapters = player.video?.sortedChapterData.isEmpty
 
         VStack(spacing: limitHeight ? 0 : 10) {
             DescriptionMiniProgressBar(
@@ -49,7 +49,7 @@ struct ChapterMiniControlView: View {
                         } label: {
                             ZStack {
                                 if let chapt = player.currentChapterPreview ?? player.currentChapter {
-                                    Text(chapt.titleTextForced)
+                                    Text(chapt.titleText(fallback: player.video?.title))
                                 } else {
                                     title
                                 }
@@ -153,7 +153,7 @@ struct ChapterMiniControlView: View {
 
     @ViewBuilder var title: some View {
         if let chapter = player.currentChapter {
-            Text(chapter.titleTextForced)
+            Text(chapter.titleText(fallback: player.video?.title))
         } else {
             Text(player.video?.title ?? "")
                 .font(.title3)

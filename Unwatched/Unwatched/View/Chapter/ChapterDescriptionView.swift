@@ -28,7 +28,7 @@ struct ChapterDescriptionView: View {
     var showActions = true
 
     var body: some View {
-        let hasChapters = video.sortedChapters.isEmpty == false
+        let hasChapters = video.sortedChapterData.isEmpty == false
 
         ScrollViewReader { proxy in
             ScrollView {
@@ -85,15 +85,15 @@ struct ChapterDescriptionView: View {
                     var anchor: UnitPoint = .center
 
                     if let current = player.currentChapter,
-                       let index = video.sortedChapters.firstIndex(where: {
-                        $0.persistentModelID == current.persistentModelID
+                       let index = video.sortedChapterData.firstIndex(where: {
+                        $0.chapterId == current.chapterId
                        }),
                        index > 0 {
-                        chapter = video.sortedChapters[index - 1]
+                        chapter = video.sortedChapterData[index - 1]
                         anchor = .top
                     }
                     proxy.scrollTo(
-                        chapter?.persistentModelID,
+                        chapter?.chapterId,
                         anchor: anchor
                     )
                 }

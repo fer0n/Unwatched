@@ -276,7 +276,7 @@ struct PlayerScrubber: View {
         isGestureActive = true
         if initialDragPosition == nil {
             gestureScrubberWidth = scrubberWidth
-            cachedChapterTimes = player.video?.sortedChapters.map(\.startTime) ?? []
+            cachedChapterTimes = player.video?.sortedChapterData.map(\.startTime) ?? []
             let duration = player.video?.duration ?? 1
             cachedSnapTimeThreshold = Double(chapterSnapPixels / scrubberWidth) * duration
             onScrubbingChanged?(true)

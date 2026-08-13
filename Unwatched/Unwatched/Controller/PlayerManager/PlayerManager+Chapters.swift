@@ -30,8 +30,8 @@ extension PlayerManager {
     }
 
     @MainActor
-    func extractCurrentChapter(at time: Double) -> Chapter? {
-        return video?.sortedChapters.first(where: { chapter in
+    func extractCurrentChapter(at time: Double) -> SendableChapter? {
+        return video?.sortedChapterData.first(where: { chapter in
             return chapter.startTime <= time && time < (chapter.endTime ?? 0)
         })
     }
@@ -45,9 +45,9 @@ extension PlayerManager {
 
         let newChapter = extractCurrentChapter(at: time) ?? {
             if time <= 0 {
-                return video.sortedChapters.first
+                return video.sortedChapterData.first
             } else {
-                return video.sortedChapters.last
+                return video.sortedChapterData.last
             }
         }()
 
@@ -82,7 +82,7 @@ extension PlayerManager {
             return
         }
 
-        let chapters = video.sortedChapters
+        let chapters = video.sortedChapterData
         guard !chapters.isEmpty else {
             cancelTimeMonitoring() // stop monitoring this video for chapters
             Log.info("no info to check for chapters")
@@ -106,7 +106,7 @@ extension PlayerManager {
         nextChapter = nextActive
         if !current.isActive {
             if let nextActive {
-                Log.info("skip to next chapter: \(nextActive.titleTextForced)")
+                Log.info("skip to next chapter: \(nextActive.titleText(fallback: video.title))")
                 seek(to: nextActive.startTime)
             } else if let duration = video.duration, time < duration - Const.seekToEndBuffer {
                 seek(to: duration)
@@ -162,7 +162,7 @@ extension PlayerManager {
     }
 
     @MainActor
-    func setChapter(_ chapter: Chapter) {
+    func setChapter(_ chapter: SendableChapter) {
         seek(to: chapter.startTime)
         withAnimation {
             currentTime = chapter.startTime
@@ -222,8 +222,7 @@ extension PlayerManager {
             return
         }
 
-        let chapters = (video?.chapters ?? []).sorted(by: { $0.startTime < $1.startTime })
-        let sendableChapters = chapters.map(\.toExport)
+        let sendableChapters = video?.ownChapterData ?? []
         let duration = video?.duration
         if let mergedChapters = video?.mergedChapters {
             ChapterService.skipSponsorBlockSegments(in: mergedChapters)
@@ -262,7 +261,7 @@ extension PlayerManager {
     @MainActor
     func chapterAwareSeekTarget(from base: Double, offset: Double) -> Double {
         guard offset < 0,
-              let chapters = video?.sortedChapters,
+              let chapters = video?.sortedChapterData,
               chapters.contains(where: { !$0.isActive }) else {
             return base + offset
         }
@@ -303,14 +302,14 @@ extension PlayerManager {
             return time
         }
         // regular chapter is active, time is okay
-        if video.sortedChapters.first(
+        if video.sortedChapterData.first(
             where: {
                 $0.isActive && $0.startTime <= time
             }) != nil {
             return time
         }
         // no active chapter found, try to find the first chapter with a start time after the current time
-        if let nextChapter = video.sortedChapters.first(
+        if let nextChapter = video.sortedChapterData.first(
             where: {
                 $0.isActive && $0.startTime > time
             }) {

@@ -200,6 +200,7 @@ actor RefreshActor {
             VideoService.fetchVideoDurationsQueueInbox()
             UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
         }
+        ChapterService.purgeDerivableChaptersIfNeeded()
 
         if enableIcloudSync {
             let networkTimeout: CGFloat = 3

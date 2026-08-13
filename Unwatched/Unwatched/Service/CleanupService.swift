@@ -182,6 +182,7 @@ struct CleanupService {
 
         _ = ImageService.deleteAllImages()
         _ = TranscriptService.deleteCache()
+        _ = ChapterService.deleteAllDerivedChapters()
     }
 }
 

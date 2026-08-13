@@ -124,7 +124,7 @@ public actor ShareAddActor {
             throw VideoError.noVideoFound
         }
 
-        let video = videoData.createVideo(youtubeId: youtubeId, extractChapters: ChapterService.extractChapters)
+        let video = videoData.createVideo(youtubeId: youtubeId)
         modelContext.insert(video)
         if let channelId = videoData.youtubeChannelId {
             addToCorrectSubscription(video, channelId: channelId)

@@ -56,7 +56,7 @@ extension PlayerManager {
         let player = PlayerManager()
         player.video = DataProvider.dummyVideo
         player.currentTime = 5
-        player.currentChapter = Chapter.getDummy()
+        player.currentChapter = Chapter.getDummy().toExport
         // player.embeddingDisabled = true
         player.isPlaying = false
         return player

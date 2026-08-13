@@ -39,14 +39,14 @@ struct InboxCard: View, Equatable {
     var body: some View {
         layout.container {
             thumbnail
-            details(video.sortedChapters)
+            details(video.sortedChapterData)
         }
         .background(Color.insetBackgroundColor)
         .clipShape(.rect(cornerRadius: Self.cornerRadius, style: .continuous))
         .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
     }
 
-    private func details(_ chapters: [Chapter]) -> some View {
+    private func details(_ chapters: [SendableChapter]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
                 title

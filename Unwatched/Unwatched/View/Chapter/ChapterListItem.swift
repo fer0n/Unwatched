@@ -2,8 +2,8 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterListItem: View {
-    var chapter: Chapter
-    var toggleChapter: (_ chapter: Chapter) -> Void
+    var chapter: SendableChapter
+    var toggleChapter: (_ chapter: SendableChapter) -> Void
     var spacing: CGFloat = 5
 
     @ScaledMetric var frameSize = 30
@@ -78,7 +78,7 @@ struct ChapterListItem: View {
         let short: String?
         let verbose: String?
 
-        init(chapter: Chapter, currentTime: Double?) {
+        init(chapter: SendableChapter, currentTime: Double?) {
             if let currentTime, let endTime = chapter.endTime {
                 let remaining = endTime - currentTime
                 self.short = String(localized: "\(remaining.formattedSeconds) remaining")
@@ -96,16 +96,16 @@ struct ChapterListItem: View {
 
 #Preview {
     VStack {
-        ChapterListItem(chapter: Chapter(
+        ChapterListItem(chapter: SendableChapter(
             title: "Hello there",
-            time: 102
+            startTime: 102
         ), toggleChapter: { _ in }
         )
         .background(Color.gray)
 
-        ChapterListItem(chapter: Chapter(
+        ChapterListItem(chapter: SendableChapter(
             title: nil,
-            time: 102
+            startTime: 102
         ), toggleChapter: { _ in }
         )
         .background(Color.gray)

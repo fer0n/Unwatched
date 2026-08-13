@@ -145,6 +145,11 @@ extension MigrationTests {
         "2.1.0": [
             "CachedImage": ["colorHex", "createdOn", "imageData", "imageUrl", "lastAccessedOn"],
             "Transcript": ["data", "youtubeId"]
+        ],
+        "2.2.0": [
+            "CachedImage": ["colorHex", "createdOn", "imageData", "imageUrl", "lastAccessedOn"],
+            "Transcript": ["data", "youtubeId"],
+            "CachedChapters": ["data", "sourceHash", "updatedDate", "youtubeId"]
         ]
     ]
 }

@@ -56,12 +56,52 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         persistentModelID
     }
 
+    /// The `Chapter` rows this video has, if any. Most videos have none — see
+    /// `sortedChapterData`, which is what readers want. Rows are for the code that edits them.
     public var sortedChapters: [Chapter] {
         Video.getSortedChapters(mergedChapters, chapters)
     }
 
-    public var sortedChapterData: [ChapterData] {
-        Video.getSortedChapters(mergedChapters, chapters)
+    /// Every chapter of this video, whether it's backed by a row or parsed from the description.
+    ///
+    /// Rows win when they exist: they're either a SponsorBlock merge or something the user
+    /// edited, and both describe the video better than a fresh parse would.
+    public var sortedChapterData: [SendableChapter] {
+        // the row check comes first because it's the cheap one: `getSortedChapters` sorts and
+        // reads the key-value store, and this runs inside view bodies
+        guard hasChapterRows else {
+            return derivedChapters
+        }
+        let stored = Video.getSortedChapters(mergedChapters, chapters)
+        return stored.isEmpty ? derivedChapters : stored.map(\.toExport)
+    }
+
+    /// This video's own chapters, excluding any SponsorBlock merge — the input the merge is built
+    /// from, and what an edit materializes into rows.
+    public var ownChapterData: [SendableChapter] {
+        guard !(chapters?.isEmpty ?? true) else {
+            return derivedChapters
+        }
+        let stored = Video.getSortedChapters(nil, chapters)
+        return stored.isEmpty ? derivedChapters : stored.map(\.toExport)
+    }
+
+    private var hasChapterRows: Bool {
+        !(chapters?.isEmpty ?? true) || !(mergedChapters?.isEmpty ?? true)
+    }
+
+    /// Parsed from the description rather than stored as rows. Only videos whose chapters have
+    /// been edited keep `Chapter` rows, and those take precedence.
+    ///
+    /// Goes through `getSortedChapters` like stored chapters do: the parse comes back in
+    /// description order, which is usually but not always chronological.
+    public var derivedChapters: [SendableChapter] {
+        let parsed = ChapterService.derivedChapters(
+            youtubeId: youtubeId,
+            videoDescription: videoDescription,
+            duration: duration
+        )
+        return ChapterService.applySkipFilter(to: Video.getSortedChapters(nil, parsed))
     }
 
     public var hasInboxEntry: Bool? {
@@ -74,8 +114,10 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     ) -> [T] {
         var result = [T]()
 
-        let settingOn = NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters)
-        if (mergedChapters?.count ?? 0) > 1 && settingOn {
+        // the setting is only read when there's a merge to choose between: derived chapters come
+        // through here with no merged set at all, on the app's main chapter read path
+        if (mergedChapters?.count ?? 0) > 1,
+           NSUbiquitousKeyValueStore.default.bool(forKey: Const.mergeSponsorBlockChapters) {
             result = mergedChapters ?? []
         } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []

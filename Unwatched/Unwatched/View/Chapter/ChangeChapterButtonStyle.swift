@@ -8,7 +8,7 @@ import UnwatchedShared
 
 struct ChangeChapterButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
-    var chapter: Chapter?
+    var chapter: SendableChapter?
     var size: CGFloat = 40
 
     func makeBody(configuration: Configuration) -> some View {

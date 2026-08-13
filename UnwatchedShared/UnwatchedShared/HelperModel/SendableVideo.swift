@@ -21,8 +21,8 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
     public var elapsedSeconds: Double?
     public var chapters = [SendableChapter]()
 
-    public var sortedChapterData: [any ChapterData] {
-        Video.getSortedChapters([], chapters)
+    public var sortedChapterData: [SendableChapter] {
+        Video.getSortedChapters(nil, chapters)
     }
 
     public var publishedDate: Date?
@@ -50,6 +50,9 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         queueEntry
     }
 
+    /// The new video carries no `Chapter` rows: chapters are parsed from `videoDescription` on
+    /// demand and cached locally, so a video only gets rows once something edits them. See
+    /// `ChapterService.derivedChapters`.
     public func createVideo(
         title: String? = nil,
         url: URL? = nil,
@@ -59,16 +62,11 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
         youtubeChannelId: String? = nil,
         feedTitle: String? = nil,
         duration: TimeInterval? = nil,
-        videoDescription: String? = nil,
-        extractChapters: (String, Double?) -> [SendableChapter]
+        videoDescription: String? = nil
     ) -> Video {
         let title = title ?? self.title
         let description = videoDescription ?? self.videoDescription
 
-        var newChapters = chapters
-        if chapters.isEmpty, let desc = self.videoDescription {
-            newChapters = extractChapters(desc, duration)
-        }
         return Video(
             title: title,
             url: url ?? self.url,
@@ -81,7 +79,6 @@ public struct SendableVideo: VideoData, Sendable, Codable, Hashable, Equatable {
             noDuration: self.noDuration,
             elapsedSeconds: self.elapsedSeconds,
             videoDescription: description,
-            chapters: newChapters.map { $0.getChapter },
             watchedDate: self.watchedDate,
             deferDate: self.deferDate,
             isYtShort: self.isYtShort,

@@ -362,7 +362,7 @@ class ExportableTests: XCTestCase {
         let decoder = JSONDecoder()
         do {
             let sendableVideo = try decoder.decode(SendableVideo.self, from: importedData)
-            let importedVideo = sendableVideo.createVideo(extractChapters: ChapterService.extractChapters)
+            let importedVideo = sendableVideo.createVideo()
 
             XCTAssertEqual(importedVideo.title, video.title)
             XCTAssertEqual(importedVideo.url, video.url)
