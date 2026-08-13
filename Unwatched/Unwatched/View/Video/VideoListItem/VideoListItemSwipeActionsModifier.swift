@@ -106,6 +106,8 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         Log.info("performVideoAction")
 
         var order = videoData.queueEntryData?.order
+        // asked before the action runs — afterwards the entry is gone and can't be recognised
+        var wasTopOfQueue = VideoService.isTopOfQueue(order: order, modelContext)
         var task: Task<Void, Error>?
         if config.async, let videoId = videoData.persistentId {
             let isNewTask = handleIsNewAsync(videoId, isNew)
@@ -121,12 +123,13 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 return
             }
             order = order ?? video.queueEntry?.order
+            wasTopOfQueue = VideoService.isTopOfQueue(order: order, modelContext)
             syncAction?(video)
             handleIsNew(video, isNew)
             try? modelContext.save()
             onChange?(changeReason, order)
         }
-        handlePotentialQueueChange(after: task, order: order)
+        handlePotentialQueueChange(after: task, wasTopOfQueue: wasTopOfQueue)
     }
 
     func handleIsNewAsync(_ videoId: PersistentIdentifier, _ isNew: Bool?) -> Task<Void, Error>? {
@@ -298,8 +301,11 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         }
     }
 
-    func handlePotentialQueueChange(_ video: Video? = nil, after task: (Task<(), Error>)? = nil, order: Int? = nil) {
-        if order == 0 || video?.queueEntry?.order == 0 {
+    func handlePotentialQueueChange(
+        after task: (Task<(), Error>)? = nil,
+        wasTopOfQueue: Bool = false
+    ) {
+        if wasTopOfQueue {
             try? modelContext.save()
             player.loadTopmostVideoFromQueue(after: task)
         }

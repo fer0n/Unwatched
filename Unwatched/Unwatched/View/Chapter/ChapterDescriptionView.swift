@@ -229,7 +229,7 @@ struct ChapterDescriptionView: View {
     }
 
     func requiresQueueChange() -> Bool {
-        return video.queueEntry?.order == 0
+        VideoService.isTopOfQueue(order: video.queueEntry?.order, modelContext)
     }
 
     func onTitleTap() {

@@ -32,9 +32,10 @@ public struct VideoService {
         try? modelContext.save()
     }
 
+    /// Removing an entry leaves the others' `order` alone — see `QueueOrder`, they only have to stay
+    /// in the right sequence relative to each other, not be contiguous.
     public static func deleteQueueEntry(
         _ queueEntry: QueueEntry,
-        updateOrder: Bool = true,
         modelContext: ModelContext
     ) {
         guard let queueEntry = modelContext.resolvedModel(queueEntry) else {
@@ -43,11 +44,7 @@ public struct VideoService {
         if let video = queueEntry.video.flatMap({ modelContext.resolvedModel($0) }), video.isNew {
             video.isNew = false
         }
-        let deletedOrder = queueEntry.order
         modelContext.delete(queueEntry)
-        if updateOrder {
-            updateQueueOrderDelete(deletedOrder: deletedOrder, modelContext: modelContext)
-        }
     }
 
     public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {
@@ -60,16 +57,4 @@ public struct VideoService {
         modelContext.delete(entry)
     }
 
-    public static func updateQueueOrderDelete(deletedOrder: Int, modelContext: ModelContext) {
-        do {
-            let fetchDescriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
-            let queue = try modelContext.fetch(fetchDescriptor)
-
-            for (index, queueEntry) in queue.enumerated() where queueEntry.order != index {
-                queueEntry.order = index
-            }
-        } catch {
-            Log.error("No queue entry found to delete")
-        }
-    }
 }
