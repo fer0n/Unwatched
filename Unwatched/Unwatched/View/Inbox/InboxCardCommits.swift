@@ -62,7 +62,7 @@ final class InboxCardCommits {
 
         // an empty queue makes an added video the new top one, whichever index it goes in at
         let addsToQueue = action == .queueNext || action == .queueLast
-        let requiresQueueChange = video.queueEntry?.order == 0
+        let requiresQueueChange = VideoService.isTopOfQueue(order: video.queueEntry?.order, modelContext)
             || (addsToQueue && VideoService.isQueueEmpty(modelContext))
 
         switch action {

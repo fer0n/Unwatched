@@ -30,10 +30,23 @@ extension VideoActor {
             }
         }
 
+        let moved = source.map { orderedQueue[$0] }
         orderedQueue.move(fromOffsets: source, toOffset: destination)
 
-        for (index, queueEntry) in orderedQueue.enumerated() where queueEntry.order != index {
-            queueEntry.order = index
+        // Only the entries that moved need a new order; the ones they moved past keep theirs.
+        let movedIds = Set(moved.map(ObjectIdentifier.init))
+        let remaining = orderedQueue.filter { !movedIds.contains(ObjectIdentifier($0)) }
+        let position = orderedQueue.firstIndex { movedIds.contains(ObjectIdentifier($0)) } ?? 0
+        if let orders = QueueOrder.insert(
+            count: moved.count,
+            at: position,
+            into: remaining.map(\.order)
+        ) {
+            for (entry, order) in zip(moved, orders) where entry.order != order {
+                entry.order = order
+            }
+        } else {
+            QueueInsertionService.renumber(orderedQueue, modelContext: modelContext)
         }
         try modelContext.save()
     }
@@ -303,19 +316,7 @@ extension VideoActor {
     }
 
     static func addToBottomQueue(video: Video, modelContext: ModelContext) throws {
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order, order: .reverse)])
-        fetch.fetchLimit = 1
-        let entries = try? modelContext.fetch(fetch)
-
-        var insertAt = 0
-        if let entries = entries {
-            if video.queueEntry != nil {
-                insertAt = entries.first?.order ?? 0
-            } else {
-                insertAt = (entries.first?.order ?? 0) + 1
-            }
-        }
-        VideoActor.insertQueueEntries(at: insertAt, videos: [video], modelContext: modelContext)
+        VideoActor.insertQueueEntries(at: -1, videos: [video], modelContext: modelContext)
         try modelContext.save()
     }
 

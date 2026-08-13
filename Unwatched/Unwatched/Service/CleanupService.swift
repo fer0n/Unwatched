@@ -48,6 +48,7 @@ struct CleanupService {
                 videoOnly: videoOnly
             )
             await repo.cleanupInboxEntryDates()
+            await repo.repairQueueOrder()
             return info
         }
     }
@@ -339,6 +340,20 @@ actor CleanupActor: SharedContextActor {
                 modelContext.delete(entry)
             }
         }
+    }
+
+    /// Spaces the queue back out if two entries ended up sharing an `order`, which leaves their
+    /// relative position down to whatever the sort does with a tie. Merging duplicates can do it,
+    /// and so can two devices inserting into the same gap before syncing.
+    func repairQueueOrder() {
+        let fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
+        guard let queue = try? modelContext.fetch(fetch),
+              !QueueOrder.isValid(queue.map(\.order)) else {
+            return
+        }
+        Log.info("repairQueueOrder: \(queue.count) entries")
+        QueueInsertionService.renumber(queue, modelContext: modelContext)
+        try? modelContext.save()
     }
 
     func removeEmptyChapters() {

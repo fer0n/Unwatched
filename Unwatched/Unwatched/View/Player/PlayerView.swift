@@ -257,7 +257,7 @@ struct PlayerView: View {
                 _ = VideoService.clearFromEverywhereAsync(video.youtubeId)
 
                 TinyUndoManager.shared.registerAction(
-                    .moveToQueue([video.persistentModelID], order: 0)
+                    .moveToQueue([video.persistentModelID], position: 0)
                 )
             }
             player.autoSetNextVideo(.continuousPlay, modelContext)

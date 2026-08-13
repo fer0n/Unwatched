@@ -75,18 +75,20 @@ class TinyUndoManager {
         _ order: Int,
         _ direction: ClearDirection) {
         var ids = [PersistentIdentifier]()
-        var newOrder = order
+        // a position for the undo to re-insert at, not an order: everything above the kept entry is
+        // going away, so it lands back on top, and everything below it lands back at the bottom
+        var position = 0
         if direction == .above {
             ids = queueEntries.compactMap { $0.order < order ? $0.video?.persistentModelID : nil }
-            newOrder = max(0, order - ids.count)
+            position = 0
         } else if direction == .below {
             ids = queueEntries.compactMap { $0.order > order ? $0.video?.persistentModelID : nil }
-            newOrder = order + 1
+            position = -1
         } else {
             Log.warning("Invalid clear direction: \(direction)")
             return
         }
-        registerAction(.moveToQueue(ids, order: newOrder))
+        registerAction(.moveToQueue(ids, position: position))
     }
 
     @MainActor
@@ -104,15 +106,18 @@ class TinyUndoManager {
             for id in ids {
                 if let video: Video = context.existingModel(for: id) {
                     if !hasNowPlayingVideo {
-                        hasNowPlayingVideo = video.queueEntry?.order == 0
+                        hasNowPlayingVideo = VideoService.isTopOfQueue(
+                            order: video.queueEntry?.order,
+                            context
+                        )
                     }
                     withAnimation {
                         VideoService.moveVideoToInbox(video, modelContext: context)
                     }
                 }
             }
-        case .moveToQueue(let ids, let order):
-            if order == 0 {
+        case .moveToQueue(let ids, let position):
+            if position == 0 {
                 hasNowPlayingVideo = true
             }
             var videos = [Video]()
@@ -123,7 +128,7 @@ class TinyUndoManager {
             }
             withAnimation {
                 VideoService.insertQueueEntries(
-                    at: order,
+                    at: position,
                     videos: videos,
                     modelContext: context
                 )
@@ -138,5 +143,5 @@ class TinyUndoManager {
 
 public enum UndoAction: Sendable {
     case moveToInbox(_ videoIds: [PersistentIdentifier]),
-         moveToQueue(_ videoIds: [PersistentIdentifier], order: Int)
+         moveToQueue(_ videoIds: [PersistentIdentifier], position: Int)
 }

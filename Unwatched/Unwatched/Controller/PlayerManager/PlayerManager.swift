@@ -484,7 +484,7 @@ extension PlayerManager {
             try? modelContext.save()
             _ = VideoService.setVideoWatchedAsync(videoId)
 
-            TinyUndoManager.shared.registerAction(.moveToQueue([videoId], order: 0))
+            TinyUndoManager.shared.registerAction(.moveToQueue([videoId], position: 0))
         }
     }
 

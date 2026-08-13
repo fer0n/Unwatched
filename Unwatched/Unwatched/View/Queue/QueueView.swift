@@ -66,6 +66,9 @@ private struct QueueListView: View {
                             if let video = entry.video {
                                 let videoId = video.persistentModelID
                                 let youtubeId = video.youtubeId
+                                // captured while the row renders: undo needs the spot the entry sat
+                                // in, which its sparse `order` doesn't give
+                                let position = queue.firstIndex(of: entry) ?? 0
 
                                 VideoListItem(
                                     video,
@@ -83,7 +86,7 @@ private struct QueueListView: View {
                                         delayQueueAction: true,
                                         ),
                                     onChange: { reason, order in
-                                        handleChange(reason, videoId, youtubeId, order ?? entry.order)
+                                        handleChange(reason, videoId, youtubeId, order ?? entry.order, position)
                                     }
                                 )
                                 .equatable()
@@ -156,11 +159,14 @@ private struct QueueListView: View {
         undoManager.registerAction(.moveToInbox(videoIds))
     }
 
+    /// - Parameter order: the entry's sort key, for picking out the entries above or below it
+    /// - Parameter position: where it sat in the queue, for undo to put it back
     func handleChange(
         _ reason: VideoChangeReason?,
         _ videoId: PersistentIdentifier,
         _ youtubeId: String,
-        _ order: Int
+        _ order: Int,
+        _ position: Int
     ) {
         guard let reason else {
             return
@@ -168,7 +174,7 @@ private struct QueueListView: View {
         switch reason {
         case .clearEverywhere, .moveToInbox, .toggleWatched:
             undoManager.registerAction(
-                .moveToQueue([videoId], order: order)
+                .moveToQueue([videoId], position: position)
             )
         case .clearAbove:
             undoManager.handleQueueClearDirection(youtubeId, queue, order, .above)

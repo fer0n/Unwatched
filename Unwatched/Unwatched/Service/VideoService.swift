@@ -118,7 +118,7 @@ extension VideoService {
     static func clearAllQueueEntries(_ modelContext: ModelContext) {
         let fetch = FetchDescriptor<QueueEntry>()
         if let entries = try? modelContext.fetch(fetch) {
-            deleteQueueEntries(entries, updateOrder: false, modelContext: modelContext)
+            deleteQueueEntries(entries, modelContext: modelContext)
         }
     }
 
@@ -130,11 +130,10 @@ extension VideoService {
 
     static func deleteQueueEntries(
         _ entries: [QueueEntry],
-        updateOrder: Bool = true,
         modelContext: ModelContext
     ) {
         for entry in entries {
-            deleteQueueEntry(entry, updateOrder: updateOrder, modelContext: modelContext)
+            deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
 
@@ -339,6 +338,17 @@ extension VideoService {
     /// queue makes the video the new top one, whichever index it goes in at.
     static func isQueueEmpty(_ context: ModelContext) -> Bool {
         (try? context.fetchCount(FetchDescriptor<QueueEntry>())) == 0
+    }
+
+    /// Whether `order` belongs to the entry at the top of the queue — the video the player would
+    /// load next. Ask *before* changing the queue: `QueueEntry.order` is a sparse sort key, so no
+    /// single value means "top", and once the entry is gone there is nothing left to compare.
+    static func isTopOfQueue(order: Int?, _ context: ModelContext) -> Bool {
+        guard let order else { return false }
+        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
+        fetch.fetchLimit = 1
+        guard let top = (try? context.fetch(fetch))?.first else { return false }
+        return top.order == order
     }
 
     static func getNextVideoInQueue(_ modelContext: ModelContext) -> (first: Video?, second: Video?) {

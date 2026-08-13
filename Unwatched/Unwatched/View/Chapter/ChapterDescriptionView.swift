@@ -268,7 +268,7 @@ struct ChapterDescriptionView: View {
     /// - Parameter adding: pass `true` when the video is about to be queued; filling an empty queue
     /// makes it the new top video, whichever index it goes in at
     func requiresQueueChange(adding: Bool = false) -> Bool {
-        if video.queueEntry?.order == 0 {
+        if VideoService.isTopOfQueue(order: video.queueEntry?.order, modelContext) {
             return true
         }
         return adding && VideoService.isQueueEmpty(modelContext)
