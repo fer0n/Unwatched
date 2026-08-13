@@ -70,7 +70,17 @@ enum OnboardingChannelSuggestions {
         channel("UCoOae5nYA7VqaXzerajD0lg", "Ali Abdaal", "aliabdaal",
                 "ytc/AIdro_m2xx6mCZwsyjARnkwBKJxEv0FqGxGS2NwWNkjWH__Smw"),
         channel("UCJquYOG5EL82sKTfH9aMA9Q", "Rick Beato", "RickBeato",
-                "ZfDOigTWKzMkwaokreALniSPfAzaAq4v2T9hawgoFmjX4mHULaVyCcySqKjmvcBqvoPyWX7gsg")
+                "ZfDOigTWKzMkwaokreALniSPfAzaAq4v2T9hawgoFmjX4mHULaVyCcySqKjmvcBqvoPyWX7gsg"),
+        channel("UCnrAvt4i_2WV3yEKWyEUMlg", "Gamertag VR", "GAMERTAGVR",
+                "ih1Eh72V95CPzo5wRq6S0GtmrZpFrpAw78CYoCu9mqiJ66nP1t7wvEkjP3FdhQbt819P_4UQuw"),
+        channel("UCVYamHliCI9rw1tHR1xbkfw", "Dave2D", "Dave2D",
+                "ytc/AIdro_lltZkOAE5XVIlI8U5QVXmdASgYyJiJps-LkO-uQnTwLMQ"),
+        channel("UC-FHoOa_jNSZy3IFctMEq2w", "habie147", "habie147",
+                "ytc/AIdro_lO1dGNQA_KkLYNfUdZJYNbFA9FFTt0rsU1DC95T4A98Y0"),
+        channel("UCi0_2sEpmT6FKn5-y6_W3cA", "Joanna Stern", "JoannaStern",
+                "FElhAj-MUyoqxqKy-ZuKtbr1Zguqs7SONymOmIGjvEiXwlu31zEkujAqnYDAwvJx3JeONDrFs8k"),
+        channel("UCEcrRXW3oEYfUctetZTAWLw", "WVFRM Podcast", "Waveform",
+                "NmzjFJ3oFspQ47IkoaNT_tGAN0a9gI_YbW7Fs-VVchxeJ0a336-qarZ4CMboDAS0vw17cqEY")
     ]
 
     private static func channel(
