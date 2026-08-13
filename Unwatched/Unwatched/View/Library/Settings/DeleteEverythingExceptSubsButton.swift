@@ -67,6 +67,7 @@ struct DeleteEverythingExceptSubsButton: View {
 
             _ = ImageService.deleteAllImages()
             _ = TranscriptService.deleteCache()
+            _ = ChapterService.deleteAllDerivedChapters()
         }
     }
 }

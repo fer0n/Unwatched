@@ -22,7 +22,7 @@ public protocol VideoData {
     var url: URL? { get }
     var persistentId: PersistentIdentifier? { get }
 
-    var sortedChapterData: [ChapterData] { get }
+    var sortedChapterData: [SendableChapter] { get }
     var subscriptionData: (any SubscriptionData)? { get }
     var hasInboxEntry: Bool? { get }
 }

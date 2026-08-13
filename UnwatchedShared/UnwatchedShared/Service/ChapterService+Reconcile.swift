@@ -1,12 +1,11 @@
 //
 //  ChapterService+Reconcile.swift
-//  Unwatched
+//  UnwatchedShared
 //
 
 import Foundation
 import OSLog
 import SwiftData
-import UnwatchedShared
 
 extension ChapterService {
 
@@ -17,7 +16,7 @@ extension ChapterService {
     /// the point: a deleted chapter that the player or a list row still holds traps that reader on
     /// its next property read. A row that already matches is left untouched, so a hand-toggled
     /// `isActive` survives a refresh that changes nothing else.
-    static func reconcileChapters(
+    public static func reconcileChapters(
         _ desired: [SendableChapter],
         with existing: [Chapter],
         in modelContext: ModelContext

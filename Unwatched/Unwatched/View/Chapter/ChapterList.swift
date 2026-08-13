@@ -24,8 +24,8 @@ struct ChapterList: View {
     var body: some View {
         if !chapters.isEmpty {
             LazyVStack(spacing: isCompact ? 4 : 10) {
-                ForEach(chapters) { chapter in
-                    let isCurrent = chapter.persistentModelID == player.currentChapter?.persistentModelID
+                ForEach(chapters, id: \.chapterId) { chapter in
+                    let isCurrent = chapter.chapterId == player.currentChapter?.chapterId
                     let foregroundColor: Color = isCurrent ? Color.backgroundColor : Color.neutralAccentColor
                     let backgroundColor: Color = isCurrent ? Color.neutralAccentColor : Color.insetBackgroundColor
 
@@ -43,7 +43,7 @@ struct ChapterList: View {
                             .opacity(chapter.isActive ? 1 : 0.6)
                             .opacity(isTransparent ? 0.7 : 1)
                     )
-                    .id(chapter.persistentModelID)
+                    .id(chapter.chapterId)
                     .onTapGesture {
                         if !chapter.isActive {
                             toggleChapter(chapter)
@@ -76,20 +76,27 @@ struct ChapterList: View {
         }
     }
 
-    var chapters: [Chapter] {
-        Video.getSortedChapters(video.mergedChapters, video.chapters)
+    var chapters: [SendableChapter] {
+        video.sortedChapterData
     }
 
-    func toggleChapter(_ chapter: Chapter) {
-        if !chapter.isActive || guardPremium() {
-            chapter.isActive.toggle()
-            if video == player.video {
-                player.handleChapterChange()
-            }
+    /// Toggling is the one action that needs a row — see `ChapterService.materialize`.
+    func toggleChapter(_ chapter: SendableChapter) {
+        guard !chapter.isActive || guardPremium() else {
+            return
+        }
+        guard let row = ChapterService.materialize(chapter, of: video, in: modelContext) else {
+            Log.warning("toggleChapter: no row for \(chapter)")
+            return
+        }
+        row.isActive.toggle()
+        try? modelContext.save()
+        if video == player.video {
+            player.handleChapterChange()
         }
     }
 
-    func setChapter(_ chapter: Chapter) {
+    func setChapter(_ chapter: SendableChapter) {
         if video != player.video {
             video.elapsedSeconds = chapter.startTime
             player.playVideo(video)
@@ -136,7 +143,7 @@ struct ChapterList: View {
 
     video.chapters = [ch1, ch2, ch3, ch4] // , ch5, ch6, ch7
     player.video = video
-    player.currentChapter = ch3
+    player.currentChapter = ch3.toExport
 
     try? context.save()
 
@@ -157,7 +164,7 @@ struct ChapterList: View {
                 }
                 // .background(.blue)
                 .onAppear {
-                    proxy.scrollTo(player.currentChapter?.persistentModelID, anchor: .center)
+                    proxy.scrollTo(player.currentChapter?.chapterId, anchor: .center)
                 }
                 .scrollIndicators(.hidden)
             }

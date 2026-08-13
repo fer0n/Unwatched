@@ -78,7 +78,7 @@ public final class DataProvider: Sendable {
     }
 
     public let localCacheContainer: ModelContainer = {
-        let schema = Schema([CachedImage.self, Transcript.self])
+        let schema = Schema([CachedImage.self, Transcript.self, CachedChapters.self])
         let fileName = "imageCache.sqlite"
 
         #if os(tvOS)

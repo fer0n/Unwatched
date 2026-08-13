@@ -155,13 +155,13 @@ struct PlayerWebView: PlatformViewRepresentable {
             return
         }
         let hash = ChapterService.getChaptersHash(
-            from: video.sortedChapters, duration: video.duration
+            from: video.sortedChapterData, duration: video.duration
         )
         player.previousState.chaptersHash = hash
         if prev.chaptersHash == hash {
             return
         }
-        if let chapters = player.video?.sortedChapters,
+        if let chapters = player.video?.sortedChapterData,
            let view = webViewState.webView {
             Log.info("CHAPTERMARKERS")
             let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)

@@ -7,11 +7,11 @@ import SwiftUI
 import UnwatchedShared
 
 struct ChapterTimeLabel: View {
-    var chapter: Chapter
+    var chapter: SendableChapter
     @Environment(PlayerManager.self) var player
 
     var body: some View {
-        let isCurrent = chapter.persistentModelID == player.currentChapter?.persistentModelID
+        let isCurrent = chapter.chapterId == player.currentChapter?.chapterId
         let currentTime = isCurrent ? player.currentTime : nil
         let timeInfo = ChapterListItem.ChapterTimeInfo(chapter: chapter, currentTime: currentTime)
 

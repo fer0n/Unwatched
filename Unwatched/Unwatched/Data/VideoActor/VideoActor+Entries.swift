@@ -123,28 +123,41 @@ extension VideoActor {
         return deleteImage
     }
 
+    /// Takes the new description, and brings the video's `Chapter` rows along with it if it has
+    /// any.
+    ///
+    /// Videos without rows need nothing further: their chapters are parsed from the description,
+    /// and `ChapterService.derivedChapters` keys its cache on that description, so a changed one
+    /// re-parses by itself. Rows only exist where the user edited them, and those are worth
+    /// correcting in place rather than leaving to describe a description that's gone.
     func updateDescriptionAndChapters(_ video: Video, _ updatedVideo: SendableVideo) {
         video.videoDescription = updatedVideo.videoDescription
+
         let currentChapters = video.chapters ?? []
-        let newChapters = updatedVideo.chapters
-
-        var shouldUpdateChapters: Bool = false
-        if currentChapters.isEmpty {
-            shouldUpdateChapters = true
-        } else if newChapters.isEmpty {
-            shouldUpdateChapters = false
-        } else {
-            // only correct existing chapters, don't replace custom ones
-            let similarity = ChapterService.chaptersSimilarity(newChapters, currentChapters)
-            shouldUpdateChapters = similarity > 0.6
-        }
-
-        if shouldUpdateChapters {
-            let reconciled = ChapterService.reconcileChapters(newChapters, with: currentChapters, in: modelContext)
-            if reconciled.hasChanges {
-                video.chapters = reconciled.chapters
+        guard !currentChapters.isEmpty else {
+            // No rows of its own, so its chapters re-parse from the new description on their own.
+            // A SponsorBlock merge was built on the old one though, and has to be rebuilt.
+            if !(video.mergedChapters?.isEmpty ?? true) {
                 CleanupService.deleteMergedChapters(from: video, modelContext)
             }
+            return
+        }
+
+        let newChapters = updatedVideo.chapters
+        guard !newChapters.isEmpty else {
+            return
+        }
+
+        // only correct existing chapters, don't replace custom ones
+        let similarity = ChapterService.chaptersSimilarity(newChapters, currentChapters)
+        guard similarity > 0.6 else {
+            return
+        }
+
+        let reconciled = ChapterService.reconcileChapters(newChapters, with: currentChapters, in: modelContext)
+        if reconciled.hasChanges {
+            video.chapters = reconciled.chapters
+            CleanupService.deleteMergedChapters(from: video, modelContext)
         }
     }
 

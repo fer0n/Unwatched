@@ -184,7 +184,7 @@ extension PlayerWebView {
     // swiftlint:disable function_body_length
     /// Override YouTube chapter indicators with custom chapters
     static func setChapterMarkersScript(
-        chapters: [Chapter],
+        chapters: [SendableChapter],
         videoDuration: Double,
         enableLogging: Bool) -> String {
         // Convert chapters to a JSON array of objects with startTime, endTime and isActive properties

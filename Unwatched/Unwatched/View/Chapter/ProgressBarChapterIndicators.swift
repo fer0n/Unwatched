@@ -13,14 +13,14 @@ struct ProgressBarChapterIndicators: View {
     let duration: Double
 
     var breakWidth: CGFloat {
-        let chapters = video?.sortedChapters ?? []
+        let chapters = video?.sortedChapterData ?? []
         return chapters.count > 40 ? 1 : 2
     }
 
     var body: some View {
-        let chapters = video?.sortedChapters ?? []
+        let chapters = video?.sortedChapterData ?? []
 
-        ForEach(chapters) { chapter in
+        ForEach(chapters, id: \.chapterId) { chapter in
             if !chapter.isActive {
                 inactive(chapter)
             }
@@ -37,7 +37,7 @@ struct ProgressBarChapterIndicators: View {
     }
 
     @ViewBuilder
-    func inactive(_ chapter: Chapter) -> some View {
+    func inactive(_ chapter: SendableChapter) -> some View {
         if let chapterDuration = chapter.duration {
             let inactiveWidth = (chapterDuration / duration) * width
             let xPos = (chapter.startTime / duration) * width + (inactiveWidth / 2)

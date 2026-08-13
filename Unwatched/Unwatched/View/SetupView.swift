@@ -131,6 +131,7 @@ struct SetupView: View {
         let shouldCleanup = UserDefaults.standard.shouldPerform(Const.cleanupImageCache, interval: .fortNightly)
         if shouldCleanup {
             ImageService.cleanupImages(olderThanDays: Const.cleanupCacheDays)
+            ChapterService.cleanupDerivedChapters(olderThanDays: Const.cleanupCacheDays)
         }
 
         CleanupService.runScheduledCleanup(

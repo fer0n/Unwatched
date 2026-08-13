@@ -234,7 +234,7 @@ actor VideoActor: SharedContextActor {
     private func insertVideoModels(from videos: [SendableVideo], to sub: Subscription) -> [Video] {
         var videoModels = [Video]()
         for vid in videos {
-            let video = vid.createVideo(extractChapters: ChapterService.extractChapters)
+            let video = vid.createVideo()
             videoModels.append(video)
             modelContext.insert(video)
             video.subscription = sub
@@ -351,8 +351,7 @@ actor VideoActor: SharedContextActor {
 
         let video = videoData.createVideo(
             url: url,
-            youtubeId: youtubeId,
-            extractChapters: ChapterService.extractChapters
+            youtubeId: youtubeId
         )
         modelContext.insert(video)
         if let channelId = videoData.youtubeChannelId {

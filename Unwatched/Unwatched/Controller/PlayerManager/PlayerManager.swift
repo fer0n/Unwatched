@@ -17,16 +17,16 @@ import UnwatchedShared
     var currentTime: Double?
 
     @MainActor
-    var currentChapter: Chapter?
+    var currentChapter: SendableChapter?
 
     @MainActor
-    var currentChapterPreview: Chapter?
+    var currentChapterPreview: SendableChapter?
 
     @MainActor
-    var previousChapter: Chapter?
+    var previousChapter: SendableChapter?
 
     @MainActor
-    var nextChapter: Chapter?
+    var nextChapter: SendableChapter?
 
     @MainActor
     var transcriptUrl: String?

@@ -13,6 +13,7 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
             CachedImageSchemaV1p2.self,
             CachedImageSchemaV2.self,
             CachedImageSchemaV2p1.self,
+            CachedImageSchemaV2p2.self,
         ]
     }
 
@@ -47,12 +48,22 @@ public enum CachedImageMigrationPlan: SchemaMigrationPlan {
         didMigrate: nil
     )
 
+    /// Adds `CachedChapters`, same as V2 -> V2p1 added `Transcript`: a new entity, nothing to
+    /// convert.
+    static let migrateCachedImageV2p1toV2p2 = MigrationStage.custom(
+        fromVersion: CachedImageSchemaV2p1.self,
+        toVersion: CachedImageSchemaV2p2.self,
+        willMigrate: nil,
+        didMigrate: nil
+    )
+
     public static var stages: [MigrationStage] {
         [
             migrateCachedImageV1toV1p1,
             migrateCachedImageV1p1toV1p2,
             migrateCachedImageV1p2toV2,
-            migrateCachedImageV2toV2p1
+            migrateCachedImageV2toV2p1,
+            migrateCachedImageV2p1toV2p2
         ]
     }
 }

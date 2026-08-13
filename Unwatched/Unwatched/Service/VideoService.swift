@@ -396,7 +396,7 @@ extension VideoService {
             return (duration, durationText)
         }
 
-        if let lastChapter = video.sortedChapters.last {
+        if let lastChapter = video.sortedChapterData.last {
             let time = lastChapter.endTime ?? lastChapter.startTime
             return (duration, ">\(time.formattedSecondsColon)")
         }
