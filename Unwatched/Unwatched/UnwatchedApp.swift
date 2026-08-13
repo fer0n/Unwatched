@@ -67,6 +67,7 @@ struct UnwatchedApp: App {
             SettingsWindowView()
                 .environment(player)
                 .environment(ImageCacheManager.shared)
+                .environment(NavigationManager.shared)
         }
 
         Window("faq", id: Const.windowHelp) {

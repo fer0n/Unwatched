@@ -80,6 +80,7 @@ struct SettingsWindowView: View {
 
 #Preview {
     SettingsWindowView()
+        .environment(NavigationManager.getDummy())
 }
 
 extension View {
