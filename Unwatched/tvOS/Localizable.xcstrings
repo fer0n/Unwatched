@@ -375,6 +375,40 @@
         }
       }
     },
+    "emptyEntry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung zum Video nicht gefunden. Möglicherweise wird auf Synchronisierung gewartet oder ein Fehler ist aufgetreten."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection to video not found. Possibly waiting on sync or an error."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conexión al video no encontrada. Posiblemente esperando sincronización o un error."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion à la vidéo non trouvée. En attente possible de synchronisation ou une erreur s'est produite."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono połączenia z filmem. Prawdopodobnie oczekiwanie na synchronizację lub wystąpił błąd."
+          }
+        }
+      }
+    },
     "markWatched" : {
       "localizations" : {
         "de" : {

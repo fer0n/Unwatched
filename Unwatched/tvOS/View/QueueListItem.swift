@@ -4,6 +4,8 @@
 //
 
 import SwiftUI
+import SwiftData
+import OSLog
 import UnwatchedShared
 
 struct QueueEntryListItem: View {
@@ -19,6 +21,7 @@ struct QueueEntryListItem: View {
 
     @State var toBeWatched: Video?
     @State var toBeCleared: Video?
+    @State var removeEmptyEntry = false
 
     init(
         _ entry: QueueEntry,
@@ -37,15 +40,23 @@ struct QueueEntryListItem: View {
     var body: some View {
         ZStack {
             Menu {
-                Button(
-                    "markWatched",
-                    systemImage: Const.checkmarkSF,
-                    action: { toBeWatched = entry.video }
-                )
+                if entry.video != nil {
+                    Button(
+                        "markWatched",
+                        systemImage: Const.checkmarkSF,
+                        action: { toBeWatched = entry.video }
+                    )
+                }
                 Button(
                     "clear",
                     systemImage: Const.clearNoFillSF,
-                    action: { toBeCleared = entry.video }
+                    action: {
+                        if let video = entry.video {
+                            toBeCleared = video
+                        } else {
+                            removeEmptyEntry = true
+                        }
+                    }
                 )
             } label: {
                 label
@@ -62,6 +73,14 @@ struct QueueEntryListItem: View {
         .task(id: toBeCleared) {
             await handleTask(for: toBeCleared, action: clearVideo)
         }
+        .task(id: removeEmptyEntry) {
+            guard removeEmptyEntry else { return }
+            try? await Task.sleep(nanoseconds: 700_000_000)
+            clearEntry()
+        }
+        .task {
+            reconnectVideo()
+        }
     }
 
     @ViewBuilder
@@ -69,7 +88,7 @@ struct QueueEntryListItem: View {
         if let video = entry.video {
             VideoGridItem(video: video, width: width)
         } else {
-            VStack {
+            VStack(alignment: .leading) {
                 ThumbnailPlaceholder(width)
                     .aspectRatio(contentMode: .fill)
                     .frame(
@@ -79,8 +98,15 @@ struct QueueEntryListItem: View {
                     .clipShape(RoundedRectangle(cornerRadius: 35))
                     .aspectRatio(contentMode: .fit)
 
-                Text(verbatim: "\n\n")
+                Text("emptyEntry")
+                    .lineLimit(3)
+                    .font(.caption)
+                    .padding(.horizontal, 10)
+                    .foregroundStyle(.secondary)
+
+                Spacer()
             }
+            .frame(width: width)
         }
     }
 
@@ -111,6 +137,35 @@ struct QueueEntryListItem: View {
         withAnimation {
             beforeRemove(entry)
             VideoService.setVideoWatched(video, modelContext: modelContext)
+        }
+    }
+
+    /// Relinks an entry that lost its video relationship in sync, using the youtube id the entry
+    /// keeps for exactly that case. Without this the entry stays an untitled black tile on tvOS.
+    private func reconnectVideo() {
+        guard entry.video == nil, let youtubeId = entry.youtubeId else {
+            return
+        }
+        let fetch = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
+        guard let video = try? modelContext.fetch(fetch).first else {
+            Log.info("reconnectVideo: no video for \(youtubeId)")
+            return
+        }
+        guard video.queueEntry == nil else {
+            // the video is already queued elsewhere: this entry is a leftover duplicate
+            return
+        }
+        video.queueEntry = entry
+        try? modelContext.save()
+        Log.info("reconnectVideo: reconnected \(youtubeId)")
+    }
+
+    /// Removes an entry that has no video to clear through.
+    private func clearEntry() {
+        withAnimation {
+            beforeRemove(entry)
+            VideoService.deleteQueueEntry(entry, modelContext: modelContext)
+            try? modelContext.save()
         }
     }
 
