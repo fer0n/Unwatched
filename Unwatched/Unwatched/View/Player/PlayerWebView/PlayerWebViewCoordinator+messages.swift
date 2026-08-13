@@ -369,13 +369,18 @@ extension PlayerWebViewCoordinator {
         if parent.player.isPlaying {
             parent.player.monitorChapters(time: time)
         }
+        statsTimeCounter += 1
+        if persist || statsTimeCounter >= Const.updateDbTimeSeconds {
+            statsTimeCounter = 0
+            if let videoId = youtubeId ?? parent.player.video?.youtubeId {
+                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time, persist: persist)
+            }
+        }
+
         updateTimeCounter += 1
-        if persist || updateTimeCounter >= Const.updateDbTimeSeconds {
+        if persist || updateTimeCounter >= Const.elapsedTimePersistSeconds {
             updateTimeCounter = 0
             parent.player.updateElapsedTime(time, videoId: youtubeId)
-            if let videoId = youtubeId ?? parent.player.video?.youtubeId {
-                StatsService.shared.handleVideoTimeUpdate(videoId: videoId, time: time)
-            }
         }
     }
 

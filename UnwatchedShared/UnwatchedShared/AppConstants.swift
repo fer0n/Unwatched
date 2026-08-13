@@ -140,7 +140,17 @@ public struct Const {
 
     public static let recentVideoDedupeCheck: Int = 30
 
+    /// How often playback is sampled for watch-time stats. Kept short so a sample can't span a
+    /// long stall; the samples are accumulated in memory and only written out on `flush`.
     public static let updateDbTimeSeconds: Int = 30
+
+    /// How often the elapsed time is written to the database while playing. Pause, video change
+    /// and backgrounding all persist it too, so this only bounds what a crash or a jetsam kill
+    /// during uninterrupted (usually background) playback can lose.
+    public static let elapsedTimePersistSeconds: Int = 120
+
+    /// Safety flush for accumulated watch time when playback never pauses
+    public static let statsFlushIntervalSeconds: Double = 600
 
     /// Timer interval to monitor the current playback
     public static let elapsedTimeMonitorSeconds: Double = 1

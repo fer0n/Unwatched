@@ -12,6 +12,7 @@ class PlayerWebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageH
     let parent: PlayerWebView
     var zoomWorkaroundActive = false
     var updateTimeCounter: Int = 0
+    var statsTimeCounter: Int = 0
 
     init(_ parent: PlayerWebView) {
         self.parent = parent

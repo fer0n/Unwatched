@@ -106,6 +106,10 @@ struct SetupView: View {
 
     static func handleAppClosed() {
         Log.info("handleAppClosed")
+        // Playback continues in the background, so this may be the last chance to write before the
+        // app is suspended — and, if it never comes back, killed.
+        PlayerManager.shared.updateElapsedTime(immediate: true)
+        StatsService.shared.flush()
         #if os(iOS)
         NotificationManager.handleNotifications()
         #endif

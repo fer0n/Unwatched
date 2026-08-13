@@ -173,27 +173,34 @@ extension VideoService {
         ) -> Task<Void, Error> {
         Log.info("forceUpdateVideo")
         return Task { @MainActor in
-            do {
-                try await Task.sleep(for: .milliseconds(delay))
-                let context = DataProvider.mainContext
-                guard let model: Video = context.existingModel(for: videoModelId) else {
-                    Log.warning("forceUpdateVideo: video not found")
+            let generation = PendingVideoUpdates.stage(
+                videoModelId, duration: duration, elapsedSeconds: elapsedSeconds, isNew: isNew
+            )
+            if delay > 0 {
+                do {
+                    try await Task.sleep(for: .milliseconds(delay))
+                } catch {
                     return
                 }
-                withAnimation {
-                    if let duration {
-                        model.duration = duration
-                    }
-                    if let elapsedSeconds {
-                        model.elapsedSeconds = elapsedSeconds
-                    }
-                    if let isNew {
-                        model.isNew = isNew
-                    }
-                }
-                try context.save()
-            } catch {}
+            }
+            PendingVideoUpdates.commit(videoModelId, generation: generation)
         }
+    }
+
+    /// Writes through without waiting out the debounce window, superseding anything pending for
+    /// the same video. For moments where there may be no later chance to write — backgrounding
+    /// can suspend the app before a delayed write ever runs.
+    @MainActor
+    static func forceUpdateVideoNow(
+        _ videoModelId: PersistentIdentifier,
+        duration: Double? = nil,
+        elapsedSeconds: Double? = nil,
+        isNew: Bool? = nil
+    ) {
+        _ = PendingVideoUpdates.stage(
+            videoModelId, duration: duration, elapsedSeconds: elapsedSeconds, isNew: isNew
+        )
+        PendingVideoUpdates.commit(videoModelId, generation: nil)
     }
 
     static func setVideoWatchedAsync(
@@ -572,5 +579,66 @@ extension VideoService {
         } catch {
             Log.error("clearNewStatus: Failed to fetch videos - \(error)")
         }
+    }
+}
+
+/// Debounce buffer for `forceUpdateVideo`. Every call used to spawn its own task and its own
+/// `context.save()`, so a burst — seeking, above all — turned into a burst of overlapping writes
+/// and, with a CloudKit-mirrored store behind them, of exported record versions. Instead the
+/// values are folded into one pending update per video and written once when the burst settles.
+@MainActor
+private enum PendingVideoUpdates {
+    private struct Update {
+        var duration: Double?
+        var elapsedSeconds: Double?
+        var isNew: Bool?
+        var generation = 0
+    }
+
+    private static var pending = [PersistentIdentifier: Update]()
+
+    /// Folds new values into the pending update, returning the generation that owns it.
+    static func stage(
+        _ videoModelId: PersistentIdentifier,
+        duration: Double?,
+        elapsedSeconds: Double?,
+        isNew: Bool?
+    ) -> Int {
+        var update = pending[videoModelId] ?? Update()
+        if let duration { update.duration = duration }
+        if let elapsedSeconds { update.elapsedSeconds = elapsedSeconds }
+        if let isNew { update.isNew = isNew }
+        update.generation += 1
+        pending[videoModelId] = update
+        return update.generation
+    }
+
+    /// - Parameter generation: the caller's claim on the pending update; a newer `stage` will have
+    ///   superseded it, in which case that caller writes instead. `nil` takes over unconditionally.
+    static func commit(_ videoModelId: PersistentIdentifier, generation: Int?) {
+        if let generation, pending[videoModelId]?.generation != generation {
+            return
+        }
+        guard let update = pending.removeValue(forKey: videoModelId) else {
+            return
+        }
+
+        let context = DataProvider.mainContext
+        guard let model: Video = context.existingModel(for: videoModelId) else {
+            Log.warning("forceUpdateVideo: video not found")
+            return
+        }
+        withAnimation {
+            if let duration = update.duration {
+                model.duration = duration
+            }
+            if let elapsedSeconds = update.elapsedSeconds {
+                model.elapsedSeconds = elapsedSeconds
+            }
+            if let isNew = update.isNew {
+                model.isNew = isNew
+            }
+        }
+        try? context.save()
     }
 }
