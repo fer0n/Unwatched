@@ -60,16 +60,10 @@ actor ChapterPurgeActor: SharedContextActor {
     /// (`ChapterService.derivedChapters`), which leaves libraries built before that carrying tens
     /// of thousands of records saying nothing the description doesn't.
     ///
-    /// Only exact matches go. A chapter whose title, timing or category differs from the parse is
-    /// something the user renamed, retimed or added, and a set the parse can't reproduce in full
-    /// stays whole — a video keeps all its rows or none, never half. `isActive` is deliberately
-    /// not compared: the parse applies the same skip filter, so a chapter switched off by that is
-    /// still reproducible, while one switched off by hand differs in nothing else and would be
-    /// lost. Which is why this only ever looks at `chapters`, never `mergedChapters` — no
-    /// description reproduces a SponsorBlock merge.
-    ///
-    /// Nothing is dropped on incomplete data: a video mid-import, whose description hasn't
-    /// arrived or whose rows have only partly landed, fails the comparison and is left alone.
+    /// Only exact matches go, and a set the parse can't reproduce in full stays whole — a video
+    /// keeps all its rows or none, never half. That covers incomplete data too: a video mid-import
+    /// fails the comparison and is left alone. Only `chapters` is ever considered, never
+    /// `mergedChapters` — no description reproduces a SponsorBlock merge.
     ///
     /// `nil` when it couldn't get at the library at all, so the caller knows not to mark the purge
     /// as done — the whole library is still to walk, not zero rows' worth of it.
@@ -107,15 +101,20 @@ actor ChapterPurgeActor: SharedContextActor {
         return deletedCount
     }
 
+    /// The skip filter is applied because the derived read path applies it too: a chapter switched
+    /// off by the filter is still reproducible, one switched off by hand isn't — and dropping that
+    /// row would undo the toggle on every device, since the delete syncs.
     private func isDerivable(_ rows: [Chapter], of video: Video) -> Bool {
         guard let description = video.videoDescription, !description.isEmpty else {
             return false
         }
         let parsed = ChapterService
-            .extractChapters(from: description, videoDuration: video.duration)
+            .applySkipFilter(to: ChapterService.extractChapters(from: description, videoDuration: video.duration))
             .sorted { $0.startTime < $1.startTime }
 
         guard parsed.count == rows.count else { return false }
-        return zip(parsed, rows).allSatisfy { ChapterService.chapterEqual($0, $1) }
+        return zip(parsed, rows).allSatisfy {
+            ChapterService.chapterEqual($0, $1) && $0.isActive == $1.isActive
+        }
     }
 }
