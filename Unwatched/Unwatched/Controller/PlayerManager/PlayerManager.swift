@@ -55,6 +55,7 @@ import UnwatchedShared
     var tallFullscreenOverlay: Bool = false
     var shouldStop: Bool = false
     var unstarted: Bool = true
+    var transitionCovered: Bool = false
     var isLoading: Date? = Date()
     var deferVideoDate: Date?
     private(set) var aspectRatio: Double?
@@ -72,6 +73,9 @@ import UnwatchedShared
     @ObservationIgnored var previousState = PreviousState()
 
     @ObservationIgnored var changeChapterTask: Task<Void, Never>?
+    @ObservationIgnored var transitionTask: Task<Void, Never>?
+    /// True while the cover is up but the next video hasn't been swapped in yet
+    @ObservationIgnored var transitionPendingSwap = false
     @ObservationIgnored var earlyEndTime: Double?
 
     init() {
@@ -205,31 +209,6 @@ import UnwatchedShared
     }
 
     @ObservationIgnored var currentEndTime: Double?
-
-    @MainActor
-    func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
-        let (first, second) = VideoService.getNextVideoInQueue(modelContext)
-        var next = first?.youtubeId != self.video?.youtubeId ? first : second
-        if first?.youtubeId == self.video?.youtubeId
-            && second?.youtubeId == self.video?.youtubeId {
-            // workaround: model context isn't always up to date
-            // if all three (current, first, second) are the same, it's the last video
-            // being cleared
-            next = nil
-        }
-        withAnimation {
-            setNextVideo(next, source)
-        }
-    }
-
-    @MainActor
-    func setNextVideo(_ nextVideo: Video?, _ source: VideoSource) {
-        updateElapsedTime()
-        if nextVideo != nil {
-            self.videoSource = source
-        }
-        self.video = nextVideo
-    }
 
     @MainActor
     private func hardClearVideo() {
@@ -456,6 +435,47 @@ extension PlayerManager {
 }
 
 extension PlayerManager {
+    @MainActor
+    func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
+        let (first, second) = VideoService.getNextVideoInQueue(modelContext)
+        var next = first?.youtubeId != self.video?.youtubeId ? first : second
+        if first?.youtubeId == self.video?.youtubeId
+            && second?.youtubeId == self.video?.youtubeId {
+            // workaround: model context isn't always up to date
+            // if all three (current, first, second) are the same, it's the last video
+            // being cleared
+            next = nil
+        }
+        setNextVideo(next, source)
+    }
+
+    /// Every video switch goes through here, which is why the fade lives here and not in the
+    /// individual actions (next button, shortcut, continuous play, queue reordering, ...)
+    @MainActor
+    func setNextVideo(_ nextVideo: Video?, _ source: VideoSource) {
+        guard let nextVideo,
+              video != nil,
+              nextVideo.youtubeId != video?.youtubeId else {
+            // nothing playing yet, or not an actual switch: nothing to fade between
+            applyVideo(nextVideo, source)
+            return
+        }
+        fadeToNextVideo { [weak self] in
+            self?.applyVideo(nextVideo, source)
+        }
+    }
+
+    @MainActor
+    private func applyVideo(_ nextVideo: Video?, _ source: VideoSource) {
+        updateElapsedTime()
+        if nextVideo != nil {
+            self.videoSource = source
+        }
+        withAnimation {
+            self.video = nextVideo
+        }
+    }
+
     @MainActor
     func markVideoWatched(showMenu: Bool = true, source: VideoSource = .nextUp) {
         Log.info("markVideoWatched")

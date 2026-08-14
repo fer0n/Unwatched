@@ -11,6 +11,37 @@ import UnwatchedShared
 // PlayerManager+Playback
 extension PlayerManager {
 
+    static let videoTransitionFade: Double = 0.4
+    private static let videoTransitionTimeout: Double = 5
+
+    /// Fades to black, swaps in the next video, stays covered until it plays.
+    /// Callers switch videos via `setNextVideo`, which is what triggers this.
+    @MainActor
+    func fadeToNextVideo(_ swap: @escaping @MainActor () -> Void) {
+        transitionTask?.cancel()
+        transitionCovered = true
+        transitionPendingSwap = true
+        transitionTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(Self.videoTransitionFade))
+            guard !Task.isCancelled else { return }
+            swap()
+            self?.transitionPendingSwap = false
+            // fallback for a video that never gets going
+            try? await Task.sleep(for: .seconds(Self.videoTransitionTimeout))
+            guard !Task.isCancelled else { return }
+            self?.endVideoTransition()
+        }
+    }
+
+    @MainActor
+    func endVideoTransition() {
+        // the outgoing video reporting in doesn't end a transition that's still waiting to swap
+        guard !transitionPendingSwap else { return }
+        transitionTask?.cancel()
+        transitionTask = nil
+        if transitionCovered { transitionCovered = false }
+    }
+
     @MainActor
     func handleAutoStart(_ url: URL?) {
         Log.info("handleAutoStart")
@@ -22,28 +53,38 @@ extension PlayerManager {
         }
         guard let source = videoSource else {
             Log.info("no source, stopping")
+            endVideoTransition()
             return
         }
         Log.info("source: \(String(describing: source))")
+        var starting = false
         switch source {
         case .continuousPlay:
             let continuousPlay = UserDefaults.standard.bool(forKey: Const.continuousPlay)
             if continuousPlay {
                 play()
+                starting = true
             }
         case .nextUp:
             break
         case .userInteraction:
             play()
+            starting = true
         case .playWhenReady:
             previousState.isPlaying = false
             play()
+            starting = true
         case .hotSwap, .errorSwap:
             if previousIsPlaying {
                 play()
+                starting = true
             }
         @unknown default:
             break
+        }
+        if !starting {
+            // loaded, but nothing will start it: uncovering can't wait for playback here
+            endVideoTransition()
         }
         videoSource = nil
     }
@@ -99,7 +140,7 @@ extension PlayerManager {
     func playVideo(_ video: Video) {
         self.videoSource = .userInteraction
         if self.video?.youtubeId != video.youtubeId {
-            self.video = video
+            setNextVideo(video, .userInteraction)
         } else {
             Log.info("playVideo: video already playing")
             play()

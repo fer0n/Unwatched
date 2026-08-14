@@ -127,6 +127,7 @@ struct PlayerEmbedded: View {
                 .animation(.easeOut(duration: 0.3), value: showThumbnail)
             }
         }
+        .transitionCover(player.transitionCovered)
         .overlay {
             if !hideMiniPlayer {
                 Color.black.opacity(0.000001)

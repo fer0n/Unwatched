@@ -6,6 +6,19 @@
 import SwiftUI
 import UnwatchedShared
 
+extension View {
+    /// Black cover the player fades through when it swaps to the next video.
+    func transitionCover(_ covered: Bool) -> some View {
+        overlay {
+            RoundedRectangle(cornerRadius: Const.videoPlayerCornerRadius, style: .continuous)
+                .fill(.black)
+                .opacity(covered ? 1 : 0)
+                .allowsHitTesting(false)
+                .animation(.easeInOut(duration: PlayerManager.videoTransitionFade), value: covered)
+        }
+    }
+}
+
 struct ThumbnailPlaceholder: View {
     var imageUrl: URL?
     var hideMiniPlayer: Bool

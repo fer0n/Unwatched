@@ -53,6 +53,7 @@ struct AVPlayerView: View {
         .overlay {
             ScrubberThumbnailOverlay()
         }
+        .transitionCover(player.transitionCovered)
         .clipShape(RoundedRectangle(
                     cornerRadius: Const.videoPlayerCornerRadius,
                     style: .continuous))

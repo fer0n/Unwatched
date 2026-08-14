@@ -146,6 +146,9 @@ struct PlayerView: View {
                 sheetPos.landscapeFullscreen = landscapeFullscreen
             }
         }
+        .onChange(of: !player.unstarted || player.video == nil) { _, done in
+            if done { player.endVideoTransition() }
+        }
         .dateSelectorSheet()
         #if !os(visionOS)
         .persistentSystemOverlays(
