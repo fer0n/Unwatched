@@ -264,6 +264,21 @@ class ExportableTests: XCTestCase {
                 Const.includeWatchHistoryInBackup: false,
             ]
 
+            // These outlive the process: a leftover `enableIcloudSync` makes every later run build
+            // a CloudKit container without the entitlement, killing the runner before any test body.
+            let previousValues = settingsOppositeDefaults.keys.reduce(into: [String: Any?]()) {
+                $0[$1] = UserDefaults.standard.object(forKey: $1)
+            }
+            defer {
+                for (key, value) in previousValues {
+                    if let value {
+                        UserDefaults.standard.setValue(value, forKey: key)
+                    } else {
+                        UserDefaults.standard.removeObject(forKey: key)
+                    }
+                }
+            }
+
             // set different settings to default value
             for (key, value) in settingsOppositeDefaults {
                 UserDefaults.standard.setValue(value, forKey: key)

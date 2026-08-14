@@ -266,6 +266,61 @@ class CleanupServiceTests: XCTestCase {
         }
     }
 
+    /// Dedupe used to delete the duplicate's chapters, i.e. another device's edit.
+    func testDedupeMovesChaptersToKeeper() async {
+        let context = DataProvider.newContext()
+        let youtubeId = "chapterMove-\(UUID().uuidString)"
+
+        let sub = Subscription.getDummy()
+        context.insert(sub)
+
+        let keeper = Video(
+            title: "keeper-\(youtubeId)",
+            url: URL(string: "https://www.youtube.com/watch?v=\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(keeper)
+        sub.videos?.append(keeper)
+
+        let duplicate = Video(
+            title: "duplicate-\(youtubeId)",
+            url: URL(string: "https://youtu.be/\(youtubeId)"),
+            youtubeId: youtubeId
+        )
+        context.insert(duplicate)
+        let edited = [
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Sponsor", time: 10, endTime: 20, isActive: false, category: nil)
+        ]
+        edited.forEach(context.insert)
+        ChapterService.attach(edited, to: duplicate)
+
+        try? context.save()
+
+        let task = CleanupService.cleanupDuplicatesAndInboxDate(quickCheck: false)
+        _ = await task.value
+
+        do {
+            let fetch = FetchDescriptor<Video>(predicate: #Predicate<Video> { $0.youtubeId == youtubeId })
+            // a fresh context: the test's own still holds the chapters pointing at the duplicate
+            let stored = try DataProvider.newContext().fetch(fetch)
+
+            XCTAssertEqual(stored.count, 1)
+            let kept = stored.first
+            XCTAssertEqual(kept?.title, "keeper-\(youtubeId)", "kept wrong duplicate")
+            XCTAssertEqual(kept?.chapters?.count, 2, "the edited chapters have to come along")
+            XCTAssertEqual(kept?.chapters?.filter { !$0.isActive }.count, 1, "the toggle has to survive")
+            XCTAssertTrue(
+                (kept?.chapters ?? []).allSatisfy { $0.video === kept },
+                "and they have to name the keeper, or they sync back as orphans"
+            )
+
+            cleanUp(videos: try context.fetch(fetch), sub: sub, context: context)
+        } catch {
+            XCTFail("Fetching failed: \(error)")
+        }
+    }
+
     /// The container is shared between tests, leftovers break suites that fetch unscoped.
     private func cleanUp(videos: [Video], sub: Subscription, context: ModelContext) {
         for video in videos {

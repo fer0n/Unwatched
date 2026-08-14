@@ -1435,22 +1435,56 @@ final class ChapterServiceTests: XCTestCase {
 
 final class ChapterReconcileTests: XCTestCase {
 
-    private func insert(_ chapters: [Chapter], into context: ModelContext) -> [Chapter] {
+    /// These reach the app's own store — a context nothing saves still autosaves eventually — so
+    /// every one has to be taken back out through the context that holds it. Anything left behind
+    /// counts towards `SharedContextActorTests`' video tally. Chapters go with the cascade rule.
+    private var created = [Video]()
+
+    override func tearDown() {
+        for video in created where !video.isDeleted {
+            guard let context = video.modelContext else { continue }
+            context.delete(video)
+            try? context.save()
+        }
+        created.removeAll()
+        super.tearDown()
+    }
+
+    private func makeVideo(owning chapters: [Chapter], in context: ModelContext) -> Video {
+        let video = Video(title: "My Video", url: nil, youtubeId: "reconcile-\(UUID().uuidString)")
+        context.insert(video)
         chapters.forEach(context.insert)
-        return chapters
+        ChapterService.attach(chapters, to: video)
+        created.append(video)
+        return video
+    }
+
+    /// Why `attach` writes the row side first: a check made after the array assignment never fires.
+    func testAssigningTheArrayAlsoFillsInTheRowSide() {
+        let context = DataProvider.newContext()
+        let rows = [
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil)
+        ]
+        let video = makeVideo(owning: [], in: context)
+        rows.forEach(context.insert)
+
+        video.chapters = rows
+
+        XCTAssertEqual(rows.compactMap(\.video).count, rows.count,
+                       "the inverse populates the row side, so a later !== check skips every row")
     }
 
     func testUnchangedChaptersKeepTheirRows() {
         let context = DataProvider.newContext()
-        let existing = insert([
+        let existing = [
             Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
             Chapter(title: "Middle", time: 10, endTime: 20, category: nil)
-        ], into: context)
+        ]
+        let video = makeVideo(owning: existing, in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
-            with: existing,
-            in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
         )
 
         XCTAssertFalse(result.hasChanges)
@@ -1460,15 +1494,10 @@ final class ChapterReconcileTests: XCTestCase {
 
     func testChangedChapterIsUpdatedInPlaceInsteadOfReplaced() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Intro", time: 0, endTime: nil, category: nil)
-        ], into: context)
+        let existing = [Chapter(title: "Intro", time: 0, endTime: nil, category: nil)]
+        let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro")],
-            with: existing,
-            in: context
-        )
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters[0] === existing[0], "the row has to survive, not be recreated")
@@ -1478,17 +1507,14 @@ final class ChapterReconcileTests: XCTestCase {
 
     func testSurplusChaptersAreDeleted() {
         let context = DataProvider.newContext()
-        let existing = insert([
+        let existing = [
             Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
             Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
             Chapter(title: "End", time: 20, endTime: 30, category: nil)
-        ], into: context)
+        ]
+        let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro")],
-            with: existing,
-            in: context
-        )
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertEqual(result.chapters.count, 1)
@@ -1498,14 +1524,11 @@ final class ChapterReconcileTests: XCTestCase {
 
     func testMissingChaptersAreInserted() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
-        ], into: context)
+        let existing = [Chapter(title: "Intro", time: 0, endTime: 10, category: nil)]
+        let video = makeVideo(owning: existing, in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
-            with: existing,
-            in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
         )
 
         XCTAssertTrue(result.hasChanges)
@@ -1515,17 +1538,42 @@ final class ChapterReconcileTests: XCTestCase {
         XCTAssertFalse(result.chapters[1].isDeleted)
     }
 
-    func testExistingRowsArePairedInStartTimeOrder() {
+    /// Every row an insert creates has to name its video, or it syncs and exports as an orphan.
+    func testInsertedRowsNameTheirVideo() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
-            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
-        ], into: context)
+        let video = makeVideo(owning: [], in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")],
-            with: existing,
-            in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
+        )
+
+        XCTAssertTrue(result.chapters.allSatisfy { $0.video === video })
+        XCTAssertEqual(video.chapters?.count, 2)
+    }
+
+    func testMergedRowsNameTheirVideoOnTheMergedSide() {
+        let context = DataProvider.newContext()
+        let video = makeVideo(owning: [], in: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Ad", category: .sponsor)], for: video, merged: true, in: context
+        )
+
+        XCTAssertTrue(result.chapters.allSatisfy { $0.mergedChapterVideo === video })
+        XCTAssertTrue(result.chapters.allSatisfy { $0.video == nil })
+        XCTAssertEqual(video.mergedChapters?.count, 1)
+    }
+
+    func testExistingRowsArePairedInStartTimeOrder() {
+        let context = DataProvider.newContext()
+        let existing = [
+            Chapter(title: "Middle", time: 10, endTime: 20, category: nil),
+            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
+        ]
+        let video = makeVideo(owning: existing, in: context)
+
+        let result = ChapterService.reconcileChapters(
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
         )
 
         XCTAssertFalse(result.hasChanges)
@@ -1537,15 +1585,10 @@ final class ChapterReconcileTests: XCTestCase {
     /// was kept as-is. Reusing the row has to keep that true.
     func testManualIsActiveSurvivesAnOtherwiseIdenticalChapter() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)
-        ], into: context)
+        let existing = [Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)]
+        let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro")],
-            with: existing,
-            in: context
-        )
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
 
         XCTAssertFalse(result.hasChanges)
         XCTAssertFalse(result.chapters[0].isActive)
@@ -1555,15 +1598,10 @@ final class ChapterReconcileTests: XCTestCase {
     /// `isActive` went back to what the feed said. Overwriting in place keeps that.
     func testIsActiveIsRestoredWhenTheChapterChanged() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)
-        ], into: context)
+        let existing = [Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)]
+        let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Renamed")],
-            with: existing,
-            in: context
-        )
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Renamed")], for: video, in: context)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters[0].isActive)
@@ -1572,20 +1610,21 @@ final class ChapterReconcileTests: XCTestCase {
 
     func testEmptyDesiredDeletesEverything() {
         let context = DataProvider.newContext()
-        let existing = insert([
-            Chapter(title: "Intro", time: 0, endTime: 10, category: nil)
-        ], into: context)
+        let existing = [Chapter(title: "Intro", time: 0, endTime: 10, category: nil)]
+        let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([], with: existing, in: context)
+        let result = ChapterService.reconcileChapters([], for: video, in: context)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters.isEmpty)
         XCTAssertTrue(existing[0].isDeleted)
+        XCTAssertEqual(video.chapters?.count ?? 0, 0, "the relationship can't be left listing gone rows")
     }
 
     func testReconcilingNothingIntoNothingReportsNoChanges() {
         let context = DataProvider.newContext()
-        let result = ChapterService.reconcileChapters([], with: [], in: context)
+        let video = makeVideo(owning: [], in: context)
+        let result = ChapterService.reconcileChapters([], for: video, in: context)
 
         XCTAssertFalse(result.hasChanges)
         XCTAssertTrue(result.chapters.isEmpty)
@@ -1594,12 +1633,12 @@ final class ChapterReconcileTests: XCTestCase {
     /// A shorter merge used to leave the extra rows both listed on the video and undeleted.
     func testUpdateIfNeededTrimsASurplusMerge() {
         let context = DataProvider.newContext()
-        let video = Video(title: "My Video", url: nil, youtubeId: "1234")
-        context.insert(video)
-        let existing = insert([
+        let existing = [
             Chapter(title: "Intro", time: 0, endTime: 10, category: nil),
             Chapter(title: "Ad", time: 10, endTime: 20, category: .sponsor)
-        ], into: context)
+        ]
+        let video = makeVideo(owning: [], in: context)
+        existing.forEach(context.insert)
         video.mergedChapters = existing
 
         ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], video, context)
@@ -1623,11 +1662,10 @@ final class ChapterReconcileTests: XCTestCase {
     /// the state a reader picks up and traps on, so clearing has to be explicit.
     func testDeleteMergedChaptersClearsTheRelationship() {
         let context = DataProvider.newContext()
-        let video = Video(title: "My Video", url: nil, youtubeId: "merged-cleared")
-        context.insert(video)
+        let video = makeVideo(owning: [], in: context)
         let merged = Chapter(title: "Ad", time: 10, endTime: 20, category: .sponsor)
         context.insert(merged)
-        video.mergedChapters = [merged]
+        ChapterService.attach([merged], to: video, merged: true)
 
         CleanupService.deleteMergedChapters(from: video, context)
 
@@ -1640,18 +1678,15 @@ final class ChapterReconcileTests: XCTestCase {
     /// chapters were left sitting unsaved and only persisted if something else happened to save.
     func testUpdateDurationPersistsThroughTheVideosContext() {
         let context = DataProvider.newContext()
-        let youtubeId = "duration-persist-\(UUID().uuidString)"
-        let video = Video(title: "My Video", url: nil, youtubeId: youtubeId)
-        context.insert(video)
         let openEnded = Chapter(title: "Intro", time: 0, endTime: nil, category: nil)
-        context.insert(openEnded)
-        video.chapters = [openEnded]
+        let video = makeVideo(owning: [openEnded], in: context)
         try? context.save()
 
         ChapterService.updateDuration(video, duration: 70)
 
         // read back through a separate context: only a save on the video's own context shows up here
         let fresh = DataProvider.newContext()
+        let youtubeId = video.youtubeId
         let descriptor = FetchDescriptor<Video>(predicate: #Predicate { $0.youtubeId == youtubeId })
         let reloaded = try? fresh.fetch(descriptor).first
         XCTAssertEqual(reloaded?.chapters?.first?.endTime, 70)
@@ -2013,7 +2048,6 @@ CHAPTERS
             duration: nil,
             elapsedSeconds: nil,
             videoDescription: videoDescription,
-            chapters: [],
             watchedDate: nil,
             isYtShort: false,
             bookmarkedDate: nil,
