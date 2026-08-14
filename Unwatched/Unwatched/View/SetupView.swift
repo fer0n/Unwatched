@@ -162,11 +162,7 @@ struct SetupView: View {
             inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly }
         )
 
-        if UserDefaults.standard.isDue(Const.cleanupHistoryTransactions, interval: .daily) {
-            Task.detached {
-                await HistoryMaintenance.pruneConsumedHistory()
-            }
-        }
+        HistoryMaintenance.pruneConsumedHistoryIfDue()
 
         Log.info("saved state")
     }
