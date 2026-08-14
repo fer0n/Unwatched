@@ -36,9 +36,8 @@ struct SetChapters: AppIntent {
         let video = try VideoService.getVideoOrCurrent(videoUrl)
 
         let chapters = ChapterService.extractChapters(from: chapterTimestamps, videoDuration: video.duration)
-        let context = DataProvider.mainContext
 
-        ChapterService.insertChapters(chapters, for: video, in: context)
+        ChapterService.insertChapters(chapters, for: video)
         return .result()
     }
 
