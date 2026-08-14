@@ -6,8 +6,6 @@ extension ChapterData {
         title ?? category?.translated
     }
 
-    /// Chapters without a title of their own show the video's, so pass it in — a derived
-    /// chapter has no way back to its video.
     public func titleText(fallback videoTitle: String?) -> String {
         titleText ?? videoTitle ?? "-"
     }
