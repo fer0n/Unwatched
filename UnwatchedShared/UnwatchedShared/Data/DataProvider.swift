@@ -102,9 +102,37 @@ public final class DataProvider: Sendable {
                 configurations: [config]
             )
         } catch {
-            fatalError("Could not create CachedImage ModelContainer: \(error)")
+            // Purely derived data, so a store that won't open is worth discarding rather than
+            // crashing on: a store written by a newer schema can't migrate back, and on tvOS the
+            // system may leave a partially purged store behind in Library/Caches.
+            Log.error("Could not open CachedImage store, discarding it: \(error)")
+            DataProvider.removeStore(at: storeURL)
+
+            do {
+                return try ModelContainer(
+                    for: schema,
+                    migrationPlan: CachedImageMigrationPlan.self,
+                    configurations: [config]
+                )
+            } catch {
+                fatalError("Could not create CachedImage ModelContainer: \(error)")
+            }
         }
     }()
+
+    private static func removeStore(at url: URL) {
+        for sidecar in ["", "-wal", "-shm"] {
+            let file = url.deletingLastPathComponent()
+                .appendingPathComponent(url.lastPathComponent + sidecar)
+            do {
+                try FileManager.default.removeItem(at: file)
+            } catch CocoaError.fileNoSuchFile {
+                continue
+            } catch {
+                Log.error("Could not remove \(file.lastPathComponent): \(error)")
+            }
+        }
+    }
 
     init() {}
 
