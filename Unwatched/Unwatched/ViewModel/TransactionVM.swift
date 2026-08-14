@@ -44,12 +44,30 @@ enum HistoryTokenStore {
 
 enum HistoryMaintenance {
     /// CloudKit tracks pending exports through the same history table, so transactions are
-    /// only dropped once they are far older than any plausible sync lag. Matches the window
-    /// used by Apple's own Core Data + CloudKit sample.
-    static let retentionDays = 7
+    /// only dropped once they are far older than any plausible sync lag. A device that stays
+    /// offline or unlaunched for weeks still has its changes waiting in here, so keep a month.
+    static let retentionDays = 30
 
     /// Keeps each delete short enough not to stall the main thread behind the store's write lock
     static let chunkDays = 1
+
+    /// Prunes at most once a day, and never while CloudKit is mid-sync: an export in flight reads
+    /// the same table, and deleting under it can drop transactions it hasn't mirrored yet.
+    /// `handleIcloudSyncDone` calls this again once sync settles, so a skip only defers the work.
+    @MainActor
+    static func pruneConsumedHistoryIfDue() {
+        guard #available(iOS 18, *),
+              UserDefaults.standard.isDue(Const.cleanupHistoryTransactions, interval: .daily) else {
+            return
+        }
+        guard !RefreshManager.shared.isSyncingIcloud else {
+            Log.info("pruneConsumedHistory: deferred, iCloud sync in progress")
+            return
+        }
+        Task.detached {
+            await pruneConsumedHistory()
+        }
+    }
 
     @available(iOS 18, *)
     static func pruneConsumedHistory() async {

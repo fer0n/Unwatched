@@ -62,6 +62,7 @@ extension RefreshManager {
         }
         await task.value
         PlayerManager.shared.handlePotentialUpdate()
+        HistoryMaintenance.pruneConsumedHistoryIfDue()
         let autoRefreshIgnoresSync = UserDefaults.standard.bool(forKey: Const.autoRefreshIgnoresSync)
         if !autoRefreshIgnoresSync {
             await executeAutoRefresh()

@@ -144,12 +144,7 @@ struct SetupView: View {
             inboxLimit: dueCleanupSetting(Const.autoDeleteInboxVideosLimit) { _ in .weekly }
         )
 
-        if #available(iOS 18, *),
-           UserDefaults.standard.isDue(Const.cleanupHistoryTransactions, interval: .daily) {
-            Task.detached {
-                await HistoryMaintenance.pruneConsumedHistory()
-            }
-        }
+        HistoryMaintenance.pruneConsumedHistoryIfDue()
 
         Log.info("saved state")
     }
