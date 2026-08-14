@@ -568,6 +568,19 @@ extension CleanupActor {
             keeper.deferDate = deferDate
         }
         moveEntries(from: duplicate, to: keeper)
+        moveChapters(from: duplicate, to: keeper)
+    }
+
+    /// Chapter rows are edits, and a device's edits arrive attached to its own copy of the video —
+    /// which `deleteVideo` would take them down with. The keeper's own rows win if it has any.
+    private func moveChapters(from duplicate: Video, to keeper: Video) {
+        let chapters = duplicate.chapters ?? []
+        guard !chapters.isEmpty, keeper.chapters?.isEmpty ?? true else { return }
+
+        duplicate.chapters = [] // before the attach, or it nulls out the `video` just written
+        ChapterService.attach(chapters, to: keeper)
+        CleanupService.deleteMergedChapters(from: keeper, modelContext)
+        ChapterService.invalidateDerivedChapters(youtubeId: keeper.youtubeId)
     }
 
     /// Moves entries over before they get deleted along with the duplicate.
