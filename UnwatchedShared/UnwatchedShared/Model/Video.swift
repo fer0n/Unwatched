@@ -80,7 +80,12 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []
         }
-        return result.sorted(by: { $0.startTime < $1.startTime })
+        // read startTime once per chapter: for the `Chapter` instantiation it's a SwiftData lookup,
+        // and one that traps if the row goes away partway through the sort
+        return result
+            .map { (startTime: $0.startTime, chapter: $0) }
+            .sorted { $0.startTime < $1.startTime }
+            .map(\.chapter)
     }
 
     public var remainingTime: Double? {
