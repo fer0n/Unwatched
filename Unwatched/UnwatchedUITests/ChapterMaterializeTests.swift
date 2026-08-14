@@ -74,8 +74,8 @@ final class ChapterMaterializeTests: XCTestCase {
 
     /// Titles are tagged so the rows can be found and cleaned up independently of the video.
     @discardableResult
-    private func reconcile(for video: Video, in context: ModelContext) -> [Chapter] {
-        let rows = ChapterService.reconcileChapters(Self.parsed, for: video, in: context).chapters
+    private func reconcile(for video: Video) -> [Chapter] {
+        let rows = ChapterService.reconcileChapters(Self.parsed, for: video).chapters
         for (index, row) in rows.enumerated() {
             row.title = "\(youtubeId)-\(index)"
         }
@@ -92,7 +92,7 @@ final class ChapterMaterializeTests: XCTestCase {
         let context = DataProvider.newContext()
         let video = try makeVideo(in: context)
 
-        let rows = reconcile(for: video, in: context)
+        let rows = reconcile(for: video)
         try context.save()
 
         XCTAssertEqual(video.chapters?.count, 5, "the video has to own every reconciled row")
@@ -103,7 +103,7 @@ final class ChapterMaterializeTests: XCTestCase {
         let context = DataProvider.newContext()
         let video = try makeVideo(in: context)
 
-        let rows = reconcile(for: video, in: context)
+        let rows = reconcile(for: video)
         try context.save()
 
         rows[1].isActive.toggle()
@@ -120,7 +120,7 @@ final class ChapterMaterializeTests: XCTestCase {
         let context = DataProvider.newContext()
         let video = try makeVideo(in: context)
 
-        let rows = reconcile(for: video, in: context)
+        let rows = reconcile(for: video)
         rows[1].isActive.toggle()
         try context.save()
 
@@ -142,7 +142,7 @@ final class ChapterMaterializeTests: XCTestCase {
         let context = DataProvider.newContext()
         let video = try makeVideo(in: context)
 
-        let rows = reconcile(for: video, in: context)
+        let rows = reconcile(for: video)
         rows[1].isActive.toggle()
         try context.save()
 

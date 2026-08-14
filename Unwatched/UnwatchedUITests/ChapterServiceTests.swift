@@ -1484,7 +1484,7 @@ final class ChapterReconcileTests: XCTestCase {
         let video = makeVideo(owning: existing, in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video
         )
 
         XCTAssertFalse(result.hasChanges)
@@ -1497,7 +1497,7 @@ final class ChapterReconcileTests: XCTestCase {
         let existing = [Chapter(title: "Intro", time: 0, endTime: nil, category: nil)]
         let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters[0] === existing[0], "the row has to survive, not be recreated")
@@ -1514,7 +1514,7 @@ final class ChapterReconcileTests: XCTestCase {
         ]
         let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertEqual(result.chapters.count, 1)
@@ -1528,7 +1528,7 @@ final class ChapterReconcileTests: XCTestCase {
         let video = makeVideo(owning: existing, in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video
         )
 
         XCTAssertTrue(result.hasChanges)
@@ -1544,7 +1544,7 @@ final class ChapterReconcileTests: XCTestCase {
         let video = makeVideo(owning: [], in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video
         )
 
         XCTAssertTrue(result.chapters.allSatisfy { $0.video === video })
@@ -1556,7 +1556,7 @@ final class ChapterReconcileTests: XCTestCase {
         let video = makeVideo(owning: [], in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Ad", category: .sponsor)], for: video, merged: true, in: context
+            [.init(0, to: 10, "Ad", category: .sponsor)], for: video, merged: true
         )
 
         XCTAssertTrue(result.chapters.allSatisfy { $0.mergedChapterVideo === video })
@@ -1573,7 +1573,7 @@ final class ChapterReconcileTests: XCTestCase {
         let video = makeVideo(owning: existing, in: context)
 
         let result = ChapterService.reconcileChapters(
-            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video, in: context
+            [.init(0, to: 10, "Intro"), .init(10, to: 20, "Middle")], for: video
         )
 
         XCTAssertFalse(result.hasChanges)
@@ -1588,7 +1588,7 @@ final class ChapterReconcileTests: XCTestCase {
         let existing = [Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)]
         let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video, in: context)
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Intro")], for: video)
 
         XCTAssertFalse(result.hasChanges)
         XCTAssertFalse(result.chapters[0].isActive)
@@ -1601,7 +1601,7 @@ final class ChapterReconcileTests: XCTestCase {
         let existing = [Chapter(title: "Intro", time: 0, endTime: 10, isActive: false, category: nil)]
         let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Renamed")], for: video, in: context)
+        let result = ChapterService.reconcileChapters([.init(0, to: 10, "Renamed")], for: video)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters[0].isActive)
@@ -1613,7 +1613,7 @@ final class ChapterReconcileTests: XCTestCase {
         let existing = [Chapter(title: "Intro", time: 0, endTime: 10, category: nil)]
         let video = makeVideo(owning: existing, in: context)
 
-        let result = ChapterService.reconcileChapters([], for: video, in: context)
+        let result = ChapterService.reconcileChapters([], for: video)
 
         XCTAssertTrue(result.hasChanges)
         XCTAssertTrue(result.chapters.isEmpty)
@@ -1624,7 +1624,7 @@ final class ChapterReconcileTests: XCTestCase {
     func testReconcilingNothingIntoNothingReportsNoChanges() {
         let context = DataProvider.newContext()
         let video = makeVideo(owning: [], in: context)
-        let result = ChapterService.reconcileChapters([], for: video, in: context)
+        let result = ChapterService.reconcileChapters([], for: video)
 
         XCTAssertFalse(result.hasChanges)
         XCTAssertTrue(result.chapters.isEmpty)
@@ -1641,10 +1641,24 @@ final class ChapterReconcileTests: XCTestCase {
         existing.forEach(context.insert)
         video.mergedChapters = existing
 
-        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], video, context)
+        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], video)
 
         XCTAssertEqual(video.mergedChapters?.count, 1)
         XCTAssertTrue(existing[1].isDeleted)
+    }
+
+    /// The player's video comes from a context of its own (`loadTopmostVideoFromQueue`), so a
+    /// merged row built anywhere else and then attached is a SwiftData fatal error — the crash on
+    /// launch as soon as the SponsorBlock merge ran.
+    func testUpdateIfNeededBuildsRowsInTheVideosContext() {
+        let videoContext = DataProvider.newContext()
+        let video = makeVideo(owning: [], in: videoContext)
+        try? videoContext.save()
+
+        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], video)
+
+        XCTAssertEqual(video.mergedChapters?.count, 1)
+        XCTAssertTrue(video.mergedChapters?.first?.modelContext === videoContext)
     }
 
     /// Without a video the old version still built and inserted chapter rows, then dropped them
@@ -1652,7 +1666,7 @@ final class ChapterReconcileTests: XCTestCase {
     func testUpdateIfNeededWithoutAVideoInsertsNothing() {
         let context = DataProvider.newContext()
 
-        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], nil, context)
+        ChapterService.updateIfNeeded([.init(0, to: 10, "Intro")], nil)
 
         XCTAssertTrue(context.insertedModelsArray.isEmpty)
     }

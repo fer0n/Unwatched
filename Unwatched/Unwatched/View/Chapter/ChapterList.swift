@@ -86,12 +86,12 @@ struct ChapterList: View {
         guard !chapter.isActive || guardPremium() else {
             return
         }
-        guard let row = ChapterService.materialize(chapter, of: video, in: modelContext) else {
+        guard let row = ChapterService.materialize(chapter, of: video) else {
             Log.warning("toggleChapter: no row for \(chapter)")
             return
         }
         row.isActive.toggle()
-        try? modelContext.save()
+        try? video.modelContext?.save()
         if video == player.video {
             player.handleChapterChange()
         }

@@ -121,7 +121,7 @@ struct TranscriptService {
                 Log.info("generateAiChapters: video not found")
                 return
             }
-            ChapterService.insertChapters(chapters, for: video, in: modelContext)
+            ChapterService.insertChapters(chapters, for: video)
         }
     }
 }

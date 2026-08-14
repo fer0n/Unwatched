@@ -154,7 +154,7 @@ extension VideoActor {
             return
         }
 
-        if ChapterService.reconcileChapters(newChapters, for: video, in: modelContext).hasChanges {
+        if ChapterService.reconcileChapters(newChapters, for: video).hasChanges {
             CleanupService.deleteMergedChapters(from: video, modelContext)
         }
     }

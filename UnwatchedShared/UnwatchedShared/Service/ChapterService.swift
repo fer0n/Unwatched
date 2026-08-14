@@ -193,7 +193,7 @@ public struct ChapterService {
             && sendable.title == chapter.title
     }
 
-    public static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?, _ modelContext: ModelContext) {
+    public static func updateIfNeeded(_ chapters: [SendableChapter], _ video: Video?) {
         Log.info("updateIfNeeded")
         guard let video else {
             // without a video to attach them to, anything built here is an orphan row
@@ -201,7 +201,7 @@ public struct ChapterService {
             return
         }
 
-        reconcileChapters(chapters, for: video, merged: true, in: modelContext)
+        reconcileChapters(chapters, for: video, merged: true)
     }
 
     /// What percentage of the two arrays is equal, paired the same way `reconcileChapters` pairs

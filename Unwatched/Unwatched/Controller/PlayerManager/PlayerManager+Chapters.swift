@@ -245,9 +245,8 @@ extension PlayerManager {
                 Log.info("SponsorBlock: Refreshed")
                 ChapterService.skipSponsorBlockSegments(in: &newChapters)
 
-                let modelContext = DataProvider.mainContext
-                ChapterService.updateIfNeeded(newChapters, video, modelContext)
-                try modelContext.save()
+                ChapterService.updateIfNeeded(newChapters, video)
+                try video?.modelContext?.save()
                 ChapterService.filterChapters(in: video)
             } catch {
                 Log.error("Error while merging chapters: \(error)")

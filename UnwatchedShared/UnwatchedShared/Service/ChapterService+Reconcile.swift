@@ -16,13 +16,19 @@ extension ChapterService {
     /// place; only surplus is deleted. Reuse is the point: a deleted chapter that the player or a
     /// list row still holds traps that reader on its next property read, and an untouched row
     /// keeps a hand-toggled `isActive` through a refresh that changes nothing else.
+    ///
+    /// No context to pass: rows have to be created in the video's own, relating them across
+    /// contexts is a SwiftData fatal error.
     @discardableResult
     public static func reconcileChapters(
         _ desired: [SendableChapter],
         for video: Video,
-        merged: Bool = false,
-        in modelContext: ModelContext
+        merged: Bool = false
     ) -> (chapters: [Chapter], hasChanges: Bool) {
+        guard let modelContext = video.modelContext else {
+            Log.warning("reconcileChapters: video has no context")
+            return ([], false)
+        }
         let desired = desired.sorted { $0.startTime < $1.startTime }
         let existing = (merged ? video.mergedChapters : video.chapters) ?? []
         let sorted = existing.sorted { $0.startTime < $1.startTime }

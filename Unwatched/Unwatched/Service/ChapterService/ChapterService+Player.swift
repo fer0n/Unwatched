@@ -39,8 +39,12 @@ extension ChapterService {
     }
 
     @MainActor
-    static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
-        if reconcileChapters(chapters, for: video, in: context).hasChanges {
+    static func insertChapters(_ chapters: [SendableChapter], for video: Video) {
+        guard let context = video.modelContext else {
+            Log.warning("insertChapters: video has no context")
+            return
+        }
+        if reconcileChapters(chapters, for: video).hasChanges {
             CleanupService.deleteMergedChapters(from: video, context)
             // rows now describe this video; a derived copy alongside them would only drift
             invalidateDerivedChapters(youtubeId: video.youtubeId)
@@ -66,14 +70,14 @@ extension ChapterService {
     @MainActor
     static func materialize(
         _ chapter: SendableChapter,
-        of video: Video,
-        in context: ModelContext
+        of video: Video
     ) -> Chapter? {
-        if let id = chapter.persistentId, let row: Chapter = context.existingModel(for: id) {
+        if let id = chapter.persistentId,
+           let row: Chapter = video.modelContext?.existingModel(for: id) {
             return row
         }
 
-        let reconciled = reconcileChapters(video.ownChapterData, for: video, in: context)
+        let reconciled = reconcileChapters(video.ownChapterData, for: video)
         // the rows are the source of truth from here on; a derived copy alongside them would only
         // be a second one that drifts
         invalidateDerivedChapters(youtubeId: video.youtubeId)
@@ -89,7 +93,10 @@ extension ChapterService {
     /// it was built on the rows being removed, and `handleChapterRefresh` rebuilds it.
     @MainActor
     static func restoreChapters(for video: Video) {
-        let context = DataProvider.mainContext
+        guard let context = video.modelContext else {
+            Log.warning("restoreChapters: video has no context")
+            return
+        }
 
         let rows = video.chapters ?? []
         video.chapters = []
