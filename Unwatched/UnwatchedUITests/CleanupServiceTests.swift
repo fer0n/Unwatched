@@ -329,4 +329,5 @@ class CleanupServiceTests: XCTestCase {
         XCTAssertEqual(diffDurationEntries.first?.watchTime, 200)
     }
 }
+
 // swiftlint:enable all

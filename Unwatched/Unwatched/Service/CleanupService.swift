@@ -400,22 +400,22 @@ actor CleanupActor: SharedContextActor {
     }
 
     func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
-        subs.sorted { (sub0: Subscription, sub1: Subscription) -> Bool in
-            let count0 = sub0.videos?.count ?? 0
-            let count1 = sub1.videos?.count ?? 0
-            if count0 != count1 {
-                return count0 > count1
+        let now = Date.now
+        return subs
+            .map { (videoCount: $0.videos?.count ?? 0,
+                    subscribedDate: $0.subscribedDate ?? now,
+                    isArchived: $0.isArchived,
+                    sub: $0) }
+            .sorted { key0, key1 in
+                if key0.videoCount != key1.videoCount {
+                    return key0.videoCount > key1.videoCount
+                }
+                if key0.subscribedDate != key1.subscribedDate {
+                    return key0.subscribedDate > key1.subscribedDate
+                }
+                return key1.isArchived && !key0.isArchived
             }
-
-            let now = Date.now
-            let date0 = sub0.subscribedDate ?? now
-            let date1 = sub1.subscribedDate ?? now
-            if date0 != date1 {
-                return date0 > date1
-            }
-
-            return sub1.isArchived
-        }
+            .map(\.sub)
     }
 
     // MARK: Videos
@@ -458,40 +458,10 @@ actor CleanupActor: SharedContextActor {
     }
 
     func sortVideos(_ videos: [Video]) -> [Video] {
-        videos.sorted { (vid0: Video, vid1: Video) -> Bool in
-            let sub0 = vid0.subscription != nil
-            let sub1 = vid1.subscription != nil
-            if sub0 != sub1 {
-                return sub0
-            }
-
-            let watched0 = vid0.watchedDate != nil
-            let watched1 = vid1.watchedDate != nil
-            if watched0 != watched1 {
-                return watched0
-            }
-
-            let sec0 = vid0.elapsedSeconds ?? 0
-            let sec1 = vid1.elapsedSeconds ?? 0
-            if sec0 != sec1 {
-                return sec0 > sec1
-            }
-
-            let new0 = vid0.isNew
-            let new1 = vid1.isNew
-            if new0 != new1 {
-                return new1
-            }
-
-            let queue0 = vid0.queueEntry?.order ?? Int.max
-            let queue1 = vid1.queueEntry?.order ?? Int.max
-            if queue0 != queue1 {
-                return queue0 < queue1
-            }
-
-            let inbox0 = vid0.inboxEntry != nil
-            return inbox0
-        }
+        videos
+            .map(VideoSortKey.init)
+            .sorted(by: VideoSortKey.precedes)
+            .map(\.video)
     }
 
     func clearOldInboxEntries(keep: Int) -> Int? {
@@ -624,6 +594,51 @@ extension CleanupActor {
             inboxEntry.video = keeper
             keeper.inboxEntry = inboxEntry
         }
+    }
+}
+
+/// Every property `sortVideos` orders by, read once up front so the comparator never touches the
+/// models — a row can be deleted partway through the sort.
+private struct VideoSortKey {
+    let video: Video
+    let hasSubscription: Bool
+    let isWatched: Bool
+    let elapsedSeconds: Double
+    let isNew: Bool
+    let queueOrder: Int
+    let hasInboxEntry: Bool
+
+    init(_ video: Video) {
+        self.video = video
+        hasSubscription = video.subscription != nil
+        isWatched = video.watchedDate != nil
+        elapsedSeconds = video.elapsedSeconds ?? 0
+        isNew = video.isNew
+        queueOrder = video.queueEntry?.order ?? Int.max
+        hasInboxEntry = video.inboxEntry != nil
+    }
+
+    /// Ranks the video most worth keeping first, so `removeVideoDuplicatesAndEntries` can drop the rest.
+    static func precedes(_ key0: VideoSortKey, _ key1: VideoSortKey) -> Bool {
+        if key0.hasSubscription != key1.hasSubscription {
+            return key0.hasSubscription
+        }
+        if key0.isWatched != key1.isWatched {
+            return key0.isWatched
+        }
+        if key0.elapsedSeconds != key1.elapsedSeconds {
+            return key0.elapsedSeconds > key1.elapsedSeconds
+        }
+        if key0.isNew != key1.isNew {
+            return key1.isNew
+        }
+        if key0.queueOrder != key1.queueOrder {
+            return key0.queueOrder < key1.queueOrder
+        }
+        if key0.hasInboxEntry != key1.hasInboxEntry {
+            return key0.hasInboxEntry
+        }
+        return false
     }
 }
 

@@ -122,7 +122,11 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         } else if (chapters?.count ?? 0) > 1 {
             result = chapters ?? []
         }
-        return result.sorted(by: { $0.startTime < $1.startTime })
+        // for `Chapter`, startTime is a SwiftData read that traps if the row goes away mid-sort
+        return result
+            .map { (startTime: $0.startTime, chapter: $0) }
+            .sorted { $0.startTime < $1.startTime }
+            .map(\.chapter)
     }
 
     public var remainingTime: Double? {

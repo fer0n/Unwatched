@@ -348,6 +348,7 @@ extension VideoActor {
         try modelContext.save()
     }
 
+    /// - Parameter startIndex: the position the videos take in the queue, `-1` for the bottom.
     static func insertQueueEntries(at startIndex: Int = 0, videos: [Video], modelContext: ModelContext) {
         QueueInsertionService.insertQueueEntries(at: startIndex, videos: videos, modelContext: modelContext)
     }
