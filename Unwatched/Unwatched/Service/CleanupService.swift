@@ -397,7 +397,6 @@ actor CleanupActor: SharedContextActor {
 
     func sortSubscriptions(_ subs: [Subscription]) -> [Subscription] {
         let now = Date.now
-        // same reason as `sortVideos`: the comparator can't reach into the models
         return subs
             .map { (videoCount: $0.videos?.count ?? 0,
                     subscribedDate: $0.subscribedDate ?? now,
@@ -594,12 +593,8 @@ extension CleanupActor {
     }
 }
 
-/// Every property `sortVideos` orders by, read once up front.
-///
-/// The comparator must not touch the models. A sort spreads O(n log n) property reads across a long
-/// window, and the dedupe pass it serves deletes and saves as it goes — so a read late in the sort
-/// can land on a row that is already gone and trap on invalid backing data. Reading each video once
-/// closes that window and drops the repeated SwiftData lookups per comparison.
+/// Every property `sortVideos` orders by, read once up front so the comparator never touches the
+/// models — a row can be deleted partway through the sort.
 private struct VideoSortKey {
     let video: Video
     let hasSubscription: Bool

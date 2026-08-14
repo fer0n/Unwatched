@@ -330,10 +330,6 @@ class CleanupServiceTests: XCTestCase {
     }
 }
 
-// Ported from native-player's SettingsMigrationTests, which does not exist here. Lives in
-// this file so it needs no project-file entry; `repairQueueOrder` above leans on the same
-// arithmetic.
-
 final class QueueOrderTests: XCTestCase {
     private let step = QueueOrder.step
 
