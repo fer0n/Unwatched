@@ -36,7 +36,7 @@ extension DataProvider {
         for chapter in chapters {
             container.mainContext.insert(chapter)
         }
-        video.chapters = chapters
+        ChapterService.attach(chapters, to: video)
         video.duration = 60
 
         try? container.mainContext.save()

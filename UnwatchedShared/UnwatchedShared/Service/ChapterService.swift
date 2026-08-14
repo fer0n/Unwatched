@@ -201,10 +201,7 @@ public struct ChapterService {
             return
         }
 
-        let reconciled = reconcileChapters(chapters, with: video.mergedChapters ?? [], in: modelContext)
-        if reconciled.hasChanges {
-            video.mergedChapters = reconciled.chapters
-        }
+        reconcileChapters(chapters, for: video, merged: true, in: modelContext)
     }
 
     /// What percentage of the two arrays is equal, paired the same way `reconcileChapters` pairs

@@ -110,6 +110,7 @@
 		882A750A2C74A6A40051BBF0 /* ChapterService+Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A75092C74A6A40051BBF0 /* ChapterService+Player.swift */; };
 		882A750B2C74A6A40051BBF0 /* ChapterService+Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A75092C74A6A40051BBF0 /* ChapterService+Player.swift */; };
 		882A75102C74A7070051BBF0 /* ChapterServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */; };
+		AA11CD012E00000000000001 /* ChapterMaterializeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */; };
 		882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */; };
 		882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */; };
 		883327FF2B8DB286001B3895 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883327FE2B8DB286001B3895 /* AsyncButton.swift */; };
@@ -930,6 +931,7 @@
 		88296AD92CCEE8E300E96D3C /* DescriptionMiniProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionMiniProgressBar.swift; sourceTree = "<group>"; };
 		882A75092C74A6A40051BBF0 /* ChapterService+Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChapterService+Player.swift"; sourceTree = "<group>"; };
 		882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterServiceTests.swift; sourceTree = "<group>"; };
+		AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterMaterializeTests.swift; sourceTree = "<group>"; };
 		882FBA7D2B905F2500213CEF /* UnwatchedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnwatchedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITests.swift; sourceTree = "<group>"; };
 		882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -1516,6 +1518,7 @@
 				88CBE3462BB76AFD00B5722F /* SpeedControlViewModelTests.swift */,
 				88415BE92C50E1D50072778F /* ExportableTests.swift */,
 				882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */,
+				AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */,
 				8843AE572C8843E7001A740A /* CleanupServiceTests.swift */,
 				88146F502C74EDDC00704B91 /* SharedContextActorTests.swift */,
 			);
@@ -2732,6 +2735,7 @@
 				88C5F3F12CCCF50500DA802F /* UserTipsView.swift in Sources */,
 				889AF90B2C50ECD8001CEDE6 /* BrowserViewSheet.swift in Sources */,
 				882A75102C74A7070051BBF0 /* ChapterServiceTests.swift in Sources */,
+				AA11CD012E00000000000001 /* ChapterMaterializeTests.swift in Sources */,
 				88339AAC2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */,
 				889AF8F42C50ECC5001CEDE6 /* String.swift in Sources */,
 				889AF8F52C50ECC5001CEDE6 /* PresentationDetent.swift in Sources */,

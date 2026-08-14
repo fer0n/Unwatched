@@ -191,7 +191,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
                 noDuration: Bool? = nil,
                 elapsedSeconds: Double? = nil,
                 videoDescription: String? = nil,
-                chapters: [Chapter] = [],
                 watchedDate: Date? = nil,
                 deferDate: Date? = nil,
                 isYtShort: Bool? = nil,
@@ -210,7 +209,6 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
         self.noDuration = noDuration
         self.elapsedSeconds = elapsedSeconds
         self.videoDescription = videoDescription
-        self.chapters = chapters
         self.watchedDate = watchedDate
         self.deferDate = deferDate
         self.isYtShort = isYtShort

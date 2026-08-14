@@ -31,7 +31,7 @@ extension ChapterService {
         if var chapters = video.mergedChapters?.sorted(by: { $0.startTime < $1.startTime }) {
             let hasChanges = fillOutEmptyEndTimes(chapters: &chapters, duration: duration, context: context)
             if hasChanges {
-                video.mergedChapters = chapters
+                attach(chapters, to: video, merged: true)
             }
         }
 
@@ -40,9 +40,7 @@ extension ChapterService {
 
     @MainActor
     static func insertChapters(_ chapters: [SendableChapter], for video: Video, in context: ModelContext) {
-        let reconciled = reconcileChapters(chapters, with: video.chapters ?? [], in: context)
-        if reconciled.hasChanges {
-            video.chapters = reconciled.chapters
+        if reconcileChapters(chapters, for: video, in: context).hasChanges {
             CleanupService.deleteMergedChapters(from: video, context)
             // rows now describe this video; a derived copy alongside them would only drift
             invalidateDerivedChapters(youtubeId: video.youtubeId)
@@ -75,10 +73,7 @@ extension ChapterService {
             return row
         }
 
-        let reconciled = reconcileChapters(video.ownChapterData, with: video.chapters ?? [], in: context)
-        if reconciled.hasChanges {
-            video.chapters = reconciled.chapters
-        }
+        let reconciled = reconcileChapters(video.ownChapterData, for: video, in: context)
         // the rows are the source of truth from here on; a derived copy alongside them would only
         // be a second one that drifts
         invalidateDerivedChapters(youtubeId: video.youtubeId)

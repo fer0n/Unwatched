@@ -39,12 +39,7 @@ public extension Video {
 
     // Preview data
     static func getDummy() -> Video {
-         let chapters = [
-             Chapter(title: "First Chapter", time: 0, duration: 30, endTime: 30),
-             Chapter(title: "Second Chapter", time: 30, duration: 40, endTime: 70, isActive: false),
-             Chapter(title: "Third Chapter", time: 70, duration: 60, endTime: 130)
-         ]
-        return Video(
+        let video = Video(
             title: "Why Democracy Is Mathematically Impossible",
             url: URL(string: "https://www.youtube.com/watch?v=_7vP9vsnYPc")!,
             youtubeId: "_7vP9vsnYPc",
@@ -86,10 +81,13 @@ public extension Video {
             14:06 What Are We Doing Here?
             16:42 FUTURE
             """,
-            chapters: chapters,
             isYtShort: true
-
-            // videoDescription: "The Resident Evil 4 Remake VR mode...
         )
+        ChapterService.attach([
+            Chapter(title: "First Chapter", time: 0, duration: 30, endTime: 30),
+            Chapter(title: "Second Chapter", time: 30, duration: 40, endTime: 70, isActive: false),
+            Chapter(title: "Third Chapter", time: 70, duration: 60, endTime: 130)
+        ], to: video)
+        return video
     }
 }
