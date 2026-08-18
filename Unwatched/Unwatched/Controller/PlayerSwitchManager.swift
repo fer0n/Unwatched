@@ -39,18 +39,13 @@ final class PlayerSwitchManager {
     }
 
     private init() {
-        activeType = Self.storedType
-    }
-
-    private static var storedType: PlayerTypeSetting {
-        let raw = UserDefaults.standard.string(forKey: Const.playerType) ?? ""
-        return PlayerTypeSetting(rawValue: raw) ?? .youtubeEmbedded
+        activeType = PlayerTypeSetting.stored
     }
 
     /// Entry point for every `Const.playerType` change, and for catching up on one that was made
     /// while no player view was around to notice it.
     func handleSettingChanged() {
-        let type = Self.storedType
+        let type = PlayerTypeSetting.stored
         guard type != target, target != nil || type != activeType else {
             return
         }

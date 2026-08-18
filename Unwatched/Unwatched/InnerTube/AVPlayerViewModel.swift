@@ -8,6 +8,8 @@ import WebKit
 
 @Observable
 final class AVPlayerViewModel {
+    /// Shared so playback can run with no view attached (see `BackgroundPlaybackManager`).
+    @MainActor static let shared = AVPlayerViewModel()
 
     // MARK: - View-facing state
 
@@ -38,6 +40,8 @@ final class AVPlayerViewModel {
     @ObservationIgnored var lastObservedTime: Double?
 
     @ObservationIgnored var loadedVideoId: String?
+    /// The `AVPlayerView` driving this instance; see `cleanup(owner:)`.
+    @ObservationIgnored private var ownerToken: UUID?
     @ObservationIgnored var hasRetriedPlayback = false
     @ObservationIgnored var hasAppliedH264Cap = false
     @ObservationIgnored var originalAudioLanguage: String?
@@ -283,7 +287,18 @@ final class AVPlayerViewModel {
     // MARK: - Cleanup
 
     @MainActor
-    func cleanup() {
+    func takeOwnership(_ token: UUID) {
+        ownerToken = token
+    }
+
+    /// Ignored when another view has taken over since: SwiftUI can build the replacement view
+    /// before the outgoing one disappears.
+    @MainActor
+    func cleanup(owner token: UUID? = nil) {
+        if let token, token != ownerToken {
+            return
+        }
+        ownerToken = nil
         stopTimeObserver()
         stopCaptionTimeObserver()
         captionFetchTask?.cancel()
@@ -298,6 +313,9 @@ final class AVPlayerViewModel {
         avPlayer.pause()
         teardownRemoteCommands()
         player.precisePosition = nil
+        // instance outlives the view: the next one starts over
+        loadedVideoId = nil
+        onVideoEnded = {}
         // the web player taking over may already be playing on this session
         if !PlayerSwitchManager.shared.isTakingOver {
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)

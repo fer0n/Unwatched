@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7ED95D9D12E759FA5FC343C7 /* BackgroundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */; };
+		87F24CD0073CD1BC6A37E112 /* StartPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */; };
 		022DD0987D143E03FFAB8840 /* InboxCardTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43B892740109ED8000D54F2 /* InboxCardTransform.swift */; };
 		0C3D09182D27E3EBB4BFF29D /* TwoRowChipLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */; };
 		104954347CFD4B4591227EA8 /* AVPlayerPrefetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */; };
@@ -979,6 +981,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPlaybackManager.swift; sourceTree = "<group>"; };
+		41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPlayback.swift; sourceTree = "<group>"; };
 		0EACF91AE60C2997A88E1E50 /* InboxCardScrollSwipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxCardScrollSwipe.swift; sourceTree = "<group>"; };
 		11282F2B5571721EF8905E29 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		1B91BD33FE5E8E8E9DEC6FB2 /* TwoRowChipLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoRowChipLayout.swift; sourceTree = "<group>"; };
@@ -1960,6 +1964,7 @@
 		887E82A62CD8FBF600B196EA /* App Intents */ = {
 			isa = PBXGroup;
 			children = (
+				41F3F1671D8F7A4899C6D9D1 /* StartPlayback.swift */,
 				887CA9442B52E72700E344EC /* AppShortcutsProvider.swift */,
 				887E82A92CD8FC4600B196EA /* VideoEntity.swift */,
 				887E82A72CD8FC1000B196EA /* AddYoutubeURL.swift */,
@@ -2424,6 +2429,7 @@
 		FE100001AA000000001000A1 /* InnerTube */ = {
 			isa = PBXGroup;
 			children = (
+				F6E752B17B521261C873B3BA /* BackgroundPlaybackManager.swift */,
 				88F844762FCAB25F000FC034 /* PlayerScrubberOverlay.swift */,
 				884128802FC838A7001B06AE /* SmartTube */,
 				884128722FC838A7001B06AE /* WKHLSManager.swift */,
@@ -3230,6 +3236,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ED95D9D12E759FA5FC343C7 /* BackgroundPlaybackManager.swift in Sources */,
+				87F24CD0073CD1BC6A37E112 /* StartPlayback.swift in Sources */,
 				5A4E5E0000000000000001B1 /* UnwatchedShareExtension/ShareCardView.swift in Sources */,
 				5A4E5E0000000000000001B2 /* UnwatchedShareExtension/ShareAction.swift in Sources */,
 				5A4E5E0000000000000001B3 /* UnwatchedShareExtension/ShareCardModel.swift in Sources */,

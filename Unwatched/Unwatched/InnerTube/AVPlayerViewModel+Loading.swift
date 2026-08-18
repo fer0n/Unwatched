@@ -806,7 +806,11 @@ extension AVPlayerViewModel {
         if session.category != .playback || session.mode != .spokenAudio {
             try? session.setCategory(.playback, mode: .spokenAudio)
         }
-        try? session.setActive(true)
+        do {
+            try session.setActive(true)
+        } catch {
+            Log.error("audio session activation failed: \(error.localizedDescription)")
+        }
     }
 
     /// Reads the player clock off the main thread: `AVPlayer.currentTime()` blocks for tens of

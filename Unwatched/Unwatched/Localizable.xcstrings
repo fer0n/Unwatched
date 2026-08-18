@@ -2014,6 +2014,40 @@
         }
       }
     },
+    "backgroundPlaybackUnsupportedError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabe im Hintergrund ist auf dieser Plattform nicht verfügbar."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background playback isn’t available on this platform."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La reproducción en segundo plano no está disponible en esta plataforma."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La lecture en arrière-plan n’est pas disponible sur cette plateforme."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzanie w tle nie jest dostępne na tej platformie."
+          }
+        }
+      }
+    },
     "backupNow" : {
       "localizations" : {
         "de" : {
@@ -4258,6 +4292,40 @@
         }
       }
     },
+    "couldNotStartPlaybackError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Wiedergabe wurde nicht gestartet."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback didn’t start."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La reproducción no se inició."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La lecture n’a pas démarré."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzanie nie zostało uruchomione."
+          }
+        }
+      }
+    },
     "createdDate" : {
       "localizations" : {
         "de" : {
@@ -6060,6 +6128,40 @@
         }
       }
     },
+    "emptyYoutubeId" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die YouTube-ID ist leer."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The YouTube ID is empty."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El ID de YouTube está vacío."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’identifiant YouTube est vide."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identyfikator YouTube jest pusty."
+          }
+        }
+      }
+    },
     "enable" : {
       "localizations" : {
         "de" : {
@@ -6736,6 +6838,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Filtr"
+          }
+        }
+      }
+    },
+    "forceNativePlayer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nativen Player erzwingen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Force Native Player"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forzar reproductor nativo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forcer le lecteur natif"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wymuś natywny odtwarzacz"
+          }
+        }
+      }
+    },
+    "forceNativePlayerDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stellt den Player-Typ auf nativ um, falls er es nicht schon ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Switches the player type to native if it isn’t already."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cambia el tipo de reproductor a nativo si aún no lo es."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bascule le type de lecteur sur natif s’il ne l’est pas déjà."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zmienia typ odtwarzacza na natywny, jeśli jeszcze nim nie jest."
           }
         }
       }
@@ -10058,6 +10228,40 @@
         }
       }
     },
+    "nativePlayerRequiredError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiedergabe im Hintergrund erfordert den nativen Player. Aktiviere „Nativen Player erzwingen“ oder ändere den Player-Typ in den Einstellungen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background playback requires the native player. Turn on “Force Native Player” or switch player type in Settings."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La reproducción en segundo plano requiere el reproductor nativo. Activa “Forzar reproductor nativo” o cambia el tipo de reproductor en los ajustes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La lecture en arrière-plan nécessite le lecteur natif. Activez « Forcer le lecteur natif » ou changez le type de lecteur dans les paramètres."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarzanie w tle wymaga natywnego odtwarzacza. Włącz „Wymuś natywny odtwarzacz” lub zmień typ odtwarzacza w ustawieniach."
+          }
+        }
+      }
+    },
     "never" : {
       "localizations" : {
         "de" : {
@@ -11168,6 +11372,142 @@
         }
       }
     },
+    "noVideoFound" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Video gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún video."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune vidéo trouvée."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono filmu."
+          }
+        }
+      }
+    },
+    "noVideoInfo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Video-Informationen gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video information found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró información del video."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune information sur la vidéo trouvée."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono informacji o filmie."
+          }
+        }
+      }
+    },
+    "noVideoInQueueError" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es ist kein Video in der Queue."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There’s no video in the queue."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay ningún video en la cola."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune vidéo dans la file d’attente."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "W kolejce nie ma żadnego filmu."
+          }
+        }
+      }
+    },
+    "noVideosFoundInPlaylist" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Videos in der Playlist gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No videos found in the playlist."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron videos en la lista de reproducción."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune vidéo trouvée dans la playlist."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono filmów na playliście."
+          }
+        }
+      }
+    },
     "noVideosYet" : {
       "localizations" : {
         "de" : {
@@ -11236,6 +11576,40 @@
         }
       }
     },
+    "noVideoUrl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Video-URL gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video URL found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró la URL del video."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune URL de vidéo trouvée."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono adresu URL filmu."
+          }
+        }
+      }
+    },
     "noWatchHistory" : {
       "localizations" : {
         "de" : {
@@ -11266,6 +11640,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Brak historii oglądania w tym okresie"
+          }
+        }
+      }
+    },
+    "noYoutubeIdFound" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine YouTube-ID gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No YouTube ID found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún ID de YouTube."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun identifiant YouTube trouvé."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono identyfikatora YouTube."
+          }
+        }
+      }
+    },
+    "noYoutubePlaylistId" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine YouTube-Playlist-ID gefunden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No YouTube playlist ID found."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ningún ID de lista de reproducción de YouTube."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun identifiant de playlist YouTube trouvé."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie znaleziono identyfikatora playlisty YouTube."
           }
         }
       }
@@ -13817,6 +14259,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Proszę sprawdzić często zadawane pytania (FAQ) i sugestie poniżej, aby zobaczyć, czy Twoje pytanie zostało już omówione."
+          }
+        }
+      }
+    },
+    "potentiallyFaultyYoutubeId%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Möglicherweise fehlerhafte YouTube-ID: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potentially faulty YouTube ID: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID de YouTube posiblemente incorrecto: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifiant YouTube potentiellement incorrect : %@"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prawdopodobnie błędny identyfikator YouTube: %@"
           }
         }
       }
@@ -18476,6 +18952,74 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sponsor"
+          }
+        }
+      }
+    },
+    "startPlayback" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video abspielen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Video"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproducir video"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire la vidéo"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwórz film"
+          }
+        }
+      }
+    },
+    "startPlaybackDescription" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielt das oberste Video in der Queue im Hintergrund ab, ohne die App zu öffnen. Erfordert den nativen Player."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plays the topmost video in the queue in the background, without opening the app. Requires the native player."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reproduce el primer video de la cola en segundo plano, sin abrir la app. Requiere el reproductor nativo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lit la première vidéo de la file d’attente en arrière-plan, sans ouvrir l’app. Nécessite le lecteur natif."
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Odtwarza pierwszy film z kolejki w tle, bez otwierania aplikacji. Wymaga natywnego odtwarzacza."
           }
         }
       }

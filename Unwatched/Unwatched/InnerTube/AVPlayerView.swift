@@ -24,7 +24,8 @@ struct AVPlayerView: View {
 
     @Query(AVPlayerView.nextEntriesDescriptor) private var nextEntries: [QueueEntry]
 
-    @State private var vm = AVPlayerViewModel()
+    @State private var vm = AVPlayerViewModel.shared
+    @State private var ownerToken = UUID()
     @State private var overlayVM = OverlayFullscreenVM.shared
     @State private var scrubberVM = PlayerScrubberOverlayVM()
     @State private var videoZoom: CGFloat = 1.0
@@ -124,13 +125,17 @@ struct AVPlayerView: View {
             .onChange(of: nextPrefetchVideoId) { _, _ in
                 prefetchNextHLS()
             }
-            .onDisappear { vm.cleanup() }
+            .onDisappear { vm.cleanup(owner: ownerToken) }
     }
 
     private var corePlayerView: some View {
         playerLayout
             .task { vm.onVideoEnded = handleVideoEnded }
-            .onChange(of: player.video?.youtubeId, initial: true) { vm.loadVideoIfNeeded() }
+            .onChange(of: player.video?.youtubeId, initial: true) {
+                // before `task`: the outgoing view must not clean up what this one loaded into
+                vm.takeOwnership(ownerToken)
+                vm.loadVideoIfNeeded()
+            }
             .onChange(of: player.video?.youtubeId) { videoZoom = 1.0; panOffset = .zero }
             .onChange(of: landscapeFullscreen) { _, isLandscape in
                 scrubberVM.handleLandscapeChanged(isLandscape: isLandscape)

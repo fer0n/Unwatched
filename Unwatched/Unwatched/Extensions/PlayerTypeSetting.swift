@@ -3,9 +3,16 @@
 //  Unwatched
 //
 
+import Foundation
 import UnwatchedShared
 
 extension PlayerTypeSetting {
+    /// What the user picked; `PlayerSwitchManager.activeType` is what's on screen.
+    static var stored: PlayerTypeSetting {
+        let raw = UserDefaults.standard.string(forKey: Const.playerType) ?? ""
+        return PlayerTypeSetting(rawValue: raw) ?? .youtubeEmbedded
+    }
+
     var description: String {
         switch self {
         case .youtubeEmbedded: return String(localized: "playerTypeEmbedded")
