@@ -47,7 +47,7 @@ enum StreamQualityHelper {
             best[fmt.height] = max(best[fmt.height] ?? 0, fmt.fps)
         }
         let sorted = best.sorted { $0.key > $1.key }
-        guard !sorted.isEmpty else { return [] }
+        guard sorted.count > 1 else { return [] }
         let options = sorted.map { height, fps -> (height: Int, label: String) in
             let label = fps > 30 ? "\(height)p\(fps)" : "\(height)p"
             return (height: height, label: label)
@@ -66,7 +66,7 @@ enum StreamQualityHelper {
                 if let h = Int(heightStr), h > 0 { heights.insert(h) }
             }
         }
-        guard !heights.isEmpty else { return [] }
+        guard heights.count > 1 else { return [] }
         let options = heights.sorted(by: >).map { h in (height: h, label: "\(h)p") }
         return [(height: 0, label: String(localized: "qualityAuto"))] + options
     }
