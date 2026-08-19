@@ -111,12 +111,15 @@ struct ScrubberThumbnailOverlay: View {
 struct PlayerScrubberOverlay: View {
     var vm: PlayerScrubberOverlayVM
     @Environment(PlayerManager.self) var player
+    @Environment(\.horizontalSizeClass) private var sizeClass: UserInterfaceSizeClass?
 
     var body: some View {
-        pillStack
-            .padding(.bottom, 30)
-            .opacity(vm.showScrubber ? 1 : 0)
-            .animation(.easeOut(duration: 0.15), value: vm.showScrubber)
+        if !Device.isBigScreen(sizeClass) {
+            pillStack
+                .padding(.bottom, 30)
+                .opacity(vm.showScrubber ? 1 : 0)
+                .animation(.easeOut(duration: 0.15), value: vm.showScrubber)
+        }
     }
 
     @ViewBuilder
