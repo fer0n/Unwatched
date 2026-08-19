@@ -78,6 +78,7 @@ struct PlayerMoreMenuContent: View {
     @AppStorage(Const.surroundingEffect) var surroundingEffect = true
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.browserDisplayMode) var browserDisplayMode: BrowserDisplayMode = .inApp
+    @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) var navManager
@@ -159,7 +160,7 @@ struct PlayerMoreMenuContent: View {
             )
 
             Divider()
-            if !inlineItems.contains(.playerType) {
+            if !preferPlayerType && !inlineItems.contains(.playerType) {
                 Menu {
                     PlayerTypeMenuContent()
                 } label: {
