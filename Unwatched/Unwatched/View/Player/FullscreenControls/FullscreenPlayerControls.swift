@@ -7,6 +7,7 @@ import SwiftUI
 import UnwatchedShared
 
 struct FullscreenPlayerControls: View {
+    @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
     @Environment(PlayerManager.self) var player
     @Binding var autoHideVM: AutoHideVM
 
@@ -93,8 +94,17 @@ struct FullscreenPlayerControls: View {
             Spacer()
 
             #if os(iOS)
-            FullscreenChangeOrientationButton(size: size, showLeft: showLeft)
-                .buttonStyle(.plain)
+            Group {
+                if preferPlayerType {
+                    playerTypeButton(size: size)
+                        .transition(.blurReplace)
+                } else {
+                    FullscreenChangeOrientationButton(size: size, showLeft: showLeft)
+                        .transition(.blurReplace)
+                }
+            }
+            .buttonStyle(.plain)
+            .animation(.default, value: preferPlayerType)
             #endif
 
             Spacer()
@@ -107,6 +117,26 @@ struct FullscreenPlayerControls: View {
         .frame(minWidth: 35)
         .preferredColorScheme(.dark)
     }
+
+    #if os(iOS)
+    /// Takes the exit fullscreen button's place; its actions move into this one's menu
+    func playerTypeButton(size: CGFloat) -> some View {
+        PlayerTypeButton(
+            extraGroups: [
+                MenuActionGroup(
+                    FullscreenExitAction.menuActions(player: player, showLeft: showLeft, includeExit: true)
+                )
+            ]
+        ) { image in
+            image
+                // not square and no circle variant: sized by font to match the neighbours' ink
+                .font(.system(size: 15))
+                .symbolRenderingMode(.monochrome)
+                .frame(width: size, height: size)
+                .modifier(PlayerControlButtonStyle())
+        }
+    }
+    #endif
 }
 
 #Preview {

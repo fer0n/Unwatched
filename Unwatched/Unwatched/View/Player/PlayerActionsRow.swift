@@ -12,6 +12,8 @@ struct PlayerActionsRow: View {
     /// Only fill up to roughly an iPhone 16 Pro's content width, wider screens keep the rest in the menu
     static let maxFillWidth: CGFloat = 370
 
+    @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
+
     let maxSpacing: CGFloat
     let minSpacing: CGFloat
     let compactSize: Bool
@@ -22,9 +24,11 @@ struct PlayerActionsRow: View {
     /// How many inline entries the layout currently shows; the rest stay in the menu.
     /// Driven by `OverflowRowLayout` so every button is built once instead of once per `ViewThatFits`
     /// variant, which is what made scrolling expensive on iPad/Mac.
-    @State private var inlineCount = PlayerMenuItem.allCases.count
+    @State private var inlineCount = PlayerMenuItem.inlineItems(preferPlayerType: false).count
 
     var body: some View {
+        let items = PlayerMenuItem.inlineItems(preferPlayerType: preferPlayerType)
+
         OverflowRowLayout(minSpacing: minSpacing, maxSpacing: maxSpacing, inlineCount: $inlineCount) {
             CombinedPlaybackSpeedSettingPlayer(
                 spacing: minSpacing,
@@ -39,7 +43,7 @@ struct PlayerActionsRow: View {
 
             // all entries stay in the tree so the layout can measure them; the ones that don't fit
             // are placed off-screen (and clipped) and picked up by the menu below instead
-            ForEach(Array(PlayerMenuItem.allCases.enumerated()), id: \.element) { index, item in
+            ForEach(Array(items.enumerated()), id: \.element) { index, item in
                 PlayerMenuItemButton(item: item)
                     .layoutValue(key: InlineIndexKey.self, value: index)
             }
@@ -50,7 +54,7 @@ struct PlayerActionsRow: View {
 
             PlayerMoreMenuButton(
                 sleepTimerVM: sleepTimerVM,
-                inlineItems: Array(PlayerMenuItem.allCases.prefix(inlineCount))
+                inlineItems: Array(items.prefix(inlineCount))
             ) { image in
                 image
                     .playerToggleModifier(
@@ -71,7 +75,7 @@ struct PlayerActionsRow: View {
 }
 
 /// Marks a subview as an optional inline entry. Entries are dropped highest-index first when the row
-/// runs out of room, so the remaining ones stay a widest-first prefix of `PlayerMenuItem.allCases`.
+/// runs out of room, so the remaining ones stay a prefix of `PlayerMenuItem.inlineItems`.
 private struct InlineIndexKey: LayoutValueKey {
     static let defaultValue: Int? = nil
 }

@@ -369,6 +369,7 @@ public struct Const {
     public static let reloadVideoId = "reloadVideoId"
     public static let playbackId = "playbackId"
     public static let fullscreenControlsSetting = "fullscreenControlsSetting"
+    public static let preferPlayerType = "preferPlayerType"
 
     public static let videoListFormat = "videoListFormat"
     public static let inboxAppearance = "inboxAppearance"

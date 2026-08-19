@@ -40,6 +40,7 @@ extension Const {
 
         // Playback
         Const.fullscreenControlsSetting: FullscreenControls.autoHide.rawValue,
+        Const.preferPlayerType: false,
         Const.originalAudio: true,
         Const.backgroundPlayback: true,
         Const.hideMenuOnPlay: false,

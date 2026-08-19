@@ -19,31 +19,45 @@ struct FullscreenChangeOrientationButton: View {
             .modifier(PlayerControlButtonStyle())
             .buttonWithMenu(
                 accessibilityLabel: String(localized: "exitFullscreen"),
-                groups: [MenuActionGroup([pipAction, rotateAction])],
-                onTap: handlePress
+                groups: [MenuActionGroup(FullscreenExitAction.menuActions(player: player, showLeft: showLeft))],
+                onTap: { FullscreenExitAction.exit(player: player) }
             )
     }
+}
 
-    private var pipAction: MenuAction {
-        MenuAction(
-            player.pipEnabled ? String(localized: "exitPip") : String(localized: "enterPip"),
-            systemImage: player.pipEnabled ? "pip.exit" : "pip.enter"
-        ) {
-            player.togglePip()
+/// Shared with the player type button that can take this button's place
+@MainActor
+enum FullscreenExitAction {
+    static func menuActions(player: PlayerManager, showLeft: Bool, includeExit: Bool = false) -> [MenuAction] {
+        var actions = [MenuAction]()
+        if includeExit {
+            actions.append(
+                MenuAction(String(localized: "exitFullscreen"), systemImage: Const.disableFullscreenSF) {
+                    exit(player: player)
+                }
+            )
         }
+        actions.append(
+            MenuAction(
+                player.pipEnabled ? String(localized: "exitPip") : String(localized: "enterPip"),
+                systemImage: player.pipEnabled ? "pip.exit" : "pip.enter"
+            ) {
+                player.togglePip()
+            }
+        )
+        actions.append(
+            showLeft
+                ? MenuAction(String(localized: "fullscreenRight"), systemImage: Const.enableFullscreenSF) {
+                    OrientationManager.changeOrientation(to: .landscapeRight)
+                }
+                : MenuAction(String(localized: "fullscreenLeft"), systemImage: Const.enableFullscreenSF) {
+                    OrientationManager.changeOrientation(to: .landscapeLeft)
+                }
+        )
+        return actions
     }
 
-    private var rotateAction: MenuAction {
-        showLeft
-            ? MenuAction(String(localized: "fullscreenRight"), systemImage: Const.enableFullscreenSF) {
-                OrientationManager.changeOrientation(to: .landscapeRight)
-            }
-            : MenuAction(String(localized: "fullscreenLeft"), systemImage: Const.enableFullscreenSF) {
-                OrientationManager.changeOrientation(to: .landscapeLeft)
-            }
-    }
-
-    func handlePress() {
+    static func exit(player: PlayerManager) {
         if player.tallFullscreenActive {
             player.setTallFullscreen(false)
         } else {

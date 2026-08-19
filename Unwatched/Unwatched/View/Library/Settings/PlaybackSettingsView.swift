@@ -17,6 +17,7 @@ struct PlaybackSettingsView: View {
     @AppStorage(Const.originalAudio) var originalAudio: Bool = true
     @AppStorage(Const.playBrowserVideosInApp) var playBrowserVideosInApp: Bool = false
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.preferPlayerType) var preferPlayerType: Bool = false
     @Environment(PlayerManager.self) var player
 
     var body: some View {
@@ -35,6 +36,12 @@ struct PlaybackSettingsView: View {
                     }
                 }
                 #endif
+
+                MySection(footer: "preferPlayerTypeHelper") {
+                    Toggle(isOn: $preferPlayerType) {
+                        Text("preferPlayerType")
+                    }
+                }
 
                 if Device.supportsFullscreenControls {
                     MySection(footer: "showFullscreenControlsHelper") {

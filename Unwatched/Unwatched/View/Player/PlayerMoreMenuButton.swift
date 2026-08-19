@@ -176,7 +176,9 @@ struct PlayerMoreMenuContent: View {
                 }
             }
 
-            bookmarkButton
+            if !inlineItems.contains(.bookmark) {
+                bookmarkButton
+            }
             deferDateButton
 
             Divider()
@@ -272,16 +274,22 @@ struct PlayerMoreMenuContent: View {
 }
 
 /// Entries of the more menu that turn into their own button when the player controls have room for them.
-/// `allCases` is the order they're shown in, both in the controls and in the menu.
-enum PlayerMenuItem: Int, CaseIterable, Identifiable {
+enum PlayerMenuItem: Int, Identifiable {
     case copyUrl
+    case bookmark
     case playerType
 
     var id: Int { rawValue }
 
+    /// The entries shown as buttons, in order; the rest stay inside the menu
+    static func inlineItems(preferPlayerType: Bool) -> [PlayerMenuItem] {
+        [.copyUrl, preferPlayerType ? .playerType : .bookmark]
+    }
+
     var systemName: String {
         switch self {
         case .copyUrl: Const.shareSF
+        case .bookmark: "bookmark"
         case .playerType: "tv"
         }
     }
@@ -289,6 +297,7 @@ enum PlayerMenuItem: Int, CaseIterable, Identifiable {
     var label: LocalizedStringKey {
         switch self {
         case .copyUrl: "copyUrl"
+        case .bookmark: "addBookmark"
         case .playerType: "playerType"
         }
     }
@@ -296,26 +305,22 @@ enum PlayerMenuItem: Int, CaseIterable, Identifiable {
 
 /// A more menu entry shown as its own button in the player controls
 struct PlayerMenuItemButton: View {
-    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
-    @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
-    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
     @State var flashSymbol: String?
-    @State var animateSwitch = false
-    @State var switchManager = PlayerSwitchManager.shared
 
     let item: PlayerMenuItem
 
     var body: some View {
         Group {
             if item == .playerType {
-                label
-                    .buttonWithMenu(
-                        accessibilityLabel: String(localized: "playerType"),
-                        groups: playerTypeMenuGroups,
-                        onTap: togglePlayerType
-                    )
+                PlayerTypeButton { image in
+                    image.playerToggleModifier(isOn: false, isSmall: true)
+                }
+            } else if item == .bookmark {
+                Button(action: toggleBookmark) {
+                    bookmarkLabel
+                }
             } else {
                 Menu {
                     PlayerMenuItemContent(
@@ -331,13 +336,91 @@ struct PlayerMenuItemButton: View {
         .buttonStyle(.plain)
         .menuIndicator(.hidden)
         .environment(\.menuOrder, .fixed)
-        .disabled(item == .copyUrl && player.video == nil)
+        .disabled(item != .playerType && player.video == nil)
         .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
-        .help(item.label)
-        .accessibilityLabel(item.label)
+        .help(accessibilityLabel)
+        .accessibilityLabel(accessibilityLabel)
     }
 
-    var playerTypeMenuGroups: [MenuActionGroup] {
+    var isBookmarked: Bool {
+        player.video?.bookmarkedDate != nil
+    }
+
+    var accessibilityLabel: LocalizedStringKey {
+        item == .bookmark && isBookmarked ? "removeBookmark" : item.label
+    }
+
+    /// Shows the current state rather than what tapping does, unlike the menu entry
+    var bookmarkLabel: some View {
+        Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
+            .animation(.default, value: isBookmarked)
+            .playerToggleModifier(isOn: isBookmarked, isSmall: true)
+    }
+
+    func toggleBookmark() {
+        guard let video = player.video else { return }
+        VideoService.toggleBookmark(video)
+        hapticToggle.toggle()
+        Signal.log("Player.MoreMenu", parameters: ["action": "bookmark"])
+    }
+
+    var label: some View {
+        Image(systemName: flashSymbol ?? item.systemName)
+            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
+            .playerToggleModifier(isOn: false, isSmall: true)
+            .task(id: flashSymbol) {
+                if flashSymbol != nil {
+                    try? await Task.sleep(s: 1)
+                    withAnimation {
+                        flashSymbol = nil
+                    }
+                }
+            }
+    }
+}
+
+/// Tapping toggles between the last two player types, long pressing opens the menu
+struct PlayerTypeButton<Content: View>: View {
+    @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
+    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
+
+    @State var hapticToggle = false
+    @State var animateSwitch = false
+    @State var switchManager = PlayerSwitchManager.shared
+
+    /// Appended below the player types, for the actions of a button this one replaces
+    var extraGroups: [MenuActionGroup] = []
+    @ViewBuilder let contentImage: (Image) -> Content
+
+    var body: some View {
+        contentImage(Image(systemName: playerType.systemImage))
+            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
+            // @AppStorage writes aren't animated, so without this the symbol would swap instantly
+            .animation(.default, value: playerType)
+            .symbolEffect(.bounce, options: .repeat(.periodic(delay: 0.4)), isActive: animateSwitch)
+            .buttonWithMenu(
+                accessibilityLabel: String(localized: "playerType"),
+                groups: menuGroups,
+                onTap: toggle
+            )
+            .sensoryFeedback(Const.sensoryFeedback, trigger: hapticToggle)
+            // repeated discrete effect rather than an indefinite one (`.breathe`): ending the
+            // switch drops out of those mid-movement. The delay lets `.replace` play out first.
+            .task(id: switchManager.isSwitching) {
+                guard switchManager.isSwitching else {
+                    animateSwitch = false
+                    return
+                }
+                try? await Task.sleep(s: 0.35)
+                if !Task.isCancelled {
+                    animateSwitch = true
+                }
+            }
+    }
+
+    var menuGroups: [MenuActionGroup] {
         [
             MenuActionGroup(title: String(localized: "playerType"), selectablePlayerTypes.map { type in
                 MenuAction(
@@ -348,14 +431,10 @@ struct PlayerMenuItemButton: View {
                         ? .system(type.systemImage)
                         : .none
                 ) {
-                    if playerType != .native {
-                        previousPlayerType = playerType
-                    }
-                    playerType = type
-                    Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
+                    select(type)
                 }
             })
-        ]
+        ] + extraGroups
     }
 
     var selectablePlayerTypes: [PlayerTypeSetting] {
@@ -364,7 +443,15 @@ struct PlayerMenuItemButton: View {
         }
     }
 
-    func togglePlayerType() {
+    func select(_ type: PlayerTypeSetting) {
+        if playerType != .native {
+            previousPlayerType = playerType
+        }
+        playerType = type
+        Signal.log("Player.MoreMenu", parameters: ["action": "playerType"])
+    }
+
+    func toggle() {
         // the icon already shows where the switch is headed, so tapping again means "never mind"
         if switchManager.isSwitching {
             switchManager.cancel()
@@ -378,43 +465,6 @@ struct PlayerMenuItemButton: View {
         playerType = next
         hapticToggle.toggle()
         Signal.log("Player.MoreMenu", parameters: ["action": "playerTypeToggle"])
-    }
-
-    var label: some View {
-        Image(systemName: flashSymbol ?? iconName)
-            .contentTransition(.symbolEffect(.replace.magic(fallback: .replace)))
-            .symbolEffect(.bounce, options: .repeat(.periodic(delay: 0.4)), isActive: animateSwitch)
-            .playerToggleModifier(isOn: false, isSmall: true)
-            // repeated discrete effect rather than an indefinite one (`.breathe`): ending the
-            // switch drops out of those mid-movement. The delay lets `.replace` play out first.
-            .task(id: isSwitchingPlayer) {
-                guard isSwitchingPlayer else {
-                    animateSwitch = false
-                    return
-                }
-                try? await Task.sleep(s: 0.35)
-                if !Task.isCancelled {
-                    animateSwitch = true
-                }
-            }
-            .task(id: flashSymbol) {
-                if flashSymbol != nil {
-                    try? await Task.sleep(s: 1)
-                    withAnimation {
-                        flashSymbol = nil
-                    }
-                }
-            }
-    }
-
-    var iconName: String {
-        item == .playerType
-            ? playerType.systemImage
-            : item.systemName
-    }
-
-    var isSwitchingPlayer: Bool {
-        item == .playerType && switchManager.isSwitching
     }
 }
 
@@ -444,6 +494,8 @@ struct PlayerMenuItemContent: View {
             Section("playerType") {
                 PlayerTypeMenuContent()
             }
+        case .bookmark:
+            EmptyView()
         }
     }
 
