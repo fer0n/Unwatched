@@ -65,9 +65,6 @@ final class AVPlayerViewModel {
     @ObservationIgnored var webViewHLSAudioContentIDs: [String: String?] = [:]
     @ObservationIgnored var webViewHLSSelectedContentID: String?
     @ObservationIgnored var pendingSeekToTime: Double?
-    @ObservationIgnored var captionFetchTask: Task<Void, Never>?
-    @ObservationIgnored var captionTimeObserverToken: Any?
-    @ObservationIgnored var captionSeekObserver: NSObjectProtocol?
 
     // Set by the view; called when the current video plays to end.
     @ObservationIgnored var onVideoEnded: () -> Void = {}
@@ -208,13 +205,6 @@ final class AVPlayerViewModel {
         player.selectedAudioLanguage = ""
         player.availableVideoQualities = []
         player.selectedVideoQuality = 0
-        player.availableCaptionTracks = []
-        player.selectedCaptionTrackId = nil
-        player.captionCues = []
-        player.currentCaptionCue = nil
-        captionFetchTask?.cancel()
-        captionFetchTask = nil
-        stopCaptionTimeObserver()
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
 
@@ -300,8 +290,6 @@ final class AVPlayerViewModel {
         }
         ownerToken = nil
         stopTimeObserver()
-        stopCaptionTimeObserver()
-        captionFetchTask?.cancel()
         loadTask?.cancel()
         backgroundQualityUpgradeTask?.cancel()
         webViewCacheTask?.cancel()

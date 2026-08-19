@@ -105,8 +105,6 @@
 		881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881964F22CCA449A0084ADE4 /* VideoListVM.swift */; };
 		8819EA352F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */; };
 		8819EA362F3B56F600F3116D /* ScrollViewInteractionDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */; };
-		8819EDEA2FDB2076009B6334 /* AVPlayerViewModel+Captions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */; };
-		8819EDED2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */; };
 		881DBDEC2B4D22770082BEFB /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881DBDEB2B4D22770082BEFB /* NavigationManager.swift */; };
 		881E51372B59CAFF006384E4 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51362B59CAFF006384E4 /* AppConstants.swift */; };
 		881E51392B59D555006384E4 /* LibraryNavListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51382B59D555006384E4 /* LibraryNavListItem.swift */; };
@@ -872,18 +870,14 @@
 		FE100002AA0000000010F205 /* ChannelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F005 /* ChannelPreviewView.swift */; };
 		FE100002AA0000000010F206 /* ChannelHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F006 /* ChannelHeaderView.swift */; };
 		FE100002AA0000000010F207 /* SearchFilterMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100002AA0000000010F007 /* SearchFilterMenu.swift */; };
-		FE100003AA0000000010C002 /* CaptionScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100003AA0000000010C001 /* CaptionScheduler.swift */; };
-		FE7A00000000000000000000 /* AVPlayerCaptionOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */; };
 		FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F611A97CF421FAF1F47ED /* AVPlayerPrefetchManager.swift */; };
 		FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE66417B2F2F4BB8AA39AE78 /* AVPlayerStreamHelpers.swift */; };
 		FE7A00000000000000000003 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100001AA000000001000B1 /* AVPlayerView.swift */; };
-		FE7A00000000000000000004 /* AVPlayerViewModel+Captions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */; };
 		FE7A00000000000000000005 /* AVPlayerViewModel+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0DD1B9C0A34CB595032683 /* AVPlayerViewModel+Loading.swift */; };
 		FE7A00000000000000000006 /* AVPlayerViewModel+NowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F6959E647463E9DA39786 /* AVPlayerViewModel+NowPlaying.swift */; };
 		FE7A00000000000000000007 /* AVPlayerViewModel+Quality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39205759BFC648CB9CBED597 /* AVPlayerViewModel+Quality.swift */; };
 		FE7A00000000000000000008 /* AVPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821534B2FC03C3000167AEE /* AVPlayerViewModel.swift */; };
 		FE7A00000000000000000009 /* AudioTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884128812FC838A7001B06AE /* AudioTrack.swift */; };
-		FE7A0000000000000000000A /* CaptionScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE100003AA0000000010C001 /* CaptionScheduler.swift */; };
 		FE7A0000000000000000000B /* HLSAudioLanguageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 884128832FC838A7001B06AE /* HLSAudioLanguageParser.swift */; };
 		FE7A0000000000000000000C /* InnerTubeAPI+Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */; };
 		FE7A0000000000000000000D /* InnerTubeAPI+Storyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */; };
@@ -1050,8 +1044,6 @@
 		881942A12C97378100B7A7B1 /* PlayerLoadingTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLoadingTimeout.swift; sourceTree = "<group>"; };
 		881964F22CCA449A0084ADE4 /* VideoListVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListVM.swift; sourceTree = "<group>"; };
 		8819EA342F3B56F600F3116D /* ScrollViewInteractionDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewInteractionDetector.swift; sourceTree = "<group>"; };
-		8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerViewModel+Captions.swift"; sourceTree = "<group>"; };
-		8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerCaptionOverlay.swift; sourceTree = "<group>"; };
 		881DBDEB2B4D22770082BEFB /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		881E51362B59CAFF006384E4 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		881E51382B59D555006384E4 /* LibraryNavListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryNavListItem.swift; sourceTree = "<group>"; };
@@ -1452,7 +1444,6 @@
 		FE100002AA0000000010F005 /* ChannelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPreviewView.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F006 /* ChannelHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelHeaderView.swift; sourceTree = "<group>"; };
 		FE100002AA0000000010F007 /* SearchFilterMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilterMenu.swift; sourceTree = "<group>"; };
-		FE100003AA0000000010C001 /* CaptionScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionScheduler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -2442,9 +2433,6 @@
 				8821534C2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift */,
 				FE100001AA000000001000B1 /* AVPlayerView.swift */,
 				885CC15B2FD1E01A00A6549A /* ZoomPanGestureView.swift */,
-				8819EDE92FDB2076009B6334 /* AVPlayerViewModel+Captions.swift */,
-				8819EDEC2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift */,
-				FE100003AA0000000010C001 /* CaptionScheduler.swift */,
 				8816E3902FEB16D0004EB1ED /* InnerTubeAPI+Metadata.swift */,
 				8816E3A12FEB16D0004EB1ED /* InnerTubeAPI+Storyboard.swift */,
 				8816E3A32FEB16D0004EB1ED /* ScrubberThumbnails.swift */,
@@ -2792,17 +2780,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE7A00000000000000000000 /* AVPlayerCaptionOverlay.swift in Sources */,
 				FE7A00000000000000000001 /* AVPlayerPrefetchManager.swift in Sources */,
 				FE7A00000000000000000002 /* AVPlayerStreamHelpers.swift in Sources */,
 				FE7A00000000000000000003 /* AVPlayerView.swift in Sources */,
-				FE7A00000000000000000004 /* AVPlayerViewModel+Captions.swift in Sources */,
 				FE7A00000000000000000005 /* AVPlayerViewModel+Loading.swift in Sources */,
 				FE7A00000000000000000006 /* AVPlayerViewModel+NowPlaying.swift in Sources */,
 				FE7A00000000000000000007 /* AVPlayerViewModel+Quality.swift in Sources */,
 				FE7A00000000000000000008 /* AVPlayerViewModel.swift in Sources */,
 				FE7A00000000000000000009 /* AudioTrack.swift in Sources */,
-				FE7A0000000000000000000A /* CaptionScheduler.swift in Sources */,
 				FE7A0000000000000000000B /* HLSAudioLanguageParser.swift in Sources */,
 				FE7A0000000000000000000C /* InnerTubeAPI+Metadata.swift in Sources */,
 				FE7A0000000000000000000D /* InnerTubeAPI+Storyboard.swift in Sources */,
@@ -3355,7 +3340,6 @@
 				816F44C17FD04972B2D4EC07 /* AVPlayerViewModel+NowPlaying.swift in Sources */,
 				8821534E2FC03C3000167AEE /* PlayerViewControllerRepresentable.swift in Sources */,
 				883CA8132B5B382900028D52 /* RefreshToolbarContent.swift in Sources */,
-				8819EDEA2FDB2076009B6334 /* AVPlayerViewModel+Captions.swift in Sources */,
 				887E72922B91ED9500928946 /* FullscreenPlayerControls.swift in Sources */,
 				88AEB5D72B98A69300A2FF0D /* Logger.swift in Sources */,
 				8841286F2FC838A7001B06AE /* YTHLSProxyLoader.swift in Sources */,
@@ -3442,8 +3426,6 @@
 				881964F42CCA449E0084ADE4 /* VideoListVM.swift in Sources */,
 				88B9E3A32DB635B900B066BD /* CopyUrlOptions.swift in Sources */,
 				8804A3F72B8B96FF00D3F4F1 /* PlayerManager+Chapters.swift in Sources */,
-				8819EDED2FDB207C009B6334 /* AVPlayerCaptionOverlay.swift in Sources */,
-				FE100003AA0000000010C002 /* CaptionScheduler.swift in Sources */,
 				88D29AE72B751B6900BDBFDF /* VideoSorting.swift in Sources */,
 				887E82AA2CD8FC4600B196EA /* VideoEntity.swift in Sources */,
 				88190EF52EC235EE00C1C321 /* MyTint.swift in Sources */,

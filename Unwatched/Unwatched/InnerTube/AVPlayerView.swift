@@ -95,9 +95,6 @@ struct AVPlayerView: View {
                         )
                     }
                     .overlay(alignment: .bottom) {
-                        PlayerCaptionOverlay()
-                    }
-                    .overlay(alignment: .bottom) {
                         PlayerScrubberOverlay(vm: scrubberVM)
                     }
             } else {
@@ -116,7 +113,6 @@ struct AVPlayerView: View {
         corePlayerView
             .onChange(of: player.selectedAudioLanguage) { _, lang in vm.handleAudioLanguageChange(lang) }
             .onChange(of: player.selectedVideoQuality) { _, height in vm.handleQualityChange(height: height) }
-            .onChange(of: player.selectedCaptionTrackId) { _, id in vm.handleCaptionTrackChange(id) }
             .onChange(of: scenePhase) { _, phase in vm.handleScenePhaseChange(phase) }
             .onChange(of: player.isLoading) { _, new in
                 guard new == nil else { return }

@@ -139,11 +139,6 @@ struct PlayerEmbedded: View {
         #if os(iOS)
         .overlay(alignment: .bottom) {
             customUIOverlay {
-                PlayerCaptionOverlay()
-            }
-        }
-        .overlay(alignment: .bottom) {
-            customUIOverlay {
                 PlayerScrubberOverlay(vm: scrubberVM)
             }
         }

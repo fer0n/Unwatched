@@ -641,14 +641,7 @@ extension InnerTubeAPI {
             else { return [] }
             return trackList.compactMap { track -> CaptionTrack? in
                 guard let baseUrlStr = track["baseUrl"] as? String,
-                      let rawURL = URL(string: baseUrlStr) else { return nil }
-                // Force WebVTT format by appending fmt=vtt to the base URL
-                var comps = URLComponents(url: rawURL, resolvingAgainstBaseURL: false)
-                var items = comps?.queryItems ?? []
-                items.removeAll { $0.name == "fmt" }
-                items.append(URLQueryItem(name: "fmt", value: "vtt"))
-                comps?.queryItems = items
-                guard let baseURL = comps?.url else { return nil }
+                      let baseURL = URL(string: baseUrlStr) else { return nil }
                 let languageCode = track["languageCode"] as? String ?? ""
                 let name = (track["name"] as? [String: Any]).flatMap { extractText($0) }
                     ?? (track["nameTranslated"] as? [String: Any]).flatMap { extractText($0) }

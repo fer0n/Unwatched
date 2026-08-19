@@ -137,35 +137,6 @@ struct PlayerMoreMenuContent: View {
                 }
             }
 
-            if playerType != .youtubeEmbedded && !player.availableCaptionTracks.isEmpty {
-                Menu {
-                    Button {
-                        player.selectedCaptionTrackId = nil
-                        Signal.log("Player.MoreMenu", parameters: ["action": "captions"])
-                    } label: {
-                        if player.selectedCaptionTrackId == nil {
-                            Label("off", systemImage: "checkmark")
-                        } else {
-                            Text("off")
-                        }
-                    }
-                    ForEach(player.availableCaptionTracks) { track in
-                        Button {
-                            player.selectedCaptionTrackId = track.id
-                            Signal.log("Player.MoreMenu", parameters: ["action": "captions"])
-                        } label: {
-                            if track.id == player.selectedCaptionTrackId {
-                                Label(track.name, systemImage: "checkmark")
-                            } else {
-                                Text(track.name)
-                            }
-                        }
-                    }
-                } label: {
-                    Label("captions", systemImage: "captions.bubble.fill")
-                }
-            }
-
             if !inlineItems.contains(.copyUrl), let video = player.video {
                 CopyUrlOptions(
                     video: video,

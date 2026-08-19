@@ -75,7 +75,6 @@ private struct PlayerTypeComparisonTable: View {
 
     private let features: [Feature] = [
         Feature(title: "playerComparisonManualQuality", youtube: true, customUI: false, native: false),
-        Feature(title: "playerComparisonCaptions", youtube: true, customUI: false, native: false),
         Feature(title: "playerComparisonHigherQuality", youtube: true, customUI: true, native: false),
         Feature(title: "playerComparisonBackground", youtube: false, customUI: false, native: true),
         Feature(title: "playerComparisonStreamlinedOverlays", youtube: false, customUI: true, native: true)
