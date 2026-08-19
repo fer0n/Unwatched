@@ -25,11 +25,17 @@ struct PlayerActionsRow: View {
     /// Driven by `OverflowRowLayout` so every button is built once instead of once per `ViewThatFits`
     /// variant, which is what made scrolling expensive on iPad/Mac.
     @State private var inlineCount = PlayerMenuItem.inlineItems(preferPlayerType: false).count
+    @State private var reporter = InlineCountReporter()
 
     var body: some View {
         let items = PlayerMenuItem.inlineItems(preferPlayerType: preferPlayerType)
 
-        OverflowRowLayout(minSpacing: minSpacing, maxSpacing: maxSpacing, inlineCount: $inlineCount) {
+        OverflowRowLayout(
+            minSpacing: minSpacing,
+            maxSpacing: maxSpacing,
+            reporter: reporter,
+            inlineCount: $inlineCount
+        ) {
             CombinedPlaybackSpeedSettingPlayer(
                 spacing: minSpacing,
                 showTemporarySpeed: compactSize,
@@ -86,6 +92,7 @@ private struct InlineIndexKey: LayoutValueKey {
 private struct OverflowRowLayout: Layout {
     var minSpacing: CGFloat
     var maxSpacing: CGFloat
+    var reporter: InlineCountReporter
     @Binding var inlineCount: Int
 
     struct Resolved {
@@ -125,9 +132,10 @@ private struct OverflowRowLayout: Layout {
             originX += resolved.sizes[index].width
         }
 
-        if resolved.keptInline != inlineCount {
-            let value = resolved.keptInline
-            DispatchQueue.main.async { inlineCount = value }
+        reporter.report(width: bounds.width, count: resolved.keptInline) { value in
+            if value != inlineCount {
+                inlineCount = value
+            }
         }
     }
 
@@ -171,5 +179,55 @@ private struct OverflowRowLayout: Layout {
             size: CGSize(width: width, height: height),
             keptInline: optional.count - dropped.count
         )
+    }
+}
+
+/// Carries the inline count out of `OverflowRowLayout` into the row's state, applying only the
+/// widest placement of an update.
+///
+/// The row is laid out at more than one width per update: besides its real width it also gets placed
+/// at its compressed width, where none of the optional entries fit. Feeding every placement back into
+/// the view flipped the count between those two answers, and every flip triggered the next layout
+/// pass — an endless loop, visible as a flickering more menu button (iPad landscape, where the two
+/// answers differ). Only the widest placement describes what's on screen, so that one wins.
+private final class InlineCountReporter {
+    private var widestWidth: CGFloat = 0
+    private var widestCount = 0
+    private var sawNarrowerPlacement = false
+    private var isScheduled = false
+
+    func report(width: CGFloat, count: Int, apply: @escaping (Int) -> Void) {
+        if width > widestWidth {
+            sawNarrowerPlacement = sawNarrowerPlacement || widestWidth > 0
+            widestWidth = width
+            widestCount = count
+        } else if width < widestWidth {
+            sawNarrowerPlacement = true
+        }
+        schedule(apply)
+    }
+
+    /// Collects the placements of one update before applying, long enough to cover them all and
+    /// short enough to stay unnoticeable.
+    private func schedule(_ apply: @escaping (Int) -> Void) {
+        guard !isScheduled else { return }
+        isScheduled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [self] in
+            isScheduled = false
+            guard widestWidth > 0 else {
+                // nothing was laid out in this window: the layout has settled
+                return
+            }
+            let count = widestCount
+            // widths of two updates may have landed in the same window (while rotating, say), so
+            // take another one to pick up the settled width
+            let needsAnotherWindow = sawNarrowerPlacement
+            widestWidth = 0
+            sawNarrowerPlacement = false
+            apply(count)
+            if needsAnotherWindow {
+                schedule(apply)
+            }
+        }
     }
 }
