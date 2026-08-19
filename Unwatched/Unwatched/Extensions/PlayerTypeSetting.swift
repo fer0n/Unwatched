@@ -49,8 +49,8 @@ extension PlayerTypeSetting {
         self != .native
     }
 
-    func toggled(previous: PlayerTypeSetting, nativeEnabled: Bool) -> PlayerTypeSetting {
-        self == .native ? previous : (nativeEnabled ? .native : .youtubeCustomUI)
+    func toggled(previous: PlayerTypeSetting) -> PlayerTypeSetting {
+        self == .native ? previous : .native
     }
 
     var systemImage: String {

@@ -355,7 +355,6 @@ struct PlayerMenuItemButton: View {
 struct PlayerTypeButton<Content: View>: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
-    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
 
     @State var hapticToggle = false
     @State var animateSwitch = false
@@ -393,7 +392,7 @@ struct PlayerTypeButton<Content: View>: View {
 
     var menuGroups: [MenuActionGroup] {
         [
-            MenuActionGroup(title: String(localized: "playerType"), selectablePlayerTypes.map { type in
+            MenuActionGroup(title: String(localized: "playerType"), PlayerTypeSetting.allCases.map { type in
                 MenuAction(
                     type.menuDescription,
                     icon: type == playerType
@@ -406,12 +405,6 @@ struct PlayerTypeButton<Content: View>: View {
                 }
             })
         ] + extraGroups
-    }
-
-    var selectablePlayerTypes: [PlayerTypeSetting] {
-        PlayerTypeSetting.allCases.filter {
-            $0 != .native || showExperimentalPlayerTypes || playerType == .native
-        }
     }
 
     func select(_ type: PlayerTypeSetting) {
@@ -429,7 +422,7 @@ struct PlayerTypeButton<Content: View>: View {
             hapticToggle.toggle()
             return
         }
-        let next = playerType.toggled(previous: previousPlayerType, nativeEnabled: showExperimentalPlayerTypes)
+        let next = playerType.toggled(previous: previousPlayerType)
         if playerType != .native {
             previousPlayerType = playerType
         }
@@ -479,10 +472,9 @@ struct PlayerMenuItemContent: View {
 struct PlayerTypeMenuContent: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
     @AppStorage(Const.previousPlayerType) var previousPlayerType: PlayerTypeSetting = .youtubeEmbedded
-    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
 
     var body: some View {
-        ForEach(selectablePlayerTypes, id: \.self) { type in
+        ForEach(PlayerTypeSetting.allCases, id: \.self) { type in
             Button {
                 if playerType != .native {
                     previousPlayerType = playerType
@@ -498,12 +490,6 @@ struct PlayerTypeMenuContent: View {
                     Text(type.menuDescription)
                 }
             }
-        }
-    }
-
-    var selectablePlayerTypes: [PlayerTypeSetting] {
-        PlayerTypeSetting.allCases.filter {
-            $0 != .native || showExperimentalPlayerTypes || playerType == .native
         }
     }
 }

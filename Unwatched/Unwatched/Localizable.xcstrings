@@ -18092,40 +18092,6 @@
         }
       }
     },
-    "showExperimentalPlayerTypes" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Experimentelle Player-Typen anzeigen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Experimental Player Types"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar tipos de reproductor experimentales"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Afficher les types de lecteur expérimentaux"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pokaż eksperymentalne typy odtwarzacza"
-          }
-        }
-      }
-    },
     "showFullscreenControlsHelper" : {
       "localizations" : {
         "de" : {

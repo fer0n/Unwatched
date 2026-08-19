@@ -8,7 +8,6 @@ import UnwatchedShared
 
 struct PipButton: View {
     @AppStorage(Const.playerType) var playerType: PlayerTypeSetting = .youtubeEmbedded
-    @AppStorage(Const.showExperimentalPlayerTypes) var showExperimentalPlayerTypes: Bool = false
     @AppStorage(Const.pipAutoEnable) var pipAutoEnable: Bool = true
     @Environment(PlayerManager.self) var player
     @State var hapticToggle = false
@@ -47,7 +46,7 @@ struct PipButton: View {
 
     /// Only the native player decides between PiP and audio-only when the app is left.
     var showsAutoEnable: Bool {
-        showExperimentalPlayerTypes || playerType == .native
+        playerType == .native
     }
 
     func togglePip() {

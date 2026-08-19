@@ -87,7 +87,6 @@ final class BackgroundPlaybackManager {
             throw BackgroundPlaybackError.nativePlayerRequired
         }
         Log.info("backgroundPlayback: switching to the native player")
-        UserDefaults.standard.set(true, forKey: Const.showExperimentalPlayerTypes)
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         PlayerSwitchManager.shared.handleSettingChanged()
     }
