@@ -13522,36 +13522,70 @@
         }
       }
     },
-    "playerComparisonHighSpeed" : {
+    "playerComparisonCaptions" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "3-fache Wiedergabegeschwindigkeit"
+            "value" : "Untertitel"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "3× playback speed"
+            "value" : "Captions"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Velocidad de reproducción 3×"
+            "value" : "Subtítulos"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vitesse de lecture 3×"
+            "value" : "Sous-titres"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prędkość odtwarzania 3×"
+            "value" : "Napisy"
+          }
+        }
+      }
+    },
+    "playerComparisonHigherQuality" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höhere Videoqualität"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Higher video quality"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mayor calidad de vídeo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualité vidéo supérieure"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyższa jakość wideo"
           }
         }
       }
@@ -13586,40 +13620,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ręczna kontrola jakości"
-          }
-        }
-      }
-    },
-    "playerComparisonReliablePlayback" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zuverlässiger & schneller Wiedergabestart"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reliable & quick playback start"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inicio de reproducción fiable y rápido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrage de lecture fiable et rapide"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Niezawodne i szybkie rozpoczęcie odtwarzania"
           }
         }
       }
