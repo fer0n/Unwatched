@@ -38,6 +38,11 @@ final class PlayerSwitchManager {
         target != nil
     }
 
+    /// The native player owns playback: on screen, or warming up to take over.
+    var nativeIsCurrent: Bool {
+        activeType == .native || target == .native
+    }
+
     private init() {
         activeType = PlayerTypeSetting.stored
     }

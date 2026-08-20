@@ -13,6 +13,11 @@ extension PlayerTypeSetting {
         return PlayerTypeSetting(rawValue: raw) ?? .youtubeEmbedded
     }
 
+    static var storedPrevious: PlayerTypeSetting {
+        let raw = UserDefaults.standard.string(forKey: Const.previousPlayerType) ?? ""
+        return PlayerTypeSetting(rawValue: raw) ?? .youtubeEmbedded
+    }
+
     var description: String {
         switch self {
         case .youtubeEmbedded: return String(localized: "playerTypeEmbedded")

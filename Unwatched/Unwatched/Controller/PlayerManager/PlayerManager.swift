@@ -42,6 +42,7 @@ import UnwatchedShared
     var availableVideoQualities: [(height: Int, label: String)] = []
     var selectedVideoQuality: Int = 0
     var embeddingDisabled: Bool = false
+    var nativeFallbackActive: Bool = false
     var airplayHD: Bool = false
     var pipEnabled: Bool = false
     var canPlayPip: Bool = false
@@ -153,6 +154,16 @@ import UnwatchedShared
                 embeddingDisabled = false
             }
         }
+        #if os(iOS)
+        if nativeFallbackActive {
+            nativeFallbackActive = false
+            // a player the user picked since stands
+            if PlayerTypeSetting.stored == .native {
+                UserDefaults.standard.set(PlayerTypeSetting.storedPrevious.rawValue, forKey: Const.playerType)
+                PlayerSwitchManager.shared.handleSettingChanged()
+            }
+        }
+        #endif
         previousState.pipEnabled = false
         if canPlayPip != false {
             canPlayPip = false

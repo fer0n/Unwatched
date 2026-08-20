@@ -131,6 +131,11 @@ final class AVPlayerViewModel {
     func loadVideoIfNeeded() {
         let videoId = player.video?.youtubeId
         Log.info("loadVideo: \(videoId)")
+        // a player switch still reaches here: the outgoing subtree gets one update with the new video
+        guard PlayerSwitchManager.shared.nativeIsCurrent else {
+            Log.info("loadVideo: skipped, the native player is no longer current")
+            return
+        }
         guard let videoId, videoId != loadedVideoId else { return }
         loadedVideoId = videoId
         lastObservedTime = nil

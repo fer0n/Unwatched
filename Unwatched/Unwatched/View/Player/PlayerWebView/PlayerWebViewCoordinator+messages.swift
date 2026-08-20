@@ -341,26 +341,40 @@ extension PlayerWebViewCoordinator {
     func handleError(_ payload: String?, youtube: Bool = false) {
         Log.error("video player error: \(payload ?? "Unknown")")
 
-        if youtube {
-            if parent.player.embeddingDisabled {
-                return
-            }
-
-            parent.player.isLoading = Date()
-            parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
-                ? true
-                : parent.player.isPlaying
-
-            parent.player.videoSource = .errorSwap
-            parent.player.previousState.isPlaying = false
-
-            withAnimation {
-                parent.player.pause()
-                parent.player.embeddingDisabled = true
-            }
+        guard youtube, !parent.player.embeddingDisabled else {
             return
         }
+
+        #if os(iOS)
+        switchToNativePlayer()
+        #else
+        parent.player.isLoading = Date()
+        parent.player.previousIsPlaying = parent.player.videoSource == .userInteraction
+            ? true
+            : parent.player.isPlaying
+
+        parent.player.videoSource = .errorSwap
+        parent.player.previousState.isPlaying = false
+
+        withAnimation {
+            parent.player.pause()
+            parent.player.embeddingDisabled = true
+        }
+        #endif
     }
+
+    #if os(iOS)
+    /// `PlayerView` only renders `.native` on iOS, so other platforms keep the website fallback.
+    private func switchToNativePlayer() {
+        let current = PlayerTypeSetting.stored
+        guard current != .native else { return }
+        Log.info("videoPlayer: embedded error, switching to the native player")
+        UserDefaults.standard.set(current.rawValue, forKey: Const.previousPlayerType)
+        UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
+        parent.player.nativeFallbackActive = true
+        PlayerSwitchManager.shared.handleSettingChanged()
+    }
+    #endif
 
     func handleTimeUpdate(_ timeString: String?, persist: Bool = false, youtubeId: String? = nil) {
         guard let timeString, let time = Double(timeString) else {
