@@ -30,6 +30,18 @@ extension Color {
     }
 }
 
+extension View {
+    func shareSheetGlassEffect<S: Shape>(in shape: S) -> some View {
+        #if os(visionOS)
+        self
+            .background(.thickMaterial, in: shape)
+            .hoverEffect()
+        #else
+        self.glassEffect(.regular, in: shape)
+        #endif
+    }
+}
+
 /// Liquid glass capsule, same recipe as the video detail sheet's Subscribe/Subscribed button
 /// (`ChannelPreviewView`/`CapsuleButtonStyle`) — reproduced locally since that style lives only in
 /// the main app's own target.
@@ -41,6 +53,6 @@ struct GlassCapsuleButtonStyle: ButtonStyle {
             .opacity(isEnabled ? 1 : 0.2)
             .padding(.vertical, 8)
             .padding(.horizontal, 10)
-            .glassEffect(.regular, in: .capsule)
+            .shareSheetGlassEffect(in: .capsule)
     }
 }

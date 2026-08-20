@@ -31,7 +31,9 @@ struct OnboardingChannelsPage: View {
             .padding(.vertical, 6)
             .background(Color.backgroundColor)
         }
+        #if !os(visionOS)
         .scrollDismissesKeyboard(.interactively)
+        #endif
         .background {
             ZStack {
                 if let state = visibleSearchState {

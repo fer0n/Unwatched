@@ -90,7 +90,7 @@ struct ShareCardView: View {
                         .frame(width: 60, height: 60)
                         .contentTransition(.symbolEffect(.replace))
                 }
-                .glassEffect(.regular, in: .circle)
+                .shareSheetGlassEffect(in: .circle)
                 .accessibilityLabel(action.title)
                 .disabled(model.loadingAction != nil)
             }
@@ -126,7 +126,7 @@ struct ShareCardView: View {
                 .font(.headline)
                 .frame(width: 60, height: 60)
         }
-        .glassEffect(.regular, in: .circle)
+        .shareSheetGlassEffect(in: .circle)
         .accessibilityLabel("moreOptions")
         .disabled(model.loadingAction != nil)
     }
@@ -156,7 +156,7 @@ struct ShareCardView: View {
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 18)
-            .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shareSheetGlassEffect(in: RoundedRectangle(cornerRadius: 20, style: .continuous))
             .padding(.horizontal, 40)
         }
     }

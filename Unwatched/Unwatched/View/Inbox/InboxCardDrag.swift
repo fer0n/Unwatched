@@ -23,13 +23,15 @@ extension View {
             .background(
                 InboxCardScrollSwipe(isEnabled: isEnabled, onChange: onChange, onEnd: onEnd)
             )
+        #elseif os(visionOS)
+        modifier(InboxCardDragFallback(onChange: onChange, onEnd: onEnd))
         #else
         gesture(InboxCardDrag(onChange: onChange, onEnd: onEnd))
         #endif
     }
 }
 
-#if !os(macOS)
+#if !os(macOS) && !os(visionOS)
 private struct InboxCardDrag: UIGestureRecognizerRepresentable {
     let onChange: (CGSize) -> Void
     let onEnd: (CGSize, CGSize) -> Void
@@ -83,7 +85,8 @@ private struct InboxCardDrag: UIGestureRecognizerRepresentable {
     }
 }
 #else
-/// AppKit has no pan recognizer worth bridging, measure the drag from where SwiftUI hands it over
+/// AppKit and visionOS have no pan recognizer worth bridging, measure the drag from where
+/// SwiftUI hands it over
 private struct InboxCardDragFallback: ViewModifier {
     let onChange: (CGSize) -> Void
     let onEnd: (CGSize, CGSize) -> Void

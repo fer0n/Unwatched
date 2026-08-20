@@ -115,7 +115,7 @@ struct ChapterDescriptionView: View {
                             }
                         }
 
-                        ToolbarSpacer(.fixed, placement: placement)
+                        FixedToolbarSpacer(placement: placement)
 
                         ToolbarItem(placement: placement) {
                             detailButton(Const.queueLastSF, label: "queueLast", withBackground: false) {
@@ -123,7 +123,7 @@ struct ChapterDescriptionView: View {
                                 Signal.videoAction("queueBottom", .detail)
                             }
                         }
-                        ToolbarSpacer(.fixed, placement: placement)
+                        FixedToolbarSpacer(placement: placement)
 
                         ToolbarItem(placement: placement) {
                             detailButton("play.fill", label: "play", withBackground: false) {
@@ -131,7 +131,7 @@ struct ChapterDescriptionView: View {
                                 Signal.videoAction("play", .detail)
                             }
                         }
-                        ToolbarSpacer(.fixed, placement: placement)
+                        FixedToolbarSpacer(placement: placement)
 
                         ToolbarItem(placement: placement) {
                             detailButton(
@@ -320,6 +320,18 @@ private extension View {
         background(.ultraThinMaterial, in: .circle)
         #else
         glassEffect(.regular.interactive(), in: .circle)
+        #endif
+    }
+}
+
+private struct FixedToolbarSpacer: ToolbarContent {
+    let placement: ToolbarItemPlacement
+
+    var body: some ToolbarContent {
+        #if os(visionOS)
+        ToolbarItem(placement: placement) { EmptyView() }
+        #else
+        ToolbarSpacer(.fixed, placement: placement)
         #endif
     }
 }

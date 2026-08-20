@@ -13,7 +13,9 @@ extension View {
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
         self
+            #if !os(visionOS)
             .scrollEdgeEffectStyle(.soft, for: edge == .top ? .top : .bottom)
+            #endif
             .safeAreaBar(edge: edge, alignment: alignment, content: content)
     }
 }
