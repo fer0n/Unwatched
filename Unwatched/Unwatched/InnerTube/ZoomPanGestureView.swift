@@ -1,11 +1,12 @@
-#if !os(macOS)
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 // MARK: - ZoomPanModifier
 
-/// Applies pinch-to-zoom and two-finger pan to any view.
-/// No-ops on iOS 17; gesture recognizers require iOS 18's UIGestureRecognizerRepresentable.
+/// Applies pinch-to-zoom and two-finger pan to any view. No-ops where there are no touches
+/// to track (visionOS, macOS).
 struct ZoomPanModifier: ViewModifier {
     @Binding var zoom: CGFloat
     @Binding var offset: CGSize
@@ -21,7 +22,7 @@ struct ZoomPanModifier: ViewModifier {
 
     @ViewBuilder
     func body(content: Content) -> some View {
-        #if os(visionOS)
+        #if !canImport(UIKit) || os(visionOS)
         content
         #else
         content
@@ -41,7 +42,7 @@ struct ZoomPanModifier: ViewModifier {
 
 // MARK: - Combined pinch + two-finger pan
 
-#if !os(visionOS)
+#if canImport(UIKit) && !os(visionOS)
 
 /// Custom recognizer that tracks its own touches so it can stay alive across finger-count
 /// changes. Pinch geometry is derived from the first two tracked touches directly (spread +
@@ -237,5 +238,4 @@ private struct PinchPanRepresentable: UIGestureRecognizerRepresentable {
         }
     }
 }
-#endif
 #endif

@@ -1,4 +1,3 @@
-#if !os(macOS)
 import SwiftUI
 import AVKit
 import SwiftData
@@ -174,4 +173,3 @@ struct AVPlayerView: View {
         return descriptor
     }
 }
-#endif

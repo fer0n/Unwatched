@@ -1,4 +1,3 @@
-#if !os(macOS)
 import UnwatchedShared
 
 enum StreamHeaders {
@@ -71,4 +70,3 @@ enum StreamQualityHelper {
         return [(height: 0, label: String(localized: "qualityAuto"))] + options
     }
 }
-#endif

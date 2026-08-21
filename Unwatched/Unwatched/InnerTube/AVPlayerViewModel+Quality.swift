@@ -1,4 +1,3 @@
-#if !os(macOS)
 import AVKit
 import OSLog
 import UnwatchedShared
@@ -249,4 +248,3 @@ extension AVPlayerViewModel {
         }
     }
 }
-#endif

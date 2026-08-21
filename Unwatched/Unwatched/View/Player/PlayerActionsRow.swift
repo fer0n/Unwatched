@@ -42,8 +42,8 @@ struct PlayerActionsRow: View {
                 isTransparent: false
             )
 
-            #if os(iOS)
             PipButton()
+            #if os(iOS)
             AirPlayButton()
             #endif
 

@@ -1,4 +1,3 @@
-#if !os(macOS)
 import SwiftUI
 import UnwatchedShared
 
@@ -188,4 +187,3 @@ struct PlayerScrubberOverlay: View {
     }
     .environment(PlayerManager.getDummy())
 }
-#endif

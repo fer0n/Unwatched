@@ -1,4 +1,3 @@
-#if !os(macOS)
 import AVKit
 import MediaPlayer
 import OSLog
@@ -164,7 +163,7 @@ extension AVPlayerViewModel {
             for url in candidates {
                 guard let (data, response) = try? await URLSession.shared.data(from: url),
                       (response as? HTTPURLResponse)?.statusCode == 200,
-                      let image = UIImage(data: data) else { continue }
+                      let image = PlatformImage(data: data) else { continue }
                 await MainActor.run {
                     guard player.video?.youtubeId == videoId else { return }
                     artworkImage = image
@@ -183,4 +182,3 @@ extension AVPlayerViewModel {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
 }
-#endif

@@ -1,4 +1,3 @@
-#if !os(macOS)
 import Foundation
 import os
 import UnwatchedShared
@@ -127,4 +126,3 @@ final class WKHLSManager {
         wkHLSLog.notice("✅ [prefetch] done: \(videoId as NSString)")
     }
 }
-#endif // !os(macOS)

@@ -140,13 +140,11 @@ final class PlayerSwitchManager {
         warmupTask?.cancel()
         warmupTask = nil
         WebPlayerWarmup.shared.cancel()
-        #if !os(macOS)
         // only what this warm-up put there: otherwise it would throw away the next-up video the
         // native player is prefetching
         if abandonedTarget == .native {
             AVPlayerPrefetchManager.shared.cancelAll()
         }
-        #endif
     }
 
     /// Loads the incoming player far enough that taking over won't stall. What it warmed up stays
@@ -159,15 +157,11 @@ final class PlayerSwitchManager {
         let startAt = player.currentTime ?? player.getStartPosition()
 
         if type == .native {
-            #if os(macOS)
-            return false
-            #else
             return await AVPlayerPrefetchManager.shared.warmUp(
                 videoId: videoId,
                 at: startAt,
                 timeout: warmupTimeout
             )
-            #endif
         }
         return await WebPlayerWarmup.shared.warmUp(
             videoId: videoId,

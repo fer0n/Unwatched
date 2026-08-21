@@ -1,4 +1,3 @@
-#if !os(macOS)
 import AVKit
 import MediaPlayer
 import OSLog
@@ -46,7 +45,7 @@ final class AVPlayerViewModel {
     @ObservationIgnored var hasAppliedH264Cap = false
     @ObservationIgnored var originalAudioLanguage: String?
     @ObservationIgnored var commandsSetUp = false
-    @ObservationIgnored var artworkImage: UIImage?
+    @ObservationIgnored var artworkImage: PlatformImage?
     @ObservationIgnored var seekAnchor = SeekAnchor()
     @ObservationIgnored var currentPlayerInfo: PlayerInfo?
     @ObservationIgnored var currentHLSHeaders: [String: String] = [:]
@@ -167,22 +166,13 @@ final class AVPlayerViewModel {
         startTimeObserver()
 
         interruptionObserverTask = Task {
-            let notifications = NotificationCenter.default.notifications(
-                named: AVAudioSession.interruptionNotification
-            )
-            for await notification in notifications {
+            for await interruption in PlayerAudioSession.interruptions {
                 guard !Task.isCancelled else { return }
-                guard let typeValue = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
-                      let type = AVAudioSession.InterruptionType(rawValue: typeValue) else { continue }
                 await MainActor.run {
-                    if type == .began {
-                        player.isPlaying = false
-                    } else if type == .ended {
-                        let optionsValue = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
-                        let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
-                        if options.contains(.shouldResume) {
-                            player.isPlaying = true
-                        }
+                    switch interruption {
+                    case .began: player.isPlaying = false
+                    case .endedShouldResume: player.isPlaying = true
+                    case .ended: break
                     }
                 }
             }
@@ -311,7 +301,7 @@ final class AVPlayerViewModel {
         onVideoEnded = {}
         // the web player taking over may already be playing on this session
         if !PlayerSwitchManager.shared.isTakingOver {
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            PlayerAudioSession.deactivate()
         }
     }
 
@@ -374,4 +364,64 @@ final class AVPlayerViewModel {
         await fetchAndPlay(videoId: videoId)
     }
 }
-#endif
+
+enum PlayerAudioSession {
+    enum Interruption {
+        case began
+        case endedShouldResume
+        case ended
+    }
+
+    /// `setCategory` is a cross-process call that costs milliseconds every time, so it only
+    /// runs when the session isn't already configured the way playback needs it.
+    static func activate() {
+        #if !os(macOS)
+        let session = AVAudioSession.sharedInstance()
+        if session.category != .playback || session.mode != .spokenAudio {
+            try? session.setCategory(.playback, mode: .spokenAudio)
+        }
+        do {
+            try session.setActive(true)
+        } catch {
+            Log.error("audio session activation failed: \(error.localizedDescription)")
+        }
+        #endif
+    }
+
+    static func deactivate() {
+        #if !os(macOS)
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        #endif
+    }
+
+    /// macOS has no `AVAudioSession`; the system never interrupts playback there, so the stream
+    /// simply never yields.
+    static var interruptions: AsyncStream<Interruption> {
+        AsyncStream { continuation in
+            #if os(macOS)
+            continuation.finish()
+            #else
+            let task = Task {
+                for await note in NotificationCenter.default.notifications(
+                    named: AVAudioSession.interruptionNotification
+                ) {
+                    guard let raw = note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+                          let type = AVAudioSession.InterruptionType(rawValue: raw) else { continue }
+                    switch type {
+                    case .began:
+                        continuation.yield(.began)
+                    case .ended:
+                        let rawOptions = note.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+                        let options = AVAudioSession.InterruptionOptions(rawValue: rawOptions)
+                        continuation.yield(options.contains(.shouldResume) ? .endedShouldResume : .ended)
+                    @unknown default:
+                        continue
+                    }
+                }
+                continuation.finish()
+            }
+            continuation.onTermination = { _ in task.cancel() }
+            #endif
+        }
+    }
+}

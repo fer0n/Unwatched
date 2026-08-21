@@ -3,6 +3,7 @@
 //  Unwatched
 //
 
+import AVKit
 import SwiftUI
 import UnwatchedShared
 
@@ -13,6 +14,12 @@ struct PipButton: View {
     @State var hapticToggle = false
 
     var body: some View {
+        if isAvailable {
+            button
+        }
+    }
+
+    var button: some View {
         label
             .buttonWithMenu(
                 accessibilityLabel: helper,
@@ -44,9 +51,24 @@ struct PipButton: View {
             )
     }
 
-    /// Only the native player decides between PiP and audio-only when the app is left.
+    /// Off iOS only the native player has a PiP path: the embedded player's own PiP is driven by
+    /// JS that reports back through `canPlayPip`.
+    var isAvailable: Bool {
+        #if os(iOS)
+        true
+        #else
+        playerType == .native && AVPictureInPictureController.isPictureInPictureSupported()
+        #endif
+    }
+
+    /// Only the native player decides between PiP and audio-only when the app is left, and only
+    /// where auto-PiP exists — `canStartPictureInPictureAutomaticallyFromInline` is unavailable on macOS.
     var showsAutoEnable: Bool {
+        #if os(macOS)
+        false
+        #else
         playerType == .native
+        #endif
     }
 
     func togglePip() {

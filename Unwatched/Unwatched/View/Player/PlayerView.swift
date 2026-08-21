@@ -63,7 +63,6 @@ struct PlayerView: View {
                             .aspectRatio(player.videoAspectRatio, contentMode: .fit)
                     }
                 } else if switchManager.activeType == .native {
-                    #if os(iOS)
                     AVPlayerView(
                         handleVideoEnded: handleVideoEnded,
                         handleSwipe: handleSwipe,
@@ -75,7 +74,6 @@ struct PlayerView: View {
                         landscapeFullscreen: landscapeFullscreen
                     )
                     .environment(\.layoutDirection, .leftToRight)
-                    #endif
                 } else if !player.embeddingDisabled {
                     embeddedPlayer
                 } else {

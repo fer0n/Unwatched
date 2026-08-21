@@ -1,4 +1,3 @@
-#if !os(macOS)
 import AVKit
 import OSLog
 import UnwatchedShared
@@ -352,4 +351,3 @@ extension AVPlayerPrefetchManager {
                               qualities: qualities)
     }
 }
-#endif

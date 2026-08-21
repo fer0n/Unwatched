@@ -4,6 +4,13 @@ Unwatched's native YouTube playback layer: a subset of SmartTubeIOS adapted for
 Unwatched's architecture. Replaces the WKWebView player when
 `Settings → Debug → useAVPlayer` is enabled.
 
+**Platforms:** iOS, visionOS and macOS all run this player. The two places platforms diverge
+are `PlayerViewControllerRepresentable.swift` (a UIKit and an AppKit host over one shared
+`PlayerLayerController`) and `PlayerAudioSession` in `AVPlayerViewModel.swift` (`AVAudioSession`
+is unavailable on macOS). macOS also has no auto-PiP and never pauses a layer-attached player on
+backgrounding, so the background-detach workaround is UIKit-only. Pinch-to-zoom is iOS-only —
+`ZoomPanModifier` no-ops on visionOS and macOS.
+
 **The API layer lives in the shared framework:**
 `UnwatchedShared/UnwatchedShared/InnerTube/Core/`. Everything else — the WKWebView extraction,
 the AVPlayer view models, the player UI — stays here in the app target, since it needs WebKit and
@@ -61,7 +68,7 @@ Unwatched/Unwatched/InnerTube/
   AVPlayerViewModel.swift     ← Unwatched-owned
   WKHLSManager.swift          ← Unwatched-owned
   InnerTubeAPI+Metadata.swift ← Unwatched-owned (extension; not upstream)
-  PlayerViewControllerRepresentable.swift
+  PlayerViewControllerRepresentable.swift  ← UIKit + AppKit hosts
   CLAUDE.md
 ```
 

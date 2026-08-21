@@ -1,4 +1,3 @@
-#if !os(macOS)
 import AVKit
 import OSLog
 import SwiftUI
@@ -788,7 +787,7 @@ extension AVPlayerViewModel {
     @MainActor
     func syncPlayPause(persistTime: Bool = true) {
         if player.isPlaying {
-            activateAudioSession()
+            PlayerAudioSession.activate()
             avPlayer.rate = Float(player.playbackSpeed)
         } else {
             avPlayer.pause()
@@ -798,20 +797,6 @@ extension AVPlayerViewModel {
         }
     }
 
-    /// `setCategory` is a cross-process call that costs milliseconds every time, so it only
-    /// runs when the session isn't already configured the way playback needs it.
-    @MainActor
-    private func activateAudioSession() {
-        let session = AVAudioSession.sharedInstance()
-        if session.category != .playback || session.mode != .spokenAudio {
-            try? session.setCategory(.playback, mode: .spokenAudio)
-        }
-        do {
-            try session.setActive(true)
-        } catch {
-            Log.error("audio session activation failed: \(error.localizedDescription)")
-        }
-    }
 
     /// Reads the player clock off the main thread: `AVPlayer.currentTime()` blocks for tens of
     /// milliseconds right after a rate change, which would stall the pause the user just asked for.
@@ -852,4 +837,3 @@ private final class ResumeOnce {
         return true
     }
 }
-#endif
