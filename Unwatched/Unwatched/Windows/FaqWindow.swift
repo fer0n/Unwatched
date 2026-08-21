@@ -13,7 +13,8 @@ struct FaqWindow: View {
         }
         .frame(width: 600, height: 800)
         #if os(macOS)
-        .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
+        .toolbarBackground(Color.myBackgroundGray2, for: .windowToolbar)
+        .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
         #endif
     }
 }

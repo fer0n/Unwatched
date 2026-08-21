@@ -22,7 +22,7 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         ZStack {
-            MyBackgroundColor(macOS: false)
+            MyBackgroundColor()
 
             MyForm {
                 MySection {

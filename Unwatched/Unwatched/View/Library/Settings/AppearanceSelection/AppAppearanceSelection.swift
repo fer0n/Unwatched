@@ -10,12 +10,21 @@ struct AppAppearanceSelection: View {
 
     @Binding var selection: AppAppearance
     @State var width: CGFloat = 100
+    @Environment(\.colorScheme) var colorScheme
+
+    var sectionBackgroundColor: Color {
+        #if os(macOS)
+        colorScheme == .dark ? .black : Color.insetBackgroundColor
+        #else
+        Color.insetBackgroundColor
+        #endif
+    }
 
     var body: some View {
         let spacing: CGFloat = width / 10
 
         ZStack {
-            Color.insetBackgroundColor
+            sectionBackgroundColor
                 .scaleEffect(2)
 
             HStack(spacing: 0) {

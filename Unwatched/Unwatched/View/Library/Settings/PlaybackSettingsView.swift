@@ -22,7 +22,7 @@ struct PlaybackSettingsView: View {
 
     var body: some View {
         ZStack {
-            MyBackgroundColor(macOS: false)
+            MyBackgroundColor()
             @Bindable var player = player
 
             MyForm {

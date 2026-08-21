@@ -8,6 +8,7 @@ import UnwatchedShared
 
 struct YoutubeApiKeyView: View {
     @CloudStorage(Const.customYoutubeApiKey) var customYoutubeApiKey: String = ""
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
 
     @State private var apiKeyStatus: ApiKeyStatus = .idle
 
@@ -36,6 +37,7 @@ struct YoutubeApiKeyView: View {
 
             Link(destination: UrlService.youtubeApiKeyUrl) {
                 Text("createYoutubeApiKey")
+                    .foregroundStyle(theme.color)
             }
             .linkHoverEffect()
         }

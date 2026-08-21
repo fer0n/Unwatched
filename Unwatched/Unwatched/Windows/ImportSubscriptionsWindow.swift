@@ -11,7 +11,8 @@ struct ImportSubscriptionsWindow: View {
         ImportSubscriptionsView()
             .background(Color.backgroundColor)
             #if os(macOS)
-            .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
+            .toolbarBackground(Color.myBackgroundGray2, for: .windowToolbar)
+            .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
         #endif
     }
 }

@@ -67,11 +67,9 @@ struct SettingsWindowView: View {
                 }
         }
         .environment(navTitleManager)
-        .background(Color.backgroundColor)
         .frame(width: 700, height: 500)
         .myTint()
         #if os(macOS)
-        .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
         // workaround: deprecated, but tint doesn't work on macOS
         .accentColor(theme.color)
         #endif
@@ -80,14 +78,13 @@ struct SettingsWindowView: View {
 
 #Preview {
     SettingsWindowView()
-        .environment(NavigationManager.getDummy())
+        .previewEnvironments()
 }
 
 extension View {
     func settingsView() -> some View {
         self
             .frame(maxWidth: 600)
-            .background(Color.backgroundColor)
             .frame(maxWidth: .infinity)
     }
 }

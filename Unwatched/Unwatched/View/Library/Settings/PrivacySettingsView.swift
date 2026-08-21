@@ -9,14 +9,16 @@ import UnwatchedShared
 struct PrivacySettingsView: View {
     @AppStorage(Const.analytics) var analytics = true
     @AppStorage(Const.useNoCookieUrl) var useNoCookieUrl: Bool = false
+    @AppStorage(Const.themeColor) var theme: ThemeColor = .defaultTheme
 
     var body: some View {
         ZStack {
-            MyBackgroundColor(macOS: false)
+            MyBackgroundColor()
 
             Form {
                 Link(destination: UrlService.privacyUrl) {
                     Text("privacyPolicy")
+                        .foregroundStyle(theme.color)
                 }
                 .myListInsetBackground()
 

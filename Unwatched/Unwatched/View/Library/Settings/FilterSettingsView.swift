@@ -18,7 +18,7 @@ struct FilterSettingsView: View {
 
     var body: some View {
         ZStack {
-            MyBackgroundColor(macOS: false)
+            MyBackgroundColor()
 
             MyForm {
                 MySection("videoFilter", footer: "shortsSettingsFooter") {

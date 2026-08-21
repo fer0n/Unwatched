@@ -24,7 +24,7 @@ struct UserDataSettingsView: View {
         let backupType = Const.backupType ?? .json
 
         ZStack {
-            MyBackgroundColor(macOS: false)
+            MyBackgroundColor()
 
             MyForm {
                 CloudSyncSetting()

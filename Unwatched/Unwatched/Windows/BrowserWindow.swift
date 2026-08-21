@@ -23,7 +23,8 @@ struct BrowserWindow: View {
                 idealHeight: 700
             )
             #if os(macOS)
-            .toolbarBackground(Color.myBackgroundGray, for: .windowToolbar)
+            .toolbarBackground(Color.myBackgroundGray2, for: .windowToolbar)
+            .toolbarBackgroundVisibility(.visible, for: .windowToolbar)
         #endif
     }
 }
