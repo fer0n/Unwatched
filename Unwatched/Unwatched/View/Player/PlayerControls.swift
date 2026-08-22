@@ -101,7 +101,8 @@ struct PlayerControls: View {
                 }
 
                 ChapterMiniControlView(
-                    handleTitleTap: handleTitleTap,
+                    compactSize: compactSize,
+                    autoHideVM: autoHideVM,
                     limitHeight: horizontalLayout || player.isTallAspectRatio,
                     inlineTime: horizontalLayout || player.isTallAspectRatio,
                     )
@@ -204,14 +205,6 @@ struct PlayerControls: View {
                 }
                 : nil
         )
-    }
-
-    func handleTitleTap() {
-        if compactSize {
-            autoHideVM.showDescription = true
-        } else {
-            navManager.handleVideoDetail(scrollToCurrentChapter: true)
-        }
     }
 
     var showControls: Bool {

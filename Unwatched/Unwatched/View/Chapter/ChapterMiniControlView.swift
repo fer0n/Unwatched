@@ -12,11 +12,11 @@ struct ChapterMiniControlView: View {
 
     @Environment(PlayerManager.self) var player
     @Environment(NavigationManager.self) var navManager
-    @Environment(SheetPositionReader.self) var sheetPos
 
     @State var triggerFeedback = false
 
-    var handleTitleTap: () -> Void
+    let compactSize: Bool
+    let autoHideVM: AutoHideVM
     var limitHeight = false
     var inlineTime = false
 
@@ -151,6 +151,14 @@ struct ChapterMiniControlView: View {
         player.setShowMenu()
     }
 
+    func handleTitleTap() {
+        if compactSize {
+            autoHideVM.showDescription = true
+        } else {
+            navManager.handleVideoDetail(scrollToCurrentChapter: true)
+        }
+    }
+
     @ViewBuilder var title: some View {
         if let chapter = player.currentChapter {
             Text(chapter.titleText(fallback: player.video?.title))
@@ -177,7 +185,7 @@ struct ChapterMiniControlRemainingText: View {
 }
 
 #Preview {
-    ChapterMiniControlView(handleTitleTap: {})
+    ChapterMiniControlView(compactSize: false, autoHideVM: AutoHideVM())
         .modelContainer(DataProvider.previewContainer)
         .environment(PlayerManager.getDummy())
         .environment(NavigationManager.getDummy())
