@@ -160,6 +160,7 @@
 		882FB1812FD9C05C00B24A60 /* PlayerTypeSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FB17F2FD9C05C00B24A60 /* PlayerTypeSetting.swift */; };
 		882FBA802B905F2500213CEF /* UnwatchedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */; };
 		882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */; };
+		CD1A2B3C2E7000010000AA02 /* LaunchTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1A2B3C2E7000010000AA01 /* LaunchTraceTests.swift */; };
 		883327FF2B8DB286001B3895 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883327FE2B8DB286001B3895 /* AsyncButton.swift */; };
 		88339AA22E5B87A500B295B7 /* PopupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AA12E5B87A500B295B7 /* PopupPresenter.swift */; };
 		88339AA32E5B87A500B295B7 /* PopupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88339AA12E5B87A500B295B7 /* PopupPresenter.swift */; };
@@ -1081,6 +1082,7 @@
 		882FBA7D2B905F2500213CEF /* UnwatchedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnwatchedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITests.swift; sourceTree = "<group>"; };
 		882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnwatchedUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CD1A2B3C2E7000010000AA01 /* LaunchTraceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchTraceTests.swift; sourceTree = "<group>"; };
 		883327FE2B8DB286001B3895 /* AsyncButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
 		88339AA12E5B87A500B295B7 /* PopupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresenter.swift; sourceTree = "<group>"; };
 		88339AAA2E5BA6EA00B295B7 /* PremiumOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumOfferView.swift; sourceTree = "<group>"; };
@@ -1691,6 +1693,7 @@
 				882FBA7F2B905F2500213CEF /* UnwatchedUITests.swift */,
 				8802F84E2C691A51008A7778 /* ImageServiceTests.swift */,
 				882FBA812B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift */,
+				CD1A2B3C2E7000010000AA01 /* LaunchTraceTests.swift */,
 				88415BE92C50E1D50072778F /* ExportableTests.swift */,
 				882A750F2C74A7070051BBF0 /* ChapterServiceTests.swift */,
 				AA11CD012E00000000000002 /* ChapterMaterializeTests.swift */,
@@ -3111,6 +3114,7 @@
 				88C10D772D088543005EDB4B /* ShortsSetting.swift in Sources */,
 				888B091D2E2382810014C66C /* TranscriptActor.swift in Sources */,
 				882FBA822B905F2500213CEF /* UnwatchedUITestsLaunchTests.swift in Sources */,
+				CD1A2B3C2E7000010000AA02 /* LaunchTraceTests.swift in Sources */,
 				887EB2E22CFE676700F9D517 /* QueueViewUnavailable.swift in Sources */,
 				8843E1022E57D00B00A303F5 /* PremiumPopupMessage.swift in Sources */,
 				88190EF62EC235EE00C1C321 /* MyTint.swift in Sources */,

@@ -58,6 +58,7 @@ struct SetupView: View {
             .onChange(of: scenePhase, initial: true) {
                 switch scenePhase {
                 case .active:
+                    LaunchTrace.mark(LaunchTrace.Phase.sceneActive)
                     Log.info("scenePhase: active")
                     BackgroundMonitor.handleActive()
                     NotificationManager.handleNotifications(checkDeferred: true)
@@ -97,6 +98,21 @@ struct SetupView: View {
             .onAppear {
                 navManager.openWindow = openWindow
             }
+            #if os(iOS) || os(visionOS)
+            // `.active` is the first point at which the app is on screen — `sceneDidBecomeActive`
+            // still runs a few hundred ms ahead of the first frame — and the task defers the
+            // warm-up past the runloop turn that draws it.
+            .onChange(of: scenePhase) {
+                guard scenePhase == .active else { return }
+                Task { WebViewWarmup.runOnce() }
+            }
+            .overlay(alignment: .topLeading) {
+                if LaunchTrace.isEnabled {
+                    LaunchTraceReporter()
+                        .frame(width: 1, height: 1)
+                }
+            }
+        #endif
     }
 
     func checkVideoHealth() {

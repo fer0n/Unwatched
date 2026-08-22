@@ -14,20 +14,16 @@ import BackgroundTasks
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     let notificationCenter = UNUserNotificationCenter.current()
 
-    func workaroundInitialWebViewDelay() {
-        let webView = WKWebView()
-        webView.loadHTMLString("", baseURL: nil)
-    }
-
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        LaunchTrace.mark(LaunchTrace.Phase.didFinishLaunchingBegin)
         Signal.setup()
-        workaroundInitialWebViewDelay()
         notificationCenter.delegate = self
         setupNotificationCategories(notificationCenter)
         SetupView.onLaunch()
+        LaunchTrace.mark(LaunchTrace.Phase.didFinishLaunchingEnd)
         return true
     }
 
@@ -190,6 +186,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                 refreshTask.cancel()
             }
         }
+    }
+}
+
+/// Builds a throwaway `WKWebView` so the WebKit processes are already up when the player needs
+/// them, working around the delay the first web view in a process pays for.
+///
+/// Deliberately not part of `didFinishLaunching`: building a `WKWebView` blocks the main thread
+/// for 60-700ms (measured on the simulator, Release build), and nothing waits on the warm-up —
+/// running it before the first frame only pushes launch back by as much.
+@MainActor
+enum WebViewWarmup {
+    private static var didRun = false
+
+    static func runOnce() {
+        guard !didRun else { return }
+        didRun = true
+        LaunchTrace.mark(LaunchTrace.Phase.webViewWarmupBegin)
+        let webView = WKWebView()
+        webView.loadHTMLString("", baseURL: nil)
+        LaunchTrace.mark(LaunchTrace.Phase.webViewWarmupEnd)
     }
 }
 

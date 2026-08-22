@@ -40,6 +40,7 @@ public final class DataProvider: Sendable {
     }
 
     public let container: ModelContainer = {
+        LaunchTrace.mark(LaunchTrace.Phase.containerBegin)
         Log.info("getModelContainer")
         var enableIcloudSync = UserDefaults.standard.bool(forKey: Const.enableIcloudSync)
         #if os(tvOS)
@@ -86,6 +87,7 @@ public final class DataProvider: Sendable {
                     configurations: [config]
                 )
             }
+            LaunchTrace.mark(LaunchTrace.Phase.containerEnd)
             Task { @MainActor in
                 DataProvider.migrationWorkaround(container.mainContext)
             }
