@@ -42,11 +42,11 @@ extension AVPlayerViewModel {
             item.preferredMaximumResolution = CGSize(width: Double(height) * 4, height: Double(height))
             item.preferredPeakBitRate = StreamQualityHelper.peakBitRate(for: height)
         }
-        let savedTime = avPlayer.currentTime().seconds
+        let savedTime = resumePosition
         if savedTime > 1 { pendingSeekToTime = savedTime }
         webViewHLSProxyLoader = proxyLoader
         startObservingItem(item, videoId: player.video?.youtubeId ?? "")
-        avPlayer.replaceCurrentItem(with: item)
+        installItem(item)
     }
 
     // MARK: - Quality change
@@ -69,13 +69,13 @@ extension AVPlayerViewModel {
                 item.preferredMaximumResolution = CGSize(width: Double(height) * 4, height: Double(height))
                 item.preferredPeakBitRate = StreamQualityHelper.peakBitRate(for: height)
             }
-            let savedTime = avPlayer.currentTime().seconds
+            let savedTime = resumePosition
             if savedTime > 1 { pendingSeekToTime = savedTime }
             webViewHLSProxyLoader = proxyLoader
             startObservingItem(item, videoId: player.video?.youtubeId ?? "")
-            avPlayer.replaceCurrentItem(with: item)
+            installItem(item)
         } else if isUsingComposition, let info = currentPlayerInfo {
-            let savedTime = avPlayer.currentTime().seconds
+            let savedTime = resumePosition
             loadTask?.cancel()
             loadTask = Task {
                 await self.rebuildCompositionForQuality(height: height, info: info, savedTime: savedTime)
@@ -83,7 +83,7 @@ extension AVPlayerViewModel {
         } else if let hlsURL = currentPlayerInfo?.hlsURL {
             // HLS: must replace the item so AVPlayer renegotiates ABR from scratch.
             // Setting hints on an already-playing item does not force a quality change.
-            let savedTime = avPlayer.currentTime().seconds
+            let savedTime = resumePosition
             let asset = AVURLAsset(url: hlsURL,
                                    options: ["AVURLAssetHTTPHeaderFieldsKey": currentHLSHeaders])
             let item = AVPlayerItem(asset: asset)
@@ -96,7 +96,7 @@ extension AVPlayerViewModel {
             }
             if savedTime > 1 { pendingSeekToTime = savedTime }
             startObservingItem(item, videoId: player.video?.youtubeId ?? "")
-            avPlayer.replaceCurrentItem(with: item)
+            installItem(item)
         } else {
             guard let item = avPlayer.currentItem else { return }
             if height == 0 {
@@ -170,7 +170,7 @@ extension AVPlayerViewModel {
             await MainActor.run {
                 pendingSeekToTime = savedTime
                 startObservingItem(item, videoId: videoId)
-                avPlayer.replaceCurrentItem(with: item)
+                installItem(item)
             }
         } catch {
             if Task.isCancelled { return }

@@ -292,8 +292,8 @@ final class AVPlayerLayerView: NSView {
 
 // MARK: - SeekAnchor
 
-// Tracks the intended seek target between rapid seeks so relative seeks don't
-// re-read avPlayer.currentTime(), which lags behind until a seek completes.
+// Where the playhead is headed while it isn't there yet: avPlayer.currentTime() lags behind until
+// a seek completes, so anything reporting or saving a position prefers this (see resumePosition).
 final class SeekAnchor {
     var time: Double?
 }

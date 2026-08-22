@@ -128,7 +128,7 @@ extension AVPlayerViewModel {
             return
         }
 
-        let pos = avPlayer.currentTime().seconds
+        let pos = resumePosition
         let resume = (pos > 0.5 && !pos.isNaN && !pos.isInfinite) ? pos : nil
 
         let fallbackInfo = currentPlayerInfo
@@ -249,6 +249,7 @@ extension AVPlayerViewModel {
                 Log.error("[AVPlayerView] IP blocked during parallel fetch: \(videoId)")
                 player.isLoading = nil
                 loadError = ipBlockError
+                clearPendingReposition()
                 return
             }
             guard !Task.isCancelled, player.video?.youtubeId == videoId else { return }
@@ -287,6 +288,7 @@ extension AVPlayerViewModel {
         Log.error("[AVPlayerView] all retry attempts exhausted: \(videoId)")
         player.isLoading = nil
         loadError = APIError.unavailable("Unable to play this video")
+        clearPendingReposition()
     }
 
     /// Tries HLS → adaptive composition → (optionally) muxed from one `PlayerInfo`.
@@ -499,7 +501,7 @@ extension AVPlayerViewModel {
             return
         }
 
-        let pos = avPlayer.currentTime().seconds
+        let pos = resumePosition
         let resume = (pos > 0.5 && !pos.isNaN && !pos.isInfinite) ? pos : nil
         pendingSeekToTime = resume
         Log.info("[AVPlayerView] attempting background HLS quality upgrade: \(videoId)")
@@ -560,6 +562,77 @@ extension AVPlayerViewModel {
 
     // MARK: - Item lifecycle
 
+    static let minResumePosition: Double = 0.5
+
+    /// The pinned target while the playhead is still on its way there, the live clock otherwise.
+    @MainActor
+    var resumePosition: Double {
+        if let pinned = seekAnchor.time ?? pendingSeekToTime { return pinned }
+        return avPlayer.currentTime().seconds
+    }
+
+    /// Swaps in a replacement item, pinning the position it has to resume at until
+    /// `handleReadyToPlay` has seeked there. Pauses because `AVPlayer` keeps its rate across
+    /// `replaceCurrentItem`: the new item would otherwise start at zero as soon as it turns ready.
+    @MainActor
+    func installItem(_ item: AVPlayerItem) {
+        let target = pendingSeekToTime ?? player.getStartPosition()
+        if target > Self.minResumePosition, !target.isNaN, !target.isInfinite {
+            pendingSeekToTime = target
+            seekAnchor.time = target
+            avPlayer.pause()
+        } else {
+            pendingSeekToTime = nil
+        }
+        avPlayer.replaceCurrentItem(with: item)
+    }
+
+    /// Moves the playhead to `time` and waits for it to get there, pinning the position meanwhile.
+    /// Sample accurate: an efficient seek landing a segment boundary away is the jump this avoids.
+    /// Capped — a seek on an item replaced under it can go unanswered, and callers hold `isLoading`.
+    @MainActor
+    func seekAndWait(to time: Double, for item: AVPlayerItem, timeout: Double = 5) async {
+        seekAnchor.time = time
+        lastObservedTime = time
+        if player.currentTime != time { player.currentTime = time }
+        updateNowPlayingInfo(elapsed: time)
+        let target = CMTime(seconds: time, preferredTimescale: 600)
+        let landed: Bool = await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
+            let resumer = ResumeOnce(cont)
+            Task { @MainActor in
+                let finished = await avPlayer.seek(to: target, toleranceBefore: .zero, toleranceAfter: .zero)
+                resumer.resume(finished)
+            }
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+                if resumer.resume(false) {
+                    Log.info("[AVPlayerView] resume seek to \(Int(time))s unanswered after \(Int(timeout))s")
+                }
+            }
+        }
+        Log.info("[AVPlayerView] resumed at \(Int(time))s (landed: \(landed))")
+        guard avPlayer.currentItem === item else {
+            Log.info("[AVPlayerView] resume seek outlived its item — the new one has its own pin")
+            return
+        }
+        // a target past the seekable range is clamped: publish where it ended up, not where it went
+        let actual = await Self.readCurrentTime(from: avPlayer)
+        if landed, !actual.isNaN, !actual.isInfinite, abs(actual - time) > 1 {
+            lastObservedTime = actual
+            player.currentTime = actual
+            updateNowPlayingInfo(elapsed: actual)
+        }
+        if pendingSeekToTime == time { pendingSeekToTime = nil }
+        if seekAnchor.time == time { seekAnchor.time = nil }
+    }
+
+    /// Drops an outstanding resume reposition: a pin left behind freezes the reported position.
+    @MainActor
+    func clearPendingReposition() {
+        pendingSeekToTime = nil
+        seekAnchor.time = nil
+    }
+
     /// Replaces the current item and awaits its first terminal status. Returns `true` on
     /// `.readyToPlay` (running success side-effects and installing the ongoing observers),
     /// `false` on `.failed`, timeout, or cancellation. This is the loop's per-stream primitive —
@@ -570,7 +643,7 @@ extension AVPlayerViewModel {
         statusObserverTask?.cancel()
         setupSecondaryObservers(item: item, videoId: videoId)
         Log.info("[AVPlayerView] attemptItem replaceCurrentItem: \(videoId)")
-        avPlayer.replaceCurrentItem(with: item)
+        installItem(item)
 
         let played: Bool = await withCheckedContinuation { (cont: CheckedContinuation<Bool, Never>) in
             let resumer = ResumeOnce(cont)
@@ -635,23 +708,20 @@ extension AVPlayerViewModel {
     func handleReadyToPlay(item: AVPlayerItem, videoId: String) async {
         Log.info("[AVPlayerView] AVPlayerItem readyToPlay: \(videoId)")
         await selectOriginalAudioTrack(for: item)
-        Log.info("[AVPlayerView] clearing isLoading (readyToPlay): \(videoId)")
-        player.isLoading = nil
-        withAnimation { player.unstarted = false }
         let size = avPlayer.currentItem?.presentationSize ?? .zero
         if size.width > 0 && size.height > 0 {
             player.handleAspectRatio(size.width / size.height)
         }
-        if let t = pendingSeekToTime, t > 0, !t.isNaN, !t.isInfinite {
-            avPlayer.seek(to: CMTime(seconds: t, preferredTimescale: 600),
-                          toleranceBefore: .zero, toleranceAfter: .zero) { _ in }
-            pendingSeekToTime = nil
-        } else {
-            let startPos = player.getStartPosition()
-            if startPos > 1 {
-                avPlayer.seek(to: CMTime(seconds: startPos, preferredTimescale: 600)) { _ in }
-            }
+        // not ready until the playhead is back where the video was left off: everything below
+        // hands the video over. Loops because a seek arriving meanwhile retargets the reposition.
+        while let target = pendingSeekToTime {
+            await seekAndWait(to: target, for: item)
+            guard !Task.isCancelled, player.video?.youtubeId == videoId,
+                  avPlayer.currentItem === item else { return }
         }
+        Log.info("[AVPlayerView] clearing isLoading (readyToPlay): \(videoId)")
+        player.isLoading = nil
+        withAnimation { player.unstarted = false }
         player.handleAutoStart(nil)
         syncPlayPause(persistTime: false)
         updateNowPlayingInfo()
@@ -715,6 +785,7 @@ extension AVPlayerViewModel {
             Log.error("[AVPlayerView] retry already attempted, giving up: \(videoId)")
             player.isLoading = nil
             loadError = item.error
+            clearPendingReposition()
             return
         }
         let nsErr = (item.error as NSError?) ?? NSError(domain: "AVFoundationErrorDomain", code: 0)
@@ -726,6 +797,7 @@ extension AVPlayerViewModel {
             Log.error("[AVPlayerView] unrecoverable failure: \(videoId)")
             player.isLoading = nil
             loadError = err ?? item.error
+            clearPendingReposition()
         case .revertToAuto:
             Log.info("[AVPlayerView] quality \(player.selectedVideoQuality)p failed — reverting to Auto and retrying: \(videoId)")
             player.selectedVideoQuality = 0
@@ -787,6 +859,8 @@ extension AVPlayerViewModel {
     @MainActor
     func syncPlayPause(persistTime: Bool = true) {
         if player.isPlaying {
+            // `handleReadyToPlay` starts playback once the reposition has landed
+            guard pendingSeekToTime == nil else { return }
             PlayerAudioSession.activate()
             avPlayer.rate = Float(player.playbackSpeed)
         } else {
@@ -803,8 +877,10 @@ extension AVPlayerViewModel {
     @MainActor
     private func persistPlaybackPosition() {
         let avp = avPlayer
+        // a pause mid-reposition would write the position being left behind over `elapsedSeconds`
+        let pinned = seekAnchor.time ?? pendingSeekToTime
         Task { @MainActor [weak self] in
-            let time = await Self.readCurrentTime(from: avp)
+            let time = if let pinned { pinned } else { await Self.readCurrentTime(from: avp) }
             guard let self, !time.isNaN, !time.isInfinite else { return }
             lastObservedTime = time
             player.updateElapsedTime(time)

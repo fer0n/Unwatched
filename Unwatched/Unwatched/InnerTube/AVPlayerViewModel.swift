@@ -63,6 +63,8 @@ final class AVPlayerViewModel {
     @ObservationIgnored var webViewHLSProxyLoader: YTHLSProxyLoader?
     @ObservationIgnored var webViewHLSAudioContentIDs: [String: String?] = [:]
     @ObservationIgnored var webViewHLSSelectedContentID: String?
+    /// Where a newly installed item has to be repositioned to; outstanding means the player is
+    /// not at the position it reports (see `resumePosition`).
     @ObservationIgnored var pendingSeekToTime: Double?
 
     // Set by the view; called when the current video plays to end.
@@ -76,8 +78,10 @@ final class AVPlayerViewModel {
         timeObserverTickCount = 0
         statsTickCount = 0
         player.precisePosition = { [weak self] in
-            guard let seconds = self?.avPlayer.currentTime().seconds,
-                  !seconds.isNaN, !seconds.isInfinite else { return nil }
+            guard let self else { return nil }
+            if let pinned = seekAnchor.time { return pinned }
+            let seconds = avPlayer.currentTime().seconds
+            guard !seconds.isNaN, !seconds.isInfinite else { return nil }
             return seconds
         }
         timeObserverToken = avPlayer.addPeriodicTimeObserver(
@@ -88,11 +92,15 @@ final class AVPlayerViewModel {
             guard !seconds.isNaN, !seconds.isInfinite else { return }
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                // mid-seek the clock still reports where the playhead is coming from — zero for
+                // a freshly installed item; the pinned target is where playback is
+                if let target = seekAnchor.time ?? player.seekAbsolute {
+                    lastObservedTime = target
+                    return
+                }
                 lastObservedTime = seconds
-                let seekInFlight = seekAnchor.time != nil
-                    || player.seekAbsolute != nil
                 if player.isPlaying {
-                    if !seekInFlight { player.monitorChapters(time: seconds) }
+                    player.monitorChapters(time: seconds)
                     statsTickCount += 1
                     if statsTickCount >= Const.updateDbTimeSeconds {
                         statsTickCount = 0
@@ -108,7 +116,7 @@ final class AVPlayerViewModel {
                 } else {
                     timeObserverTickCount = 0
                     statsTickCount = 0
-                    if player.isLoading == nil && !seekInFlight {
+                    if player.isLoading == nil {
                         if player.currentTime != seconds { player.currentTime = seconds }
                     }
                 }
@@ -137,7 +145,8 @@ final class AVPlayerViewModel {
         }
         guard let videoId, videoId != loadedVideoId else { return }
         loadedVideoId = videoId
-        lastObservedTime = nil
+        // otherwise the lock screen shows the empty player's zero for the whole load
+        lastObservedTime = player.getStartPosition()
         hasRetriedPlayback = false
         hasAppliedH264Cap = false
         loadError = nil
@@ -185,7 +194,9 @@ final class AVPlayerViewModel {
                 guard !Task.isCancelled else { return }
                 let isNowPlaying = avPlayer.rate != 0
                 await MainActor.run {
+                    // the pause `installItem` makes to reposition isn't the user's
                     guard player.isLoading == nil,
+                          seekAnchor.time == nil,
                           player.isPlaying != isNowPlaying else { return }
                     player.isPlaying = isNowPlaying
                 }
@@ -230,14 +241,21 @@ final class AVPlayerViewModel {
     @MainActor
     func applyAbsoluteSeek() {
         guard let time = player.seekAbsolute else { return }
+        player.seekAbsolute = nil
         lastObservedTime = time
         seekAnchor.time = time
-        let anchor = seekAnchor
-        avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
-                      toleranceBefore: .zero, toleranceAfter: .zero) { finished in
-            if finished, anchor.time == time { anchor.time = nil }
+        if pendingSeekToTime != nil {
+            // seeking an item that isn't repositioned yet wouldn't stick, and `handleReadyToPlay`
+            // would undo it: retarget its reposition instead
+            pendingSeekToTime = time
+        } else {
+            let anchor = seekAnchor
+            avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
+                          toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                // also when unfinished: an anchor still pointing here was superseded by nothing
+                if anchor.time == time { anchor.time = nil }
+            }
         }
-        player.seekAbsolute = nil
         // Keep the scrubber in sync immediately (see applyRelativeSeek).
         player.currentTime = time
         updateNowPlayingInfo(elapsed: time)
@@ -295,6 +313,7 @@ final class AVPlayerViewModel {
         rateObserverTask?.cancel()
         avPlayer.pause()
         teardownRemoteCommands()
+        clearPendingReposition()
         player.precisePosition = nil
         // instance outlives the view: the next one starts over
         loadedVideoId = nil
