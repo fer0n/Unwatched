@@ -17,6 +17,7 @@ final class LaunchTraceTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        dismissSystemAlerts()
         app = XCUIApplication()
         app.launchArguments = ["launch-trace"]
         app.launch()
@@ -64,6 +65,18 @@ final class LaunchTraceTests: XCTestCase {
     }
 
     // MARK: Helpers
+
+    /// A system alert left behind by another test (a notification permission prompt, say) keeps
+    /// the app underneath it from ever becoming active, so the launch would never finish.
+    private func dismissSystemAlerts() {
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for label in ["Don’t Allow", "Don't Allow", "Allow", "OK", "Dismiss"] {
+            let button = springboard.buttons[label]
+            if button.exists {
+                button.tap()
+            }
+        }
+    }
 
     /// The recorded phases, as `name` to milliseconds since process start.
     ///
