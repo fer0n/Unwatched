@@ -18,8 +18,10 @@ extension Const {
         Const.mergeSponsorBlockChapters: false,
         Const.youtubePremium: false,
         Const.sponsorSegmentSetting: SponsorBlockSegmentSetting.sponsorDefault.rawValue,
-        Const.selfPromoSegmentSetting: SponsorBlockSegmentSetting.selfPromoDefault.rawValue
+        Const.selfPromoSegmentSetting: SponsorBlockSegmentSetting.selfPromoDefault.rawValue,
 
+        // Queue
+        Const.quickSwitchAllVideos: true
     ]
 
     static let settingsDefaults: [String: Sendable] = [

@@ -27,7 +27,6 @@ struct AddYoutubeURL: AppIntent {
             markAsNew: false
         )
         try await task.value
-        UserDefaults.standard.set(true, forKey: Const.shortcutHasBeenUsed)
         return .result()
     }
 

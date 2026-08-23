@@ -106,7 +106,7 @@ class TinyUndoManager {
             for id in ids {
                 if let video: Video = context.existingModel(for: id) {
                     if !hasNowPlayingVideo {
-                        hasNowPlayingVideo = VideoService.isTopOfQueue(
+                        hasNowPlayingVideo = PlayerManager.shared.isTopOfQueue(
                             order: video.queueEntry?.order,
                             context
                         )

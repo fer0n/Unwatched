@@ -125,6 +125,15 @@ extension MigrationTests {
             "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "customAspectRatio", "customSpeedSetting", "filterText", "isArchived", "link", "mostRecentVideoDate", "subscribedDate", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
             "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "createdDate", "deferDate", "duration", "elapsedSeconds", "inboxEntry", "isNew", "isYtShort", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
             "WatchTimeEntry": ["channelId", "date", "watchTime"]
+        ],
+        "1.15.0": [
+            "Chapter": ["category", "duration", "endTime", "isActive", "link", "mergedChapterVideo", "startTime", "title", "video"],
+            "InboxEntry": ["date", "video", "youtubeId"],
+            "QueueEntry": ["order", "video", "youtubeId"],
+            "Subscription": ["_shortsSetting", "_videoPlacement", "allowOnMatch", "author", "customAspectRatio", "customSpeedSetting", "filterText", "isArchived", "link", "mostRecentVideoDate", "subscribedDate", "tags", "thumbnailUrl", "title", "videos", "youtubeChannelId", "youtubePlaylistId", "youtubeUserName"],
+            "Tag": ["_mode", "createdDate", "name", "order", "quickSwitch", "subscriptions", "symbol", "videos"],
+            "Video": ["apiUpdatedDate", "bookmarkedDate", "chapters", "createdDate", "deferDate", "duration", "elapsedSeconds", "inboxEntry", "isNew", "isYtShort", "mergedChapters", "noDuration", "publishedDate", "queueEntry", "sponserBlockUpdateDate", "subscription", "tags", "thumbnailUrl", "title", "updatedDate", "url", "videoDescription", "watchedDate", "youtubeChannelId", "youtubeId"],
+            "WatchTimeEntry": ["channelId", "date", "watchTime"]
         ]
     ]
 

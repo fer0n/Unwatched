@@ -78,6 +78,7 @@ extension VideoService {
         from source: IndexSet,
         to destination: Int,
         updateIsNew: Bool,
+        filter: QueueFilter = .all,
         modelContext: ModelContext
     ) {
         try? VideoActor
@@ -85,6 +86,7 @@ extension VideoService {
                 from: source,
                 to: destination,
                 updateIsNew: updateIsNew,
+                filter: filter,
                 modelContext: modelContext
             )
     }
@@ -114,11 +116,8 @@ extension VideoService {
         }
     }
 
-    static func clearAllQueueEntries(_ modelContext: ModelContext) {
-        let fetch = FetchDescriptor<QueueEntry>()
-        if let entries = try? modelContext.fetch(fetch) {
-            deleteQueueEntries(entries, modelContext: modelContext)
-        }
+    static func clearAllQueueEntries(_ modelContext: ModelContext, _ filter: QueueFilter = .all) {
+        deleteQueueEntries(filter.entries(modelContext), modelContext: modelContext)
     }
 
     static func deleteInboxEntries(_ entries: [InboxEntry], modelContext: ModelContext) {
@@ -322,46 +321,14 @@ extension VideoService {
         return task
     }
 
-    static func getTopVideoInQueue() -> PersistentIdentifier? {
-        let context = DataProvider.newContext()
-        return getTopVideoInQueue(context)?.persistentModelID
-    }
-
-    static func getTopVideoInQueue(_ context: ModelContext) -> Video? {
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
-        fetch.fetchLimit = 1
-        let entries = try? context.fetch(fetch)
-        if let nextVideo = entries?.first?.video {
+    static func getTopVideoInQueue(_ context: ModelContext, _ filter: QueueFilter = .all) -> Video? {
+        if let nextVideo = filter.entries(context, limit: 1).first?.video {
             if nextVideo.isNew {
                 _ = setIsNew(nextVideo.persistentModelID, false)
             }
             return nextVideo
         }
         return nil
-    }
-
-    /// Whether the queue currently holds no entries. Check before inserting: filling an empty
-    /// queue makes the video the new top one, whichever index it goes in at.
-    static func isQueueEmpty(_ context: ModelContext) -> Bool {
-        (try? context.fetchCount(FetchDescriptor<QueueEntry>())) == 0
-    }
-
-    /// Whether `order` belongs to the entry at the top of the queue — the video the player would
-    /// load next. Ask *before* changing the queue: `QueueEntry.order` is a sparse sort key, so no
-    /// single value means "top", and once the entry is gone there is nothing left to compare.
-    static func isTopOfQueue(order: Int?, _ context: ModelContext) -> Bool {
-        guard let order else { return false }
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
-        fetch.fetchLimit = 1
-        guard let top = (try? context.fetch(fetch))?.first else { return false }
-        return top.order == order
-    }
-
-    static func getNextVideoInQueue(_ modelContext: ModelContext) -> (first: Video?, second: Video?) {
-        var fetch = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\.order)])
-        fetch.fetchLimit = 2
-        let entries = try? modelContext.fetch(fetch)
-        return (entries?.first?.video, entries?.last?.video)
     }
 
     static func toggleBookmarkFetch(_ videoId: PersistentIdentifier, _ context: ModelContext) -> (Task<(), Error>)? {
@@ -384,12 +351,14 @@ extension VideoService {
                           _ direction: ClearDirection,
                           index: Int? = nil,
                           date: Date? = nil,
+                          filter: QueueFilter = .all,
                           _ modelContext: ModelContext) {
         try? VideoActor.clearList(
             list,
             direction,
             index: index,
             date: date,
+            filter: filter,
             modelContext
         )
     }
@@ -631,10 +600,7 @@ extension VideoService {
         }
 
         let context = DataProvider.mainContext
-        let sort = SortDescriptor<QueueEntry>(\.order)
-        let fetch = FetchDescriptor<QueueEntry>(sortBy: [sort])
-        let entries = try context.fetch(fetch)
-        guard let fetchedVideo = entries.first?.video else {
+        guard let fetchedVideo = QueueFilter.all.entries(context, limit: 1).first?.video else {
             throw VideoError.noVideoFound
         }
         return fetchedVideo

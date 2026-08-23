@@ -175,6 +175,9 @@ struct CleanupService {
             if model != WatchTimeEntry.self {
                 try context.delete(model: WatchTimeEntry.self)
             }
+            if model != Tag.self {
+                try context.delete(model: Tag.self)
+            }
             try context.save()
         } catch {
             Log.error("Failed to delete everything")
@@ -374,18 +377,28 @@ actor CleanupActor: SharedContextActor {
         guard let subs = try? modelContext.fetch(fetch) else {
             return
         }
-        let duplicates = getDuplicates(from: subs, keySelector: {
+        // grouped, not `getDuplicates`, so each duplicate is paired with its keeper
+        let grouped = Dictionary(grouping: subs, by: {
             ($0.youtubeChannelId ?? "") + ($0.youtubePlaylistId ?? "")
-        }, sort: sortSubscriptions)
-        duplicateInfo.countSubscriptions = duplicates.count
-        for duplicate in duplicates {
-            if let videos = duplicate.videos {
-                for video in videos {
-                    CleanupService.deleteVideo(video, modelContext)
-                }
+        })
+        var removedCount = 0
+        for (_, group) in grouped where group.count > 1 {
+            let sortedGroup = sortSubscriptions(group)
+            guard let keeper = sortedGroup.first else {
+                continue
             }
-            modelContext.delete(duplicate)
+            for duplicate in sortedGroup.dropFirst() {
+                moveTags(from: duplicate, to: keeper, \.tags)
+                if let videos = duplicate.videos {
+                    for video in videos {
+                        CleanupService.deleteVideo(video, modelContext)
+                    }
+                }
+                modelContext.delete(duplicate)
+                removedCount += 1
+            }
         }
+        duplicateInfo.countSubscriptions = removedCount
     }
 
     func removeEmptySubscriptions() {
@@ -572,6 +585,19 @@ extension CleanupActor {
         }
         moveEntries(from: duplicate, to: keeper)
         moveChapters(from: duplicate, to: keeper)
+        moveTags(from: duplicate, to: keeper, \.tags)
+    }
+
+    /// A device's tags arrive on its own copy of the row, which the dedupe deletes.
+    private func moveTags<T: PersistentModel>(
+        from duplicate: T,
+        to keeper: T,
+        _ tags: ReferenceWritableKeyPath<T, [Tag]?>
+    ) {
+        let existing = Set((keeper[keyPath: tags] ?? []).map(\.persistentModelID))
+        let missing = (duplicate[keyPath: tags] ?? []).filter { !existing.contains($0.persistentModelID) }
+        guard !missing.isEmpty else { return }
+        keeper[keyPath: tags] = (keeper[keyPath: tags] ?? []) + missing
     }
 
     /// Chapter rows are edits, and a device's edits arrive attached to its own copy of the video —

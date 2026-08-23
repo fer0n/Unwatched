@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 extension View {
@@ -51,6 +52,8 @@ extension View {
                         PrivacySettingsView()
                     case .stats:
                         StatsView()
+                    case .tag(let name):
+                        TagDestinationView(name: name)
                     }
                 }
                 #if os(macOS)
@@ -61,7 +64,7 @@ extension View {
     // swiftlint:enable cyclomatic_complexity
 }
 
-enum LibraryDestination: Codable {
+enum LibraryDestination: Codable, Hashable {
     case sideloading,
          watchHistory,
          allVideos,
@@ -79,5 +82,26 @@ enum LibraryDestination: Codable {
          titleFilter,
          privacy,
          stats,
-         settingsPlayerType
+         settingsPlayerType,
+         tag(String)
+}
+
+/// Resolves the name back to a row, so the navigation value stays Codable across a relaunch.
+private struct TagDestinationView: View {
+    @Query private var tags: [Tag]
+
+    let name: String
+
+    init(name: String) {
+        self.name = name
+        _tags = Query(filter: #Predicate<Tag> { $0.name == name })
+    }
+
+    var body: some View {
+        if let tag = tags.first {
+            TagVideosView(tag: tag)
+        } else {
+            ContentUnavailableView("noTagFound", systemImage: Const.filterTagSF)
+        }
+    }
 }

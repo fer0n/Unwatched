@@ -142,7 +142,7 @@ struct EmptyEntry<Entry>: View where Entry: PersistentModel & HasVideo {
         Log.info("Clear Entry")
         withAnimation {
             if let queueEntry = entry as? QueueEntry {
-                let wasTopOfQueue = VideoService.isTopOfQueue(order: queueEntry.order, modelContext)
+                let wasTopOfQueue = player.isTopOfQueue(order: queueEntry.order, modelContext)
                 VideoService.deleteQueueEntry(queueEntry, modelContext: modelContext)
                 if wasTopOfQueue {
                     player.loadTopmostVideoFromQueue()

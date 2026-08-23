@@ -76,12 +76,6 @@ struct AppCommands: Commands {
             #endif
 
             Section {
-                Link(destination: UrlService.shareShortcutUrl) {
-                    Text("setupShareSheetAction")
-                }
-            }
-
-            Section {
                 Button("importSubscriptions") {
                     openWindow(id: Const.windowImportSubs)
                 }

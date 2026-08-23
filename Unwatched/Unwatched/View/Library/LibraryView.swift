@@ -14,6 +14,7 @@ struct LibraryView: View {
     @Environment(NavigationManager.self) private var navManager
 
     @State var subManager = SubscribeManager()
+    @State private var editedTag: TagEdit?
     var showCancelButton: Bool = false
 
     var body: some View {
@@ -27,6 +28,7 @@ struct LibraryView: View {
                 List {
                     LibraryVideoSection()
                         .id(topListItemId)
+                    LibraryTagSection(editedTag: $editedTag)
                     SubscriptionListSection(subManager: $subManager,
                                             theme: theme)
                 }
@@ -44,6 +46,11 @@ struct LibraryView: View {
                     #endif
                     RefreshToolbarContent()
                 }
+            }
+            // outside the list: anchored to a row, the sheet is torn down along with it
+            // whenever a query re-emits, which drops the name field's focus
+            .sheet(item: $editedTag) { edit in
+                TagEditView(tag: edit.tag, isNew: edit.isNew)
             }
             .myTint()
             .libraryDestination()

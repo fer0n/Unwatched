@@ -52,6 +52,7 @@ struct UserDataService {
         var subs                = fetchMapExportable(Subscription.self)
         subs = subs.map { var sub = $0; sub.persistentId = nil; return sub }
         backup.subscriptions = subs.filter({ !$0.isArchived || !$0.videosIds.isEmpty })
+        backup.tags             = fetchMapExportable(Tag.self)
 
         if backup.isEmpty {
             Log.info("checkIfBackupEmpty")
@@ -143,6 +144,25 @@ struct UserDataService {
             context.insert(subscriptionModel)
             let videos = subscription.videosIds.compactMap { videoIdDict[$0] }
             subscriptionModel.videos = videos
+        }
+
+        // after the subscriptions and videos: membership is re-linked to rows
+        if let tags = backup.tags, !tags.isEmpty {
+            let subscriptionsByKey = Dictionary(
+                ((try? context.fetch(FetchDescriptor<Subscription>())) ?? [])
+                    .compactMap { sub in sub.subscriptionKey.map { ($0, sub) } },
+                uniquingKeysWith: { first, _ in first }
+            )
+            let videosById = Dictionary(
+                ((try? context.fetch(FetchDescriptor<Video>())) ?? []).map { ($0.youtubeId, $0) },
+                uniquingKeysWith: { first, _ in first }
+            )
+            for tag in tags {
+                let model = tag.toModel
+                context.insert(model)
+                model.subscriptions = tag.subscriptionKeys.compactMap { subscriptionsByKey[$0] }
+                model.videos = (tag.videoIds ?? []).compactMap { videosById[$0] }
+            }
         }
 
         try context.save()
@@ -395,6 +415,7 @@ struct UserDataService {
 struct UnwatchedBackup: Codable {
     var settings: [String: AnyCodable]? = [:]
     var subscriptions   = [SendableSubscription]()
+    var tags: [SendableTag]? = []
     var videos          = [SendableVideo]()
     var queueEntries    = [SendableQueueEntry]()
     var inboxEntries    = [SendableInboxEntry]()

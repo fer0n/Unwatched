@@ -75,6 +75,9 @@ struct VideoListItemMoreMenuView: View {
                     Label("markUnwatched", image: "custom.checkmark.circle.slash.fill")
                 }
             }
+
+            VideoTagMenu(videoData: videoData)
+
             Divider()
 
             if videoData.hasInboxEntry != true {

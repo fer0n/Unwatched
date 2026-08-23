@@ -40,6 +40,9 @@ struct HandleVideoListItemTap: ViewModifier {
         }
         Signal.videoAction("play", listContext)
         Signal.playbackStarted(listContext.rawValue)
+        if listContext == .queue {
+            player.playbackTag = navManager.queueTag
+        }
         Task {
             VideoService.insertQueueEntries(videos: [video], modelContext: modelContext)
         }

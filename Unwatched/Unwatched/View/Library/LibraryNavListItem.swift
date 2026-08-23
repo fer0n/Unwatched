@@ -11,42 +11,64 @@ struct LibraryNavListItem: View {
 
     var text: LocalizedStringKey
     var subTitle: LocalizedStringKey?
+    var trailingText: LocalizedStringKey?
     var systemName: String?
     var imageName: String?
 
-    init(_ text: LocalizedStringKey, subTitle: LocalizedStringKey? = nil, systemName: String) {
+    init(
+        _ text: LocalizedStringKey,
+        subTitle: LocalizedStringKey? = nil,
+        trailingText: LocalizedStringKey? = nil,
+        systemName: String
+    ) {
         self.text = text
         self.subTitle = subTitle
+        self.trailingText = trailingText
         self.systemName = systemName
     }
 
-    init(_ text: LocalizedStringKey, subTitle: LocalizedStringKey? = nil, imageName: String) {
+    init(
+        _ text: LocalizedStringKey,
+        subTitle: LocalizedStringKey? = nil,
+        trailingText: LocalizedStringKey? = nil,
+        imageName: String
+    ) {
         self.text = text
         self.subTitle = subTitle
+        self.trailingText = trailingText
         self.imageName = imageName
     }
 
     var body: some View {
-        Label {
-            VStack(alignment: .leading, spacing: 0) {
-                Text(text)
-                    .foregroundStyle(Color.neutralAccentColor)
-                if let subTitle {
-                    Text(subTitle)
-                        .foregroundStyle(Color.neutralAccentColor.opacity(0.5))
+        HStack {
+            Label {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(text)
+                        .foregroundStyle(Color.neutralAccentColor)
+                    if let subTitle {
+                        Text(subTitle)
+                            .foregroundStyle(Color.neutralAccentColor.opacity(0.5))
+                    }
+                }
+            } icon: {
+                if let systemName {
+                    Image(systemName: systemName)
+                } else if let imageName {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(1)
                 }
             }
-        } icon: {
-            if let systemName {
-                Image(systemName: systemName)
-            } else if let imageName {
-                Image(imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(1)
+            .foregroundStyle(theme.color)
+
+            if let trailingText {
+                Spacer()
+                Text(trailingText)
+                    .font(.body)
+                    .foregroundStyle(Color.neutralAccentColor.opacity(0.5))
             }
         }
-        .foregroundStyle(theme.color)
     }
 }
 

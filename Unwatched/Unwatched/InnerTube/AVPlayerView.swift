@@ -12,6 +12,7 @@ import UnwatchedShared
 struct AVPlayerView: View {
     @Environment(PlayerManager.self) var player
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var modelContext
     @AppStorage(Const.pipAutoEnable) private var pipAutoEnable = true
 
     var handleVideoEnded: () -> Void
@@ -21,8 +22,6 @@ struct AVPlayerView: View {
     var showOverlay: Bool
     var landscapeFullscreen: Bool
 
-    @Query(AVPlayerView.nextEntriesDescriptor) private var nextEntries: [QueueEntry]
-
     @State private var vm = AVPlayerViewModel.shared
     @State private var ownerToken = UUID()
     @State private var overlayVM = OverlayFullscreenVM.shared
@@ -30,6 +29,7 @@ struct AVPlayerView: View {
     @State private var videoZoom: CGFloat = 1.0
     @State private var panOffset: CGSize = .zero
     @State private var isTwoFingerGesturing = false
+    @State private var nextPrefetchVideoId: String?
 
     @ViewBuilder
     private var videoPlayerView: some View {
@@ -109,7 +109,12 @@ struct AVPlayerView: View {
     }
 
     var body: some View {
-        corePlayerView
+        let filter = player.queueFilter(modelContext)
+        return corePlayerView
+            .background {
+                NextQueueVideoReader(filter: filter, videoId: $nextPrefetchVideoId)
+                    .id(filter)
+            }
             .onChange(of: player.selectedAudioLanguage) { _, lang in vm.handleAudioLanguageChange(lang) }
             .onChange(of: player.selectedVideoQuality) { _, height in vm.handleQualityChange(height: height) }
             .onChange(of: scenePhase) { _, phase in vm.handleScenePhaseChange(phase) }
@@ -146,16 +151,6 @@ struct AVPlayerView: View {
             .onChange(of: player.playbackSpeed) { vm.handlePlaybackSpeedChange() }
     }
 
-    /// The video after the current one in the queue — the one to pre-warm.
-    /// The playing video normally sits at queue position 1, so this is position 2
-    /// (falling back to position 1 if it isn't the current video, e.g. right after a swap).
-    private var nextPrefetchVideoId: String? {
-        let first = nextEntries.first?.video
-        let second = nextEntries.count > 1 ? nextEntries[1].video : nil
-        let next = first?.youtubeId != player.video?.youtubeId ? first : second
-        return next?.youtubeId
-    }
-
     /// Pre-warm the second (next-up) video. Gated on the current video having finished
     /// loading so the prefetch doesn't compete with the current stream for bandwidth.
     private func prefetchNextHLS() {
@@ -166,10 +161,35 @@ struct AVPlayerView: View {
         }
         vm.prefetchNext(videoId: nextId)
     }
+}
 
-    static var nextEntriesDescriptor: FetchDescriptor<QueueEntry> {
-        var descriptor = FetchDescriptor<QueueEntry>(sortBy: [SortDescriptor(\QueueEntry.order)])
-        descriptor.fetchLimit = 2
-        return descriptor
+/// The video `PlayerManager.autoSetNextVideo` will pick, so the prefetch pre-warms the same row.
+///
+/// Its own view, keyed by the filter: a `@Query`'s descriptor only changes when the view is
+/// re-initialised, and rebuilding `AVPlayerView` would tear down the player.
+private struct NextQueueVideoReader: View {
+    @Environment(PlayerManager.self) private var player
+    @Query private var entries: [QueueEntry]
+
+    let filter: QueueFilter
+    @Binding var videoId: String?
+
+    init(filter: QueueFilter, videoId: Binding<String?>) {
+        self.filter = filter
+        _videoId = videoId
+        _entries = Query(filter.descriptor(limit: 2))
+    }
+
+    var body: some View {
+        Color.clear
+            .frame(width: 0, height: 0)
+            .allowsHitTesting(false)
+            .onChange(of: nextVideoId, initial: true) {
+                videoId = nextVideoId
+            }
+    }
+
+    private var nextVideoId: String? {
+        filter.nextVideo(skipping: player.video?.youtubeId, in: entries)?.youtubeId
     }
 }

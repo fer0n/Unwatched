@@ -38,7 +38,7 @@ final class InboxCardCommits {
         var wrote = false
         var reloadsPlayer = false
         for commit in commits {
-            let result = apply(commit, modelContext, undoManager)
+            let result = apply(commit, modelContext, player, undoManager)
             wrote = wrote || result.wrote
             reloadsPlayer = reloadsPlayer || result.reloadsPlayer
         }
@@ -54,6 +54,7 @@ final class InboxCardCommits {
     private func apply(
         _ commit: Commit,
         _ modelContext: ModelContext,
+        _ player: PlayerManager,
         _ undoManager: TinyUndoManager
     ) -> (wrote: Bool, reloadsPlayer: Bool) {
         let (action, video) = (commit.action, commit.video)
@@ -62,8 +63,8 @@ final class InboxCardCommits {
 
         // an empty queue makes an added video the new top one, whichever index it goes in at
         let addsToQueue = action == .queueNext || action == .queueLast
-        let requiresQueueChange = VideoService.isTopOfQueue(order: video.queueEntry?.order, modelContext)
-            || (addsToQueue && VideoService.isQueueEmpty(modelContext))
+        let requiresQueueChange = player.isTopOfQueue(order: video.queueEntry?.order, modelContext)
+            || (addsToQueue && player.isQueueEmpty(modelContext))
 
         switch action {
         case .skip:

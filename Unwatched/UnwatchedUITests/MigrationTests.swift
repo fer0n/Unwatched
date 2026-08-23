@@ -264,6 +264,44 @@ final class MigrationTests: XCTestCase {
         }
     }
 
+    /// V1p14 -> V1p15 adds `Tag`. Existing subscriptions must come through untagged and still be
+    /// taggable afterwards.
+    func testSubscriptionsAreTaggableAfterMigrationFromV1p14() throws {
+        let url = storeURL()
+        try autoreleasepool {
+            let context = ModelContext(try container(UnwatchedSchemaV1p14.self, at: url))
+            context.insert(UnwatchedSchemaV1p14.Subscription(
+                link: nil,
+                title: "Channel",
+                youtubeChannelId: "channel-1"
+            ))
+            try context.save()
+        }
+
+        try autoreleasepool {
+            let context = ModelContext(try migrate(url))
+            let subscription = try XCTUnwrap(try context.fetch(FetchDescriptor<Subscription>()).first)
+
+            let tag = Tag(name: "Tech", order: 0)
+            context.insert(tag)
+            tag.setCovers(subscription, true)
+            try context.save()
+        }
+
+        try autoreleasepool {
+            let context = ModelContext(try migrate(url))
+            let tag = try XCTUnwrap(try context.fetch(FetchDescriptor<Tag>()).first)
+            let subscription = try XCTUnwrap(try context.fetch(FetchDescriptor<Subscription>()).first)
+            XCTAssertEqual(tag.name, "Tech")
+            XCTAssertEqual(
+                (tag.subscriptions ?? []).map(\.youtubeChannelId),
+                ["channel-1"],
+                "the membership relationship must survive the store"
+            )
+            XCTAssertTrue(tag.covers(subscription))
+        }
+    }
+
     // MARK: - Image cache store
 
     func testCachedImageMigratesFromEveryHistoricVersion() throws {

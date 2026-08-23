@@ -9,6 +9,15 @@ import SwiftData
 public protocol SubscriptionData: Hashable {
     var displayTitle: String { get }
     var youtubeChannelId: String? { get }
+    var youtubePlaylistId: String? { get }
+    var link: URL? { get }
+}
+
+public extension SubscriptionData {
+    /// Identifies the channel rather than its row, so it survives a backup round trip and dedupe.
+    var subscriptionKey: String? {
+        youtubeChannelId ?? youtubePlaylistId ?? link?.absoluteString
+    }
 }
 
 @Model
@@ -19,6 +28,8 @@ public final class Subscription: SubscriptionData, CustomStringConvertible, Expo
     public var videos: [Video]? = []
 
     public var link: URL?
+
+    public var tags: [Tag]? = []
 
     public var title: String = "-"
     public var author: String?

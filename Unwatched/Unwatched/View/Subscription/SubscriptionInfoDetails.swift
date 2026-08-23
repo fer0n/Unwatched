@@ -106,6 +106,8 @@ struct SubscriptionInfoDetails: View {
 
                         SubscriptionShortsSetting(subscription: subscription)
 
+                        SubscriptionTagsSetting(subscription: subscription)
+
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,
                             hasFilter: !subscription.filterText.isEmpty

@@ -42,15 +42,22 @@ struct QueueTabItemViewModifier: ViewModifier {
 /// Tab-bar label for the queue, showing a badge dot when the queue has new items.
 struct QueueTabLabel: View {
     @AppStorage(Const.showTabBarBadge) var showTabBarBadge = true
+    @Environment(NavigationManager.self) private var navManager
 
     @Query(QueueTabItemViewModifier.descriptor)
     var queue: [QueueEntry]
+    @Query(sort: \Tag.order) private var tags: [Tag]
 
     var body: some View {
         MenuTabLabel(
-            image: Image(systemName: Const.queueTagSF),
+            image: Image(systemName: symbol),
             tag: .queue,
             showBadge: showTabBarBadge && !queue.isEmpty
         )
+    }
+
+    /// Only a symbol the user picked for the tag, the default one says no more than the queue's own
+    private var symbol: String {
+        navManager.queueTag.tag(in: tags)?.symbol ?? Const.queueTagSF
     }
 }

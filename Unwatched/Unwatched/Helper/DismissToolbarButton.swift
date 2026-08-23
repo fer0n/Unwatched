@@ -21,11 +21,12 @@ struct DismissToolbarButton: ToolbarContent {
                     dismiss()
                 }
             } label: {
-                Image(systemName: Const.clearSF)
+                Image(systemName: Const.clearNoFillSF)
             }
             .fontWeight(.bold)
             .accessibilityLabel("dismiss")
             .myTint(neutral: true)
+            .foregroundStyle(Color.neutralAccentColor)
         }
     }
 }

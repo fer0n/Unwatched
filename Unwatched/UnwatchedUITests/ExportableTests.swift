@@ -107,6 +107,60 @@ class ExportableTests: XCTestCase {
         }
     }
 
+    func testBackupRestoresTags() async {
+        let context = DataProvider.newContext()
+
+        let tech = Subscription(link: URL(string: "https://example.com/tech"), title: "Tech Channel", youtubeChannelId: "tech-channel")
+        let music = Subscription(link: URL(string: "https://example.com/music"), title: "Music Channel", youtubePlaylistId: "music-playlist")
+        let untagged = Subscription(link: URL(string: "https://example.com/untagged"), title: "Untagged Channel", youtubeChannelId: "untagged-channel")
+        context.insert(tech)
+        context.insert(music)
+        context.insert(untagged)
+
+        let video = Video(title: "Video", url: URL(string: "https://example.com/video"), youtubeId: "tagVideoId")
+        context.insert(video)
+        tech.videos = [video]
+
+        let tag = Tag(name: "Listening", order: 3)
+        context.insert(tag)
+        tag.setCovers(tech, true)
+        tag.setCovers(music, true)
+
+        let rest = Tag(name: "Rest", order: 4, mode: .untagged)
+        context.insert(rest)
+
+        try? context.save()
+
+        do {
+            let data = try UserDataService.exportUserData()
+            await CleanupService.deleteEverything()
+            UserDataService.importBackup(data)
+
+            let tags = try context.fetch(FetchDescriptor<Tag>(sortBy: [SortDescriptor(\Tag.order)]))
+            XCTAssertEqual(tags.count, 2)
+            XCTAssertEqual(tags.last?.mode, .untagged, "a tag's mode has to survive the round trip")
+
+            let restored = try XCTUnwrap(tags.first)
+            XCTAssertEqual(restored.name, "Listening")
+            XCTAssertEqual(restored.mode, .include)
+            XCTAssertEqual(restored.order, 3)
+            XCTAssertEqual(
+                Set((restored.subscriptions ?? []).compactMap(\.subscriptionKey)),
+                ["tech-channel", "music-playlist"],
+                "membership must be re-linked from the exported keys, a playlist by its playlist id"
+            )
+
+            let subs = try context.fetch(FetchDescriptor<Subscription>())
+            XCTAssertTrue(restored.covers(subs.first { $0.title == "Tech Channel" }))
+            XCTAssertTrue(restored.covers(subs.first { $0.title == "Music Channel" }))
+            XCTAssertFalse(restored.covers(subs.first { $0.title == "Untagged Channel" }))
+        } catch {
+            XCTFail("Decoding failed with error: \(error)")
+        }
+
+        await CleanupService.deleteEverything()
+    }
+
     func testTriage() async {
         let oneDay: TimeInterval = 60 * 60 * 24
         let date = Date(timeIntervalSince1970: 0)
@@ -221,6 +275,16 @@ class ExportableTests: XCTestCase {
             updatedSub?.mostRecentVideoDate,
             existingDate,
             "mostRecentVideoDate must not be reset when a fetch returns no videos"
+        )
+    }
+
+    /// The per-tag flag rides along on `Tag`, but the one slice that isn't a tag keeps its flag in
+    /// the synced key-value store, which `getSettings` only reads for registered keys. The store
+    /// itself can't be exercised here: writes to it are invisible without an iCloud entitlement.
+    func testQuickSwitchSettingsAreBackedUp() {
+        XCTAssertNotNil(
+            Const.syncedSettingsDefaults[Const.quickSwitchAllVideos],
+            "quickSwitchAllVideos is written with @CloudStorage, so a backup skips it unless it is registered"
         )
     }
 

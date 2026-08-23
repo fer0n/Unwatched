@@ -107,13 +107,21 @@ import UnwatchedShared
         let container = try decoder.container(keyedBy: PlayerCodingKeys.self)
         pipEnabled = try container.decode(Bool.self, forKey: .pipEnabled)
         isRepeating = try container.decodeIfPresent(Bool.self, forKey: .isRepeating) ?? false
+        let legacyTagId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .playbackTagId)
+        // `try?`, so a selection this build can no longer read costs the tag, not the player state
+        let decodedTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .playbackTag)) ?? nil
+        playbackTag = decodedTag ?? QueueTagSelection(tagId: legacyTagId)
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: PlayerCodingKeys.self)
         try container.encode(pipEnabled, forKey: .pipEnabled)
         try container.encodeIfPresent(isRepeating, forKey: .isRepeating)
+        try container.encode(playbackTag, forKey: .playbackTag)
     }
+
+    /// Latched when a video is started: browsing to another tag must not change what plays next.
+    var playbackTag: QueueTagSelection = .all
 
     @MainActor
     var video: Video? {
@@ -251,7 +259,7 @@ import UnwatchedShared
         let currentVideoId = video?.youtubeId
 
         func handleTopVideo(_ context: ModelContext) {
-            let topVideo = VideoService.getTopVideoInQueue(context)
+            let topVideo = VideoService.getTopVideoInQueue(context, queueFilter(context))
             if let topVideo {
                 if topVideo.youtubeId != currentVideoId || playIfCurrent {
                     self.setNextVideo(topVideo, source)
@@ -402,15 +410,7 @@ import UnwatchedShared
 extension PlayerManager {
     @MainActor
     func autoSetNextVideo(_ source: VideoSource, _ modelContext: ModelContext) {
-        let (first, second) = VideoService.getNextVideoInQueue(modelContext)
-        var next = first?.youtubeId != self.video?.youtubeId ? first : second
-        if first?.youtubeId == self.video?.youtubeId
-            && second?.youtubeId == self.video?.youtubeId {
-            // workaround: model context isn't always up to date
-            // if all three (current, first, second) are the same, it's the last video
-            // being cleared
-            next = nil
-        }
+        let next = queueFilter(modelContext).nextVideo(skipping: video?.youtubeId, modelContext)
         setNextVideo(next, source)
     }
 
@@ -501,5 +501,7 @@ extension PlayerManager {
 
 enum PlayerCodingKeys: CodingKey {
     case pipEnabled,
-         isRepeating
+         isRepeating,
+         playbackTagId,
+         playbackTag
 }

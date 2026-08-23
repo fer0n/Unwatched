@@ -17,8 +17,12 @@ struct StartPlayback: AudioPlaybackIntent {
     @Parameter(title: "forceNativePlayer", description: "forceNativePlayerDescription", default: false)
     var forceNativePlayer: Bool
 
+    @Parameter(title: "playTag", description: "playTagDescription")
+    var tag: TagEntity?
+
     static var parameterSummary: some ParameterSummary {
         Summary("startPlayback") {
+            \.$tag
             \.$forceNativePlayer
         }
     }
@@ -34,7 +38,10 @@ struct StartPlayback: AudioPlaybackIntent {
     @MainActor
     private func startPlayback() async throws {
         #if os(iOS)
-        try await BackgroundPlaybackManager.shared.start(forceNativePlayer: forceNativePlayer)
+        try await BackgroundPlaybackManager.shared.start(
+            forceNativePlayer: forceNativePlayer,
+            tag: try tag?.selection()
+        )
         Signal.playbackStarted("shortcut")
         #else
         throw BackgroundPlaybackError.unsupportedPlatform

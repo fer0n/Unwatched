@@ -6,6 +6,11 @@
 import SwiftUI
 
 extension LocalizedStringKey {
+    /// Shows `text` as-is: interpolating it makes the key an argument rather than a lookup.
+    static func verbatim(_ text: String) -> LocalizedStringKey {
+        LocalizedStringKey("\(text)")
+    }
+
     var stringKey: String? {
         Mirror(reflecting: self).children.first(where: { $0.label == "key" })?.value as? String
     }

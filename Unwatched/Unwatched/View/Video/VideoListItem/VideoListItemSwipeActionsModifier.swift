@@ -15,6 +15,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationManager.self) private var navManager
     @Environment(\.videoListContext) private var listContext
+    @Environment(\.queueFilter) private var queueFilter
 
     let videoData: VideoData
     var config: VideoListItemConfig
@@ -108,9 +109,9 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
         Log.info("performVideoAction")
 
         var order = videoData.queueEntryData?.order
-        let fillsEmptyQueue = addsToQueue && VideoService.isQueueEmpty(modelContext)
+        let fillsEmptyQueue = addsToQueue && player.isQueueEmpty(modelContext)
         // asked before the action runs — afterwards the entry is gone and can't be recognised
-        var wasTopOfQueue = VideoService.isTopOfQueue(order: order, modelContext)
+        var wasTopOfQueue = player.isTopOfQueue(order: order, modelContext)
         var task: Task<Void, Error>?
         if config.async, let videoId = videoData.persistentId {
             let isNewTask = handleIsNewAsync(videoId, isNew)
@@ -126,7 +127,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
                 return
             }
             order = order ?? video.queueEntry?.order
-            wasTopOfQueue = VideoService.isTopOfQueue(order: order, modelContext)
+            wasTopOfQueue = player.isTopOfQueue(order: order, modelContext)
             syncAction?(video)
             handleIsNew(video, isNew)
             try? modelContext.save()
@@ -339,6 +340,7 @@ struct VideoListItemSwipeActionsModifier: ViewModifier {
             direction,
             index: video.queueEntry?.order,
             date: video.inboxEntry?.date,
+            filter: queueFilter,
             modelContext
         )
         if list == .queue && direction == .above {

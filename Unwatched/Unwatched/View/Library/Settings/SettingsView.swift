@@ -44,14 +44,6 @@ struct SettingsView: View {
                 }
 
                 MySection("shortcuts") {
-                    Link(destination: UrlService.shareShortcutUrl) {
-                        LibraryNavListItem(
-                            "setupShareSheetAction",
-                            systemName: "square.and.arrow.up.on.square.fill"
-                        )
-                    }
-                    .linkHoverEffect()
-
                     CloudAiButton {
                         LibraryNavListItem(
                             "generateChapters",

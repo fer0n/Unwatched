@@ -50,6 +50,9 @@ import UnwatchedShared
     var lastInboxSubscriptionId: PersistentIdentifier?
     var lastQueueSubscriptionId: PersistentIdentifier?
 
+    /// The slice on screen; what plays next is latched on `PlayerManager` instead.
+    var queueTag: QueueTagSelection = .all
+
     init() { }
 
     static func load() -> NavigationManager {
@@ -86,6 +89,11 @@ import UnwatchedShared
             [SendableSubscription].self,
             forKey: .presentedSubscriptionInbox
         )
+        // `queueTagId` is what versions before the tag slices wrote. `try?`, so a selection this
+        // build can no longer read costs the tag and not the whole navigation state.
+        let legacyTagId = try container.decodeIfPresent(PersistentIdentifier.self, forKey: .queueTagId)
+        let decodedTag = (try? container.decodeIfPresent(QueueTagSelection.self, forKey: .queueTag)) ?? nil
+        queueTag = decodedTag ?? QueueTagSelection(tagId: legacyTagId)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -100,6 +108,7 @@ import UnwatchedShared
             try container.encode(representation, forKey: .presentedLibrary)
         }
         try container.encode(presentedSubscriptionInbox, forKey: .presentedSubscriptionInbox)
+        try container.encode(queueTag, forKey: .queueTag)
     }
 
     func pushSubscription(
@@ -342,7 +351,9 @@ enum NavManagerCodingKeys: CodingKey {
          presentedLibrary,
          presentedSubscriptionInbox,
          presentedSubscriptionQueue,
-         columnVisibility
+         columnVisibility,
+         queueTagId,
+         queueTag
 }
 
 enum NavigationTab: String, Codable, CustomStringConvertible {

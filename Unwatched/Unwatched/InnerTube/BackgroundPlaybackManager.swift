@@ -5,6 +5,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 import UnwatchedShared
 
 #if os(iOS)
@@ -25,10 +26,14 @@ final class BackgroundPlaybackManager {
     private var viewModel: AVPlayerViewModel { .shared }
 
     /// Returns once audio is running: the app is only kept alive past this by playback that started.
-    func start(forceNativePlayer: Bool) async throws {
+    /// - Parameter tag: the slice to play, or `nil` to keep the latched one.
+    func start(forceNativePlayer: Bool, tag: QueueTagSelection? = nil) async throws {
         try enableNativePlayer(force: forceNativePlayer)
         try activateAudioSession()
-        if player.video == nil {
+        if let tag, tag != player.playbackTag {
+            player.playbackTag = tag
+            player.loadTopmostVideoFromQueue(source: .playWhenReady, playIfCurrent: true)
+        } else if player.video == nil {
             player.loadTopmostVideoFromQueue(source: .playWhenReady)
         }
         guard let videoId = player.video?.youtubeId else {
@@ -195,6 +200,7 @@ enum BackgroundPlaybackError: Error, CustomLocalizedStringResourceConvertible {
     case noVideoInQueue
     case unsupportedPlatform
     case couldNotStart
+    case tagNotFound
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -206,6 +212,8 @@ enum BackgroundPlaybackError: Error, CustomLocalizedStringResourceConvertible {
             return "backgroundPlaybackUnsupportedError"
         case .couldNotStart:
             return "couldNotStartPlaybackError"
+        case .tagNotFound:
+            return "tagNotFoundError"
         }
     }
 }

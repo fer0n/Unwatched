@@ -104,8 +104,8 @@ struct SearchView: View {
             vm.refreshAllStatuses()
         }
         // Focus the search field for explicit requests: "Search YouTube" quick action,
-        // AddFeedsMenu, macOS tab selection (handleTabChanged guards on searchTabShouldAutoFocus),
-        // and when already pending on first appearance.
+        // QueueViewUnavailable's browse button, macOS tab selection (handleTabChanged guards on
+        // searchTabShouldAutoFocus), and when already pending on first appearance.
         .onChange(of: navManager.pendingSearchFocus, initial: true) { _, pending in
             guard pending else { return }
             // The very first appearance may still be mounting (notably on cold launch);

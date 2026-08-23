@@ -6,7 +6,7 @@
 import SwiftUI
 import UnwatchedShared
 
-struct MyNavigationTitle: ViewModifier {
+struct MyNavigationTitle<Principal: View>: ViewModifier {
     var title: LocalizedStringKey?
     var titleHidden = false
     /// Fades the title on its own, e.g. while a gesture drags something towards it. A closure, so
@@ -14,6 +14,9 @@ struct MyNavigationTitle: ViewModifier {
     var titleOpacity: () -> Double = { 1 }
     /// Appended after the title, e.g. an inbox count, and faded along with it
     var titleAccessory: Text?
+    /// Stands in for the title on iOS, so it can double as a control. Only iOS draws the title
+    /// itself; elsewhere it belongs to the window and `principal` is dropped.
+    @ViewBuilder var principal: (LocalizedStringKey) -> Principal
 
     func body(content: Content) -> some View {
         content
@@ -24,12 +27,7 @@ struct MyNavigationTitle: ViewModifier {
             .toolbar {
                 if let title {
                     ToolbarItem(placement: .principal) {
-                        TitleLabel(
-                            title: title,
-                            accessory: titleAccessory,
-                            hidden: titleHidden,
-                            opacity: titleOpacity
-                        )
+                        principal(title)
                     }
                 }
             }
@@ -37,36 +35,6 @@ struct MyNavigationTitle: ViewModifier {
         .navigationTitle(title ?? "")
         .updateNavTitle(title, titleHidden: titleHidden)
         #endif
-    }
-}
-
-/// Its own view, so a changing `opacity` doesn't invalidate the toolbar around it
-private struct TitleLabel: View {
-    let title: LocalizedStringKey
-    let accessory: Text?
-    let hidden: Bool
-    let opacity: () -> Double
-
-    var body: some View {
-        HStack(spacing: 0) {
-            Text(title)
-                .fontWeight(.black)
-            accessoryLabel
-        }
-        .offset(y: hidden ? 10 : 0)
-        .opacity(hidden ? 0 : opacity())
-        .blur(radius: hidden ? 3 : 0)
-        .lineLimit(1)
-    }
-
-    @ViewBuilder private var accessoryLabel: some View {
-        if let accessory {
-            accessory
-                .contentTransition(.numericText())
-                .fixedSize()
-                .frame(width: 0, alignment: .leading)
-                .offset(x: 4)
-        }
     }
 }
 
@@ -82,9 +50,24 @@ extension View {
                 title: title,
                 titleHidden: titleHidden,
                 titleOpacity: titleOpacity,
-                titleAccessory: titleAccessory
+                titleAccessory: titleAccessory,
+                principal: {
+                    NavigationTitleLabel(
+                        title: $0,
+                        accessory: titleAccessory,
+                        hidden: titleHidden,
+                        opacity: titleOpacity
+                    )
+                }
             )
         )
+    }
+
+    func myNavigationTitle<Principal: View>(
+        _ title: LocalizedStringKey,
+        @ViewBuilder principal: @escaping () -> Principal
+    ) -> some View {
+        self.modifier(MyNavigationTitle(title: title, principal: { _ in principal() }))
     }
 }
 

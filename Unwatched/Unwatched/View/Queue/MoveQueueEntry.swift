@@ -9,6 +9,7 @@ import UnwatchedShared
 struct MoveQueueEntry<Content: DynamicViewContent>: DynamicViewContent {
     @Environment(\.modelContext) var modelContext
     @Environment(PlayerManager.self) private var player
+    @Environment(\.queueFilter) private var queueFilter
 
     let content: Content
 
@@ -30,6 +31,7 @@ struct MoveQueueEntry<Content: DynamicViewContent>: DynamicViewContent {
         VideoService.moveQueueEntry(from: source,
                                     to: destination,
                                     updateIsNew: true,
+                                    filter: queueFilter,
                                     modelContext: modelContext)
         if destination == 0 || source.contains(0) {
             player.loadTopmostVideoFromQueue()

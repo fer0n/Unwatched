@@ -9,6 +9,7 @@ import UnwatchedShared
 struct ClearAllQueueEntriesButton: View {
     @AppStorage(Const.showClearQueueButton) var showClearQueueButton: Bool = true
     @Environment(\.modelContext) var modelContext
+    @Environment(\.queueFilter) private var queueFilter
 
     var willClearAll: () -> Void
 
@@ -21,7 +22,7 @@ struct ClearAllQueueEntriesButton: View {
     func clearAll() {
         willClearAll()
         withAnimation {
-            VideoService.clearAllQueueEntries(modelContext)
+            VideoService.clearAllQueueEntries(modelContext, queueFilter)
         }
     }
 }

@@ -22,6 +22,8 @@ public final class Video: VideoData, CustomStringConvertible, Exportable {
     @Relationship(deleteRule: .cascade, inverse: \Chapter.mergedChapterVideo)
     public var mergedChapters: [Chapter]? = []
 
+    public var tags: [Tag]? = []
+
     public var youtubeId: String = UUID().uuidString
 
     public var title: String = "-"

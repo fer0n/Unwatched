@@ -10,10 +10,6 @@ import UnwatchedShared
 struct LibraryVideoSection: View {
     var body: some View {
         MySection("videos", hasPadding: false) {
-            NavigationLink(value: LibraryDestination.allVideos) {
-                LibraryNavListItem("allVideos",
-                                   systemName: Const.allVideosViewSF)
-            }
             NavigationLink(value: LibraryDestination.watchHistory) {
                 LibraryNavListItem("watched",
                                    systemName: "checkmark")

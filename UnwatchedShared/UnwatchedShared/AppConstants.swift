@@ -204,6 +204,8 @@ public struct Const {
 
     // MARK: - SF Symbols
     public static let queueTagSF = "rectangle.stack"
+    public static let filterTagSF = "line.3.horizontal.decrease"
+    public static let untaggedSF = "tag.slash.fill"
     public static let inboxTabEmptySF = "tray"
     public static let clearSF = "xmark.circle.fill"
     public static let removeNewSF = "circle.slash.fill"
@@ -319,6 +321,9 @@ public struct Const {
     public static let showClearQueueButton = "showClearQueueButton"
     public static let useNoCookieUrl = "useNoCookieUrl"
     public static let enableQueueContextMenu = "enableQueueContextMenu"
+
+    /// Quick switch for the two queue slices that aren't tags, and so have nowhere else to keep it
+    public static let quickSwitchAllVideos = "quickSwitchAllVideos"
     public static let disableCaptions = "disableCaptions"
     public static let autoCaptionsOnSeekBack = "autoCaptionsOnSeekBack"
     public static let swipeGestureUp = "swipeGestureUp"
@@ -340,7 +345,6 @@ public struct Const {
     public static let legacyExcludeWatchHistoryInBackup = "exludeWatchHistoryInBackup"
     public static let analytics = "analytics"
 
-    public static let shortcutHasBeenUsed = "shortcutHasBeenUsed"
     public static let sideloadingSortOrder = "sideloadingSortOrder"
     public static let showTabBarBadge = "showTabBarBadge"
     public static let browserAsTab = "browserAsTab"

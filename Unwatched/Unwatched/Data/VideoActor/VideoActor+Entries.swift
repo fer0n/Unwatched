@@ -11,15 +11,15 @@ import UnwatchedShared
 
 // Entries
 extension VideoActor {
+    /// `source` and `destination` index the filtered queue; what the filter hides keeps its order.
     static func moveQueueEntry(
         from source: IndexSet,
         to destination: Int,
         updateIsNew: Bool = false,
+        filter: QueueFilter = .all,
         modelContext: ModelContext
     ) throws {
-        let fetchDescriptor = FetchDescriptor<QueueEntry>()
-        let queue = try modelContext.fetch(fetchDescriptor)
-        var orderedQueue = queue.sorted(by: { $0.order < $1.order })
+        var orderedQueue = filter.entries(modelContext)
 
         if updateIsNew {
             for sourceIndex in source {
@@ -37,18 +37,49 @@ extension VideoActor {
         let movedIds = Set(moved.map(ObjectIdentifier.init))
         let remaining = orderedQueue.filter { !movedIds.contains(ObjectIdentifier($0)) }
         let position = orderedQueue.firstIndex { movedIds.contains(ObjectIdentifier($0)) } ?? 0
+
+        // Against the whole queue, not just the visible slice: the gap between two visible
+        // entries can already hold hidden ones, and reusing their values would collide.
+        let fullQueue = filter.isActive ? QueueFilter.all.entries(modelContext) : orderedQueue
+        let fullRemaining = fullQueue.filter { !movedIds.contains(ObjectIdentifier($0)) }
+        let fullPosition = unfilteredPosition(position, remaining, moved, in: fullRemaining)
+
         if let orders = QueueOrder.insert(
             count: moved.count,
-            at: position,
-            into: remaining.map(\.order)
+            at: fullPosition,
+            into: fullRemaining.map(\.order)
         ) {
             for (entry, order) in zip(moved, orders) where entry.order != order {
                 entry.order = order
             }
         } else {
-            QueueInsertionService.renumber(orderedQueue, modelContext: modelContext)
+            var renumbered = fullRemaining
+            renumbered.insert(contentsOf: moved, at: fullPosition)
+            QueueInsertionService.renumber(renumbered, modelContext: modelContext)
         }
         try modelContext.save()
+    }
+
+    /// Where the moved entries land in the unfiltered queue: right below the visible entry they
+    /// now follow, or above the one they now precede.
+    private static func unfilteredPosition(
+        _ position: Int,
+        _ remaining: [QueueEntry],
+        _ moved: [QueueEntry],
+        in fullRemaining: [QueueEntry]
+    ) -> Int {
+        func index(of entry: QueueEntry) -> Int? {
+            fullRemaining.firstIndex { $0 === entry }
+        }
+        if position > 0, let above = index(of: remaining[position - 1]) {
+            return above + 1
+        }
+        if position == 0, let below = remaining.first.flatMap(index) {
+            return below
+        }
+        // nothing visible left to anchor to: keep the block where it already sat
+        let anchor = moved.map(\.order).min() ?? 0
+        return fullRemaining.filter { $0.order < anchor }.count
     }
 
     func getVideosFromSub(_ sub: Subscription, oldestDate: Date) -> [Video]? {
@@ -355,13 +386,15 @@ extension VideoActor {
         _ list: ClearList,
         _ direction: ClearDirection,
         index: Int? = nil,
-        date: Date? = nil
+        date: Date? = nil,
+        filter: QueueFilter = .all
     ) throws {
         try VideoActor.clearList(
             list,
             direction,
             index: index,
             date: date,
+            filter: filter,
             modelContext
         )
     }
@@ -371,13 +404,14 @@ extension VideoActor {
         _ direction: ClearDirection,
         index: Int?,
         date: Date?,
+        filter: QueueFilter = .all,
         _ modelContext: ModelContext
     ) throws {
         switch list {
         case .inbox:
             clearInbox(direction, date: date, modelContext)
         case .queue:
-            clearQueue(direction, index: index, modelContext)
+            clearQueue(direction, index: index, filter: filter, modelContext)
         @unknown default:
             Log.warning("Clear list value not implemented")
         }
@@ -400,20 +434,18 @@ extension VideoActor {
         }
     }
 
+    /// Deletes only what the filter can see — never entries the user can't know are there.
     static func clearQueue(
         _ direction: ClearDirection,
         index: Int?,
+        filter: QueueFilter = .all,
         _ modelContext: ModelContext
     ) {
-        var filter: Predicate<QueueEntry>
-        if direction == .above {
-            filter = #Predicate<QueueEntry> { $0.order < index ?? 0 }
-        } else {
-            filter = #Predicate<QueueEntry> { $0.order > index ?? 0 }
+        let order = index ?? 0
+        let entries = filter.entries(modelContext).filter {
+            direction == .above ? $0.order < order : $0.order > order
         }
-        let fetch = FetchDescriptor<QueueEntry>(predicate: filter)
-        let queueEntries = try? modelContext.fetch(fetch)
-        for entry in queueEntries ?? [] {
+        for entry in entries {
             VideoService.deleteQueueEntry(entry, modelContext: modelContext)
         }
     }
