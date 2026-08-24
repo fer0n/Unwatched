@@ -49,6 +49,7 @@ public enum QueueInsertionService {
                 queue.insert(contentsOf: entries, at: position)
                 renumber(queue, modelContext: modelContext)
             }
+            VideoService.syncPodcastDownloads(for: videos.first { $0.mediaUrl != nil })
         } catch {
             Log.error("insertQueueEntries: \(error)")
         }

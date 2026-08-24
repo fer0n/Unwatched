@@ -34,6 +34,9 @@ public struct VideoListItemThumbnailOverlay: View {
         ZStack {
             progressOverlay
             listItemDuration
+            if video.isPodcast {
+                downloadIndicator
+            }
         }
     }
 
@@ -41,10 +44,16 @@ public struct VideoListItemThumbnailOverlay: View {
 
     @ViewBuilder
     var progressOverlay: some View {
-        if let progress = cleanedProgress {
+        let progress = cleanedProgress
+        let download = downloadProgress
+        if progress != nil || download != nil {
             GeometryReader { geo in
-                let progressWidth = max(radius * 3, geo.size.width * progress)
-                ProgressBar(color, progressWidth, barHeight)
+                ProgressBar(
+                    color,
+                    progress.map { max(radius * 3, geo.size.width * $0) },
+                    barHeight,
+                    downloadWidth: download.map { geo.size.width * $0 }
+                )
             }
         } else if hasDuration {
             ProgressBar(color, nil, barHeight)
@@ -67,6 +76,14 @@ public struct VideoListItemThumbnailOverlay: View {
         }
     }
 
+    @ViewBuilder
+    var downloadIndicator: some View {
+        PodcastDownloadIndicator(video: video, radius: radius, padding: padding)
+            .padding(.bottom, padding + barHeight + 1)
+            .padding(.leading, padding + 1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+    }
+
     // MARK: - Helpers
 
     var barHeight: CGFloat {
@@ -87,6 +104,12 @@ public struct VideoListItemThumbnailOverlay: View {
             || video.isYtShort == true
             || video.noDuration == true
         )
+    }
+
+    /// Only read for an episode that isn't downloaded yet, so a list of watched ones doesn't observe the manager.
+    private var downloadProgress: Double? {
+        guard video.isPodcast, video.downloadedDate == nil else { return nil }
+        return PodcastDownloadManager.shared.downloadProgress[video.youtubeId]
     }
 
     private var cleanedProgress: Double? {

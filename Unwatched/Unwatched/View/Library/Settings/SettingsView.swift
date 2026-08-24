@@ -30,6 +30,10 @@ struct SettingsView: View {
                         Label("playback", systemImage: Const.playbackSettingsSF)
                     }
 
+                    NavigationLink(value: LibraryDestination.settingsPodcastDownloads) {
+                        Label("podcastDownloads", systemImage: Const.downloadedSF)
+                    }
+
                     NavigationLink(value: LibraryDestination.settingsNotifications) {
                         Label("notifications", systemImage: Const.notificationsSettingsSF)
                     }

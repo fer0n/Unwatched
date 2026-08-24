@@ -18,6 +18,15 @@ public struct VideoService {
             video.watchedDate = nil
         }
         try? modelContext.save()
+        syncPodcastDownloads(for: video)
+    }
+
+    /// Nudges the download window after a change that can move an episode in or out of it.
+    static func syncPodcastDownloads(for video: Video?) {
+        guard video?.mediaUrl != nil else { return }
+        Task { @MainActor in
+            PodcastDownloadManager.shared.scheduleSync()
+        }
     }
 
     public static func clearEntries(from video: Video,
@@ -44,10 +53,12 @@ public struct VideoService {
         guard let queueEntry = modelContext.resolvedModel(queueEntry) else {
             return
         }
-        if let video = queueEntry.video.flatMap({ modelContext.resolvedModel($0) }), video.isNew {
+        let video = queueEntry.video.flatMap { modelContext.resolvedModel($0) }
+        if let video, video.isNew {
             video.isNew = false
         }
         modelContext.delete(queueEntry)
+        syncPodcastDownloads(for: video)
     }
 
     public static func deleteInboxEntry(_ entry: InboxEntry, modelContext: ModelContext) {

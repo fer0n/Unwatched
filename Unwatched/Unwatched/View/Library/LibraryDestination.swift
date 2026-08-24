@@ -8,7 +8,7 @@ import SwiftData
 import UnwatchedShared
 
 extension View {
-    // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable cyclomatic_complexity function_body_length
     func libraryDestination() -> some View {
         self
             .sendableSubscriptionDestination()
@@ -42,6 +42,8 @@ extension View {
                         PlaybackSettingsView()
                     case .settingsPlayerType:
                         PlayerTypeSettingsView()
+                    case .settingsPodcastDownloads:
+                        PodcastDownloadSettingsView()
                     case .help:
                         HelpView()
                     case .filter:
@@ -61,7 +63,7 @@ extension View {
                 #endif
             }
     }
-    // swiftlint:enable cyclomatic_complexity
+    // swiftlint:enable cyclomatic_complexity function_body_length
 }
 
 enum LibraryDestination: Codable, Hashable {
@@ -83,6 +85,7 @@ enum LibraryDestination: Codable, Hashable {
          privacy,
          stats,
          settingsPlayerType,
+         settingsPodcastDownloads,
          tag(String)
 }
 

@@ -661,7 +661,9 @@
 		88C46B762F124BE100DF2963 /* StatsChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C46B752F124BE100DF2963 /* StatsChannelRow.swift */; };
 		88C46B772F124BE100DF2963 /* StatsChannelRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C46B752F124BE100DF2963 /* StatsChannelRow.swift */; };
 		88C4F6942F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6932F24C82E005893C5 /* CleanupHiddenShortsView.swift */; };
+		88C4F6A42F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6A32F24C82E005893D1 /* PodcastDownloadSettingsView.swift */; };
 		88C4F6952F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6932F24C82E005893C5 /* CleanupHiddenShortsView.swift */; };
+		88C4F6A52F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6A32F24C82E005893D1 /* PodcastDownloadSettingsView.swift */; };
 		88C4F6972F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */; };
 		88AA10322F0000000000A032 /* SubscriptionTagsSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88AA10312F0000000000A031 /* SubscriptionTagsSetting.swift */; };
 		88C4F6982F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */; };
@@ -1346,6 +1348,7 @@
 		88C382402E6DD69400F1FDC2 /* PlayNowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayNowButton.swift; sourceTree = "<group>"; };
 		88C46B752F124BE100DF2963 /* StatsChannelRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsChannelRow.swift; sourceTree = "<group>"; };
 		88C4F6932F24C82E005893C5 /* CleanupHiddenShortsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupHiddenShortsView.swift; sourceTree = "<group>"; };
+		88C4F6A32F24C82E005893D1 /* PodcastDownloadSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastDownloadSettingsView.swift; sourceTree = "<group>"; };
 		88C4F6962F24CAD4005893C5 /* SubscriptionVideoPlacementSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionVideoPlacementSetting.swift; sourceTree = "<group>"; };
 		88AA10312F0000000000A031 /* SubscriptionTagsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionTagsSetting.swift; sourceTree = "<group>"; };
 		88C4F6992F24CD6E005893C5 /* SubscriptionShortsSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionShortsSetting.swift; sourceTree = "<group>"; };
@@ -2083,6 +2086,7 @@
 				8842DFCB2EACB5E800D11C5D /* SwipeGestureSettings.swift */,
 				88017FD62B96161B00192AEA /* DebugView.swift */,
 				88C4F6932F24C82E005893C5 /* CleanupHiddenShortsView.swift */,
+				88C4F6A32F24C82E005893D1 /* PodcastDownloadSettingsView.swift */,
 				88F7E24A2DE59962001E1F3F /* DebugLoggerView.swift */,
 				883C38362EBC817500741119 /* CleanupDuplicatesView.swift */,
 				888F74A82BA1FD8400B94822 /* GeneralSettingsView.swift */,
@@ -2928,6 +2932,7 @@
 				88373C292C8C6A9100ACBB3B /* SubscriptionListVM.swift in Sources */,
 				88F3AA922C998BFC0030B2EA /* VideoPlacement.swift in Sources */,
 				88C4F6942F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */,
+				88C4F6A42F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */,
 				889AF95C2C50ED05001CEDE6 /* HandleVideoListItemTap.swift in Sources */,
 				886817882D77379800E06A0D /* AppCommands.swift in Sources */,
 				88C1A1E52FF5D9D4001ED1DD /* AnalyticsQueue.swift in Sources */,
@@ -3690,6 +3695,7 @@
 				881EEF4E2D0308240028EAF8 /* PlayerCommands.swift in Sources */,
 				8809D8942DE8E54500B28165 /* HiddenEntriesInfo.swift in Sources */,
 				88C4F6952F24C82E005893C5 /* CleanupHiddenShortsView.swift in Sources */,
+				88C4F6A52F24C82E005893D1 /* PodcastDownloadSettingsView.swift in Sources */,
 				88339AAB2E5BA6EA00B295B7 /* PremiumOfferView.swift in Sources */,
 				88C5EF8B2CCABA9300DA802F /* TransactionVM.swift in Sources */,
 				8849F38F2DF068550040DD9A /* ImageAccentBackground.swift in Sources */,

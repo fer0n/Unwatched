@@ -149,6 +149,7 @@ actor RefreshActor {
             }
         }
         await cleanup(hardRefresh: hardRefresh)
+        PodcastDownloadManager.shared.scheduleSync()
     }
 
     func handleAutoBackup() {
@@ -201,6 +202,7 @@ actor RefreshActor {
             UserDefaults.standard.set(false, forKey: Const.requiresDurationFetch)
         }
         ChapterService.purgeDerivableChaptersIfNeeded()
+        PodcastDownloadManager.shared.scheduleSync()
 
         if enableIcloudSync {
             let networkTimeout: CGFloat = 3
