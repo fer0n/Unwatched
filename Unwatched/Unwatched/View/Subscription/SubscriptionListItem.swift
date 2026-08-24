@@ -24,6 +24,11 @@ struct SubscriptionListItem: View {
 
     var body: some View {
         HStack {
+            if subscription.hasFeedIssue {
+                Image(systemName: Const.errorSF)
+                    .foregroundStyle(.secondary)
+                    .accessibilityLabel("feedIssue")
+            }
             Text(subscription.displayTitle)
                 .lineLimit(1)
             Spacer()

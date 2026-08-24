@@ -103,17 +103,14 @@ extension VideoActor {
     }
 
     /// Fetches all videos for the specified subscription.
-    ///
-    /// A failing feed is recorded in `fetchErrors` and returned as an empty result rather than thrown,
-    /// so one broken subscription can't abort the refresh for all the others. Cancellation still throws.
-    func fetchVideos(_ sub: SendableSubscription) async throws -> (SendableSubscription, [SendableVideo]) {
+    func fetchVideos(_ sub: SendableSubscription) async throws -> FetchResult {
         guard let url = sub.link else {
             Log.info("sub has no url: \(sub.title)")
-            return (sub, [])
+            return FetchResult(sub: sub, videos: [], errorMessage: nil)
         }
         do {
             let videos = try await VideoCrawler.loadVideosFromRSS(url: url)
-            return (sub, videos)
+            return FetchResult(sub: sub, videos: videos, errorMessage: nil)
         } catch {
             if Task.isCancelled {
                 throw error
@@ -122,7 +119,31 @@ extension VideoActor {
                 "Failed to fetch videos for subscription: \(sub.title), error: \(error.localizedDescription)"
             )
             fetchErrors.append(error)
-            return (sub, [])
+            return FetchResult(sub: sub, videos: [], errorMessage: error.localizedDescription)
+        }
+    }
+
+    /// Writes the run's per-feed outcomes onto the subscriptions, so a feed that keeps failing can be told apart from
+    /// one that failed once.
+    func recordFetchOutcomes(_ outcomes: [FetchOutcome]) {
+        guard !outcomes.isEmpty else { return }
+        let failureShare = Double(outcomes.filter(\.didFail).count) / Double(outcomes.count)
+        if outcomes.count > 1 && failureShare >= Const.refreshFailedThreshold {
+            Log.info("recordFetchOutcomes: \(failureShare) failed, treating as an outage")
+            return
+        }
+
+        for outcome in outcomes {
+            guard let sub = self[outcome.subscriptionId, as: Subscription.self] else { continue }
+            if let errorMessage = outcome.errorMessage {
+                sub.failedFetchCount += 1
+                sub.lastFetchFailedDate = .now
+                sub.lastFetchErrorMessage = errorMessage
+            } else if sub.failedFetchCount != 0 || sub.lastFetchErrorMessage != nil {
+                sub.failedFetchCount = 0
+                sub.lastFetchFailedDate = nil
+                sub.lastFetchErrorMessage = nil
+            }
         }
     }
 

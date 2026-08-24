@@ -28,11 +28,16 @@ struct SubscriptionInfoDetails: View {
             ChannelHeaderView(
                 title: subscription.title,
                 imageUrl: subscription.thumbnailUrl,
+                isPodcast: subscription.isPodcast,
                 userName: subscription.youtubeUserName,
                 author: subscription.author,
                 videoCount: subscription.videos?.count,
                 onAuthorTap: handleAuthorTap
             )
+
+            if subscription.hasFeedIssue {
+                feedIssueNotice
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
@@ -40,7 +45,7 @@ struct SubscriptionInfoDetails: View {
                         .frame(maxHeight: .infinity)
                         .buttonStyle(CapsuleButtonStyle())
 
-                    if browserDisplayMode != .disabled {
+                    if browserDisplayMode != .disabled, !subscription.isPodcast {
                         Button {
                             if let url = UrlService.getYoutubeUrl(
                                 userName: subscription.youtubeUserName,
@@ -104,9 +109,17 @@ struct SubscriptionInfoDetails: View {
 
                         SubscriptionVideoPlacementSetting(subscription: subscription)
 
-                        SubscriptionShortsSetting(subscription: subscription)
+                        if !subscription.isPodcast {
+                            SubscriptionShortsSetting(subscription: subscription)
+                        }
 
                         SubscriptionTagsSetting(subscription: subscription)
+
+                        SubscriptionSkipSetting(subscription: subscription, edge: .intro)
+
+                        SubscriptionSkipSetting(subscription: subscription, edge: .outro)
+
+                        SubscriptionAutoSkipSetting(subscription: subscription)
 
                         SubscriptionTitleFilterButton(
                             showFilter: $showFilter,
@@ -123,6 +136,24 @@ struct SubscriptionInfoDetails: View {
             .padding(.bottom, 15)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var feedIssueNotice: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: Const.errorSF)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("feedIssueMessage")
+                if let message = subscription.lastFetchErrorMessage {
+                    Text(verbatim: message)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .font(.footnote)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Color.insetBackgroundColor, in: .rect(cornerRadius: 10))
+        .padding(.horizontal, padding)
     }
 
     private var shareURL: URL? {

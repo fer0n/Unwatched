@@ -395,6 +395,7 @@
 		8890179F2D790C61008BC329 /* BrowserWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890179E2D790C61008BC329 /* BrowserWindow.swift */; };
 		889017A02D790C61008BC329 /* BrowserWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8890179E2D790C61008BC329 /* BrowserWindow.swift */; };
 		88904B092C089DE500F95C67 /* SubscriptionSpeedSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */; };
+		88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
 		88905DA62C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */; };
 		8891AAEE2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */; };
 		8891AAEF2CE3372F0058DD7C /* ChapterHandlingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */; };
@@ -550,6 +551,7 @@
 		889AF9362C50ECEE001CEDE6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B0C1612C427940006D2423 /* PlayerView.swift */; };
 		889AF9372C50ECEE001CEDE6 /* CombinedPlaybackSpeedSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889924722C482B92001185A6 /* CombinedPlaybackSpeedSetting.swift */; };
 		889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */; };
+		88913A38E9920BF251498E5C /* SubscriptionSkipSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */; };
 		889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BDC3A62B78172C00656D63 /* ImportSubscriptionsView.swift */; };
 		889AF93A2C50ECF5001CEDE6 /* SubStateOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8823EB772B5519C60010A12F /* SubStateOverview.swift */; };
 		889AF93B2C50ECF5001CEDE6 /* SubscriptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881E51432B5A75AD006384E4 /* SubscriptionListView.swift */; };
@@ -1264,6 +1266,7 @@
 		888F74AC2BA2009C00B94822 /* AppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsView.swift; sourceTree = "<group>"; };
 		8890179E2D790C61008BC329 /* BrowserWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserWindow.swift; sourceTree = "<group>"; };
 		88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSpeedSetting.swift; sourceTree = "<group>"; };
+		88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionSkipSetting.swift; sourceTree = "<group>"; };
 		88905DA52C5865EE00DD27B8 /* FullscreenPlayerControlsWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPlayerControlsWrapper.swift; sourceTree = "<group>"; };
 		8891AAED2CE3372F0058DD7C /* ChapterHandlingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChapterHandlingContext.swift; sourceTree = "<group>"; };
 		8891F0AC2B4E7E170098A3FB /* VideoActor+Videos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoActor+Videos.swift"; sourceTree = "<group>"; };
@@ -1915,6 +1918,7 @@
 				88C4F6992F24CD6E005893C5 /* SubscriptionShortsSetting.swift */,
 				88899D8F2E035E1B002C05BC /* SubscriptionTitleFilterButton.swift */,
 				88904B082C089DE500F95C67 /* SubscriptionSpeedSetting.swift */,
+				88E2ABCAAC0887D9028AAAD5 /* SubscriptionSkipSetting.swift */,
 				881E51432B5A75AD006384E4 /* SubscriptionListView.swift */,
 				889924702C4824EE001185A6 /* InteractiveSubscriptionTitle.swift */,
 				88373C242C8C424C00ACBB3B /* SendableSubscriptionDetailView.swift */,
@@ -2963,6 +2967,7 @@
 				88FB236A2DD4BAD10066DB07 /* MultiPayload.swift in Sources */,
 				889AF9622C50ED05001CEDE6 /* VideoActor+Subscriptions.swift in Sources */,
 				889AF9382C50ECF5001CEDE6 /* SubscriptionSpeedSetting.swift in Sources */,
+				88913A38E9920BF251498E5C /* SubscriptionSkipSetting.swift in Sources */,
 				889AF9392C50ECF5001CEDE6 /* ImportSubscriptionsView.swift in Sources */,
 				88EBB40F2F5C607600A25A70 /* AutoDeleteVideosView.swift in Sources */,
 				882966F62CCE1F9400E96D3C /* View.swift in Sources */,
@@ -3728,6 +3733,7 @@
 				886817892D77379800E06A0D /* AppCommands.swift in Sources */,
 				88274F01301E47250033352A /* DescriptionEdgeSwipe.swift in Sources */,
 				88904B092C089DE500F95C67 /* SubscriptionSpeedSetting.swift in Sources */,
+				88253072A9EC95E688D9565F /* SubscriptionSkipSetting.swift in Sources */,
 				8808820D2E565AEA008C38DA /* TemporaryPlaybackSpeedSettings.swift in Sources */,
 				88C4F69B2F24CD6E005893C5 /* SubscriptionShortsSetting.swift in Sources */,
 				88D29AED2B757E5700BDBFDF /* DebouncedText.swift in Sources */,

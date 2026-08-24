@@ -4,6 +4,26 @@ import Observation
 import OSLog
 import UnwatchedShared
 
+/// One subscription's feed request: what it returned, and why it didn't return anything.
+struct FetchResult: Sendable {
+    let sub: SendableSubscription
+    let videos: [SendableVideo]
+    let errorMessage: String?
+
+    var outcome: [FetchOutcome] {
+        guard let subscriptionId = sub.persistentId else { return [] }
+        return [FetchOutcome(subscriptionId: subscriptionId, errorMessage: errorMessage)]
+    }
+}
+
+/// What a refresh run has to say about one feed, see `VideoActor.recordFetchOutcomes`.
+struct FetchOutcome: Sendable {
+    let subscriptionId: PersistentIdentifier
+    let errorMessage: String?
+
+    var didFail: Bool { errorMessage != nil }
+}
+
 // Video
 actor VideoActor: SharedContextActor {
     var newVideos = NewVideosNotificationInfo()
@@ -180,7 +200,7 @@ actor VideoActor: SharedContextActor {
             consumeDeferredVideos()
         }
 
-        try await withThrowingTaskGroup(of: (SendableSubscription, [SendableVideo]).self) { group in
+        try await withThrowingTaskGroup(of: FetchResult.self) { group in
             Log.info("loadVideos for \(sendableSubs.count) subscriptions")
             for sub in sendableSubs {
                 group.addTask {
@@ -191,21 +211,12 @@ actor VideoActor: SharedContextActor {
             // Ids, not models: this accumulates across every subscription's feed request, so
             // models kept here would outlive the shared context's turn on this job.
             var newVideoInfo = [(loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier])]()
-            for try await (sub, videos) in group {
-                let result = await handleNewVideos(
-                    sub,
-                    videos,
-                    defaultPlacement: placementInfo
-                )
-                if result.addedVideos.count > 0 {
-                    // save sooner if videos got added
-                    try modelContext.save()
-                }
-                newVideoInfo.append((
-                    loadedVideos: result.loadedVideos.map(\.persistentModelID),
-                    addedVideos: result.addedVideos.map(\.persistentModelID)
-                ))
+            var outcomes = [FetchOutcome]()
+            for try await fetched in group {
+                outcomes.append(contentsOf: fetched.outcome)
+                newVideoInfo.append(try await handleFetched(fetched, placementInfo))
             }
+            recordFetchOutcomes(outcomes)
             if fetchDurations {
                 try await handleFetchDurationsLoaded(
                     newVideoInfo,
@@ -221,6 +232,25 @@ actor VideoActor: SharedContextActor {
         newVideos.failedSubscriptionsCount = fetchErrors.count
         newVideos.totalSubscriptionsCount = sendableSubs.count
         return newVideos
+    }
+
+    private func handleFetched(
+        _ fetched: FetchResult,
+        _ placementInfo: DefaultVideoPlacement
+    ) async throws -> (loadedVideos: [PersistentIdentifier], addedVideos: [PersistentIdentifier]) {
+        let result = await handleNewVideos(
+            fetched.sub,
+            fetched.videos,
+            defaultPlacement: placementInfo
+        )
+        if result.addedVideos.count > 0 {
+            // save sooner if videos got added
+            try modelContext.save()
+        }
+        return (
+            loadedVideos: result.loadedVideos.map(\.persistentModelID),
+            addedVideos: result.addedVideos.map(\.persistentModelID)
+        )
     }
 
     private func handleFetchDurationsLoaded(
@@ -279,6 +309,11 @@ actor VideoActor: SharedContextActor {
             videoModels.append(video)
             modelContext.insert(video)
             video.subscription = sub
+            // podcast feeds can carry their chapters inline; nothing else does, and everything else derives them from
+            // the description instead.
+            if !vid.chapters.isEmpty, video.isPodcast {
+                ChapterService.cachePodcastChapters(vid.chapters, youtubeId: video.youtubeId)
+            }
         }
         return videoModels
     }

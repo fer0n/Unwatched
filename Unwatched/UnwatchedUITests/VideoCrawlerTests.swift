@@ -187,10 +187,11 @@ class VideoCrawlerTests: XCTestCase {
             link: url, title: "Working sub", videoPlacement: .defaultPlacement, isArchived: false
         )
 
-        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+        let result = try await repo.fetchVideos(sub)
 
-        XCTAssertEqual(returnedSub.title, sub.title)
-        XCTAssertGreaterThan(videos.count, 0, "Expected videos from a valid feed")
+        XCTAssertEqual(result.sub.title, sub.title)
+        XCTAssertNil(result.errorMessage)
+        XCTAssertGreaterThan(result.videos.count, 0, "Expected videos from a valid feed")
     }
 
     func testFetchVideosInvalidFeedReturnsEmptyWithoutThrowing() async throws {
@@ -200,10 +201,11 @@ class VideoCrawlerTests: XCTestCase {
             link: url, title: "Broken sub", videoPlacement: .defaultPlacement, isArchived: false
         )
 
-        let (returnedSub, videos) = try await repo.fetchVideos(sub)
+        let result = try await repo.fetchVideos(sub)
 
-        XCTAssertEqual(returnedSub.title, sub.title)
-        XCTAssertEqual(videos.count, 0, "A failing feed should return no videos instead of throwing")
+        XCTAssertEqual(result.sub.title, sub.title)
+        XCTAssertNotNil(result.errorMessage, "A failing feed should report why it failed")
+        XCTAssertEqual(result.videos.count, 0, "A failing feed should return no videos instead of throwing")
     }
 
     func testLoadVideosPartialFailureStillLoadsWorkingSubscription() async throws {

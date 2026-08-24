@@ -17,6 +17,19 @@ extension SubscriptionActor {
         Log.info("youtubePlaylistId: \(sub.youtubePlaylistId?.debugDescription ?? "")")
         var subState = SubscriptionState(title: sub.title)
 
+        if sub.isPodcast, let feedUrl = sub.link {
+            if let existing = getPodcast(feedUrl) {
+                if unarchiveSubIfAvailable {
+                    unarchive(existing)
+                }
+                subState.title = existing.title
+                subState.alreadyAdded = true
+                return (subState, nil)
+            }
+            subState.success = true
+            return (subState, sub)
+        }
+
         if let title = getTitleIfSubscriptionExists(
             channelId: sub.youtubeChannelId,
             unarchiveSubIfAvailable
@@ -59,6 +72,11 @@ extension SubscriptionActor {
             subState.userName = UrlService.getChannelUserNameFromUrl(url)
             subState.playlistId = UrlService.getPlaylistIdFromUrl(url)
 
+            if subState.channelId == nil, subState.userName == nil, subState.playlistId == nil,
+               !UrlService.isYoutubeFeedUrl(url: url) {
+                return await loadPodcastInfo(from: url, unarchiveSubIfAvailable)
+            }
+
             if let title = getTitleIfSubscriptionExists(
                 channelId: subState.channelId,
                 userName: subState.userName,
@@ -90,6 +108,31 @@ extension SubscriptionActor {
                 subState.success = true
                 return (subState, sendableSub)
             }
+        } catch {
+            subState.error = error.localizedDescription
+        }
+        return (subState, nil)
+    }
+
+    /// A feed URL that isn't YouTube's: the only thing left to try is a podcast feed.
+    private func loadPodcastInfo(
+        from url: URL,
+        _ unarchiveSubIfAvailable: Bool
+    ) async -> (SubscriptionState, SendableSubscription?) {
+        var subState = SubscriptionState(url: url)
+        if let existing = getPodcast(url) {
+            if unarchiveSubIfAvailable {
+                unarchive(existing)
+            }
+            subState.title = existing.title
+            subState.alreadyAdded = true
+            return (subState, nil)
+        }
+        do {
+            let feed = try await PodcastService.loadFeed(url, limitEpisodes: 1)
+            subState.title = feed.subscription.title
+            subState.success = true
+            return (subState, feed.subscription)
         } catch {
             subState.error = error.localizedDescription
         }

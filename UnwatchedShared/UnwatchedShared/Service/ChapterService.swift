@@ -256,38 +256,22 @@ public struct ChapterService {
         guard !filterStrings.isEmpty else { return }
 
         // only the still-active ones, for the reason given in `skipSponsorBlockSegments`
+        var hasChanges = false
         for chapter in (video?.sortedChapters ?? []) where chapter.isActive {
             guard let title = chapter.title, !title.isEmpty else { continue }
 
             if let matchingFilter = filterStrings.first(where: { title.localizedStandardContains($0) }) {
                 Log.info("skipping: '\(title)'; filter: '\(matchingFilter)'")
                 chapter.isActive = false
+                hasChanges = true
             }
+        }
+        if hasChanges {
+            video?.chaptersDidChange()
         }
     }
 
-    /// The value-type counterpart of `filterChapters(in:)`, for chapters that have no row to
-    /// deactivate. Applied on every read rather than stored: the setting can change at any point,
-    /// and there's nothing persisted to bring back up to date when it does.
-    ///
-    /// Only ever deactivates, like the row version — a chapter the user re-enabled by hand has a
-    /// row by then, so it doesn't come through here.
-    public static func applySkipFilter(to chapters: [SendableChapter]) -> [SendableChapter] {
-        let filterStrings = skipChapterFilters()
-        guard !filterStrings.isEmpty else { return chapters }
-
-        return chapters.map { chapter in
-            guard let title = chapter.title, !title.isEmpty,
-                  filterStrings.contains(where: { title.localizedStandardContains($0) }) else {
-                return chapter
-            }
-            var filtered = chapter
-            filtered.isActive = false
-            return filtered
-        }
-    }
-
-    private static func skipChapterFilters() -> [String] {
+    static func skipChapterFilters() -> [String] {
         guard let skipChapterText = NSUbiquitousKeyValueStore.default.string(forKey: Const.skipChapterText),
               !skipChapterText.isEmpty else {
             return []
