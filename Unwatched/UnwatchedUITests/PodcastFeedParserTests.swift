@@ -32,6 +32,12 @@ class PodcastFeedParserTests: XCTestCase {
         XCTAssertEqual(try feed.showDescription, "A show about examples.")
     }
 
+    /// What a generated transcript is transcribed in, so it can't come from the reader's own locale.
+    func testParsesShowLanguage() {
+        let parser = PodcastFeedParser.parse(Data(Self.feedXml.utf8))
+        XCTAssertEqual(parser.showLanguage, "de-DE")
+    }
+
     func testParsesEpisodes() throws {
         let episodes = try feed.episodes
         XCTAssertEqual(episodes.count, 2)
@@ -394,6 +400,7 @@ class PodcastFeedParserTests: XCTestCase {
         <title>The Example Show</title>
         <link>https://example.com</link>
         <description>A show about examples.</description>
+        <language>de-DE</language>
         <itunes:author>Example Media</itunes:author>
         <itunes:image href="https://example.com/art.jpg"/>
         <image>

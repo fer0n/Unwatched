@@ -54,6 +54,19 @@ public enum PodcastTranscriptLookup: Sendable {
     case unreachable
 }
 
+/// A transcript lookup plus what the feed says about itself, so a caller that goes on to generate a transcript
+/// doesn't have to read the feed a second time to learn which language to transcribe in.
+public struct PodcastTranscriptLookupResult: Sendable {
+    public let lookup: PodcastTranscriptLookup
+    /// The show's `<language>` as the feed writes it, `nil` when the feed omits it or couldn't be read.
+    public let language: String?
+
+    public init(_ lookup: PodcastTranscriptLookup, language: String? = nil) {
+        self.lookup = lookup
+        self.language = language
+    }
+}
+
 /// One `<podcast:transcript>` element.
 public struct PodcastTranscriptSource: Sendable, Equatable {
     public let url: URL

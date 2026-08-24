@@ -81,7 +81,7 @@ struct TranscriptService {
             }
             guard let feedUrl else { return [] }
 
-            switch await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId) {
+            switch await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId).lookup {
             case .found(let entries):
                 let cleaned = analyseBreaks(entries)
                 await repo.cacheTranscript(cleaned, for: youtubeId)
@@ -121,10 +121,13 @@ struct TranscriptService {
             let repo = TranscriptActor(modelContainer: cacheContainer)
 
             // the feed gets one more look: it's cheap next to transcribing, and a show that published a transcript
-            // since the tab was last opened is worth catching
-            if let feedUrl,
-               case .found(let published) = await PodcastService.fetchTranscript(feedUrl: feedUrl,
-                                                                                 episodeId: youtubeId) {
+            // since the tab was last opened is worth catching. The same read supplies the show's language, which
+            // is what the episode has to be transcribed in.
+            var feed: PodcastTranscriptLookupResult?
+            if let feedUrl {
+                feed = await PodcastService.fetchTranscript(feedUrl: feedUrl, episodeId: youtubeId)
+            }
+            if case .found(let published) = feed?.lookup {
                 Log.info("using the feed's own transcript for \(youtubeId)")
                 let cleaned = analyseBreaks(published)
                 await repo.cacheTranscript(cleaned, for: youtubeId)
@@ -143,7 +146,10 @@ struct TranscriptService {
                 }
             }
 
-            let entries = try await SpeechTranscriptService.transcribe(fileUrl: fileUrl) { fraction in
+            let entries = try await SpeechTranscriptService.transcribe(
+                fileUrl: fileUrl,
+                language: feed?.language
+            ) { fraction in
                 // the leading slice covers fetching the audio and installing the speech model, neither of which
                 // reports progress of its own
                 progress(0.1 + fraction * 0.9)

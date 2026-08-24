@@ -16,6 +16,8 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
     public private(set) var parsingSucceeded = false
     /// The show's own description, for the subscribe preview. Not persisted.
     public var showDescription = ""
+    /// The show's `<language>`, as the feed writes it (e.g. "de", "en-US"). Not persisted.
+    public private(set) var showLanguage: String?
 
     private let limitEpisodes: Int?
 
@@ -173,6 +175,10 @@ public final class PodcastFeedParser: NSObject, XMLParserDelegate {
         case "title": showTitle = value
         case "link": showLink = value
         case "itunes:author": showAuthor = value
+        case "language", "itunes:language":
+            if showLanguage == nil, !value.isEmpty {
+                showLanguage = value
+            }
         case "description", "itunes:summary":
             if showDescription.isEmpty {
                 showDescription = PodcastShowNotes.plainText(value, keepLinks: false) ?? ""

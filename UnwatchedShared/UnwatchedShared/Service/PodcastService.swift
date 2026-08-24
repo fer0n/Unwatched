@@ -168,27 +168,28 @@ public enum PodcastService {
 
     // MARK: - Transcripts
 
-    /// The transcript a show publishes for an episode, if it publishes one.
-    public static func fetchTranscript(feedUrl: URL, episodeId: String) async -> PodcastTranscriptLookup {
+    /// The transcript a show publishes for an episode, if it publishes one, along with the show's own language.
+    public static func fetchTranscript(feedUrl: URL, episodeId: String) async -> PodcastTranscriptLookupResult {
         let data: Data
         do {
             let url = secureUrl(feedUrl) ?? feedUrl
             data = try await VideoCrawler.fetchFeedData(url)
         } catch {
             Log.warning("podcast transcript feed failed to load: \(error.localizedDescription)")
-            return .unreachable
+            return PodcastTranscriptLookupResult(.unreachable)
         }
 
         let parser = PodcastFeedParser.parse(data)
+        let language = parser.showLanguage
         guard let sources = parser.transcriptSources[episodeId],
               let source = PodcastTranscriptSource.best(from: sources) else {
             Log.info("no podcast:transcript for \(episodeId)")
-            return .notPublished
+            return PodcastTranscriptLookupResult(.notPublished, language: language)
         }
         guard let entries = await fetchTranscript(source) else {
-            return .unreachable
+            return PodcastTranscriptLookupResult(.unreachable, language: language)
         }
-        return .found(entries)
+        return PodcastTranscriptLookupResult(.found(entries), language: language)
     }
 
     public static func fetchTranscript(_ source: PodcastTranscriptSource) async -> [TranscriptEntry]? {
