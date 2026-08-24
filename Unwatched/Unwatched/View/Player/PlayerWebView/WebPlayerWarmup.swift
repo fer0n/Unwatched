@@ -229,18 +229,14 @@ extension PlayerWebView {
     /// replaying the one-shot events the warmup swallowed.
     func adopt(_ warmed: WebPlayerWarmup.Warmed, _ coordinator: PlayerWebViewCoordinator) -> WKWebView {
         let webView = warmed.webView
-        webViewState.webView = webView
-
-        player.previousState.videoId = player.video?.youtubeId
-        player.previousState.playbackSpeed = warmed.playbackSpeed
-        // the warmed page has no chapter markers yet
-        player.previousState.chaptersHash = nil
+        backend.resetAppliedState()
+        backend.webView = webView
+        backend.loadedVideoId = player.video?.youtubeId
+        backend.appliedUIMode = warmed.uiMode
 
         attach(coordinator, to: webView)
-        coordinator.appliedUIMode = warmed.uiMode
 
         if warmed.didStart {
-            player.previousState.isPlaying = warmed.isPlaying
             player.unstarted = false
             evaluateJavaScript(webView, PlayerWebView.muteScript(false))
         } else {
@@ -254,20 +250,24 @@ extension PlayerWebView {
         let startAt = player.getStartPosition()
         Task { @MainActor in
             if !warmed.didStart, abs(startAt - warmed.startAt) > 0.5 {
-                evaluateJavaScript(webView, getSeekToScript(startAt))
+                evaluateJavaScript(webView, PlayerWebView.seekToScript(startAt))
             }
             for message in warmed.messages {
                 coordinator.handleJsMessages(message.topic, message.payload)
             }
             player.isLoading = nil
+            // the speed the page was warmed at can be stale by now: it was read when the warm-up started, and the
+            // user had the outgoing player in front of them the whole time
+            if warmed.playbackSpeed != player.playbackSpeed {
+                backend.setRate(player.playbackSpeed)
+            }
             if !warmed.didStart {
                 await PlayerWebView.awaitViewport(webView)
             }
+            // `play()` confirms and re-clicks on its own, so adoption no longer needs a retry loop of its own — two
+            // of them would double-click the page.
             player.handleAutoStart(webView.url)
-            setChapterMarkers(awaitHash: false)
-            if !warmed.didStart {
-                await retryPlayIfNeeded(webView)
-            }
+            backend.setChapterMarkers(force: true)
         }
         return webView
     }
@@ -285,28 +285,8 @@ extension PlayerWebView {
         }
     }
 
-    /// The click can still land on something that doesn't start playback. The script's own retries
-    /// can't stand in for this: only a fresh `evaluateJavaScript` carries the user gesture WebKit
-    /// requires to start media.
-    @MainActor
-    private func retryPlayIfNeeded(_ webView: WKWebView) async {
-        for _ in 0..<Self.playRetries {
-            try? await Task.sleep(for: .seconds(Self.playRetrySeconds))
-            guard player.isPlaying, webViewState.webView === webView else {
-                return
-            }
-            guard await PlayerWebView.evaluateBool(webView, "!!document.querySelector('video')?.paused") else {
-                return
-            }
-            Log.info("adopt: play didn't take, clicking again")
-            evaluateJavaScript(webView, getPlayScript())
-        }
-    }
-
     private static let viewportPollSeconds: Double = 0.03
     private static let viewportTimeout: Double = 0.9
-    private static let playRetrySeconds: Double = 0.5
-    private static let playRetries = 4
 
     func attach(_ coordinator: PlayerWebViewCoordinator, to webView: WKWebView) {
         webView.navigationDelegate = coordinator

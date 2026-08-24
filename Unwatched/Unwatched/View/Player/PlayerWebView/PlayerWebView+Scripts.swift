@@ -72,10 +72,10 @@ extension PlayerWebView {
         """
     }
 
-    func getPlayScript() -> String {
-        if player.unstarted {
+    static func playScript(unstarted: Bool) -> String {
+        if unstarted {
             Log.info("PLAY: unstarted")
-            return Self.unstartedPlayScript
+            return unstartedPlayScript
         }
         return "play();"
     }
@@ -128,7 +128,13 @@ extension PlayerWebView {
                 }
         """
 
-    func getPauseScript() -> String {
+    /// A repeat attempt at the play click, without the one-time setup `unstartedPlayScript` does around it.
+    static func retryPlayScript(unstarted: Bool) -> String {
+        guard unstarted else { return "play();" }
+        return "document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2)?.click();"
+    }
+
+    static func pauseScript() -> String {
         """
         video.pause();
         """
@@ -153,24 +159,24 @@ extension PlayerWebView {
         """
     }
 
-    func getSeekToScript(_ seekTo: Double) -> String {
+    static func seekToScript(_ seekTo: Double) -> String {
         """
         video.currentTime = \(seekTo);
         startAtTime = \(seekTo);
         """
     }
 
-    func getSetPlaybackRateScript() -> String {
+    static func setPlaybackRateScript(_ rate: Double) -> String {
         """
-        playbackRate = \(player.playbackSpeed);
+        playbackRate = \(rate);
         // defaultPlaybackRate is what the element resets to when YouTube reloads the media
         // (e.g. resuming from background); keep it in sync so the speed survives the reload.
-        video.defaultPlaybackRate = \(player.playbackSpeed);
-        video.playbackRate = \(player.playbackSpeed);
+        video.defaultPlaybackRate = \(rate);
+        video.playbackRate = \(rate);
         """
     }
 
-    func getEnterPipScript() -> String {
+    static func enterPipScript() -> String {
         """
         if (document.pictureInPictureEnabled && !document.pictureInPictureElement) {
             video.requestPictureInPicture().catch(error => {
@@ -182,12 +188,12 @@ extension PlayerWebView {
         """
     }
 
-    func getExitPipScript() -> String {
+    static func exitPipScript() -> String {
         "document.exitPictureInPicture();"
     }
 
     static func repairVideo(onRepair: @escaping () -> Void) {
-        guard let webView = WebViewState.shared.webView else {
+        guard let webView = WebPlayerBackend.shared.webView else {
             Log.error("repairVideo: no webView")
             return
         }

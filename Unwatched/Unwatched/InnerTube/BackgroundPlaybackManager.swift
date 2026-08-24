@@ -20,14 +20,19 @@ final class BackgroundPlaybackManager {
 
     private static let startTimeout: Double = 20
 
-    private var isObserving = false
-
     private var player: PlayerManager { .shared }
     private var viewModel: AVPlayerViewModel { .shared }
 
     /// Returns once audio is running: the app is only kept alive past this by playback that started.
-    /// - Parameter tag: the slice to play, or `nil` to keep the latched one.
-    func start(forceNativePlayer: Bool, tag: QueueTagSelection? = nil) async throws {
+    /// - Parameters:
+    ///   - tag: the slice to play, or `nil` to keep the latched one.
+    ///   - video: what to play, or `nil` for the top of the queue. Loaded before anything else can
+    ///     fail, so a caller that can fall back to the foreground (`PlayMediaIntentHandler`) finds
+    ///     it staged and ready to play.
+    func start(forceNativePlayer: Bool, tag: QueueTagSelection? = nil, video: Video? = nil) async throws {
+        if let video {
+            player.setNextVideo(video, .playWhenReady)
+        }
         try enableNativePlayer(force: forceNativePlayer)
         try activateAudioSession()
         if let tag, tag != player.playbackTag {
@@ -41,7 +46,6 @@ final class BackgroundPlaybackManager {
         }
         Log.info("backgroundPlayback: starting \(videoId)")
         viewModel.onVideoEnded = { [weak self] in self?.handleVideoEnded() }
-        armObserver()
 
         if viewModel.loadedVideoId == videoId {
             if player.videoEnded {
@@ -49,7 +53,6 @@ final class BackgroundPlaybackManager {
             } else {
                 player.play()
             }
-            applyPlayerChanges()
         } else {
             // started by `handleReadyToPlay` once the stream is up
             player.videoSource = .playWhenReady
@@ -85,7 +88,8 @@ final class BackgroundPlaybackManager {
     }
 
     private func enableNativePlayer(force: Bool) throws {
-        guard PlayerTypeSetting.stored != .native else {
+        // a podcast episode plays natively whatever the setting says
+        guard PlayerTypeSetting.stored != .native, player.video?.isPodcast != true else {
             return
         }
         guard force else {
@@ -94,75 +98,6 @@ final class BackgroundPlaybackManager {
         Log.info("backgroundPlayback: switching to the native player")
         UserDefaults.standard.set(PlayerTypeSetting.native.rawValue, forKey: Const.playerType)
         PlayerSwitchManager.shared.handleSettingChanged()
-    }
-
-    // MARK: - Standing in for the view
-
-    /// What `AVPlayerView` passes on via `onChange`; without a scene none of those run.
-    private struct PlayerState: Equatable {
-        var videoId: String?
-        var isPlaying: Bool
-        var seekAbsolute: Double?
-        var playbackSpeed: Double
-    }
-
-    private var lastState: PlayerState?
-
-    private var currentState: PlayerState {
-        PlayerState(
-            videoId: player.video?.youtubeId,
-            isPlaying: player.isPlaying,
-            seekAbsolute: player.seekAbsolute,
-            playbackSpeed: player.playbackSpeed
-        )
-    }
-
-    private func armObserver() {
-        guard !isObserving else {
-            return
-        }
-        isObserving = true
-        lastState = currentState
-        observeChanges()
-    }
-
-    /// Re-arms itself: `withObservationTracking` reports a single change.
-    private func observeChanges() {
-        withObservationTracking {
-            _ = currentState
-        } onChange: {
-            // runs before the new values are in place, so read them on the next hop
-            Task { @MainActor [weak self] in
-                guard let self else {
-                    return
-                }
-                guard PlayerTypeSetting.stored == .native else {
-                    isObserving = false
-                    return
-                }
-                applyPlayerChanges()
-                observeChanges()
-            }
-        }
-    }
-
-    private func applyPlayerChanges() {
-        let state = currentState
-        let previous = lastState
-        lastState = state
-
-        if state.videoId != previous?.videoId {
-            viewModel.loadVideoIfNeeded()
-        }
-        if state.isPlaying != previous?.isPlaying {
-            viewModel.handleIsPlayingChange()
-        }
-        if state.seekAbsolute != nil {
-            viewModel.applyAbsoluteSeek()
-        }
-        if state.playbackSpeed != previous?.playbackSpeed {
-            viewModel.handlePlaybackSpeedChange()
-        }
     }
 
     /// `PlayerView.handleVideoEnded`, minus the review prompt.
@@ -175,7 +110,6 @@ final class BackgroundPlaybackManager {
         Log.info("backgroundPlayback: videoEnded, continuousPlay: \(continuousPlay)")
         guard continuousPlay else {
             player.pause()
-            player.seekAbsolute = nil
             player.setVideoEnded(true)
             return
         }

@@ -154,6 +154,8 @@ struct SetupView: View {
 
         #if os(iOS)
         RefreshManager.shared.scheduleVideoRefresh()
+        // the queue as it stands now is what the system should offer while the app is away
+        MediaSuggestionService.refreshSuggestions()
         #endif
     }
 
@@ -202,6 +204,10 @@ struct SetupView: View {
     static func onLaunch() {
         Log.info("setupVideo")
         PlayerManager.shared.restoreNowPlayingVideo()
+        PodcastDownloadManager.shared.onEpisodeDownloaded = { youtubeId in
+            ChapterService.loadPodcastChapters(youtubeId: youtubeId)
+            SilenceScanActor.scanDownloadedEpisode(youtubeId: youtubeId)
+        }
         VideoService.fetchVideoDurationsQueueInbox()
         sendSettings()
     }

@@ -8,6 +8,16 @@ extension AVPlayerViewModel {
     // MARK: - Audio language change
 
     @MainActor
+    // MARK: - PlayerBackend
+
+    func setAudioLanguage(_ code: String) {
+        handleAudioLanguageChange(code)
+    }
+
+    func setVideoQuality(_ height: Int) {
+        handleQualityChange(height: height)
+    }
+
     func handleAudioLanguageChange(_ lang: String) {
         guard !lang.isEmpty else { return }
         if isUsingWebViewHLS {
@@ -205,7 +215,7 @@ extension AVPlayerViewModel {
             Log.info("[AVPlayerView] selecting audio by lang '\(lang)': \(byLang.displayName)")
             await MainActor.run {
                 item.select(byLang, in: group)
-                player.selectedAudioLanguage = byLang.locale?.languageCode ?? ""
+                player.reportAudioLanguage(byLang.locale?.languageCode ?? "")
             }
             return
         }
@@ -217,7 +227,7 @@ extension AVPlayerViewModel {
             Log.info("[AVPlayerView] selecting audio via characteristic detection: \(option.displayName) locale=\(option.locale?.identifier ?? "nil")")
             await MainActor.run {
                 item.select(option, in: group)
-                player.selectedAudioLanguage = option.locale?.languageCode ?? ""
+                player.reportAudioLanguage(option.locale?.languageCode ?? "")
             }
         }
     }

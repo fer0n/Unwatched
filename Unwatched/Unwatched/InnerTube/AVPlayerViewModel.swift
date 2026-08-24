@@ -6,7 +6,7 @@ import UnwatchedShared
 import WebKit
 
 @Observable
-final class AVPlayerViewModel {
+final class AVPlayerViewModel: PlayerBackend {
     /// Shared so playback can run with no view attached (see `BackgroundPlaybackManager`).
     @MainActor static let shared = AVPlayerViewModel()
 
@@ -46,6 +46,8 @@ final class AVPlayerViewModel {
     @ObservationIgnored var originalAudioLanguage: String?
     @ObservationIgnored var commandsSetUp = false
     @ObservationIgnored var artworkImage: PlatformImage?
+    /// What `artworkImage` was loaded for, so a chapter change only refetches on a real change.
+    @ObservationIgnored var fetchedArtworkUrls: [URL] = []
     @ObservationIgnored var seekAnchor = SeekAnchor()
     @ObservationIgnored var currentPlayerInfo: PlayerInfo?
     @ObservationIgnored var currentHLSHeaders: [String: String] = [:]
@@ -67,6 +69,19 @@ final class AVPlayerViewModel {
     /// not at the position it reports (see `resumePosition`).
     @ObservationIgnored var pendingSeekToTime: Double?
 
+    /// Set while a "trim silence" composition is playing, and the only thing that knows the player's clock isn't the
+    /// episode's; nil for everything else (see `trimmedComposition`).
+    @ObservationIgnored var silenceMap: SilenceMap? {
+        // the anchor's two times were read against the outgoing map, so they can't be differenced against anything
+        // read against this one
+        didSet { savedTimeAnchor = nil }
+    }
+
+    /// The two clocks at the last tick counted toward `Const.trimSilenceSecondsSaved`, and what they've added up to
+    /// since it was last written.
+    @ObservationIgnored private var savedTimeAnchor: (player: Double, file: Double)?
+    @ObservationIgnored private var pendingSecondsSaved: Double = 0
+
     // Set by the view; called when the current video plays to end.
     @ObservationIgnored var onVideoEnded: () -> Void = {}
 
@@ -80,7 +95,7 @@ final class AVPlayerViewModel {
         player.precisePosition = { [weak self] in
             guard let self else { return nil }
             if let pinned = seekAnchor.time { return pinned }
-            let seconds = avPlayer.currentTime().seconds
+            let seconds = currentFileTime()
             guard !seconds.isNaN, !seconds.isInfinite else { return nil }
             return seconds
         }
@@ -88,18 +103,19 @@ final class AVPlayerViewModel {
             forInterval: CMTime(seconds: 1, preferredTimescale: 600), queue: .main
         ) { [weak self] cmTime in
             guard let self else { return }
-            let seconds = cmTime.seconds
-            guard !seconds.isNaN, !seconds.isInfinite else { return }
+            guard !cmTime.seconds.isNaN, !cmTime.seconds.isInfinite else { return }
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                let seconds = fileTime(cmTime.seconds)
                 // mid-seek the clock still reports where the playhead is coming from — zero for
                 // a freshly installed item; the pinned target is where playback is
-                if let target = seekAnchor.time ?? player.seekAbsolute {
+                if let target = seekAnchor.time {
                     lastObservedTime = target
                     return
                 }
                 lastObservedTime = seconds
                 if player.isPlaying {
+                    accumulateSecondsSaved(playerTime: cmTime.seconds, fileTime: seconds)
                     player.monitorChapters(time: seconds)
                     statsTickCount += 1
                     if statsTickCount >= Const.updateDbTimeSeconds {
@@ -116,6 +132,7 @@ final class AVPlayerViewModel {
                 } else {
                     timeObserverTickCount = 0
                     statsTickCount = 0
+                    stopCountingSecondsSaved()
                     if player.isLoading == nil {
                         if player.currentTime != seconds { player.currentTime = seconds }
                     }
@@ -126,10 +143,56 @@ final class AVPlayerViewModel {
 
     @MainActor
     private func stopTimeObserver() {
+        stopCountingSecondsSaved()
         if let token = timeObserverToken {
             avPlayer.removeTimeObserver(token)
             timeObserverToken = nil
         }
+    }
+
+    // MARK: - Time saved by trimming
+
+    /// Adds what the shortened timeline saved between this tick and the last to the lifetime total behind
+    /// `Const.trimSilenceSecondsSaved`.
+    @MainActor
+    private func accumulateSecondsSaved(playerTime: Double, fileTime: Double) {
+        guard silenceMap != nil, playerTime.isFinite, fileTime.isFinite else {
+            savedTimeAnchor = nil
+            return
+        }
+        defer { savedTimeAnchor = (player: playerTime, file: fileTime) }
+        guard let previous = savedTimeAnchor else { return }
+
+        let played = playerTime - previous.player
+        // only an ordinary forward tick is time someone sat through: anything else is a seek, a loop or a stall,
+        // where the two deltas describe a jump rather than playback
+        guard played > 0, played < 3 else { return }
+        let saved = (fileTime - previous.file) - played
+        guard saved > 0 else { return }
+
+        pendingSecondsSaved += saved
+        // written in whole seconds rather than every tick: the total is only ever read by eye, and this is the
+        // difference between one write a second and one every ten or twenty
+        if pendingSecondsSaved >= 1 {
+            flushSecondsSaved()
+        }
+    }
+
+    /// Banks what's counted so far and stops counting until playback is somewhere differenceable again — otherwise a
+    /// pause, or the gap around a new item, would be counted as time saved.
+    @MainActor
+    private func stopCountingSecondsSaved() {
+        savedTimeAnchor = nil
+        flushSecondsSaved()
+    }
+
+    @MainActor
+    private func flushSecondsSaved() {
+        guard pendingSecondsSaved > 0 else { return }
+        let key = Const.trimSilenceSecondsSaved
+        let total = UserDefaults.standard.double(forKey: key) + pendingSecondsSaved
+        pendingSecondsSaved = 0
+        UserDefaults.standard.set(total, forKey: key)
     }
 
     // MARK: - Change handlers (called from view onChange)
@@ -179,8 +242,9 @@ final class AVPlayerViewModel {
                 guard !Task.isCancelled else { return }
                 await MainActor.run {
                     switch interruption {
-                    case .began: player.isPlaying = false
-                    case .endedShouldResume: player.isPlaying = true
+                    // commands, not reports: the engine has to actually stop and restart
+                    case .began: player.pause()
+                    case .endedShouldResume: player.play()
                     case .ended: break
                     }
                 }
@@ -198,7 +262,8 @@ final class AVPlayerViewModel {
                     guard player.isLoading == nil,
                           seekAnchor.time == nil,
                           player.isPlaying != isNowPlaying else { return }
-                    player.isPlaying = isNowPlaying
+                    // AVPlayer telling us what it did; commanding it back would be an echo
+                    isNowPlaying ? player.reportPlaying() : player.reportPaused()
                 }
             }
         }
@@ -208,17 +273,23 @@ final class AVPlayerViewModel {
         // previous non-embed YouTube session so the native player uses the full controls layout.
         player.embeddingDisabled = false
         player.availableAudioLanguages = []
-        player.selectedAudioLanguage = ""
+        player.reportAudioLanguage("")
         player.availableVideoQualities = []
-        player.selectedVideoQuality = 0
+        player.reportVideoQuality(0)
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
+        // Only podcasts wait: a YouTube stream is raced, prefetched and swapped between qualities, and starting those
+        // on whatever has arrived is what makes the switches feel instant.
+        avPlayer.automaticallyWaitsToMinimizeStalling = player.video?.mediaUrl != nil
+        // the outgoing episode's shortened timeline must not be read against the incoming one
+        clearSilenceMap()
 
         setupRemoteCommandsIfNeeded()
         artworkImage = nil
-        if let video = player.video {
+        fetchedArtworkUrls = []
+        if player.video != nil {
             updateNowPlayingInfo()
-            fetchArtwork(for: video)
+            fetchArtwork()
         }
 
         // Use a pre-built item if the prefetch completed for this video.
@@ -232,6 +303,40 @@ final class AVPlayerViewModel {
         loadTask = Task { await self.fetchAndPlay(videoId: videoId, useAndroidFallback: false) }
     }
 
+    // MARK: - PlayerBackend
+
+    @MainActor
+    func play() {
+        handleIsPlayingChange()
+    }
+
+    @MainActor
+    func pause() {
+        handleIsPlayingChange()
+    }
+
+    @MainActor
+    func stop() {
+        avPlayer.pause()
+    }
+
+    @MainActor
+    func setRate(_ rate: Double) {
+        handlePlaybackSpeedChange()
+    }
+
+    /// PiP on the native player isn't a command: `AVPlayerView` hands `player.pipEnabled` down to
+    /// `AVPlayerViewController.isPipRequested`, which is declarative and belongs in the view.
+    @MainActor
+    func setPip(_ enabled: Bool) {}
+
+    @MainActor
+    func cueVideo() {
+        loadVideoIfNeeded()
+    }
+
+    /// Both `play()` and `pause()` come through here: `syncPlayPause` reads `player.isPlaying`, which the caller has
+    /// already set.
     @MainActor
     func handleIsPlayingChange() {
         syncPlayPause()
@@ -239,9 +344,7 @@ final class AVPlayerViewModel {
     }
 
     @MainActor
-    func applyAbsoluteSeek() {
-        guard let time = player.seekAbsolute else { return }
-        player.seekAbsolute = nil
+    func seek(to time: Double) {
         lastObservedTime = time
         seekAnchor.time = time
         if pendingSeekToTime != nil {
@@ -250,7 +353,7 @@ final class AVPlayerViewModel {
             pendingSeekToTime = time
         } else {
             let anchor = seekAnchor
-            avPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
+            avPlayer.seek(to: CMTime(seconds: playerTime(time), preferredTimescale: 600),
                           toleranceBefore: .zero, toleranceAfter: .zero) { _ in
                 // also when unfinished: an anchor still pointing here was superseded by nothing
                 if anchor.time == time { anchor.time = nil }
@@ -264,13 +367,13 @@ final class AVPlayerViewModel {
     @MainActor
     func handlePlaybackSpeedChange() {
         if avPlayer.rate != 0 {
-            avPlayer.rate = Float(player.playbackSpeed)
+            startAtCurrentSpeed()
         }
     }
 
     func handleScenePhaseChange(_ phase: ScenePhase) {
         if phase == .active && player.pipEnabled {
-            player.pipEnabled = false
+            player.reportPip(false)
         }
     }
 
@@ -318,9 +421,14 @@ final class AVPlayerViewModel {
         // instance outlives the view: the next one starts over
         loadedVideoId = nil
         onVideoEnded = {}
-        // the web player taking over may already be playing on this session
-        if !PlayerSwitchManager.shared.isTakingOver {
+        // The audio session is process-wide: WebKit plays the embedded player's media on this very session, so it may
+        // only be given up while the native player is still the engine that plays.
+        let handingOver = PlayerSwitchManager.shared.isTakingOver
+            || !PlayerSwitchManager.shared.nativeIsCurrent
+        if player.video == nil || !handingOver {
             PlayerAudioSession.deactivate()
+        } else {
+            Log.info("[AVPlayerView] cleanup: leaving the audio session to the player taking over")
         }
     }
 
@@ -331,14 +439,8 @@ final class AVPlayerViewModel {
         prefetchManager.prefetchNext(videoId: videoId)
     }
 
-    /// Drops a prefetched/warming stream once the queue no longer has a next-up video —
-    /// otherwise it would keep buffering a video that isn't coming.
-    ///
-    /// `keeping` is the currently playing video. The queue and `player.video` update in the
-    /// same pass during a transition, so with a two-entry queue "next" makes the prefetched
-    /// video current *and* empties the next-up slot; without this guard the result would be
-    /// discarded in the same pass that `loadVideoIfNeeded` is about to consume it, and the
-    /// most common prefetch hit would be lost to an onChange ordering detail.
+    /// Drops a prefetched/warming stream once the queue no longer has a next-up video — otherwise it would keep
+    /// buffering a video that isn't coming.
     @MainActor
     func discardPrefetch(keeping videoId: String?) {
         prefetchManager.discardUnlessHolding(videoId)
@@ -368,8 +470,10 @@ final class AVPlayerViewModel {
         player.availableVideoQualities = pre.qualities
         if !pre.audioTracks.isEmpty {
             player.availableAudioLanguages = pre.audioTracks.map { (code: $0.languageCode, name: $0.name) }
-            player.selectedAudioLanguage = pre.audioTracks.first(where: \.isOriginal)?.languageCode
-                ?? pre.audioTracks.first?.languageCode ?? ""
+            player.reportAudioLanguage(
+                pre.audioTracks.first(where: \.isOriginal)?.languageCode
+                    ?? pre.audioTracks.first?.languageCode ?? ""
+            )
         }
         if let info = pre.playerInfo {
             applyTranscriptUrl(from: info)

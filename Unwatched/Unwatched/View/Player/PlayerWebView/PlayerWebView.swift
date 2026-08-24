@@ -14,12 +14,6 @@ typealias PlatformViewRepresentable = UIViewRepresentable
 typealias PlatformViewRepresentable = NSViewRepresentable
 #endif
 
-@Observable class WebViewState {
-    @MainActor static let shared = WebViewState()
-
-    @ObservationIgnored var webView: WKWebView?
-}
-
 struct PlayerWebView: PlatformViewRepresentable {
     @Environment(PlayerManager.self) var player
     @Environment(AppNotificationVM.self) var appNotificationVM
@@ -30,7 +24,7 @@ struct PlayerWebView: PlatformViewRepresentable {
     let onVideoEnded: () -> Void
     var handleSwipe: (SwipeDirecton) -> Void
 
-    @State var webViewState = WebViewState.shared
+    @State var backend = WebPlayerBackend.shared
     @State var switchManager = PlayerSwitchManager.shared
 
     /// The variant on screen, which lags the setting while a switch to the native player warms up.
@@ -52,11 +46,11 @@ struct PlayerWebView: PlatformViewRepresentable {
         }
 
         let webView = PlayerWebView.buildWebView(airplayHD: player.airplayHD)
-        webViewState.webView = webView
+        backend.resetAppliedState()
+        backend.webView = webView
 
         player.isLoading = Date()
-        player.previousState.videoId = player.video?.youtubeId
-        player.previousState.playbackSpeed = player.playbackSpeed
+        backend.loadedVideoId = player.video?.youtubeId
 
         attach(coordinator, to: webView)
         loadWebContent(webView)
@@ -117,25 +111,11 @@ struct PlayerWebView: PlatformViewRepresentable {
         return webView
     }
 
+    /// Playback commands don't come through here: `PlayerManager` calls `WebPlayerBackend` directly, so a command
+    /// lands once, in order, whether or not this view is on screen.
     func updateView(_ view: WKWebView, _ coordinator: PlayerWebViewCoordinator) {
-        #if os(macOS)
-        handleShouldStop(view)
-        #endif
-
-        if player.isLoading != nil {
-            // avoid setting anything before the player is ready
-            Log.info("video not loaded yet – cancelling updateUIView")
-            return
-        }
-
-        handleUIMode(view, coordinator)
-        let prev = player.previousState
-        handlePlaybackSpeed(prev, view)
-        handlePlayPause(prev, view)
-        handlePip(prev, view)
-        handleSeek(prev, view)
-        handleQueueVideo(prev, view)
-        setChapterMarkers()
+        backend.reclaim(view)
+        backend.applyUIMode(uiMode)
     }
 
     #if os(macOS)
@@ -157,25 +137,25 @@ struct PlayerWebView: PlatformViewRepresentable {
     }
     #endif
 
-    /// Releases the shared reference when this web view leaves the hierarchy (player type
-    /// switched, player reloaded). Without it a detached web view stays reachable for the rest
-    /// of the app run, and `repairVideo` keeps probing its `<video>` — which reads
-    /// `readyState === 0` once detached and reloads the player on every foregrounding.
-    ///
-    /// Identity-checked because a reload dismantles the old view around the time the new one is
-    /// made, and the order isn't guaranteed; only the instance still on file may clear it.
-    static func dismantleView(_ view: WKWebView) {
-        guard WebViewState.shared.webView === view else { return }
-        WebViewState.shared.webView = nil
+    /// Releases the shared reference when this web view leaves the hierarchy (player type switched, player reloaded).
+    static func dismantleView(_ view: WKWebView, _ coordinator: PlayerWebViewCoordinator) {
+        // its page is on its way out: late navigation callbacks must not be taken for the live player's, least of all
+        // the auto-start, which only ever fires once
+        coordinator.retire()
+        // otherwise the page plays on unseen once the view is gone, e.g.
+        view.pauseAllMediaPlayback()
+        guard WebPlayerBackend.shared.webView === view else { return }
+        WebPlayerBackend.shared.webView = nil
+        WebPlayerBackend.shared.resetAppliedState()
     }
 
     #if os(macOS)
     static func dismantleNSView(_ view: WKWebView, coordinator: PlayerWebViewCoordinator) {
-        dismantleView(view)
+        dismantleView(view, coordinator)
     }
     #elseif os(iOS) || os(visionOS)
     static func dismantleUIView(_ view: WKWebView, coordinator: PlayerWebViewCoordinator) {
-        dismantleView(view)
+        dismantleView(view, coordinator)
     }
     #endif
 
@@ -187,6 +167,13 @@ struct PlayerWebView: PlatformViewRepresentable {
         view.evaluateJavaScript(script + " undefined;", completionHandler: handleJsError)
     }
 
+    /// Whether the page is *not* playing — a page with no media element yet counts, which is the case a
+    /// `!!video?.paused` test gets wrong: it reads `false` for "no element" and so looks exactly like "playing".
+    @MainActor
+    static func evaluateIsNotPlaying(_ view: WKWebView) async -> Bool {
+        await evaluateBool(view, "(() => { const v = document.querySelector('video'); return !v || v.paused; })()")
+    }
+
     @MainActor
     static func evaluateBool(_ view: WKWebView, _ script: String) async -> Bool {
         let result = try? await view.evaluateJavaScript(script)
@@ -196,111 +183,6 @@ struct PlayerWebView: PlatformViewRepresentable {
     static func handleJsError(result: Any?, _ error: (any Error)?) {
         guard let error else { return }
         Log.error("Error evaluating JavaScript: \(error)")
-    }
-
-    func setChapterMarkers(awaitHash: Bool = true) {
-        let prev = player.previousState
-        if awaitHash && prev.chaptersHash == nil {
-            return
-        }
-        guard let video = player.video,
-              prev.videoId == player.video?.youtubeId else {
-            return
-        }
-        let hash = ChapterService.getChaptersHash(
-            from: video.sortedChapterData, duration: video.duration
-        )
-        player.previousState.chaptersHash = hash
-        if prev.chaptersHash == hash {
-            return
-        }
-        if let chapters = player.video?.sortedChapterData,
-           let view = webViewState.webView {
-            Log.info("CHAPTERMARKERS")
-            let enableLogging = UserDefaults.standard.bool(forKey: Const.enableLogging)
-            let script = PlayerWebView.setChapterMarkersScript(
-                chapters: chapters,
-                videoDuration: player.video?.duration ?? 0,
-                enableLogging: enableLogging
-            )
-            evaluateJavaScript(view, script)
-        }
-    }
-
-    func handleShouldStop(_ view: WKWebView) {
-        // workaround: reload otherwise keeps old audio playing in the background
-        if player.shouldStop {
-            Log.info("STOP")
-            view.pauseAllMediaPlayback()
-            player.shouldStop = false
-        }
-    }
-
-    /// Switches the player variant without touching playback: they all run this same page.
-    func handleUIMode(_ uiView: WKWebView, _ coordinator: PlayerWebViewCoordinator) {
-        let mode = uiMode
-        guard coordinator.appliedUIMode != mode else {
-            return
-        }
-        Log.info("UI MODE: \(mode)")
-        coordinator.appliedUIMode = mode
-        evaluateJavaScript(uiView, PlayerWebView.applyUIModeScript(mode))
-    }
-
-    func handlePlaybackSpeed(_ prev: PreviousState, _ uiView: WKWebView) {
-        if prev.playbackSpeed != player.playbackSpeed {
-            Log.info("SPEED")
-            evaluateJavaScript(uiView, getSetPlaybackRateScript())
-            player.previousState.playbackSpeed = player.playbackSpeed
-        }
-    }
-
-    func handlePlayPause(_ prev: PreviousState, _ uiView: WKWebView) {
-        if prev.isPlaying != player.isPlaying {
-            if player.isPlaying {
-                Log.info("PLAY")
-                evaluateJavaScript(uiView, getPlayScript())
-            } else {
-                Log.info("PAUSE")
-                evaluateJavaScript(uiView, getPauseScript())
-            }
-            player.previousState.isPlaying = player.isPlaying
-        }
-    }
-
-    func handlePip(_ prev: PreviousState, _ uiView: WKWebView) {
-        if prev.pipEnabled != player.pipEnabled && player.canPlayPip {
-            if player.pipEnabled {
-                evaluateJavaScript(uiView, getEnterPipScript())
-            } else {
-                Log.info("PIP OFF")
-                evaluateJavaScript(uiView, getExitPipScript())
-            }
-            if !player.pipEnabled {
-                player.previousState.pipEnabled = false
-            }
-        }
-    }
-
-    func handleSeek(_ prev: PreviousState, _ uiView: WKWebView) {
-        if let seekAbs = player.seekAbsolute {
-            Log.info("SEEK ABS")
-            evaluateJavaScript(uiView, getSeekToScript(seekAbs))
-            player.seekAbsolute = nil
-        }
-
-    }
-
-    func handleQueueVideo(_ prev: PreviousState, _ uiView: WKWebView) {
-        if prev.videoId != player.video?.youtubeId {
-            Log.info("CUE VIDEO: \(player.video?.title ?? "-")")
-            let startAt = player.getStartPosition()
-
-            let success = loadPlayer(webView: uiView, startAt: startAt, type: playerType)
-            if success {
-                player.previousState.videoId = player.video?.youtubeId
-            }
-        }
     }
 
     @MainActor

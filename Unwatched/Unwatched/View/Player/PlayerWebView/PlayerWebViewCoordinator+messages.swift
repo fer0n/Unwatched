@@ -17,7 +17,6 @@ extension PlayerWebViewCoordinator {
         case "play":
             handlePlay()
         case "ended":
-            parent.player.previousState.isPlaying = false
             flushStats()
             parent.onVideoEnded()
         case "currentTime":
@@ -72,8 +71,8 @@ extension PlayerWebViewCoordinator {
 
     func handleResize() {
         #if os(iOS)
-        if parent.webViewState.webView?.scrollView.zoomScale != 1.0 {
-            parent.webViewState.webView?.scrollView.setZoomScale(1.0, animated: true)
+        if parent.backend.webView?.scrollView.zoomScale != 1.0 {
+            parent.backend.webView?.scrollView.setZoomScale(1.0, animated: true)
         }
         #endif
     }
@@ -164,14 +163,12 @@ extension PlayerWebViewCoordinator {
             return
         }
         if payload == "enter" {
-            parent.player.previousState.pipEnabled = true
-            parent.player.setPip(true)
+            parent.player.reportPip(true)
         } else if payload == "exit" {
-            parent.player.previousState.pipEnabled = false
-            parent.player.setPip(false)
+            parent.player.reportPip(false)
         } else if payload == "canplay" {
-            parent.player.previousState.pipEnabled = false
             parent.player.canPlayPip = true
+            parent.backend.handleCanPlayPip()
         }
     }
 
@@ -210,7 +207,7 @@ extension PlayerWebViewCoordinator {
     func handleChapters() {
         Task {
             try await Task.sleep(for: .seconds(1))
-            parent.setChapterMarkers(awaitHash: false)
+            parent.backend.setChapterMarkers(force: true)
         }
     }
 
@@ -263,9 +260,8 @@ extension PlayerWebViewCoordinator {
     }
 
     func handlePlay() {
-        parent.player.previousState.isPlaying = true
         updateUnstarted()
-        parent.player.play()
+        parent.player.reportPlaying()
         #if os(iOS)
         BackgroundMonitor.handlePlay()
         #endif
@@ -283,10 +279,7 @@ extension PlayerWebViewCoordinator {
             Log.info("handlePause: playbackId mismatch, not pausing")
             return
         }
-        // Sync previousState before pausing so handlePlayPause doesn't echo
-        // the pause command back to the web player (mirrors handlePlay's approach)
-        parent.player.previousState.isPlaying = false
-        parent.player.pause()
+        parent.player.reportPaused()
 
         flushStats(timeString: payloadArray[safe: 0], urlString: payloadArray[safe: 2])
 
@@ -354,7 +347,6 @@ extension PlayerWebViewCoordinator {
             : parent.player.isPlaying
 
         parent.player.videoSource = .errorSwap
-        parent.player.previousState.isPlaying = false
 
         withAnimation {
             parent.player.pause()

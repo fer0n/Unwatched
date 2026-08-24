@@ -36,7 +36,6 @@ import UnwatchedShared
     @MainActor
     var transcriptUrl: String?
 
-    var seekAbsolute: Double?
     var availableAudioLanguages: [(code: String, name: String)] = []
     var selectedAudioLanguage: String = ""
     var availableVideoQualities: [(height: Int, label: String)] = []
@@ -50,7 +49,6 @@ import UnwatchedShared
     var videoSource: VideoSource?
     var videoEnded: Bool = false
     var tallFullscreenOverlay: Bool = false
-    var shouldStop: Bool = false
     var unstarted: Bool = true
     var transitionCovered: Bool = false
     var isLoading: Date? = Date()
@@ -62,12 +60,23 @@ import UnwatchedShared
             UserDefaults.standard.set(defaultPlaybackSpeed, forKey: Const.playbackSpeed)
         }
     }
-    var temporaryPlaybackSpeed: Double?
+    /// Held-down speed change.
+    @MainActor
+    var temporaryPlaybackSpeed: Double? {
+        didSet {
+            guard temporaryPlaybackSpeed != oldValue else { return }
+            applyPlaybackSpeed()
+        }
+    }
     var _debouncedPlaybackSpeed: Double?
     @ObservationIgnored var playbackSpeedTask: Task<Void, Never>?
 
     @ObservationIgnored var previousIsPlaying = false
-    @ObservationIgnored var previousState = PreviousState()
+
+    #if DEBUG
+    /// Stands a fake engine in for the real one, so the dispatch itself can be tested without a player.
+    @ObservationIgnored var backendOverride: (any PlayerBackend)?
+    #endif
 
     @ObservationIgnored var changeChapterTask: Task<Void, Never>?
     @ObservationIgnored var transitionTask: Task<Void, Never>?
@@ -96,13 +105,6 @@ import UnwatchedShared
         }
     }
 
-    func save() {
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(self) {
-            UserDefaults.standard.set(encoded, forKey: Const.playerManager)
-        }
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PlayerCodingKeys.self)
         pipEnabled = try container.decode(Bool.self, forKey: .pipEnabled)
@@ -123,9 +125,16 @@ import UnwatchedShared
     /// Latched when a video is started: browsing to another tag must not change what plays next.
     var playbackTag: QueueTagSelection = .all
 
+    /// The tag whose continuous play setting was last applied, so a manual toggle sticks for the rest of that tag's
+    /// videos.
+    @ObservationIgnored private var continuousPlayTagId: PersistentIdentifier?
+
     @MainActor
     var video: Video? {
         didSet {
+            // set outside `handleNewVideoSet`: that one returns early for a re-set of the same video, which is how
+            // the restored episode arrives at launch
+            PodcastDownloadManager.shared.playingYoutubeId = video?.youtubeId
             handleNewVideoSet(oldValue)
         }
     }
@@ -172,11 +181,10 @@ import UnwatchedShared
             }
         }
         #endif
-        previousState.pipEnabled = false
         if canPlayPip != false {
             canPlayPip = false
         }
-        previousState.chaptersHash = nil
+        WebPlayerBackend.shared.handleVideoChanged()
         setVideoEnded(false)
         handleChapterChange()
     }
@@ -188,14 +196,21 @@ import UnwatchedShared
             return
         }
         resetVideoIndependentValues()
+        // before the cue: it settles which player is up, and so which URL variant to load.
+        PlayerSwitchManager.shared.handleVideoChanged()
+        // the engine that's up loads it; one that isn't will on its own once it comes up
+        backend.cueVideo()
         handleChapterRefresh()
         BrowserManager.shared.releaseWebViewSoon()
+        PodcastDownloadManager.shared.scheduleSync()
         if deferVideoDate != nil {
             deferVideoDate = nil
         }
         if unstarted != true {
             unstarted = true
         }
+        orientationLockCheck()
+        applyTagContinuousPlay()
     }
 
     @MainActor
@@ -214,9 +229,18 @@ import UnwatchedShared
         tallFullscreenOverlay && isTallAspectRatio
     }
 
+    /// An episode with no picture: the cover art stands in for the video, so anything that sizes itself to the video
+    /// is sizing to a placeholder.
+    @MainActor
+    var isAudioOnly: Bool {
+        video?.isAudioOnly == true
+    }
+
+    /// The player doesn't size itself to a video: the sheet goes to the mini player rather than resting under it, and
+    /// the detent that sizes itself to the player is dropped.
     @MainActor
     var limitHeight: Bool {
-        embeddingDisabled || isTallAspectRatio
+        embeddingDisabled || isTallAspectRatio || isAudioOnly
     }
 
     var isContinuousPlay: Bool {
@@ -307,9 +331,7 @@ import UnwatchedShared
         Log.info("handleHotSwap")
         isLoading = Date()
         canPlayPip = false
-        previousState.pipEnabled = false
         previousIsPlaying = isPlaying
-        previousState.isPlaying = false
         pause()
         self.videoSource = .hotSwap
         updateElapsedTime()
@@ -333,7 +355,8 @@ import UnwatchedShared
     /// Attempts to keep playing as seamlessly as possible
     @MainActor
     func hotReloadPlayer() {
-        shouldStop = true
+        // before the swap: otherwise the outgoing page plays on unheard until it's torn down
+        backend.stop()
         handleHotSwap()
         PlayerManager.reloadPlayer()
     }
@@ -365,7 +388,6 @@ import UnwatchedShared
 
     @MainActor
     func handleAspectRatio(_ aspectRatio: Double) {
-        Log.info("handleAspectRatio \(aspectRatio)")
         guard aspectRatio.isUsableAspectRatio else {
             Log.warning("Ignoring unusable aspect ratio: \(aspectRatio)")
             return
@@ -384,6 +406,11 @@ import UnwatchedShared
                 video.isYtShort = isShort
             }
         }
+
+        // The same video reports its ratio over and over: every HLS variant switch does, and resizing the player
+        // (swiping the sheet up) makes AVFoundation pick another variant.
+        guard !aspectRatio.isNearlySameAspectRatio(as: videoAspectRatio) else { return }
+        Log.info("handleAspectRatio \(aspectRatio)")
 
         let cleanedAspectRatio = aspectRatio.cleanedAspectRatio
 
@@ -404,6 +431,39 @@ import UnwatchedShared
                 self.aspectRatio = aspectRatio
             }
         }
+    }
+}
+
+extension PlayerManager {
+    func save() {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self) {
+            UserDefaults.standard.set(encoded, forKey: Const.playerManager)
+        }
+    }
+}
+
+extension PlayerManager {
+    /// Continuous play follows the tag a video belongs to, but only where playback moves into a
+    /// different tag than the one that last set it — it stays a global toggle the user can flip
+    /// back at any point without the next video of the same tag undoing it.
+    @MainActor
+    private func applyTagContinuousPlay() {
+        let tag = video.flatMap(Tag.continuousPlayTag(for:))
+        guard let tag, let continuousPlay = tag.continuousPlay else {
+            continuousPlayTagId = nil
+            return
+        }
+        guard tag.persistentModelID != continuousPlayTagId else { return }
+        continuousPlayTagId = tag.persistentModelID
+        UserDefaults.standard.set(continuousPlay, forKey: Const.continuousPlay)
+    }
+
+    @MainActor
+    private func orientationLockCheck() {
+        #if os(iOS)
+        OrientationManager.updatePodcastOrientationLock()
+        #endif
     }
 }
 
@@ -439,6 +499,7 @@ extension PlayerManager {
         withAnimation {
             self.video = nextVideo
         }
+        moveToTopOfQueue(nextVideo)
     }
 
     @MainActor
@@ -461,6 +522,9 @@ extension PlayerManager {
 
             // workaround: clear on main thread for animation to work (broken in iOS 18.0-2)
             VideoService.setVideoWatched(video, modelContext: modelContext)
+            #if os(iOS)
+            MediaSuggestionService.removeDonation(for: video.youtubeId)
+            #endif
 
             autoSetNextVideo(source, modelContext)
 

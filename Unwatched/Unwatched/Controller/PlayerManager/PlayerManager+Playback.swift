@@ -8,6 +8,21 @@ import SwiftData
 import OSLog
 import UnwatchedShared
 
+extension PlayerManager {
+    /// The engine that owns playback, which is whichever player is on screen.
+    @MainActor
+    var backend: any PlayerBackend {
+        #if DEBUG
+        if let backendOverride {
+            return backendOverride
+        }
+        #endif
+        return PlayerSwitchManager.shared.activeType == .native
+            ? AVPlayerViewModel.shared
+            : WebPlayerBackend.shared
+    }
+}
+
 // PlayerManager+Playback
 extension PlayerManager {
 
@@ -71,7 +86,6 @@ extension PlayerManager {
             play()
             starting = true
         case .playWhenReady:
-            previousState.isPlaying = false
             play()
             starting = true
         case .hotSwap, .errorSwap:
@@ -149,19 +163,48 @@ extension PlayerManager {
 
     @MainActor
     func play() {
+        startedPlaying()
+        backend.play()
+    }
+
+    @MainActor
+    func pause() {
+        stoppedPlaying()
+        backend.pause()
+    }
+
+    /// The engine reporting that it started on its own — the page's own controls, an interruption ending,
+    /// `AVPlayer`'s rate changing.
+    @MainActor
+    func reportPlaying() {
+        startedPlaying()
+    }
+
+    @MainActor
+    func reportPaused() {
+        stoppedPlaying()
+    }
+
+    @MainActor
+    private func startedPlaying() {
         if self.isLoading != nil {
             self.videoSource = .playWhenReady
         }
         if !self.isPlaying {
             self.isPlaying = true
         }
+        #if os(iOS)
+        if let video {
+            MediaSuggestionService.donate(video)
+        }
+        #endif
         updateVideoEnded()
         handleRotateOnPlay()
         handlePreciseChapterChangePlay()
     }
 
     @MainActor
-    func pause() {
+    private func stoppedPlaying() {
         if self.isPlaying {
             self.isPlaying = false
         }
@@ -207,7 +250,7 @@ extension PlayerManager {
             let offset = backward ? -seconds : seconds
             let base = currentTime ?? 0
             let target = max(0, chapterAwareSeekTarget(from: base, offset: offset))
-            seekAbsolute = target
+            backend.seek(to: target)
             currentTime = target
             updateVideoEnded()
             return true
@@ -218,9 +261,9 @@ extension PlayerManager {
     @MainActor
     func seek(to time: CGFloat) {
         if let duration = video?.duration, time >= duration {
-            seekAbsolute = duration - Const.seekToEndBuffer
+            backend.seek(to: duration - Const.seekToEndBuffer)
         } else {
-            seekAbsolute = time
+            backend.seek(to: time)
         }
         updateVideoEnded()
         updateElapsedTime(time, videoId: video?.youtubeId)
@@ -282,6 +325,7 @@ extension PlayerManager {
         Signal.log("Player.setTemporarySpeed")
     }
 
+    @MainActor
     func temporarySpeedUp() {
         temporaryPlaybackSpeed = tempSpeedUpValue
     }
@@ -338,6 +382,7 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     func resetTemporaryPlaybackSpeed() {
         temporaryPlaybackSpeed = nil
     }
@@ -356,10 +401,18 @@ extension PlayerManager {
     /// intentionally excluded — this answers "who uses the PIP button").
     @MainActor
     func togglePip() {
-        pipEnabled.toggle()
+        guard pipEnabled || hasPipSurface else { return }
+        setPip(!pipEnabled)
         if pipEnabled {
             Signal.log("Player.PIP")
         }
+    }
+
+    /// An audio episode has no picture to put in a picture, so the native player builds no layer to start PiP from
+    /// (see `AVPlayerView.videoPlayerView`) and `PipButton` hides itself.
+    @MainActor
+    var hasPipSurface: Bool {
+        !isAudioOnly
     }
 
     /// Where the player currently is, for analytics context. Shared by `Player.setPlaybackSpeed`
@@ -383,6 +436,13 @@ extension PlayerManager {
         } else {
             defaultPlaybackSpeed = value
         }
+        applyPlaybackSpeed()
+    }
+
+    /// Pushes the effective speed to the engine.
+    @MainActor
+    func applyPlaybackSpeed() {
+        backend.setRate(playbackSpeed)
     }
 
     @MainActor
@@ -425,7 +485,65 @@ extension PlayerManager {
         }
     }
 
+    @MainActor
     func setPip(_ value: Bool) {
+        guard !value || hasPipSurface else { return }
+        if pipEnabled != value {
+            pipEnabled = value
+        }
+        backend.setPip(value)
+    }
+
+    /// The user picking an audio track.
+    @MainActor
+    func setAudioLanguage(_ code: String) {
+        reportAudioLanguage(code)
+        backend.setAudioLanguage(code)
+    }
+
+    @MainActor
+    func reportAudioLanguage(_ code: String) {
+        if selectedAudioLanguage != code {
+            selectedAudioLanguage = code
+        }
+    }
+
+    /// The user picking a variant, 0 for automatic.
+    @MainActor
+    func setVideoQuality(_ height: Int) {
+        reportVideoQuality(height)
+        backend.setVideoQuality(height)
+    }
+
+    @MainActor
+    func reportVideoQuality(_ height: Int) {
+        if selectedVideoQuality != height {
+            selectedVideoQuality = height
+        }
+    }
+
+    /// Writes the setting and has the engine act on it.
+    @MainActor
+    func setTrimSilence(_ enabled: Bool) {
+        UserDefaults.standard.set(enabled, forKey: Const.trimSilence)
+        if enabled {
+            UserDefaults.standard.set(0.0, forKey: Const.trimSilenceSecondsSaved)
+        }
+        backend.applyTrimSilence()
+    }
+
+    /// Same idea as `setTrimSilence`: the engine re-reads the setting and rebuilds the composition from the episode's
+    /// existing scan, so a tier change never triggers a re-scan.
+    @MainActor
+    func setTrimSilenceTier(_ tier: TrimSilenceTier) {
+        UserDefaults.standard.set(tier.rawValue, forKey: Const.trimSilenceTier)
+        backend.applyTrimSilence()
+    }
+
+    /// The player reporting that PiP started or ended without being asked — the system PiP button, or the PiP window
+    /// being closed.
+    @MainActor
+    func reportPip(_ value: Bool) {
         if pipEnabled != value {
             pipEnabled = value
         }
@@ -457,5 +575,24 @@ extension PlayerManager {
         }
         let context = DataProvider.mainContext
         loadTopmostVideoFromQueue(modelContext: context, updateTime: false)
+    }
+}
+
+@MainActor
+extension PlayerManager {
+    /// The shape the player surface draws in.
+    var surfaceAspectRatio: Double {
+        isAudioOnly ? 1 : videoAspectRatio
+    }
+
+    /// Whether the episode brought an image of its own.
+    var hasEpisodeArtwork: Bool {
+        isAudioOnly && video?.thumbnailUrl != nil
+    }
+
+    /// What the player surface and the lock screen show, in the order they're tried: the current chapter's own image
+    /// where the episode gives its chapters one, then the episode's artwork.
+    var displayArtworkUrls: [URL?] {
+        [currentChapter?.imageUrl, video?.displayThumbnailUrl]
     }
 }
